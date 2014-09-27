@@ -7,7 +7,6 @@
     android:orientation="vertical"
     android:paddingBottom="12dp"
     android:paddingTop="5dp"
-    android:background="@drawable/bkg_login"
     tools:context=".TransactionDetailFragment" >
 
     <ScrollView
@@ -61,6 +60,8 @@
                         android:textSize="25sp"
                         android:textColor="@color/color_text_title"
                         android:layout_gravity="bottom"
+                        android:singleLine="true"
+                        android:ellipsize="end"
                         android:gravity="left"
                         android:textStyle="bold" 
                         />
@@ -77,30 +78,29 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/textView_tipo_canal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="12dp"
                     android:paddingRight="12dp"
                     android:textStyle="bold" 
-                    android:text="Mayorista"
                     android:singleLine="true"
                     android:ellipsize="end"
                     style="@style/Widget.TextView.Medium" />
                 
                 <TextView
-                    android:id="@+id/textView1"
+                    android:id="@+id/textView_tipo_cliente"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="12dp"
                     android:paddingRight="12dp"
                     android:textStyle="bold" 
-                    android:text="Distribuidor"
                     android:layout_marginBottom="3dp"
                     android:textColor="@color/bg_button_bg_main"
                     style="@style/Widget.TextView.Medium" />
 
                 <RatingBar
-                    android:id="@+id/ratingBar1"
+                    android:id="@+id/ratingBar_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:isIndicator="true"

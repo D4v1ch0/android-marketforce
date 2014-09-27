@@ -37,6 +37,7 @@ public class Cliente {
 				
 				rp3.marketforce.models.Cliente.deleteAll(db, Contract.Cliente.TABLE_NAME);
 				rp3.marketforce.models.ClienteDireccion.deleteAll(db, Contract.ClienteDireccion.TABLE_NAME);
+				rp3.marketforce.models.Cliente.ClientExt.deleteAll(db, Contract.ClientExt.TABLE_NAME);
 				
 				for(int i=0; i < types.length(); i++){
 					
@@ -57,23 +58,16 @@ public class Cliente {
 						cl.setIdTipoCliente(type.getInt("IdTipoCliente"));
 						cl.setNombre1(type.getString("Nombre1"));
 						cl.setNombre2(type.getString("Nombre2"));
-						cl.setFechaNacimiento(Convert.getDateFromTicks(type.getLong("FechaNacimientoTicks")));
+						cl.setFechaNacimiento(Convert.getDateFromDotNetTicks(type.getLong("FechaNacimientoTicks")));
 						cl.setNombreCompleto(type.getString("NombresCompletos"));
-					
-						rp3.marketforce.models.Cliente.insert(db, cl);
-						
+																	
 						JSONArray strs = type.getJSONArray("ClienteDirecciones");
 						
 						for(int j=0; j < strs.length(); j++){
 							JSONObject str = strs.getJSONObject(j);
 							rp3.marketforce.models.ClienteDireccion  clienteDir = new rp3.marketforce.models.ClienteDireccion();
 							
-							clienteDir.setDireccion(""+str.getString("Direccion"));
-							String flag = str.getString("EsPrincipal");
-							if(flag.equals("true"))
-								clienteDir.setIdPrincipal(1);
-							else
-							   clienteDir.setIdPrincipal(0);
+							clienteDir.setDireccion(""+str.getString("Direccion"));							
 							
 							clienteDir.setIdCiudad(str.getInt("IdCiudad"));
 							clienteDir.setIdCliente(str.getLong("IdCliente"));							
@@ -85,8 +79,19 @@ public class Cliente {
 							clienteDir.setTelefono2(""+str.getString("Telefono2"));
 							clienteDir.setTipoDireccion(""+str.getString("TipoDireccion"));
 							
+							if(str.getBoolean("EsPrincipal")){
+								clienteDir.setEsPrincipal(true);
+								cl.setDireccion(clienteDir.getDireccion());
+								cl.setTelefono(clienteDir.getTelefono1());
+							}								
+							else
+							   clienteDir.setEsPrincipal(false);
+							
 							rp3.marketforce.models.ClienteDireccion.insert(db, clienteDir);
 						}
+						
+						rp3.marketforce.models.Cliente.insert(db, cl);
+						
 					} catch (JSONException e) {
 						Log.e("Entro","Error: "+e.toString());
 						return SyncAdapter.SYNC_EVENT_ERROR;

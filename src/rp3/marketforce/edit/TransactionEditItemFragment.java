@@ -147,14 +147,8 @@ public class TransactionEditItemFragment extends BaseFragment {
 			
 			datos = getActivity(). getResources().getStringArray(R.array.testArrayEstadoCivil);
 			inflater = (LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			setSpinnerSimpleAdapter(R.id.spinner_state_civil, datos);
-			
-			for(int x = 0 ; x < datos.length ; x++)
-				if(datos[x].equals(""+client.getEstadoCivil()))
-				{
-					setSpinnerSelectionByPosition(R.id.spinner_state_civil, x);
-					break;
-				}
+			setSpinnerAdapter(R.id.spinner_state_civil, new rp3.content.SimpleGeneralValueAdapter(this.getActivity(),getDataBase(),1002));
+			setSpinnerGeneralValueSelection(R.id.spinner_state_civil,client.getEstadoCivil());
 			
 			linearLayout_directions = (LinearLayout) rootView.findViewById(R.id.linearLayout_directions);
 			editTextMail = (EditText) rootView.findViewById(R.id.editText_correo);
@@ -190,7 +184,9 @@ public class TransactionEditItemFragment extends BaseFragment {
 	    			((EditText) view_rowlist.findViewById(R.id.editText_direccion)).setText(""+client.getClienteDirecciones().get(x).getDireccion());
 	    			((EditText) view_rowlist.findViewById(R.id.editText_telefono1)).setText(""+client.getClienteDirecciones().get(x).getTelefono1());
 	    			((EditText) view_rowlist.findViewById(R.id.editText_telefono2)).setText(""+client.getClienteDirecciones().get(x).getTelefono2());
-	    			((EditText) view_rowlist.findViewById(R.id.editText_referencia)).setText(""+client.getClienteDirecciones().get(x).getReferencia());
+	    			if(client.getClienteDirecciones().get(x).getReferencia() != null)
+	    				if(!client.getClienteDirecciones().get(x).getReferencia().equals("null"))
+	    					((EditText) view_rowlist.findViewById(R.id.editText_referencia)).setText(""+client.getClienteDirecciones().get(x).getReferencia());
 	    			
 	    			final TextView text_pos = (TextView) view_rowlist.findViewById(R.id.textView_pos);
 	    			

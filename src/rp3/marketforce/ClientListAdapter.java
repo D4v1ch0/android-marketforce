@@ -1,6 +1,5 @@
 package rp3.marketforce;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -155,23 +154,14 @@ public class ClientListAdapter extends SectionAdapter{
 			break;
 		}
 		
-		String dateAsText="";
-		
-		
 		((TextView) convertView.findViewById(R.id.textView_clientlist_name)).setText(""+string_client);
-		((TextView) convertView.findViewById(R.id.textView_clientlist_date)).setText(""+dateAsText);
 		
 		if(current.getCorreoElectronico()!= null)
 			if(!current.getCorreoElectronico().equals("null"))
 				((TextView) convertView.findViewById(R.id.textView_clientlist_mail)).setText(current.getCorreoElectronico());
 		
-		
-		if(current.getClienteDireccionesIDPrincipal() != null)
-		{
-			if(!current.getClienteDireccionesIDPrincipal().getTelefono1().equals("null"))
-			((TextView) convertView.findViewById(R.id.textView_clientlist_movil)).setText(""+current.getClienteDireccionesIDPrincipal().getTelefono1());
-			((TextView) convertView.findViewById(R.id.textView_clientlist_address)).setText(""+current.getClienteDireccionesIDPrincipal().getDireccion());
-		}
+	   ((TextView) convertView.findViewById(R.id.textView_clientlist_movil)).setText(""+current.getTelefono());
+		((TextView) convertView.findViewById(R.id.textView_clientlist_address)).setText(""+current.getDireccion());
 		
 		if(ClientFragment. mTwoPane)
 		{

@@ -8,10 +8,12 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 public class ClientDetailFragment extends rp3.app.BaseFragment {
@@ -155,7 +157,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment {
     			   				
     			case ITEM_CEDULA:
     				
-    				str_titulo = "0989438746";
+    				str_titulo = "";
     				
     				if(client.getIdentificacion() != null)
     					if(!client.getIdentificacion().equals("null"))
@@ -180,6 +182,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment {
     				setTextViewText(R.id.textView_client, "");
     				
     			  setTextViewDateText(R.id.textView_client, client.getFechaNacimiento());
+    			  Log.e("DATE",""+client.getFechaNacimiento());
     				
     				flag = true;
     				break;
@@ -188,9 +191,9 @@ public class ClientDetailFragment extends rp3.app.BaseFragment {
     				
     				str_titulo = "";
     				
-    				if(client.getGenero() != null)
-    					if(!client.getGenero().equals("null"))
-    						str_titulo = ""+client.getGenero();
+    				if(client.getGeneroDescripcion() != null)
+    					if(!client.getGeneroDescripcion().equals("null"))
+    						str_titulo = ""+client.getGeneroDescripcion();
     						
     				flag = false;
     				break;
@@ -199,9 +202,9 @@ public class ClientDetailFragment extends rp3.app.BaseFragment {
     				
     				str_titulo = "";
     				
-    				if(client.getEstadoCivil() != null)
-    					if(!client.getEstadoCivil().equals("null"))
-    							str_titulo = ""+client.getEstadoCivil();
+    				if(client.getEstadoCivilDescripcion() != null)
+    					if(!client.getEstadoCivilDescripcion().equals("null"))
+    							str_titulo = ""+client.getEstadoCivilDescripcion();
     				
     				flag = false;
     				break;
@@ -292,7 +295,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment {
 		    				
 		    			case ITEM_CIUDAD:
 		    				
-		    				str_titulo = "";
+		    				str_titulo = client.getClienteDirecciones().get(x).getCiudadDescripcion();
 		    				
 		    				break;
 		    				
@@ -315,6 +318,9 @@ public class ClientDetailFragment extends rp3.app.BaseFragment {
 			}
 		}
     	
+    	setTextViewText(R.id.textView_tipo_canal, client.getCanalDescripcion());
+    	setTextViewText(R.id.textView_tipo_cliente, client.getTipoClienteDescripcion());
+    	((RatingBar) rootView.findViewById(R.id.ratingBar_status)).setRating(client.getCalificacion());
     	setTextViewText(R.id.textView_client, client.getNombre1()+" "+client.getApellido1());
     }
     }

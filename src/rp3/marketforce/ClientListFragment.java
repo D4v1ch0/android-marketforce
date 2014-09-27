@@ -416,6 +416,8 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 						cliente.setNombre2(lista.get(y).getNombre2());
 						cliente.setApellido1(lista.get(y).getApellido1());
 						cliente.setApellido2(lista.get(y).getApellido2());
+						cliente.setTelefono(lista.get(y).getTelefono());
+						cliente.setDireccion(lista.get(y).getDireccion());
 						cliente.setCorreoElectronico(lista.get(y).getCorreoElectronico());
 						
 						if(lista.get(y).getClienteDireccionesIDPrincipal() != null)
@@ -455,7 +457,9 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 						cliente.setNombre1(lista.get(y).getNombre1());
 						cliente.setNombre2(lista.get(y).getNombre2());
 						cliente.setApellido1(lista.get(y).getApellido1());
-						cliente.setApellido2(lista.get(y).getApellido2());						
+						cliente.setApellido2(lista.get(y).getApellido2());	
+						cliente.setTelefono(lista.get(y).getTelefono());
+						cliente.setDireccion(lista.get(y).getDireccion());
 						cliente.setCorreoElectronico(lista.get(y).getCorreoElectronico());
 						
 						if(lista.get(y).getClienteDireccionesIDPrincipal() != null)

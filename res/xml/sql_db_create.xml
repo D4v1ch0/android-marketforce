@@ -25,11 +25,11 @@
 	</statement>
 	<statement>
         CREATE VIRTUAL TABLE tbClienteExt USING fts4 (
-        Nombre1 TEXT,
-	    Nombre2 TEXT,
-	    Apellido1 TEXT,
-	    Apellido2 TEXT,
-	    NombreCompleto TEXT,
+        Nombre1,
+	    Nombre2,
+	    Apellido1,
+	    Apellido2,
+	    NombreCompleto,
         Identificacion,
         CorreoElectronico,        
         Direccion,
@@ -43,7 +43,7 @@
 	  IdCliente INTEGER,
 	  IdClienteDireccion INTEGER,
 	  Direccion TEXT,
-	  IdPrincipal INTEGER,
+	  EsPrincipal INTEGER,
 	  TipoDireccion TEXT,
 	  IdCiudad INTEGER,
 	  Telefono1 TEXT,

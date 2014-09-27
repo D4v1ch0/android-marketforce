@@ -17,14 +17,14 @@
        	tbClienteExt.Identificacion AS tbClienteExt_Identificacion,
        	tbClienteExt.CorreoElectronico AS tbClienteExt_CorreoElectronico,
        	tbClienteExt.Direccion AS tbClienteExt_Direccion,
-       	tbClienteExt.Telefono1 AS tbClienteExt_Telefono1,
+       	tbClienteExt.Telefono AS tbClienteExt_Telefono,
        	tbEstadoCivil.Value AS tbEstadoCivil_Value,
        	tbGenero.Value AS tbGenero_Value,
        	tbTipoCliente.Descripcion AS tbTipoCliente_Descripcion,
        	tbCanal.Descripcion AS tbCanal_Descripcion
         FROM tbCliente
     	JOIN tbClienteExt
-    	ON tbCliente._id = tbCliente.docid
+    	ON tbCliente._id = tbClienteExt.docid
     	JOIN tbTipoCliente
     	ON tbTipoCliente._id = tbCliente.IdTipoCliente
     	JOIN tbCanal
@@ -38,7 +38,7 @@
     </statement>
     <statement name="ClienteById">
         SELECT 
-        tbCliente._id AS _id,
+         tbCliente._id AS _id,
         tbCliente.Genero,
         tbCliente.EstadoCivil,
         tbCliente.FechaNacimiento,
@@ -53,14 +53,14 @@
        	tbClienteExt.Identificacion AS tbClienteExt_Identificacion,
        	tbClienteExt.CorreoElectronico AS tbClienteExt_CorreoElectronico,
        	tbClienteExt.Direccion AS tbClienteExt_Direccion,
-       	tbClienteExt.Telefono1 AS tbClienteExt_Telefono1,
+       	tbClienteExt.Telefono AS tbClienteExt_Telefono,
        	tbEstadoCivil.Value AS tbEstadoCivil_Value,
        	tbGenero.Value AS tbGenero_Value,
        	tbTipoCliente.Descripcion AS tbTipoCliente_Descripcion,
        	tbCanal.Descripcion AS tbCanal_Descripcion
         FROM tbCliente
     	JOIN tbClienteExt
-    	ON tbCliente._id = tbCliente.docid
+    	ON tbCliente._id = tbClienteExt.docid
     	JOIN tbTipoCliente
     	ON tbTipoCliente._id = tbCliente.IdTipoCliente
     	JOIN tbCanal
@@ -73,6 +73,25 @@
     	AND tbGenero.Code = tbCliente.Genero
     	WHERE tbCliente._id = ?
     </statement>
+    
+     <statement name="ClienteDireccionById">
+        SELECT 
+        tbClienteDireccion._id,
+        tbClienteDireccion.IdCliente,
+        tbClienteDireccion.Direccion,
+        tbClienteDireccion.EsPrincipal,
+        tbClienteDireccion.Telefono1,
+        tbClienteDireccion.Telefono2,
+        tbClienteDireccion.Referencia,
+        tbClienteDireccion.Latitud,
+        tbClienteDireccion.Longitud,
+        tbGeopoliticalStructure.Name AS tbGeopoliticalStructure_Name
+        FROM tbClienteDireccion
+    	JOIN tbGeopoliticalStructure
+    	ON tbGeopoliticalStructure._id = tbClienteDireccion.IdCiudad
+    	WHERE tbClienteDireccion.IdCliente = ?
+    </statement>
+    
 	 <statement name="SimpleClientSearch">
         SELECT 
         tbCliente._id AS _id,

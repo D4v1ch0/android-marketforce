@@ -10,14 +10,12 @@ import rp3.connection.WebService;
 import rp3.content.SyncAdapter;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.db.Contract;
-import rp3.runtime.Session;
 import android.util.Log;
 
 public class TipoCliente {
 	
 		public static int executeSync(DataBase db){
-			WebService webService = new WebService("MartketForce","GetClientes");
-			webService.addParameter("@logonname", Session.getUser().getLogonName());
+			WebService webService = new WebService("MartketForce","GetTipoClientes");
 			try
 			{			
 				webService.addCurrentAuthToken();
@@ -33,7 +31,6 @@ public class TipoCliente {
 				}
 				
 				JSONArray types = webService.getJSONArrayResponse();			
-				
 				rp3.marketforce.models.TipoCliente.deleteAll(db, Contract.TipoCliente.TABLE_NAME);
 				
 				for(int i=0; i < types.length(); i++){

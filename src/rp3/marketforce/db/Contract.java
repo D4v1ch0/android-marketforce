@@ -60,7 +60,7 @@ public final class Contract {
 		
 		public static final String QUERY_CLIENTES = "Clientes";
 		public static final String QUERY_CLIENTE_BY_ID = "ClienteById";
-		public static final String QUERY_CLIENT_SEARCH = "SimpleClienteSearch";
+		public static final String QUERY_CLIENT_SEARCH = "SimpleClientSearch";
 		
 //		 private static final String QUERY_TRANSACTION_MAINFIELDS = 
 //	        		"SELECT " + 
@@ -113,7 +113,7 @@ public final class Contract {
 			public static final String COLUMN_CORREO_ELECTRONICO = "CorreoElectronico";	        
 	        public static final String COLUMN_MAIL = "CorreoElectronico";	        
 	        public static final String COLUMN_DIRECCION = "Direccion";
-	        public static final String COLUMN_TELEFONO = "Telefono1";
+	        public static final String COLUMN_TELEFONO = "Telefono";
 	        
 	        
 	        
@@ -126,7 +126,7 @@ public final class Contract {
 		public static final String COLUMN_CLIENTE_ID = "IdCliente";
 		public static final String COLUMN_CLIENTE_DIRECCION_ID = "IdClienteDireccion";
 		public static final String COLUMN_DIRECCION = "Direccion";  
-		public static final String COLUMN_PRINCIPAL_ID = "IdPrincipal";
+		public static final String COLUMN_ES_PRINCIPAL = "EsPrincipal";
 		public static final String COLUMN_TIPO_DIRECCION = "TipoDireccion";
 		public static final String COLUMN_CIUDAD_ID = "IdCiudad";
 		public static final String COLUMN_TELEFONO1 = "Telefono1";
@@ -138,7 +138,7 @@ public final class Contract {
 		public static final String FIELD_CLIENTE_ID = COLUMN_CLIENTE_ID;
 		public static final String FIELD_CLIENTE_DIRECCION_ID = COLUMN_CLIENTE_DIRECCION_ID;
 		public static final String FIELD_DIRECCION = COLUMN_DIRECCION;
-		public static final String FIELD_PRINCIPAL_ID = COLUMN_PRINCIPAL_ID;
+		public static final String FIELD_ES_PRINCIPAL = COLUMN_ES_PRINCIPAL;
 		public static final String FIELD_TIPO_DIRECCION = COLUMN_TIPO_DIRECCION;
 		public static final String FIELD_CIUDAD_ID = COLUMN_CIUDAD_ID;
 		public static final String FIELD_TELEFONO1 = COLUMN_TELEFONO1;
@@ -146,6 +146,9 @@ public final class Contract {
 		public static final String FIELD_REFERENCIA = COLUMN_REFERENCIA;
 		public static final String FIELD_LATITUD = COLUMN_LATITUD;
 		public static final String FIELD_LONGITUD = COLUMN_LONGITUD;
+		public static final String FIELD_CIUDAD = rp3.data.models.Contract.GeopoliticalStructure.TABLE_NAME+"_"+rp3.data.models.Contract.GeopoliticalStructure.COLUMN_NAME;
+		
+		public static final String QUERY_CLIENTE_DIRECCION_BY_ID = "ClienteDireccionById";
 	}
 	
 	public static abstract class Agenda implements BaseColumns {

@@ -27,17 +27,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical" >
-
-            <TextView
-                android:id="@+id/textView_clientlist_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:drawableLeft="@drawable/ic_action_go_to__today_mini"
-                android:textSize="@dimen/text_xsmall_size"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:textStyle="bold" />
         </LinearLayout>
 
     </LinearLayout>

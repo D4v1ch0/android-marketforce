@@ -56,7 +56,17 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 					result = rp3.marketforce.sync.Rutas.executeSync(db,null,null);				
 					addDefaultMessage(result);
 				}
-						
+				
+				if(result == SYNC_EVENT_SUCCESS){
+					result = rp3.marketforce.sync.Canal.executeSync(db);				
+					addDefaultMessage(result);
+				}
+
+				if(result == SYNC_EVENT_SUCCESS){
+					result = rp3.marketforce.sync.TipoCliente.executeSync(db);				
+					addDefaultMessage(result);
+				}
+				
 				SyncAudit.insert(syncType, result);
 				db.commitTransaction();								
 			}
