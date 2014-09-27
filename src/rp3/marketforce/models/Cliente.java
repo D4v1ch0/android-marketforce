@@ -28,12 +28,16 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 	private int idTipoCliente;
 	private int idCanal;
 	private int Calificacion;
-	private String usrIng;
-	private Date fecIng;
-	private String usrMod;
-	private Date fecMod;
+	
+	private String direccion;
+	private String telefono;
+	private String estadoCivilDescripcion;
+	private String generoDescripcion;
+	private String tipoClienteDescripcion;
+	private String canalDescripcion;
+
 	private List<ClienteDireccion> clienteDirecciones;
-	private ClienteDireccion clienteDireccionesIDPrincipal;
+	private ClienteDireccion clienteDireccionesIDPrincipal;	
 	
 	@Override
 	public long getID() {
@@ -58,25 +62,13 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 	@Override
 	public void setValues() {
 		setValue(Contract.Cliente._ID, this.id);		
-		setValue(Contract.Cliente.COLUMN_IDENTIFICATION_TYPE_ID, this.identificationTypeId);
-		setValue(Contract.Cliente.COLUMN_IDENTIFICACION, this.identificacion);
-		setValue(Contract.Cliente.COLUMN_NOMBRE1, this.nombre1);
-		setValue(Contract.Cliente.COLUMN_NOMBRE2, this.nombre2);
-		setValue(Contract.Cliente.COLUMN_APELLIDO1, this.apellido1);
-		setValue(Contract.Cliente.COLUMN_APELLIDO2, this.apellido2);
-		setValue(Contract.Cliente.COLUMN_NOMBRE_COMPLETO, this.nombreCompleto);
-		setValue(Contract.Cliente.COLUMN_CORREO_ELECTRONICO, this.correoElectronico);
+		setValue(Contract.Cliente.COLUMN_IDENTIFICATION_TYPE_ID, this.identificationTypeId);		
 		setValue(Contract.Cliente.COLUMN_GENERO, this.genero);
 		setValue(Contract.Cliente.COLUMN_ESTADO_CIVIL, this.estadoCivil);
 		setValue(Contract.Cliente.COLUMN_FECHA_NACIMIENTO, this.fechaNacimiento);
 		setValue(Contract.Cliente.COLUMN_TIPO_CLIENTE_ID, this.idTipoCliente);
 		setValue(Contract.Cliente.COLUMN_CANAL_ID, this.idCanal);
-		setValue(Contract.Cliente.COLUMN_CALIFICACION, this.Calificacion);
-		setValue(Contract.Cliente.COLUMN_USRING, this.usrIng);
-		setValue(Contract.Cliente.COLUMN_FECING, this.fecIng);
-		setValue(Contract.Cliente.COLUMN_USRMOD, this.usrMod);
-		setValue(Contract.Cliente.COLUMN_FECMOD, this.fecMod);
-		
+		setValue(Contract.Cliente.COLUMN_CALIFICACION, this.Calificacion);		
 	}
 
 	@Override
@@ -201,37 +193,6 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 		Calificacion = calificacion;
 	}
 
-	public String getUsrIng() {
-		return usrIng;
-	}
-
-	public void setUsrIng(String usrIng) {
-		this.usrIng = usrIng;
-	}
-
-	public Date getFecIng() {
-		return fecIng;
-	}
-
-	public void setFecIng(Date fecIng) {
-		this.fecIng = fecIng;
-	}
-
-	public String getUsrMod() {
-		return usrMod;
-	}
-
-	public void setUsrMod(String usrMod) {
-		this.usrMod = usrMod;
-	}
-
-	public Date getFecMod() {
-		return fecMod;
-	}
-
-	public void setFecMod(Date fecMod) {
-		this.fecMod = fecMod;
-	}
 
 	public List<ClienteDireccion> getClienteDirecciones() {
 		return clienteDirecciones;
@@ -249,29 +210,60 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			ClienteDireccion clienteDireccionesIDPrincipal) {
 		this.clienteDireccionesIDPrincipal = clienteDireccionesIDPrincipal;
 	}
+	
+	public String getDireccion() {
+		return direccion;
+	}
 
-	public static List<Cliente> getCliente(DataBase db, boolean flag){
-		Cursor c = db.query(Contract.Cliente.TABLE_NAME, new String[]{
-			Contract.Cliente._ID,			
-			Contract.Cliente.COLUMN_IDENTIFICATION_TYPE_ID,
-			Contract.Cliente.COLUMN_IDENTIFICACION,
-			Contract.Cliente.COLUMN_NOMBRE1,
-			Contract.Cliente.COLUMN_NOMBRE2,
-			Contract.Cliente.COLUMN_APELLIDO1,
-			Contract.Cliente.COLUMN_APELLIDO2,
-			Contract.Cliente.COLUMN_NOMBRE_COMPLETO,
-			Contract.Cliente.COLUMN_CORREO_ELECTRONICO,
-			Contract.Cliente.COLUMN_GENERO,
-			Contract.Cliente.COLUMN_ESTADO_CIVIL,
-			Contract.Cliente.COLUMN_FECHA_NACIMIENTO,
-			Contract.Cliente.COLUMN_TIPO_CLIENTE_ID,
-			Contract.Cliente.COLUMN_CANAL_ID,
-			Contract.Cliente.COLUMN_CALIFICACION,
-			Contract.Cliente.COLUMN_USRING,
-			Contract.Cliente.COLUMN_FECING,
-			Contract.Cliente.COLUMN_USRMOD,
-			Contract.Cliente.COLUMN_FECMOD
-		});
+	public void setDireccion(String direccion) {
+		this.direccion = direccion;
+	}
+
+	public String getTelefono() {
+		return telefono;
+	}
+
+	public void setTelefono(String telefono) {
+		this.telefono = telefono;
+	}
+
+	public String getEstadoCivilDescripcion() {
+		return estadoCivilDescripcion;
+	}
+
+	public void setEstadoCivilDescripcion(String estadoCivilDescripcion) {
+		this.estadoCivilDescripcion = estadoCivilDescripcion;
+	}
+
+	public String getGeneroDescripcion() {
+		return generoDescripcion;
+	}
+
+	public void setGeneroDescripcion(String generoDescripcion) {
+		this.generoDescripcion = generoDescripcion;
+	}
+
+	public String getTipoClienteDescripcion() {
+		return tipoClienteDescripcion;
+	}
+
+	public void setTipoClienteDescripcion(String tipoClienteDescripcion) {
+		this.tipoClienteDescripcion = tipoClienteDescripcion;
+	}
+
+	public String getCanalDescripcion() {
+		return canalDescripcion;
+	}
+
+	public void setCanalDescripcion(String canalDescripcion) {
+		this.canalDescripcion = canalDescripcion;
+	}
+
+	public static List<Cliente> getCliente(DataBase db){
+		
+		String query = Contract.Cliente.QUERY_CLIENTES;
+		
+		Cursor c = db.rawQuery(query);
 		
 		List<Cliente> list = new ArrayList<Cliente>();
 		while(c.moveToNext()){
@@ -290,16 +282,16 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			cl.setFechaNacimiento(CursorUtils.getDate(c, Contract.Cliente.FIELD_FECHA_NACIMIENTO));
 			cl.setIdTipoCliente(CursorUtils.getInt(c, Contract.Cliente.FIELD_TIPO_CLIENTE_ID));
 			cl.setIdCanal(CursorUtils.getInt(c, Contract.Cliente.FIELD_CANAL_ID));
-			cl.setCalificacion(CursorUtils.getInt(c, Contract.Cliente.FIELD_CALIFICACION));
-			cl.setUsrIng(CursorUtils.getString(c, Contract.Cliente.FIELD_USRING));
-			cl.setFecIng(CursorUtils.getDate(c, Contract.Cliente.FIELD_FECING));
-			cl.setUsrMod(CursorUtils.getString(c, Contract.Cliente.FIELD_USRMOD));
-			cl.setFecMod(CursorUtils.getDate(c, Contract.Cliente.FIELD_FECMOD));
-	
-			if(flag)
-				cl.setClienteDirecciones(ClienteDireccion.getClienteDirecciones(db, cl.getID()));
-			else
-				cl.setClienteDireccionesIDPrincipal(ClienteDireccion.getClienteDireccionIdPrincipal(db, cl.getID()));
+			cl.setCalificacion(CursorUtils.getInt(c, Contract.Cliente.FIELD_CALIFICACION));		
+			
+			cl.setTelefono(CursorUtils.getString(c, Contract.Cliente.FIELD_TELEFONO));
+			cl.setDireccion(CursorUtils.getString(c, Contract.Cliente.FIELD_DIRECCION));
+			cl.setTelefono(CursorUtils.getString(c, Contract.Cliente.FIELD_TELEFONO));
+			cl.setEstadoCivilDescripcion(CursorUtils.getString(c, Contract.Cliente.FIELD_ESTADO_CIVIL_DESCRIPCION));
+			cl.setGeneroDescripcion(CursorUtils.getString(c, Contract.Cliente.FIELD_GENERO_DESCRIPCION));
+			cl.setTipoClienteDescripcion(CursorUtils.getString(c, Contract.Cliente.FIELD_TIPO_CLIENTE_DESCRIPCION));
+			cl.setCanalDescripcion(CursorUtils.getString(c, Contract.Cliente.FIELD_TIPO_CLIENTE_DESCRIPCION));
+			
 			
 			list.add(cl);
 		}
@@ -307,9 +299,9 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 	}
 
 	
-	public static Cliente getClienteID(DataBase db, long clientId , boolean flag)
+	public static Cliente getClienteID(DataBase db, long clientId , boolean incluirDirecciones)
 	{		
-		String query = Contract.Cliente.QUERY_TRANSACTION_BY_ID;
+		String query = Contract.Cliente.QUERY_CLIENTE_BY_ID;
 		 
 		Cursor c = db.rawQuery(query, clientId );
 		Cliente client = null;
@@ -331,14 +323,17 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			client.setFechaNacimiento(CursorUtils.getDate(c,Contract.Cliente.FIELD_FECHA_NACIMIENTO) );
 			client.setIdTipoCliente(CursorUtils.getInt(c,Contract.Cliente.FIELD_TIPO_CLIENTE_ID) );
 			client.setIdCanal(CursorUtils.getInt(c,Contract.Cliente.FIELD_CANAL_ID) );
-			client.setCalificacion(CursorUtils.getInt(c,Contract.Cliente.FIELD_CALIFICACION) );
-			client.setUsrIng(CursorUtils.getString(c,Contract.Cliente.FIELD_USRING) );
-			client.setFecIng(CursorUtils.getDate(c,Contract.Cliente.FIELD_FECING));
-			client.setUsrMod(CursorUtils.getString(c,Contract.Cliente.FIELD_USRMOD) );
-			client.setFecMod(CursorUtils.getDate(c,Contract.Cliente.FIELD_FECMOD) );
+			client.setCalificacion(CursorUtils.getInt(c,Contract.Cliente.FIELD_CALIFICACION) );			
 			
-			
-			if(flag)
+			client.setTelefono(CursorUtils.getString(c, Contract.Cliente.FIELD_TELEFONO));
+			client.setDireccion(CursorUtils.getString(c, Contract.Cliente.FIELD_DIRECCION));
+			client.setTelefono(CursorUtils.getString(c, Contract.Cliente.FIELD_TELEFONO));
+			client.setEstadoCivilDescripcion(CursorUtils.getString(c, Contract.Cliente.FIELD_ESTADO_CIVIL_DESCRIPCION));
+			client.setGeneroDescripcion(CursorUtils.getString(c, Contract.Cliente.FIELD_GENERO_DESCRIPCION));
+			client.setTipoClienteDescripcion(CursorUtils.getString(c, Contract.Cliente.FIELD_TIPO_CLIENTE_DESCRIPCION));
+			client.setCanalDescripcion(CursorUtils.getString(c, Contract.Cliente.FIELD_TIPO_CLIENTE_DESCRIPCION));
+						
+			if(incluirDirecciones)
 				client.setClienteDirecciones(ClienteDireccion.getClienteDirecciones(db, client.getID()));
 			else
 				client.setClienteDireccionesIDPrincipal(ClienteDireccion.getClienteDireccionIdPrincipal(db, client.getID()));
@@ -446,10 +441,13 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 		@Override
 		public void setValues() {
 			setValue(Contract.ClientExt.COLUMN_ID , id);
-			setValue(Contract.ClientExt.COLUMN_NAME ,  nombre1);
-			setValue(Contract.ClientExt.COLUMN_LAST_NAME, apellido1);
-			setValue(Contract.ClientExt.COLUMN_IDENTIFICATION, identificacion);
-			setValue(Contract.ClientExt.COLUMN_MAIL, correoElectronico);
+			setValue(Contract.ClientExt.COLUMN_IDENTIFICACION, identificacion);
+			setValue(Contract.ClientExt.COLUMN_NOMBRE1, nombre1);
+			setValue(Contract.ClientExt.COLUMN_NOMBRE2, nombre2);
+			setValue(Contract.ClientExt.COLUMN_APELLIDO1, apellido1);
+			setValue(Contract.ClientExt.COLUMN_APELLIDO2, apellido2);
+			setValue(Contract.ClientExt.COLUMN_NOMBRE_COMPLETO, nombreCompleto);
+			setValue(Contract.ClientExt.COLUMN_CORREO_ELECTRONICO, correoElectronico);			
 		}
 
 		@Override
@@ -473,11 +471,10 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 		while(c.moveToNext()){
 			Cliente cl = new Cliente();
 			cl.setID(c.getInt(0));
-			cl.setNombre1(CursorUtils.getString(c,Contract.ClientExt.COLUMN_NAME));
-			cl.setApellido1(CursorUtils.getString(c,Contract.ClientExt.COLUMN_LAST_NAME));
-			cl.setIdentificacion(CursorUtils.getString(c,Contract.ClientExt.COLUMN_IDENTIFICATION));
-			cl.setCorreoElectronico(CursorUtils.getString(c,Contract.ClientExt.COLUMN_MAIL));
-			cl.setFecIng(CursorUtils.getDate(c,Contract.ClientExt.COLUMN_FECING));
+			cl.setNombre1(CursorUtils.getString(c,Contract.ClientExt.COLUMN_NOMBRE1));
+			cl.setApellido1(CursorUtils.getString(c,Contract.ClientExt.COLUMN_APELLIDO1));
+			cl.setIdentificacion(CursorUtils.getString(c,Contract.ClientExt.COLUMN_IDENTIFICACION));
+			cl.setCorreoElectronico(CursorUtils.getString(c,Contract.ClientExt.COLUMN_CORREO_ELECTRONICO));		
 			ClienteDireccion cd = new ClienteDireccion();
 			cd.setDireccion(CursorUtils.getString(c,Contract.ClientExt.COLUMN_DIRECCION));
 			cd.setTelefono1(CursorUtils.getString(c,Contract.ClientExt.COLUMN_TELEFONO));

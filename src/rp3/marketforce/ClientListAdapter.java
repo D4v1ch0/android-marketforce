@@ -157,8 +157,6 @@ public class ClientListAdapter extends SectionAdapter{
 		
 		String dateAsText="";
 		
-		if(current.getFecIng() != null)
-			dateAsText = new SimpleDateFormat("dd MMMM").format(current.getFecIng());
 		
 		((TextView) convertView.findViewById(R.id.textView_clientlist_name)).setText(""+string_client);
 		((TextView) convertView.findViewById(R.id.textView_clientlist_date)).setText(""+dateAsText);

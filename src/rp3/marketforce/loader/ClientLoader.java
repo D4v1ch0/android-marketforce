@@ -25,7 +25,7 @@ public class ClientLoader extends
 		List<Cliente> result = null;
 		
 		if(flag)
-		   result = Cliente.getCliente(db, false);
+		   result = Cliente.getCliente(db);
 		else
 			result  = Cliente.getClientSearch(db, search);
 		

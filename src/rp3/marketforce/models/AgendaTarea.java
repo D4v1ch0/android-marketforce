@@ -12,10 +12,7 @@ public class AgendaTarea extends rp3.data.entity.EntityBase<AgendaTarea> {
 
 	private long id;
 	private int idRuta;
-	private long idAgenda;
-	private int idCliente;
-	private int idClienteDireccion;
-	private int idProgramacionRuta;
+	private long idAgenda;		
 	private String nombreTarea;
 	private int tipoTarea;
 	
@@ -44,10 +41,7 @@ public class AgendaTarea extends rp3.data.entity.EntityBase<AgendaTarea> {
 		
 		setValue(Contract.AgendaTarea._ID, this.id);
 		setValue(Contract.AgendaTarea.COLUMN_RUTA_ID, this.idRuta);
-		setValue(Contract.AgendaTarea.COLUMN_AGENDA_ID, this.idAgenda);
-		setValue(Contract.AgendaTarea.COLUMN_CLIENTE_ID, this.idCliente);
-		setValue(Contract.AgendaTarea.COLUMN_CLIENTE_DIRECCION_ID, this.idClienteDireccion);
-		setValue(Contract.AgendaTarea.COLUMN_PROGRAMACION_RUTA_ID, this.idProgramacionRuta);
+		setValue(Contract.AgendaTarea.COLUMN_AGENDA_ID, this.idAgenda);		
 		setValue(Contract.AgendaTarea.COLUMN_NOMBRE_TAREA, this.nombreTarea);
 		setValue(Contract.AgendaTarea.COLUMN_TIPO_TAREA, this.tipoTarea);
 	}
@@ -78,30 +72,6 @@ public class AgendaTarea extends rp3.data.entity.EntityBase<AgendaTarea> {
 		this.idAgenda = idAgenda;
 	}
 
-	public int getIdCliente() {
-		return idCliente;
-	}
-
-	public void setIdCliente(int idCliente) {
-		this.idCliente = idCliente;
-	}
-
-	public int getIdClienteDireccion() {
-		return idClienteDireccion;
-	}
-
-	public void setIdClienteDireccion(int idClienteDireccion) {
-		this.idClienteDireccion = idClienteDireccion;
-	}
-
-	public int getIdProgramacionRuta() {
-		return idProgramacionRuta;
-	}
-
-	public void setIdProgramacionRuta(int idProgramacionRuta) {
-		this.idProgramacionRuta = idProgramacionRuta;
-	}
-
 	public String getNombreTarea() {
 		return nombreTarea;
 	}
@@ -124,11 +94,8 @@ public class AgendaTarea extends rp3.data.entity.EntityBase<AgendaTarea> {
 		
 		Cursor c = db.query(Contract.AgendaTarea.TABLE_NAME, new String[]{
 				Contract.AgendaTarea._ID,
-				Contract.AgendaTarea.COLUMN_RUTA_ID,
-				Contract.AgendaTarea.COLUMN_CLIENTE_ID,
-				Contract.AgendaTarea.COLUMN_AGENDA_ID,
-				Contract.AgendaTarea.COLUMN_CLIENTE_DIRECCION_ID,
-				Contract.AgendaTarea.COLUMN_PROGRAMACION_RUTA_ID,
+				Contract.AgendaTarea.COLUMN_RUTA_ID,			
+				Contract.AgendaTarea.COLUMN_AGENDA_ID,				
 				Contract.AgendaTarea.COLUMN_NOMBRE_TAREA,
 				Contract.AgendaTarea.COLUMN_TIPO_TAREA
 		}, Contract.ClienteDireccion.COLUMN_CLIENTE_ID + " = ?",
@@ -139,11 +106,8 @@ public class AgendaTarea extends rp3.data.entity.EntityBase<AgendaTarea> {
 			
 			AgendaTarea agdt = new AgendaTarea();
 			agdt.setID(CursorUtils.getInt(c, Contract.AgendaTarea._ID));
-			agdt.setIdRuta(CursorUtils.getInt(c, Contract.AgendaTarea.FIELD_RUTA_ID));
-			agdt.setIdCliente(CursorUtils.getInt(c, Contract.AgendaTarea.FIELD_CLIENTE_ID));
+			agdt.setIdRuta(CursorUtils.getInt(c, Contract.AgendaTarea.FIELD_RUTA_ID));		
 			agdt.setIdAgenda(CursorUtils.getLong(c, Contract.AgendaTarea.FIELD_AGENDA_ID));
-			agdt.setIdClienteDireccion(CursorUtils.getInt(c, Contract.AgendaTarea.FIELD_CLIENTE_DIRECCION_ID));
-			agdt.setIdProgramacionRuta(CursorUtils.getInt(c, Contract.AgendaTarea.FIELD_PROGRAMACION_RUTA_ID));
 			agdt.setNombreTarea(CursorUtils.getString(c, Contract.AgendaTarea.FIELD_NOMBRE_TAREA));
 			agdt.setTipoTarea(CursorUtils.getInt(c, Contract.AgendaTarea.FIELD_TIPO_TAREA));
 			

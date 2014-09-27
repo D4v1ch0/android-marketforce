@@ -3,7 +3,7 @@
       CREATE TABLE tbTipoCliente(
       _id INTEGER PRIMARY KEY,
 	  IdTipoCliente INTEGER,
-	  Descripcion TEXT      
+	  Descripcion TEXT
       )
 	</statement>  
 	<statement>
@@ -16,35 +16,26 @@
 	<statement>
       CREATE TABLE tbCliente(
       _id INTEGER PRIMARY KEY,	 
-	  IdentificationTypeId INTEGER,
-	  Identificacion TEXT,
-	  Nombre1 TEXT,
-	  Nombre2 TEXT,
-	  Apellido1 TEXT,
-	  Apellido2 TEXT,
-	  NombreCompleto TEXT,
-	  CorreoElectronico TEXT,
+	  IdentificationTypeId INTEGER,	  	  
 	  Genero TEXT,
 	  EstadoCivil TEXT,
 	  FechaNacimiento INTEGER,
 	  IdTipoCliente INTEGER,
 	  IdCanal INTEGER,
-	  Calificacion INTEGER,
-	  UsrIng TEXT,
-	  FecIng INTEGER,
-	  UsrMod TEXT,
-	  FecMod INTEGER
+	  Calificacion INTEGER
       )
 	</statement>
 	<statement>
         CREATE VIRTUAL TABLE tbClienteExt USING fts4 (
-        Nombre1,
-        Apellido1,
+        Nombre1 TEXT,
+	    Nombre2 TEXT,
+	    Apellido1 TEXT,
+	    Apellido2 TEXT,
+	    NombreCompleto TEXT,
         Identificacion,
-        CorreoElectronico,
-        FecIng,
+        CorreoElectronico,        
         Direccion,
-        Telefono1,
+        Telefono,
         tokenize=porter
         );
     </statement>   
@@ -92,10 +83,7 @@
 	  CREATE TABLE tbAgendaTarea(
       _id INTEGER PRIMARY KEY,
       IdRuta INTEGER,
-      IdAgenda INTEGER,
-      IdCliente INTEGER,
-      IdClienteDireccion INTEGER,
-      IdProgramacionRuta INTEGER,
+      IdAgenda INTEGER,      
       NombreTarea TEXT,
       TipoTarea INTEGER
       )

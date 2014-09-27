@@ -203,13 +203,13 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setEstadoAgenda(CursorUtils.getString(c, Contract.Agenda.FIELD_ESTADO_AGENDA));
 			
 			Cliente cl = new Cliente();
-			cl.setNombreCompleto((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_NOMBRE_CLIENTE)));
-			cl.setCorreoElectronico((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_CORREO_CLIENTE)));
+			cl.setNombreCompleto((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_NOMBRE)));			
 			agd.setCliente(cl);
 			
 			ClienteDireccion cld = new ClienteDireccion();
 			cld.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
-			cld.setTelefono1((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_TELEFONO)));
+			
+			agd.setCiudad(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_CIUDAD));			
 			agd.setClienteDireccion(cld);
 			
 			list.add(agd);
@@ -233,13 +233,13 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setEstadoAgenda(CursorUtils.getString(c, Contract.Agenda.FIELD_ESTADO_AGENDA));
 						
 			Cliente cl = new Cliente();
-			cl.setNombreCompleto((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_NOMBRE_CLIENTE)));
-			cl.setCorreoElectronico((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_CORREO_CLIENTE)));
+			//cl.setNombreCompleto((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_NOMBRE_CLIENTE)));
+			//cl.setCorreoElectronico((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_CORREO_CLIENTE)));
 			agd.setCliente(cl);
 			
 			ClienteDireccion cld = new ClienteDireccion();
 			cld.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
-			cld.setTelefono1((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_TELEFONO)));
+			//cld.setTelefono1((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_TELEFONO)));
 			agd.setClienteDireccion(cld);
 			
 			agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getIdCliente()));
@@ -264,7 +264,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setEstadoAgenda(CursorUtils.getString(c, Contract.AgendaExt.COLUMN_ESTADO_AGENDA));
 			
 			Cliente cl = new Cliente();
-			cl.setNombreCompleto((CursorUtils.getString(c, Contract.AgendaExt.COLUMN_NAME)));
+			//cl.setNombreCompleto((CursorUtils.getString(c, Contract.AgendaExt.COLUMN_)));
 //			cl.setCorreoElectronico((CursorUtils.getString(c, Contract.AgendaExt.FIELD_CLIENTE_CORREO_CLIENTE)));
 			agd.setCliente(cl);
 			
@@ -344,7 +344,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 		@Override
 		public void setValues() {
 			setValue(Contract.AgendaExt.COLUMN_ID , id);
-			setValue(Contract.AgendaExt.COLUMN_NAME , nombreCompleto  );
+			setValue(Contract.AgendaExt.COLUMN_NOMBRE, nombreCompleto  );
 			setValue(Contract.AgendaExt.COLUMN_DIRECCION, direccion);
 			setValue(Contract.AgendaExt.COLUMN_CIUDAD, ciudad);
 		}

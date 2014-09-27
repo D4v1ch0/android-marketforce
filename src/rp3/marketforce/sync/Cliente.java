@@ -59,9 +59,7 @@ public class Cliente {
 						cl.setNombre2(type.getString("Nombre2"));
 						cl.setFechaNacimiento(Convert.getDateFromTicks(type.getLong("FechaNacimientoTicks")));
 						cl.setNombreCompleto(type.getString("NombresCompletos"));
-//						cl.setUsrIng(type.getString("UsrIng"));
-//						cl.setUsrMod(type.getString("UsrMod"));
-						
+					
 						rp3.marketforce.models.Cliente.insert(db, cl);
 						
 						JSONArray strs = type.getJSONArray("ClienteDirecciones");
