@@ -188,9 +188,8 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 	}
 
 	public static List<Agenda> getAgenda(DataBase db){
-		
-		
-         String query = QueryDir.getQuery( Contract.Agenda.QUERY_AGENDA );
+				
+        String query = QueryDir.getQuery( Contract.Agenda.QUERY_AGENDA );
 		
 		Cursor c = db.rawQuery(query);
 		
@@ -219,10 +218,8 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 	}
 	
 	public static Agenda getAgendaID(DataBase db, long id){
-		
-		
-        String query = QueryDir.getQuery( Contract.Agenda.QUERY_AGENDA_ID );
-		
+				
+        String query = QueryDir.getQuery( Contract.Agenda.QUERY_AGENDA_ID );		
 		Cursor c = db.rawQuery(query,""+id);
 		
 		Agenda agd = null;

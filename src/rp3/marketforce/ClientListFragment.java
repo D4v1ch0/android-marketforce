@@ -411,8 +411,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 					{
 						rp3.marketforce.models.Cliente cliente = new rp3.marketforce.models.Cliente();
 						
-						cliente.setID(lista.get(y).getID());
-						cliente.setIdCliente(lista.get(y).getIdCliente());
+						cliente.setID(lista.get(y).getID());						
 						cliente.setNombre1(lista.get(y).getNombre1());
 						cliente.setNombre2(lista.get(y).getNombre2());
 						cliente.setApellido1(lista.get(y).getApellido1());
@@ -453,8 +452,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 					{
 						rp3.marketforce.models.Cliente cliente = new rp3.marketforce.models.Cliente();
 						
-						cliente.setID(lista.get(y).getID());
-						cliente.setIdCliente(lista.get(y).getIdCliente());
+						cliente.setID(lista.get(y).getID());						
 						cliente.setNombre1(lista.get(y).getNombre1());
 						cliente.setNombre2(lista.get(y).getNombre2());
 						cliente.setApellido1(lista.get(y).getApellido1());

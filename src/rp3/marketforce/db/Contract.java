@@ -31,8 +31,7 @@ public final class Contract {
 	public static abstract class Cliente implements BaseColumns {
 		
 		public static final String TABLE_NAME = "tbCliente";
-		
-		public static final String COLUMN_CLIENTE_ID = "IdCliente";
+				
 		public static final String COLUMN_IDENTIFICATION_TYPE_ID = "IdentificationTypeId";
 		public static final String COLUMN_IDENTIFICACION = "Identificacion";
 		public static final String COLUMN_NOMBRE1 = "Nombre1";
@@ -51,8 +50,7 @@ public final class Contract {
 		public static final String COLUMN_FECING = "FecIng";
 		public static final String COLUMN_USRMOD = "UsrMod";
 		public static final String COLUMN_FECMOD = "FecMod";
-		
-		public static final String FIELD_CLIENTE_ID = COLUMN_CLIENTE_ID;
+				
 		public static final String FIELD_IDENTIFICATION_TYPE_ID = COLUMN_IDENTIFICATION_TYPE_ID;
 		public static final String FIELD_IDENTIFICACION = COLUMN_IDENTIFICACION;
 		public static final String FIELD_NOMBRE1 = COLUMN_NOMBRE1;
@@ -77,8 +75,7 @@ public final class Contract {
 		
 		 private static final String QUERY_TRANSACTION_MAINFIELDS = 
 	        		"SELECT " + 
-	        				TABLE_NAME + "." + _ID + DataBase.COMMA_SEP +
-	        				TABLE_NAME + "." + COLUMN_CLIENTE_ID + DataBase.COMMA_SEP +
+	        				TABLE_NAME + "." + _ID + DataBase.COMMA_SEP +	        				
 	        				TABLE_NAME + "." + COLUMN_IDENTIFICATION_TYPE_ID + DataBase.COMMA_SEP +
 	        				TABLE_NAME + "." + COLUMN_IDENTIFICACION + DataBase.COMMA_SEP +
 	        				TABLE_NAME + "." + COLUMN_NOMBRE1 + DataBase.COMMA_SEP +

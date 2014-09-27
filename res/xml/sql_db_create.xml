@@ -15,8 +15,7 @@
 	</statement> 
 	<statement>
       CREATE TABLE tbCliente(
-      _id INTEGER PRIMARY KEY,
-	  IdCliente INTEGER,
+      _id INTEGER PRIMARY KEY,	 
 	  IdentificationTypeId INTEGER,
 	  Identificacion TEXT,
 	  Nombre1 TEXT,

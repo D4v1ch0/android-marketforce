@@ -42,7 +42,8 @@
         JOIN tbCliente
         ON tbAgenda.IdCliente = tbCliente._id 
         JOIN tbClienteDireccion 
-        ON tbAgenda.IdClienteDireccion = tbClienteDireccion._id 
+        ON tbAgenda.IdCliente = tbClienteDireccion.IdCliente
+        AND tbAgenda.IdClienteDireccion = tbClienteDireccion.IdClienteDireccion 
         ORDER BY tbAgenda.FechaInicio, tbCliente.NombreCompleto
      </statement>
      
@@ -59,10 +60,11 @@
         tbClienteDireccion.Direccion AS tbClienteDireccion_Direccion,
         tbClienteDireccion.Telefono1 AS tbClienteDireccion_Telefono1
         FROM tbAgenda
-        JOIN tbCliente
-        ON tbAgenda.IdCliente = tbCliente._id 
-        JOIN tbClienteDireccion 
-        ON tbAgenda.IdClienteDireccion = tbClienteDireccion._id 
+        JOIN tbCliente        
+        ON tbAgenda.IdCliente = tbCliente._id         
+        JOIN tbClienteDireccion        
+        ON tbAgenda.IdCliente = tbClienteDireccion.IdCliente
+        AND tbAgenda.IdClienteDireccion = tbClienteDireccion.IdClienteDireccion 
         WHERE tbAgenda._id = ?
      </statement>
 	  

@@ -78,7 +78,7 @@ public class Cliente {
 							   clienteDir.setIdPrincipal(0);
 							
 							clienteDir.setIdCiudad(str.getInt("IdCiudad"));
-							clienteDir.setIdCliente(str.getInt("IdCliente"));
+							clienteDir.setIdCliente(str.getLong("IdCliente"));							
 							clienteDir.setIdClienteDireccion(str.getInt("IdClienteDireccion"));
 							clienteDir.setLatitud(str.getDouble("Latitud"));
 							clienteDir.setLongitud(str.getDouble("Longitud"));

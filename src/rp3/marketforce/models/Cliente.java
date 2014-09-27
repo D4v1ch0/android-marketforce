@@ -13,8 +13,7 @@ import android.database.Cursor;
 
 public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 
-	private long id;
-	private int idCliente;
+	private long id;	
 	private int identificationTypeId;
 	private String identificacion;
 	private String nombre1;
@@ -58,8 +57,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 
 	@Override
 	public void setValues() {
-		setValue(Contract.Cliente._ID, this.id);
-		setValue(Contract.Cliente.COLUMN_CLIENTE_ID, this.idCliente);
+		setValue(Contract.Cliente._ID, this.id);		
 		setValue(Contract.Cliente.COLUMN_IDENTIFICATION_TYPE_ID, this.identificationTypeId);
 		setValue(Contract.Cliente.COLUMN_IDENTIFICACION, this.identificacion);
 		setValue(Contract.Cliente.COLUMN_NOMBRE1, this.nombre1);
@@ -90,15 +88,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 	public String getDescription() {
 		return null;
 	}
-
-	public int getIdCliente() {
-		return idCliente;
-	}
-
-	public void setIdCliente(int idCliente) {
-		this.idCliente = idCliente;
-	}
-
+	
 	public int getIdentificationTypeId() {
 		return identificationTypeId;
 	}
@@ -262,8 +252,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 
 	public static List<Cliente> getCliente(DataBase db, boolean flag){
 		Cursor c = db.query(Contract.Cliente.TABLE_NAME, new String[]{
-			Contract.Cliente._ID,
-			Contract.Cliente.COLUMN_CLIENTE_ID,
+			Contract.Cliente._ID,			
 			Contract.Cliente.COLUMN_IDENTIFICATION_TYPE_ID,
 			Contract.Cliente.COLUMN_IDENTIFICACION,
 			Contract.Cliente.COLUMN_NOMBRE1,
@@ -287,8 +276,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 		List<Cliente> list = new ArrayList<Cliente>();
 		while(c.moveToNext()){
 			Cliente cl = new Cliente();
-			cl.setID(CursorUtils.getInt(c, Contract.Cliente._ID));
-			cl.setIdCliente(CursorUtils.getInt(c, Contract.Cliente.FIELD_CLIENTE_ID));
+			cl.setID(CursorUtils.getInt(c, Contract.Cliente._ID));			
 			cl.setIdentificationTypeId(CursorUtils.getInt(c, Contract.Cliente.FIELD_IDENTIFICATION_TYPE_ID));
 			cl.setIdentificacion(CursorUtils.getString(c, Contract.Cliente.FIELD_IDENTIFICACION));
 			cl.setNombre1(CursorUtils.getString(c, Contract.Cliente.FIELD_NOMBRE1));
@@ -329,8 +317,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 		if(c.moveToFirst())
 		{
 			client =  new Cliente();
-			client.setID(CursorUtils.getInt(c,Contract.Cliente._ID));
-			client.setIdCliente(CursorUtils.getInt(c,Contract.Cliente.FIELD_CLIENTE_ID));
+			client.setID(CursorUtils.getInt(c,Contract.Cliente._ID));			
 			client.setIdentificationTypeId(CursorUtils.getInt(c,Contract.Cliente.FIELD_IDENTIFICATION_TYPE_ID) );
 			client.setIdentificacion( CursorUtils.getString(c,Contract.Cliente.FIELD_IDENTIFICACION) );
 			client.setNombre1(CursorUtils.getString(c,Contract.Cliente.FIELD_NOMBRE1) );
