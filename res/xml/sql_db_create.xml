@@ -2,14 +2,12 @@
 	<statement>
       CREATE TABLE tbTipoCliente(
       _id INTEGER PRIMARY KEY,
-	  IdTipoCliente INTEGER,
 	  Descripcion TEXT
       )
 	</statement>  
 	<statement>
       CREATE TABLE tbCanal(
       _id INTEGER PRIMARY KEY,
-	  IdCanal INTEGER,
 	  Descripcion TEXT      
       )
 	</statement> 

@@ -12,7 +12,6 @@ import rp3.util.CursorUtils;
 public class TipoCliente extends rp3.data.entity.EntityBase<TipoCliente>{
 
 	private long id;
-	private int idTipoCliente;
 	private String descripcion;
 	
 	@Override
@@ -39,7 +38,6 @@ public class TipoCliente extends rp3.data.entity.EntityBase<TipoCliente>{
 	public void setValues() {
 		
 		setValue(Contract.TipoCliente._ID, this.id);
-		setValue(Contract.TipoCliente.COLUMN_TIPO_CLIENTE_ID, this.idTipoCliente);
 		setValue(Contract.TipoCliente.COLUMN_DESCRIPCION, this.descripcion);
 		
 	}
@@ -54,16 +52,6 @@ public class TipoCliente extends rp3.data.entity.EntityBase<TipoCliente>{
 		return null;
 	}
 
-	
-
-	public int getIdTipoCliente() {
-		return idTipoCliente;
-	}
-
-	public void setIdTipoCliente(int idTipoCliente) {
-		this.idTipoCliente = idTipoCliente;
-	}
-
 	public String getDescripcion() {
 		return descripcion;
 	}
@@ -74,14 +62,14 @@ public class TipoCliente extends rp3.data.entity.EntityBase<TipoCliente>{
 
 	public static List<TipoCliente> getTipoCliente(DataBase db, String code){
 		Cursor c = db.query(Contract.Cliente.TABLE_NAME, new String[]{
-			Contract.TipoCliente.COLUMN_TIPO_CLIENTE_ID,
+			Contract.TipoCliente._ID,
 			Contract.TipoCliente.COLUMN_DESCRIPCION
 		});
 		
 		List<TipoCliente> list = new ArrayList<TipoCliente>();
 		while(c.moveToNext()){
 			 TipoCliente tpcl = new TipoCliente();
-			tpcl.setIdTipoCliente(CursorUtils.getInt(c, Contract.TipoCliente.FIELD_TIPO_CLIENTE_ID));
+			tpcl.setID(CursorUtils.getInt(c, Contract.TipoCliente._ID));
 			tpcl.setDescripcion(CursorUtils.getString(c, Contract.TipoCliente.FIELD_DESCRIPCION));
 		
 			list.add(tpcl);
