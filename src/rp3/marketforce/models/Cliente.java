@@ -10,7 +10,6 @@ import rp3.db.sqlite.DataBase;
 import rp3.marketforce.db.Contract;
 import rp3.util.CursorUtils;
 import android.database.Cursor;
-import android.util.Log;
 
 public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 
@@ -413,9 +412,9 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 						
 		}catch(Exception ex){
 			result = false;
-			db.rollBackTransaction();
+//			db.rollBackTransaction();
 		}finally{
-			db.endTransaction();			
+//			db.endTransaction();			
 		}
 		return result;	
 	}
@@ -480,7 +479,10 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			cl.setNombre1(CursorUtils.getString(c,Contract.ClientExt.COLUMN_NOMBRE1));
 			cl.setApellido1(CursorUtils.getString(c,Contract.ClientExt.COLUMN_APELLIDO1));
 			cl.setIdentificacion(CursorUtils.getString(c,Contract.ClientExt.COLUMN_IDENTIFICACION));
-			cl.setCorreoElectronico(CursorUtils.getString(c,Contract.ClientExt.COLUMN_CORREO_ELECTRONICO));		
+			cl.setCorreoElectronico(CursorUtils.getString(c,Contract.ClientExt.COLUMN_CORREO_ELECTRONICO));	
+			cl.setDireccion(CursorUtils.getString(c,Contract.ClientExt.COLUMN_DIRECCION));
+			cl.setTelefono(CursorUtils.getString(c,Contract.ClientExt.COLUMN_TELEFONO));
+			
 			ClienteDireccion cd = new ClienteDireccion();
 			cd.setDireccion(CursorUtils.getString(c,Contract.ClientExt.COLUMN_DIRECCION));
 			cd.setTelefono1(CursorUtils.getString(c,Contract.ClientExt.COLUMN_TELEFONO));

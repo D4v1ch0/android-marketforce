@@ -99,9 +99,8 @@
        	tbClienteExt.Apellido1 ,
        	tbClienteExt.Identificacion ,
        	tbClienteExt.CorreoElectronico,
-       	tbClienteExt.FecIng,
        	tbClienteExt.Direccion,
-       	tbClienteExt.Telefono1
+       	tbClienteExt.Telefono
        	FROM tbClienteExt       	 
        	INNER JOIN tbCliente 
        	ON tbCliente._id = tbClienteExt.docid
