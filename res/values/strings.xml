@@ -1,0 +1,50 @@
+<resources>
+
+    <string name="app_name">RP3 Market Force</string>
+    <string name="title_option_setrutas">Rutas</string>
+    <string name="title_option_setclientes">Clientes</string>
+    <string name="title_option_setpedido">Pedido</string>
+    <string name="title_option_setreuniones">Reuniones</string>
+    <string name="title_option_setrecordatorios">Recordatorios</string>
+    <string name="title_option_setsincronizar">Sincronizar</string>
+    <string name="title_option_setajustes">Ajustes</string>
+    <string name="title_option_setcerrar_sesion">Cerrar Sesión</string>
+    <string name="title_option_setconfiguracion">CONFIGURACIÓN</string>
+    <string name="test_money_value">$100.00</string>
+	<string name="test_transaction_type">Factura</string>
+	<string name="test_client_name">Nombre Prueba</string>
+	<string name="test_product_name">Producto de Prueba</string>
+	<string name="test_number_value">100.00</string>
+	<string name="test_order_name">Por nombre</string>
+	<string name="test_order_last_name">Por Apellido</string>
+	<string name="test_order_date">Por fecha</string>
+	<string name="test_telefono">042823867</string>
+	<string name="test_null"></string>
+	<string name="label_total">Total</string>
+    <string name="label_discount">Descuento</string>
+    <string name="label_tax">Impuesto</string>
+    <string name="label_taxes">Impuestos</string>
+    <string name="label_detail">Detalle</string>
+    <string name="label_subtotal">Subtotal</string>
+    <string name="string_client_token">########</string>
+    <string name="label_correo">Correo</string>
+    <string name="label_direcciones">Direcciones</string>
+    <string name="label_fecha_nacimiento">Fecha Nacimiento</string>
+    <string name="label_estado_civil">Estado Civil</string>
+    <string name="label_referencia">Referencia</string>
+    <string name="label_telefono_1">Teléfono 1</string>
+    <string name="label_telefono_2">Teléfono 2</string>
+    <string name="label_geo_posicion">Geo - Pos</string>
+    <string name="label_datos_personales">Datos Personales</string>
+    <string name="label_datos_contacto">Direcciones</string>
+    <string name="label_direccion">Dirección</string>
+    <string name="label_ciudad">Ciudad</string>
+    <string name="hint_search_transaction">Buscar Cliente</string>
+    <string name="hint_search_transaction_rutas">Buscar</string>
+    <string name="title_activity_searchable">Búqueda</string>
+    <string name="label_recordarme">Recordarme</string>
+    <string name="label_registtrarse">Registrarse</string>
+    <string name="label_olvido_clave">¿Olvidó su contraseña?</string>
+    <string name="label_tareas">Tareas</string>
+
+</resources>

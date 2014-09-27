@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <array name="testArrayDetails">  
+    	<item>Cédula</item>  
+    	<item>E-mail</item>
+    	<item>Cumpleaños</item>
+    	<item>Género</item>
+    	<item>Estado Civil</item>
+     </array>
+     
+     <array name="testArrayDetailsAdress">  
+    	<item>Dirección</item>
+    	<item>Teléfono 1</item>  
+    	<item>Teléfono 2</item>
+    	<item>Referencia</item>
+    	<item>Ciudad</item>
+     </array>
+     
+     <array name="testArrayEstadoCivil">  
+    	<item>Casado</item>  
+    	<item>Divorciado</item>  
+    	<item>Soltero</item>
+    	<item>Unión Libre</item>
+    	<item>Viudo</item>
+     </array>
+     
+     <array name="testArrayEstado">  
+    	<item>Visitado</item>  
+    	<item>Pendiente</item>  
+     </array>
+     
+    
+</resources>

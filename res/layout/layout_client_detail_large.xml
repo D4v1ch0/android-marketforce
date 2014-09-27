@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:baselineAligned="false" >
+
+    <LinearLayout
+        android:id="@+id/linearLayout_content_rigth"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="5dp"
+        android:layout_weight="1" >
+        
+      <TextView
+        android:id="@+id/textView_datos_personales"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_background_title"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:padding="10dp"
+        android:singleLine="true"
+        android:text="@string/label_datos_personales"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/color_background_white" />
+        
+    </LinearLayout>
+    
+      <LinearLayout
+        android:id="@+id/linearLayout_content_left"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="12dp"
+        android:layout_weight="1" >
+        
+     <TextView
+        android:id="@+id/textView_datos_contactos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/label_datos_contacto"
+        android:padding="10dp"
+        android:textColor="@color/color_background_white"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:background="@color/color_background_title"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+          
+    </LinearLayout>
+
+</LinearLayout>

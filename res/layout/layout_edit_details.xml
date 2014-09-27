@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:orientation="vertical" >
+
+   <TextView
+       android:id="@+id/textView_name_client"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_marginBottom="5dp"
+       android:textSize="20sp"
+       android:textStyle="bold" 
+       android:singleLine="true"
+       android:ellipsize="end"
+       android:layout_gravity="center_vertical"
+       android:text="@string/test_client_name"
+       />
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:orientation="horizontal"
+		>
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".30"
+            android:singleLine="true"
+       		android:ellipsize="end"
+            android:text="@string/label_correo" />
+
+        <EditText
+            android:id="@+id/editText_correo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".70"
+            android:singleLine="true"
+	        android:hint="@string/test_null"
+            />
+
+
+    </LinearLayout>
+    
+     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".30"
+            android:layout_gravity="center_vertical"
+            android:maxLines="2"
+       		android:ellipsize="end"
+            android:text="@string/label_fecha_nacimiento" />
+
+        <rp3.marketforce.DateDisplayPicker
+            android:id="@+id/datePicker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".70"
+            style="@android:style/Widget.Holo.Spinner"
+             />
+
+    </LinearLayout>
+    
+    
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".30"
+            android:layout_gravity="center_vertical"
+            android:maxLines="2"
+       		android:ellipsize="end"
+            android:text="@string/label_estado_civil" />
+
+        <Spinner
+            android:id="@+id/spinner_state_civil"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".70"
+            android:singleLine="true"
+             />
+
+    </LinearLayout>
+    
+      <TextView
+          android:id="@+id/textView_direcciones_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp"
+            android:singleLine="true"
+       		android:ellipsize="end"
+       		android:visibility="gone"
+            android:text="@string/label_direcciones" />
+      
+      <View
+          	android:id="@+id/view_separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:visibility="gone"
+            android:background="@color/color_background_selector"
+             />
+      
+     <LinearLayout
+        android:id="@+id/linearLayout_directions"   
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:orientation="vertical">
+    
+       </LinearLayout>
+         
+      
+</LinearLayout>

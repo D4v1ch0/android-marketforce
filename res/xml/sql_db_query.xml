@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sql>  
+	 <statement name="SimpleClientSearch">
+        SELECT 
+        tbCliente._id AS _id,
+        tbClienteExt.Nombre1,
+       	tbClienteExt.Apellido1 ,
+       	tbClienteExt.Identificacion ,
+       	tbClienteExt.CorreoElectronico,
+       	tbClienteExt.FecIng,
+       	tbClienteExt.Direccion,
+       	tbClienteExt.Telefono1
+       	FROM tbClienteExt       	 
+       	INNER JOIN tbCliente 
+       	ON tbCliente._id = tbClienteExt.docid
+       	INNER JOIN ( 
+       	
+       		SELECT 
+        		tbClienteExt.docid,
+        		matchinfo( tbClienteExt ) AS Rank
+        		FROM tbClienteExt
+        		WHERE tbClienteExt MATCH ?
+        		ORDER BY rank DESC LIMIT 30 OFFSET 0
+       		
+       	 ) AS tbClientSearch
+       	ON tbClienteExt.docid = tbClientSearch.docid       	
+        ORDER BY tbClientSearch.Rank DESC   	
+    </statement>    
+    
+	 
+	  <statement name="AgendaByCliente">
+       SELECT  
+        tbAgenda._id, 
+        tbAgenda.FechaInicio,
+        tbAgenda.FechaFin,
+        tbAgenda.EstadoAgenda,
+        tbCliente.NombreCompleto AS tbCliente_NombreCompleto,
+        tbCliente.CorreoElectronico AS tbCliente_CorreoElectronico,
+        tbClienteDireccion.Direccion AS tbClienteDireccion_Direccion,
+        tbClienteDireccion.Telefono1 AS tbClienteDireccion_Telefono1
+        FROM tbAgenda
+        JOIN tbCliente
+        ON tbAgenda.IdCliente = tbCliente._id 
+        JOIN tbClienteDireccion 
+        ON tbAgenda.IdClienteDireccion = tbClienteDireccion._id 
+        ORDER BY tbAgenda.FechaInicio, tbCliente.NombreCompleto
+     </statement>
+     
+	  
+	  <statement name="AgendaByAgendaID">
+       SELECT  
+        tbAgenda._id,
+        tbAgenda.IdCliente, 
+        tbAgenda.FechaInicio,
+        tbAgenda.FechaFin,
+        tbAgenda.EstadoAgenda,
+        tbCliente.NombreCompleto AS tbCliente_NombreCompleto,
+        tbCliente.CorreoElectronico AS tbCliente_CorreoElectronico,
+        tbClienteDireccion.Direccion AS tbClienteDireccion_Direccion,
+        tbClienteDireccion.Telefono1 AS tbClienteDireccion_Telefono1
+        FROM tbAgenda
+        JOIN tbCliente
+        ON tbAgenda.IdCliente = tbCliente._id 
+        JOIN tbClienteDireccion 
+        ON tbAgenda.IdClienteDireccion = tbClienteDireccion._id 
+        WHERE tbAgenda._id = ?
+     </statement>
+	  
+	 <statement name="SimpleRutaSearch">
+        SELECT 
+        tbAgenda._id AS tbAgenda__id,
+        tbAgendaExt.NombreCompleto,
+        tbAgendaExt.Direccion,
+        tbAgenda.EstadoAgenda AS tbAgenda_EstadoAgenda,
+        tbAgenda.FechaInicio AS tbAgenda_FechaInicio,
+        tbAgenda.FechaFin AS tbAgenda_FechaFin
+       	FROM tbAgendaExt       	 
+       	INNER JOIN tbAgenda 
+       	ON tbAgenda._id = tbAgendaExt.docid 
+       	INNER JOIN ( 
+       	
+       		SELECT 
+        		tbAgendaExt.docid,
+        		matchinfo( tbAgendaExt ) AS Rank
+        		FROM tbAgendaExt
+        		WHERE tbAgendaExt MATCH ?
+        		ORDER BY rank DESC LIMIT 30 OFFSET 0
+       		
+       	 ) AS tbRutaSearch
+       	ON tbAgendaExt.docid = tbRutaSearch.docid       	
+        ORDER BY tbRutaSearch.Rank DESC   	
+    </statement>    
+</sql>

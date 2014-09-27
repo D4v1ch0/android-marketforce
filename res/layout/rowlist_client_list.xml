@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:baselineAligned="false"
+    android:orientation="vertical"
+    android:padding="10dp" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/textView_clientlist_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:layout_marginRight="5dp"
+            android:textSize="@dimen/text_large_size"
+             />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical" >
+
+            <TextView
+                android:id="@+id/textView_clientlist_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:drawableLeft="@drawable/ic_action_go_to__today_mini"
+                android:textSize="@dimen/text_xsmall_size"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight=".7"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical" >
+
+            <TextView
+                android:id="@+id/textView_clientlist_movil"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="3dp"
+                android:gravity="center_vertical"
+                android:drawableLeft="@drawable/ic_action_call_mini"
+                style="@style/Widget.TextView.XSmall"
+                android:textSize="@dimen/text_xsmall_size"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical" >
+
+            <TextView
+                android:id="@+id/textView_clientlist_mail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:textSize="@dimen/text_xsmall_size"
+                android:drawableLeft="@drawable/ic_action_email_mini"
+                android:gravity="center_vertical"
+                style="@style/Widget.TextView.XSmall"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight=".7"
+        android:gravity="center_vertical" >
+
+        <TextView
+            android:id="@+id/textView_clientlist_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_menu_home_mini"
+            android:gravity="center_vertical"
+            style="@style/Widget.TextView.XSmall"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textSize="@dimen/text_xsmall_size" />
+    </LinearLayout>
+
+</LinearLayout>

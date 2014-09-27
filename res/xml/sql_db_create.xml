@@ -1,0 +1,104 @@
+<sql>
+	<statement>
+      CREATE TABLE tbTipoCliente(
+      _id INTEGER PRIMARY KEY,
+	  IdTipoCliente INTEGER,
+	  Descripcion TEXT      
+      )
+	</statement>  
+	<statement>
+      CREATE TABLE tbCanal(
+      _id INTEGER PRIMARY KEY,
+	  IdCanal INTEGER,
+	  Descripcion TEXT      
+      )
+	</statement> 
+	<statement>
+      CREATE TABLE tbCliente(
+      _id INTEGER PRIMARY KEY,
+	  IdCliente INTEGER,
+	  IdentificationTypeId INTEGER,
+	  Identificacion TEXT,
+	  Nombre1 TEXT,
+	  Nombre2 TEXT,
+	  Apellido1 TEXT,
+	  Apellido2 TEXT,
+	  NombreCompleto TEXT,
+	  CorreoElectronico TEXT,
+	  Genero TEXT,
+	  EstadoCivil TEXT,
+	  FechaNacimiento INTEGER,
+	  IdTipoCliente INTEGER,
+	  IdCanal INTEGER,
+	  Calificacion INTEGER,
+	  UsrIng TEXT,
+	  FecIng INTEGER,
+	  UsrMod TEXT,
+	  FecMod INTEGER
+      )
+	</statement>
+	<statement>
+        CREATE VIRTUAL TABLE tbClienteExt USING fts4 (
+        Nombre1,
+        Apellido1,
+        Identificacion,
+        CorreoElectronico,
+        FecIng,
+        Direccion,
+        Telefono1,
+        tokenize=porter
+        );
+    </statement>   
+	<statement>
+	  CREATE TABLE tbClienteDireccion(
+      _id INTEGER PRIMARY KEY AUTOINCREMENT,
+	  IdCliente INTEGER,
+	  IdClienteDireccion INTEGER,
+	  Direccion TEXT,
+	  IdPrincipal INTEGER,
+	  TipoDireccion TEXT,
+	  IdCiudad INTEGER,
+	  Telefono1 TEXT,
+	  Telefono2 TEXT,
+	  Referencia TEXT,
+	  Latitud REAL,
+	  Longitud REAL
+      )
+	</statement>
+	
+	<statement>
+	  CREATE TABLE tbAgenda(
+      _id INTEGER PRIMARY KEY,
+      IdRuta INTEGER,
+      IdAgenda INTEGER,
+      IdCliente INTEGER,
+      IdClienteDireccion INTEGER,
+      IdProgramacionRuta INTEGER,
+      FechaInicio INTEGER,
+      FechaFin INTEGER,
+      EstadoAgenda TEXT
+      )
+	</statement>
+	
+	<statement>
+        CREATE VIRTUAL TABLE tbAgendaExt USING fts4 (
+        NombreCompleto,
+        Direccion,
+        Ciudad,
+        tokenize=porter
+        );
+    </statement>   
+	
+	<statement>
+	  CREATE TABLE tbAgendaTarea(
+      _id INTEGER PRIMARY KEY,
+      IdRuta INTEGER,
+      IdAgenda INTEGER,
+      IdCliente INTEGER,
+      IdClienteDireccion INTEGER,
+      IdProgramacionRuta INTEGER,
+      NombreTarea TEXT,
+      TipoTarea INTEGER
+      )
+	</statement>
+</sql>

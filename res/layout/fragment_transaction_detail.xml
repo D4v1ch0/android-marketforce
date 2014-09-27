@@ -1,0 +1,122 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/transaction_detail"
+    style="?android:attr/textAppearanceLarge"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="12dp"
+    android:paddingTop="5dp"
+    android:background="@drawable/bkg_login"
+    tools:context=".TransactionDetailFragment" >
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:id="@+id/linearLayout_scrollview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal"
+            android:paddingTop="2dp" >
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="100dp"
+                android:adjustViewBounds="true"
+                android:layout_height="122dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/user" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" 
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="8dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/textView_client"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:textSize="25sp"
+                        android:textColor="@color/color_text_title"
+                        android:layout_gravity="bottom"
+                        android:gravity="left"
+                        android:textStyle="bold" 
+                        />
+
+                    <ImageView
+                        android:id="@+id/imageView_edit_detail_client"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/action_edit"
+                        android:background="@drawable/button_press"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_registrarse" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:textStyle="bold" 
+                    android:text="Mayorista"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    style="@style/Widget.TextView.Medium" />
+                
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:textStyle="bold" 
+                    android:text="Distribuidor"
+                    android:layout_marginBottom="3dp"
+                    android:textColor="@color/bg_button_bg_main"
+                    style="@style/Widget.TextView.Medium" />
+
+                <RatingBar
+                    android:id="@+id/ratingBar1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:isIndicator="true"
+                    android:numStars="5"
+                    android:rating="3"
+                    android:layout_marginLeft="15dp"
+                    android:progressDrawable="@drawable/rating_style"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+        
+         <include layout="@layout/layout_client_detail"/>
+         
+		</LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
