@@ -48,12 +48,22 @@
             <methods>
                 <method>
                     <name>GetClientes</name>
-                    <action>cliente/getclientes?logonname=@logonname</action>
+                    <action>cliente/getclientes</action>
                     <webMethod>GET</webMethod>
                 </method>
                 <method>
                     <name>Agenda</name>
-                    <action>agenda/get?logonname=@logonname&amp;fechainicio=@fechainicio&amp;fechafin=@fechafin</action>
+                    <action>agenda/get?fechainicio=@fechainicio&amp;fechafin=@fechafin</action>
+                    <webMethod>GET</webMethod>
+                </method>
+                <method>
+                    <name>GetTipoClientes</name>
+                    <action>tipocliente/get</action>
+                    <webMethod>GET</webMethod>
+                </method>
+                <method>
+                    <name>GetCanales</name>
+                    <action>canal/get</action>
                     <webMethod>GET</webMethod>
                 </method>
             </methods>     

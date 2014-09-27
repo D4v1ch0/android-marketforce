@@ -1,7 +1,6 @@
 package rp3.marketforce.sync;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import org.json.JSONArray;
 import org.json.JSONException;
