@@ -1,6 +1,5 @@
 package rp3.marketforce.db;
 
-import rp3.db.sqlite.DataBase;
 import android.provider.BaseColumns;
 
 public final class Contract {
@@ -9,10 +8,8 @@ public final class Contract {
 		
 		public static final String TABLE_NAME = "tbTipoCliente";
 		
-		public static final String COLUMN_TIPO_CLIENTE_ID = "IdTipoCliente";
 		public static final String COLUMN_DESCRIPCION = "Descripcion";
 		
-		public static final String FIELD_TIPO_CLIENTE_ID = COLUMN_TIPO_CLIENTE_ID;
 		public static final String FIELD_DESCRIPCION = COLUMN_DESCRIPCION;	
 	}
 	
@@ -20,10 +17,8 @@ public final class Contract {
 		
 		public static final String TABLE_NAME = "tbCanal";
 		
-		public static final String COLUMN_CANAL_ID = "IdCanal";
 		public static final String COLUMN_DESCRIPCION = "Descripcion";
 		
-		public static final String FIELD_CANAL_ID = COLUMN_CANAL_ID;
 		public static final String FIELD_DESCRIPCION = COLUMN_DESCRIPCION;	
 	}
 	

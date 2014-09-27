@@ -12,7 +12,6 @@ import rp3.util.CursorUtils;
 public class Canal extends rp3.data.entity.EntityBase<Canal>{
 
 	private long id;
-	private int idCanal;
 	private String descripcion;
 	
 	@Override
@@ -39,7 +38,6 @@ public class Canal extends rp3.data.entity.EntityBase<Canal>{
 	public void setValues() {
 		
 		setValue(Contract.Canal._ID, this.id);
-		setValue(Contract.Canal.COLUMN_CANAL_ID, this.idCanal);
 		setValue(Contract.Canal.COLUMN_DESCRIPCION, this.descripcion);
 		
 	}
@@ -54,14 +52,6 @@ public class Canal extends rp3.data.entity.EntityBase<Canal>{
 		return null;
 	}
 
-	public int getIdCanal() {
-		return idCanal;
-	}
-
-	public void setIdCanal(int idCanal) {
-		this.idCanal = idCanal;
-	}
-
 	public String getDescripcion() {
 		return descripcion;
 	}
@@ -72,14 +62,14 @@ public class Canal extends rp3.data.entity.EntityBase<Canal>{
 
 	public static List<Canal> getCanal(DataBase db, String code){
 		Cursor c = db.query(Contract.Cliente.TABLE_NAME, new String[]{
-			Contract.Canal.COLUMN_CANAL_ID,
+			Contract.Canal._ID,
 			Contract.Canal.COLUMN_DESCRIPCION
 		});
 		
 		List<Canal> list = new ArrayList<Canal>();
 		while(c.moveToNext()){
 			 Canal tpcl = new Canal();
-			tpcl.setIdCanal(CursorUtils.getInt(c, Contract.Canal.FIELD_CANAL_ID));
+			tpcl.setID(CursorUtils.getLong(c, Contract.Canal._ID));
 			tpcl.setDescripcion(CursorUtils.getString(c, Contract.Canal.FIELD_DESCRIPCION));
 		
 			list.add(tpcl);
