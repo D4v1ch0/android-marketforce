@@ -14,7 +14,7 @@ import android.database.Cursor;
 public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 
 	private long id;	
-	private int identificationTypeId;
+	private int idTipoIdentificacion;
 	private String identificacion;
 	private String nombre1;
 	private String nombre2;
@@ -35,9 +35,14 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 	private String generoDescripcion;
 	private String tipoClienteDescripcion;
 	private String canalDescripcion;
+	private String tipoIdentificacionDescripcion;
 
 	private List<ClienteDireccion> clienteDirecciones;
-	private ClienteDireccion clienteDireccionesIDPrincipal;	
+	private ClienteDireccion clienteDireccionPrincipal;	
+	
+	public static String getFotoFileNameFormat(Long id){
+		return "PCL" + String.valueOf(id);
+	}
 	
 	@Override
 	public long getID() {
@@ -60,15 +65,17 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 	}
 
 	@Override
-	public void setValues() {
-		setValue(Contract.Cliente._ID, this.id);		
-		setValue(Contract.Cliente.COLUMN_IDENTIFICATION_TYPE_ID, this.identificationTypeId);		
-		setValue(Contract.Cliente.COLUMN_GENERO, this.genero);
-		setValue(Contract.Cliente.COLUMN_ESTADO_CIVIL, this.estadoCivil);
-		setValue(Contract.Cliente.COLUMN_FECHA_NACIMIENTO, this.fechaNacimiento);
-		setValue(Contract.Cliente.COLUMN_TIPO_CLIENTE_ID, this.idTipoCliente);
-		setValue(Contract.Cliente.COLUMN_CANAL_ID, this.idCanal);
-		setValue(Contract.Cliente.COLUMN_CALIFICACION, this.Calificacion);		
+	public void setValues() {		
+		if(this.getAction() == ACTION_INSERT){
+			setValue(Contract.Cliente._ID, this.id);				
+			setValue(Contract.Cliente.COLUMN_ID_TIPO_IDENTIFICACION, this.idTipoIdentificacion);						
+			setValue(Contract.Cliente.COLUMN_TIPO_CLIENTE_ID, this.idTipoCliente);
+			setValue(Contract.Cliente.COLUMN_CANAL_ID, this.idCanal);
+			setValue(Contract.Cliente.COLUMN_CALIFICACION, this.Calificacion);
+		}
+		setValue(Contract.Cliente.COLUMN_GENERO, this.genero);						
+		setValue(Contract.Cliente.COLUMN_FECHA_NACIMIENTO, this.fechaNacimiento);		
+		setValue(Contract.Cliente.COLUMN_ESTADO_CIVIL, this.estadoCivil);				
 	}
 
 	@Override
@@ -81,12 +88,16 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 		return null;
 	}
 	
-	public int getIdentificationTypeId() {
-		return identificationTypeId;
+	public String getFotoFileName(){
+		return getFotoFileNameFormat(this.id);
+	}
+	
+	public int getTipoIdentificacionId() {
+		return idTipoIdentificacion;
 	}
 
-	public void setIdentificationTypeId(int identificationTypeId) {
-		this.identificationTypeId = identificationTypeId;
+	public void setIdTipoIdentificacion(int idTipoIdentificacion) {
+		this.idTipoIdentificacion = idTipoIdentificacion;
 	}
 
 	public String getIdentificacion() {
@@ -206,14 +217,17 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 		this.clienteDirecciones = clienteDirecciones;
 	}
 	
-	public ClienteDireccion getClienteDireccionesIDPrincipal() {
-		return clienteDireccionesIDPrincipal;
-	}
-
-	public void setClienteDireccionesIDPrincipal(
-			ClienteDireccion clienteDireccionesIDPrincipal) {
-		this.clienteDireccionesIDPrincipal = clienteDireccionesIDPrincipal;
-	}
+	public ClienteDireccion getClienteDireccionPrincipal() {
+		if(clienteDireccionPrincipal == null || !clienteDireccionPrincipal.getEsPrincipal()){
+			for(ClienteDireccion d : getClienteDirecciones()){
+				if(d.getEsPrincipal()){
+					clienteDireccionPrincipal = d;
+					break;
+				}
+			}
+		}
+		return clienteDireccionPrincipal;
+	}	
 	
 	public String getDireccion() {
 		return direccion;
@@ -262,7 +276,25 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 	public void setCanalDescripcion(String canalDescripcion) {
 		this.canalDescripcion = canalDescripcion;
 	}
+	
+	public String getTipoIdentificacionDescripcion() {
+		return tipoIdentificacionDescripcion;
+	}
 
+	public void setTipoIdentificacionDescripcion(
+			String tipoIdentificacionDescripcion) {
+		this.tipoIdentificacionDescripcion = tipoIdentificacionDescripcion;
+	}
+
+	public static List<Long> getIDSCliente(DataBase db){
+		Cursor c = db.query(Contract.Cliente.TABLE_NAME, Contract.Cliente._ID);
+		List<Long> result = new ArrayList<Long>();
+		while(c.moveToNext()){
+			result.add(CursorUtils.getLong(c,Contract.Cliente._ID));
+		}
+		return result;
+	}
+	
 	public static List<Cliente> getCliente(DataBase db){
 		
 		String query = QueryDir.getQuery(Contract.Cliente.QUERY_CLIENTES);
@@ -273,7 +305,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 		while(c.moveToNext()){
 			Cliente cl = new Cliente();
 			cl.setID(CursorUtils.getInt(c, Contract.Cliente._ID));			
-//			cl.setIdentificationTypeId(CursorUtils.getInt(c, Contract.Cliente.FIELD_IDENTIFICATION_TYPE_ID));
+			//cl.setIdentificationTypeId(CursorUtils.getInt(c, Contract.Cliente.FIELD_IDENTIFICATION_TYPE_ID));
 			cl.setIdentificacion(CursorUtils.getString(c, Contract.Cliente.FIELD_IDENTIFICACION));
 			cl.setNombre1(CursorUtils.getString(c, Contract.Cliente.FIELD_NOMBRE1));
 			cl.setNombre2(CursorUtils.getString(c, Contract.Cliente.FIELD_NOMBRE2));
@@ -309,11 +341,11 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 		Cursor c = db.rawQuery(query, clientId );
 		Cliente client = null;
 		
-		if(c.moveToFirst())
-		{
+		if(c.moveToFirst()){
 			client =  new Cliente();
 			client.setID(CursorUtils.getInt(c,Contract.Cliente._ID));			
-//			client.setIdentificationTypeId(CursorUtils.getInt(c,Contract.Cliente.FIELD_IDENTIFICATION_TYPE_ID) );
+			client.setIdTipoIdentificacion(CursorUtils.getInt(c,Contract.Cliente.FIELD_ID_TIPO_IDENTIFICACION) );
+			client.setTipoIdentificacionDescripcion(CursorUtils.getString(c,Contract.Cliente.FIELD_TIPOIDENTIFICACION_NOMBRE) );
 			client.setIdentificacion( CursorUtils.getString(c,Contract.Cliente.FIELD_IDENTIFICACION) );
 			client.setNombre1(CursorUtils.getString(c,Contract.Cliente.FIELD_NOMBRE1) );
 			client.setNombre2(CursorUtils.getString(c,Contract.Cliente.FIELD_NOMBRE2) );
@@ -337,9 +369,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			client.setCanalDescripcion(CursorUtils.getString(c, Contract.Cliente.FIELD_CANAL_DESCRIPCION));
 						
 			if(incluirDirecciones)
-				client.setClienteDirecciones(ClienteDireccion.getClienteDirecciones(db, client.getID()));
-			else
-				client.setClienteDireccionesIDPrincipal(ClienteDireccion.getClienteDireccionIdPrincipal(db, client.getID()));
+				client.setClienteDirecciones(ClienteDireccion.getClienteDirecciones(db, client.getID()));			
 			
 		}
 		
@@ -391,11 +421,15 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 		boolean result = false;
 		
 		try
-		{
-			db.beginTransaction();
+		{			
 			result = super.updateDb(db);
 			
 			if(result){
+				ClientExt cl_ex = new ClientExt();
+				result = ClientExt.update(db, cl_ex);
+			}
+			
+			if(result){	
 				for(ClienteDireccion d : this.getClienteDirecciones()){
 					d.setIdCliente(this.id);
 					if(d.getID() == 0)
@@ -404,17 +438,12 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 						result = ClienteDireccion.update(db, d);
 						
 					if(!result) break;					
-				}								
-				
-				if(result)
-					db.commitTransaction();								
-			}					
-						
+				}			
+			}
+																												
 		}catch(Exception ex){
 			result = false;
-//			db.rollBackTransaction();
-		}finally{
-//			db.endTransaction();			
+		}finally{		
 		}
 		return result;	
 	}
@@ -443,18 +472,26 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 
 		@Override
 		public void setValues() {
-			setValue(Contract.ClientExt.COLUMN_ID , id);
-			setValue(Contract.ClientExt.COLUMN_IDENTIFICACION, identificacion);
-			setValue(Contract.ClientExt.COLUMN_NOMBRE1, nombre1);
-			setValue(Contract.ClientExt.COLUMN_NOMBRE2, nombre2);
-			setValue(Contract.ClientExt.COLUMN_APELLIDO1, apellido1);
-			setValue(Contract.ClientExt.COLUMN_APELLIDO2, apellido2);
+			if(getAction() == ACTION_INSERT){
+				setValue(Contract.ClientExt.COLUMN_ID ,id);
+				setValue(Contract.ClientExt.COLUMN_IDENTIFICACION, identificacion);
+				setValue(Contract.ClientExt.COLUMN_NOMBRE1, nombre1);
+				setValue(Contract.ClientExt.COLUMN_NOMBRE2, nombre2);
+				setValue(Contract.ClientExt.COLUMN_NOMBRE_COMPLETO, nombreCompleto);
+				setValue(Contract.ClientExt.COLUMN_APELLIDO1, apellido1);
+				setValue(Contract.ClientExt.COLUMN_APELLIDO2, apellido2);				
+				setValue(Contract.ClientExt.COLUMN_TELEFONO, telefono);							
+			}
 			setValue(Contract.ClientExt.COLUMN_DIRECCION, direccion);
 			setValue(Contract.ClientExt.COLUMN_TELEFONO, telefono);
-			setValue(Contract.ClientExt.COLUMN_NOMBRE_COMPLETO, nombreCompleto);
-			setValue(Contract.ClientExt.COLUMN_CORREO_ELECTRONICO, correoElectronico);			
+			setValue(Contract.ClientExt.COLUMN_CORREO_ELECTRONICO, correoElectronico);
 		}
 
+		@Override
+		public String getWhere() {			
+			return Contract.ClientExt.COLUMN_ID + " = ?";
+		}
+		
 		@Override
 		public Object getValue(String key) {
 			return null;
@@ -486,12 +523,14 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			ClienteDireccion cd = new ClienteDireccion();
 			cd.setDireccion(CursorUtils.getString(c,Contract.ClientExt.COLUMN_DIRECCION));
 			cd.setTelefono1(CursorUtils.getString(c,Contract.ClientExt.COLUMN_TELEFONO));
-			cl.setClienteDireccionesIDPrincipal(cd);
+			
 			
 			list.add(cl);
 		}
 		return list;
 
 	}
+
+	
 	
 }

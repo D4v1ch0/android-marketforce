@@ -1,6 +1,13 @@
-package rp3.marketforce;
+package rp3.marketforce.ruta;
 
 import rp3.app.BaseFragment;
+import rp3.marketforce.R;
+import rp3.marketforce.R.color;
+import rp3.marketforce.R.drawable;
+import rp3.marketforce.R.id;
+import rp3.marketforce.R.layout;
+import rp3.marketforce.R.menu;
+import rp3.marketforce.R.string;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
@@ -8,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 

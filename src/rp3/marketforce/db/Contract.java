@@ -27,7 +27,7 @@ public final class Contract {
 		
 		public static final String TABLE_NAME = "tbCliente";
 				
-		public static final String COLUMN_IDENTIFICATION_TYPE_ID = "IdentificationTypeId";
+		public static final String COLUMN_ID_TIPO_IDENTIFICACION = "IdTipoIdentificacion";
 		
 		public static final String COLUMN_GENERO = "Genero";
 		public static final String COLUMN_ESTADO_CIVIL = "EstadoCivil";
@@ -36,7 +36,7 @@ public final class Contract {
 		public static final String COLUMN_CANAL_ID = "IdCanal";
 		public static final String COLUMN_CALIFICACION = "Calificacion";
 				
-		public static final String FIELD_IDENTIFICATION_TYPE_ID = COLUMN_IDENTIFICATION_TYPE_ID;		
+		public static final String FIELD_ID_TIPO_IDENTIFICACION = COLUMN_ID_TIPO_IDENTIFICACION;		
 		public static final String FIELD_GENERO = COLUMN_GENERO;
 		public static final String FIELD_ESTADO_CIVIL = COLUMN_ESTADO_CIVIL;
 		public static final String FIELD_FECHA_NACIMIENTO = COLUMN_FECHA_NACIMIENTO;
@@ -57,6 +57,7 @@ public final class Contract {
 		public static final String FIELD_GENERO_DESCRIPCION = "tbGenero_Value";
 		public static final String FIELD_TIPO_CLIENTE_DESCRIPCION = Contract.TipoCliente.TABLE_NAME + "_" + Contract.TipoCliente.COLUMN_DESCRIPCION;
 		public static final String FIELD_CANAL_DESCRIPCION = Contract.Canal.TABLE_NAME + "_" + Contract.Canal.COLUMN_DESCRIPCION;
+		public static final String FIELD_TIPOIDENTIFICACION_NOMBRE = rp3.data.models.Contract.IdentificationType.TABLE_NAME + "_" + rp3.data.models.Contract.IdentificationType.COLUMN_NAME ;
 		
 		public static final String QUERY_CLIENTES = "Clientes";
 		public static final String QUERY_CLIENTE_BY_ID = "ClienteById";
@@ -175,6 +176,8 @@ public final class Contract {
 		public static final String FIELD_CLIENTE_NOMBRE = Contract.AgendaExt.TABLE_NAME + "_" + Contract.AgendaExt.COLUMN_NOMBRE;		
 		public static final String FIELD_CLIENTE_DIRECCION = Contract.AgendaExt.TABLE_NAME + "_" + Contract.AgendaExt.COLUMN_DIRECCION;
 		public static final String FIELD_CLIENTE_CIUDAD = Contract.AgendaExt.TABLE_NAME + "_" + Contract.AgendaExt.COLUMN_CIUDAD;
+		public static final String FIELD_CLIENTE_CORREO_ELECTRONICO = Contract.ClientExt.TABLE_NAME + "_" + Contract.ClientExt.COLUMN_CORREO_ELECTRONICO;
+		public static final String FIELD_ESTADO_AGENDA_DESCRIPCION = "tbEstadoAgenda_" + rp3.data.models.Contract.GeneralValue.COLUMN_VALUE;
 		
 		public static final String QUERY_AGENDA = "AgendaByCliente";
 		public static final String QUERY_AGENDA_ID = "AgendaByAgendaID";
@@ -197,7 +200,7 @@ public final class Contract {
     public static abstract class AgendaTarea implements BaseColumns {
 		
 		public static final String TABLE_NAME = "tbAgendaTarea";
-		
+				
 		public static final String COLUMN_RUTA_ID = "IdRuta";
 		public static final String COLUMN_AGENDA_ID = "IdAgenda";		
 		public static final String COLUMN_NOMBRE_TAREA = "NombreTarea";

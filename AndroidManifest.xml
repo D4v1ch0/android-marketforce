@@ -68,19 +68,19 @@
             
         </activity>
          <activity
-            android:name="rp3.marketforce.ClientDetailActivity"
+            android:name="rp3.marketforce.cliente.ClientDetailActivity"
             android:label="@string/app_name"
             android:configChanges="orientation|keyboardHidden|screenSize"
             >
         </activity>
         <activity
-            android:name="rp3.marketforce.RutasDetailActivity"
+            android:name="rp3.marketforce.ruta.RutasDetailActivity"
             android:label="@string/app_name"
             android:configChanges="orientation|keyboardHidden|screenSize"
             >
         </activity>
          <activity
-            android:name="rp3.marketforce.edit.TransactionEditItemActivity"
+            android:name="rp3.marketforce.cliente.ClienteEditActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -112,6 +112,10 @@
             <meta-data android:name="android.content.SyncAdapter"
                     android:resource="@xml/syncadapter" />
         </service>
+        <receiver
+            android:name="rp3.marketforce.content.EnviarUbicacionReceiver"
+            android:enabled="true" >
+        </receiver>
         <provider
             android:name="rp3.content.StubProvider"
             android:authorities="rp3.marketforce.provider"

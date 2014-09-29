@@ -1,12 +1,17 @@
-package rp3.marketforce;
+package rp3.marketforce.ruta;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import rp3.marketforce.RutasListFragment.TransactionListFragmentListener;
+import rp3.marketforce.R;
+import rp3.marketforce.R.color;
+import rp3.marketforce.R.id;
+import rp3.marketforce.R.layout;
+import rp3.marketforce.cliente.ClientFragment;
 import rp3.marketforce.headerlistview.SectionAdapter;
 import rp3.marketforce.models.Agenda;
+import rp3.marketforce.ruta.RutasListFragment.TransactionListFragmentListener;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;

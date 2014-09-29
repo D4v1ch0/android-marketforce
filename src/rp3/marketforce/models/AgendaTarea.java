@@ -91,14 +91,13 @@ public class AgendaTarea extends rp3.data.entity.EntityBase<AgendaTarea> {
 	
 	public static List<AgendaTarea> getAgendaTareas(DataBase db, int id){
 		
-		
 		Cursor c = db.query(Contract.AgendaTarea.TABLE_NAME, new String[]{
 				Contract.AgendaTarea._ID,
 				Contract.AgendaTarea.COLUMN_RUTA_ID,			
 				Contract.AgendaTarea.COLUMN_AGENDA_ID,				
 				Contract.AgendaTarea.COLUMN_NOMBRE_TAREA,
 				Contract.AgendaTarea.COLUMN_TIPO_TAREA
-		}, Contract.ClienteDireccion.COLUMN_CLIENTE_ID + " = ?",
+		}, Contract.AgendaTarea.COLUMN_AGENDA_ID + " = ?",
 		new String[] { String.valueOf(id) });
 		
 		List<AgendaTarea> list = new ArrayList<AgendaTarea>();

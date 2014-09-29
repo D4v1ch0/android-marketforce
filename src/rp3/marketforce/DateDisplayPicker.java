@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import rp3.marketforce.edit.TransactionEditItemFragment;
+import rp3.marketforce.cliente.ClienteEditFragment;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
@@ -17,10 +17,10 @@ import android.widget.TextView;
  
 public class DateDisplayPicker extends TextView implements DatePickerDialog.OnDateSetListener{
  
-    private TransactionEditItemFragment _context;
+    private ClienteEditFragment _context;
     private Date date = null;
  
-    public DateDisplayPicker(TransactionEditItemFragment context, AttributeSet attrs, int defStyle) {
+    public DateDisplayPicker(ClienteEditFragment context, AttributeSet attrs, int defStyle) {
         super(context.getActivity(), attrs, defStyle);
         _context = context;
     }
@@ -44,7 +44,7 @@ public class DateDisplayPicker extends TextView implements DatePickerDialog.OnDa
         });
     }
     
-    public void setParent(TransactionEditItemFragment context)
+    public void setParent(ClienteEditFragment context)
     {
     	_context = context;
     }

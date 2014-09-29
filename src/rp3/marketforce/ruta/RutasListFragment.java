@@ -1,10 +1,14 @@
-package rp3.marketforce;
+package rp3.marketforce.ruta;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import rp3.data.MessageCollection;
+import rp3.marketforce.R;
+import rp3.marketforce.R.drawable;
+import rp3.marketforce.R.id;
+import rp3.marketforce.R.layout;
 import rp3.marketforce.headerlistview.HeaderListView;
 import rp3.marketforce.loader.RutasLoader;
 import rp3.marketforce.models.Agenda;

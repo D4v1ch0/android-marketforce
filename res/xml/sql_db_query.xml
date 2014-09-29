@@ -3,7 +3,7 @@
     <statement name="Clientes">
         SELECT 
         tbCliente._id AS _id,
-        tbCliente.Genero,
+        tbCliente.Genero,        
         tbCliente.EstadoCivil,
         tbCliente.FechaNacimiento,
         tbCliente.IdTipoCliente,
@@ -40,6 +40,7 @@
         SELECT 
          tbCliente._id AS _id,
         tbCliente.Genero,
+        tbCliente.IdTipoIdentificacion,
         tbCliente.EstadoCivil,
         tbCliente.FechaNacimiento,
         tbCliente.IdTipoCliente,
@@ -57,7 +58,8 @@
        	tbEstadoCivil.Value AS tbEstadoCivil_Value,
        	tbGenero.Value AS tbGenero_Value,
        	tbTipoCliente.Descripcion AS tbTipoCliente_Descripcion,
-       	tbCanal.Descripcion AS tbCanal_Descripcion
+       	tbCanal.Descripcion AS tbCanal_Descripcion,
+       	tbIdentificationType.Name AS tbIdentificationType_Name
         FROM tbCliente
     	JOIN tbClienteExt
     	ON tbCliente._id = tbClienteExt.docid
@@ -71,6 +73,8 @@
     	JOIN tbGeneralValue tbGenero
     	ON tbGenero.GeneralTableId = 1003
     	AND tbGenero.Code = tbCliente.Genero
+    	JOIN tbIdentificationType
+    	ON tbIdentificationType._id = tbCliente.IdTipoIdentificacion
     	WHERE tbCliente._id = ?
     </statement>
     
@@ -78,6 +82,9 @@
         SELECT 
         tbClienteDireccion._id,
         tbClienteDireccion.IdCliente,
+        tbClienteDireccion.IdClienteDireccion,
+        tbClienteDireccion.TipoDireccion,
+        tbClienteDireccion.IdCiudad,
         tbClienteDireccion.Direccion,
         tbClienteDireccion.EsPrincipal,
         tbClienteDireccion.Telefono1,
@@ -127,11 +134,15 @@
         tbAgenda.EstadoAgenda,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
-        tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad
+        tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad,
+        tbEstadoAgenda.Value AS tbEstadoAgenda_Value
         FROM tbAgenda
         JOIN tbAgendaExt
         ON tbAgenda._id = tbAgendaExt.docid
-        ORDER BY tbAgenda.FechaInicio, tbCliente.NombreCompleto
+        JOIN tbGeneralValue tbEstadoAgenda
+        ON tbEstadoAgenda.GeneralTableId = 1013
+        AND tbAgenda.EstadoAgenda = tbEstadoAgenda.Code
+        ORDER BY tbAgenda.FechaInicio, tbAgendaExt.NombreCompleto
      </statement>
      
 	  
@@ -142,16 +153,26 @@
         tbAgenda.FechaInicio,
         tbAgenda.FechaFin,
         tbAgenda.EstadoAgenda,
-        tbCliente.NombreCompleto AS tbCliente_NombreCompleto,
-        tbCliente.CorreoElectronico AS tbCliente_CorreoElectronico,
+        tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
+        tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
+        tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad,
+        tbClienteExt.CorreoElectronico AS tbClienteExt_CorreoElectronico,
         tbClienteDireccion.Direccion AS tbClienteDireccion_Direccion,
-        tbClienteDireccion.Telefono1 AS tbClienteDireccion_Telefono1
+        tbClienteDireccion.Telefono1 AS tbClienteDireccion_Telefono1,
+        tbEstadoAgenda.Value AS tbEstadoAgenda_Value
         FROM tbAgenda
+        JOIN tbAgendaExt
+        ON tbAgenda._id = tbAgendaExt.docid
         JOIN tbCliente        
-        ON tbAgenda.IdCliente = tbCliente._id         
+        ON tbAgenda.IdCliente = tbCliente._id
+        JOIN tbClienteExt
+        ON tbClienteExt.docid = tbCliente._id         
         JOIN tbClienteDireccion        
         ON tbAgenda.IdCliente = tbClienteDireccion.IdCliente
-        AND tbAgenda.IdClienteDireccion = tbClienteDireccion.IdClienteDireccion 
+        AND tbAgenda.IdClienteDireccion = tbClienteDireccion.IdClienteDireccion
+        JOIN tbGeneralValue tbEstadoAgenda
+        ON tbEstadoAgenda.GeneralTableId = 1013
+        AND tbAgenda.EstadoAgenda = tbEstadoAgenda.Code 
         WHERE tbAgenda._id = ?
      </statement>
 	  
@@ -162,7 +183,8 @@
         tbAgendaExt.Direccion,
         tbAgenda.EstadoAgenda AS tbAgenda_EstadoAgenda,
         tbAgenda.FechaInicio AS tbAgenda_FechaInicio,
-        tbAgenda.FechaFin AS tbAgenda_FechaFin
+        tbAgenda.FechaFin AS tbAgenda_FechaFin,
+        tbEstadoAgenda.Value AS tbEstadoAgenda_Value
        	FROM tbAgendaExt       	 
        	INNER JOIN tbAgenda 
        	ON tbAgenda._id = tbAgendaExt.docid 
@@ -176,6 +198,9 @@
         		ORDER BY rank DESC LIMIT 30 OFFSET 0
        		
        	 ) AS tbRutaSearch
+       	JOIN tbGeneralValue tbEstadoAgenda
+        ON tbEstadoAgenda.GeneralTableId = 1013
+        AND tbAgenda.EstadoAgenda = tbEstadoAgenda.Code
        	ON tbAgendaExt.docid = tbRutaSearch.docid       	
         ORDER BY tbRutaSearch.Rank DESC   	
     </statement>    

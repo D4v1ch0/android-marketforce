@@ -1,9 +1,10 @@
-package rp3.marketforce;
+package rp3.marketforce.cliente;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import rp3.marketforce.ClientListFragment.TransactionListFragmentListener;
+import rp3.marketforce.R;
+import rp3.marketforce.cliente.ClientListFragment.ClienteListFragmentListener;
 import rp3.marketforce.headerlistview.SectionAdapter;
 import rp3.marketforce.models.Cliente;
 import android.annotation.SuppressLint;
@@ -37,19 +38,19 @@ public class ClientListAdapter extends SectionAdapter{
 	private int row_ = -1;
 	private List<String> headersortList;
 	private int order;
-	private TransactionListFragmentListener transactionListFragmentCallback;
+	private ClienteListFragmentListener clienteListFragmentCallback;
 	
 	private final int ORDER_BY_NAME = 5;
     private final int ORDER_BY_LAST_NAME = 6;
 	
-	public ClientListAdapter(Context c,ArrayList<ArrayList<rp3.marketforce.models.Cliente>> data, List<String> headersortList, int order
-			,TransactionListFragmentListener transactionListFragmentCallback){
+	public ClientListAdapter(Context c,ArrayList<ArrayList<rp3.marketforce.models.Cliente>> data, List<String> headersortList, 
+			int order,ClienteListFragmentListener clienteListFragmentCallback){
 		this.dataList = data;
 		this.inflater = LayoutInflater.from(c);
 		this.contex = c;
 		this.headersortList = headersortList;
 		this.order= order;
-		this.transactionListFragmentCallback = transactionListFragmentCallback;
+		this.clienteListFragmentCallback = clienteListFragmentCallback;
 	}
 	
 	@Override
@@ -139,7 +140,7 @@ public class ClientListAdapter extends SectionAdapter{
 //		return convertView;
 		 
 //		if (convertView == null)
-	        convertView = (View) inflater.inflate(this.contex.getApplicationContext().getResources().getLayout(R.layout.rowlist_client_list), null);
+	    convertView = (View) inflater.inflate(this.contex.getApplicationContext().getResources().getLayout(R.layout.rowlist_client_list), null);
 		
 		Cliente current =  dataList.get(section).get(row);
 				
@@ -197,17 +198,14 @@ public class ClientListAdapter extends SectionAdapter{
     public void onRowItemClick(AdapterView<?> parent, View view, int section, int row, long id) {
         super.onRowItemClick(parent, view, section, row, id);
         
-        if(ClientFragment. mTwoPane)
-        {
+        if(ClientFragment. mTwoPane){
         	section_ = section;
         	row_ = row;
         	notifyDataSetChanged();
         }
         
-        if(transactionListFragmentCallback != null)
-        	transactionListFragmentCallback.onTransactionSelected(dataList.get(section).get(row).getID());
-        
-//       ClientListFragment.itemClientID = dataList.get(section).get(row).getIdCliente();
+        if(clienteListFragmentCallback != null)
+        	clienteListFragmentCallback.onClienteSelected(dataList.get(section).get(row).getID());        
        
        }
 	

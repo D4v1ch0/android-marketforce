@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_weight=".70"
             android:hint="@string/test_null"
-            android:singleLine="true"
+            android:singleLine="false"
             android:ems="10"/>
 
 
@@ -107,8 +107,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".70"
-            android:hint="@string/test_null"
-            android:singleLine="true"
+            android:hint="@string/test_null"            
             android:ems="10"/>
 
 

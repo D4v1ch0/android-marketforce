@@ -1,6 +1,10 @@
-package rp3.marketforce;
+package rp3.marketforce.cliente;
 
 import rp3.app.BaseFragment;
+import rp3.marketforce.R;
+import rp3.marketforce.cliente.ClientDetailFragment.ClienteDetailFragmentListener;
+import rp3.marketforce.cliente.ClientListFragment.ClienteListFragmentListener;
+import rp3.marketforce.models.Cliente;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
@@ -12,7 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SearchView;
 
-public class ClientFragment extends BaseFragment implements ClientListFragment.TransactionListFragmentListener {
+public class ClientFragment extends BaseFragment implements ClienteListFragmentListener, ClienteDetailFragmentListener {
 
 	public static final String ARG_TRANSACTIONTYPEID = "transactionTypeId";
 	
@@ -20,10 +24,7 @@ public class ClientFragment extends BaseFragment implements ClientListFragment.T
 	private ClientDetailFragment transactionDetailFragment;
 	
 	public static boolean mTwoPane = false;
-	private long selectedTransactionId;
-	
-//	private MenuItem menuItemActionEdit;
-//    private MenuItem menuItemActionDiscard;
+	private long selectedClientId;	
     
 	public static ClientFragment newInstance(int transactionTypeId) {
 		ClientFragment fragment = new ClientFragment();
@@ -31,9 +32,14 @@ public class ClientFragment extends BaseFragment implements ClientListFragment.T
     }
 	
 	@Override
+	public void onFragmentResult(String tagName, int resultCode, Bundle data) {		
+		super.onFragmentResult(tagName, resultCode, data);
+	}
+	
+	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		setContentView(R.layout.fragment_client,R.menu.fragment_client_menu);
+		setContentView(R.layout.fragment_client,R.menu.fragment_client_menu);				
 	}
 	
 	@Override
@@ -43,6 +49,11 @@ public class ClientFragment extends BaseFragment implements ClientListFragment.T
 		setRetainInstance(true);		
 		transactionListFragment = ClientListFragment.newInstance(true, null);					
 		
+	}
+	
+	@Override
+	public void onResume() {		
+		super.onResume();				
 	}
 	
 	@Override
@@ -57,11 +68,7 @@ public class ClientFragment extends BaseFragment implements ClientListFragment.T
 		
 		if (rootView.findViewById(R.id.content_transaction_detail) != null) {     
 			mTwoPane = true;
-        }
-					
-		if(mTwoPane){
-			transactionListFragment.setActivateOnItemClick(true);			
-		}
+        }							
 		
 	}	
 	
@@ -93,34 +100,28 @@ public class ClientFragment extends BaseFragment implements ClientListFragment.T
 //      setVisibleEditActionButtons(visibleActionDetail);
 	}
 	 
-	private void setVisibleEditActionButtons(boolean visible){
-//    	menuItemActionEdit.setVisible(visible);
-//    	menuItemActionDiscard.setVisible(visible);
-    }
-    
-//    private void clearDetailContent(){
-//    	transactionDetailFragment = ClientDetailFragment.newInstance(0);
-//    	
-//    	setFragment(R.id.content_transaction_detail, transactionDetailFragment);    	
-//    }   
-
-	
 	@Override
-	public void onTransactionSelected(long id) {
+	public void onClienteSelected(long id) {
 		if (mTwoPane) {
            
-        	selectedTransactionId = id;
-        	setVisibleEditActionButtons( selectedTransactionId != 0 );
-        	transactionDetailFragment = ClientDetailFragment.newInstance(selectedTransactionId); 
+			selectedClientId = id;        	
+        	transactionDetailFragment = ClientDetailFragment.newInstance(selectedClientId); 
         	setFragment(R.id.content_transaction_detail, transactionDetailFragment);        	
 
-        } else {
-        	//waitUpdate = true;        	            
+        } else {      	            
             startActivity(ClientDetailActivity.newIntent(this.getActivity(), id) );
             this.cancelAnimationTransition();
         }
+	}
+
+	@Override
+	public void onClienteChanged(Cliente cliente) {
+		transactionListFragment.actualizarCliente(cliente);
+		onClienteSelected(selectedClientId);
+	}
+
+	@Override
+	public void onFinalizaConsulta() {		
 	}	
-	
-	///End TransactionListFragmentListener
 	
 }

@@ -66,6 +66,21 @@
                     <action>canal/get</action>
                     <webMethod>GET</webMethod>
                 </method>
+                <method>
+                    <name>GetFoto</name>
+                    <action>cliente/getfoto?idcliente=@idcliente</action>
+                    <webMethod>GET</webMethod>
+                </method>
+                <method>
+                    <name>SetUbicacion</name>
+                    <action>agente/setubicacion?latitud=@latitud&amp;longitud=@longitud</action>
+                    <webMethod>POST</webMethod>
+                </method> 
+                <method>
+                    <name>UpdateCliente</name>
+                    <action>cliente/update</action>
+                    <webMethod>POST</webMethod>
+                </method>               
             </methods>     
         </webServiceData>
     </webServiceConfiguration>

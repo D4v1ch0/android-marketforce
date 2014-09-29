@@ -12,6 +12,8 @@ import android.util.Log;
 public class SyncAdapter extends rp3.content.SyncAdapter {
 	
 	public static String SYNC_TYPE_GENERAL = "general";
+	public static String SYNC_TYPE_ENVIAR_UBICACION = "sendlocation";
+	public static String SYNC_TYPE_CLIENTE_UPDATE = "clienteupdate";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -67,11 +69,31 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 					addDefaultMessage(result);
 				}
 				
-				SyncAudit.insert(syncType, result);
-				db.commitTransaction();								
+				if(result == SYNC_EVENT_SUCCESS){
+					result = rp3.marketforce.sync.ClienteFoto.executeSync(db,null);				
+					addDefaultMessage(result);
+				}
+								
+				db.commitTransaction();
+				
+			}else if(syncType.equals(SYNC_TYPE_ENVIAR_UBICACION)){
+				try{
+					double latitud = extras.getDouble(EnviarUbicacion.ARG_LATITUD);
+					double longitud = extras.getDouble(EnviarUbicacion.ARG_LONGITUD);
+					
+					EnviarUbicacion.executeSync(longitud, latitud);				
+					
+					
+				}catch(Exception e){
+					Log.e("Sync Adapter", e.getMessage());
+				}
+			}else if(syncType.equals(SYNC_TYPE_CLIENTE_UPDATE)){
+				long id = extras.getLong(ClienteActualizacion.ARG_CLIENTE_ID);
+				result = ClienteActualizacion.executeSync(db, id);
+				addDefaultMessage(result);
 			}
 			
-		
+			SyncAudit.insert(syncType, result);
 				
 		}catch (Exception e) {			
 			Log.e(TAG, "E: " + e.getMessage());

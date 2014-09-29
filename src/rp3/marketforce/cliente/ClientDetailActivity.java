@@ -1,12 +1,14 @@
-package rp3.marketforce;
+package rp3.marketforce.cliente;
 
 import rp3.marketforce.R;
+import rp3.marketforce.cliente.ClientDetailFragment.ClienteDetailFragmentListener;
 import rp3.marketforce.db.DbOpenHelper;
+import rp3.marketforce.models.Cliente;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-public class ClientDetailActivity extends rp3.app.BaseActivity{
+public class ClientDetailActivity extends rp3.app.BaseActivity implements ClienteDetailFragmentListener {
 
 	private long transactionId;
 	private final String STATE_TRANSACTIONID = "transactionId";
@@ -51,7 +53,12 @@ public class ClientDetailActivity extends rp3.app.BaseActivity{
     	// TODO Auto-generated method stub
     	super.onSaveInstanceState(outState);
     	outState.putLong(STATE_TRANSACTIONID,transactionId);    	
-    }    
+    }
+
+	@Override
+	public void onClienteChanged(Cliente cliente) {
+		finish();		
+	}    
     
 //    @Override
 //	public void onDeleteSuccess(Transaction transaction) {		

@@ -10,7 +10,6 @@ import rp3.connection.WebService;
 import rp3.content.SyncAdapter;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.db.Contract;
-import rp3.runtime.Session;
 import rp3.util.Convert;
 import android.util.Log;
 
@@ -18,7 +17,7 @@ public class Cliente {
 	
 		public static int executeSync(DataBase db){
 			WebService webService = new WebService("MartketForce","GetClientes");
-			webService.addParameter("@logonname", Session.getUser().getLogonName());
+			
 			try
 			{			
 				webService.addCurrentAuthToken();
@@ -45,7 +44,8 @@ public class Cliente {
 						
 						JSONObject type = types.getJSONObject(i);
 						
-						 rp3.marketforce.models.Cliente cl = new rp3.marketforce.models.Cliente();
+						rp3.marketforce.models.Cliente cl = new rp3.marketforce.models.Cliente();
+						
 						cl.setApellido1(type.getString("Apellido1"));
 						cl.setApellido2(type.getString("Apellido2"));
 						cl.setCalificacion(type.getInt("Calificacion"));
@@ -54,6 +54,7 @@ public class Cliente {
 						cl.setGenero(type.getString("Genero"));
 						cl.setIdCanal(type.getInt("IdCanal"));
 						cl.setID(type.getLong("IdCliente"));
+						cl.setIdTipoIdentificacion(type.getInt("IdTipoIdentificacion"));
 						cl.setIdentificacion(type.getString("Identificacion"));
 						cl.setIdTipoCliente(type.getInt("IdTipoCliente"));
 						cl.setNombre1(type.getString("Nombre1"));

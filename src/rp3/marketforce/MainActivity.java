@@ -5,6 +5,8 @@ import java.util.List;
 import rp3.app.NavActivity;
 import rp3.app.nav.NavItem;
 import rp3.data.MessageCollection;
+import rp3.marketforce.cliente.ClientFragment;
+import rp3.marketforce.ruta.RutasFragment;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.runtime.Session;
 import android.content.Context;
@@ -96,7 +98,7 @@ public class MainActivity extends rp3.app.NavActivity{
 			break;
 		case NAV_SINCRONIZAR:	
 			
-          showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait);
+			showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait);
 			
 			Bundle bundle = new Bundle();
 			bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_GENERAL);

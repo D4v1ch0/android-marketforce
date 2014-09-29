@@ -2,7 +2,9 @@ package rp3.marketforce;
 
 import rp3.marketforce.R;
 import rp3.app.BaseActivity;
-import rp3.marketforce.models.Cliente;
+import rp3.marketforce.cliente.ClientDetailActivity;
+import rp3.marketforce.cliente.ClientDetailFragment;
+import rp3.marketforce.cliente.ClientListFragment;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,14 +16,14 @@ import android.widget.SearchView.OnQueryTextListener;
 
 
 public class SearchableActivity extends BaseActivity
-	implements ClientListFragment.TransactionListFragmentListener,ClientDetailFragment.TransactionDetailListener {
+	implements ClientListFragment.ClienteListFragmentListener {
 
 	private boolean mTwoPane;
 	private String query;
 	
 //	private MenuItem menuItemActionEdit;
 //    private MenuItem menuItemActionDiscard;
-    private long selectedTransactionId;
+    private long selectedClientId;
     
 	private ClientDetailFragment clientDetailFragment;
 	private ClientListFragment clientListFragment;
@@ -73,13 +75,13 @@ public class SearchableActivity extends BaseActivity
 	}
 	
 	@Override
-	public void onTransactionSelected(long id) {
+	public void onClienteSelected(long id) {
 		
-		selectedTransactionId = id;
+		selectedClientId = id;
 		
 		if (mTwoPane) {      			
-			clientDetailFragment = ClientDetailFragment.newInstance(selectedTransactionId);
-			setVisibleEditActionButtons( selectedTransactionId != 0 );
+			clientDetailFragment = ClientDetailFragment.newInstance(selectedClientId);
+			setVisibleEditActionButtons( selectedClientId != 0 );
 			
 			
 			getCurrentFragmentManager().beginTransaction()
@@ -93,7 +95,7 @@ public class SearchableActivity extends BaseActivity
 //            detailIntent.putExtra(ClientDetailFragment.ARG_PARENT_SOURCE, ClientDetailFragment.PARENT_SOURCE_SEARCH);
 //            startActivity(detailIntent);
         	
-        	startActivity(ClientDetailActivity.newIntent(this, selectedTransactionId) );
+        	startActivity(ClientDetailActivity.newIntent(this, selectedClientId) );
         }  
 	}
 
@@ -111,7 +113,7 @@ public class SearchableActivity extends BaseActivity
 //		menuItemActionEdit = menu.findItem(R.id.action_edit);
 //		menuItemActionDiscard = menu.findItem(R.id.action_discard);	    
 	    
-		boolean visibleActionDetail = mTwoPane && selectedTransactionId != 0;
+		boolean visibleActionDetail = mTwoPane && selectedClientId != 0;
         setVisibleEditActionButtons(visibleActionDetail);
         
 		MenuItem searchViewItem = menu.findItem(R.id.action_search);
@@ -165,15 +167,9 @@ public class SearchableActivity extends BaseActivity
     }
 
 	@Override
-	public void onDeleteSuccess(Cliente transaction) {
-		// TODO Auto-generated method stub
-		
+	public void onFinalizaConsulta() {
+		if(mTwoPane && selectedClientId!=0){			
+			onClienteSelected(selectedClientId);
+		}
 	}
-
-//	@Override
-//	public void onDeleteSuccess(Cliente transaction) {
-//		selectedTransactionId = 0;
-//		finish();
-//	}
-
 }

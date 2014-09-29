@@ -7,22 +7,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.ksoap2.transport.HttpResponseException;
 
-import android.util.Log;
-
 import rp3.connection.HttpConnection;
 import rp3.connection.WebService;
 import rp3.content.SyncAdapter;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.db.Contract;
-import rp3.runtime.Session;
 import rp3.util.Convert;
 import rp3.util.DateTime;
+import android.util.Log;
 
 public class Rutas {
 
 		public static int executeSync(DataBase db, Long inicio, Long fin){
-			WebService webService = new WebService("MartketForce","Agenda");
-			webService.addParameter("@logonname", Session.getUser().getLogonName());
+			WebService webService = new WebService("MartketForce","Agenda");			
 			//webService.addParameter("@fechainicio", 635451264000000000l);
 			//webService.addParameter("@fechafin", 635477183990000000l);	
 			
@@ -56,6 +53,7 @@ public class Rutas {
 				JSONArray types = webService.getJSONArrayResponse();			
 				
 				rp3.marketforce.models.Agenda.deleteAll(db, Contract.Agenda.TABLE_NAME);
+				rp3.marketforce.models.Agenda.AgendaExt.deleteAll(db, Contract.AgendaExt.TABLE_NAME);
 				rp3.marketforce.models.AgendaTarea.deleteAll(db, Contract.AgendaTarea.TABLE_NAME);
 				
 				for(int i=0; i < types.length(); i++){
@@ -75,7 +73,7 @@ public class Rutas {
 						agenda.setNombreCompleto(type.getString("NombresCompletos"));
 						agenda.setDireccion(type.getString("Direccion"));
 						
-//						agenda.setEstadoAgenda(type.getString(""));
+						agenda.setEstadoAgenda(type.getString("EstadoAgenda"));
 						
 						rp3.marketforce.models.Agenda.insert(db, agenda);
 						

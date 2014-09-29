@@ -14,13 +14,13 @@
 	<statement>
       CREATE TABLE tbCliente(
       _id INTEGER PRIMARY KEY,	 
-	  IdentificationTypeId INTEGER,	  	  
+	  IdTipoIdentificacion INTEGER,	  	  
 	  Genero TEXT,
 	  EstadoCivil TEXT,
 	  FechaNacimiento INTEGER,
 	  IdTipoCliente INTEGER,
 	  IdCanal INTEGER,
-	  Calificacion INTEGER
+	  Calificacion INTEGER	  
       )
 	</statement>
 	<statement>

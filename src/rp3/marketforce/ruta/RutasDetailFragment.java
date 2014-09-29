@@ -1,5 +1,10 @@
-package rp3.marketforce;
+package rp3.marketforce.ruta;
 
+import rp3.marketforce.ListaTareasAdapter;
+import rp3.marketforce.R;
+import rp3.marketforce.R.array;
+import rp3.marketforce.R.id;
+import rp3.marketforce.R.layout;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.Cliente;
 import android.annotation.SuppressLint;
@@ -14,35 +19,27 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
-    public static final String ARG_ITEM_ID = "rp3.pos.transactionid";
-    public static final String ARG_PARENT_SOURCE = "rp3.pos.parentsource";
+    public static final String ARG_ITEM_ID = "idagenda";
+
 
     public static final String PARENT_SOURCE_LIST = "LIST";
     public static final String PARENT_SOURCE_SEARCH = "SEARCH";
     
-    public static final String STATE_TRANSACTIONID = "transactionid";
+    public static final String STATE_IDAGENDA = "state_idagenda";
     
-    private long transactionId;
-    
-//    private LayoutInflater inflater;
-    
+    private long idAgenda;        
     private Agenda agenda;
     private ListaTareasAdapter adapter;
     private ListView lista_tarea;
-//    private boolean mTwoPane = false;
-    
-//    private TransactionDetailListener transactionDetailCallback;
-    
-//    private Cliente client;
-    
+
     public interface TransactionDetailListener{
     	public void onDeleteSuccess(Cliente transaction);
     }
     
-    public static RutasDetailFragment newInstance(long transactionId)
+    public static RutasDetailFragment newInstance(long idAgenda)
     {
     	Bundle arguments = new Bundle();
-        arguments.putLong(RutasDetailFragment.ARG_ITEM_ID, transactionId);
+        arguments.putLong(RutasDetailFragment.ARG_ITEM_ID, idAgenda);
         RutasDetailFragment fragment = new RutasDetailFragment();
         fragment.setArguments(arguments);
         return fragment;
@@ -59,15 +56,13 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
         	setRetainInstance(true);
         
         if (getArguments().containsKey(ARG_ITEM_ID)) {            
-            transactionId = getArguments().getLong(ARG_ITEM_ID);   
-        }else if(savedInstanceState!=null)
-        {
-        	transactionId = savedInstanceState.getLong(STATE_TRANSACTIONID);
+            idAgenda = getArguments().getLong(ARG_ITEM_ID);   
+        }else if(savedInstanceState!=null){
+        	idAgenda = savedInstanceState.getLong(STATE_IDAGENDA);
         }    
         
-        if(transactionId != 0)
-        {        	
-        	agenda = Agenda.getAgendaID(getDataBase(), transactionId);
+        if(idAgenda != 0){        	
+        	agenda = Agenda.getAgendaID(getDataBase(), idAgenda);
         }
         
         if(agenda != null){
@@ -75,12 +70,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
         }
         else{
         	super.setContentView(R.layout.base_content_no_selected_item);
-        }      
-        
-       
-        
-//     super.setContentView(R.layout.fragment_tramnsaction_detail, R.menu.fragment_cliente_detail);
-            
+        }                        
     }
 
     @Override
@@ -105,16 +95,16 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
 	//			inflater = (LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		  setSpinnerSimpleAdapter(R.id.spinner_state, datos);
 			
-		   setTextViewText(R.id.textView_name, agenda.getCliente().getNombreCompleto());
+		   setTextViewText(R.id.textView_name, agenda.getNombreCompleto());
 		   setTextViewText(R.id.textView_movil, agenda.getClienteDireccion().getTelefono1());
 		   setTextViewText(R.id.textView_mail, agenda.getCliente().getCorreoElectronico());
 		   setTextViewText(R.id.textView_address, agenda.getClienteDireccion().getDireccion());
 		   setTextViewDateText(R.id.textView_fecha, agenda.getFechaInicio());
 		   
 		   
-		   if(agenda.getAgendaTareaList() != null)
+		   if(agenda.getAgendaTareas() != null)
 		   {
-			   adapter = new ListaTareasAdapter(getActivity(), agenda.getAgendaTareaList());
+			   adapter = new ListaTareasAdapter(getActivity(), agenda.getAgendaTareas());
 			   lista_tarea = (ListView) rootView.findViewById(R.id.listView_tareas);
 			   lista_tarea.setAdapter(adapter);
 		   }
@@ -124,7 +114,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
       
     @Override
     public void onSaveInstanceState(Bundle outState) {
-    	outState.putLong(STATE_TRANSACTIONID, transactionId);    	
+    	outState.putLong(STATE_IDAGENDA, idAgenda);    	
     }
     
 	@Override

@@ -8,7 +8,6 @@ import rp3.db.sqlite.DataBase;
 import rp3.marketforce.db.Contract;
 import rp3.util.CursorUtils;
 import android.database.Cursor;
-import android.util.Log;
 
 
 public class ClienteDireccion extends rp3.data.entity.EntityBase<ClienteDireccion>{
@@ -50,13 +49,14 @@ public class ClienteDireccion extends rp3.data.entity.EntityBase<ClienteDireccio
 
 	@Override
 	public void setValues() {
-		
-		setValue(Contract.ClienteDireccion.COLUMN_CLIENTE_ID, this.idCliente);
-		setValue(Contract.ClienteDireccion.COLUMN_CLIENTE_DIRECCION_ID, this.idClienteDireccion);
+		if(getAction() == ACTION_INSERT){
+			setValue(Contract.ClienteDireccion.COLUMN_CLIENTE_ID, this.idCliente);
+			setValue(Contract.ClienteDireccion.COLUMN_CLIENTE_DIRECCION_ID, this.idClienteDireccion);
+			setValue(Contract.ClienteDireccion.COLUMN_TIPO_DIRECCION, this.tipoDireccion);
+			setValue(Contract.ClienteDireccion.COLUMN_CIUDAD_ID, this.idCiudad);
+			setValue(Contract.ClienteDireccion.COLUMN_ES_PRINCIPAL, this.esPrincipal);			
+		}
 		setValue(Contract.ClienteDireccion.COLUMN_DIRECCION, this.direccion);
-		setValue(Contract.ClienteDireccion.COLUMN_TIPO_DIRECCION, this.tipoDireccion);
-		setValue(Contract.ClienteDireccion.COLUMN_CIUDAD_ID, this.idCiudad);
-		setValue(Contract.ClienteDireccion.COLUMN_ES_PRINCIPAL, this.esPrincipal);
 		setValue(Contract.ClienteDireccion.COLUMN_TELEFONO1, this.telefono1);
 		setValue(Contract.ClienteDireccion.COLUMN_TELEFONO2, this.telefono2);
 		setValue(Contract.ClienteDireccion.COLUMN_REFERENCIA, this.referencia);
@@ -87,7 +87,7 @@ public class ClienteDireccion extends rp3.data.entity.EntityBase<ClienteDireccio
 		return idClienteDireccion;
 	}
 
-	public boolean getIdPrincipal() {
+	public boolean getEsPrincipal() {
 		return esPrincipal;
 	}
 
@@ -174,41 +174,24 @@ public class ClienteDireccion extends rp3.data.entity.EntityBase<ClienteDireccio
 	public static List<ClienteDireccion> getClienteDirecciones(DataBase db, long id){
 		
 		String query = QueryDir.getQuery(Contract.ClienteDireccion.QUERY_CLIENTE_DIRECCION_BY_ID);
-    	Cursor c = db.rawQuery(query, id );
-		
-//		Cursor c = db.query(Contract.ClienteDireccion.TABLE_NAME, new String[]{
-//				Contract.ClienteDireccion._ID,
-//				Contract.ClienteDireccion.COLUMN_CLIENTE_ID,
-//				Contract.ClienteDireccion.COLUMN_CLIENTE_DIRECCION_ID,
-//				Contract.ClienteDireccion.COLUMN_DIRECCION,
-//				Contract.ClienteDireccion.COLUMN_ES_PRINCIPAL,
-//				Contract.ClienteDireccion.COLUMN_TIPO_DIRECCION,
-//				Contract.ClienteDireccion.COLUMN_CIUDAD_ID,
-//				Contract.ClienteDireccion.COLUMN_TELEFONO1,
-//				Contract.ClienteDireccion.COLUMN_TELEFONO2,
-//				Contract.ClienteDireccion.COLUMN_REFERENCIA,
-//				Contract.ClienteDireccion.COLUMN_LATITUD,
-//				Contract.ClienteDireccion.COLUMN_LONGITUD,
-//		}, Contract.ClienteDireccion.COLUMN_CLIENTE_ID + " = ?",
-//		new String[] { String.valueOf(id) });
+    	Cursor c = db.rawQuery(query, id );		
 		
 		List<ClienteDireccion> list = new ArrayList<ClienteDireccion>();
 		while(c.moveToNext()){
 			ClienteDireccion tpd = new ClienteDireccion();
 			tpd.setID(CursorUtils.getInt(c,Contract.ClienteDireccion._ID));
 			tpd.setIdCliente(CursorUtils.getLong(c, Contract.ClienteDireccion.FIELD_CLIENTE_ID));
-//			tpd.setIdClienteDireccion(CursorUtils.getInt(c, Contract.ClienteDireccion.FIELD_CLIENTE_DIRECCION_ID));
+			tpd.setIdClienteDireccion(CursorUtils.getInt(c, Contract.ClienteDireccion.FIELD_CLIENTE_DIRECCION_ID));
 			tpd.setDireccion(CursorUtils.getString(c, Contract.ClienteDireccion.FIELD_DIRECCION));
 			tpd.setEsPrincipal(CursorUtils.getBoolean(c, Contract.ClienteDireccion.FIELD_ES_PRINCIPAL));
-//			tpd.setTipoDireccion(CursorUtils.getString(c, Contract.ClienteDireccion.FIELD_TIPO_DIRECCION));
-//			tpd.setIdCiudad(CursorUtils.getInt(c, Contract.ClienteDireccion.FIELD_CIUDAD_ID));
+			tpd.setTipoDireccion(CursorUtils.getString(c, Contract.ClienteDireccion.FIELD_TIPO_DIRECCION));
+			tpd.setIdCiudad(CursorUtils.getInt(c, Contract.ClienteDireccion.FIELD_CIUDAD_ID));
 			tpd.setTelefono1(CursorUtils.getString(c, Contract.ClienteDireccion.FIELD_TELEFONO1));
 			tpd.setTelefono2(CursorUtils.getString(c, Contract.ClienteDireccion.FIELD_TELEFONO2));
 			tpd.setReferencia(CursorUtils.getString(c, Contract.ClienteDireccion.FIELD_REFERENCIA));
 			tpd.setLatitud(CursorUtils.getDouble(c, Contract.ClienteDireccion.FIELD_LATITUD));
 			tpd.setLongitud(CursorUtils.getDouble(c, Contract.ClienteDireccion.FIELD_LONGITUD));
 			tpd.setCiudadDescripcion(CursorUtils.getString(c, Contract.ClienteDireccion.FIELD_CIUDAD));
-			Log.e("Ciudad",""+tpd.getCiudadDescripcion());
 			
 			list.add(tpd);
 		}
