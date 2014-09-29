@@ -27,20 +27,20 @@ public class StartActivity extends rp3.app.StartActivity{
 	}
 	
 	private void setServiceRecurring(){
-		Intent i = new Intent(this, EnviarUbicacionReceiver.class);
-		PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
-		
-		// Set the alarm to start at 8:30 a.m.
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTimeInMillis(System.currentTimeMillis());
-		calendar.set(Calendar.HOUR_OF_DAY, 8);
-		calendar.set(Calendar.MINUTE, 30);
-				
-		AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-		//am.cancel(pi); // cancel any existing alarms
-		am.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-			calendar.getTimeInMillis(),
-		    AlarmManager.INTERVAL_FIFTEEN_MINUTES, pi);		
+//		Intent i = new Intent(this, EnviarUbicacionReceiver.class);
+//		PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
+//		
+//		// Set the alarm to start at 8:30 a.m.
+//		Calendar calendar = Calendar.getInstance();
+//		calendar.setTimeInMillis(System.currentTimeMillis());
+//		calendar.set(Calendar.HOUR_OF_DAY, 8);
+//		calendar.set(Calendar.MINUTE, 30);
+//				
+//		AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+//		//am.cancel(pi); // cancel any existing alarms
+//		am.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+//			calendar.getTimeInMillis(),
+//		    AlarmManager.INTERVAL_FIFTEEN_MINUTES, pi);		
 		
 		//AlarmManager.INTERVAL_FIFTEEN_MINUTES
 	}
@@ -57,14 +57,13 @@ public class StartActivity extends rp3.app.StartActivity{
 			bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_GENERAL);
 			requestSync(bundle);
 			
-			
-			
 		}else{
 			callNextActivity();
 		}
 	}
 	
 	public void onSyncComplete(Bundle data, final MessageCollection messages) {
+		if(data.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_GENERAL)){
 		if(messages.getCuount()>0)
 			showDialogMessage(messages, new SimpleCallback() {				
 				@Override
@@ -77,6 +76,7 @@ public class StartActivity extends rp3.app.StartActivity{
 			});
 		else
 			callNextActivity();
+		}
 	}
 	
 	private void callNextActivity(){
