@@ -1,19 +1,12 @@
 package rp3.marketforce;
 
-import java.util.Calendar;
-
 import rp3.configuration.Configuration;
 import rp3.content.SimpleCallback;
 import rp3.data.MessageCollection;
-import rp3.marketforce.content.EnviarUbicacionReceiver;
 import rp3.marketforce.db.DbOpenHelper;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.sync.SyncAudit;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 
 public class StartActivity extends rp3.app.StartActivity{
 	
