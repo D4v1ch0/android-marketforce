@@ -3,6 +3,7 @@ package rp3.marketforce.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import rp3.db.QueryDir;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.db.Contract;
 import rp3.util.CursorUtils;
@@ -12,9 +13,12 @@ public class AgendaTarea extends rp3.data.entity.EntityBase<AgendaTarea> {
 
 	private long id;
 	private int idRuta;
-	private long idAgenda;		
+	private long idAgenda;
+	private int idTarea;
 	private String nombreTarea;
-	private int tipoTarea;
+	private String tipoTarea;
+	private String estadoTarea;
+	private String estadoTareaDescripcion;
 	
 	@Override
 	public long getID() {
@@ -35,15 +39,33 @@ public class AgendaTarea extends rp3.data.entity.EntityBase<AgendaTarea> {
 	public String getTableName() {
 		return Contract.AgendaTarea.TABLE_NAME;
 	}
+	
+	public String getEstadoTarea() {
+		return estadoTarea;
+	}
 
+	public void setEstadoTarea(String estadoTarea) {
+		this.estadoTarea = estadoTarea;
+	}	
+
+	public int getIdTarea() {
+		return idTarea;
+	}
+
+	public void setIdTarea(int idTarea) {
+		this.idTarea = idTarea;
+	}
+	
 	@Override
 	public void setValues() {
 		
 		setValue(Contract.AgendaTarea._ID, this.id);
 		setValue(Contract.AgendaTarea.COLUMN_RUTA_ID, this.idRuta);
 		setValue(Contract.AgendaTarea.COLUMN_AGENDA_ID, this.idAgenda);		
+		setValue(Contract.AgendaTarea.COLUMN_TAREA_ID, this.idTarea);		
 		setValue(Contract.AgendaTarea.COLUMN_NOMBRE_TAREA, this.nombreTarea);
 		setValue(Contract.AgendaTarea.COLUMN_TIPO_TAREA, this.tipoTarea);
+		setValue(Contract.AgendaTarea.COLUMN_ESTADO_TAREA, this.estadoTarea);
 	}
 
 	@Override
@@ -80,40 +102,47 @@ public class AgendaTarea extends rp3.data.entity.EntityBase<AgendaTarea> {
 		this.nombreTarea = nombreTarea;
 	}
 
-	public int getTipoTarea() {
+	public String getTipoTarea() {
 		return tipoTarea;
 	}
 
-	public void setTipoTarea(int tipoTarea) {
+	public void setTipoTarea(String tipoTarea) {
 		this.tipoTarea = tipoTarea;
 	}
 	
+	public String getEstadoTareaDescripcion() {
+		return estadoTareaDescripcion;
+	}
+
+	public void setEstadoTareaDescripcion(String estadoTareaDescripcion) {
+		this.estadoTareaDescripcion = estadoTareaDescripcion;
+	}	
 	
-	public static List<AgendaTarea> getAgendaTareas(DataBase db, int id){
-		
-		Cursor c = db.query(Contract.AgendaTarea.TABLE_NAME, new String[]{
-				Contract.AgendaTarea._ID,
-				Contract.AgendaTarea.COLUMN_RUTA_ID,			
-				Contract.AgendaTarea.COLUMN_AGENDA_ID,				
-				Contract.AgendaTarea.COLUMN_NOMBRE_TAREA,
-				Contract.AgendaTarea.COLUMN_TIPO_TAREA
-		}, Contract.AgendaTarea.COLUMN_AGENDA_ID + " = ?",
-		new String[] { String.valueOf(id) });
-		
+	public static List<AgendaTarea> getAgendaTareas(DataBase db, int idRuta, int idAgenda){
+		String query = QueryDir.getQuery(Contract.AgendaTarea.QUERY_AGENDA_TAREA);
+				
+		Cursor c = db.rawQuery(query, new String[] { String.valueOf(idRuta), String.valueOf(idAgenda) });
+				
 		List<AgendaTarea> list = new ArrayList<AgendaTarea>();
 		while(c.moveToNext()){
 			
 			AgendaTarea agdt = new AgendaTarea();
 			agdt.setID(CursorUtils.getInt(c, Contract.AgendaTarea._ID));
-			agdt.setIdRuta(CursorUtils.getInt(c, Contract.AgendaTarea.FIELD_RUTA_ID));		
+			agdt.setIdRuta(CursorUtils.getInt(c, Contract.AgendaTarea.FIELD_RUTA_ID));	
+			agdt.setIdTarea(CursorUtils.getInt(c, Contract.AgendaTarea.FIELD_TAREA_ID));
 			agdt.setIdAgenda(CursorUtils.getLong(c, Contract.AgendaTarea.FIELD_AGENDA_ID));
 			agdt.setNombreTarea(CursorUtils.getString(c, Contract.AgendaTarea.FIELD_NOMBRE_TAREA));
-			agdt.setTipoTarea(CursorUtils.getInt(c, Contract.AgendaTarea.FIELD_TIPO_TAREA));
+			agdt.setTipoTarea(CursorUtils.getString(c, Contract.AgendaTarea.FIELD_TIPO_TAREA));
+			agdt.setEstadoTarea(CursorUtils.getString(c, Contract.AgendaTarea.FIELD_ESTADO_TAREA));
+			agdt.setEstadoTareaDescripcion(CursorUtils.getString(c, Contract.AgendaTarea.FIELD_ESTADO_TAREA_DESCRIPCION));
 			
 			list.add(agdt);
 		}
 		return list;
 	}
+
+	
+
 	
 
 }

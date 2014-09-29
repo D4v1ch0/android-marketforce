@@ -237,6 +237,9 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			
 			agd = new Agenda();
 			agd.setID(CursorUtils.getInt(c, Contract.Agenda._ID));
+			agd.setIdRuta(CursorUtils.getInt(c, Contract.Agenda.COLUMN_RUTA_ID));
+			agd.setIdAgenda(CursorUtils.getInt(c, Contract.Agenda.COLUMN_AGENDA_ID));
+			
 			agd.setIdCliente(CursorUtils.getInt(c, Contract.Agenda.FIELD_CLIENTE_ID));
 			agd.setFechaInicio(CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_INCICIO));
 			agd.setFechaFin(CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_FIN));
@@ -255,7 +258,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			//cld.setTelefono1((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_TELEFONO)));
 			agd.setClienteDireccion(cld);
 			
-			agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getIdAgenda()));
+			agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getIdRuta(), agd.getIdAgenda()));
 			
 		}
 		return agd;

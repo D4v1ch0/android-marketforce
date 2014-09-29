@@ -77,23 +77,21 @@ public class Rutas {
 						
 						rp3.marketforce.models.Agenda.insert(db, agenda);
 						
-//						JSONArray strs = type.getJSONArray("AgendaTareas");
-//						
-//						for(int j=0; j < strs.length(); j++){
-//							JSONObject str = strs.getJSONObject(j);
-//							rp3.marketforce.models.AgendaTarea agendaTarea = new rp3.marketforce.models.AgendaTarea();						
-//							
-//							agendaTarea.setID(str.getLong("IdTarea"));
-//							agendaTarea.setIdRuta(str.getInt("IdRuta"));
-//							agendaTarea.setIdAgenda(str.getInt("IdAgenda"));
-//							agendaTarea.setIdCliente(str.getInt("IdTarea"));
-//							agendaTarea.setIdClienteDireccion(str.getInt(""));
-//							agendaTarea.setIdProgramacionRuta(str.getInt(""));
-//							agendaTarea.setNombreTarea(str.getString(""));
-//							agendaTarea.setTipoTarea(str.getInt(""));
-//							
-//							rp3.marketforce.models.AgendaTarea.insert(db, agendaTarea);
-//						}
+						JSONArray strs = type.getJSONArray("AgendaTareas");
+						
+						for(int j=0; j < strs.length(); j++){
+							JSONObject str = strs.getJSONObject(j);
+							rp3.marketforce.models.AgendaTarea agendaTarea = new rp3.marketforce.models.AgendaTarea();						
+							
+							agendaTarea.setID(str.getLong("IdTarea"));
+							agendaTarea.setIdRuta(str.getInt("IdRuta"));
+							agendaTarea.setIdAgenda(str.getInt("IdAgenda"));						
+							agendaTarea.setNombreTarea(str.getString("Nombre"));
+							agendaTarea.setEstadoTarea(str.getString("EstadoTarea"));
+							agendaTarea.setTipoTarea(str.getString("TipoTarea"));
+							
+							rp3.marketforce.models.AgendaTarea.insert(db, agendaTarea);
+						}
 						
 					} catch (JSONException e) {
 						Log.e("Error", e.toString());

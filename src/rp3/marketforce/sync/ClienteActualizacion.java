@@ -35,6 +35,9 @@ public class ClienteActualizacion {
 				JSONArray direcciones = new JSONArray();
 				for(ClienteDireccion direccion: cliente.getClienteDirecciones()){
 					JSONObject dataDireccion = new JSONObject();
+					dataDireccion.put("IdCliente", direccion.getIdCliente());
+					dataDireccion.put("IdClienteDireccion", direccion.getIdClienteDireccion() );
+					
 					dataDireccion.put("Direccion", direccion.getDireccion());
 					dataDireccion.put("Telefono1", direccion.getTelefono1());
 					dataDireccion.put("Telefono2", direccion.getTelefono2());

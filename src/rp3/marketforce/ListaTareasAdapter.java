@@ -49,16 +49,16 @@ public class ListaTareasAdapter extends BaseAdapter{
 		  convertView = (View) inflater.inflate(this.context.getApplicationContext().getResources().getLayout(R.layout.rowlist_tarea), null);
 		
 		  
-		  if(agendaTarea.get(position).getTipoTarea() == 1)
-		  {
-			  id_icon = R.drawable.ic_action_accept;
-			  estado = "Visitado";
-		  }
-		  else
-		  {
-			  id_icon = R.drawable.ic_action_cancel;
-			  estado = "Pendiente";
-		  }
+//		  if(agendaTarea.get(position).getTipoTarea() == 1)
+//		  {
+//			  id_icon = R.drawable.ic_action_accept;
+//			  estado = "Visitado";
+//		  }
+//		  else
+//		  {
+//			  id_icon = R.drawable.ic_action_cancel;
+//			  estado = "Pendiente";
+//		  }
 		  
 			((TextView) convertView.findViewById(R.id.textView2)).setCompoundDrawablesWithIntrinsicBounds(0, 0, id_icon, 0);
 			((TextView) convertView.findViewById(R.id.textView2)).setText(estado);

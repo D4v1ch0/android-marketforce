@@ -129,6 +129,8 @@
 	  <statement name="AgendaByCliente">
        SELECT  
         tbAgenda._id, 
+        tbAgenda.IdRuta,
+        tbAgenda.IdAgenda,        
         tbAgenda.FechaInicio,
         tbAgenda.FechaFin,
         tbAgenda.EstadoAgenda,
@@ -149,6 +151,8 @@
 	  <statement name="AgendaByAgendaID">
        SELECT  
         tbAgenda._id,
+        tbAgenda.IdRuta,
+        tbAgenda.IdAgenda,        
         tbAgenda.IdCliente, 
         tbAgenda.FechaInicio,
         tbAgenda.FechaFin,
@@ -179,6 +183,8 @@
 	 <statement name="SimpleRutaSearch">
         SELECT 
         tbAgenda._id AS tbAgenda__id,
+        tbAgenda.IdRuta,
+        tbAgenda.IdAgenda,
         tbAgendaExt.NombreCompleto,
         tbAgendaExt.Direccion,
         tbAgenda.EstadoAgenda AS tbAgenda_EstadoAgenda,
@@ -203,5 +209,20 @@
         AND tbAgenda.EstadoAgenda = tbEstadoAgenda.Code
        	ON tbAgendaExt.docid = tbRutaSearch.docid       	
         ORDER BY tbRutaSearch.Rank DESC   	
-    </statement>    
+    </statement>   
+    
+	 <statement name="AgendaTarea">
+       SELECT
+       IdRuta,
+	   IdAgenda,
+	   IdTarea,
+	   NombreTarea,
+	   TipoTarea,
+	   EstadoTarea
+	   FROM tbAgendaTarea
+	   JOIN tbGeneralValue tbEstadoTarea
+	   ON tbEstadoTarea.GeneralTableId = 1014
+       AND tbAgendaTarea.EstadoTarea = tbEstadoTarea.Code
+       WHERE IdAgenda = ? AND IdRuta = ?
+     </statement>
 </sql>

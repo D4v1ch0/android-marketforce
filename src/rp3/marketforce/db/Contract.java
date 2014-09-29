@@ -202,14 +202,20 @@ public final class Contract {
 		public static final String TABLE_NAME = "tbAgendaTarea";
 				
 		public static final String COLUMN_RUTA_ID = "IdRuta";
-		public static final String COLUMN_AGENDA_ID = "IdAgenda";		
+		public static final String COLUMN_AGENDA_ID = "IdAgenda";
+		public static final String COLUMN_TAREA_ID = "IdTarea";
 		public static final String COLUMN_NOMBRE_TAREA = "NombreTarea";
 		public static final String COLUMN_TIPO_TAREA = "TipoTarea";
+		public static final String COLUMN_ESTADO_TAREA = "EstadoTarea";		
 		
 		public static final String FIELD_RUTA_ID = COLUMN_RUTA_ID;
 		public static final String FIELD_AGENDA_ID = COLUMN_AGENDA_ID;
 		public static final String FIELD_NOMBRE_TAREA = COLUMN_NOMBRE_TAREA;
 		public static final String FIELD_TIPO_TAREA = COLUMN_TIPO_TAREA;
-		 
+		public static final String FIELD_ESTADO_TAREA = COLUMN_ESTADO_TAREA;
+		public static final String FIELD_TAREA_ID = COLUMN_TAREA_ID;
+		public static final String FIELD_ESTADO_TAREA_DESCRIPCION = "tbEstadoTarea_Value_" + rp3.data.models.Contract.GeneralValue.COLUMN_VALUE;
+		
+		public static final String QUERY_AGENDA_TAREA = "AgendaTarea";
 	}
 }

@@ -81,9 +81,11 @@
 	  CREATE TABLE tbAgendaTarea(
       _id INTEGER PRIMARY KEY,
       IdRuta INTEGER,
-      IdAgenda INTEGER,      
+      IdAgenda INTEGER, 
+      IdTarea INTEGER,      
       NombreTarea TEXT,
-      TipoTarea INTEGER
+      TipoTarea TEXT,
+      EstadoTarea TEXT
       )
 	</statement>
 </sql>
