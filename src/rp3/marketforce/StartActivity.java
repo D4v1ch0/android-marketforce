@@ -61,7 +61,6 @@ public class StartActivity extends rp3.app.StartActivity{
 		}else{
 			callNextActivity();
 		}
-					
 	}
 	
 	public void onSyncComplete(Bundle data, final MessageCollection messages) {

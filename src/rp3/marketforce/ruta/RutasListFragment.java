@@ -1,18 +1,17 @@
 package rp3.marketforce.ruta;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import rp3.data.MessageCollection;
 import rp3.marketforce.R;
-import rp3.marketforce.R.drawable;
-import rp3.marketforce.R.id;
-import rp3.marketforce.R.layout;
 import rp3.marketforce.headerlistview.HeaderListView;
 import rp3.marketforce.loader.RutasLoader;
 import rp3.marketforce.models.Agenda;
 import rp3.util.DateTime;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -181,7 +180,8 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 			}
 		}
 	 
-	 private void orderDate()
+	 @SuppressLint("SimpleDateFormat")
+	private void orderDate()
 	 {
 		 if(list_agenda != null)
 			 if(list_agenda.size()> 0)
@@ -213,7 +213,7 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 						int current_month = cal.get(Calendar.MONTH);
 						
 					if(day_w == 0)
-						day_w = 7;
+					   day_w = 7;
 					
 					if(day_w == day_week && day_m == day_month && current_month == month)
 					{
@@ -240,74 +240,79 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 							mañana.add(agd);
 						}else
 						{
-							flag = true;
+							if(estaSemana == null)
+								estaSemana = new ArrayList<Agenda>();
 							
-							int lapso = 7 - (day_week +1);
-							int per = 2;
+							estaSemana.add(agd);
 							
-							for(int y = 0 ; y < lapso ; y++)
-							{
-							    cal = Calendar.getInstance();
-							    cal.add(Calendar.DAY_OF_YEAR, per++);
-								 day_week_aux = cal.get(Calendar.DAY_OF_WEEK)-1;
-								 day_mont_aux = cal.get(Calendar.DAY_OF_MONTH);
-								 current_month_aux = cal.get(Calendar.MONTH);
-								 
-								 if(day_week_aux == 0)
-									 day_week_aux = 7;
-								 
-								 if(day_w == day_week_aux && day_m == day_mont_aux && current_month == current_month_aux)
-									{
-										if(estaSemana == null)
-											estaSemana = new ArrayList<Agenda>();
-										
-										estaSemana.add(agd);
-										
-										flag = false;
-										break;
-									}
-							   }
-							
-							if(flag)
-							{
-							
-									flag = true;
-									
-									lapso =  (7 - day_week)+1;
-									
-									for(int y = 0 ; y < 7 ; y++)
-									{
-										
-									    cal = Calendar.getInstance();
-									    cal.add(Calendar.DAY_OF_YEAR, lapso++);
-										 day_week_aux = cal.get(Calendar.DAY_OF_WEEK)-1;
-										 day_mont_aux = cal.get(Calendar.DAY_OF_MONTH);
-										 current_month_aux = cal.get(Calendar.MONTH);
-										 
-										 if(day_week_aux == 0)
-											 day_week_aux = 7;
-										 
-										 if(day_w == day_week_aux && day_m == day_mont_aux && current_month == current_month_aux)
-											{
-												if(proxima_semana == null)
-													proxima_semana = new ArrayList<Agenda>();
-												
-												proxima_semana.add(agd);
-												
-												flag = false;
-												break;
-											}
-									}
-									
-									if(flag)
-									{
-										if(proximo == null)
-											proximo = new ArrayList<Agenda>();
-										
-										proximo.add(agd);
-									}
-							
-							}
+//							flag = true;
+//							
+//							int lapso = 7 - (day_week +1);
+//							int per = 2;
+//							
+//							for(int y = 0 ; y < lapso ; y++)
+//							{
+//							    cal = Calendar.getInstance();
+//							    cal.add(Calendar.DAY_OF_YEAR, per++);
+//								 day_week_aux = cal.get(Calendar.DAY_OF_WEEK)-1;
+//								 day_mont_aux = cal.get(Calendar.DAY_OF_MONTH);
+//								 current_month_aux = cal.get(Calendar.MONTH);
+//								 
+//								 if(day_week_aux == 0)
+//									 day_week_aux = 7;
+//								 
+//								 if(day_w == day_week_aux && day_m == day_mont_aux && current_month == current_month_aux)
+//									{
+//										if(estaSemana == null)
+//											estaSemana = new ArrayList<Agenda>();
+//										
+//										estaSemana.add(agd);
+//										
+//										flag = false;
+//										break;
+//									}
+//							   }
+//							
+//							if(flag)
+//							{
+//							
+//									flag = true;
+//									
+//									lapso =  (7 - day_week)+1;
+//									
+//									for(int y = 0 ; y < 7 ; y++)
+//									{
+//										
+//									    cal = Calendar.getInstance();
+//									    cal.add(Calendar.DAY_OF_YEAR, lapso++);
+//										 day_week_aux = cal.get(Calendar.DAY_OF_WEEK)-1;
+//										 day_mont_aux = cal.get(Calendar.DAY_OF_MONTH);
+//										 current_month_aux = cal.get(Calendar.MONTH);
+//										 
+//										 if(day_week_aux == 0)
+//											 day_week_aux = 7;
+//										 
+//										 if(day_w == day_week_aux && day_m == day_mont_aux && current_month == current_month_aux)
+//											{
+//												if(proxima_semana == null)
+//													proxima_semana = new ArrayList<Agenda>();
+//												
+//												proxima_semana.add(agd);
+//												
+//												flag = false;
+//												break;
+//											}
+//									}
+//									
+//									if(flag)
+//									{
+//										if(proximo == null)
+//											proximo = new ArrayList<Agenda>();
+//										
+//										proximo.add(agd);
+//									}
+//							
+//							}
 						}
 					}
 					}else
@@ -319,41 +324,51 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 					}
 				 }
 				 
-				 if(anteriores != null)
-				 {
-					 arrayAgenda.add(anteriores);
-					 header.add("Anteriores");
-				 }
+//				 if(anteriores != null)
+//				 {
+//					 arrayAgenda.add(anteriores);
+//					 header.add("Anteriores");
+//				 }
+				 
+				 String date;
+				 SimpleDateFormat format1 = new SimpleDateFormat("EEEE-dd-MMMM-YYYY");
 				 
 				 if(hoy != null)
 				 {
 					 arrayAgenda.add(hoy);
-					 header.add("Hoy");
+					 
+					 cal = Calendar.getInstance();
+					 date = format1.format(cal.getTime());
+					 header.add("Hoy, "+date);
 				 }
 				 
 				 if(mañana != null)
 				 {
 					 arrayAgenda.add(mañana);
-					 header.add("Mañana");
+					 
+					 cal = Calendar.getInstance();
+					 cal.add(Calendar.DAY_OF_YEAR, 1);
+					 date = format1.format(cal.getTime());
+					 header.add("Mañana, "+date);
 				 }
 				 
 				 if(estaSemana != null)
 				 {
 					arrayAgenda.add(estaSemana);
-					header.add("Esta Semana");
+					header.add("");
 				 }
 				 
-				 if(proxima_semana != null)
-				 {
-					 arrayAgenda.add(proxima_semana);
-					 header.add("Próxima Semana");
-				 }
-				 
-				 if(proximo != null)
-				 {
-					 arrayAgenda.add(proximo);
-					 header.add("Próximo");
-				 }
+//				 if(proxima_semana != null)
+//				 {
+//					 arrayAgenda.add(proxima_semana);
+//					 header.add("Próxima Semana");
+//				 }
+//				 
+//				 if(proximo != null)
+//				 {
+//					 arrayAgenda.add(proximo);
+//					 header.add("Próximo");
+//				 }
 				 
 			 }
 	 }

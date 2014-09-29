@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import rp3.marketforce.R;
-import rp3.marketforce.R.color;
-import rp3.marketforce.R.id;
-import rp3.marketforce.R.layout;
 import rp3.marketforce.cliente.ClientFragment;
 import rp3.marketforce.headerlistview.SectionAdapter;
 import rp3.marketforce.models.Agenda;
