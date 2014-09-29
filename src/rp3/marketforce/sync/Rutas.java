@@ -83,7 +83,7 @@ public class Rutas {
 							JSONObject str = strs.getJSONObject(j);
 							rp3.marketforce.models.AgendaTarea agendaTarea = new rp3.marketforce.models.AgendaTarea();						
 							
-							agendaTarea.setID(str.getLong("IdTarea"));
+							agendaTarea.setIdTarea(str.getInt("IdTarea"));
 							agendaTarea.setIdRuta(str.getInt("IdRuta"));
 							agendaTarea.setIdAgenda(str.getInt("IdAgenda"));						
 							agendaTarea.setNombreTarea(str.getString("Nombre"));
