@@ -58,7 +58,7 @@ public class StartActivity extends rp3.app.StartActivity{
 			requestSync(bundle);
 			
 			
-			setServiceRecurring();
+			
 		}else{
 			callNextActivity();
 		}
@@ -81,6 +81,8 @@ public class StartActivity extends rp3.app.StartActivity{
 	}
 	
 	private void callNextActivity(){
+		setServiceRecurring();
+		
 		startActivity(MainActivity.newIntent(this));
 		finish();
 	}
