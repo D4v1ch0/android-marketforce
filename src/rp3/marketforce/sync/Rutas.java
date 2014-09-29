@@ -97,7 +97,6 @@ public class Rutas {
 						Log.e("Error", e.toString());
 						return SyncAdapter.SYNC_EVENT_ERROR;
 					}
-					
 				}
 			}finally{
 				webService.close();
