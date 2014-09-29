@@ -48,9 +48,7 @@ public class StartActivity extends rp3.app.StartActivity{
 	@Override
 	public void onContinue() {	
 		
-		super.onContinue();
-		
-		setServiceRecurring();
+		super.onContinue();				
 		
 		Long days = SyncAudit.getDaysOfLastSync(SyncAdapter.SYNC_TYPE_GENERAL, SyncAdapter.SYNC_EVENT_SUCCESS);
 		
@@ -58,6 +56,9 @@ public class StartActivity extends rp3.app.StartActivity{
 			Bundle bundle = new Bundle();
 			bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_GENERAL);
 			requestSync(bundle);
+			
+			
+			
 		}else{
 			callNextActivity();
 		}
@@ -79,6 +80,8 @@ public class StartActivity extends rp3.app.StartActivity{
 	}
 	
 	private void callNextActivity(){
+		setServiceRecurring();
+		
 		startActivity(MainActivity.newIntent(this));
 		finish();
 	}
