@@ -84,7 +84,7 @@ public class RutasListAdapter extends SectionAdapter{
 		
 		
 //		if (convertView == null)
-	      convertView = (View) inflater.inflate(this.contex.getApplicationContext().getResources().getLayout(R.layout.headerlist_client_list), null);
+	      convertView = (View) inflater.inflate(this.contex.getApplicationContext().getResources().getLayout(R.layout.headerlist_ruta_list), null);
 //		
 		((TextView) convertView.findViewById(R.id.textView_headerlist_client_list)).setText(""+header.get(section));
 		

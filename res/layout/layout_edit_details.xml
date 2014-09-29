@@ -31,6 +31,8 @@
             android:layout_weight=".30"
             android:singleLine="true"
        		android:ellipsize="end"
+       		android:textColor="@color/bg_button_bg_main"
+            android:textStyle="bold" 
             android:text="@string/label_correo" />
 
         <EditText
@@ -58,6 +60,8 @@
             android:layout_gravity="center_vertical"
             android:maxLines="2"
        		android:ellipsize="end"
+       		android:textColor="@color/bg_button_bg_main"
+            android:textStyle="bold" 
             android:text="@string/label_fecha_nacimiento" />
 
         <rp3.marketforce.DateDisplayPicker
@@ -84,6 +88,8 @@
             android:layout_gravity="center_vertical"
             android:maxLines="2"
        		android:ellipsize="end"
+       		android:textColor="@color/bg_button_bg_main"
+            android:textStyle="bold" 
             android:text="@string/label_estado_civil" />
 
         <Spinner

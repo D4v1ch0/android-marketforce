@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingBottom="0dp"
-    android:background="@drawable/bkg_login"
     android:paddingTop="5dp" >
 
     <ScrollView

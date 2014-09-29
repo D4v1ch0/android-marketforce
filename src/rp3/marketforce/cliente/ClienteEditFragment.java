@@ -238,6 +238,8 @@ public class ClienteEditFragment extends BaseFragment {
 		client.setEstadoCivil(getSpinnerGeneralValueSelectedCode(R.id.spinner_state_civil));
 
 		int x = 0;
+		TextView textViewPos;
+		
 		for (ClienteDireccion d : client.getClienteDirecciones()) {
 			View row;
 
@@ -259,13 +261,20 @@ public class ClienteEditFragment extends BaseFragment {
 					.findViewById(R.id.editText_referencia)).getText()
 					.toString());
 
-			if (((TextView) row.findViewById(R.id.textView_pos)).getText().length() > 0) {
-				d.setLongitud(longitude);
-				d.setLatitud(latitude);
+			textViewPos = ((TextView) row.findViewById(R.id.textView_pos));
+			
+			if (textViewPos.getText().length() > 0) {
+				
+				String[] dat = textViewPos.getText().toString().split(" , ");
+				
+				if(dat != null)
+					if(dat.length == 2)
+					{
+						d.setLongitud(Double.parseDouble(dat[0]));
+						d.setLatitud(Double.parseDouble(dat[1]));
+					}
 			}
-
 		}
-
 	}
 
 	private boolean updateCliente() {

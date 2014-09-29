@@ -180,7 +180,7 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 			}
 		}
 	 
-	 @SuppressLint("SimpleDateFormat")
+    @SuppressLint("SimpleDateFormat")
 	private void orderDate()
 	 {
 		 if(list_agenda != null)
@@ -201,12 +201,10 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 				 for(Agenda agd :list_agenda)
 				 {
 					
-					
 					long diff = DateTime.getDaysDiff(calendar.getTime(), agd.getFechaInicio());
 					
 					if(diff >= 0)
 					{
-						
 						cal.setTime(agd.getFechaInicio());
 						int day_w = cal.get(Calendar.DAY_OF_WEEK)-1;
 						int day_m = cal.get(Calendar.DAY_OF_MONTH);
@@ -331,7 +329,7 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 //				 }
 				 
 				 String date;
-				 SimpleDateFormat format1 = new SimpleDateFormat("EEEE-dd-MMMM-YYYY");
+				 SimpleDateFormat format1 = new SimpleDateFormat("EEEE dd MMMM");
 				 
 				 if(hoy != null)
 				 {

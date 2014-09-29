@@ -17,6 +17,8 @@
             android:layout_weight=".30"
             android:singleLine="true"
        		android:ellipsize="end"
+       		android:textColor="@color/bg_button_bg_main"
+            android:textStyle="bold" 
        		android:layout_gravity="center_vertical"
             android:text="@string/label_direccion" />
 
@@ -43,6 +45,8 @@
             android:layout_weight=".30"
             android:singleLine="true"
        		android:ellipsize="end"
+       		android:textColor="@color/bg_button_bg_main"
+            android:textStyle="bold" 
        		android:layout_gravity="center_vertical"
             android:text="@string/label_telefono_1" />
 
@@ -71,6 +75,8 @@
             android:layout_weight=".30"
             android:singleLine="true"
        		android:ellipsize="end"
+       		android:textColor="@color/bg_button_bg_main"
+            android:textStyle="bold" 
        		android:layout_gravity="center_vertical"
             android:text="@string/label_telefono_2" />
 
@@ -99,6 +105,8 @@
             android:layout_weight=".30"
             android:singleLine="true"
        		android:ellipsize="end"
+       		android:textColor="@color/bg_button_bg_main"
+            android:textStyle="bold" 
        		android:layout_gravity="center_vertical"
             android:text="@string/label_referencia" />
 
@@ -125,6 +133,8 @@
             android:layout_weight=".35"
             android:singleLine="true"
        		android:ellipsize="end"
+       		android:textColor="@color/bg_button_bg_main"
+            android:textStyle="bold" 
        		android:layout_gravity="center_vertical"
             android:text="@string/label_geo_posicion" />
 
