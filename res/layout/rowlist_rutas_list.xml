@@ -4,49 +4,23 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal" >
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="10dp" >
-
-        <TextView
-            android:id="@+id/textView_dia"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:textSize="@dimen/text_small_size" />
-
-        <TextView
-            android:id="@+id/textView_num_dia"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:textStyle="bold"
-            android:textSize="@dimen/text_large_size" />
-
-        <TextView
-            android:id="@+id/textView_mes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:textSize="@dimen/text_small_size" />
-    </LinearLayout>
+    <View
+        android:id="@+id/view1"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:background="@drawable/circle_shape" />
 
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:baselineAligned="false"
         android:gravity="center"
         android:orientation="vertical"
-        android:paddingTop="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="5dp"
         android:paddingBottom="10dp" >
 
         <TextView
@@ -55,50 +29,8 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textSize="@dimen/text_large_size" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical" >
-
-                <TextView
-                    android:id="@+id/textView_movil"
-                    style="@style/Widget.TextView.XSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/ic_action_call_mini"
-                    android:gravity="center_vertical"
-                    android:textSize="@dimen/text_small_size"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical" >
-
-                <TextView
-                    android:id="@+id/textView_mail"
-                    style="@style/Widget.TextView.XSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:drawableLeft="@drawable/ic_action_email_mini"
-                    android:ellipsize="end"
-                    android:gravity="center_vertical"
-                    android:singleLine="true"
-                    android:textSize="@dimen/text_small_size"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-        </LinearLayout>
+            android:textStyle="bold"
+            android:textSize="@dimen/text_medium_size" />
 
         <TextView
             android:id="@+id/textView_address"
@@ -116,18 +48,8 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:layout_marginRight="15dp"
         android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/textView_estado"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:singleLine="true"
-            android:ellipsize="end"
-            android:textColor="@color/color_rating_select"
-            android:textSize="@dimen/text_small_size" />
 
         <ImageView
             android:layout_width="28dp"
@@ -143,7 +65,6 @@
             android:layout_gravity="center"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textStyle="bold"
             android:textSize="@dimen/text_small_size" />
 
     </LinearLayout>

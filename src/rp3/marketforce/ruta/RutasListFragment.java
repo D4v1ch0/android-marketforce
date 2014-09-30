@@ -65,7 +65,7 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 //        setRetainInstance(true);
         
         if(savedInstanceState == null)
-		     super.setContentView(R.layout.layout_headerlist_client_list);
+		     super.setContentView(R.layout.layout_headerlist_ruta_list);
         
         calendar = Calendar.getInstance();
         day_month =  calendar.get(Calendar.DAY_OF_MONTH);
@@ -86,7 +86,7 @@ public class RutasListFragment extends rp3.app.BaseFragment {
     public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
     	super.onFragmentCreateView(rootView, savedInstanceState);
     	
-    	linearLayout_rootParent = (LinearLayout) rootView.findViewById(R.id.linearLayout_headerlist_client_list);
+    	linearLayout_rootParent = (LinearLayout) rootView.findViewById(R.id.linearLayout_headerlist_ruta_list);
     }
     
     @Override

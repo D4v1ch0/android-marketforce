@@ -109,34 +109,12 @@ public class RutasListAdapter extends SectionAdapter{
 		 hour_fin = format4.format(agd.getFechaFin());
 		 str_range =hour_inicio+" - "+hour_fin;
 		
-		((TextView) convertView.findViewById(R.id.textView_dia)).setText(""+capitalizeFirstLetter(day_week));
-		((TextView) convertView.findViewById(R.id.textView_num_dia)).setText(""+day);
-		((TextView) convertView.findViewById(R.id.textView_mes)).setText(""+capitalizeFirstLetter(month));
-		((TextView) convertView.findViewById(R.id.textView_estado)).setText(""+agd.getEstadoAgenda());
 		((TextView) convertView.findViewById(R.id.textView_horas)).setText(str_range);
 		 
-		
-		if(agd.getCliente() != null)
-		{
-			((TextView) convertView.findViewById(R.id.textView_nombre)).setText(""+agd.getCliente().getNombreCompleto());
-			
-			if(agd.getCliente().getCorreoElectronico() != null)
-				((TextView) convertView.findViewById(R.id.textView_mail)).setText(""+agd.getCliente().getCorreoElectronico());
-			else
-				((TextView) convertView.findViewById(R.id.textView_mail)).setVisibility(View.GONE);
-		}
+		((TextView) convertView.findViewById(R.id.textView_nombre)).setText(""+agd.getNombreCompleto());
 		
 		if(agd.getClienteDireccion() != null)
-		{
 			((TextView) convertView.findViewById(R.id.textView_address)).setText(""+agd.getClienteDireccion().getDireccion());
-			
-			if(agd.getClienteDireccion().getTelefono1() != null)
-				((TextView) convertView.findViewById(R.id.textView_movil)).setText(""+agd.getClienteDireccion().getTelefono1());
-			else
-				((TextView) convertView.findViewById(R.id.textView_movil)).setVisibility(View.GONE);
-			
-		}
-		
 		
 		if(ClientFragment. mTwoPane)
 		{
