@@ -1,7 +1,6 @@
 package rp3.marketforce;
 
 import java.util.Calendar;
-
 import rp3.configuration.Configuration;
 import rp3.content.SimpleCallback;
 import rp3.data.MessageCollection;
@@ -26,22 +25,25 @@ public class StartActivity extends rp3.app.StartActivity{
 	}
 	
 	private void setServiceRecurring(){
-//		Intent i = new Intent(this, EnviarUbicacionReceiver.class);
-//		PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
-//		
-//		// Set the alarm to start at 8:30 a.m.
-//		Calendar calendar = Calendar.getInstance();
-//		calendar.setTimeInMillis(System.currentTimeMillis());
-//		calendar.set(Calendar.HOUR_OF_DAY, 8);
-//		calendar.set(Calendar.MINUTE, 30);
-//				
-//		AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-//		//am.cancel(pi); // cancel any existing alarms
-//		am.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-//			calendar.getTimeInMillis(),
-//		    AlarmManager.INTERVAL_FIFTEEN_MINUTES, pi);		
+		Intent i = new Intent(this, EnviarUbicacionReceiver.class);
+		PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
 		
-		//AlarmManager.INTERVAL_FIFTEEN_MINUTES
+		// Set the alarm to start at 8:30 a.m.
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(System.currentTimeMillis());
+		calendar.set(Calendar.HOUR_OF_DAY, 8);
+		calendar.set(Calendar.MINUTE, 30);
+				
+		Random r = new Random();
+		int i1 = r.nextInt(5);
+		
+		AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+		//am.cancel(pi); // cancel any existing alarms
+		am.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+			calendar.getTimeInMillis() + (i1 * 1000 * 5),
+			1000 * 60 * 10, pi);
+		
+	//AlarmManager.INTERVAL_FIFTEEN_MINUTES
 	}
 
 	@Override
@@ -63,22 +65,23 @@ public class StartActivity extends rp3.app.StartActivity{
 	
 	public void onSyncComplete(Bundle data, final MessageCollection messages) {
 		if(data.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_GENERAL)){
-		if(messages.getCuount()>0)
-			showDialogMessage(messages, new SimpleCallback() {				
-				@Override
-				public void onExecute(Object... params) {
-					if(!messages.hasErrorMessage())
-						callNextActivity();
-					else
-						finish();
-				}
-			});
-		else
-			callNextActivity();
+			if(messages.hasErrorMessage())
+				showDialogMessage(messages, new SimpleCallback() {				
+					@Override
+					public void onExecute(Object... params) {
+						if(!messages.hasErrorMessage())
+							callNextActivity();
+						else
+							finish();
+					}
+				});
+			else
+				callNextActivity();
 		}
 	}
 	
 	private void callNextActivity(){
+		setServiceRecurring();		
 		startActivity(MainActivity.newIntent(this));
 		finish();
 		setServiceRecurring();

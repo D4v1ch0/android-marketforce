@@ -17,6 +17,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -39,6 +40,7 @@ public class RutasListFragment extends rp3.app.BaseFragment {
     private HorizontalScrollView horizontalListView;
     private LinearLayout linearLayout_horizontal;
     LayoutInflater inflater;
+    private int width;
     
     public static RutasListFragment newInstance() {
     	RutasListFragment fragment = new RutasListFragment();
@@ -96,6 +98,10 @@ public class RutasListFragment extends rp3.app.BaseFragment {
     	linearLayout_rootParent = (LinearLayout) rootView.findViewById(R.id.linearLayout_headerlist_ruta_list);
     	horizontalListView = (HorizontalScrollView) rootView.findViewById(R.id.horizontalScrollView);
     	linearLayout_horizontal = (LinearLayout) rootView.findViewById(R.id.linearLayout_horizontal);
+    	
+    	DisplayMetrics metrics = new DisplayMetrics();
+    	getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+    	width = metrics.widthPixels;
     }
     
     @Override
@@ -179,11 +185,12 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 							linearLayout_rootParent.addView(headerlist);
 						}
 						
-						
+						LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int) (width*.14f) , LinearLayout.LayoutParams.WRAP_CONTENT);
 						for(int x = 0 ; x < 10; x++)
 						{
-							View view_ = inflater.inflate(R.layout.rowlist_date, null);
-							linearLayout_horizontal.addView(view_);
+						  View view_ = inflater.inflate(R.layout.rowlist_date, null);
+						  view_.setLayoutParams(params);
+						  linearLayout_horizontal.addView(view_);
 						}
 						
 						orderDate();
@@ -217,7 +224,6 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 				 
 				 for(Agenda agd :list_agenda)
 				 {
-					
 					long diff = DateTime.getDaysDiff(calendar.getTime(), agd.getFechaInicio());
 					
 					if(diff >= 0)

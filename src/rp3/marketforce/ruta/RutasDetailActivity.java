@@ -1,8 +1,6 @@
 package rp3.marketforce.ruta;
 
 import rp3.marketforce.R;
-import rp3.marketforce.R.id;
-import rp3.marketforce.R.layout;
 import rp3.marketforce.db.DbOpenHelper;
 import android.content.Context;
 import android.content.Intent;
