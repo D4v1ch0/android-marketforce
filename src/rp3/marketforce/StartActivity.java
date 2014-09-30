@@ -1,6 +1,8 @@
 package rp3.marketforce;
 
 import java.util.Calendar;
+import java.util.Random;
+
 import rp3.configuration.Configuration;
 import rp3.content.SimpleCallback;
 import rp3.data.MessageCollection;
