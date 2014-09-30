@@ -13,11 +13,14 @@ import rp3.marketforce.models.Agenda;
 import rp3.util.DateTime;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
 public class RutasListFragment extends rp3.app.BaseFragment {
@@ -33,6 +36,9 @@ public class RutasListFragment extends rp3.app.BaseFragment {
     private int day_month = -1;
     private int month = -1;
     private Calendar calendar;
+    private HorizontalScrollView horizontalListView;
+    private LinearLayout linearLayout_horizontal;
+    LayoutInflater inflater;
     
     public static RutasListFragment newInstance() {
     	RutasListFragment fragment = new RutasListFragment();
@@ -86,13 +92,15 @@ public class RutasListFragment extends rp3.app.BaseFragment {
     public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
     	super.onFragmentCreateView(rootView, savedInstanceState);
     	
+    	inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE); 
     	linearLayout_rootParent = (LinearLayout) rootView.findViewById(R.id.linearLayout_headerlist_ruta_list);
+    	horizontalListView = (HorizontalScrollView) rootView.findViewById(R.id.horizontalScrollView);
+    	linearLayout_horizontal = (LinearLayout) rootView.findViewById(R.id.linearLayout_horizontal);
     }
     
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {    	
     	super.onActivityCreated(savedInstanceState);
-    	
     }
     
     @Override
@@ -165,8 +173,17 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 						if(headerlist == null)
 						{
 							headerlist = new HeaderListView(getActivity());
+							headerlist.getListView().setDivider(null);
+							headerlist.getListView().setDividerHeight(0);
 							headerlist.getListView().setSelector(getActivity().getResources().getDrawable(R.drawable.bkg));
 							linearLayout_rootParent.addView(headerlist);
+						}
+						
+						
+						for(int x = 0 ; x < 10; x++)
+						{
+							View view_ = inflater.inflate(R.layout.rowlist_date, null);
+							linearLayout_horizontal.addView(view_);
 						}
 						
 						orderDate();

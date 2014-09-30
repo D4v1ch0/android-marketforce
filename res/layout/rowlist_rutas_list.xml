@@ -2,71 +2,80 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@android:color/white"
     android:orientation="horizontal" >
 
     <View
-        android:id="@+id/view1"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
-        android:layout_gravity="center"
-        android:layout_margin="5dp"
-        android:background="@drawable/circle_shape" />
+        android:id="@+id/View01"
+        android:layout_width="8dp"
+        android:layout_height="match_parent"
+        android:background="@color/color_background_title"
+         />
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:baselineAligned="false"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="5dp"
-        android:paddingBottom="10dp" >
+        android:background="@drawable/border_bottom" >
 
-        <TextView
-            android:id="@+id/textView_nombre"
-            android:layout_width="match_parent"
+        <View
+            android:id="@+id/view1"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_margin="5dp"
+            android:layout_gravity="center"
+            android:background="@drawable/circle_shape" />
+
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:textStyle="bold"
-            android:textSize="@dimen/text_medium_size" />
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:baselineAligned="false"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="10dp" >
 
-        <TextView
-            android:id="@+id/textView_address"
-            style="@style/Widget.TextView.XSmall"
+            <TextView
+                android:id="@+id/textView_nombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textSize="@dimen/text_medium_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView_address"
+                style="@style/Widget.TextView.XSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_menu_home_mini"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:textSize="@dimen/text_small_size" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_menu_home_mini"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:singleLine="true"
-            android:textSize="@dimen/text_small_size" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="15dp"
-        android:orientation="vertical" >
-
-        <ImageView
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_marginRight="15dp"
             android:layout_gravity="center"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_action_time" />
+            android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/textView_horas"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:textSize="@dimen/text_small_size" />
-
+            <TextView
+                android:id="@+id/textView_horas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:drawableTop="@drawable/ic_action_time"
+                android:textSize="@dimen/text_small_size" />
+        </LinearLayout>
     </LinearLayout>
     
 </LinearLayout>
