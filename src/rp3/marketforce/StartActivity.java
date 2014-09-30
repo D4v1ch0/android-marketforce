@@ -1,6 +1,7 @@
 package rp3.marketforce;
 
 import java.util.Calendar;
+import java.util.Random;
 
 import rp3.configuration.Configuration;
 import rp3.content.SimpleCallback;
@@ -35,11 +36,14 @@ public class StartActivity extends rp3.app.StartActivity{
 		calendar.set(Calendar.HOUR_OF_DAY, 8);
 		calendar.set(Calendar.MINUTE, 30);
 				
+		Random r = new Random();
+		int i1 = r.nextInt(5);
+		
 		AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
 		//am.cancel(pi); // cancel any existing alarms
 		am.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-			calendar.getTimeInMillis(),
-			AlarmManager.INTERVAL_FIFTEEN_MINUTES, pi);
+			calendar.getTimeInMillis() + (i1 * 1000 * 5),
+			1000 * 60 * 10, pi);
 		
 	//AlarmManager.INTERVAL_FIFTEEN_MINUTES
 	}
