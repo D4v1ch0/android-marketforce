@@ -8,6 +8,7 @@ import rp3.db.sqlite.DataBase;
 import rp3.marketforce.db.Contract;
 import rp3.util.CursorUtils;
 import android.database.Cursor;
+import android.util.Log;
 
 public class AgendaTarea extends rp3.data.entity.EntityBase<AgendaTarea> {
 
@@ -117,11 +118,12 @@ public class AgendaTarea extends rp3.data.entity.EntityBase<AgendaTarea> {
 		this.estadoTareaDescripcion = estadoTareaDescripcion;
 	}	
 	
-	public static List<AgendaTarea> getAgendaTareas(DataBase db, int idRuta, int idAgenda){
+	public static List<AgendaTarea> getAgendaTareas(DataBase db, long idAgenda, int idRuta){
 		String query = QueryDir.getQuery(Contract.AgendaTarea.QUERY_AGENDA_TAREA);
 				
-		Cursor c = db.rawQuery(query, new String[] { String.valueOf(idRuta), String.valueOf(idAgenda) });
-				
+		Cursor c = db.rawQuery(query, new String[] { String.valueOf(idAgenda), String.valueOf(idRuta) });
+		
+		
 		List<AgendaTarea> list = new ArrayList<AgendaTarea>();
 		while(c.moveToNext()){
 			

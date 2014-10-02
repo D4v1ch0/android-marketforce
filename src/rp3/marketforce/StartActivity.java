@@ -82,6 +82,11 @@ public class StartActivity extends rp3.app.StartActivity{
 		}
 	}
 	
+	@Override
+	public void onVerifyRequestSignIn() {
+		callNextActivity();
+	}
+	
 	private void callNextActivity(){
 		setServiceRecurring();		
 		startActivity(MainActivity.newIntent(this));

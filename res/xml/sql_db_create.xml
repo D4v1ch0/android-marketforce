@@ -88,4 +88,33 @@
       EstadoTarea TEXT
       )
 	</statement>
+	
+	<statement>
+	  CREATE TABLE tbAgendaTareaActividades(
+      _id INTEGER PRIMARY KEY,
+      Descripcion TEXT,
+      IdAgenda INTEGER,
+      IdRuta INTEGER,
+      IdTarea INTEGER,
+      IdTareaActividad INTEGER,
+      IdTareaActividadPadre INTEGER,
+      IdTareaOpcion INTEGER,
+      IdTipoActividad INTEGER,
+      Orden INTEGER,
+      Resultado TEXT,
+      Tipo TEXT
+      )
+	</statement>
+	
+	<statement>
+	  CREATE TABLE tbAgendaTareaOpciones(
+      _id INTEGER PRIMARY KEY,
+      Descripcion TEXT,
+      IdAgenda INTEGER,
+      IdRuta INTEGER,
+      IdTarea INTEGER,
+      IdTareaActividad INTEGER,
+      Orden INTEGER
+      )
+	</statement>
 </sql>

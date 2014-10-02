@@ -213,12 +213,14 @@
     
 	 <statement name="AgendaTarea">
        SELECT
-       IdRuta,
-	   IdAgenda,
-	   IdTarea,
-	   NombreTarea,
-	   TipoTarea,
-	   EstadoTarea
+       tbAgendaTarea._id,
+       tbAgendaTarea.IdRuta,
+	   tbAgendaTarea.IdAgenda,
+	   tbAgendaTarea.IdTarea,
+	   tbAgendaTarea.NombreTarea,
+	   tbAgendaTarea.TipoTarea,
+	   tbAgendaTarea.EstadoTarea,
+	   tbEstadoTarea.Value AS tbEstadoTarea_Value_Value
 	   FROM tbAgendaTarea
 	   JOIN tbGeneralValue tbEstadoTarea
 	   ON tbEstadoTarea.GeneralTableId = 1014

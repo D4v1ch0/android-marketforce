@@ -22,7 +22,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 
 	public static final String ARG_TRANSACTIONTYPEID = "transactionTypeId";
 	
-	private boolean mTwoPane = false;
+	public static boolean mTwoPane = false;
 	private long selectedTransactionId;
 	
 //	private MenuItem menuItemActionEdit;

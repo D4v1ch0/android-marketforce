@@ -53,7 +53,7 @@
                 </method>
                 <method>
                     <name>Agenda</name>
-                    <action>agenda/get?fechainicio=@fechainicio&amp;fechafin=@fechafin</action>
+                    <action>agenda/get?fechainicio=@fechainicio&amp;fechafin=@fechafin&amp;incluiractividades=@incluiractividades</action>
                     <webMethod>GET</webMethod>
                 </method>
                 <method>

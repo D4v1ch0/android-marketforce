@@ -8,29 +8,28 @@
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/TextView02"
+        android:id="@+id/textView_week"
         style="@style/Widget.TextView.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Lun" />
+         />
 
     <TextView
-        android:id="@+id/TextView01"
+        android:id="@+id/textView_day"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/Widget.TextView.Large"
         android:layout_gravity="center_horizontal"
         android:textStyle="bold"
-        android:text="29" />
+         />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textView_month"
         style="@style/Widget.TextView.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:visibility="invisible"
-        android:text="Sep" />
+        />
 
 </LinearLayout>

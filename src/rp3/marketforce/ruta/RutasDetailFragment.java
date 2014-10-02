@@ -2,9 +2,6 @@ package rp3.marketforce.ruta;
 
 import rp3.marketforce.ListaTareasAdapter;
 import rp3.marketforce.R;
-import rp3.marketforce.R.array;
-import rp3.marketforce.R.id;
-import rp3.marketforce.R.layout;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.Cliente;
 import android.annotation.SuppressLint;
@@ -91,15 +88,17 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
 		if(agenda != null)
 		{
 			
-	      String[] datos = getActivity(). getResources().getStringArray(R.array.testArrayEstado);
-	//			inflater = (LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		  setSpinnerSimpleAdapter(R.id.spinner_state, datos);
+	//	   inflater = (LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			
 		   setTextViewText(R.id.textView_name, agenda.getNombreCompleto());
 		   setTextViewText(R.id.textView_movil, agenda.getClienteDireccion().getTelefono1());
+//		   setTextViewText(R.id.textView_tipo_canal,agenda.getCliente().getCanalDescripcion());
+//		   setTextViewText(R.id.textView_tipo_cliente,agenda.getCliente().getTipoClienteDescripcion());
 		   setTextViewText(R.id.textView_mail, agenda.getCliente().getCorreoElectronico());
 		   setTextViewText(R.id.textView_address, agenda.getClienteDireccion().getDireccion());
 		   setTextViewDateText(R.id.textView_fecha, agenda.getFechaInicio());
+		   
+//		   setImageViewBitmapFromInternalStorageAsync(R.id.imageView_foto, agenda.getCliente().getFotoFileName());
 		   
 		   
 		   if(agenda.getAgendaTareas() != null)

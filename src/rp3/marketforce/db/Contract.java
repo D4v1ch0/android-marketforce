@@ -218,4 +218,52 @@ public final class Contract {
 		
 		public static final String QUERY_AGENDA_TAREA = "AgendaTarea";
 	}
+    
+   public static abstract class AgendaTareaActividades implements BaseColumns {
+		
+		public static final String TABLE_NAME = "tbAgendaTareaActividades";
+		
+		public static final String COLUMN_DESCRIPCION = "Descripcion";
+		public static final String COLUMN_AGENDA_ID = "IdAgenda";
+		public static final String COLUMN_RUTA_ID = "IdRuta";
+		public static final String COLUMN_TAREA_ID = "IdTarea";
+		public static final String COLUMN_TAREA_ACTIVIDAD_ID = "IdTareaActividad";
+		public static final String COLUMN_TAREA_ACTIVIDAD_PADRE_ID = "IdTareaActividadPadre";
+		public static final String COLUMN_TAREA_OPCION_ID = "IdTareaOpcion";
+		public static final String COLUMN_TIPO_ACTIVIDAD_ID = "IdTipoActividad";
+		public static final String COLUMN_ORDEN = "Orden";
+		public static final String COLUMN_RESULTADO = "Resultado";
+		public static final String COLUMN_TIPO = "Tipo";
+		
+		public static final String FIELD_DESCRIPCION = COLUMN_DESCRIPCION;
+		public static final String FIELD_AGENDA_ID = COLUMN_AGENDA_ID;
+		public static final String FIELD_RUTA_ID = COLUMN_RUTA_ID;
+		public static final String FIELD_TAREA_ID = COLUMN_TAREA_ID;
+		public static final String FIELD_TAREA_ACTIVIDAD_ID = COLUMN_TAREA_ACTIVIDAD_ID;
+		public static final String FIELD_TAREA_ACTIVIDAD_PADRE_ID = COLUMN_TAREA_ACTIVIDAD_PADRE_ID;
+		public static final String FIELD_TAREA_OPCION_ID = COLUMN_TAREA_OPCION_ID;
+		public static final String FIELD_TIPO_ACTIVIDAD_ID = COLUMN_TIPO_ACTIVIDAD_ID;
+		public static final String FIELD_ORDEN = COLUMN_ORDEN;
+		public static final String FIELD_RESULTADO = COLUMN_RESULTADO;
+		public static final String FIELD_TIPO = COLUMN_TIPO;
+	}
+   
+   public static abstract class AgendaTareaOpciones implements BaseColumns {
+		
+		public static final String TABLE_NAME = "tbAgendaTareaOpciones";
+		
+		public static final String COLUMN_DESCRIPCION = "Descripcion";
+		public static final String COLUMN_AGENDA_ID = "IdAgenda";
+		public static final String COLUMN_RUTA_ID = "IdRuta";
+		public static final String COLUMN_TAREA_ID = "IdTarea";
+		public static final String COLUMN_TAREA_ACTIVIDAD_ID = "IdTareaActividad";
+		public static final String COLUMN_ORDEN = "Orden";
+		
+		public static final String FIELD_DESCRIPCION = COLUMN_DESCRIPCION;
+		public static final String FIELD_AGENDA_ID = COLUMN_AGENDA_ID;
+		public static final String FIELD_RUTA_ID = COLUMN_RUTA_ID;
+		public static final String FIELD_TAREA_ID = COLUMN_TAREA_ID;
+		public static final String FIELD_TAREA_ACTIVIDAD_ID = COLUMN_TAREA_ACTIVIDAD_ID;
+		public static final String FIELD_ORDEN = COLUMN_ORDEN;
+	}
 }

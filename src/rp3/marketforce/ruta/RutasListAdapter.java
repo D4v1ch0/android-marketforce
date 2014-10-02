@@ -25,19 +25,13 @@ public class RutasListAdapter extends SectionAdapter{
 	private ArrayList<ArrayList<Agenda>> list_agenda;
 	private ArrayList<String> header;
 	private TransactionListFragmentListener transactionListFragmentCallback;
-	private String day_week= "";
-	private String day = "";
-	private String month = "";
 	private String hour_inicio="";
 	private String hour_fin="";
 	private String str_range;
-	private SimpleDateFormat format1; 
-	private SimpleDateFormat format2; 
-	private SimpleDateFormat format3;
 	private SimpleDateFormat format4;
 	private Date date;
-	private int section_ = -1;
 	private int row_ = -1;
+	private int section_ = -1;
 	
 	public RutasListAdapter(Context c, ArrayList<ArrayList<Agenda>> list_agenda ,TransactionListFragmentListener transactionListFragmentCallback,
 			ArrayList<String> header){
@@ -47,9 +41,6 @@ public class RutasListAdapter extends SectionAdapter{
 		this.header = header;
 		this.transactionListFragmentCallback = transactionListFragmentCallback;
 		
-		 format1 = new SimpleDateFormat("EEEE"); 
-		 format2 = new SimpleDateFormat("dd"); 
-		 format3= new SimpleDateFormat("MMMM");
 		 format4= new SimpleDateFormat("HH:mm");
 	}
 	
@@ -101,10 +92,6 @@ public class RutasListAdapter extends SectionAdapter{
 		
 		Agenda agd = list_agenda.get(section).get(row);
 		date = agd.getFechaInicio();
-		 day_week = format1.format(date);
-		 day = format2.format(date);
-		 month = format3.format(date);
-		 
 		 hour_inicio = format4.format(date);
 		 hour_fin = format4.format(agd.getFechaFin());
 		 str_range =hour_inicio+" - "+hour_fin;
@@ -116,17 +103,18 @@ public class RutasListAdapter extends SectionAdapter{
 		if(agd.getClienteDireccion() != null)
 			((TextView) convertView.findViewById(R.id.textView_address)).setText(""+agd.getClienteDireccion().getDireccion());
 		
-		if(ClientFragment. mTwoPane)
-		{
+		View vi = (View) convertView.findViewById(R.id.view_vertical);
+		if(section == section_)
+			vi.setVisibility(View.VISIBLE);
+		else
+			vi.setVisibility(View.GONE);
+			
+		
+		convertView.setBackgroundResource(R.drawable.border_bottom);
+		if(RutasFragment.mTwoPane)
 			if (section == section_)
 				if (row == row_)
 					convertView.setBackgroundColor(contex.getResources().getColor(R.color.color_background_selector));
-				else
-					convertView.setBackgroundColor(contex.getResources().getColor(R.color.color_background_white));
-			else
-				convertView.setBackgroundColor(contex.getResources().getColor(R.color.color_background_white));
-		}
-		
 		
 		return convertView;
 	}
@@ -150,10 +138,12 @@ public class RutasListAdapter extends SectionAdapter{
     public void onRowItemClick(AdapterView<?> parent, View view, int section, int row, long id) {
         super.onRowItemClick(parent, view, section, row, id);
         
+        RutasListFragment.SECTION = section;
+        section_= section;
+    	row_ = row;
+        
         if(ClientFragment. mTwoPane)
         {
-        	section_ = section;
-        	row_ = row;
         	notifyDataSetChanged();
         }
         

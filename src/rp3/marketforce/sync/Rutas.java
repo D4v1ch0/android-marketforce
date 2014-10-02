@@ -35,6 +35,7 @@ public class Rutas {
 			
 			webService.addParameter("@fechainicio", inicio);
 			webService.addParameter("@fechafin", fin);
+			webService.addParameter("@incluiractividades", true);
 			
 			try
 			{			
