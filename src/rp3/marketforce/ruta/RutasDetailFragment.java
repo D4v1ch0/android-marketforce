@@ -4,7 +4,6 @@ import rp3.marketforce.ListaTareasAdapter;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.Cliente;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -12,10 +11,7 @@ import android.view.View;
 import android.widget.ListView;
 
 public class RutasDetailFragment extends rp3.app.BaseFragment {
-    /**
-     * The fragment argument representing the item ID that this fragment
-     * represents.
-     */
+    
     public static final String ARG_ITEM_ID = "idagenda";
 
 
@@ -41,9 +37,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
         fragment.setArguments(arguments);
         return fragment;
     }
-            
-    public RutasDetailFragment() {
-    }
+      
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,11 +53,11 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
         }    
         
         if(idAgenda != 0){        	
-        	agenda = Agenda.getAgendaID(getDataBase(), idAgenda);
+        	agenda = Agenda.getAgenda(getDataBase(), idAgenda);
         }
         
         if(agenda != null){
-        	super.setContentView(R.layout.fragment_transaction_detail_rutas);
+        	super.setContentView(R.layout.fragment_rutas_detalle);
         }
         else{
         	super.setContentView(R.layout.base_content_no_selected_item);
@@ -73,36 +67,21 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
     @Override
     public void onAttach(Activity activity) {    	
     	super.onAttach(activity);
-    	
     }
+      
     
-    @Override
-    public void onPositiveConfirmation(int id) {
-    	super.onPositiveConfirmation(id);
-    }
-    
-    @SuppressLint("InflateParams")
 	@Override
     public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {    	
     	 
-		if(agenda != null)
-		{
-			
-	//	   inflater = (LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			
+		if(agenda != null){			
+		   setImageViewBitmapFromInternalStorageAsync(R.id.imageView1, agenda.getCliente().getFotoFileName());
 		   setTextViewText(R.id.textView_name, agenda.getNombreCompleto());
 		   setTextViewText(R.id.textView_movil, agenda.getClienteDireccion().getTelefono1());
-//		   setTextViewText(R.id.textView_tipo_canal,agenda.getCliente().getCanalDescripcion());
-//		   setTextViewText(R.id.textView_tipo_cliente,agenda.getCliente().getTipoClienteDescripcion());
 		   setTextViewText(R.id.textView_mail, agenda.getCliente().getCorreoElectronico());
 		   setTextViewText(R.id.textView_address, agenda.getClienteDireccion().getDireccion());
-		   setTextViewDateText(R.id.textView_fecha, agenda.getFechaInicio());
+		   setTextViewDateText(R.id.textView_fecha, agenda.getFechaInicio());		  		   
 		   
-//		   setImageViewBitmapFromInternalStorageAsync(R.id.imageView_foto, agenda.getCliente().getFotoFileName());
-		   
-		   
-		   if(agenda.getAgendaTareas() != null)
-		   {
+		   if(agenda.getAgendaTareas() != null){
 			   adapter = new ListaTareasAdapter(getActivity(), agenda.getAgendaTareas());
 			   lista_tarea = (ListView) rootView.findViewById(R.id.listView_tareas);
 			   lista_tarea.setAdapter(adapter);

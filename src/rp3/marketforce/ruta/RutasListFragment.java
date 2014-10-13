@@ -66,10 +66,7 @@ public class RutasListFragment extends rp3.app.BaseFragment {
         public void onTransactionSelected(long id);
 
 		boolean onCreateOptionsMenu(Menu menu);
-    }
-
-    public RutasListFragment() {
-    }
+    }  
     
 	@Override
     public void onAttach(Activity activity) {
@@ -86,7 +83,6 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setRetainInstance(true);
         
         if(savedInstanceState == null)
 		     super.setContentView(R.layout.layout_headerlist_ruta_list);

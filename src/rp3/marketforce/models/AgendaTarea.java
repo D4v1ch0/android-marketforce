@@ -8,7 +8,6 @@ import rp3.db.sqlite.DataBase;
 import rp3.marketforce.db.Contract;
 import rp3.util.CursorUtils;
 import android.database.Cursor;
-import android.util.Log;
 
 public class AgendaTarea extends rp3.data.entity.EntityBase<AgendaTarea> {
 

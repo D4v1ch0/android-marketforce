@@ -2,13 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="4dp"
-    android:layout_marginRight="4dp"
+    android:layout_marginLeft="2dp"
+    android:layout_marginRight="2dp"
     android:baselineAligned="false"
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="horizontal"
-    android:showDividers="middle"
-    tools:context=".TransactionListActivity" >
+    android:showDividers="middle"   >
 
     <!--
     This layout is a two-pane layout for the Transactions
@@ -25,14 +24,14 @@
         android:id="@+id/content_transaction_list"        
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="3"
+        android:layout_weight="4.5"
         />
 
     <FrameLayout
         android:id="@+id/content_transaction_detail"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="7"        
+        android:layout_weight="5.5"        
         />
 
 </LinearLayout>
