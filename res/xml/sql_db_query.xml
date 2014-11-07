@@ -9,6 +9,7 @@
         tbCliente.IdTipoCliente,
         tbCliente.IdCanal,
         tbCliente.Calificacion,
+        tbCliente.URLFoto,
         tbClienteExt.Nombre1 AS tbClienteExt_Nombre1,
         tbClienteExt.Nombre2 AS tbClienteExt_Nombre2,
        	tbClienteExt.Apellido1 AS tbClienteExt_Apellido1,
@@ -46,6 +47,7 @@
         tbCliente.IdTipoCliente,
         tbCliente.IdCanal,
         tbCliente.Calificacion,
+        tbCliente.URLFoto,
         tbClienteExt.Nombre1 AS tbClienteExt_Nombre1,
         tbClienteExt.Nombre2 AS tbClienteExt_Nombre2,
        	tbClienteExt.Apellido1 AS tbClienteExt_Apellido1,
@@ -122,7 +124,7 @@
        		
        	 ) AS tbClientSearch
        	ON tbClienteExt.docid = tbClientSearch.docid       	
-        ORDER BY tbClientSearch.Rank DESC   	
+        ORDER BY tbClientSearch.Rank DESC   
     </statement>    
     
 	 

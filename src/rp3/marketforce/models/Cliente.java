@@ -12,6 +12,8 @@ import rp3.util.CursorUtils;
 import android.database.Cursor;
 
 public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
+	
+	public static int ACTION_SYNC = 6;
 
 	private long id;	
 	private int idTipoIdentificacion;
@@ -36,6 +38,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 	private String tipoClienteDescripcion;
 	private String canalDescripcion;
 	private String tipoIdentificacionDescripcion;
+	private String URLFoto;
 
 	private List<ClienteDireccion> clienteDirecciones;
 	private ClienteDireccion clienteDireccionPrincipal;	
@@ -75,7 +78,8 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 		}
 		setValue(Contract.Cliente.COLUMN_GENERO, this.genero);						
 		setValue(Contract.Cliente.COLUMN_FECHA_NACIMIENTO, this.fechaNacimiento);		
-		setValue(Contract.Cliente.COLUMN_ESTADO_CIVIL, this.estadoCivil);				
+		setValue(Contract.Cliente.COLUMN_ESTADO_CIVIL, this.estadoCivil);	
+		setValue(Contract.Cliente.COLUMN_URL_FOTO, this.URLFoto);
 	}
 
 	@Override
@@ -285,6 +289,14 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			String tipoIdentificacionDescripcion) {
 		this.tipoIdentificacionDescripcion = tipoIdentificacionDescripcion;
 	}
+	
+	public String getURLFoto() {
+		return URLFoto;
+	}
+
+	public void setURLFoto(String URLFoto) {
+		this.URLFoto = URLFoto;
+	}
 
 	public static List<Long> getIDSCliente(DataBase db){
 		Cursor c = db.query(Contract.Cliente.TABLE_NAME, Contract.Cliente._ID);
@@ -326,6 +338,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			cl.setGeneroDescripcion(CursorUtils.getString(c, Contract.Cliente.FIELD_GENERO_DESCRIPCION));
 			cl.setTipoClienteDescripcion(CursorUtils.getString(c, Contract.Cliente.FIELD_TIPO_CLIENTE_DESCRIPCION));
 			cl.setCanalDescripcion(CursorUtils.getString(c, Contract.Cliente.FIELD_CANAL_DESCRIPCION));
+			cl.setURLFoto(CursorUtils.getString(c, Contract.Cliente.FIELD_URL_FOTO));
 			
 			
 			list.add(cl);
@@ -367,6 +380,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			client.setGeneroDescripcion(CursorUtils.getString(c, Contract.Cliente.FIELD_GENERO_DESCRIPCION));
 			client.setTipoClienteDescripcion(CursorUtils.getString(c, Contract.Cliente.FIELD_TIPO_CLIENTE_DESCRIPCION));
 			client.setCanalDescripcion(CursorUtils.getString(c, Contract.Cliente.FIELD_CANAL_DESCRIPCION));
+			client.setURLFoto(CursorUtils.getString(c, Contract.Cliente.FIELD_URL_FOTO));
 						
 			if(incluirDirecciones)
 				client.setClienteDirecciones(ClienteDireccion.getClienteDirecciones(db, client.getID()));			
@@ -472,7 +486,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 
 		@Override
 		public void setValues() {
-			if(getAction() == ACTION_INSERT){
+			if(getAction() == ACTION_INSERT || getAction() == ACTION_UPDATE){
 				setValue(Contract.ClientExt.COLUMN_ID ,id);
 				setValue(Contract.ClientExt.COLUMN_IDENTIFICACION, identificacion);
 				setValue(Contract.ClientExt.COLUMN_NOMBRE1, nombre1);
@@ -530,7 +544,5 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 		return list;
 
 	}
-
-	
 	
 }

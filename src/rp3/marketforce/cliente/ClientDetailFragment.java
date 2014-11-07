@@ -1,15 +1,20 @@
 package rp3.marketforce.cliente;
 
+import rp3.configuration.PreferenceManager;
+import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Cliente;
+import rp3.marketforce.utils.DrawableManager;
 import rp3.util.Screen;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -49,6 +54,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	private final int REQUEST_CODE_DETAIL_EDIT = 3;
 	private boolean flag = false;
 	private Cliente client;
+	private DrawableManager DManager;
 	
 	private ClienteDetailFragmentListener clienteDetailFragmentCallback;
 
@@ -65,10 +71,15 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 		return fragment;
 	}
 
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		/*
+		 * Se instancia Drawable Manager para carga de imagenes;
+		 */
+		DManager = new DrawableManager();
+		
 		if (getParentFragment() == null)
 			setRetainInstance(true);
 
@@ -101,10 +112,10 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);		
 
-		if(getParentFragment()!=null)
-			clienteDetailFragmentCallback = (ClienteDetailFragmentListener)getParentFragment();
-		else
-			clienteDetailFragmentCallback = (ClienteDetailFragmentListener)activity;
+		//if(getParentFragment()!=null)
+		//	clienteDetailFragmentCallback = (ClienteDetailFragmentListener)getParentFragment();
+		//else
+		//	clienteDetailFragmentCallback = (ClienteDetailFragmentListener)activity;
 	}	
 
 	@SuppressLint("InflateParams")
@@ -112,7 +123,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
 
 		if (client != null) {
-
+			
 			hideDialogConfirmation();
 			(rootView.findViewById(R.id.imageView_edit_detail_client))
 					.setOnClickListener(new View.OnClickListener() {
@@ -314,7 +325,13 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 					}
 				}
 			}
-			setImageViewBitmapFromInternalStorageAsync(R.id.imageView_foto, client.getFotoFileName());
+			/*
+			 * Se cambia la carga de foto por un lazy load
+			 */
+			//setImageViewBitmapFromInternalStorageAsync(R.id.imageView_foto, client.getFotoFileName());
+			DManager.fetchDrawableOnThread(PreferenceManager.getString("server") + 
+					rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + client.getURLFoto(),
+					(ImageView) this.getRootView().findViewById(R.id.imageView_foto));
 			setTextViewText(R.id.textView_tipo_canal,
 					client.getCanalDescripcion());
 			setTextViewText(R.id.textView_tipo_cliente,

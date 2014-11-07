@@ -5,11 +5,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.ksoap2.transport.HttpResponseException;
 
+import rp3.configuration.PreferenceManager;
 import rp3.connection.HttpConnection;
 import rp3.connection.WebService;
 import rp3.content.SyncAdapter;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.db.Contract;
+import rp3.sync.SyncAudit;
 import rp3.util.Convert;
 import android.util.Log;
 
@@ -21,6 +23,8 @@ public class Cliente {
 			try
 			{			
 				webService.addCurrentAuthToken();
+				long fecha = rp3.util.Convert.getDotNetTicksFromDate(SyncAudit.getLastSyncDate(rp3.marketforce.sync.SyncAdapter.SYNC_TYPE_CLIENTE_UPDATE, SyncAdapter.SYNC_EVENT_SUCCESS));
+				webService.addLongParameter("ultimaactualizacion", fecha);
 				
 				try {
 					webService.invokeWebService();
@@ -34,9 +38,9 @@ public class Cliente {
 				
 				JSONArray types = webService.getJSONArrayResponse();			
 				
-				rp3.marketforce.models.Cliente.deleteAll(db, Contract.Cliente.TABLE_NAME);
-				rp3.marketforce.models.ClienteDireccion.deleteAll(db, Contract.ClienteDireccion.TABLE_NAME);
-				rp3.marketforce.models.Cliente.ClientExt.deleteAll(db, Contract.ClientExt.TABLE_NAME);
+				//rp3.marketforce.models.Cliente.deleteAll(db, Contract.Cliente.TABLE_NAME);
+				//rp3.marketforce.models.ClienteDireccion.deleteAll(db, Contract.ClienteDireccion.TABLE_NAME);
+				//rp3.marketforce.models.Cliente.ClientExt.deleteAll(db, Contract.ClientExt.TABLE_NAME);
 				
 				for(int i=0; i < types.length(); i++){
 					
@@ -61,8 +65,11 @@ public class Cliente {
 						cl.setNombre2(type.getString("Nombre2"));
 						cl.setFechaNacimiento(Convert.getDateFromDotNetTicks(type.getLong("FechaNacimientoTicks")));
 						cl.setNombreCompleto(type.getString("NombresCompletos"));
+						cl.setURLFoto(type.getString("Foto"));
 																	
 						JSONArray strs = type.getJSONArray("ClienteDirecciones");
+						
+						rp3.marketforce.models.ClienteDireccion.deleteClienteDireccionIdCliente(db, cl.getID());
 						
 						for(int j=0; j < strs.length(); j++){
 							JSONObject str = strs.getJSONObject(j);
@@ -90,8 +97,15 @@ public class Cliente {
 							
 							rp3.marketforce.models.ClienteDireccion.insert(db, clienteDir);
 						}
+						if(rp3.marketforce.models.Cliente.getClienteID(db, cl.getID(), false) == null)
+						{
+							rp3.marketforce.models.Cliente.insert(db, cl);
+						}
+						else
+						{
+							rp3.marketforce.models.Cliente.update(db, cl, rp3.marketforce.models.Cliente.ACTION_SYNC);
+						}
 						
-						rp3.marketforce.models.Cliente.insert(db, cl);
 						
 					} catch (JSONException e) {
 						Log.e("Entro","Error: "+e.toString());

@@ -5,13 +5,17 @@ import java.util.List;
 import rp3.app.NavActivity;
 import rp3.app.nav.NavItem;
 import rp3.data.MessageCollection;
+import rp3.marketforce.cliente.ClientDetailActivity;
 import rp3.marketforce.cliente.ClientFragment;
 import rp3.marketforce.ruta.RutasFragment;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.runtime.Session;
+import rp3.widget.SlidingPaneLayout;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 public class MainActivity extends rp3.app.NavActivity{
 	
@@ -117,6 +121,25 @@ public class MainActivity extends rp3.app.NavActivity{
 		default:
 			break;
 		}
+	}
+	
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		if(this.findViewById(R.id.sliding_pane_clientes) != null)
+		{
+			SlidingPaneLayout slidingPane = (SlidingPaneLayout) findViewById(R.id.sliding_pane_clientes);
+			switch(item.getItemId())
+			{
+			case android.R.id.home:
+				if(!slidingPane.isOpen())
+				{
+					slidingPane.openPane();
+					return true;
+				}
+			}
+		}
+		return super.onMenuItemSelected(featureId, item);
+		
 	}
 	
       public void onSyncComplete(Bundle data, final MessageCollection messages) {		

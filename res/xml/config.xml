@@ -4,6 +4,8 @@
         <help>www.rp3.com.ec</help>
         <allowSettingsOnAut>TRUE</allowSettingsOnAut>
         <allowHelpOnAut>TRUE</allowHelpOnAut>
+        <imagesFolder>/Content/AgendaComercial/img/clientes/</imagesFolder>
+        <cancelAlarmTime>22H00</cancelAlarmTime>
     </appConfiguration>
     <dataBaseConfiguration>       
        <name>Rp3MarketForce.db</name>
@@ -12,7 +14,7 @@
     <webServiceConfiguration>                
         <webServiceData>
             <name>Core</name>
-            <url>http://[@server:54.94.162.88/marketforce]/api</url>
+            <url>[@server:http://54.94.162.88/marketforce]/api</url>
             <type>REST</type>            
             <oAuthClientId>android-app-marketforce</oAuthClientId>
             <oAuthClientSecret>rp3-marketforce2014</oAuthClientSecret>
@@ -41,14 +43,14 @@
         </webServiceData>
            <webServiceData>
             <name>MartketForce</name>
-            <url>http://[@server:54.94.162.88/marketforce]/api</url>
+            <url>[@server:http://54.94.162.88/marketforce]/api</url>
             <type>REST</type>            
             <oAuthClientId>android-app-marketforce</oAuthClientId>
             <oAuthClientSecret>rp3-marketforce2014</oAuthClientSecret>
             <methods>
                 <method>
                     <name>GetClientes</name>
-                    <action>cliente/getclientes</action>
+                    <action>cliente/getclientes?ultimaactualizacion=@ultimaactualizacion</action>
                     <webMethod>GET</webMethod>
                 </method>
                 <method>

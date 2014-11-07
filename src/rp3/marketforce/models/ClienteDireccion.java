@@ -227,6 +227,11 @@ public class ClienteDireccion extends rp3.data.entity.EntityBase<ClienteDireccio
 		}
 		return tpd;
 	}
+    
+    public static void deleteClienteDireccionIdCliente(DataBase db, long id)
+    {
+    	db.delete(Contract.ClienteDireccion.TABLE_NAME, Contract.ClienteDireccion.COLUMN_CLIENTE_ID + " = ?", id);
+    }
 
 	
 }

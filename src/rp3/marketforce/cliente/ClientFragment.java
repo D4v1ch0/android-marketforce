@@ -5,12 +5,18 @@ import rp3.marketforce.R;
 import rp3.marketforce.cliente.ClientDetailFragment.ClienteDetailFragmentListener;
 import rp3.marketforce.cliente.ClientListFragment.ClienteListFragmentListener;
 import rp3.marketforce.models.Cliente;
+import rp3.widget.SlidingPaneLayout;
+import rp3.widget.SlidingPaneLayout.PanelSlideListener;
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,9 +25,11 @@ import android.widget.SearchView;
 public class ClientFragment extends BaseFragment implements ClienteListFragmentListener, ClienteDetailFragmentListener {
 
 	public static final String ARG_TRANSACTIONTYPEID = "transactionTypeId";
+	private static final int PARALLAX_SIZE = 500;
 	
 	private ClientListFragment transactionListFragment;
 	private ClientDetailFragment transactionDetailFragment;
+	private SlidingPaneLayout slidingPane;
 	
 	public static boolean mTwoPane = false;
 	private long selectedClientId;	
@@ -39,7 +47,8 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		setContentView(R.layout.fragment_client,R.menu.fragment_client_menu);				
+		setContentView(R.layout.fragment_client,R.menu.fragment_client_menu);
+		
 	}
 	
 	@Override
@@ -56,10 +65,35 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
 		super.onResume();				
 	}
 	
+	@SuppressLint("NewApi")
 	@Override
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {		
 		super.onFragmentCreateView(rootView, savedInstanceState);
 						
+		slidingPane = (SlidingPaneLayout) rootView.findViewById(R.id.sliding_pane_clientes);
+		slidingPane.setParallaxDistance(PARALLAX_SIZE);
+		slidingPane.setShadowResource(R.drawable.sliding_pane_shadow);
+		slidingPane.setSlidingEnabled(true);
+		slidingPane.openPane();
+		
+		slidingPane.setPanelSlideListener(new PanelSlideListener(){
+
+			@Override
+			public void onPanelSlide(View panel, float slideOffset) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onPanelOpened(View panel) {
+				
+			}
+
+			@Override
+			public void onPanelClosed(View panel) {
+
+			}});
+		
 		if(getChildFragmentManager().findFragmentById(R.id.transaction_detail) == null){			
 			if(rootView.findViewById(R.id.content_transaction_list)!=null){
 				setFragment(R.id.content_transaction_list, transactionListFragment );
@@ -68,7 +102,11 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
 		
 		if (rootView.findViewById(R.id.content_transaction_detail) != null) {     
 			mTwoPane = true;
-        }							
+        }	
+		else
+		{
+			mTwoPane = false;
+		}
 		
 	}	
 	
@@ -103,16 +141,19 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
 	@Override
 	public void onClienteSelected(long id) {
 		if (mTwoPane) {
-           
+			slidingPane.closePane();
 			selectedClientId = id;        	
         	transactionDetailFragment = ClientDetailFragment.newInstance(selectedClientId); 
-        	setFragment(R.id.content_transaction_detail, transactionDetailFragment);        	
+        	setFragment(R.id.content_transaction_detail, transactionDetailFragment);
+        	
 
         } else {      	            
             startActivity(ClientDetailActivity.newIntent(this.getActivity(), id) );
             this.cancelAnimationTransition();
         }
 	}
+	
+	
 
 	@Override
 	public void onClienteChanged(Cliente cliente) {

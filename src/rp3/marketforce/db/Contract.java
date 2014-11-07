@@ -35,6 +35,7 @@ public final class Contract {
 		public static final String COLUMN_TIPO_CLIENTE_ID = "IdTipoCliente";
 		public static final String COLUMN_CANAL_ID = "IdCanal";
 		public static final String COLUMN_CALIFICACION = "Calificacion";
+		public static final String COLUMN_URL_FOTO = "URLFoto";
 				
 		public static final String FIELD_ID_TIPO_IDENTIFICACION = COLUMN_ID_TIPO_IDENTIFICACION;		
 		public static final String FIELD_GENERO = COLUMN_GENERO;
@@ -42,7 +43,8 @@ public final class Contract {
 		public static final String FIELD_FECHA_NACIMIENTO = COLUMN_FECHA_NACIMIENTO;
 		public static final String FIELD_TIPO_CLIENTE_ID = COLUMN_TIPO_CLIENTE_ID;
 		public static final String FIELD_CANAL_ID = COLUMN_CANAL_ID;
-		public static final String FIELD_CALIFICACION = COLUMN_CALIFICACION;		
+		public static final String FIELD_CALIFICACION = COLUMN_CALIFICACION;	
+		public static final String FIELD_URL_FOTO = COLUMN_URL_FOTO;	
 		
 		public static final String FIELD_IDENTIFICACION = Contract.ClientExt.TABLE_NAME + "_" + Contract.ClientExt.COLUMN_IDENTIFICACION;
 		public static final String FIELD_NOMBRE1 = Contract.ClientExt.TABLE_NAME + "_" + Contract.ClientExt.COLUMN_NOMBRE1;

@@ -18,6 +18,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     
 
     <application
@@ -55,8 +56,7 @@
         
         <activity
             android:name="rp3.marketforce.MainActivity"
-            android:label="@string/app_name"
-            android:configChanges="orientation|keyboardHidden|screenSize">
+            android:label="@string/app_name">
             <!-- Only Required for search dialog -->
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
@@ -64,13 +64,14 @@
             <!-- enable the search dialog to send searches to SearchableActivity -->
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value="rp3.marketforce.SearchableActivity" />
+                android:value="rp3.marketforce.SearchableActivity" 
+                />
             
         </activity>
          <activity
             android:name="rp3.marketforce.cliente.ClientDetailActivity"
             android:label="@string/app_name"
-            android:configChanges="orientation|keyboardHidden|screenSize"
+                        android:configChanges="orientation|keyboardHidden|screenSize"
             >
         </activity>
         <activity

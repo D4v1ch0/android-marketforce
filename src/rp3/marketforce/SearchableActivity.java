@@ -5,6 +5,7 @@ import rp3.app.BaseActivity;
 import rp3.marketforce.cliente.ClientDetailActivity;
 import rp3.marketforce.cliente.ClientDetailFragment;
 import rp3.marketforce.cliente.ClientListFragment;
+import rp3.widget.SlidingPaneLayout;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ public class SearchableActivity extends BaseActivity
 
 	private boolean mTwoPane;
 	private String query;
+	private static final int PARALLAX_SIZE = 500;
 	
 //	private MenuItem menuItemActionEdit;
 //    private MenuItem menuItemActionDiscard;
@@ -27,13 +29,20 @@ public class SearchableActivity extends BaseActivity
     
 	private ClientDetailFragment clientDetailFragment;
 	private ClientListFragment clientListFragment;
+	private SlidingPaneLayout slidingPane;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.fragment_client);				
 		
-		setHomeAsUpEnabled(true, true);		
+		setHomeAsUpEnabled(true, true);	
+		
+		slidingPane = (SlidingPaneLayout) findViewById(R.id.sliding_pane_clientes);
+		slidingPane.setParallaxDistance(PARALLAX_SIZE);
+		slidingPane.setShadowResource(R.drawable.sliding_pane_shadow);
+		slidingPane.setSlidingEnabled(true);
+		slidingPane.openPane();
 		
 		 Intent intent = getIntent();
 		    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
@@ -88,6 +97,7 @@ public class SearchableActivity extends BaseActivity
             .replace(R.id.content_transaction_detail, 
             		clientDetailFragment)
             .commit();
+			slidingPane.closePane();
 
         } else {     
 //            Intent detailIntent = new Intent(this, ClientDetailActivity.class);
@@ -149,7 +159,15 @@ public class SearchableActivity extends BaseActivity
     public boolean onOptionsItemSelected(MenuItem item) {    	
         switch (item.getItemId()) {
             case android.R.id.home: 
-            	this.finish();
+            	if(!slidingPane.isOpen())
+				{
+					slidingPane.openPane();
+					return true;
+				}
+            	else
+            	{
+            		this.finish();
+            	}
                 return true;
             case R.id.action_edit:
     			

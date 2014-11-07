@@ -52,6 +52,9 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 				if(result == SYNC_EVENT_SUCCESS){
 					result = rp3.marketforce.sync.Cliente.executeSync(db);				
 					addDefaultMessage(result);
+					if(result == SYNC_EVENT_SUCCESS){
+						SyncAudit.insert(SYNC_TYPE_CLIENTE_UPDATE, SYNC_EVENT_SUCCESS);
+					}
 				}
 				
 				if(result == SYNC_EVENT_SUCCESS){
@@ -68,11 +71,15 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 					result = rp3.marketforce.sync.TipoCliente.executeSync(db);				
 					addDefaultMessage(result);
 				}
+				/*
+				 * Se comenta carga de fotos ya que se la hara mediante un lazy loader.
+				 * Para esto se cargara tambien en el modelo Cliente la url de la foto para poder cargarla
+				 * */
 				
-				if(result == SYNC_EVENT_SUCCESS){
-					result = rp3.marketforce.sync.ClienteFoto.executeSync(db,null);				
-					addDefaultMessage(result);
-				}
+				//if(result == SYNC_EVENT_SUCCESS){
+				//	result = rp3.marketforce.sync.ClienteFoto.executeSync(db,null);				
+				//	addDefaultMessage(result);
+				//}
 								
 				db.commitTransaction();
 				

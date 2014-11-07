@@ -1,11 +1,13 @@
 package rp3.marketforce.cliente;
 
+import rp3.marketforce.MainActivity;
 import rp3.marketforce.R;
 import rp3.marketforce.cliente.ClientDetailFragment.ClienteDetailFragmentListener;
 import rp3.marketforce.db.DbOpenHelper;
 import rp3.marketforce.models.Cliente;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 public class ClientDetailActivity extends rp3.app.BaseActivity implements ClienteDetailFragmentListener {
@@ -47,6 +49,7 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
         	transactionDetailFragment = (ClientDetailFragment)getCurrentFragmentManager().findFragmentById(R.id.content_transaction_detail);
         }
     }    
+    
     
     @Override
     protected void onSaveInstanceState(Bundle outState) {
