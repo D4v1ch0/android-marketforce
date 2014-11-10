@@ -66,6 +66,7 @@ public class Cliente {
 						cl.setFechaNacimiento(Convert.getDateFromDotNetTicks(type.getLong("FechaNacimientoTicks")));
 						cl.setNombreCompleto(type.getString("NombresCompletos"));
 						cl.setURLFoto(type.getString("Foto"));
+						cl.setTipoPersona(type.getString("TipoPersona"));
 																	
 						JSONArray strs = type.getJSONArray("ClienteDirecciones");
 						
@@ -96,6 +97,28 @@ public class Cliente {
 							   clienteDir.setEsPrincipal(false);
 							
 							rp3.marketforce.models.ClienteDireccion.insert(db, clienteDir);
+						}
+						
+						strs = type.getJSONArray("ClienteContactos");
+						
+						rp3.marketforce.models.Contacto.deleteContactoIdCliente(db, cl.getID());
+						
+						for(int j=0; j < strs.length(); j++){
+							JSONObject str = strs.getJSONObject(j);
+							rp3.marketforce.models.Contacto  clienteCont = new rp3.marketforce.models.Contacto();
+							
+							clienteCont.setIdContacto(str.getLong("IdClienteContacto"));							
+							
+							clienteCont.setIdCliente(str.getLong("IdCliente"));							
+							clienteCont.setIdClienteDireccion(str.getInt("IdClienteDireccion"));
+							clienteCont.setNombre(""+str.getString("Nombre"));
+							clienteCont.setApellido(""+str.getString("Apellido"));
+							clienteCont.setCargo(""+str.getString("Cargo"));
+							clienteCont.setTelefono1(""+str.getString("Telefono1"));
+							clienteCont.setTelefono2(""+str.getString("Telefono2"));
+							clienteCont.setCorreo(""+str.getString("CorreoElectronico"));
+							
+							rp3.marketforce.models.Contacto.insert(db, clienteCont);
 						}
 						if(rp3.marketforce.models.Cliente.getClienteID(db, cl.getID(), false) == null)
 						{

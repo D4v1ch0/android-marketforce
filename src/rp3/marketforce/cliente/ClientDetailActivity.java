@@ -38,7 +38,7 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
         if (savedInstanceState == null) {            
             
             transactionId = getIntent().getLongExtra(EXTRA_TRANSACTIONID,0);                                    
-            transactionDetailFragment = ClientDetailFragment.newInstance(transactionId);            
+            transactionDetailFragment = ClientDetailFragment.newInstance(Cliente.getClienteID(getDataBase(), transactionId, false));            
             
             getCurrentFragmentManager().beginTransaction()
                     .add(R.id.content_transaction_detail, transactionDetailFragment)

@@ -228,6 +228,27 @@ public class ClienteDireccion extends rp3.data.entity.EntityBase<ClienteDireccio
 		return tpd;
 	}
     
+    public static ClienteDireccion getClienteDireccionIdDireccion(DataBase db, long idCliente, long idDireccion){
+    	
+    	String query = QueryDir.getQuery(Contract.ClienteDireccion.QUERY_CLIENTE_DIRECCION_BY_ID_DIRECCION);
+		Cursor c = db.rawQuery(query,new String[]{""+idCliente,""+idDireccion});
+		
+		ClienteDireccion tpd = null;
+		
+		while(c.moveToNext()){
+			tpd = new ClienteDireccion();
+			tpd.setID(CursorUtils.getInt(c,Contract.ClienteDireccion._ID));
+			tpd.setIdCliente(CursorUtils.getLong(c, Contract.ClienteDireccion.FIELD_CLIENTE_ID));
+			tpd.setDireccion(CursorUtils.getString(c, Contract.ClienteDireccion.FIELD_DIRECCION));
+			tpd.setEsPrincipal(CursorUtils.getBoolean(c, Contract.ClienteDireccion.FIELD_ES_PRINCIPAL));
+			tpd.setIdCiudad(CursorUtils.getInt(c, Contract.ClienteDireccion.FIELD_CIUDAD_ID));
+			tpd.setTelefono1(CursorUtils.getString(c, Contract.ClienteDireccion.FIELD_TELEFONO1));
+			tpd.setTelefono2(CursorUtils.getString(c, Contract.ClienteDireccion.FIELD_TELEFONO2));
+			
+		}
+		return tpd;
+	}
+    
     public static void deleteClienteDireccionIdCliente(DataBase db, long id)
     {
     	db.delete(Contract.ClienteDireccion.TABLE_NAME, Contract.ClienteDireccion.COLUMN_CLIENTE_ID + " = ?", id);

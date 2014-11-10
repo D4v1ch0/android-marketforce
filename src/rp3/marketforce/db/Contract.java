@@ -36,6 +36,7 @@ public final class Contract {
 		public static final String COLUMN_CANAL_ID = "IdCanal";
 		public static final String COLUMN_CALIFICACION = "Calificacion";
 		public static final String COLUMN_URL_FOTO = "URLFoto";
+		public static final String COLUMN_TIPO_PERSONA = "TipoPersona";
 				
 		public static final String FIELD_ID_TIPO_IDENTIFICACION = COLUMN_ID_TIPO_IDENTIFICACION;		
 		public static final String FIELD_GENERO = COLUMN_GENERO;
@@ -45,6 +46,7 @@ public final class Contract {
 		public static final String FIELD_CANAL_ID = COLUMN_CANAL_ID;
 		public static final String FIELD_CALIFICACION = COLUMN_CALIFICACION;	
 		public static final String FIELD_URL_FOTO = COLUMN_URL_FOTO;	
+		public static final String FIELD_TIPO_PERSONA = COLUMN_TIPO_PERSONA;	
 		
 		public static final String FIELD_IDENTIFICACION = Contract.ClientExt.TABLE_NAME + "_" + Contract.ClientExt.COLUMN_IDENTIFICACION;
 		public static final String FIELD_NOMBRE1 = Contract.ClientExt.TABLE_NAME + "_" + Contract.ClientExt.COLUMN_NOMBRE1;
@@ -152,6 +154,44 @@ public final class Contract {
 		public static final String FIELD_CIUDAD = rp3.data.models.Contract.GeopoliticalStructure.TABLE_NAME+"_"+rp3.data.models.Contract.GeopoliticalStructure.COLUMN_NAME;
 		
 		public static final String QUERY_CLIENTE_DIRECCION_BY_ID = "ClienteDireccionById";
+		public static final String QUERY_CLIENTE_DIRECCION_BY_ID_DIRECCION = "ClienteDireccionByIdDireccion";
+	}
+	
+	public static abstract class Contacto implements BaseColumns {
+		
+		public static final String TABLE_NAME = "tbContacto";
+				
+		public static final String COLUMN_ID_CONTACTO = "IdContacto";
+		
+		public static final String COLUMN_ID_CLIENTE = "IdCliente";
+		public static final String COLUMN_ID_CLIENTE_DIRECCION = "IdClienteDireccion";
+		public static final String COLUMN_URL_FOTO = "URLFoto";
+				
+		public static final String FIELD_ID_CONTACTO = COLUMN_ID_CONTACTO;		
+		public static final String FIELD_ID_CLIENTE = COLUMN_ID_CLIENTE;
+		public static final String FIELD_ID_CLIENTE_DIRECCION = COLUMN_ID_CLIENTE_DIRECCION;
+		public static final String FIELD_NOMBRE = Contract.ContactoExt.TABLE_NAME + "_" + Contract.ContactoExt.COLUMN_NOMBRE;
+		public static final String FIELD_APELLIDO = Contract.ContactoExt.TABLE_NAME + "_" + Contract.ContactoExt.COLUMN_APELLIDO;
+		public static final String FIELD_TELEFONO1 = Contract.ContactoExt.TABLE_NAME + "_" + Contract.ContactoExt.COLUMN_TELEFONO1;
+		public static final String FIELD_TELEFONO2 = Contract.ContactoExt.TABLE_NAME + "_" + Contract.ContactoExt.COLUMN_TELEFONO2;
+		public static final String FIELD_CARGO = Contract.ContactoExt.TABLE_NAME + "_" + Contract.ContactoExt.COLUMN_CARGO;
+		public static final String FIELD_CORREO = Contract.ContactoExt.TABLE_NAME + "_" + Contract.ContactoExt.COLUMN_CORREO;
+		public static final String FIELD_URL_FOTO = COLUMN_URL_FOTO;	
+		
+		public static final String QUERY_CONTACTOS = "ContactosByCliente";
+		public static final String QUERY_CONTACTOS_ID = "ContactoById";
+		
+	}
+	
+	public static abstract class ContactoExt implements BaseColumns {
+		public static final String TABLE_NAME = "tbContactoExt";
+		public static final String COLUMN_ID = "docid";
+		public static final String COLUMN_NOMBRE = "Nombre";
+		public static final String COLUMN_APELLIDO = "Apellido";
+		public static final String COLUMN_TELEFONO1 = "Telefono1";
+		public static final String COLUMN_TELEFONO2 = "Telefono2";
+		public static final String COLUMN_CARGO = "Cargo";
+		public static final String COLUMN_CORREO = "Correo";
 	}
 	
 	public static abstract class Agenda implements BaseColumns {

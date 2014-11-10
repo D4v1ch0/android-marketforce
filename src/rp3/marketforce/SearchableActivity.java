@@ -5,6 +5,7 @@ import rp3.app.BaseActivity;
 import rp3.marketforce.cliente.ClientDetailActivity;
 import rp3.marketforce.cliente.ClientDetailFragment;
 import rp3.marketforce.cliente.ClientListFragment;
+import rp3.marketforce.models.Cliente;
 import rp3.widget.SlidingPaneLayout;
 import android.app.SearchManager;
 import android.content.Intent;
@@ -21,11 +22,12 @@ public class SearchableActivity extends BaseActivity
 
 	private boolean mTwoPane;
 	private String query;
-	private static final int PARALLAX_SIZE = 500;
+	private static final int PARALLAX_SIZE = 0;
 	
 //	private MenuItem menuItemActionEdit;
 //    private MenuItem menuItemActionDiscard;
     private long selectedClientId;
+    private Cliente client;
     
 	private ClientDetailFragment clientDetailFragment;
 	private ClientListFragment clientListFragment;
@@ -84,12 +86,13 @@ public class SearchableActivity extends BaseActivity
 	}
 	
 	@Override
-	public void onClienteSelected(long id) {
+	public void onClienteSelected(Cliente cliente) {
 		
-		selectedClientId = id;
+		selectedClientId = cliente.getID();
+		client = cliente;
 		
 		if (mTwoPane) {      			
-			clientDetailFragment = ClientDetailFragment.newInstance(selectedClientId);
+			clientDetailFragment = ClientDetailFragment.newInstance(cliente);
 			setVisibleEditActionButtons( selectedClientId != 0 );
 			
 			
@@ -186,8 +189,8 @@ public class SearchableActivity extends BaseActivity
 
 	@Override
 	public void onFinalizaConsulta() {
-		if(mTwoPane && selectedClientId!=0){			
-			onClienteSelected(selectedClientId);
+		if(mTwoPane && client != null){			
+			onClienteSelected(client);
 		}
 	}
 }

@@ -205,7 +205,7 @@ public class ClientListAdapter extends SectionAdapter{
         }
         
         if(clienteListFragmentCallback != null)
-        	clienteListFragmentCallback.onClienteSelected(dataList.get(section).get(row).getID());        
+        	clienteListFragmentCallback.onClienteSelected(dataList.get(section).get(row));        
        
        }
 	

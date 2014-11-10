@@ -10,6 +10,7 @@
         tbCliente.IdCanal,
         tbCliente.Calificacion,
         tbCliente.URLFoto,
+        tbCliente.TipoPersona,
         tbClienteExt.Nombre1 AS tbClienteExt_Nombre1,
         tbClienteExt.Nombre2 AS tbClienteExt_Nombre2,
        	tbClienteExt.Apellido1 AS tbClienteExt_Apellido1,
@@ -48,6 +49,7 @@
         tbCliente.IdCanal,
         tbCliente.Calificacion,
         tbCliente.URLFoto,
+        tbCliente.TipoPersona,
         tbClienteExt.Nombre1 AS tbClienteExt_Nombre1,
         tbClienteExt.Nombre2 AS tbClienteExt_Nombre2,
        	tbClienteExt.Apellido1 AS tbClienteExt_Apellido1,
@@ -101,9 +103,72 @@
     	WHERE tbClienteDireccion.IdCliente = ?
     </statement>
     
+     <statement name="ClienteDireccionByIdDireccion">
+        SELECT 
+        tbClienteDireccion._id,
+        tbClienteDireccion.IdCliente,
+        tbClienteDireccion.IdClienteDireccion,
+        tbClienteDireccion.TipoDireccion,
+        tbClienteDireccion.IdCiudad,
+        tbClienteDireccion.Direccion,
+        tbClienteDireccion.EsPrincipal,
+        tbClienteDireccion.Telefono1,
+        tbClienteDireccion.Telefono2,
+        tbClienteDireccion.Referencia,
+        tbClienteDireccion.Latitud,
+        tbClienteDireccion.Longitud,
+        tbGeopoliticalStructure.Name AS tbGeopoliticalStructure_Name
+        FROM tbClienteDireccion
+    	JOIN tbGeopoliticalStructure
+    	ON tbGeopoliticalStructure._id = tbClienteDireccion.IdCiudad
+    	WHERE tbClienteDireccion.IdCliente = ? 
+    	AND tbClienteDireccion.IdClienteDireccion = ?
+    </statement>
+    
+     <statement name="ContactosByCliente">
+       SELECT  
+        tbContacto._id, 
+        tbContacto.IdContacto,
+        tbContacto.IdCliente,        
+        tbContacto.IdClienteDireccion,
+        tbContacto.URLFoto,
+        tbContactoExt.Nombre AS tbContactoExt_Nombre,
+        tbContactoExt.Apellido AS tbContactoExt_Apellido,
+        tbContactoExt.Telefono1 AS tbContactoExt_Telefono1,
+        tbContactoExt.Telefono2 AS tbContactoExt_Telefono2,
+        tbContactoExt.Cargo AS tbContactoExt_Cargo,
+        tbContactoExt.Correo AS tbContactoExt_Correo
+        FROM tbContacto
+        JOIN tbContactoExt
+        ON tbContacto._id = tbContactoExt.docid
+        WHERE tbContacto.IdCliente = ?
+        ORDER BY  tbContactoExt.Apellido
+     </statement>
+     
+     <statement name="ContactoById">
+       SELECT  
+        tbContacto._id, 
+        tbContacto.IdContacto,
+        tbContacto.IdCliente,        
+        tbContacto.IdClienteDireccion,
+        tbContacto.URLFoto,
+        tbContactoExt.Nombre AS tbContactoExt_Nombre,
+        tbContactoExt.Apellido AS tbContactoExt_Apellido,
+        tbContactoExt.Telefono1 AS tbContactoExt_Telefono1,
+        tbContactoExt.Telefono2 AS tbContactoExt_Telefono2,
+        tbContactoExt.Cargo AS tbContactoExt_Cargo,
+        tbContactoExt.Correo AS tbContactoExt_Correo
+        FROM tbContacto
+        JOIN tbContactoExt
+        ON tbContacto._id = tbContactoExt.docid
+        WHERE tbContacto._id = ?
+        ORDER BY  tbContactoExt.Apellido
+     </statement>
+    
 	 <statement name="SimpleClientSearch">
         SELECT 
         tbCliente._id AS _id,
+        tbCliente.TipoPersona,
         tbClienteExt.Nombre1,
        	tbClienteExt.Apellido1 ,
        	tbClienteExt.Identificacion ,
@@ -123,8 +188,33 @@
         		ORDER BY rank DESC LIMIT 30 OFFSET 0
        		
        	 ) AS tbClientSearch
-       	ON tbClienteExt.docid = tbClientSearch.docid       	
-        ORDER BY tbClientSearch.Rank DESC   
+       	ON tbClienteExt.docid = tbClientSearch.docid       	 
+        UNION ALL
+        SELECT  
+        tbContacto._id, 
+        'C' AS TipoPersona,
+        tbContactoExt.Nombre AS Nombre1,
+        tbContactoExt.Apellido AS Apellido1,
+        '' AS Identificacion,
+        tbContactoExt.Correo AS CorreoElectronico,
+        tbClienteDireccion.Direccion AS Direccion,
+        tbContactoExt.Telefono1 AS Telefono
+        FROM tbContactoExt
+        INNER JOIN tbContacto
+        ON tbContacto._id = tbContactoExt.docid
+        JOIN tbClienteDireccion
+        ON tbContacto.IdCliente = tbClienteDireccion.IdCliente 
+        AND tbContacto.IdClienteDireccion = tbClienteDireccion.IdClienteDireccion
+        INNER JOIN (
+        SELECT 
+        		tbContactoExt.docid,
+        		matchinfo( tbContactoExt ) AS Rank
+        		FROM tbContactoExt
+        		WHERE tbContactoExt MATCH ?
+        		ORDER BY rank DESC LIMIT 30 OFFSET 0
+       		
+       	 ) AS tbContactoSearch
+       	ON tbContactoExt.docid = tbContactoSearch.docid       	
     </statement>    
     
 	 

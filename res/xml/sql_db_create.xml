@@ -21,22 +21,8 @@
 	  IdTipoCliente INTEGER,
 	  IdCanal INTEGER,
 	  Calificacion INTEGER,
-	  URLFoto TEXT	  
-      )
-	</statement>
-	<statement>
-      CREATE TABLE tbContactos(
-      _id INTEGER PRIMARY KEY,	 
-	  IdContacto INTEGER,	  	  
-	  IdCliente INTEGER,
-	  IdClienteDireccion INTEGER,
-	  Nombre TEXT,
-	  Apellido TEXT,
-	  Telefono1 TEXT,
-	  Telefono2 TEXT,
-	  Cargo TEXT,
-	  Correo TEXT,
-	  URLFoto TEXT	  
+	  URLFoto TEXT,
+	  TipoPersona TEXT
       )
 	</statement>
 	<statement>
@@ -69,7 +55,26 @@
 	  Longitud REAL
       )
 	</statement>
-	
+	<statement>
+      CREATE TABLE tbContacto(
+      _id INTEGER PRIMARY KEY AUTOINCREMENT,	 
+	  IdContacto INTEGER,	  	  
+	  IdCliente INTEGER,
+	  IdClienteDireccion INTEGER,
+	  URLFoto TEXT	  
+      )
+	</statement>
+	<statement>
+        CREATE VIRTUAL TABLE tbContactoExt USING fts4 (
+        Nombre,
+	  	Apellido,
+	  	Telefono1,
+	  	Telefono2,
+	  	Cargo,
+	  	Correo,
+        tokenize=porter
+        );
+    </statement>
 	<statement>
 	  CREATE TABLE tbAgenda(
       _id INTEGER PRIMARY KEY,

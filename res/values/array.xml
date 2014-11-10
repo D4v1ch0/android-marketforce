@@ -7,8 +7,9 @@
     	<item>Cumpleaños</item>
     	<item>Género</item>
     	<item>Estado Civil</item>
+    	<item>Cargo</item>
      </array>
-     
+    
      <array name="testArrayDetailsAdress">  
     	<item>Dirección</item>
     	<item>Teléfono 1</item>  

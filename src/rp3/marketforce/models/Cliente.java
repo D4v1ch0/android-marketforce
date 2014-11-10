@@ -39,7 +39,9 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 	private String canalDescripcion;
 	private String tipoIdentificacionDescripcion;
 	private String URLFoto;
+	private String tipoPersona;
 
+	private List<Contacto> contactos;
 	private List<ClienteDireccion> clienteDirecciones;
 	private ClienteDireccion clienteDireccionPrincipal;	
 	
@@ -80,6 +82,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 		setValue(Contract.Cliente.COLUMN_FECHA_NACIMIENTO, this.fechaNacimiento);		
 		setValue(Contract.Cliente.COLUMN_ESTADO_CIVIL, this.estadoCivil);	
 		setValue(Contract.Cliente.COLUMN_URL_FOTO, this.URLFoto);
+		setValue(Contract.Cliente.COLUMN_TIPO_PERSONA, this.tipoPersona);
 	}
 
 	@Override
@@ -206,6 +209,14 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 
 	public void setCalificacion(int calificacion) {
 		Calificacion = calificacion;
+	}
+	
+	public String getTipoPersona() {
+		return tipoPersona;
+	}
+
+	public void setTipoPersona(String tipoPersona) {
+		this.tipoPersona = tipoPersona;
 	}
 
 
@@ -339,6 +350,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			cl.setTipoClienteDescripcion(CursorUtils.getString(c, Contract.Cliente.FIELD_TIPO_CLIENTE_DESCRIPCION));
 			cl.setCanalDescripcion(CursorUtils.getString(c, Contract.Cliente.FIELD_CANAL_DESCRIPCION));
 			cl.setURLFoto(CursorUtils.getString(c, Contract.Cliente.FIELD_URL_FOTO));
+			cl.setTipoPersona(CursorUtils.getString(c, Contract.Cliente.FIELD_TIPO_PERSONA));
 			
 			
 			list.add(cl);
@@ -381,7 +393,10 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			client.setTipoClienteDescripcion(CursorUtils.getString(c, Contract.Cliente.FIELD_TIPO_CLIENTE_DESCRIPCION));
 			client.setCanalDescripcion(CursorUtils.getString(c, Contract.Cliente.FIELD_CANAL_DESCRIPCION));
 			client.setURLFoto(CursorUtils.getString(c, Contract.Cliente.FIELD_URL_FOTO));
-						
+			client.setTipoPersona(CursorUtils.getString(c, Contract.Cliente.FIELD_TIPO_PERSONA));
+			
+			client.setContactos(Contacto.getContactoIdCliente(db, client.getID()));
+			
 			if(incluirDirecciones)
 				client.setClienteDirecciones(ClienteDireccion.getClienteDirecciones(db, client.getID()));			
 			
@@ -521,7 +536,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 	{		
 		String query = QueryDir.getQuery( Contract.Cliente.QUERY_CLIENT_SEARCH );
 		
-		Cursor c = db.rawQuery(query, "*" + termSearch + "*" );
+		Cursor c = db.rawQuery(query,new String[]{ "*" + termSearch + "*", "*" + termSearch + "*"} );
 		
 		List<Cliente> list = new ArrayList<Cliente>();
 		while(c.moveToNext()){
@@ -533,6 +548,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			cl.setCorreoElectronico(CursorUtils.getString(c,Contract.ClientExt.COLUMN_CORREO_ELECTRONICO));	
 			cl.setDireccion(CursorUtils.getString(c,Contract.ClientExt.COLUMN_DIRECCION));
 			cl.setTelefono(CursorUtils.getString(c,Contract.ClientExt.COLUMN_TELEFONO));
+			cl.setTipoPersona(CursorUtils.getString(c, Contract.Cliente.COLUMN_TIPO_PERSONA));
 			
 			ClienteDireccion cd = new ClienteDireccion();
 			cd.setDireccion(CursorUtils.getString(c,Contract.ClientExt.COLUMN_DIRECCION));
@@ -543,6 +559,14 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 		}
 		return list;
 
+	}
+
+	public List<Contacto> getContactos() {
+		return contactos;
+	}
+
+	public void setContactos(List<Contacto> contactos) {
+		this.contactos = contactos;
 	}
 	
 }

@@ -57,7 +57,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
     }
     
     public interface ClienteListFragmentListener {
-        public void onClienteSelected(long id);
+        public void onClienteSelected(Cliente cliente);
         public void onFinalizaConsulta();
     }
 
@@ -236,7 +236,8 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 						cliente.setApellido2(lista.get(y).getApellido2());
 						cliente.setTelefono(lista.get(y).getTelefono());
 						cliente.setDireccion(lista.get(y).getDireccion());
-						cliente.setCorreoElectronico(lista.get(y).getCorreoElectronico());												
+						cliente.setCorreoElectronico(lista.get(y).getCorreoElectronico());
+						cliente.setTipoPersona(lista.get(y).getTipoPersona());
 						
 						list_aux.add(cliente);
 					}
@@ -275,7 +276,8 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 						cliente.setApellido2(lista.get(y).getApellido2());	
 						cliente.setTelefono(lista.get(y).getTelefono());
 						cliente.setDireccion(lista.get(y).getDireccion());
-						cliente.setCorreoElectronico(lista.get(y).getCorreoElectronico());												
+						cliente.setCorreoElectronico(lista.get(y).getCorreoElectronico());	
+						cliente.setTipoPersona(lista.get(y).getTipoPersona());
 						
 						list_aux.add(cliente);
 					}

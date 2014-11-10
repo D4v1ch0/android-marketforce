@@ -52,4 +52,25 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/linearLayout_content_contactos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/textView_datos_personas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_background_header"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:text="@string/label_datos_personas"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/color_background_white" />
+    </LinearLayout>
+
 </LinearLayout>

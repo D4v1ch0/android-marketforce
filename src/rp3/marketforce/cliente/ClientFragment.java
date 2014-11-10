@@ -25,7 +25,7 @@ import android.widget.SearchView;
 public class ClientFragment extends BaseFragment implements ClienteListFragmentListener, ClienteDetailFragmentListener {
 
 	public static final String ARG_TRANSACTIONTYPEID = "transactionTypeId";
-	private static final int PARALLAX_SIZE = 500;
+	private static final int PARALLAX_SIZE = 0;
 	
 	private ClientListFragment transactionListFragment;
 	private ClientDetailFragment transactionDetailFragment;
@@ -73,7 +73,7 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
 		slidingPane = (SlidingPaneLayout) rootView.findViewById(R.id.sliding_pane_clientes);
 		slidingPane.setParallaxDistance(PARALLAX_SIZE);
 		slidingPane.setShadowResource(R.drawable.sliding_pane_shadow);
-		slidingPane.setSlidingEnabled(true);
+		slidingPane.setSlidingEnabled(false);
 		slidingPane.openPane();
 		
 		slidingPane.setPanelSlideListener(new PanelSlideListener(){
@@ -139,16 +139,16 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
 	}
 	 
 	@Override
-	public void onClienteSelected(long id) {
+	public void onClienteSelected(Cliente cl) {
 		if (mTwoPane) {
 			slidingPane.closePane();
-			selectedClientId = id;        	
-        	transactionDetailFragment = ClientDetailFragment.newInstance(selectedClientId); 
+			selectedClientId = cl.getID();        	
+        	transactionDetailFragment = ClientDetailFragment.newInstance(cl); 
         	setFragment(R.id.content_transaction_detail, transactionDetailFragment);
         	
 
         } else {      	            
-            startActivity(ClientDetailActivity.newIntent(this.getActivity(), id) );
+            startActivity(ClientDetailActivity.newIntent(this.getActivity(), cl.getID()) );
             this.cancelAnimationTransition();
         }
 	}
@@ -158,7 +158,7 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
 	@Override
 	public void onClienteChanged(Cliente cliente) {
 		transactionListFragment.actualizarCliente(cliente);
-		onClienteSelected(selectedClientId);
+		onClienteSelected(cliente);
 	}
 
 	@Override
