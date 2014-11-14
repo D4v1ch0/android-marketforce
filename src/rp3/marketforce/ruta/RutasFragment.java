@@ -75,6 +75,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 			@Override
 			public void onPanelOpened(View panel) {
 				getActivity().invalidateOptionsMenu();
+				rutasListFragment.searchTransactions("");
 			}
 
 			@Override

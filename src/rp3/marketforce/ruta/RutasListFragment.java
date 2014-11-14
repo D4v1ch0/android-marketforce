@@ -202,8 +202,15 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 						}
 						
 						orderDate();
-						adapter = new RutasListAdapter(getActivity(),arrayAgenda,transactionListFragmentCallback,header);
-				    	headerlist.setAdapter(adapter);
+						if(adapter == null)
+						{
+							adapter = new RutasListAdapter(getActivity(),arrayAgenda,transactionListFragmentCallback,header);
+					    	headerlist.setAdapter(adapter);
+						}
+						else
+						{
+							adapter.setNewList(arrayAgenda);
+						}
 				    	
 				    	header_position = new ArrayList<String>();
 				    	header_position.add("0");

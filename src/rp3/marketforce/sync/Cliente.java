@@ -120,7 +120,8 @@ public class Cliente {
 							clienteCont.setTelefono1(""+str.getString("Telefono1"));
 							clienteCont.setTelefono2(""+str.getString("Telefono2"));
 							clienteCont.setCorreo(""+str.getString("CorreoElectronico"));
-							clienteCont.setURLFoto(""+str.getString("URLFoto"));
+							if(!str.isNull("Foto"))
+								clienteCont.setURLFoto(""+str.getString("Foto"));
 							
 							rp3.marketforce.models.Contacto.insert(db, clienteCont);
 						}

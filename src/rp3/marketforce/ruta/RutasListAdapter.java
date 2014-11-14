@@ -148,6 +148,12 @@ public class RutasListAdapter extends SectionAdapter{
 		return null;
 	}
 	
+	public void setNewList(ArrayList<ArrayList<Agenda>> new_list_agenda)
+	{
+		this.list_agenda = new_list_agenda;
+		notifyDataSetChanged();
+	}
+	
 	@Override
     public void onRowItemClick(AdapterView<?> parent, View view, int section, int row, long id) {
         super.onRowItemClick(parent, view, section, row, id);

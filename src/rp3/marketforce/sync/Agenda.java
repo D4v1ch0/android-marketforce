@@ -27,7 +27,7 @@ public class Agenda {
 		{
 			jObject.put("IdAgenda", agendaUpload.getIdAgenda());
 			jObject.put("IdRuta", agendaUpload.getIdRuta());
-			jObject.put("IdCliente", agendaUpload.getIdCliente());
+			//jObject.put("IdCliente", agendaUpload.getIdCliente());
 			jObject.put("FechaInicioGestionTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaInicioReal()));
 			jObject.put("FechaFinGestionTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaFinReal()));
 			
@@ -35,25 +35,25 @@ public class Agenda {
 			for(AgendaTarea agt : agendaUpload.getAgendaTareas())
 			{
 				JSONObject jObjectTarea = new JSONObject();
-				jObjectTarea.put("IdAgenda", agt.getIdAgenda());
-				jObjectTarea.put("IdRuta", agt.getIdRuta());
+				//jObjectTarea.put("IdAgenda", agt.getIdAgenda());
+				//jObjectTarea.put("IdRuta", agt.getIdRuta());
 				jObjectTarea.put("IdTarea", agt.getIdTarea());
 				jObjectTarea.put("EstadoTarea", agt.getEstadoTarea());
-				jObjectTarea.put("TipoTarea", agt.getTipoTarea());
+				//jObjectTarea.put("TipoTarea", agt.getTipoTarea());
 				
 				JSONArray jArrayActividades = new JSONArray();
 				for(AgendaTareaActividades ata : agt.getActividades())
 				{
 					JSONObject jObjectActividad = new JSONObject();
-					jObjectActividad.put("IdAgenda", ata.getIdAgenda());
+					//jObjectActividad.put("IdAgenda", ata.getIdAgenda());
 					jObjectActividad.put("Resultado", ata.getResultado());
-					jObjectActividad.put("IdRuta", ata.getIdRuta());
+					//jObjectActividad.put("IdRuta", ata.getIdRuta());
 					jObjectActividad.put("IdTareaActividad", ata.getIdTareaActividad());
-					jObjectActividad.put("IdTareaActividadPadre", ata.getIdTareaActividadPadre());
+					//jObjectActividad.put("IdTareaActividadPadre", ata.getIdTareaActividadPadre());
 					jObjectActividad.put("IdTarea", ata.getIdTarea());
 					jObjectActividad.put("IdTareaOpcion", ata.getIdTareaOpcion());
-					jObjectActividad.put("Tipo", ata.getTipo());
-					jObjectActividad.put("IdTipoActividad", ata.getIdTipoActividad());
+					//jObjectActividad.put("Tipo", ata.getTipo());
+					//jObjectActividad.put("IdTipoActividad", ata.getIdTipoActividad());
 					
 					jArrayActividades.put(jObjectActividad);
 				}
@@ -70,7 +70,7 @@ public class Agenda {
 			
 		}
 		
-		webService.addParameter("@agenda", jObject.toString());
+		webService.addParameter("@agenda", jObject);
 		
 		try
 		{			
@@ -78,6 +78,8 @@ public class Agenda {
 			
 			try {
 				webService.invokeWebService();	
+				agendaUpload.setEnviado(true);
+				rp3.marketforce.models.Agenda.update(db, agendaUpload);
 			} catch (HttpResponseException e) {
 				if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
 					return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
@@ -85,6 +87,7 @@ public class Agenda {
 			} catch (Exception e) {
 				return SyncAdapter.SYNC_EVENT_ERROR;
 			}
+			
 		}finally{
 			webService.close();
 		}
