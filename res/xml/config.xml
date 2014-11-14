@@ -59,6 +59,11 @@
                     <webMethod>GET</webMethod>
                 </method>
                 <method>
+                    <name>UpdateAgenda</name>
+                    <action>agenda/update</action>
+                    <webMethod>POST</webMethod>
+                </method>
+                <method>
                     <name>GetTipoClientes</name>
                     <action>tipocliente/get</action>
                     <webMethod>GET</webMethod>

@@ -26,6 +26,9 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 	private String correoElectronico;
 	private String genero;
 	private String estadoCivil;
+	private String paginaWeb;
+	private String razonSocial;
+	private String actividadEconomica;
 	private Date fechaNacimiento;
 	private int idTipoCliente;
 	private int idCanal;
@@ -309,6 +312,32 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 		this.URLFoto = URLFoto;
 	}
 
+	
+	
+	public String getPaginaWeb() {
+		return paginaWeb;
+	}
+
+	public void setPaginaWeb(String paginaWeb) {
+		this.paginaWeb = paginaWeb;
+	}
+
+	public String getRazonSocial() {
+		return razonSocial;
+	}
+
+	public void setRazonSocial(String razonSocial) {
+		this.razonSocial = razonSocial;
+	}
+
+	public String getActividadEconomica() {
+		return actividadEconomica;
+	}
+
+	public void setActividadEconomica(String actividadEconomica) {
+		this.actividadEconomica = actividadEconomica;
+	}
+
 	public static List<Long> getIDSCliente(DataBase db){
 		Cursor c = db.query(Contract.Cliente.TABLE_NAME, Contract.Cliente._ID);
 		List<Long> result = new ArrayList<Long>();
@@ -394,6 +423,9 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			client.setCanalDescripcion(CursorUtils.getString(c, Contract.Cliente.FIELD_CANAL_DESCRIPCION));
 			client.setURLFoto(CursorUtils.getString(c, Contract.Cliente.FIELD_URL_FOTO));
 			client.setTipoPersona(CursorUtils.getString(c, Contract.Cliente.FIELD_TIPO_PERSONA));
+			client.setActividadEconomica(CursorUtils.getString(c, Contract.Cliente.FIELD_ACTIVIDAD_ECONOMICA));
+			client.setPaginaWeb(CursorUtils.getString(c, Contract.Cliente.FIELD_PAGINA_WEB));
+			client.setRazonSocial(CursorUtils.getString(c, Contract.Cliente.FIELD_RAZON_SOCIAL));
 			
 			client.setContactos(Contacto.getContactoIdCliente(db, client.getID()));
 			
@@ -514,6 +546,9 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			setValue(Contract.ClientExt.COLUMN_DIRECCION, direccion);
 			setValue(Contract.ClientExt.COLUMN_TELEFONO, telefono);
 			setValue(Contract.ClientExt.COLUMN_CORREO_ELECTRONICO, correoElectronico);
+			setValue(Contract.ClientExt.COLUMN_RAZON_SOCIAL, razonSocial);
+			setValue(Contract.ClientExt.COLUMN_ACTIVIDAD_ECONOMICA, actividadEconomica);
+			setValue(Contract.ClientExt.COLUMN_PAGINA_WEB, paginaWeb);
 		}
 
 		@Override

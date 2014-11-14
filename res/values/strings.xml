@@ -50,5 +50,10 @@
     <string name="label_button_info">Info</string>
     <string name="label_button_direcciones">Dirección</string>
     <string name="label_button_contactos">Contacto</string>
+    <string name="label_button_cancelar">Cancelar Gestión</string>
+    <string name="label_button_iniciar">Iniciar Gestión</string>
+    <string name="label_button_fin">Fin de Gestión</string>
+    <string name="label_button_aceptar_act">Aceptar</string>
+    <string name="label_button_cancelar_act">Cancelar</string>
 
 </resources>

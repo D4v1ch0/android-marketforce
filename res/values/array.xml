@@ -9,6 +9,14 @@
     	<item>Estado Civil</item>
     	<item>Cargo</item>
      </array>
+     
+    <array name="testArrayDetailsJuridico">  
+    	<item>Cédula</item>  
+    	<item>Razón Social</item>
+    	<item>Actividad Económica</item>
+    	<item>E-mail</item>
+    	<item>Página Web</item>
+     </array>
     
      <array name="testArrayDetailsAdress">  
     	<item>Dirección</item>

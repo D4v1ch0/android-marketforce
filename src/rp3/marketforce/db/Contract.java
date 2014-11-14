@@ -57,6 +57,9 @@ public final class Contract {
 		public static final String FIELD_CORREO_ELECTRONICO = Contract.ClientExt.TABLE_NAME + "_" + Contract.ClientExt.COLUMN_CORREO_ELECTRONICO;
 		public static final String FIELD_DIRECCION = Contract.ClientExt.TABLE_NAME + "_" + Contract.ClientExt.COLUMN_DIRECCION;
 		public static final String FIELD_TELEFONO = Contract.ClientExt.TABLE_NAME + "_" + Contract.ClientExt.COLUMN_TELEFONO;
+		public static final String FIELD_PAGINA_WEB = Contract.ClientExt.TABLE_NAME + "_" + Contract.ClientExt.COLUMN_PAGINA_WEB;
+		public static final String FIELD_RAZON_SOCIAL = Contract.ClientExt.TABLE_NAME + "_" + Contract.ClientExt.COLUMN_RAZON_SOCIAL;
+		public static final String FIELD_ACTIVIDAD_ECONOMICA = Contract.ClientExt.TABLE_NAME + "_" + Contract.ClientExt.COLUMN_ACTIVIDAD_ECONOMICA;
 		public static final String FIELD_ESTADO_CIVIL_DESCRIPCION = "tbEstadoCivil_Value";
 		public static final String FIELD_GENERO_DESCRIPCION = "tbGenero_Value";
 		public static final String FIELD_TIPO_CLIENTE_DESCRIPCION = Contract.TipoCliente.TABLE_NAME + "_" + Contract.TipoCliente.COLUMN_DESCRIPCION;
@@ -119,6 +122,9 @@ public final class Contract {
 	        public static final String COLUMN_MAIL = "CorreoElectronico";	        
 	        public static final String COLUMN_DIRECCION = "Direccion";
 	        public static final String COLUMN_TELEFONO = "Telefono";
+	        public static final String COLUMN_RAZON_SOCIAL = "RazonSocial";
+	        public static final String COLUMN_PAGINA_WEB = "PaginaWeb";
+	        public static final String COLUMN_ACTIVIDAD_ECONOMICA = "ActividadEconomica";
 	        
 	        
 	        
@@ -206,6 +212,9 @@ public final class Contract {
 		public static final String COLUMN_FECHA_INICIO = "FechaInicio";
 		public static final String COLUMN_FECHA_FIN = "FechaFin";
 		public static final String COLUMN_ESTADO_AGENDA = "EstadoAgenda";
+		public static final String COLUMN_FECHA_INICIO_REAL = "FechaInicioReal";
+		public static final String COLUMN_FECHA_FIN_REAL = "FechaFinReal";
+		public static final String COLUMN_ENVIADO = "Enviado";
 		
 		public static final String FIELD_RUTA_ID = COLUMN_RUTA_ID;
 		public static final String FIELD_AGENDA_ID = COLUMN_AGENDA_ID;
@@ -215,6 +224,9 @@ public final class Contract {
 		public static final String FIELD_FECHA_INCICIO = COLUMN_FECHA_INICIO;
 		public static final String FIELD_FECHA_FIN = COLUMN_FECHA_FIN;
 		public static final String FIELD_ESTADO_AGENDA = COLUMN_ESTADO_AGENDA;
+		public static final String FIELD_FECHA_INICIO_REAL = COLUMN_FECHA_INICIO_REAL;
+		public static final String FIELD_FECHA_FIN_REAL = COLUMN_FECHA_FIN_REAL;
+		public static final String FIELD_ENVIADO = COLUMN_ENVIADO;
 		public static final String FIELD_CLIENTE_NOMBRE = Contract.AgendaExt.TABLE_NAME + "_" + Contract.AgendaExt.COLUMN_NOMBRE;		
 		public static final String FIELD_CLIENTE_DIRECCION = Contract.AgendaExt.TABLE_NAME + "_" + Contract.AgendaExt.COLUMN_DIRECCION;
 		public static final String FIELD_CLIENTE_CIUDAD = Contract.AgendaExt.TABLE_NAME + "_" + Contract.AgendaExt.COLUMN_CIUDAD;

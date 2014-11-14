@@ -2,19 +2,24 @@ package rp3.marketforce.ruta;
 
 import rp3.app.BaseFragment;
 import rp3.marketforce.R;
+import rp3.widget.SlidingPaneLayout;
+import rp3.widget.SlidingPaneLayout.PanelSlideListener;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnFocusChangeListener;
 import android.widget.EditText;
 import android.widget.SearchView;
+import android.widget.SearchView.OnCloseListener;
 import android.widget.SearchView.OnQueryTextListener;
 
 public class RutasFragment extends BaseFragment implements RutasListFragment.TransactionListFragmentListener{
 
 	public static final String ARG_TRANSACTIONTYPEID = "transactionTypeId";
+	private static final int PARALLAX_SIZE = 0;
 	
 	public static boolean mTwoPane = false;
 	private long selectedTransactionId;
@@ -24,6 +29,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	
 	private RutasListFragment rutasListFragment;
 	private RutasDetailFragment rutasDetailfragment;
+	private SlidingPaneLayout slidingPane;
     
 	public static RutasFragment newInstance(int transactionTypeId) {
 		RutasFragment fragment = new RutasFragment();
@@ -52,6 +58,29 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	@Override
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {		
 		super.onFragmentCreateView(rootView, savedInstanceState);
+		
+		slidingPane = (SlidingPaneLayout) rootView.findViewById(R.id.sliding_pane_clientes);
+		slidingPane.setParallaxDistance(PARALLAX_SIZE);
+		slidingPane.setShadowResource(R.drawable.sliding_pane_shadow);
+		slidingPane.setSlidingEnabled(false);
+		slidingPane.openPane();
+		slidingPane.setPanelSlideListener(new PanelSlideListener(){
+
+			@Override
+			public void onPanelSlide(View panel, float slideOffset) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onPanelOpened(View panel) {
+				getActivity().invalidateOptionsMenu();
+			}
+
+			@Override
+			public void onPanelClosed(View panel) {
+				getActivity().invalidateOptionsMenu();
+			}});
 						
 		if(getChildFragmentManager().findFragmentById(R.id.transaction_detail) == null){			
 			if(rootView.findViewById(R.id.content_transaction_list)!=null){
@@ -72,6 +101,15 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	public void onAfterCreateOptionsMenu(Menu menu) {	
 		
   	 SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search_ruta));
+  	 if(!slidingPane.isOpen())
+  	 {
+  		 searchView.setVisibility(View.GONE);
+  		 menu.removeItem(R.id.action_search_ruta);
+  	 }
+  	 else
+  	 {
+  		 searchView.setVisibility(View.VISIBLE);
+  	 }
   	  
   	 int searchPlateId = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
   	 EditText searchPlate = (EditText) searchView.findViewById(searchPlateId);
@@ -90,9 +128,24 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 			
 			@Override
 			public boolean onQueryTextChange(String newText) {
+				if(newText.equalsIgnoreCase(""));
+				try
+				{
+					rutasListFragment.searchTransactions("");
+				}
+				catch(Exception ex)
+				{
+					
+				}
 				return false;
 			}
 		});
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		// TODO Auto-generated method stub
+		return super.onContextItemSelected(item);
 	}
 	
 	 @Override
@@ -108,7 +161,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	@Override
 	public void onTransactionSelected(long id) {
 		if (mTwoPane) {
-           
+            slidingPane.closePane();
         	selectedTransactionId = id;
         	rutasDetailfragment = RutasDetailFragment.newInstance(selectedTransactionId); 
         	

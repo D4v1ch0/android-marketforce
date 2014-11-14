@@ -23,10 +23,11 @@
 
             <ImageView
                 android:id="@+id/imageView_foto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/user" />
+
         </FrameLayout>
 
         <LinearLayout
@@ -100,10 +101,44 @@
         </LinearLayout>
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageButton
+            android:id="@+id/detail_tab_info"
+            style="@style/Widget.Button.Theme"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_action_storage" />
+
+        <ImageButton
+            android:id="@+id/detail_tab_direccion"
+            style="@style/Widget.Button.Theme"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_action_place"
+            android:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/detail_tab_contactos"
+            style="@style/Widget.Button.Theme"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_action_group"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
     <rp3.widget.ViewPager
         android:id="@+id/detail_client_pager"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
+        
+        
     </rp3.widget.ViewPager>
 
     <ScrollView

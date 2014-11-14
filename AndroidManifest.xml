@@ -19,6 +19,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     
 
     <application
@@ -92,7 +94,7 @@
             android:windowSoftInputMode="stateHidden">                        
         </activity>
         
-          <service android:name="rp3.accounts.AuthenticatorService" >
+          <activity android:name=".actividades.TextoActivity" android:theme="@style/ActivityPopupTheme"></activity><service android:name="rp3.accounts.AuthenticatorService" >
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" >
                 </action>
@@ -122,6 +124,11 @@
             android:authorities="rp3.marketforce.provider"
             android:exported="false"
             android:syncable="true" />
+        
+        <activity android:name=".actividades.CheckboxActivity"></activity>
+        <activity android:name=".actividades.MultipleActivity" android:theme="@style/ActivityPopupTheme"></activity>
+        <activity android:name=".actividades.SeleccionActivity"></activity>
+        <activity android:name=".actividades.GrupoActivity"></activity>
         
     </application>
 

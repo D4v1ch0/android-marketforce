@@ -2,15 +2,22 @@ package rp3.marketforce.utils;
 
 import java.util.ArrayList;
 
+import rp3.marketforce.MainActivity;
 import rp3.widget.ViewPager;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.TextView;
 
 public class DetailsPageAdapter extends PagerAdapter {
 
 	  private ArrayList<View> views = new ArrayList<View>();
+	  private String[] titles = {"Info","Direcciones","Contactos"};
 
 	  @Override
 	  public int getItemPosition (Object object)
@@ -24,10 +31,10 @@ public class DetailsPageAdapter extends PagerAdapter {
 
 	  @Override
 	  public Object instantiateItem (ViewGroup container, int position)
-	  {
-	    View v = views.get (position);
-	    container.addView (v);
-	    return v;
+	  {		  
+	      View v = views.get (position);
+	      container.addView (v);
+	      return v;
 	  }
 
 	  @Override
@@ -47,7 +54,12 @@ public class DetailsPageAdapter extends PagerAdapter {
 	  {
 	    return view == object;
 	  }
-
+	  
+	  @Override
+	  public CharSequence getPageTitle(int position) {
+	  	return titles[position];
+	  }
+	  
 	  public int addView (View v)
 	  {
 	    return addView (v, views.size());

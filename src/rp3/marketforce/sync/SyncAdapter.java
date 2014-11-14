@@ -1,6 +1,7 @@
 package rp3.marketforce.sync;
 
 import rp3.db.sqlite.DataBase;
+import rp3.marketforce.ruta.RutasDetailFragment;
 import rp3.sync.SyncAudit;
 import android.accounts.Account;
 import android.content.ContentProviderClient;
@@ -14,6 +15,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 	public static String SYNC_TYPE_GENERAL = "general";
 	public static String SYNC_TYPE_ENVIAR_UBICACION = "sendlocation";
 	public static String SYNC_TYPE_CLIENTE_UPDATE = "clienteupdate";
+	public static String SYNC_TYPE_ENVIAR_AGENDA = "sendagenda";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -24,7 +26,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 			ContentProviderClient provider, SyncResult syncResult) {		
 		super.onPerformSync(account, extras, authority, provider, syncResult);	
 		
-		//android.os.Debug.waitForDebugger();
+		android.os.Debug.waitForDebugger();
 		String syncType = extras.getString(ARG_SYNC_TYPE);
 		
 		DataBase db = null;		
@@ -97,6 +99,12 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 			}else if(syncType.equals(SYNC_TYPE_CLIENTE_UPDATE)){
 				long id = extras.getLong(ClienteActualizacion.ARG_CLIENTE_ID);
 				result = ClienteActualizacion.executeSync(db, id);
+				addDefaultMessage(result);
+			}
+			
+			else if(syncType.equals(SYNC_TYPE_ENVIAR_AGENDA)){
+				int id = extras.getInt(RutasDetailFragment.ARG_AGENDA_ID);
+				result = Agenda.executeSync(db, id);
 				addDefaultMessage(result);
 			}
 			

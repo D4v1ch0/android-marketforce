@@ -36,6 +36,9 @@
         CorreoElectronico,        
         Direccion,
         Telefono,
+        PaginaWeb,
+        RazonSocial,
+        ActividadEconomica,
         tokenize=porter
         );
     </statement>   
@@ -85,6 +88,9 @@
       IdProgramacionRuta INTEGER,
       FechaInicio INTEGER,
       FechaFin INTEGER,
+      FechaInicioReal INTEGER,
+      FechaFinReal INTEGER,
+      Enviado BOOLEAN,
       EstadoAgenda TEXT
       )
 	</statement>
@@ -112,7 +118,7 @@
 	
 	<statement>
 	  CREATE TABLE tbAgendaTareaActividades(
-      _id INTEGER PRIMARY KEY,
+      _id INTEGER PRIMARY KEY AUTOINCREMENT,
       Descripcion TEXT,
       IdAgenda INTEGER,
       IdRuta INTEGER,
@@ -129,7 +135,7 @@
 	
 	<statement>
 	  CREATE TABLE tbAgendaTareaOpciones(
-      _id INTEGER PRIMARY KEY,
+      _id INTEGER PRIMARY KEY AUTOINCREMENT,
       Descripcion TEXT,
       IdAgenda INTEGER,
       IdRuta INTEGER,

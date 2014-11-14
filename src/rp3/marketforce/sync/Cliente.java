@@ -67,6 +67,9 @@ public class Cliente {
 						cl.setNombreCompleto(type.getString("NombresCompletos"));
 						cl.setURLFoto(type.getString("Foto"));
 						cl.setTipoPersona(type.getString("TipoPersona"));
+						cl.setActividadEconomica(type.getString("ActividadEconomica"));
+						cl.setPaginaWeb(type.getString("PaginaWeb"));
+						cl.setRazonSocial(type.getString("RazonSocial"));
 																	
 						JSONArray strs = type.getJSONArray("ClienteDirecciones");
 						
@@ -117,6 +120,7 @@ public class Cliente {
 							clienteCont.setTelefono1(""+str.getString("Telefono1"));
 							clienteCont.setTelefono2(""+str.getString("Telefono2"));
 							clienteCont.setCorreo(""+str.getString("CorreoElectronico"));
+							clienteCont.setURLFoto(""+str.getString("URLFoto"));
 							
 							rp3.marketforce.models.Contacto.insert(db, clienteCont);
 						}

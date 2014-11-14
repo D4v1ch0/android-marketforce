@@ -14,14 +14,16 @@
 
         <ImageView
             android:id="@+id/imageView1"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="0.3"
             android:src="@drawable/user" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="8dp"
+            android:layout_weight="0.4"
             android:gravity="center_vertical"
             android:orientation="vertical" >
 
@@ -32,7 +34,7 @@
                 <ImageView
                     android:id="@+id/detail_agenda_image_status"
                     android:layout_width="14dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:src="@drawable/circle_shape" />
 
                 <TextView
@@ -71,65 +73,65 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:paddingRight="12dp"
-                android:text="Mayorista"
                 android:singleLine="true"
+                android:text="Mayorista"
                 android:textStyle="bold" />
-
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_weight="0.4"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textView_movil"
+                style="@style/Widget.TextView.XSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:drawableLeft="@drawable/ic_action_call_mini"
+                android:drawablePadding="8dp"
+                android:gravity="center"
+                android:textSize="@dimen/text_medium_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView_mail"
+                style="@style/Widget.TextView.XSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_action_email_mini"
+                android:drawablePadding="8dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:singleLine="true"
+                android:textSize="@dimen/text_medium_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textSize="@dimen/text_small_size" />
+
+            <TextView
+                android:id="@+id/textView_fecha"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textSize="@dimen/text_small_size" />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/textView_movil"
-            style="@style/Widget.TextView.XSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_action_call_mini"
-            android:gravity="center"
-            android:drawablePadding="8dp"
-            android:layout_marginRight="10dp"
-            android:textSize="@dimen/text_medium_size"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/textView_mail"
-            style="@style/Widget.TextView.XSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_action_email_mini"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:singleLine="true"
-            android:drawablePadding="8dp"
-            android:textSize="@dimen/text_medium_size"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/textView_address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:singleLine="true"
-        android:textSize="@dimen/text_small_size" />
-
-    <TextView
-        android:id="@+id/textView_fecha"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:singleLine="true"
-        android:textSize="@dimen/text_small_size" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_marginTop="@dimen/transaction_edit_resume_values_marginleft" >
 
         <Button
             android:id="@+id/detail_agenda_button_cancelar"

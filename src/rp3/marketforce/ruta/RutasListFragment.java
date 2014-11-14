@@ -236,11 +236,10 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 						});
 				    	
 				    	LinearLayout.LayoutParams params;
-				    	
-				    	if(RutasFragment.mTwoPane)
-				    		params = new LinearLayout.LayoutParams((int) (width*.07f) , LinearLayout.LayoutParams.WRAP_CONTENT);
+				    	if(width > 480)
+				    		params = new LinearLayout.LayoutParams((int) (width*.14f) + 2, LinearLayout.LayoutParams.WRAP_CONTENT);
 				    	else
-				    	   params = new LinearLayout.LayoutParams((int) (width*.14f) , LinearLayout.LayoutParams.WRAP_CONTENT);
+				    		params = new LinearLayout.LayoutParams((int) (width*.18f) , LinearLayout.LayoutParams.WRAP_CONTENT);
 				    	
 						if(header != null)
 						{
@@ -318,7 +317,9 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 				 
 				 for(Agenda agd :list_agenda)
 				 {
-					long diff = DateTime.getDaysDiff(calendar.getTime(), agd.getFechaInicio());
+					String prueba = cal.getTime().toString();
+					String prueba2 = agd.getFechaInicio().toString();
+					long diff = DateTime.getDaysDiff(cal.getTime(), agd.getFechaInicio());
 					
 					if(diff >= 0)
 					{

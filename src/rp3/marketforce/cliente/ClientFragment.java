@@ -76,6 +76,7 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
 		slidingPane.setSlidingEnabled(false);
 		slidingPane.openPane();
 		
+		
 		slidingPane.setPanelSlideListener(new PanelSlideListener(){
 
 			@Override
@@ -86,12 +87,12 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
 
 			@Override
 			public void onPanelOpened(View panel) {
-				
+				getActivity().invalidateOptionsMenu();
 			}
 
 			@Override
 			public void onPanelClosed(View panel) {
-
+				getActivity().invalidateOptionsMenu();
 			}});
 		
 		if(getChildFragmentManager().findFragmentById(R.id.transaction_detail) == null){			
@@ -116,7 +117,15 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
       SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
       //SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
   	  SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
-      // Assumes current activity is the searchable activity
+  	  if(!slidingPane.isOpen())
+ 	 {
+ 		 searchView.setVisibility(View.GONE);
+ 		 menu.removeItem(R.id.action_search);
+ 	 }
+ 	 else
+ 	 {
+ 		 searchView.setVisibility(View.VISIBLE);
+ 	 }
   	  
   	 int searchicon = searchView.getContext().getResources().getIdentifier("android:id/search_mag_icon", null, null);
   	 ImageView searchIcon = (ImageView)searchView.findViewById(searchicon);

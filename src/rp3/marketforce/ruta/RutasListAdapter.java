@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.cliente.ClientFragment;
 import rp3.marketforce.headerlistview.SectionAdapter;
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 @SuppressLint("SimpleDateFormat")
@@ -99,6 +101,18 @@ public class RutasListAdapter extends SectionAdapter{
 		((TextView) convertView.findViewById(R.id.textView_horas)).setText(str_range);
 		 
 		((TextView) convertView.findViewById(R.id.textView_nombre)).setText(""+agd.getNombreCompleto());
+		
+		if(agd.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO))
+			((ImageView) convertView.findViewById(R.id.itemlist_rutas_estado)).setImageResource(R.drawable.circle_in_process);
+		if(agd.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_NO_VISITADO))
+			((ImageView) convertView.findViewById(R.id.itemlist_rutas_estado)).setImageResource(R.drawable.circle_unvisited);
+		if(agd.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_PENDIENTE))
+			((ImageView) convertView.findViewById(R.id.itemlist_rutas_estado)).setImageResource(R.drawable.circle_pending);
+		if(agd.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_REPROGRAMADO))
+			((ImageView) convertView.findViewById(R.id.itemlist_rutas_estado)).setImageResource(R.drawable.circle_reprogramed);
+		if(agd.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_VISITADO))
+			((ImageView) convertView.findViewById(R.id.itemlist_rutas_estado)).setImageResource(R.drawable.circle_visited);
+		
 		
 		if(agd.getClienteDireccion() != null)
 			((TextView) convertView.findViewById(R.id.textView_address)).setText(""+agd.getClienteDireccion().getDireccion());

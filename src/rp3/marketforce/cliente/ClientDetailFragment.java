@@ -14,14 +14,20 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+@SuppressLint("ResourceAsColor")
 public class ClientDetailFragment extends rp3.app.BaseFragment implements ClienteEditFragment.OnClienteEditListener {
 	/**
 	 * The fragment argument representing the item ID that this fragment
@@ -46,7 +52,13 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	private LinearLayout linearLayoutContact;
 	private ViewPager PagerDetalles;
 	private DetailsPageAdapter pagerAdapter;
+	private ImageButton TabInfo;
+	private ImageButton TabDirecciones;
+	private ImageButton TabContactos;
 
+	/*
+	 * Posiciones y pivots de campos para clientes naturales y contactos
+	 */
 	private static final int ITEM_CEDULA = 0;
 	private static final int ITEM_MAIL = 1;
 	private static final int ITEM_CUMPLE = 2;
@@ -54,11 +66,22 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	private static final int ITEM_ESTADO_CIVIL = 4;
 	private static final int ITEM_CARGO = 5;
 
+	/*
+	 * Posiciones y pivots de campos para direcciones
+	 */
 	private static final int ITEM_DIRECCION = 0;
 	private static final int ITEM_TELEFONO_1 = 1;
 	private static final int ITEM_TELEFONO_2 = 2;
 	private static final int ITEM_REFERENCIA = 3;
 	private static final int ITEM_CIUDAD = 4;
+	
+	/*
+	 * Posiciones y pivots de campos para clientes jurídicos
+	 */
+	private static final int ITEM_RAZON_SOCIAL = 1;
+	private static final int ITEM_ACTIVIDAD = 2;
+	private static final int ITEM_EMAIL = 3;
+	private static final int ITEM_PAGINA_WEB = 4;
 
 	private String str_titulo;
 	private final int REQUEST_CODE_DETAIL_EDIT = 3;
@@ -147,6 +170,68 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
 
 		PagerDetalles = (ViewPager) rootView.findViewById(R.id.detail_client_pager);
+		TabInfo = (ImageButton) rootView.findViewById((R.id.detail_tab_info));
+		TabDirecciones = (ImageButton) rootView.findViewById((R.id.detail_tab_direccion));
+		TabContactos = (ImageButton) rootView.findViewById((R.id.detail_tab_contactos));
+		
+		TabInfo.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				PagerDetalles.setCurrentItem(0);
+			}});
+		
+		TabDirecciones.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				PagerDetalles.setCurrentItem(1);
+			}});
+		
+		TabContactos.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				PagerDetalles.setCurrentItem(2);
+			}});
+		
+		PagerDetalles.setOnPageChangeListener(new OnPageChangeListener(){
+
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+				
+			}
+
+			@SuppressLint("NewApi")
+			@Override
+			public void onPageSelected(int arg0) {
+				String title = pagerAdapter.getPageTitle(arg0).toString();
+				if(title.equalsIgnoreCase("Info"))
+				{
+					TabInfo.setBackgroundColor(R.color.bg_button_bg_main_pressed);
+					TabDirecciones.setBackground(getResources().getDrawable(R.drawable.button));
+					TabContactos.setBackground(getResources().getDrawable(R.drawable.button));
+				}
+				if(title.equalsIgnoreCase("Direcciones"))
+				{
+					TabInfo.setBackground(getResources().getDrawable(R.drawable.button));
+					TabDirecciones.setBackgroundColor(R.color.bg_button_bg_main_pressed);
+					TabContactos.setBackground(getResources().getDrawable(R.drawable.button));
+				}
+				if(title.equalsIgnoreCase("Contactos"))
+				{
+					TabInfo.setBackground(getResources().getDrawable(R.drawable.button));
+					TabDirecciones.setBackground(getResources().getDrawable(R.drawable.button));
+					TabContactos.setBackgroundColor(R.color.bg_button_bg_main_pressed);
+				}
+				
+			}});
 		pagerAdapter = new DetailsPageAdapter();
 		if (client != null) {
 			if(client.getTipoPersona().equalsIgnoreCase("N"))
@@ -277,13 +362,16 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 							View.GONE);
 			}
 		}
-		linearLayoutRigth.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-		pagerAdapter.addView(linearLayoutRigth);
+		FrameLayout fl = new FrameLayout(getActivity());
+		((ViewGroup)linearLayoutRigth.getParent()).removeView(linearLayoutRigth);
+		fl.addView(linearLayoutRigth);
+		pagerAdapter.addView(fl);
 
 		if (client.getClienteDirecciones() != null
 				&& client.getClienteDirecciones().size() > 0) {
 			setViewVisibility(R.id.linearLayout_content_adress,
 					View.VISIBLE);
+			setViewVisibility(R.id.detail_tab_direccion, View.VISIBLE);
 			testArrayDetailsAdress = this.getActivity().getResources()
 					.getStringArray(R.array.testArrayDetailsAdress);
 
@@ -372,14 +460,17 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 								.setVisibility(View.GONE);
 				}
 			}
-			linearLayoutAdress.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-			pagerAdapter.addView(linearLayoutAdress);
+			fl = new FrameLayout(getActivity());
+			((ViewGroup)linearLayoutAdress.getParent()).removeView(linearLayoutAdress);
+			fl.addView(linearLayoutAdress);
+			pagerAdapter.addView(fl);
 		}
 		
 		if(client.getContactos() != null && client.getContactos().size() > 0)
 		{
 			setViewVisibility(R.id.linearLayout_content_contactos,
 					View.VISIBLE);
+			setViewVisibility(R.id.detail_tab_contactos, View.VISIBLE);
 			testArrayDetails = this.getActivity().getResources()
 					.getStringArray(R.array.testArrayDetails);
 
@@ -398,17 +489,291 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 					View view_rowlist = inflater.inflate(
 							R.layout.rowlist_client_detail, null);
 					((TextView) view_rowlist
-							.findViewById(R.id.textView_title)).setText(client.getContactos().get(x).getNombre() + " " +
-									client.getContactos().get(x).getApellido());
+							.findViewById(R.id.textView_title)).setText(client.getContactos().get(x).getCargo());
 
 					((TextView) view_rowlist
 							.findViewById(R.id.textView_content))
-							.setText(client.getContactos().get(x).getCargo());
+							.setText(client.getContactos().get(x).getNombre() + " " +
+									client.getContactos().get(x).getApellido());
 					linearLayoutContact.addView(view_rowlist);
 				
 			}
-			linearLayoutContact.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-			pagerAdapter.addView(linearLayoutContact);
+			fl = new FrameLayout(getActivity());
+			((ViewGroup)linearLayoutContact.getParent()).removeView(linearLayoutContact);
+			fl.addView(linearLayoutContact);
+			pagerAdapter.addView(fl);
+		}
+		/*
+		 * Se cambia la carga de foto por un lazy load
+		 */
+		//setImageViewBitmapFromInternalStorageAsync(R.id.imageView_foto, client.getFotoFileName());
+		DManager.fetchDrawableOnThread(PreferenceManager.getString("server") + 
+				rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + client.getURLFoto(),
+				(ImageView) this.getRootView().findViewById(R.id.imageView_foto));
+		setTextViewText(R.id.textView_tipo_canal,
+				client.getCanalDescripcion());
+		setTextViewText(R.id.textView_tipo_cliente,
+				client.getTipoClienteDescripcion());
+		((RatingBar) rootView.findViewById(R.id.ratingBar_status))
+				.setRating(client.getCalificacion());
+		setTextViewText(R.id.textView_client, client.getNombreCompleto());
+		TabInfo.setBackgroundColor(R.color.bg_button_bg_main_pressed);
+		
+		PagerDetalles.setAdapter(pagerAdapter);
+	}
+	
+	private void renderClienteJuridico(View rootView)
+	{
+		hideDialogConfirmation();
+		(rootView.findViewById(R.id.imageView_edit_detail_client))
+				.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						onDetailItemEdit(clientId);
+					}
+				});
+
+		testArrayDetails = this.getActivity().getResources()
+				.getStringArray(R.array.testArrayDetailsJuridico);
+		inflater = (LayoutInflater) this.getActivity().getSystemService(
+				Context.LAYOUT_INFLATER_SERVICE);
+
+		linearLayoutRigth = (LinearLayout) rootView
+				.findViewById(R.id.linearLayout_content_rigth);
+		linearLayoutAdress = (LinearLayout) rootView
+				.findViewById(R.id.linearLayout_content_adress);
+		linearLayoutContact = (LinearLayout) rootView
+				.findViewById(R.id.linearLayout_content_contactos);
+
+		String etiqueta = "";
+		for (int x = 0; x < testArrayDetails.length; x++) {
+			etiqueta = "";
+			switch (x) {
+
+			case ITEM_CEDULA:
+
+				str_titulo = "";
+				etiqueta = client.getTipoIdentificacionDescripcion();
+				if (client.getIdentificacion() != null)
+					if (!client.getIdentificacion().equals("null"))
+						str_titulo = "" + client.getIdentificacion();
+
+				flag = false;
+				break;
+
+			case ITEM_EMAIL:
+
+				str_titulo = "";
+				etiqueta = testArrayDetails[x];
+				if (client.getCorreoElectronico() != null)
+					if (!client.getCorreoElectronico().equals("null"))
+						str_titulo = "" + client.getCorreoElectronico();
+
+				flag = false;
+				break;
+				
+			case ITEM_RAZON_SOCIAL:
+
+				str_titulo = "";
+				etiqueta = testArrayDetails[x];
+				if (client.getRazonSocial() != null)
+					if (!client.getRazonSocial().equals("null"))
+						str_titulo = "" + client.getRazonSocial();
+
+				flag = false;
+				break;
+				
+			case ITEM_PAGINA_WEB:
+
+				str_titulo = "";
+				etiqueta = testArrayDetails[x];
+				if (client.getPaginaWeb() != null)
+					if (!client.getPaginaWeb().equals("null"))
+						str_titulo = "" + client.getPaginaWeb();
+
+				flag = false;
+				break;
+				
+			case ITEM_ACTIVIDAD:
+
+				str_titulo = "";
+				etiqueta = testArrayDetails[x];
+				if (client.getActividadEconomica() != null)
+					if (!client.getActividadEconomica().equals("null"))
+						str_titulo = "" + client.getActividadEconomica();
+
+				flag = false;
+				break;
+
+			default:
+				break;
+			}
+			
+			if(!etiqueta.equalsIgnoreCase(""))
+			{
+				View view_rowlist = inflater.inflate(
+						R.layout.rowlist_client_detail, null);
+				((TextView) view_rowlist.findViewById(R.id.textView_title))
+						.setText(etiqueta);
+
+				
+				
+				if (flag)
+					((TextView) view_rowlist
+							.findViewById(R.id.textView_content))
+							.setText(getTextViewString(R.id.textView_client));
+				else
+					((TextView) view_rowlist
+							.findViewById(R.id.textView_content))
+							.setText(str_titulo);
+
+				linearLayoutRigth.addView(view_rowlist);
+
+				if (x + 1 == testArrayDetails.length)
+					view_rowlist.findViewById(R.id.view_bottom).setVisibility(
+							View.GONE);
+			}
+		}
+		FrameLayout fl = new FrameLayout(getActivity());
+		((ViewGroup)linearLayoutRigth.getParent()).removeView(linearLayoutRigth);
+		fl.addView(linearLayoutRigth);
+		pagerAdapter.addView(fl);
+
+		if (client.getClienteDirecciones() != null
+				&& client.getClienteDirecciones().size() > 0) {
+			setViewVisibility(R.id.linearLayout_content_adress,
+					View.VISIBLE);
+			setViewVisibility(R.id.detail_tab_direccion, View.VISIBLE);
+			testArrayDetailsAdress = this.getActivity().getResources()
+					.getStringArray(R.array.testArrayDetailsAdress);
+
+			LinearLayout.LayoutParams par = new LinearLayout.LayoutParams(
+					LinearLayout.LayoutParams.MATCH_PARENT, 4);
+			par.setMargins(0, 10, 0, 15);
+
+			for (int x = 0; x < client.getClienteDirecciones().size(); x++) {
+				if (x > 0) {
+					View view = new View(getActivity());
+					view.setLayoutParams(par);
+					view.setBackgroundResource(R.color.color_background_header);
+					linearLayoutAdress.addView(view);
+				}
+
+				for (int y = 0; y < testArrayDetailsAdress.length; y++) {
+
+					switch (y) {
+					case ITEM_DIRECCION:
+						str_titulo = "";
+
+						if (client.getClienteDirecciones().get(x)
+								.getDireccion() != null)
+							if (!client.getClienteDirecciones().get(x)
+									.getDireccion().equals("null"))
+								str_titulo = ""
+										+ client.getClienteDirecciones()
+												.get(x).getDireccion();
+
+						break;
+
+					case ITEM_TELEFONO_1:
+						str_titulo = "";
+						if (client.getClienteDirecciones().get(x)
+								.getTelefono1() != null)
+							if (!client.getClienteDirecciones().get(x)
+									.getTelefono1().equals("null"))
+								str_titulo = ""
+										+ client.getClienteDirecciones()
+												.get(x).getTelefono1();
+
+						break;
+
+					case ITEM_TELEFONO_2:
+						str_titulo = "";
+						if (client.getClienteDirecciones().get(x).getTelefono2() != null)
+							if (!client.getClienteDirecciones().get(x).getTelefono2().equals("null"))
+								str_titulo = "" + client.getClienteDirecciones().get(x).getTelefono2();
+
+						break;
+
+					case ITEM_REFERENCIA:
+						str_titulo = "";
+						if (client.getClienteDirecciones().get(x)
+								.getReferencia() != null)
+							if (!client.getClienteDirecciones().get(x)
+									.getReferencia().equals("null"))
+								str_titulo = ""
+										+ client.getClienteDirecciones()
+												.get(x).getReferencia();
+
+						break;
+
+					case ITEM_CIUDAD:
+						str_titulo = client.getClienteDirecciones().get(x)
+								.getCiudadDescripcion();
+						break;
+
+					default:
+						break;
+					}
+
+					View view_rowlist = inflater.inflate(
+							R.layout.rowlist_client_detail, null);
+					((TextView) view_rowlist
+							.findViewById(R.id.textView_title)).setText(""
+							+ testArrayDetailsAdress[y]);
+
+					((TextView) view_rowlist
+							.findViewById(R.id.textView_content))
+							.setText(str_titulo);
+					linearLayoutAdress.addView(view_rowlist);
+
+					if (y + 1 == testArrayDetailsAdress.length)
+						view_rowlist.findViewById(R.id.view_bottom)
+								.setVisibility(View.GONE);
+				}
+			}
+			fl = new FrameLayout(getActivity());
+			((ViewGroup)linearLayoutAdress.getParent()).removeView(linearLayoutAdress);
+			fl.addView(linearLayoutAdress);
+			pagerAdapter.addView(fl);
+		}
+		
+		if(client.getContactos() != null && client.getContactos().size() > 0)
+		{
+			setViewVisibility(R.id.linearLayout_content_contactos,
+					View.VISIBLE);
+			setViewVisibility(R.id.detail_tab_contactos, View.VISIBLE);
+			testArrayDetails = this.getActivity().getResources()
+					.getStringArray(R.array.testArrayDetails);
+
+			LinearLayout.LayoutParams par = new LinearLayout.LayoutParams(
+					LinearLayout.LayoutParams.MATCH_PARENT, 4);
+			par.setMargins(0, 10, 0, 15);
+
+			for (int x = 0; x < client.getContactos().size(); x++) {
+				if (x > 0) {
+					View view = new View(getActivity());
+					view.setLayoutParams(par);
+					view.setBackgroundResource(R.color.color_background_header);
+					linearLayoutContact.addView(view);
+				}			
+
+					View view_rowlist = inflater.inflate(
+							R.layout.rowlist_client_detail, null);
+					((TextView) view_rowlist
+							.findViewById(R.id.textView_title)).setText(client.getContactos().get(x).getCargo());
+
+					((TextView) view_rowlist
+							.findViewById(R.id.textView_content))
+							.setText(client.getContactos().get(x).getNombre() + " " +
+									client.getContactos().get(x).getApellido());
+					linearLayoutContact.addView(view_rowlist);
+				
+			}
+			fl = new FrameLayout(getActivity());
+			((ViewGroup)linearLayoutContact.getParent()).removeView(linearLayoutContact);
+			fl.addView(linearLayoutContact);
+			pagerAdapter.addView(fl);
 		}
 		/*
 		 * Se cambia la carga de foto por un lazy load
@@ -426,10 +791,16 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 		setTextViewText(R.id.textView_client, client.getNombreCompleto());
 		
 		PagerDetalles.setAdapter(pagerAdapter);
-	}
-	
-	private void renderClienteJuridico(View rootView)
-	{
+		
+		if(client.getContactos() != null && client.getContactos().size() > 0)
+		{
+			TabContactos.setBackgroundColor(R.color.bg_button_bg_main_pressed);
+			PagerDetalles.setCurrentItem(2);
+		}
+		else
+		{
+			TabInfo.setBackgroundColor(R.color.bg_button_bg_main_pressed);
+		}
 		
 	}
 	
@@ -503,6 +874,11 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 			}
 		}
 		
+		FrameLayout fl = new FrameLayout(getActivity());
+		((ViewGroup)linearLayoutRigth.getParent()).removeView(linearLayoutRigth);
+		fl.addView(linearLayoutRigth);
+		pagerAdapter.addView(fl);
+		
 		if (contacto.getIdClienteDireccion() != 0) {
 			setViewVisibility(R.id.linearLayout_content_adress,
 					View.VISIBLE);
@@ -560,6 +936,10 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 						view_rowlist.findViewById(R.id.view_bottom)
 								.setVisibility(View.GONE);
 				}
+				fl = new FrameLayout(getActivity());
+				((ViewGroup)linearLayoutAdress.getParent()).removeView(linearLayoutAdress);
+				fl.addView(linearLayoutAdress);
+				pagerAdapter.addView(fl);
 			}
 		
 

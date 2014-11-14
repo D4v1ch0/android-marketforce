@@ -27,16 +27,17 @@ public class EnviarUbicacionReceiver extends WakefulBroadcastReceiver    {
 		 * Antes de subir posicion actual, se chequea si se paso la hora establecida como limite
 		 * para enviar al servicio web la posicion.
 		 */
-		String horaLimite = rp3.configuration.Configuration.getAppConfiguration().get(Contants.ALARM_CANCEL_TIME);
-		String[] tiempoLimite = horaLimite.split("H");
+		//rp3.configuration.Configuration.TryInitializeConfiguration(context);
+		//String horaLimite = rp3.configuration.Configuration.getAppConfiguration().get(Contants.ALARM_CANCEL_TIME);
+		//String[] tiempoLimite = horaLimite.split("H");
 		
 		Calendar calendarCurrent = Calendar.getInstance();
 		calendarCurrent.setTimeInMillis(System.currentTimeMillis());
 		
 		Calendar calendarLimit = Calendar.getInstance();
 		calendarLimit.setTimeInMillis(System.currentTimeMillis());
-		calendarLimit.set(Calendar.HOUR_OF_DAY, Integer.parseInt(tiempoLimite[0]));
-		calendarLimit.set(Calendar.MINUTE, Integer.parseInt(tiempoLimite[1]));
+		calendarLimit.set(Calendar.HOUR_OF_DAY, 20);
+		calendarLimit.set(Calendar.MINUTE, 30);
 		
 		if(calendarCurrent.getTimeInMillis() < calendarLimit.getTimeInMillis())
 		{

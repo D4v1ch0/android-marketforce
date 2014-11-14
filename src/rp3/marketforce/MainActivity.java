@@ -1,5 +1,10 @@
 package rp3.marketforce;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 import rp3.app.NavActivity;
@@ -11,10 +16,12 @@ import rp3.marketforce.ruta.RutasFragment;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.runtime.Session;
 import rp3.widget.SlidingPaneLayout;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.MenuItem;
 
 public class MainActivity extends rp3.app.NavActivity{
@@ -33,11 +40,15 @@ public class MainActivity extends rp3.app.NavActivity{
 		return i;
 	}
 
+	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);		
 		
 //		Session.Start(this);
+		
+		//extractDatabase();
+		
 		
 		if(savedInstanceState == null){
 			int startNav = NAV_CLIENTES;			
@@ -141,6 +152,22 @@ public class MainActivity extends rp3.app.NavActivity{
 		return super.onMenuItemSelected(featureId, item);
 		
 	}
+
+	@Override
+	public void onBackPressed() {
+		if(this.findViewById(R.id.sliding_pane_clientes) != null)
+		{
+			SlidingPaneLayout slidingPane = (SlidingPaneLayout) findViewById(R.id.sliding_pane_clientes);
+			if(!slidingPane.isOpen())
+			{
+				slidingPane.openPane();
+			}
+			else
+			{
+				finish();
+			}
+		}
+	}
 	
       public void onSyncComplete(Bundle data, final MessageCollection messages) {		
 		
@@ -154,5 +181,39 @@ public class MainActivity extends rp3.app.NavActivity{
 		}
 		
 	}
+      
+      @SuppressLint("NewApi")
+	public void extractDatabase()
+      {
+    	  File file = this.getDatabasePath("Rp3MarketForce.db");
+  		file.setExecutable(true);
+  		file.setReadable(true);
+  		file.setWritable(true);
+  		
+  		File file2 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath()+"prueba.db");
+  		file2.setExecutable(true);
+  		file2.setReadable(true);
+  		file2.setWritable(true);
+  		
+  		try
+  		{
+  			file2.createNewFile();
+  			InputStream in = new FileInputStream(file);
+  		    OutputStream out = new FileOutputStream(file2);
+  	
+  		    // Transfer bytes from in to out
+  		    byte[] buf = new byte[1024];
+  		    int len;
+  		    while ((len = in.read(buf)) > 0) {
+  		        out.write(buf, 0, len);
+  		    }
+  		    in.close();
+  		    out.close();
+  			}
+  			catch(Exception e)
+  		{
+  			
+  		}
+      }
 
 }

@@ -146,12 +146,17 @@ public class ClientListAdapter extends SectionAdapter{
 				
 		switch (order) {
 		case ORDER_BY_NAME:
-			string_client = current.getNombre1()+" "+current.getApellido1();
+			if(!current.getTipoPersona().equalsIgnoreCase("J"))
+				string_client = current.getNombre1()+" "+current.getApellido1();
+			else
+				string_client = current.getNombre1();
 			
 		break;
 		case ORDER_BY_LAST_NAME:
-			string_client = current.getApellido1()+" "+current.getNombre1();
-			
+			if(!current.getTipoPersona().equalsIgnoreCase("J"))
+				string_client = current.getApellido1()+" "+current.getNombre1();
+			else
+				string_client = current.getNombre1();
 			break;
 		}
 		

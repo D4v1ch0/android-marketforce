@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/transaction_edit_resume_values_marginleft" >
+
+    <TextView
+        android:id="@+id/label_pregunta_actividad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
+
+    <CheckBox
+        android:id="@+id/actividad_check_respuesta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CheckBox" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/actividad_cancelar"
+            style="@style/Widget.Button.Theme"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="cancelarCambios"
+            android:text="@string/label_button_cancelar_act" />
+
+        <Button
+            android:id="@+id/actividad_aceptar"
+            style="@style/Widget.Button.Theme"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/transaction_edit_resume_values_marginleft"
+            android:layout_weight="1"
+            android:onClick="aceptarCambios"
+            android:text="@string/label_button_aceptar_act" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,7 +1,11 @@
-package rp3.marketforce;
+package rp3.marketforce.ruta;
 
 import java.util.List;
 
+import rp3.marketforce.R;
+import rp3.marketforce.R.drawable;
+import rp3.marketforce.R.id;
+import rp3.marketforce.R.layout;
 import rp3.marketforce.models.AgendaTarea;
 
 import android.annotation.SuppressLint;
@@ -33,8 +37,8 @@ public class ListaTareasAdapter extends BaseAdapter{
 	}
 
 	@Override
-	public Object getItem(int position) {
-		return null;
+	public AgendaTarea getItem(int position) {
+		return agendaTarea.get(position);
 	}
 
 	@Override
@@ -57,7 +61,7 @@ public class ListaTareasAdapter extends BaseAdapter{
 			((TextView) convertView.findViewById(R.id.textView2)).setCompoundDrawablesWithIntrinsicBounds(0, 0, id_icon, 0);
 			((TextView) convertView.findViewById(R.id.textView2)).setText(agendaTarea.get(position).getEstadoTareaDescripcion());
 			
-			((TextView) convertView.findViewById(R.id.textView1)).setText(agendaTarea.get(position).getNombreTarea());
+			((TextView) convertView.findViewById(R.id.detail_agenda_estado)).setText(agendaTarea.get(position).getNombreTarea());
 		
 		return convertView;
 	}

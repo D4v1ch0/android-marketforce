@@ -24,7 +24,7 @@ public class RutasLoader extends
 	public List<Agenda> loadInBackground() {
 		List<Agenda> result = null;
 		
-		if(flag)
+		if(flag || search.equalsIgnoreCase(""))
 		   result = Agenda.getAgenda(db);
 		else
 			result = Agenda.getAgendaSearch(db, search);

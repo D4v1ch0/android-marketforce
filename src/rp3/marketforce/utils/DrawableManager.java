@@ -20,6 +20,7 @@ import android.os.Message;
 import android.util.Log;
 import android.support.v4.util.LruCache;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 
 public class DrawableManager {
@@ -87,12 +88,7 @@ public class DrawableManager {
         	final Handler handler = new Handler() {
             	@Override
             	public void handleMessage(Message message) {
-            		int height = imageView.getHeight();
-            		int width = imageView.getWidth();
                 	imageView.setImageDrawable((Drawable) message.obj);
-                	imageView.setMinimumHeight(height);
-                	imageView.setMinimumWidth(width);
-                	
             	}
         	};
 

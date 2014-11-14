@@ -20,6 +20,9 @@
        	tbClienteExt.CorreoElectronico AS tbClienteExt_CorreoElectronico,
        	tbClienteExt.Direccion AS tbClienteExt_Direccion,
        	tbClienteExt.Telefono AS tbClienteExt_Telefono,
+       	tbClienteExt.PaginaWeb AS tbClienteExt_PaginaWeb,
+       	tbClienteExt.RazonSocial AS tbClienteExt_RazonSocial,
+       	tbClienteExt.ActividadEconomica AS tbClienteExt_ActividadEconomica,
        	tbEstadoCivil.Value AS tbEstadoCivil_Value,
        	tbGenero.Value AS tbGenero_Value,
        	tbTipoCliente.Descripcion AS tbTipoCliente_Descripcion,
@@ -59,6 +62,9 @@
        	tbClienteExt.CorreoElectronico AS tbClienteExt_CorreoElectronico,
        	tbClienteExt.Direccion AS tbClienteExt_Direccion,
        	tbClienteExt.Telefono AS tbClienteExt_Telefono,
+       	tbClienteExt.PaginaWeb AS tbClienteExt_PaginaWeb,
+       	tbClienteExt.RazonSocial AS tbClienteExt_RazonSocial,
+       	tbClienteExt.ActividadEconomica AS tbClienteExt_ActividadEconomica,
        	tbEstadoCivil.Value AS tbEstadoCivil_Value,
        	tbGenero.Value AS tbGenero_Value,
        	tbTipoCliente.Descripcion AS tbTipoCliente_Descripcion,
@@ -228,14 +234,10 @@
         tbAgenda.EstadoAgenda,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
-        tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad,
-        tbEstadoAgenda.Value AS tbEstadoAgenda_Value
+        tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad
         FROM tbAgenda
         JOIN tbAgendaExt
         ON tbAgenda._id = tbAgendaExt.docid
-        JOIN tbGeneralValue tbEstadoAgenda
-        ON tbEstadoAgenda.GeneralTableId = 1013
-        AND tbAgenda.EstadoAgenda = tbEstadoAgenda.Code
         ORDER BY tbAgenda.FechaInicio, tbAgendaExt.NombreCompleto
      </statement>
      
@@ -246,6 +248,7 @@
         tbAgenda.IdRuta,
         tbAgenda.IdAgenda,        
         tbAgenda.IdCliente, 
+        tbAgenda.IdClienteDireccion,
         tbAgenda.FechaInicio,
         tbAgenda.FechaFin,
         tbAgenda.EstadoAgenda,
@@ -277,11 +280,13 @@
         tbAgenda._id AS tbAgenda__id,
         tbAgenda.IdRuta,
         tbAgenda.IdAgenda,
-        tbAgendaExt.NombreCompleto,
-        tbAgendaExt.Direccion,
+        tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
+        tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
         tbAgenda.EstadoAgenda AS tbAgenda_EstadoAgenda,
         tbAgenda.FechaInicio AS tbAgenda_FechaInicio,
         tbAgenda.FechaFin AS tbAgenda_FechaFin,
+        tbClienteDireccion.Direccion AS tbAgendaExt_Direccion,
+        tbClienteDireccion.Telefono1 AS tbAgendaExt_Telefono1,
         tbEstadoAgenda.Value AS tbEstadoAgenda_Value
        	FROM tbAgendaExt       	 
        	INNER JOIN tbAgenda 
@@ -296,10 +301,17 @@
         		ORDER BY rank DESC LIMIT 30 OFFSET 0
        		
        	 ) AS tbRutaSearch
+       	 ON tbAgendaExt.docid = tbRutaSearch.docid       
        	JOIN tbGeneralValue tbEstadoAgenda
         ON tbEstadoAgenda.GeneralTableId = 1013
-        AND tbAgenda.EstadoAgenda = tbEstadoAgenda.Code
-       	ON tbAgendaExt.docid = tbRutaSearch.docid       	
+        AND tbAgenda.EstadoAgenda = tbEstadoAgenda.Code	
+        JOIN tbCliente        
+        ON tbAgenda.IdCliente = tbCliente._id
+        JOIN tbClienteExt
+        ON tbClienteExt.docid = tbCliente._id         
+        JOIN tbClienteDireccion        
+        ON tbAgenda.IdCliente = tbClienteDireccion.IdCliente
+        AND tbAgenda.IdClienteDireccion = tbClienteDireccion.IdClienteDireccion
         ORDER BY tbRutaSearch.Rank DESC   	
     </statement>   
     

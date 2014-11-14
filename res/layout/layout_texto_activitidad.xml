@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/apptheme_color"
+    android:orientation="vertical"
+    android:padding="@dimen/transaction_edit_resume_values_marginleft" >
+
+    <TextView
+        android:id="@+id/label_pregunta_actividad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
+
+    <EditText
+        android:id="@+id/actividad_texto_respuesta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:minLines="2"
+        android:minWidth="@dimen/nav_drawer_width"
+        android:textAppearance="@style/EditTextAppTheme"
+        android:textSize="@dimen/text_input_size" >
+
+        <requestFocus />
+    </EditText>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/actividad_cancelar"
+            style="@style/Widget.Button.Theme"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="cancelarCambios"
+            android:text="@string/label_button_cancelar_act" />
+
+        <Button
+            android:id="@+id/actividad_aceptar"
+            style="@style/Widget.Button.Theme"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/transaction_edit_resume_values_marginleft"
+            android:layout_weight="1"
+            android:onClick="aceptarCambios"
+            android:text="@string/label_button_aceptar_act" />
+
+    </LinearLayout>
+
+</LinearLayout>
