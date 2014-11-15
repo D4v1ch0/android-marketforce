@@ -10,10 +10,8 @@ import android.support.v4.view.MenuItemCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnFocusChangeListener;
 import android.widget.EditText;
 import android.widget.SearchView;
-import android.widget.SearchView.OnCloseListener;
 import android.widget.SearchView.OnQueryTextListener;
 
 public class RutasFragment extends BaseFragment implements RutasListFragment.TransactionListFragmentListener{
@@ -21,7 +19,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	public static final String ARG_TRANSACTIONTYPEID = "transactionTypeId";
 	private static final int PARALLAX_SIZE = 0;
 	
-	public static boolean mTwoPane = false;
+	public boolean mTwoPane = false;
 	private long selectedTransactionId;
 	
 //	private MenuItem menuItemActionEdit;
@@ -180,6 +178,11 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 		return false;
 	}
 
+	@Override
+	public boolean allowSelectedItem() {		
+		return mTwoPane;
+	}
+	
 	///End TransactionListFragmentListener
 	
 }

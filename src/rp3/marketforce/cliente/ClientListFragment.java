@@ -59,6 +59,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
     public interface ClienteListFragmentListener {
         public void onClienteSelected(Cliente cliente);
         public void onFinalizaConsulta();
+        public boolean allowSelectedItem();        
     }
 
     public ClientListFragment() {
@@ -132,9 +133,14 @@ public class ClientListFragment extends rp3.app.BaseFragment {
     public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
     	super.onFragmentCreateView(rootView, savedInstanceState);
     	
-    	linearLayout_rootParent = (LinearLayout) rootView.findViewById(R.id.linearLayout_headerlist_client_list);
-    	
-    	if(headerList!=null){    		
+    	linearLayout_rootParent = (LinearLayout) rootView.findViewById(R.id.linearLayout_headerlist_client_list);    	    	
+    }        
+    
+    
+    @Override
+    public void onStart() {    	
+    	super.onStart();
+    	if(headerList!=null && headerList.getParent() == null){    		
     		linearLayout_rootParent.addView(headerList);
     		headerList.setAdapter(adapter);
     	}
@@ -150,12 +156,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
     @Override
     public void onDetach() {    	
     	super.onDetach();    	    	
-    }
-    
-    @Override
-    public void onStart() {    	
-    	super.onStart();    	    	
-    }
+    }        
          
     
     public void searchTransactions(String termSearch){

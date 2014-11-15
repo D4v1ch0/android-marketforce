@@ -97,9 +97,17 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	}
 
 	public static ClientDetailFragment newInstance(Cliente cl) {
+		return newInstance(cl.getID(), cl.getTipoPersona());
+	}
+	
+	public static ClientDetailFragment newInstance(long id) {
+		return newInstance(id, "");
+	}
+	
+	public static ClientDetailFragment newInstance(long id, String tipoPersona) {
 		Bundle arguments = new Bundle();
-		arguments.putLong(ClientDetailFragment.ARG_ITEM_ID, cl.getID());
-		arguments.putString(ClientDetailFragment.ARG_ITEM_TIPO_PERSONA, cl.getTipoPersona());
+		arguments.putLong(ClientDetailFragment.ARG_ITEM_ID, id);
+		arguments.putString(ClientDetailFragment.ARG_ITEM_TIPO_PERSONA, tipoPersona);
 		ClientDetailFragment fragment = new ClientDetailFragment();
 		fragment.setArguments(arguments);
 		
@@ -151,24 +159,23 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	@Override
 	public void onResume() {		
 		super.onResume();
-		
-		
 	}
 	
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);		
 
-		//if(getParentFragment()!=null)
-		//	clienteDetailFragmentCallback = (ClienteDetailFragmentListener)getParentFragment();
-		//else
-		//	clienteDetailFragmentCallback = (ClienteDetailFragmentListener)activity;
+		if(getParentFragment()!=null)
+			clienteDetailFragmentCallback = (ClienteDetailFragmentListener)getParentFragment();
+		else
+			clienteDetailFragmentCallback = (ClienteDetailFragmentListener)activity;
 	}	
 
 	@SuppressLint("InflateParams")
 	@Override
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
 
+		if(client==null && contacto==null) return;
 		PagerDetalles = (ViewPager) rootView.findViewById(R.id.detail_client_pager);
 		TabInfo = (ImageButton) rootView.findViewById((R.id.detail_tab_info));
 		TabDirecciones = (ImageButton) rootView.findViewById((R.id.detail_tab_direccion));

@@ -66,6 +66,8 @@ public class RutasListFragment extends rp3.app.BaseFragment {
         public void onTransactionSelected(long id);
 
 		boolean onCreateOptionsMenu(Menu menu);
+		
+		boolean allowSelectedItem();		
     }  
     
 	@Override

@@ -125,7 +125,7 @@ public class RutasListAdapter extends SectionAdapter{
 			
 		
 		convertView.setBackgroundResource(R.drawable.border_bottom);
-		if(RutasFragment.mTwoPane)
+		if(transactionListFragmentCallback.allowSelectedItem())
 			if (section == section_)
 				if (row == row_)
 					convertView.setBackgroundColor(contex.getResources().getColor(R.color.color_background_selector));
@@ -162,7 +162,7 @@ public class RutasListAdapter extends SectionAdapter{
         section_= section;
     	row_ = row;
         
-        if(ClientFragment. mTwoPane)
+        if(transactionListFragmentCallback.allowSelectedItem())
         {
         	notifyDataSetChanged();
         }

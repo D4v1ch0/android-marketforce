@@ -2,8 +2,8 @@ package rp3.marketforce;
 
 import rp3.marketforce.R;
 import rp3.app.BaseActivity;
-import rp3.marketforce.cliente.ClientDetailActivity;
 import rp3.marketforce.cliente.ClientDetailFragment;
+import rp3.marketforce.cliente.ClientDetailFragment.ClienteDetailFragmentListener;
 import rp3.marketforce.cliente.ClientListFragment;
 import rp3.marketforce.models.Cliente;
 import rp3.widget.SlidingPaneLayout;
@@ -12,22 +12,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 
 
 public class SearchableActivity extends BaseActivity
-	implements ClientListFragment.ClienteListFragmentListener {
+	implements ClientListFragment.ClienteListFragmentListener, ClienteDetailFragmentListener {
 
 	private boolean mTwoPane;
 	private String query;
 	private static final int PARALLAX_SIZE = 0;
+	private static final String STATE_SELECTED_ID = "id";
+	private static final String STATE_SELECTED_TIPO_PERSONA = "tipoPersona";
 	
 //	private MenuItem menuItemActionEdit;
 //    private MenuItem menuItemActionDiscard;
     private long selectedClientId;
-    private Cliente client;
+    private String tipoPersona;
     
 	private ClientDetailFragment clientDetailFragment;
 	private ClientListFragment clientListFragment;
@@ -60,19 +63,37 @@ public class SearchableActivity extends BaseActivity
 			clientListFragment = (ClientListFragment) getFragment(R.id.content_transaction_list);
 		}
 		
-	    if (findViewById(R.id.content_transaction_detail) != null) {
-            mTwoPane = true;
-            
-//            ((ClientListFragment) getCurrentFragmentManager()
-//                    .findFragmentById(R.id.content_transaction_list))
-//                    .setActivateOnItemClick(true);
-        }
-	    				
-	    // Get the intent, verify the action and get the query
-	       	    
-
+		if(slidingPane.isOpen() && 
+				findViewById(R.id.content_transaction_list).getLayoutParams().width != LayoutParams.MATCH_PARENT)		
+			mTwoPane = true;			
+		else
+			mTwoPane = false;
+		
+		if(savedInstanceState!=null){
+			selectedClientId = savedInstanceState.getLong(STATE_SELECTED_ID);
+			tipoPersona = savedInstanceState.getString(STATE_SELECTED_TIPO_PERSONA);
+		}
 	}
 
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		
+		super.onSaveInstanceState(outState);
+		
+		outState.putLong(STATE_SELECTED_ID,selectedClientId);
+		outState.putString(STATE_SELECTED_TIPO_PERSONA,tipoPersona);
+	}
+	
+	@Override
+	protected void onStart() {		
+		super.onStart();
+		
+		if(selectedClientId != 0){
+			if(!mTwoPane)			
+				slidingPane.closePane();
+		}		
+	}
+	
 	private void executeSearch(String query)
 	{
 		
@@ -89,27 +110,15 @@ public class SearchableActivity extends BaseActivity
 	public void onClienteSelected(Cliente cliente) {
 		
 		selectedClientId = cliente.getID();
-		client = cliente;
+		tipoPersona = cliente.getTipoPersona();
 		
-		if (mTwoPane) {      			
-			clientDetailFragment = ClientDetailFragment.newInstance(cliente);
-			setVisibleEditActionButtons( selectedClientId != 0 );
-			
-			
-			getCurrentFragmentManager().beginTransaction()
-            .replace(R.id.content_transaction_detail, 
-            		clientDetailFragment)
-            .commit();
+		if(!mTwoPane)
 			slidingPane.closePane();
-
-        } else {     
-//            Intent detailIntent = new Intent(this, ClientDetailActivity.class);
-//            detailIntent.putExtra(ClientDetailFragment.ARG_ITEM_ID, id);
-//            detailIntent.putExtra(ClientDetailFragment.ARG_PARENT_SOURCE, ClientDetailFragment.PARENT_SOURCE_SEARCH);
-//            startActivity(detailIntent);
-        	
-        	startActivity(ClientDetailActivity.newIntent(this, selectedClientId) );
-        }  
+	
+		      			
+		clientDetailFragment = ClientDetailFragment.newInstance(cliente);
+		setVisibleEditActionButtons( selectedClientId != 0 );						
+		setFragment(R.id.content_transaction_detail, clientDetailFragment);			  
 	}
 
 	
@@ -144,7 +153,9 @@ public class SearchableActivity extends BaseActivity
 			
 			@Override
 			public boolean onQueryTextSubmit(String query) {
-				executeSearch(query);
+				
+				executeSearch(query);				
+				setFragment(R.id.content_transaction_detail, ClientDetailFragment.newInstance(0));					
 				return true;
 			}
 			
@@ -188,9 +199,17 @@ public class SearchableActivity extends BaseActivity
     }
 
 	@Override
-	public void onFinalizaConsulta() {
-		if(mTwoPane && client != null){			
-			onClienteSelected(client);
-		}
+	public void onFinalizaConsulta() {	
+	}
+
+	@Override
+	public boolean allowSelectedItem() {		
+		return mTwoPane;
+	}
+
+	@Override
+	public void onClienteChanged(Cliente cliente) {
+		clientListFragment.actualizarCliente(cliente);
+		onClienteSelected(cliente);		
 	}
 }

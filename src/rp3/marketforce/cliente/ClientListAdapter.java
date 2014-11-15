@@ -169,7 +169,7 @@ public class ClientListAdapter extends SectionAdapter{
 	   ((TextView) convertView.findViewById(R.id.textView_clientlist_movil)).setText(""+current.getTelefono());
 		((TextView) convertView.findViewById(R.id.textView_clientlist_address)).setText(""+current.getDireccion());
 		
-		if(ClientFragment. mTwoPane)
+		if(clienteListFragmentCallback.allowSelectedItem())
 		{
 			if (section == section_)
 				if (row == row_)
@@ -203,7 +203,7 @@ public class ClientListAdapter extends SectionAdapter{
     public void onRowItemClick(AdapterView<?> parent, View view, int section, int row, long id) {
         super.onRowItemClick(parent, view, section, row, id);
         
-        if(ClientFragment. mTwoPane){
+        if(clienteListFragmentCallback.allowSelectedItem()){
         	section_ = section;
         	row_ = row;
         	notifyDataSetChanged();

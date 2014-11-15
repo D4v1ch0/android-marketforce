@@ -3,9 +3,6 @@ package rp3.marketforce.ruta;
 import java.util.List;
 
 import rp3.marketforce.R;
-import rp3.marketforce.R.drawable;
-import rp3.marketforce.R.id;
-import rp3.marketforce.R.layout;
 import rp3.marketforce.models.AgendaTarea;
 
 import android.annotation.SuppressLint;
@@ -22,7 +19,6 @@ public class ListaTareasAdapter extends BaseAdapter{
 	private LayoutInflater inflater;
 	private List<AgendaTarea> agendaTarea;
 	private int id_icon;
-	private String estado;
 	
 	public ListaTareasAdapter(Context context, List<AgendaTarea> agendaTarea)
 	{

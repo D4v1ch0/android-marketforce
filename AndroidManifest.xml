@@ -36,7 +36,7 @@
         <activity
             android:name="rp3.marketforce.SearchableActivity"
             android:label="@string/title_activity_searchable" 
-            android:configChanges="orientation|keyboardHidden|screenSize">
+            >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
