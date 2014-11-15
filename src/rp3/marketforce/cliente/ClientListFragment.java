@@ -70,9 +70,10 @@ public class ClientListFragment extends rp3.app.BaseFragment {
         super.onAttach(activity);
         
         if(getParentFragment()!=null){        	
-        	clienteListFragmentCallback = (ClienteListFragmentListener)getParentFragment();
+        	clienteListFragmentCallback = (ClienteListFragmentListener)getParentFragment();        	
         }else{
         	clienteListFragmentCallback = (ClienteListFragmentListener) activity;
+        	setRetainInstance(true);
         }     
         
         super.setContentView(R.layout.layout_headerlist_client_list);
@@ -82,6 +83,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        
         if(savedInstanceState == null)
         {
         	currentTransactionBoolean = getArguments().getBoolean(ARG_TRANSACTIONTYPEBO);

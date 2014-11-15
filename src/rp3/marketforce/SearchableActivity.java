@@ -64,8 +64,8 @@ public class SearchableActivity extends BaseActivity
 		}
 		
 		if(slidingPane.isOpen() && 
-				findViewById(R.id.content_transaction_list).getLayoutParams().width != LayoutParams.MATCH_PARENT)		
-			mTwoPane = true;			
+				findViewById(R.id.content_transaction_list).getLayoutParams().width != LayoutParams.MATCH_PARENT)
+			mTwoPane = true;
 		else
 			mTwoPane = false;
 		

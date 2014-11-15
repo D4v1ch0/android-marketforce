@@ -167,8 +167,10 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 
 		if(getParentFragment()!=null)
 			clienteDetailFragmentCallback = (ClienteDetailFragmentListener)getParentFragment();
-		else
+		else{
 			clienteDetailFragmentCallback = (ClienteDetailFragmentListener)activity;
+			setRetainInstance(true);
+		}
 	}	
 
 	@SuppressLint("InflateParams")
