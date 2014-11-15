@@ -252,6 +252,7 @@
         tbAgenda.FechaInicio,
         tbAgenda.FechaFin,
         tbAgenda.EstadoAgenda,
+        tbAgenda.FechaInicioReal,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
         tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad,

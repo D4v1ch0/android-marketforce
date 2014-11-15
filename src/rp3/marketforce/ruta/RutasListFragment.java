@@ -129,7 +129,11 @@ public class RutasListFragment extends rp3.app.BaseFragment {
     
     @Override
     public void onStart() {    	
-    	super.onStart();    	    	
+    	super.onStart(); 
+    	if(headerlist!=null && headerlist.getParent() == null){    		
+    		linearLayout_rootParent.addView(headerlist);
+    		headerlist.setAdapter(adapter);
+    	}
     }
     
     public void searchTransactions(String termSearch)

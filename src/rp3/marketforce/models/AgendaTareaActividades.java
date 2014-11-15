@@ -355,4 +355,11 @@ public class AgendaTareaActividades extends rp3.data.entity.EntityBase<AgendaTar
 		return actividad;
 	}
 	
+	public static void deleteActividades(DataBase db, long idRuta, long idAgenda, long idTarea)
+	{
+		db.delete(Contract.AgendaTareaActividades.TABLE_NAME,Contract.AgendaTareaActividades.COLUMN_RUTA_ID + " = ? AND " +
+				Contract.AgendaTareaActividades.COLUMN_AGENDA_ID + " = ? AND " +
+				Contract.AgendaTareaActividades.COLUMN_TAREA_ID + " = ? " , new String[] { idRuta + "", idAgenda + "", idTarea + ""});
+	}
+	
 }

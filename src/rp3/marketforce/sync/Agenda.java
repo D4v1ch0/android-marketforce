@@ -27,6 +27,7 @@ public class Agenda {
 		{
 			jObject.put("IdAgenda", agendaUpload.getIdAgenda());
 			jObject.put("IdRuta", agendaUpload.getIdRuta());
+			jObject.put("EstadoAgenda", agendaUpload.getEstadoAgenda());
 			//jObject.put("IdCliente", agendaUpload.getIdCliente());
 			jObject.put("FechaInicioGestionTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaInicioReal()));
 			jObject.put("FechaFinGestionTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaFinReal()));
@@ -46,7 +47,15 @@ public class Agenda {
 				{
 					JSONObject jObjectActividad = new JSONObject();
 					//jObjectActividad.put("IdAgenda", ata.getIdAgenda());
-					jObjectActividad.put("Resultado", ata.getResultado());
+					if(ata.getResultado().equals("null"))
+						jObjectActividad.put("Resultado", " ");
+					else if(ata.getResultado().equals("true"))
+						jObjectActividad.put("Resultado", "Sí");
+					else if(ata.getResultado().equals("false"))
+						jObjectActividad.put("Resultado", "No");
+					else
+						jObjectActividad.put("Resultado", ata.getResultado());
+						
 					//jObjectActividad.put("IdRuta", ata.getIdRuta());
 					jObjectActividad.put("IdTareaActividad", ata.getIdTareaActividad());
 					//jObjectActividad.put("IdTareaActividadPadre", ata.getIdTareaActividadPadre());
@@ -70,14 +79,15 @@ public class Agenda {
 			
 		}
 		
-		webService.addParameter("@agenda", jObject);
+		webService.addParameter("agenda", jObject);
 		
 		try
 		{			
 			webService.addCurrentAuthToken();
 			
 			try {
-				webService.invokeWebService();	
+				webService.invokeWebService();
+				String error = webService.getStringResponse();
 				agendaUpload.setEnviado(true);
 				rp3.marketforce.models.Agenda.update(db, agendaUpload);
 			} catch (HttpResponseException e) {

@@ -1,6 +1,7 @@
 package rp3.marketforce.sync;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,19 +21,31 @@ import android.util.Log;
 public class Rutas {
 
 		public static int executeSync(DataBase db, Long inicio, Long fin){
-			WebService webService = new WebService("MartketForce","Agenda");			
+			WebService webService = new WebService("MartketForce","Agenda");		
+			
+			//inicio = rp3.marketforce.models.Agenda.getLastAgenda(db);
 			//webService.addParameter("@fechainicio", 635451264000000000l);
 			//webService.addParameter("@fechafin", 635477183990000000l);	
 			
-			if(inicio == null){
+			if(inicio == null || inicio == 0){
 				Calendar dateIni = DateTime.getCurrentCalendar();
 				dateIni.add(Calendar.DATE, -7);
-				inicio = Convert.getDotNetTicksFromDate(dateIni.getTime());
-				
-				Calendar dateFin = DateTime.getCurrentCalendar();
-				dateFin.add(Calendar.DATE, 30);
-				fin = Convert.getDotNetTicksFromDate(dateFin.getTime());												
+				inicio = Convert.getDotNetTicksFromDate(dateIni.getTime());											
 			}
+			
+			Date ini = Convert.getDateFromDotNetTicks(inicio);
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(ini);
+			if(fin == null || fin == 0)
+			{
+				cal.add(Calendar.DATE, 14);
+			}
+			else
+			{
+				cal.add(Calendar.DATE, 7);
+			}
+			
+			fin = Convert.getDotNetTicksFromDate(cal.getTime());
 			
 			webService.addParameter("@fechainicio", inicio);
 			webService.addParameter("@fechafin", fin);
@@ -54,11 +67,11 @@ public class Rutas {
 				
 				JSONArray types = webService.getJSONArrayResponse();			
 				
-				rp3.marketforce.models.Agenda.deleteAll(db, Contract.Agenda.TABLE_NAME);
-				rp3.marketforce.models.Agenda.AgendaExt.deleteAll(db, Contract.AgendaExt.TABLE_NAME);
-				rp3.marketforce.models.AgendaTarea.deleteAll(db, Contract.AgendaTarea.TABLE_NAME);
-				rp3.marketforce.models.AgendaTareaActividades.deleteAll(db, Contract.AgendaTareaActividades.TABLE_NAME);
-				rp3.marketforce.models.AgendaTareaOpciones.deleteAll(db, Contract.AgendaTareaOpciones.TABLE_NAME);
+				//rp3.marketforce.models.Agenda.deleteAll(db, Contract.Agenda.TABLE_NAME);
+				//rp3.marketforce.models.Agenda.AgendaExt.deleteAll(db, Contract.AgendaExt.TABLE_NAME);
+				//rp3.marketforce.models.AgendaTarea.deleteAll(db, Contract.AgendaTarea.TABLE_NAME);
+				//rp3.marketforce.models.AgendaTareaActividades.deleteAll(db, Contract.AgendaTareaActividades.TABLE_NAME);
+				//rp3.marketforce.models.AgendaTareaOpciones.deleteAll(db, Contract.AgendaTareaOpciones.TABLE_NAME);
 				
 				for(int i=0; i < types.length(); i++){
 					
@@ -79,7 +92,17 @@ public class Rutas {
 						
 						agenda.setEstadoAgenda(type.getString("EstadoAgenda"));
 						
-						rp3.marketforce.models.Agenda.insert(db, agenda);
+						rp3.marketforce.models.AgendaTarea.deleteTareas(db, agenda.getIdRuta(), agenda.getID());
+						
+						rp3.marketforce.models.Agenda getter = rp3.marketforce.models.Agenda.getAgenda(db, agenda.getID());
+						if(getter == null)
+						{
+							rp3.marketforce.models.Agenda.insert(db, agenda);
+						}
+						else
+						{
+							rp3.marketforce.models.Agenda.update(db, agenda);
+						}
 						
 						JSONArray strs = type.getJSONArray("AgendaTareas");
 						
@@ -95,6 +118,8 @@ public class Rutas {
 							agendaTarea.setTipoTarea(str.getString("TipoTarea"));
 							
 							rp3.marketforce.models.AgendaTarea.insert(db, agendaTarea);
+							rp3.marketforce.models.AgendaTareaActividades.deleteActividades(db, agendaTarea.getIdRuta(), agendaTarea.getIdAgenda(),
+									agendaTarea.getIdTarea());
 							
 							JSONArray acts = str.getJSONArray("AgendaTareaActividades");
 							
@@ -118,6 +143,8 @@ public class Rutas {
 								actividad.setIdTipoActividad(act.getInt("IdTipoActividad"));
 								
 								rp3.marketforce.models.AgendaTareaActividades.insert(db, actividad);
+								rp3.marketforce.models.AgendaTareaOpciones.deleteOpciones(db, actividad.getIdRuta(), actividad.getIdAgenda(), 
+										 actividad.getIdTarea(), actividad.getIdTareaActividad());
 								
 								JSONArray opcs = act.getJSONArray("AgendaTareaOpciones");
 								
@@ -132,6 +159,7 @@ public class Rutas {
 									opcion.setIdTarea(opc.getInt("IdTarea"));
 									opcion.setOrden(opc.getInt("Orden"));
 									
+									rp3.marketforce.models.AgendaTareaOpciones.delete(db, opcion);
 									rp3.marketforce.models.AgendaTareaOpciones.insert(db, opcion);
 								}
 							}

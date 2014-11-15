@@ -174,6 +174,12 @@ public class AgendaTarea extends rp3.data.entity.EntityBase<AgendaTarea> {
 		}
 		return tarea;
 	}
+	
+	public static void deleteTareas(DataBase db, long idRuta, long idAgenda)
+	{
+		db.delete(Contract.AgendaTarea.TABLE_NAME, Contract.AgendaTarea.COLUMN_RUTA_ID + " = ? AND " + 
+				Contract.AgendaTarea.COLUMN_AGENDA_ID + " = ? ", new String[] {idRuta + "", idAgenda + ""});
+	}
 
 	
 

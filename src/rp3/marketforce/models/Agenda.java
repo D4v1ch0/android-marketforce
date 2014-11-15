@@ -278,6 +278,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setNombreCompleto(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_NOMBRE));
 			agd.setEstadoAgendaDescripcion(CursorUtils.getString(c, Contract.Agenda.FIELD_ESTADO_AGENDA_DESCRIPCION));
 			agd.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
+			agd.setFechaInicioReal((CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_INICIO_REAL)));
 			
 			Cliente cl = new Cliente();
 			cl.setNombreCompleto(agd.getNombreCompleto());
@@ -300,7 +301,8 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 	public static Agenda getAgendaUpload(DataBase db, long id){
 		
 		Cursor c = db.query(Contract.Agenda.TABLE_NAME, new String[] {Contract.Agenda.COLUMN_AGENDA_ID, Contract.Agenda.COLUMN_CLIENTE_ID,
-				Contract.Agenda.COLUMN_RUTA_ID, Contract.Agenda.COLUMN_FECHA_INICIO_REAL, Contract.Agenda.COLUMN_FECHA_FIN_REAL}, 
+				Contract.Agenda.COLUMN_RUTA_ID, Contract.Agenda.COLUMN_FECHA_INICIO_REAL, Contract.Agenda.COLUMN_FECHA_FIN_REAL,
+				Contract.Agenda.COLUMN_ESTADO_AGENDA}, 
 				Contract.Agenda._ID + " = ? AND " +
 				Contract.Agenda.COLUMN_ESTADO_AGENDA + " = 'V' AND " +
 				Contract.Agenda.COLUMN_ENVIADO + " = 0", id);
@@ -315,6 +317,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setIdCliente(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_ID));
 			agd.setFechaInicioReal(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_INICIO_REAL));
 			agd.setFechaFinReal(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_FIN_REAL));
+			agd.setEstadoAgenda(CursorUtils.getString(c,Contract.Agenda.COLUMN_ESTADO_AGENDA));
 			
 			agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getIdAgenda(), agd.getIdRuta()));
 			
@@ -348,6 +351,12 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 		}
 		return list;
 	}
+	
+	public static long getLastAgenda(DataBase db)
+	{
+		return db.queryMaxLong(Contract.Agenda.TABLE_NAME, Contract.Agenda.COLUMN_FECHA_FIN);
+	}
+	
 	
 	
 	@Override
