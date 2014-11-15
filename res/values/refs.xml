@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-        <item name="fragment_client" type="layout">@layout/activity_transaction_twopane</item>
+<resources>   
     <item name="fragment_rutas" type="layout">@layout/activity_transaction_twopane</item>
 </resources>

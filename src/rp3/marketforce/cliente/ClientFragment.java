@@ -5,18 +5,16 @@ import rp3.marketforce.R;
 import rp3.marketforce.cliente.ClientDetailFragment.ClienteDetailFragmentListener;
 import rp3.marketforce.cliente.ClientListFragment.ClienteListFragmentListener;
 import rp3.marketforce.models.Cliente;
+import rp3.util.Screen;
 import rp3.widget.SlidingPaneLayout;
 import rp3.widget.SlidingPaneLayout.PanelSlideListener;
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -95,21 +93,27 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
 				getActivity().invalidateOptionsMenu();
 			}});
 		
-		if(getChildFragmentManager().findFragmentById(R.id.transaction_detail) == null){			
-			if(rootView.findViewById(R.id.content_transaction_list)!=null){
-				setFragment(R.id.content_transaction_list, transactionListFragment );
-			}			
-		}
+//		if(getChildFragmentManager().findFragmentById(R.id.transaction_detail) == null){			
+//			if(rootView.findViewById(R.id.content_transaction_list)!=null){
+//				
+//			}			
+//		}
+		if(!hasFragment(R.id.content_transaction_list))
+			setFragment(R.id.content_transaction_list, transactionListFragment );
+								
+		if(slidingPane.isOpen() && 
+				rootView.findViewById(R.id.content_transaction_detail).getWidth() > 0)		
+			mTwoPane = true;			
 		
-		if (rootView.findViewById(R.id.content_transaction_detail) != null) {     
-			mTwoPane = true;
-        }	
-		else
-		{
-			mTwoPane = false;
+		if(selectedClientId != 0){
+			showDetail();
 		}
-		
 	}	
+	
+	private void showDetail(){	
+		if(!mTwoPane)
+			slidingPane.closePane();		
+	}
 	
 	@Override
 	public void onAfterCreateOptionsMenu(Menu menu) {	
@@ -149,17 +153,12 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
 	 
 	@Override
 	public void onClienteSelected(Cliente cl) {
-		if (mTwoPane) {
-			slidingPane.closePane();
-			selectedClientId = cl.getID();        	
-        	transactionDetailFragment = ClientDetailFragment.newInstance(cl); 
-        	setFragment(R.id.content_transaction_detail, transactionDetailFragment);
-        	
-
-        } else {      	            
-            startActivity(ClientDetailActivity.newIntent(this.getActivity(), cl.getID()) );
-            this.cancelAnimationTransition();
-        }
+		selectedClientId = cl.getID();
+		if (!mTwoPane) {
+			showDetail();
+		}
+		transactionDetailFragment = ClientDetailFragment.newInstance(cl);
+		setFragment(R.id.content_transaction_detail, transactionDetailFragment);
 	}
 	
 	

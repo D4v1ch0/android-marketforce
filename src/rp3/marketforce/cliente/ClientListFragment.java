@@ -72,7 +72,9 @@ public class ClientListFragment extends rp3.app.BaseFragment {
         	clienteListFragmentCallback = (ClienteListFragmentListener)getParentFragment();
         }else{
         	clienteListFragmentCallback = (ClienteListFragmentListener) activity;
-        }        
+        }     
+        
+        super.setContentView(R.layout.layout_headerlist_client_list);
     }   
 
     @Override
@@ -84,7 +86,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
         	currentTransactionBoolean = getArguments().getBoolean(ARG_TRANSACTIONTYPEBO);
 		    currentTransactionSearch = getArguments().getString(ARG_TRANSACTIONTYPEID);
 		     
-		     super.setContentView(R.layout.layout_headerlist_client_list);
+		     
 		   
 		     id_select = R.id.item_order_name;
 		     
@@ -131,8 +133,24 @@ public class ClientListFragment extends rp3.app.BaseFragment {
     	super.onFragmentCreateView(rootView, savedInstanceState);
     	
     	linearLayout_rootParent = (LinearLayout) rootView.findViewById(R.id.linearLayout_headerlist_client_list);
+    	
+    	if(headerList!=null){    		
+    		linearLayout_rootParent.addView(headerList);
+    		headerList.setAdapter(adapter);
+    	}
     }
     
+     @Override
+    public void onSaveInstanceState(Bundle arg0) {    	
+    	super.onSaveInstanceState(arg0);
+    	
+    	linearLayout_rootParent.removeView(headerList);
+    }
+    
+    @Override
+    public void onDetach() {    	
+    	super.onDetach();    	    	
+    }
     
     @Override
     public void onStart() {    	
@@ -160,11 +178,19 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 	    public boolean onOptionsItemSelected(MenuItem item) {
 	    	
 		 menu.findItem(R.id.item_order_name).setChecked(false);
-		 menu.findItem(R.id.item_order_last_name).setChecked(false);
+		 menu.findItem(R.id.item_order_last_name).setChecked(false);		 
+     	 menu.findItem(id_select).setChecked(true);
      	 
-     	  menu.findItem(id_select).setChecked(true);
-		 
-     	switch(item.getItemId())
+     	 if(item.getItemId() == R.id.item_order_name || item.getItemId() == R.id.item_order_last_name){
+     		 callOrderBy(item.getItemId());
+     		 return true;
+     	 }
+	    	
+     	 return super.onOptionsItemSelected(item);
+	 }
+	 	
+	 private void callOrderBy(int id){
+		 switch(id)
 	    	{
 	    		case R.id.item_order_name:
 	    			
@@ -172,7 +198,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 	    			
 	    		   OrderBy(ORDER_BY_NAME);
 		    			
-	                return true;
+	               
 	                
 	    		case R.id.item_order_last_name:
 	    			
@@ -180,12 +206,9 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 	    				
 	    			OrderBy(ORDER_BY_LAST_NAME);
 	    				
-	                return true;
+	              
 	    	}
-	    	
-	    	return super.onOptionsItemSelected(item);
-	    }
-	 	
+	 }
 	
 	@SuppressLint("SimpleDateFormat")
 	private void OrderBy(int option)
