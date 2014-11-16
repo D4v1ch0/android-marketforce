@@ -2,6 +2,7 @@ package rp3.marketforce.sync;
 
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.ruta.RutasDetailFragment;
+import rp3.marketforce.ruta.RutasListFragment;
 import rp3.sync.SyncAudit;
 import android.accounts.Account;
 import android.content.ContentProviderClient;
@@ -16,6 +17,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 	public static String SYNC_TYPE_ENVIAR_UBICACION = "sendlocation";
 	public static String SYNC_TYPE_CLIENTE_UPDATE = "clienteupdate";
 	public static String SYNC_TYPE_ENVIAR_AGENDA = "sendagenda";
+	public static String SYNC_TYPE_ACTUALIZAR_AGENDA = "actagenda";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -105,6 +107,12 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 			else if(syncType.equals(SYNC_TYPE_ENVIAR_AGENDA)){
 				int id = extras.getInt(RutasDetailFragment.ARG_AGENDA_ID);
 				result = Agenda.executeSync(db, id);
+				addDefaultMessage(result);
+			}
+			
+			else if(syncType.equals(SYNC_TYPE_ACTUALIZAR_AGENDA)){
+				long inicio = extras.getLong(RutasListFragment.ARG_INICIO);
+				result = rp3.marketforce.sync.Rutas.executeSync(db,inicio,(long) 1);				
 				addDefaultMessage(result);
 			}
 			

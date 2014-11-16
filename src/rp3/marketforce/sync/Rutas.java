@@ -32,6 +32,10 @@ public class Rutas {
 				dateIni.add(Calendar.DATE, -7);
 				inicio = Convert.getDotNetTicksFromDate(dateIni.getTime());											
 			}
+			else
+			{
+				inicio = Convert.getDotNetTicksFromDate(Convert.getDateFromTicks(inicio));
+			}
 			
 			Date ini = Convert.getDateFromDotNetTicks(inicio);
 			Calendar cal = Calendar.getInstance();

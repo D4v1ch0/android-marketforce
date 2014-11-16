@@ -11,6 +11,7 @@ import rp3.marketforce.R;
 import rp3.marketforce.headerlistview.HeaderListView;
 import rp3.marketforce.loader.RutasLoader;
 import rp3.marketforce.models.Agenda;
+import rp3.marketforce.sync.SyncAdapter;
 import rp3.util.DateTime;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -32,6 +33,8 @@ import android.widget.TextView;
 
 public class RutasListFragment extends rp3.app.BaseFragment {
 		    
+	public static String ARG_INICIO = "inicio";
+	
     private TransactionListFragmentListener transactionListFragmentCallback;
     private LinearLayout linearLayout_rootParent;
     private HeaderListView headerlist;
@@ -183,6 +186,8 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 		if(messages.hasErrorMessage()){
 			showDialogMessage(messages);
 		}
+		
+		searchTransactions("");
 	}
 	
 	
@@ -219,18 +224,33 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 							headerlist.getListView().setDividerHeight(0);
 							headerlist.getListView().setSelector(getActivity().getResources().getDrawable(R.drawable.bkg_rutas));
 							linearLayout_rootParent.addView(headerlist);
+							
+							headerlist.getListView().setOnScrollListener(new OnScrollListener(){
+
+								@Override
+								public void onScrollStateChanged(AbsListView view, int scrollState) {
+									// TODO Auto-generated method stub
+									
+								}
+
+								@Override
+								public void onScroll(AbsListView view, int firstVisibleItem,
+										int visibleItemCount, int totalItemCount) {
+									if(totalItemCount - visibleItemCount < 3)
+									{
+										long inicio = Agenda.getLastAgenda(getDataBase());
+										Bundle bundle = new Bundle();
+										bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ACTUALIZAR_AGENDA);
+										bundle.putLong(ARG_INICIO, inicio);
+										requestSync(bundle);
+									}
+									
+								}});
 						}
 						
 						orderDate();
-						if(adapter == null)
-						{
-							adapter = new RutasListAdapter(getActivity(),arrayAgenda,transactionListFragmentCallback,header);
-					    	headerlist.setAdapter(adapter);
-						}
-						else
-						{
-							adapter.setNewList(arrayAgenda);
-						}
+						adapter = new RutasListAdapter(getActivity(),arrayAgenda,transactionListFragmentCallback,header);
+					    headerlist.setAdapter(adapter);
 				    	
 				    	header_position = new ArrayList<String>();
 				    	header_position.add("0");
