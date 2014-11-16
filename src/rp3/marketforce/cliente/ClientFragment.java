@@ -124,15 +124,17 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
       SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
       //SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
   	  SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
-  	  if(!slidingPane.isOpen())
- 	 {
- 		 searchView.setVisibility(View.GONE);
- 		 menu.removeItem(R.id.action_search);
- 	 }
- 	 else
- 	 {
- 		 searchView.setVisibility(View.VISIBLE);
- 	 }
+  	  if(slidingPane!=null){
+	  	  if(!slidingPane.isOpen())
+	 	 {
+	 		 searchView.setVisibility(View.GONE);
+	 		 menu.removeItem(R.id.action_search);
+	 	 }
+	 	 else
+	 	 {
+	 		 searchView.setVisibility(View.VISIBLE);
+	 	 }
+  	  }
   	  
   	 int searchicon = searchView.getContext().getResources().getIdentifier("android:id/search_mag_icon", null, null);
   	 ImageView searchIcon = (ImageView)searchView.findViewById(searchicon);

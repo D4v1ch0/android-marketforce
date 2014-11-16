@@ -103,14 +103,16 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	public void onAfterCreateOptionsMenu(Menu menu) {	
 		
   	 SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search_ruta));
-  	 if(!slidingPane.isOpen())
-  	 {
-  		 searchView.setVisibility(View.GONE);
-  		 menu.removeItem(R.id.action_search_ruta);
-  	 }
-  	 else
-  	 {
-  		 searchView.setVisibility(View.VISIBLE);
+  	 if(slidingPane!=null){
+	  	 if(!slidingPane.isOpen())
+	  	 {
+	  		 searchView.setVisibility(View.GONE);
+	  		 menu.removeItem(R.id.action_search_ruta);
+	  	 }
+	  	 else
+	  	 {
+	  		 searchView.setVisibility(View.VISIBLE);
+	  	 }
   	 }
   	  
   	 int searchPlateId = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
