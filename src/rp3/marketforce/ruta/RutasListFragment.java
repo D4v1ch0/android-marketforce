@@ -56,6 +56,7 @@ public class RutasListFragment extends rp3.app.BaseFragment {
     private int cont;
     public static int SECTION = 0;
     private List<String> header_position;
+    private int scrollV = 0;
     
     public static RutasListFragment newInstance() {
     	RutasListFragment fragment = new RutasListFragment();
@@ -101,7 +102,9 @@ public class RutasListFragment extends rp3.app.BaseFragment {
         Bundle args = new Bundle();
         args.putString(LoaderRutas.STRING_SEARCH, "");
         args.putBoolean(LoaderRutas.STRING_BOOLEAN, true);
-        getLoaderManager().initLoader(0, args, loaderRutas);
+        
+        executeLoader(0, args, loaderRutas);
+        
 		format1 = new SimpleDateFormat("EEEE dd MMMM yyyy");
 		format2 = new SimpleDateFormat("EEEE");
 		format3 = new SimpleDateFormat("dd");
@@ -115,11 +118,21 @@ public class RutasListFragment extends rp3.app.BaseFragment {
     	inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE); 
     	linearLayout_rootParent = (LinearLayout) rootView.findViewById(R.id.linearLayout_headerlist_ruta_list);
     	horizontalScrollView = (HorizontalScrollView) rootView.findViewById(R.id.horizontalScrollView);
+    	
+    	
     	linearLayout_horizontal = (LinearLayout) rootView.findViewById(R.id.linearLayout_horizontal);
     	
+//    	if(headerlist!=null)
+//    		paintDates();
     	DisplayMetrics metrics = new DisplayMetrics();
     	getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-    	width = metrics.widthPixels;
+    	
+    	if(!transactionListFragmentCallback.allowSelectedItem()){
+    		width = metrics.widthPixels;
+    	}else{
+    		width = (int) (metrics.widthPixels * 0.35);
+    	}
+    	    	    	
     }
     
     @Override
@@ -131,18 +144,17 @@ public class RutasListFragment extends rp3.app.BaseFragment {
     public void onStart() {    	
     	super.onStart(); 
     	if(headerlist!=null && headerlist.getParent() == null){    		
-    		linearLayout_rootParent.addView(headerlist);
+    		linearLayout_rootParent.addView(headerlist);    		
     		headerlist.setAdapter(adapter);
+    		paintDates();    		    		
     	}
     }
     
-    public void searchTransactions(String termSearch)
-    {
-    	
+    public void searchTransactions(String termSearch){    	
     	Bundle args = new Bundle();
 		args.putString(LoaderRutas.STRING_SEARCH, termSearch);
 		args.putBoolean(LoaderRutas.STRING_BOOLEAN, false);
-	    getLoaderManager().restartLoader(0, args, loaderRutas);
+	    executeLoader(0, args, loaderRutas);
     }      
     
     public void loadTransactions(int transactionType)
@@ -158,6 +170,8 @@ public class RutasListFragment extends rp3.app.BaseFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        
+        linearLayout_rootParent.removeView(headerlist);
         
     }
     
@@ -239,6 +253,7 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 							@Override
 							public void onScroll(AbsListView view, int firstVisibleItem,
 									int visibleItemCount, int totalItemCount) {
+									    
 									   if(header_position.contains(String.valueOf(firstVisibleItem)))
 									   {
 										   SECTION = header_position.indexOf(""+firstVisibleItem);
@@ -248,59 +263,7 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 							}
 						});
 				    	
-				    	LinearLayout.LayoutParams params;
-				    	if(width > 480)
-				    		params = new LinearLayout.LayoutParams((int) (width*.14f) + 2, LinearLayout.LayoutParams.WRAP_CONTENT);
-				    	else
-				    		params = new LinearLayout.LayoutParams((int) (width*.18f) , LinearLayout.LayoutParams.WRAP_CONTENT);
-				    	
-						if(header != null)
-						{
-							int x = 0;
-					    	for(String fec : header)
-							{
-				    	       try {
-				    	       calendar.setTime(format1.parse(fec));
-				    	       
-								final View view_ = inflater.inflate(R.layout.rowlist_date, null);
-							    view_.setLayoutParams(params);
-							    
-							    ((TextView) view_.findViewById(R.id.textView_week)).setText(format2.format(calendar.getTime()).substring(0, 3));
-							    ((TextView) view_.findViewById(R.id.textView_day)).setText(format3.format(calendar.getTime()));
-							    ((TextView) view_.findViewById(R.id.textView_month)).setText(format4.format(calendar.getTime()).substring(0, 3));
-							    
-							    view_.setId(56+x);
-							    x++;
-							    linearLayout_horizontal.addView(view_);
-							    
-							    view_.setOnClickListener(new View.OnClickListener() {
-									
-									@Override
-									public void onClick(View v) {
-										
-										cont = 0 ;
-										SECTION = v.getId()-56;
-										
-										if(adapter != null)
-											adapter.notifyDataSetChanged();
-										
-										for(int m = 0; m< arrayAgenda.size();m++)
-											if(m < SECTION)
-											   cont = ((cont + arrayAgenda.get(m).size())+1);
-										
-										headerlist.getListView().setSelection(cont);
-										
-										mPaintRiel();
-									}
-								});
-								  
-								} catch (ParseException e) {
-									e.printStackTrace();
-								}
-						      
-							}
-					    	mPaintRiel();
-						}
+				    	paintDates();
 					}
 			}
 
@@ -310,6 +273,66 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 			}
 		}
 	 
+	 void paintDates(){
+		 
+	    	LinearLayout.LayoutParams params;
+	    	if(width > 480)
+	    		params = new LinearLayout.LayoutParams((int) (width*.14f) + 2, LinearLayout.LayoutParams.WRAP_CONTENT);
+	    	else
+	    		params = new LinearLayout.LayoutParams((int) (width*.18f) , LinearLayout.LayoutParams.WRAP_CONTENT);
+	    	
+			if(header != null)
+			{
+				linearLayout_horizontal.removeAllViews();
+				
+				int x = 0;
+		    	for(String fec : header)
+				{
+	    	       try {
+	    	       calendar.setTime(format1.parse(fec));
+	    	       
+					final View view_ = inflater.inflate(R.layout.rowlist_date, null);
+				    view_.setLayoutParams(params);
+				    
+				    ((TextView) view_.findViewById(R.id.textView_week)).setText(format2.format(calendar.getTime()).substring(0, 3));
+				    ((TextView) view_.findViewById(R.id.textView_day)).setText(format3.format(calendar.getTime()));
+				    ((TextView) view_.findViewById(R.id.textView_month)).setText(format4.format(calendar.getTime()).substring(0, 3));
+				    
+				    view_.setId(56+x);
+				    x++;
+				    linearLayout_horizontal.addView(view_);
+				    
+				    view_.setOnClickListener(new View.OnClickListener() {
+						
+						@Override
+						public void onClick(View v) {
+							
+							cont = 0 ;
+							SECTION = v.getId()-56;
+							
+							if(adapter != null)
+								adapter.notifyDataSetChanged();
+							
+							for(int m = 0; m< arrayAgenda.size();m++)
+								if(m < SECTION)
+								   cont = ((cont + arrayAgenda.get(m).size())+1);
+							
+							scrollV = cont;
+							headerlist.getListView().setSelection(cont);
+							
+							mPaintRiel();
+						}
+					});
+					  
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+			      
+				}
+		    	mPaintRiel();
+			}
+	 }
+	 
     @SuppressLint("SimpleDateFormat")
 	private void orderDate()
 	 {
@@ -318,20 +341,14 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 			 {
 				 header = new ArrayList<String>();
 				 arrayAgenda = new ArrayList<ArrayList<Agenda>>();
-				 Calendar cal = Calendar.getInstance();
-				 boolean flag = false;
+				 Calendar cal = Calendar.getInstance();		
 				 
 				 ArrayList<Agenda> anteriores = null; 
 				 ArrayList<Agenda> hoy = null; 
 				 ArrayList<Agenda> mañana = null; 
-				 ArrayList<Agenda> estaSemana = null;
-				 ArrayList<Agenda> proxima_semana = null;
 				 ArrayList<Agenda> proximo = null;
 				 
-				 for(Agenda agd :list_agenda)
-				 {
-					String prueba = cal.getTime().toString();
-					String prueba2 = agd.getFechaInicio().toString();
+				 for(Agenda agd :list_agenda){
 					long diff = DateTime.getDaysDiff(cal.getTime(), agd.getFechaInicio());
 					
 					if(diff >= 0)
@@ -394,77 +411,7 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 									arrayAgenda.add(proximo);
 									header.add(date);
 								}
-							}
-							
-							
-//							flag = true;
-//							
-//							int lapso = 7 - (day_week +1);
-//							int per = 2;
-//							
-//							for(int y = 0 ; y < lapso ; y++)
-//							{
-//							    cal = Calendar.getInstance();
-//							    cal.add(Calendar.DAY_OF_YEAR, per++);
-//								 day_week_aux = cal.get(Calendar.DAY_OF_WEEK)-1;
-//								 day_mont_aux = cal.get(Calendar.DAY_OF_MONTH);
-//								 current_month_aux = cal.get(Calendar.MONTH);
-//								 
-//								 if(day_week_aux == 0)
-//									 day_week_aux = 7;
-//								 
-//								 if(day_w == day_week_aux && day_m == day_mont_aux && current_month == current_month_aux)
-//									{
-//										if(estaSemana == null)
-//											estaSemana = new ArrayList<Agenda>();
-//										
-//										estaSemana.add(agd);
-//										
-//										flag = false;
-//										break;
-//									}
-//							   }
-//							
-//							if(flag)
-//							{
-//							
-//									flag = true;
-//									
-//									lapso =  (7 - day_week)+1;
-//									
-//									for(int y = 0 ; y < 7 ; y++)
-//									{
-//										
-//									    cal = Calendar.getInstance();
-//									    cal.add(Calendar.DAY_OF_YEAR, lapso++);
-//										 day_week_aux = cal.get(Calendar.DAY_OF_WEEK)-1;
-//										 day_mont_aux = cal.get(Calendar.DAY_OF_MONTH);
-//										 current_month_aux = cal.get(Calendar.MONTH);
-//										 
-//										 if(day_week_aux == 0)
-//											 day_week_aux = 7;
-//										 
-//										 if(day_w == day_week_aux && day_m == day_mont_aux && current_month == current_month_aux)
-//											{
-//												if(proxima_semana == null)
-//													proxima_semana = new ArrayList<Agenda>();
-//												
-//												proxima_semana.add(agd);
-//												
-//												flag = false;
-//												break;
-//											}
-//									}
-//									
-//									if(flag)
-//									{
-//										if(proximo == null)
-//											proximo = new ArrayList<Agenda>();
-//										
-//										proximo.add(agd);
-//									}
-//							
-//							}
+							}							
 						}
 					}
 					}else
@@ -474,13 +421,7 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 						
 						anteriores.add(agd);
 					}
-				 }
-				 
-//				 if(anteriores != null)
-//				 {
-//					 arrayAgenda.add(anteriores);
-//					 header.add("Anteriores");
-//				 }
+				 }				 
 				 
 				 if(hoy != null)
 				 {
@@ -499,34 +440,22 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 					 cal.add(Calendar.DAY_OF_YEAR, 1);
 					 date = format1.format(cal.getTime());
 					 header.add(1,date);
-				 }
-				 
-//				 if(proxima_semana != null)
-//				 {
-//					 arrayAgenda.add(proxima_semana);
-//					 header.add("Próxima Semana");
-//				 }
-//				 
-//				 if(proximo != null)
-//				 {
-//					 arrayAgenda.add(proximo);
-//					 header.add("Próximo");
-//				 }
-				 
+				 }				 				 
 			 }
 	 }
     
     private void mPaintRiel()
     {
+    	int bgColor = getActivity().getResources().getColor(R.color.bg_button_bg_main);
     	for(int y = 0 ; y < header.size() ; y++)
 		{ 
-    		View st =  getActivity().findViewById((y+56));
+    		View st =  linearLayout_horizontal.findViewById((y+56));
     		
     		if(st != null)
     		{
 				if((st.getId()-56) == SECTION)
 				{
-					st.setBackgroundColor(getActivity().getResources().getColor(R.color.bg_button_bg_main));
+					st.setBackgroundColor(bgColor);
 					((TextView) st.findViewById(R.id.textView_week)).setTextColor(Color.WHITE);
 					((TextView) st.findViewById(R.id.textView_day)).setTextColor(Color.WHITE);
 					((TextView) st.findViewById(R.id.textView_month)).setTextColor(Color.WHITE);
@@ -564,10 +493,10 @@ public class RutasListFragment extends rp3.app.BaseFragment {
     public void onResume() {
     	super.onResume();
     	
-    	if(adapter != null)
-    	{
+    	if(adapter != null){
     		adapter.notifyDataSetChanged();
     		mPaintRiel();
-    	}
+    	}    	    	
     }
-	}
+    
+}

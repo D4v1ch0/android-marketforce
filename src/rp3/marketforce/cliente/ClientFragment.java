@@ -21,8 +21,7 @@ import android.widget.ImageView;
 import android.widget.SearchView;
 
 public class ClientFragment extends BaseFragment implements ClienteListFragmentListener, ClienteDetailFragmentListener {
-
-	public static final String ARG_TRANSACTIONTYPEID = "transactionTypeId";
+	
 	private static final int PARALLAX_SIZE = 0;
 	
 	private ClientListFragment transactionListFragment;

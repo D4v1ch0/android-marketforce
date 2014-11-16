@@ -10,6 +10,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
@@ -46,17 +47,26 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	public void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
 		
-		setRetainInstance(true);		
-		
-//		setContentView(R.layout.activity_transaction_twopane,R.menu.fragment_client);
+		setRetainInstance(true);				
 				
 		rutasListFragment = RutasListFragment.newInstance();					
 	}
 	
 	@Override
+	public void onStart() {		
+		super.onStart();
+		
+		if(selectedTransactionId != 0){
+			if(!mTwoPane)			
+				slidingPane.closePane();			
+		}		
+	}
+	
+	
+	@Override
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {		
 		super.onFragmentCreateView(rootView, savedInstanceState);
-		
+				
 		slidingPane = (SlidingPaneLayout) rootView.findViewById(R.id.sliding_pane_clientes);
 		slidingPane.setParallaxDistance(PARALLAX_SIZE);
 		slidingPane.setShadowResource(R.drawable.sliding_pane_shadow);
@@ -65,35 +75,28 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 		slidingPane.setPanelSlideListener(new PanelSlideListener(){
 
 			@Override
-			public void onPanelSlide(View panel, float slideOffset) {
-				// TODO Auto-generated method stub
-				
+			public void onPanelSlide(View panel, float slideOffset) {		
 			}
 
 			@Override
 			public void onPanelOpened(View panel) {
 				getActivity().invalidateOptionsMenu();
-				rutasListFragment.searchTransactions("");
+				//rutasListFragment.searchTransactions("");
 			}
 
 			@Override
 			public void onPanelClosed(View panel) {
 				getActivity().invalidateOptionsMenu();
 			}});
-						
-		if(getChildFragmentManager().findFragmentById(R.id.transaction_detail) == null){			
-			if(rootView.findViewById(R.id.content_transaction_list)!=null){
-				setFragment(R.id.content_transaction_list, rutasListFragment );
-			}			
-		}
 		
-		if (rootView.findViewById(R.id.content_transaction_detail) != null) {     
-			mTwoPane = true;
-        }
-					
-//		if(mTwoPane){
-//			rutasListFragment.setActivateOnItemClick(true);			
-//		}
+		if(!hasFragment(R.id.content_transaction_list))		
+			setFragment(R.id.content_transaction_list, rutasListFragment );				
+		
+		if(slidingPane.isOpen() && 
+				rootView.findViewById(R.id.content_transaction_list).getLayoutParams().width != LayoutParams.MATCH_PARENT)		
+			mTwoPane = true;			
+		else
+			mTwoPane = false;					
 	}	
 	
 	@Override
@@ -142,8 +145,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	}
 	
 	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		// TODO Auto-generated method stub
+	public boolean onContextItemSelected(MenuItem item) {		
 		return super.onContextItemSelected(item);
 	}
 	
@@ -159,18 +161,12 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 		
 	@Override
 	public void onTransactionSelected(long id) {
-		if (mTwoPane) {
-            slidingPane.closePane();
-        	selectedTransactionId = id;
-        	rutasDetailfragment = RutasDetailFragment.newInstance(selectedTransactionId); 
-        	
-        	setFragment(R.id.content_transaction_detail, rutasDetailfragment);        	
-
-        } else {
-        	//waitUpdate = true;        	            
-            startActivity(RutasDetailActivity.newIntent(this.getActivity(), id) );
-            this.cancelAnimationTransition();
-        }
+		if(!mTwoPane)
+			slidingPane.closePane();
+		
+		selectedTransactionId = id;
+    	rutasDetailfragment = RutasDetailFragment.newInstance(selectedTransactionId);     	
+    	setFragment(R.id.content_transaction_detail, rutasDetailfragment);           					
 	}
 
 	@Override
@@ -181,8 +177,6 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	@Override
 	public boolean allowSelectedItem() {		
 		return mTwoPane;
-	}
-	
-	///End TransactionListFragmentListener
+	}	
 	
 }

@@ -14,7 +14,6 @@ import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.AgendaTareaActividades;
 import rp3.marketforce.models.Cliente;
 import rp3.marketforce.sync.SyncAdapter;
-import rp3.util.Convert;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,7 +24,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 public class RutasDetailFragment extends rp3.app.BaseFragment {
     
@@ -47,8 +45,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
     	public void onDeleteSuccess(Cliente transaction);
     }
     
-    public static RutasDetailFragment newInstance(long idAgenda)
-    {
+    public static RutasDetailFragment newInstance(long idAgenda){
     	Bundle arguments = new Bundle();
         arguments.putLong(RutasDetailFragment.ARG_ITEM_ID, idAgenda);
         RutasDetailFragment fragment = new RutasDetailFragment();
