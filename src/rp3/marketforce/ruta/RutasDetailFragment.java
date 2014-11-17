@@ -2,6 +2,7 @@ package rp3.marketforce.ruta;
 
 import java.util.Calendar;
 
+import rp3.configuration.PreferenceManager;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.actividades.CheckboxActivity;
@@ -14,6 +15,7 @@ import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.AgendaTareaActividades;
 import rp3.marketforce.models.Cliente;
 import rp3.marketforce.sync.SyncAdapter;
+import rp3.marketforce.utils.DrawableManager;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -40,7 +42,8 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
     private Agenda agenda;
     private ListaTareasAdapter adapter;
     private ListView lista_tarea;
-
+    private DrawableManager DManager;
+    
     public interface TransactionDetailListener{
     	public void onDeleteSuccess(Cliente transaction);
     }
@@ -66,6 +69,8 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
         }else if(savedInstanceState!=null){
         	idAgenda = savedInstanceState.getLong(STATE_IDAGENDA);
         }    
+        
+        DManager = new DrawableManager();
         
         if(idAgenda != 0){        	
         	agenda = Agenda.getAgenda(getDataBase(), idAgenda);
@@ -98,7 +103,10 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {    	
     	 
 		if(agenda != null){			
-		   setImageViewBitmapFromInternalStorageAsync(R.id.imageView1, agenda.getCliente().getFotoFileName());
+		  DManager.fetchDrawableOnThread(PreferenceManager.getString("server") + 
+					rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + agenda.getCliente().getURLFoto(),
+					(ImageView) this.getRootView().findViewById(R.id.imageView1));
+					   
 		   setTextViewText(R.id.textView_name, agenda.getNombreCompleto());
 		   setTextViewText(R.id.textView_movil, agenda.getClienteDireccion().getTelefono1());
 		   setTextViewText(R.id.textView_mail, agenda.getCliente().getCorreoElectronico());

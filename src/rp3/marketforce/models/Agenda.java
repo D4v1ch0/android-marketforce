@@ -283,13 +283,14 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			Cliente cl = new Cliente();
 			cl.setNombreCompleto(agd.getNombreCompleto());
 			cl.setCorreoElectronico(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_CORREO_ELECTRONICO));
+			cl.setURLFoto(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_URL_FOTO));
 			cl.setID(agd.getIdCliente());
 			
 			agd.setCliente(cl);
 			
 			ClienteDireccion cld = new ClienteDireccion();
 			cld.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
-			//cld.setTelefono1((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_TELEFONO)));
+			cld.setTelefono1((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION_TELEFONO)));
 			agd.setClienteDireccion(cld);
 			
 			agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getID(), agd.getIdRuta()));

@@ -96,7 +96,8 @@ public class RutasListAdapter extends SectionAdapter{
 		date = agd.getFechaInicio();
 		 hour_inicio = format4.format(date);
 		 hour_fin = format4.format(agd.getFechaFin());
-		 str_range =hour_inicio+" - "+hour_fin;
+		 //str_range =hour_inicio+" - "+hour_fin;
+		 str_range =hour_inicio;
 		
 		((TextView) convertView.findViewById(R.id.textView_horas)).setText(str_range);
 		 

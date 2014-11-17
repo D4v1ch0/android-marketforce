@@ -227,8 +227,10 @@ public final class Contract {
 		public static final String FIELD_FECHA_INICIO_REAL = COLUMN_FECHA_INICIO_REAL;
 		public static final String FIELD_FECHA_FIN_REAL = COLUMN_FECHA_FIN_REAL;
 		public static final String FIELD_ENVIADO = COLUMN_ENVIADO;
+		public static final String FIELD_CLIENTE_URL_FOTO = Contract.Cliente.TABLE_NAME + "_" + Contract.Cliente.COLUMN_URL_FOTO;
 		public static final String FIELD_CLIENTE_NOMBRE = Contract.AgendaExt.TABLE_NAME + "_" + Contract.AgendaExt.COLUMN_NOMBRE;		
 		public static final String FIELD_CLIENTE_DIRECCION = Contract.AgendaExt.TABLE_NAME + "_" + Contract.AgendaExt.COLUMN_DIRECCION;
+		public static final String FIELD_CLIENTE_DIRECCION_TELEFONO = Contract.ClienteDireccion.TABLE_NAME + "_" + Contract.ClienteDireccion.COLUMN_TELEFONO1;
 		public static final String FIELD_CLIENTE_CIUDAD = Contract.AgendaExt.TABLE_NAME + "_" + Contract.AgendaExt.COLUMN_CIUDAD;
 		public static final String FIELD_CLIENTE_CORREO_ELECTRONICO = Contract.ClientExt.TABLE_NAME + "_" + Contract.ClientExt.COLUMN_CORREO_ELECTRONICO;
 		public static final String FIELD_ESTADO_AGENDA_DESCRIPCION = "tbEstadoAgenda_" + rp3.data.models.Contract.GeneralValue.COLUMN_VALUE;
