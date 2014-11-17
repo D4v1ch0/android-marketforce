@@ -203,9 +203,10 @@ public class ClientListAdapter extends SectionAdapter{
     public void onRowItemClick(AdapterView<?> parent, View view, int section, int row, long id) {
         super.onRowItemClick(parent, view, section, row, id);
         
-        if(clienteListFragmentCallback.allowSelectedItem()){
-        	section_ = section;
-        	row_ = row;
+        section_ = section;
+    	row_ = row;
+    	
+        if(clienteListFragmentCallback.allowSelectedItem()){        	
         	notifyDataSetChanged();
         }
         

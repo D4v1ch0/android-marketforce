@@ -145,12 +145,7 @@ public class RutasListFragment extends rp3.app.BaseFragment {
     
     @Override
     public void onStart() {    	
-    	super.onStart(); 
-    	if(headerlist!=null && headerlist.getParent() == null){    		
-    		linearLayout_rootParent.addView(headerlist);    		
-    		headerlist.setAdapter(adapter);
-    		paintDates();    		    		
-    	}
+    	super.onStart();     	
     }
     
     public void searchTransactions(String termSearch){    	
@@ -170,6 +165,7 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 
     }
     
+	
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -521,6 +517,12 @@ public class RutasListFragment extends rp3.app.BaseFragment {
     @Override
     public void onResume() {
     	super.onResume();
+    	
+    	if(headerlist!=null && headerlist.getParent() == null){    		
+    		linearLayout_rootParent.addView(headerlist);    		
+    		headerlist.setAdapter(adapter);
+    		paintDates();    		    		
+    	}
     	
     	if(adapter != null){
     		adapter.notifyDataSetChanged();
