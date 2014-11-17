@@ -217,27 +217,26 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 				
 			}
 
-			@SuppressLint("NewApi")
 			@Override
 			public void onPageSelected(int arg0) {
 				String title = pagerAdapter.getPageTitle(arg0).toString();
 				if(title.equalsIgnoreCase("Info"))
 				{
-					TabInfo.setBackgroundColor(R.color.bg_button_bg_main_pressed);
-					TabDirecciones.setBackground(getResources().getDrawable(R.drawable.button));
-					TabContactos.setBackground(getResources().getDrawable(R.drawable.button));
+					TabInfo.setBackgroundColor(R.color.tab_inactivated);
+					TabDirecciones.setBackgroundColor(R.color.tab_activated);
+					TabContactos.setBackgroundColor(R.color.tab_activated);
 				}
 				if(title.equalsIgnoreCase("Direcciones"))
 				{
-					TabInfo.setBackground(getResources().getDrawable(R.drawable.button));
-					TabDirecciones.setBackgroundColor(R.color.bg_button_bg_main_pressed);
-					TabContactos.setBackground(getResources().getDrawable(R.drawable.button));
+					TabInfo.setBackgroundColor(R.color.tab_activated);
+					TabDirecciones.setBackgroundColor(R.color.tab_inactivated);
+					TabContactos.setBackgroundColor(R.color.tab_activated);
 				}
 				if(title.equalsIgnoreCase("Contactos"))
 				{
-					TabInfo.setBackground(getResources().getDrawable(R.drawable.button));
-					TabDirecciones.setBackground(getResources().getDrawable(R.drawable.button));
-					TabContactos.setBackgroundColor(R.color.bg_button_bg_main_pressed);
+					TabInfo.setBackgroundColor(R.color.tab_activated);
+					TabDirecciones.setBackgroundColor(R.color.tab_activated);
+					TabContactos.setBackgroundColor(R.color.tab_inactivated);
 				}
 				
 			}});
@@ -526,7 +525,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 		((RatingBar) rootView.findViewById(R.id.ratingBar_status))
 				.setRating(client.getCalificacion());
 		setTextViewText(R.id.textView_client, client.getNombreCompleto());
-		TabInfo.setBackgroundColor(R.color.bg_button_bg_main_pressed);
+		TabInfo.setBackgroundColor(R.color.tab_activated);
 		
 		PagerDetalles.setAdapter(pagerAdapter);
 	}
@@ -803,12 +802,12 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 		
 		if(client.getContactos() != null && client.getContactos().size() > 0)
 		{
-			TabContactos.setBackgroundColor(R.color.bg_button_bg_main_pressed);
+			TabContactos.setBackgroundColor(R.color.tab_activated);
 			PagerDetalles.setCurrentItem(2);
 		}
 		else
 		{
-			TabInfo.setBackgroundColor(R.color.bg_button_bg_main_pressed);
+			TabInfo.setBackgroundColor(R.color.tab_activated);
 		}
 		
 	}

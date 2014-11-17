@@ -2,9 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp"
     android:gravity="center_vertical"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:padding="5dp" >
+
+    <TextView
+        android:id="@+id/detail_tarea_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/transaction_edit_resume_values_marginleft"
+        android:text="2"
+        android:textColor="@color/bg_button_bg_main"
+        android:textStyle="bold"
+        android:typeface="normal" />
+
+    <LinearLayout
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/transaction_edit_resume_values_marginleft"
+        android:layout_marginTop="@dimen/transaction_edit_resume_values_marginleft"
+        android:background="@color/bg_button_bg_main_pressed" >
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/detail_agenda_estado"
@@ -17,13 +36,23 @@
         android:layout_marginRight="15dp"
          />
 
+    <LinearLayout
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/transaction_edit_resume_values_marginleft"
+        android:layout_marginTop="@dimen/transaction_edit_resume_values_marginleft"
+        android:background="@color/bg_button_bg_main_pressed"
+        android:orientation="vertical" >
+
+    </LinearLayout>
+
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/transaction_edit_resume_values_marginleft"
         android:drawablePadding="5dp"
         android:gravity="center"
-        android:textStyle="bold"
-         />
+        android:textStyle="bold" />
 
 </LinearLayout>

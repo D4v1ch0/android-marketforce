@@ -15,6 +15,7 @@
         android:id="@+id/actividad_check_respuesta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:button="@drawable/custom_checkbox"
         android:text="CheckBox" />
 
     <LinearLayout

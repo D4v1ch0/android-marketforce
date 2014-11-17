@@ -28,9 +28,9 @@
             android:id="@+id/View01"
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"            
-            android:background="@android:color/white" />
+            android:background="@color/bg_button_bg_main_pressed"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp" />
 
         <TextView
             android:id="@+id/textView_content"
@@ -48,6 +48,6 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="5dp"
-        android:background="@android:color/white" />
+        android:background="@color/bg_button_bg_main_pressed" />
 
 </LinearLayout>

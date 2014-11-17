@@ -84,6 +84,7 @@ public class GrupoActivity extends ActividadActivity {
 		
 		texto.setLayoutParams(params);
 		check.setLayoutParams(params2);
+		check.setButtonDrawable(R.drawable.custom_checkbox);
 		
 		texto.setText(act.getDescripcion());
 		if(act.getResultado().equals("true"))

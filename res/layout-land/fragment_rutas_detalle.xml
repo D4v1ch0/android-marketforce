@@ -27,25 +27,6 @@
             android:gravity="center_vertical"
             android:orientation="vertical" >
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-
-                <ImageView
-                    android:id="@+id/detail_agenda_image_status"
-                    android:layout_width="14dp"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/circle_shape" />
-
-                <TextView
-                    android:id="@+id/detail_agenda_estado"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:paddingLeft="@dimen/transaction_edit_resume_values_marginleft" />
-
-            </LinearLayout>
-
             <TextView
                 android:id="@+id/textView_name"
                 android:layout_width="wrap_content"
@@ -79,11 +60,38 @@
         </LinearLayout>
 
         <LinearLayout
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:background="@color/bg_button_bg_main_pressed" >
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_weight="0.4"
             android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right" >
+
+                <ImageView
+                    android:id="@+id/detail_agenda_image_status"
+                    android:layout_width="14dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/circle_shape" />
+
+                <TextView
+                    android:id="@+id/detail_agenda_estado"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/transaction_edit_resume_values_marginleft" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textView_movil"
@@ -91,7 +99,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
-                android:drawableLeft="@drawable/ic_action_call_mini"
+                android:drawableLeft="@drawable/ic_phone"
                 android:drawablePadding="8dp"
                 android:gravity="center"
                 android:textSize="@dimen/text_medium_size"
@@ -102,7 +110,7 @@
                 style="@style/Widget.TextView.XSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_action_email_mini"
+                android:drawableLeft="@drawable/ic_email"
                 android:drawablePadding="8dp"
                 android:ellipsize="end"
                 android:gravity="center"
@@ -114,6 +122,9 @@
                 android:id="@+id/textView_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:drawableLeft="@drawable/ic_home"
+                android:drawablePadding="8dp"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:textSize="@dimen/text_small_size" />
@@ -122,9 +133,13 @@
                 android:id="@+id/textView_fecha"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:drawableLeft="@drawable/ic_calendar"
+                android:drawablePadding="8dp"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:textSize="@dimen/text_small_size" />
+
         </LinearLayout>
     </LinearLayout>
 

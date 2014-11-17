@@ -58,6 +58,7 @@ public class ListaTareasAdapter extends BaseAdapter{
 			((TextView) convertView.findViewById(R.id.textView2)).setText(agendaTarea.get(position).getEstadoTareaDescripcion());
 			
 			((TextView) convertView.findViewById(R.id.detail_agenda_estado)).setText(agendaTarea.get(position).getNombreTarea());
+			((TextView) convertView.findViewById(R.id.detail_tarea_num)).setText(position + 1 + "");
 		
 		return convertView;
 	}

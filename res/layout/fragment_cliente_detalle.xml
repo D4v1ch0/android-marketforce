@@ -111,7 +111,16 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/ic_action_storage" />
+            android:background="@color/tab_inactivated"
+            android:src="@drawable/ic_pedido" />
+
+        <LinearLayout
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/tab_activated"
+            android:orientation="vertical" >
+
+        </LinearLayout>
 
         <ImageButton
             android:id="@+id/detail_tab_direccion"
@@ -119,8 +128,17 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/ic_action_place"
+            android:background="@color/tab_inactivated"
+            android:src="@drawable/ic_rutas"
             android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/tab_activated"
+            android:orientation="vertical" >
+
+        </LinearLayout>
 
         <ImageButton
             android:id="@+id/detail_tab_contactos"
@@ -128,7 +146,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/ic_action_group"
+            android:background="@color/tab_inactivated"
+            android:src="@drawable/ic_clientes"
             android:visibility="gone" />
 
     </LinearLayout>

@@ -25,25 +25,6 @@
             android:gravity="center_vertical"
             android:orientation="vertical" >
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-
-                <ImageView
-                    android:id="@+id/detail_agenda_image_status"
-                    android:layout_width="14dp"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/circle_shape" />
-
-                <TextView
-                    android:id="@+id/detail_agenda_estado"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:paddingLeft="@dimen/transaction_edit_resume_values_marginleft" />
-
-            </LinearLayout>
-
             <TextView
                 android:id="@+id/textView_name"
                 android:layout_width="wrap_content"
@@ -75,6 +56,24 @@
                 android:singleLine="true"
                 android:textStyle="bold" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:id="@+id/detail_agenda_image_status"
+                    android:layout_width="14dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/circle_shape" />
+
+                <TextView
+                    android:id="@+id/detail_agenda_estado"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/transaction_edit_resume_values_marginleft" />
+            </LinearLayout>
+
         </LinearLayout>
 
     </LinearLayout>
@@ -90,10 +89,10 @@
             style="@style/Widget.TextView.XSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_action_call_mini"
-            android:gravity="center"
-            android:drawablePadding="8dp"
             android:layout_marginRight="10dp"
+            android:drawableLeft="@drawable/ic_phone"
+            android:drawablePadding="8dp"
+            android:gravity="center"
             android:textSize="@dimen/text_medium_size"
             android:textStyle="bold" />
 
@@ -102,19 +101,23 @@
             style="@style/Widget.TextView.XSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_action_email_mini"
+            android:drawableLeft="@drawable/ic_email"
+            android:drawablePadding="8dp"
             android:ellipsize="end"
             android:gravity="center"
             android:singleLine="true"
-            android:drawablePadding="8dp"
             android:textSize="@dimen/text_medium_size"
             android:textStyle="bold" />
+
     </LinearLayout>
 
     <TextView
         android:id="@+id/textView_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:drawableLeft="@drawable/ic_home"
+        android:drawablePadding="8dp"
         android:ellipsize="end"
         android:singleLine="true"
         android:textSize="@dimen/text_small_size" />
@@ -123,6 +126,9 @@
         android:id="@+id/textView_fecha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:drawableLeft="@drawable/ic_calendar"
+        android:drawablePadding="8dp"
         android:ellipsize="end"
         android:singleLine="true"
         android:textSize="@dimen/text_small_size" />

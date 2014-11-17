@@ -279,6 +279,15 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 										   SECTION = header_position.indexOf(""+firstVisibleItem);
 										   mPaintRiel();
 									   }
+									   
+									   if(totalItemCount - visibleItemCount < 3)
+										{
+											long inicio = Agenda.getLastAgenda(getDataBase());
+											Bundle bundle = new Bundle();
+											bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ACTUALIZAR_AGENDA);
+											bundle.putLong(ARG_INICIO, inicio);
+											requestSync(bundle);
+										}
 								
 							}
 						});

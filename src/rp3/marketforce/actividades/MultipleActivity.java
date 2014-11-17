@@ -47,6 +47,7 @@ public class MultipleActivity extends  ActividadActivity {
 	    for(AgendaTareaOpciones opcion: ag_opcs)
 		{
 	    	CheckBox setter = new CheckBox(this);
+	    	setter.setButtonDrawable(R.drawable.custom_checkbox);
 	    	setter.setChecked(existeRespuesta(opcion.getDescripcion()));
 	    	setter.setText(opcion.getDescripcion());
 			Grupo.addView(setter);
