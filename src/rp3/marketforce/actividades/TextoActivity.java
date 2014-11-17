@@ -15,6 +15,7 @@ public class TextoActivity extends ActividadActivity {
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		int numero = getIntent().getExtras().getInt(ARG_NUMERO, 1);
 		int tema = getIntent().getExtras().getInt(ARG_THEME, R.style.MyAppTheme);
 		setTheme(tema);
 		if(tema != R.style.MyAppTheme)
@@ -34,6 +35,7 @@ public class TextoActivity extends ActividadActivity {
 	    }
 	    
 	    setTextViewText(R.id.label_pregunta_actividad, ata.getDescripcion());
+	    setTextViewText(R.id.detail_activity_number, numero + "");
 	    if(!ata.getResultado().equalsIgnoreCase("null"))
 	    {
 	    	setTextViewText(R.id.actividad_texto_respuesta, ata.getResultado());

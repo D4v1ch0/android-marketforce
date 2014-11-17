@@ -4,27 +4,59 @@
     android:layout_height="match_parent"
     android:background="@color/apptheme_color"
     android:orientation="vertical"
-    android:padding="@dimen/transaction_edit_resume_values_marginleft" >
+    android:padding="5dp" >
 
-    <TextView
-        android:id="@+id/label_pregunta_actividad"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:layout_height="wrap_content" >
 
-    <EditText
-        android:id="@+id/actividad_texto_respuesta"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textMultiLine"
-        android:minLines="2"
-        android:minWidth="@dimen/nav_drawer_width"
-        android:textAppearance="@style/EditTextAppTheme"
-        android:textSize="@dimen/text_input_size" >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
 
-        <requestFocus />
-    </EditText>
+            <TextView
+                android:id="@+id/detail_activity_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1"
+                android:textColor="@color/tab_inactivated"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:background="@color/bg_button_bg_main_pressed" >
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/label_pregunta_actividad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView" />
+
+            <EditText
+                android:id="@+id/actividad_texto_respuesta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textMultiLine"
+                android:minLines="2"
+                android:minWidth="@dimen/nav_drawer_width"
+                android:textAppearance="@style/EditTextAppTheme"
+                android:textSize="@dimen/text_input_size" >
+
+                <requestFocus />
+            </EditText>
+        </LinearLayout>
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -44,7 +76,7 @@
             style="@style/Widget.Button.Theme"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/transaction_edit_resume_values_marginleft"
+            android:layout_marginLeft="5dp"
             android:layout_weight="1"
             android:onClick="aceptarCambios"
             android:text="@string/label_button_aceptar_act" />

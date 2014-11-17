@@ -21,6 +21,7 @@ public class MultipleActivity extends  ActividadActivity {
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		int numero = getIntent().getExtras().getInt(ARG_NUMERO, 1);
 		int tema = getIntent().getExtras().getInt(ARG_THEME, R.style.MyAppTheme);
 		setTheme(tema);
 		if(tema != R.style.MyAppTheme)
@@ -42,6 +43,7 @@ public class MultipleActivity extends  ActividadActivity {
 	    }
 	    
 	    setTextViewText(R.id.label_pregunta_actividad, ata.getDescripcion());
+	    setTextViewText(R.id.detail_activity_number, numero + "");
 	    respuestas = ata.getResultado().split(",");
 	    List<AgendaTareaOpciones> ag_opcs = AgendaTareaOpciones.getOpciones(getDataBase(), ata.getIdAgenda(), ata.getIdTarea(), ata.getIdTareaActividad());
 	    for(AgendaTareaOpciones opcion: ag_opcs)
@@ -50,6 +52,7 @@ public class MultipleActivity extends  ActividadActivity {
 	    	setter.setButtonDrawable(R.drawable.custom_checkbox);
 	    	setter.setChecked(existeRespuesta(opcion.getDescripcion()));
 	    	setter.setText(opcion.getDescripcion());
+	    	setter.setPadding(30, 15, 0, 15);
 			Grupo.addView(setter);
 		}
 	}

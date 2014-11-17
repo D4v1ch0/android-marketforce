@@ -14,8 +14,9 @@
 
         <ImageView
             android:id="@+id/imageView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:scaleType="fitCenter"
             android:src="@drawable/user" />
 
         <LinearLayout
@@ -71,7 +72,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:paddingLeft="@dimen/transaction_edit_resume_values_marginleft" />
+                    android:paddingLeft="5dp" />
             </LinearLayout>
 
         </LinearLayout>
@@ -169,7 +170,10 @@
     <ListView
         android:id="@+id/listView_tareas"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:divider="@color/bg_button_bg_main_pressed"
+        android:dividerHeight="1dp" >
+
     </ListView>
 
 </LinearLayout>

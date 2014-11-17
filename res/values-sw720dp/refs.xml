@@ -9,5 +9,6 @@
     -->
     <item name="fragment_client" type="layout">@layout/activity_transaction_twopane</item>
     <item name="fragment_rutas" type="layout">@layout/activity_transaction_twopane</item>
+    <string name="is_tablet">false</string>
 <!--     <item name="layout_client_detail" type="layout">@layout/layout_client_detail_large</item> -->
 </resources>

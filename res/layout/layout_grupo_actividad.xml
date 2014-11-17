@@ -15,7 +15,7 @@
             android:id="@+id/actividad_agrupar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="@dimen/transaction_edit_resume_values_marginleft"
+            android:layout_margin="5dp"
             android:orientation="vertical" >
         </LinearLayout>
     </ScrollView>
@@ -38,7 +38,7 @@
             style="@style/Widget.Button.Theme"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/transaction_edit_resume_values_marginleft"
+            android:layout_marginLeft="5dp"
             android:layout_weight="1"
             android:onClick="aceptarCambios"
             android:text="@string/label_button_aceptar_act" />

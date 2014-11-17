@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="@dimen/transaction_edit_resume_values_marginleft" >
+    android:padding="5dp" >
 
     <ScrollView
         android:id="@+id/scrollView1"
@@ -13,20 +13,46 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/label_pregunta_actividad"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TextView" />
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
 
             <LinearLayout
-                android:id="@+id/actividad_multiple_respuesta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/detail_activity_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1"
+                    android:textColor="@color/tab_inactivated"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:background="@color/bg_button_bg_main_pressed" >
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/label_pregunta_actividad"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="TextView" />
+
+                <LinearLayout
+                    android:id="@+id/actividad_multiple_respuesta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
@@ -50,7 +76,7 @@
             style="@style/Widget.Button.Theme"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/transaction_edit_resume_values_marginleft"
+            android:layout_marginLeft="5dp"
             android:layout_weight="1"
             android:onClick="aceptarCambios"
             android:text="@string/label_button_aceptar_act" />
