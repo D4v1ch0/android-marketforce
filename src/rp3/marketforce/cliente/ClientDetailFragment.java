@@ -25,6 +25,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 @SuppressLint("ResourceAsColor")
@@ -89,6 +90,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	private Cliente client;
 	private Contacto contacto;
 	private DrawableManager DManager;
+	private int curentPage = -1;
 	
 	private ClienteDetailFragmentListener clienteDetailFragmentCallback;
 
@@ -219,25 +221,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 
 			@Override
 			public void onPageSelected(int arg0) {
-				String title = pagerAdapter.getPageTitle(arg0).toString();
-				if(title.equalsIgnoreCase("Info"))
-				{
-					TabInfo.setBackgroundColor(getResources().getColor(R.color.tab_activated));
-					TabDirecciones.setBackgroundColor(getResources().getColor(R.color.tab_inactivated));
-					TabContactos.setBackgroundColor(getResources().getColor(R.color.tab_inactivated));
-				}
-				if(title.equalsIgnoreCase("Direcciones"))
-				{
-					TabInfo.setBackgroundColor(getResources().getColor(R.color.tab_inactivated));
-					TabDirecciones.setBackgroundColor(getResources().getColor(R.color.tab_activated));
-					TabContactos.setBackgroundColor(getResources().getColor(R.color.tab_inactivated));
-				}
-				if(title.equalsIgnoreCase("Contactos"))
-				{
-					TabInfo.setBackgroundColor(getResources().getColor(R.color.tab_inactivated));
-					TabDirecciones.setBackgroundColor(getResources().getColor(R.color.tab_inactivated));
-					TabContactos.setBackgroundColor(getResources().getColor(R.color.tab_activated));
-				}
+				setPageConfig(arg0);
 				
 			}});
 		pagerAdapter = new DetailsPageAdapter();
@@ -254,6 +238,32 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 		if(contacto != null)
 		{
 			renderContacto(rootView);
+		}
+		
+		
+		setPageConfig(PagerDetalles.getCurrentItem());
+	}
+	
+	private void setPageConfig(int page){
+		curentPage = page;
+		String title = pagerAdapter.getPageTitle(page).toString();
+		if(title.equalsIgnoreCase("Info"))
+		{
+			TabInfo.setBackgroundColor(getResources().getColor(R.color.tab_activated));
+			TabDirecciones.setBackgroundColor(getResources().getColor(R.color.tab_inactivated));
+			TabContactos.setBackgroundColor(getResources().getColor(R.color.tab_inactivated));
+		}
+		if(title.equalsIgnoreCase("Direcciones"))
+		{
+			TabInfo.setBackgroundColor(getResources().getColor(R.color.tab_inactivated));
+			TabDirecciones.setBackgroundColor(getResources().getColor(R.color.tab_activated));
+			TabContactos.setBackgroundColor(getResources().getColor(R.color.tab_inactivated));
+		}
+		if(title.equalsIgnoreCase("Contactos"))
+		{
+			TabInfo.setBackgroundColor(getResources().getColor(R.color.tab_inactivated));
+			TabDirecciones.setBackgroundColor(getResources().getColor(R.color.tab_inactivated));
+			TabContactos.setBackgroundColor(getResources().getColor(R.color.tab_activated));
 		}
 	}
 	
@@ -370,7 +380,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 							View.GONE);
 			}
 		}
-		FrameLayout fl = new FrameLayout(getActivity());
+		ScrollView fl = new ScrollView(getActivity());
 		((ViewGroup)linearLayoutRigth.getParent()).removeView(linearLayoutRigth);
 		fl.addView(linearLayoutRigth);
 		pagerAdapter.addView(fl);
@@ -468,7 +478,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 								.setVisibility(View.GONE);
 				}
 			}
-			fl = new FrameLayout(getActivity());
+			fl = new ScrollView(getActivity());
 			((ViewGroup)linearLayoutAdress.getParent()).removeView(linearLayoutAdress);
 			fl.addView(linearLayoutAdress);
 			pagerAdapter.addView(fl);
@@ -506,7 +516,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 					linearLayoutContact.addView(view_rowlist);
 				
 			}
-			fl = new FrameLayout(getActivity());
+			fl = new ScrollView(getActivity());
 			((ViewGroup)linearLayoutContact.getParent()).removeView(linearLayoutContact);
 			fl.addView(linearLayoutContact);
 			pagerAdapter.addView(fl);
@@ -527,7 +537,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 		setTextViewText(R.id.textView_client, client.getNombreCompleto());
 		TabInfo.setBackgroundColor(getResources().getColor(R.color.tab_activated));
 		
-		PagerDetalles.setAdapter(pagerAdapter);
+		PagerDetalles.setAdapter(pagerAdapter);		
 	}
 	
 	private void renderClienteJuridico(View rootView)
@@ -740,7 +750,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 								.setVisibility(View.GONE);
 				}
 			}
-			fl = new FrameLayout(getActivity());
+			fl = new ScrollView(getActivity());
 			((ViewGroup)linearLayoutAdress.getParent()).removeView(linearLayoutAdress);
 			fl.addView(linearLayoutAdress);
 			pagerAdapter.addView(fl);
@@ -778,7 +788,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 					linearLayoutContact.addView(view_rowlist);
 				
 			}
-			fl = new FrameLayout(getActivity());
+			fl = new ScrollView(getActivity());
 			((ViewGroup)linearLayoutContact.getParent()).removeView(linearLayoutContact);
 			fl.addView(linearLayoutContact);
 			pagerAdapter.addView(fl);

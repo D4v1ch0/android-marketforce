@@ -63,6 +63,10 @@ public class SearchableActivity extends BaseActivity
 			clientListFragment = (ClientListFragment) getFragment(R.id.content_transaction_list);
 		}
 		
+		if(hasFragment(R.id.content_transaction_detail)){
+			clientDetailFragment = (ClientDetailFragment)getFragment(R.id.content_transaction_detail);
+		}
+		
 		if(slidingPane.isOpen() && 
 				findViewById(R.id.content_transaction_list).getLayoutParams().width != LayoutParams.MATCH_PARENT)
 			mTwoPane = true;
@@ -112,13 +116,12 @@ public class SearchableActivity extends BaseActivity
 		selectedClientId = cliente.getID();
 		tipoPersona = cliente.getTipoPersona();
 		
-		if(!mTwoPane)
-			slidingPane.closePane();
-	
-		      			
 		clientDetailFragment = ClientDetailFragment.newInstance(cliente);
 		setVisibleEditActionButtons( selectedClientId != 0 );						
-		setFragment(R.id.content_transaction_detail, clientDetailFragment);			  
+		setFragment(R.id.content_transaction_detail, clientDetailFragment);	
+		
+		if(!mTwoPane)
+			slidingPane.closePane();		      							  
 	}
 
 	

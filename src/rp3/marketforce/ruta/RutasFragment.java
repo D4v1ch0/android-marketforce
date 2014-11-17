@@ -7,8 +7,10 @@ import rp3.widget.SlidingPaneLayout.PanelSlideListener;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.EditText;
@@ -22,7 +24,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	
 	public boolean mTwoPane = false;
 	private long selectedTransactionId;
-	
+	private String textSearch;
 //	private MenuItem menuItemActionEdit;
 //    private MenuItem menuItemActionDiscard;
 	
@@ -118,10 +120,10 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
   	 int searchPlateId = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
   	 EditText searchPlate = (EditText) searchView.findViewById(searchPlateId);
   	 searchPlate.setHintTextColor(getResources().getColor(R.color.color_hint));
-  	searchPlate.setHint(getActivity().getResources().getString(R.string.hint_search_transaction_rutas));
+  	 searchPlate.setHint(getActivity().getResources().getString(R.string.hint_search_transaction_rutas));
   	 searchPlate.setTextColor(getResources().getColor(R.color.apptheme_color));
   	 searchPlate.setBackgroundResource(R.drawable.apptheme_edit_text_holo_light);
-  	 
+  	   	  	 
 	 searchView.setOnQueryTextListener(new OnQueryTextListener() {
 			@Override
 			public boolean onQueryTextSubmit(String query) {
@@ -129,19 +131,24 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 					rutasListFragment.searchTransactions(query);
 				return true;
 			}
+					
 			
 			@Override
 			public boolean onQueryTextChange(String newText) {
-				if(newText.equalsIgnoreCase(""));
-				try
-				{
-					rutasListFragment.searchTransactions("");
+				if(TextUtils.isEmpty(newText) && !TextUtils.isEmpty(textSearch)){
+					try
+					{
+						rutasListFragment.searchTransactions("");
+					}
+					catch(Exception ex)
+					{
+						
+					}
 				}
-				catch(Exception ex)
-				{
-					
-				}
-				return false;
+				textSearch = newText;
+				
+				return true;
+				
 			}
 		});
 	}
