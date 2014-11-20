@@ -110,6 +110,14 @@
       IdRuta INTEGER,
       IdAgenda INTEGER, 
       IdTarea INTEGER,      
+      EstadoTarea TEXT
+      )
+	</statement>
+	
+	<statement>
+	  CREATE TABLE tbTarea(
+      _id INTEGER PRIMARY KEY,
+      IdTarea INTEGER,      
       NombreTarea TEXT,
       TipoTarea TEXT,
       EstadoTarea TEXT
@@ -119,16 +127,24 @@
 	<statement>
 	  CREATE TABLE tbAgendaTareaActividades(
       _id INTEGER PRIMARY KEY AUTOINCREMENT,
-      Descripcion TEXT,
       IdAgenda INTEGER,
       IdRuta INTEGER,
       IdTarea INTEGER,
       IdTareaActividad INTEGER,
+      IdTipoActividad INTEGER,
+      Resultado TEXT
+      )
+	</statement>
+	
+	<statement>
+	  CREATE TABLE tbActividad(
+      _id INTEGER PRIMARY KEY AUTOINCREMENT,
+      Descripcion TEXT,
+      IdTarea INTEGER,
+      IdTareaActividad INTEGER,
       IdTareaActividadPadre INTEGER,
-      IdTareaOpcion INTEGER,
       IdTipoActividad INTEGER,
       Orden INTEGER,
-      Resultado TEXT,
       Tipo TEXT
       )
 	</statement>
