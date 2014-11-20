@@ -305,7 +305,10 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 	}
 	
 	public String getURLFoto() {
-		return URLFoto;
+		if(URLFoto != null)
+			return URLFoto;
+		else
+			return "";
 	}
 
 	public void setURLFoto(String URLFoto) {
@@ -385,6 +388,35 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			list.add(cl);
 		}
 		return list;
+	}
+	
+	public static List<Cliente> getClientAndContacts(DataBase db)
+	{		
+		String query = QueryDir.getQuery( Contract.Cliente.QUERY_CLIENTES_AND_CONTACTS );
+		
+		Cursor c = db.rawQuery(query);
+		
+		List<Cliente> list = new ArrayList<Cliente>();
+		while(c.moveToNext()){
+			Cliente cl = new Cliente();
+			cl.setID(c.getInt(0));
+			cl.setNombre1(CursorUtils.getString(c,Contract.ClientExt.COLUMN_NOMBRE1));
+			cl.setApellido1(CursorUtils.getString(c,Contract.ClientExt.COLUMN_APELLIDO1));
+			cl.setIdentificacion(CursorUtils.getString(c,Contract.ClientExt.COLUMN_IDENTIFICACION));
+			cl.setCorreoElectronico(CursorUtils.getString(c,Contract.ClientExt.COLUMN_CORREO_ELECTRONICO));	
+			cl.setDireccion(CursorUtils.getString(c,Contract.ClientExt.COLUMN_DIRECCION));
+			cl.setTelefono(CursorUtils.getString(c,Contract.ClientExt.COLUMN_TELEFONO));
+			cl.setTipoPersona(CursorUtils.getString(c, Contract.Cliente.COLUMN_TIPO_PERSONA));
+			
+			ClienteDireccion cd = new ClienteDireccion();
+			cd.setDireccion(CursorUtils.getString(c,Contract.ClientExt.COLUMN_DIRECCION));
+			cd.setTelefono1(CursorUtils.getString(c,Contract.ClientExt.COLUMN_TELEFONO));
+			
+			
+			list.add(cl);
+		}
+		return list;
+
 	}
 
 	

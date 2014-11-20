@@ -8,72 +8,87 @@
     android:layout_marginRight="10dp"
     android:baselineAligned="false" >
 
-    <LinearLayout
-        android:id="@+id/linearLayout_content_rigth"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:layout_height="wrap_content" >
 
-        <TextView
-            android:id="@+id/textView_datos_personales"
+        <LinearLayout
+            android:id="@+id/linearLayout_content_rigth"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/color_background_header"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:padding="10dp"
-            android:singleLine="true"
-            android:text="@string/label_datos_personales"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/color_background_white"
-            android:visibility="gone" />
+            android:orientation="vertical" >
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/textView_datos_personales"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/color_background_header"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:text="@string/label_datos_personales"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/color_background_white"
+                android:visibility="gone" />
+        </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/linearLayout_content_adress"
+    </FrameLayout>
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone" >
+        android:layout_height="wrap_content" >
 
-        <TextView
-            android:id="@+id/textView_datos_contactos"
+        <LinearLayout
+            android:id="@+id/linearLayout_content_adress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/color_background_header"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:padding="10dp"
-            android:singleLine="true"
-            android:text="@string/label_datos_contacto"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/color_background_white"
-            android:visibility="gone" />
+            android:orientation="vertical"
+            android:visibility="gone" >
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/textView_datos_contactos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/color_background_header"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:text="@string/label_datos_contacto"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/color_background_white"
+                android:visibility="gone" />
+        </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/linearLayout_content_contactos"
+    </FrameLayout>
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone" >
+        android:layout_height="wrap_content" >
 
-        <TextView
-            android:id="@+id/textView_datos_personas"
+        <LinearLayout
+            android:id="@+id/linearLayout_content_contactos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/color_background_header"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:padding="10dp"
-            android:singleLine="true"
-            android:text="@string/label_datos_personas"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/color_background_white"
-            android:visibility="gone" />
+            android:orientation="vertical"
+            android:visibility="gone" >
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/textView_datos_personas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/color_background_header"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:text="@string/label_datos_personas"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/color_background_white"
+                android:visibility="gone" />
+        </LinearLayout>
+
+    </FrameLayout>
 
 </LinearLayout>

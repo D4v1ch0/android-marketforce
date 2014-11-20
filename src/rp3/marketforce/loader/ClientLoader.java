@@ -12,12 +12,14 @@ public class ClientLoader extends
 	private DataBase db;
 	private boolean flag;
 	private String search;
+	private boolean withContacts;
 
-	public ClientLoader(Context context, DataBase db, boolean flag, String search) {
+	public ClientLoader(Context context, DataBase db, boolean flag, String search, boolean withContacts) {
 		super(context);
 		this.db = db;
 		this.flag = flag;
 		this.search = search;
+		this.withContacts = withContacts;
 	}
 
 	@Override
@@ -25,7 +27,10 @@ public class ClientLoader extends
 		List<Cliente> result = null;
 		
 		if(flag)
-		   result = Cliente.getCliente(db);
+			if(withContacts)
+				result = Cliente.getClientAndContacts(db);
+			else
+				result = Cliente.getCliente(db);
 		else
 			result  = Cliente.getClientSearch(db, search);
 		

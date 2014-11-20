@@ -55,5 +55,6 @@
     <string name="label_button_fin">Finalizar</string>
     <string name="label_button_aceptar_act">Aceptar</string>
     <string name="label_button_cancelar_act">Cancelar</string>
+    <string name="menu_toggle_contactos">Ver Contactos</string>
 
 </resources>

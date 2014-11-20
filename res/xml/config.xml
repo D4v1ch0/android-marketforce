@@ -79,6 +79,11 @@
                     <webMethod>GET</webMethod>
                 </method>
                 <method>
+                    <name>GetTareas</name>
+                    <action>tarea/get</action>
+                    <webMethod>GET</webMethod>
+                </method>
+                <method>
                     <name>SetUbicacion</name>
                     <action>agente/setubicacion?latitud=@latitud&amp;longitud=@longitud</action>
                     <webMethod>POST</webMethod>

@@ -53,7 +53,7 @@ public class Rutas {
 			
 			webService.addParameter("@fechainicio", inicio);
 			webService.addParameter("@fechafin", fin);
-			webService.addParameter("@incluiractividades", true);
+			//webService.addParameter("@incluiractividades", false);
 			
 			try
 			{			
@@ -121,52 +121,7 @@ public class Rutas {
 							agendaTarea.setEstadoTarea(str.getString("EstadoTarea"));
 							agendaTarea.setTipoTarea(str.getString("TipoTarea"));
 							
-							rp3.marketforce.models.AgendaTarea.insert(db, agendaTarea);
-							rp3.marketforce.models.AgendaTareaActividades.deleteActividades(db, agendaTarea.getIdRuta(), agendaTarea.getIdAgenda(),
-									agendaTarea.getIdTarea());
-							
-							JSONArray acts = str.getJSONArray("AgendaTareaActividades");
-							
-							for(int k=0; k < acts.length(); k++)
-							{
-								JSONObject act = acts.getJSONObject(k);
-								rp3.marketforce.models.AgendaTareaActividades actividad = new rp3.marketforce.models.AgendaTareaActividades();
-								
-								actividad.setIdAgenda(act.getInt("IdAgenda"));
-								actividad.setDescripcion(act.getString("Descripcion"));
-								actividad.setOrden(act.getInt("Orden"));
-								actividad.setResultado(act.getString("Resultado"));
-								actividad.setIdRuta(act.getInt("IdRuta"));
-								actividad.setIdTareaActividad(act.getInt("IdTareaActividad"));
-								if(!act.isNull("IdTareaActividadPadre"))
-									actividad.setIdTareaActividadPadre(act.getInt("IdTareaActividadPadre"));
-								actividad.setIdTarea(act.getInt("IdTarea"));
-								if(!act.isNull("IdTareaOpcion"))
-									actividad.setIdTareaOpcion(act.getInt("IdTareaOpcion"));
-								actividad.setTipo(act.getString("Tipo"));
-								actividad.setIdTipoActividad(act.getInt("IdTipoActividad"));
-								
-								rp3.marketforce.models.AgendaTareaActividades.insert(db, actividad);
-								rp3.marketforce.models.AgendaTareaOpciones.deleteOpciones(db, actividad.getIdRuta(), actividad.getIdAgenda(), 
-										 actividad.getIdTarea(), actividad.getIdTareaActividad());
-								
-								JSONArray opcs = act.getJSONArray("AgendaTareaOpciones");
-								
-								for(int l=0; l < opcs.length(); l++){
-									JSONObject opc = opcs.getJSONObject(l);
-									rp3.marketforce.models.AgendaTareaOpciones opcion = new rp3.marketforce.models.AgendaTareaOpciones();
-									
-									opcion.setDescripcion(opc.getString("Descripcion"));
-									opcion.setIdAgenda(opc.getInt("IdAgenda"));
-									opcion.setIdRuta(opc.getInt("IdRuta"));
-									opcion.setIdTareaActividad(opc.getInt("IdTareaActividad"));
-									opcion.setIdTarea(opc.getInt("IdTarea"));
-									opcion.setOrden(opc.getInt("Orden"));
-									
-									rp3.marketforce.models.AgendaTareaOpciones.delete(db, opcion);
-									rp3.marketforce.models.AgendaTareaOpciones.insert(db, opcion);
-								}
-							}
+							rp3.marketforce.models.AgendaTarea.insert(db, agendaTarea);							
 						}
 						
 					} catch (JSONException e) {

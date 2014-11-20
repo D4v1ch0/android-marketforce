@@ -8,11 +8,14 @@ import rp3.marketforce.models.ClienteDireccion;
 import rp3.marketforce.models.Contacto;
 import rp3.marketforce.utils.DetailsPageAdapter;
 import rp3.marketforce.utils.DrawableManager;
+import rp3.marketforce.utils.Utils;
 import rp3.util.Screen;
 import rp3.widget.ViewPager;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
@@ -66,6 +69,9 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	private static final int ITEM_GENERO = 3;
 	private static final int ITEM_ESTADO_CIVIL = 4;
 	private static final int ITEM_CARGO = 5;
+	private static final int ITEM_FONO1 = 6;
+	private static final int ITEM_FONO2 = 7;
+	
 
 	/*
 	 * Posiciones y pivots de campos para direcciones
@@ -140,6 +146,16 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 		}
 		
 		if (clientId != 0) {
+			super.setContentView(R.layout.fragment_cliente_detalle);
+		} else {
+			super.setContentView(R.layout.base_content_no_selected_item);
+		}
+	}
+
+	@Override
+	public void onResume() {		
+		super.onResume();
+		if (clientId != 0) {
 			if(tipoPersona != null && tipoPersona.equalsIgnoreCase("C"))
 			{
 				contacto = Contacto.getContactoId(getDataBase(), clientId);
@@ -150,40 +166,25 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 			}
 		}
 		
-		if (client != null || contacto != null) {
-			super.setContentView(R.layout.fragment_cliente_detalle);
-		} else {
-			super.setContentView(R.layout.base_content_no_selected_item);
-		}
-
-	}
-
-	@Override
-	public void onResume() {		
-		super.onResume();
-	}
-	
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);		
-
-		if(getParentFragment()!=null)
-			clienteDetailFragmentCallback = (ClienteDetailFragmentListener)getParentFragment();
-		else{
-			clienteDetailFragmentCallback = (ClienteDetailFragmentListener)activity;
-			setRetainInstance(true);
-		}
-	}	
-
-	@SuppressLint("InflateParams")
-	@Override
-	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
-
 		if(client==null && contacto==null) return;
-		PagerDetalles = (ViewPager) rootView.findViewById(R.id.detail_client_pager);
-		TabInfo = (ImageButton) rootView.findViewById((R.id.detail_tab_info));
-		TabDirecciones = (ImageButton) rootView.findViewById((R.id.detail_tab_direccion));
-		TabContactos = (ImageButton) rootView.findViewById((R.id.detail_tab_contactos));
+		PagerDetalles = (ViewPager) getRootView().findViewById(R.id.detail_client_pager);
+		TabInfo = (ImageButton) getRootView().findViewById((R.id.detail_tab_info));
+		TabDirecciones = (ImageButton) getRootView().findViewById((R.id.detail_tab_direccion));
+		TabContactos = (ImageButton) getRootView().findViewById((R.id.detail_tab_contactos));
+		
+		if(linearLayoutRigth == null)
+		{
+			linearLayoutRigth = (LinearLayout) getRootView()
+					.findViewById(R.id.linearLayout_content_rigth);
+			linearLayoutAdress = (LinearLayout) getRootView()
+					.findViewById(R.id.linearLayout_content_adress);
+			linearLayoutContact = (LinearLayout) getRootView()
+					.findViewById(R.id.linearLayout_content_contactos);
+		}
+
+		linearLayoutRigth.removeAllViews();
+		linearLayoutAdress.removeAllViews();
+		linearLayoutContact.removeAllViews();
 		
 		TabInfo.setOnClickListener(new OnClickListener(){
 
@@ -225,23 +226,53 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 				
 			}});
 		pagerAdapter = new DetailsPageAdapter();
+		
+		
+		setPageConfig(PagerDetalles.getCurrentItem());
 		if (client != null) {
 			if(client.getTipoPersona().equalsIgnoreCase("N"))
 			{
-				renderClienteNatural(rootView);
+				renderClienteNatural(getRootView());
 			}
 			if(client.getTipoPersona().equalsIgnoreCase("J"))
 			{
-				renderClienteJuridico(rootView);
+				renderClienteJuridico(getRootView());
 			}
 		}
 		if(contacto != null)
 		{
-			renderContacto(rootView);
+			renderContacto(getRootView());
 		}
-		
-		
-		setPageConfig(PagerDetalles.getCurrentItem());
+	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+	}
+	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);		
+
+		try
+		{
+			if(getParentFragment()!=null)
+				clienteDetailFragmentCallback = (ClienteDetailFragmentListener)getParentFragment();
+			else{
+				clienteDetailFragmentCallback = (ClienteDetailFragmentListener)activity;
+				setRetainInstance(true);
+			}
+		}
+		catch(Exception ex)
+		{
+			getActivity().getActionBar().hide();
+		}
+	}	
+
+	@SuppressLint("InflateParams")
+	@Override
+	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
+
 	}
 	
 	private void setPageConfig(int page){
@@ -514,6 +545,28 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 							.setText(client.getContactos().get(x).getNombre() + " " +
 									client.getContactos().get(x).getApellido());
 					linearLayoutContact.addView(view_rowlist);
+					
+					view_rowlist.setClickable(true);
+					
+					final int position = x;
+					view_rowlist.setOnClickListener(new OnClickListener(){
+
+						@Override
+						public void onClick(View v) {
+							if((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE)
+							{
+								ClientDetailFragment transactionDetailFragment = ClientDetailFragment.newInstance(client);
+								showDialogFragment(transactionDetailFragment, "Contacto");
+							}
+							else
+							{
+								Intent intent = new Intent(getActivity(), ClientDetailActivity.class);
+								intent.putExtra(ARG_ITEM_ID, client.getContactos().get(position).getId());
+								intent.putExtra(ARG_ITEM_TIPO_PERSONA, "C");
+								startActivity(intent);
+							}
+							
+						}});
 				
 			}
 			fl = new ScrollView(getActivity());
@@ -526,7 +579,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 		 */
 		//setImageViewBitmapFromInternalStorageAsync(R.id.imageView_foto, client.getFotoFileName());
 		DManager.fetchDrawableOnThread(PreferenceManager.getString("server") + 
-				rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + client.getURLFoto(),
+				rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + Utils.getImageDPISufix(getActivity(), client.getURLFoto()),
 				(ImageView) this.getRootView().findViewById(R.id.imageView_foto));
 		setTextViewText(R.id.textView_tipo_canal,
 				client.getCanalDescripcion());
@@ -555,13 +608,6 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 				.getStringArray(R.array.testArrayDetailsJuridico);
 		inflater = (LayoutInflater) this.getActivity().getSystemService(
 				Context.LAYOUT_INFLATER_SERVICE);
-
-		linearLayoutRigth = (LinearLayout) rootView
-				.findViewById(R.id.linearLayout_content_rigth);
-		linearLayoutAdress = (LinearLayout) rootView
-				.findViewById(R.id.linearLayout_content_adress);
-		linearLayoutContact = (LinearLayout) rootView
-				.findViewById(R.id.linearLayout_content_contactos);
 
 		String etiqueta = "";
 		for (int x = 0; x < testArrayDetails.length; x++) {
@@ -758,8 +804,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 		
 		if(client.getContactos() != null && client.getContactos().size() > 0)
 		{
-			setViewVisibility(R.id.linearLayout_content_contactos,
-					View.VISIBLE);
+			linearLayoutContact.setVisibility(View.VISIBLE);
 			setViewVisibility(R.id.detail_tab_contactos, View.VISIBLE);
 			testArrayDetails = this.getActivity().getResources()
 					.getStringArray(R.array.testArrayDetails);
@@ -786,6 +831,32 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 							.setText(client.getContactos().get(x).getNombre() + " " +
 									client.getContactos().get(x).getApellido());
 					linearLayoutContact.addView(view_rowlist);
+					
+					float prueba = ((TextView) view_rowlist
+							.findViewById(R.id.textView_content)).getTextSize();
+					float prueba2 = getResources().getDimensionPixelSize(R.dimen.text_medium_size);
+					
+					view_rowlist.setClickable(true);
+					
+					final int position = x;
+					view_rowlist.setOnClickListener(new OnClickListener(){
+
+						@Override
+						public void onClick(View v) {
+							if((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE)
+							{
+								ClientDetailFragment transactionDetailFragment = ClientDetailFragment.newInstance(client);
+								showDialogFragment(transactionDetailFragment, "Contacto");
+							}
+							else
+							{
+								Intent intent = new Intent(getActivity(), ClientDetailActivity.class);
+								intent.putExtra(ARG_ITEM_ID, client.getContactos().get(position).getId());
+								intent.putExtra(ARG_ITEM_TIPO_PERSONA, "C");
+								startActivity(intent);
+							}
+							
+						}});
 				
 			}
 			fl = new ScrollView(getActivity());
@@ -798,7 +869,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 		 */
 		//setImageViewBitmapFromInternalStorageAsync(R.id.imageView_foto, client.getFotoFileName());
 		DManager.fetchDrawableOnThread(PreferenceManager.getString("server") + 
-				rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + client.getURLFoto(),
+				rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + Utils.getImageDPISufix(getActivity(), client.getURLFoto()),
 				(ImageView) this.getRootView().findViewById(R.id.imageView_foto));
 		setTextViewText(R.id.textView_tipo_canal,
 				client.getCanalDescripcion());
@@ -806,7 +877,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 				client.getTipoClienteDescripcion());
 		((RatingBar) rootView.findViewById(R.id.ratingBar_status))
 				.setRating(client.getCalificacion());
-		setTextViewText(R.id.textView_client, client.getNombreCompleto());
+		setTextViewText(R.id.textView_client, client.getNombreCompleto().trim());
 		
 		PagerDetalles.setAdapter(pagerAdapter);
 		
@@ -831,11 +902,6 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 				.getStringArray(R.array.testArrayDetails);
 		inflater = (LayoutInflater) this.getActivity().getSystemService(
 				Context.LAYOUT_INFLATER_SERVICE);
-
-		linearLayoutRigth = (LinearLayout) rootView
-				.findViewById(R.id.linearLayout_content_rigth);
-		linearLayoutAdress = (LinearLayout) rootView
-				.findViewById(R.id.linearLayout_content_adress);
 
 		String etiqueta = "";
 		for (int x = 0; x < testArrayDetails.length; x++) {
@@ -862,6 +928,23 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 						str_titulo = "" + contacto.getCargo();
 
 				flag = false;
+				break;
+				
+			case ITEM_FONO1:
+				str_titulo = "";
+				etiqueta = testArrayDetails[x];
+					if (!contacto.getTelefono1().equals("null"))
+						str_titulo = ""
+								+ contacto.getTelefono1();
+
+				break;
+
+			case ITEM_FONO2:
+				str_titulo = "";
+				etiqueta = testArrayDetails[x];
+					if (!contacto.getTelefono2().equals("null"))
+						str_titulo = "" + contacto.getTelefono2();
+
 				break;
 
 			default:
@@ -900,19 +983,21 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 		if (contacto.getIdClienteDireccion() != 0) {
 			setViewVisibility(R.id.linearLayout_content_adress,
 					View.VISIBLE);
+			setViewVisibility(R.id.detail_tab_direccion, View.VISIBLE);
 			testArrayDetailsAdress = this.getActivity().getResources()
 					.getStringArray(R.array.testArrayDetailsAdress);
 
 			LinearLayout.LayoutParams par = new LinearLayout.LayoutParams(
 					LinearLayout.LayoutParams.MATCH_PARENT, 4);
 			par.setMargins(0, 10, 0, 15);
+			ClienteDireccion cd = ClienteDireccion.getClienteDireccionIdDireccion(getDataBase(), contacto.getIdCliente(), contacto.getIdClienteDireccion());
 
 				for (int y = 0; y < testArrayDetailsAdress.length; y++) {
-
+					etiqueta = "";
 					switch (y) {
 					case ITEM_DIRECCION:
 						str_titulo = "";
-						ClienteDireccion cd = ClienteDireccion.getClienteDireccionIdDireccion(getDataBase(), contacto.getIdCliente(), contacto.getIdClienteDireccion());
+						etiqueta = testArrayDetails[y];
 						if (cd != null)
 							if (!cd.getDireccion().equals("null"))
 								str_titulo = ""
@@ -922,16 +1007,18 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 
 					case ITEM_TELEFONO_1:
 						str_titulo = "";
-							if (!contacto.getTelefono1().equals("null"))
+						etiqueta = testArrayDetails[y];
+							if (!cd.getTelefono1().equals("null"))
 								str_titulo = ""
-										+ contacto.getTelefono1();
+										+ cd.getTelefono1();
 
 						break;
 
 					case ITEM_TELEFONO_2:
 						str_titulo = "";
-							if (!contacto.getTelefono2().equals("null"))
-								str_titulo = "" + contacto.getTelefono2();
+						etiqueta = testArrayDetails[y];
+							if (!cd.getTelefono2().equals("null"))
+								str_titulo = "" + cd.getTelefono2();
 
 						break;
 
@@ -939,20 +1026,23 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 						break;
 					}
 
-					View view_rowlist = inflater.inflate(
-							R.layout.rowlist_client_detail, null);
-					((TextView) view_rowlist
-							.findViewById(R.id.textView_title)).setText(""
-							+ testArrayDetailsAdress[y]);
-
-					((TextView) view_rowlist
-							.findViewById(R.id.textView_content))
-							.setText(str_titulo);
-					linearLayoutAdress.addView(view_rowlist);
-
-					if (y + 1 == testArrayDetailsAdress.length)
-						view_rowlist.findViewById(R.id.view_bottom)
-								.setVisibility(View.GONE);
+					if(!etiqueta.equalsIgnoreCase(""))
+					{
+						View view_rowlist = inflater.inflate(
+								R.layout.rowlist_client_detail, null);
+						((TextView) view_rowlist
+								.findViewById(R.id.textView_title)).setText(""
+								+ testArrayDetailsAdress[y]);
+	
+						((TextView) view_rowlist
+								.findViewById(R.id.textView_content))
+								.setText(str_titulo);
+						linearLayoutAdress.addView(view_rowlist);
+	
+						if (y + 1 == testArrayDetailsAdress.length)
+							view_rowlist.findViewById(R.id.view_bottom)
+									.setVisibility(View.GONE);
+					}
 				}
 				fl = new FrameLayout(getActivity());
 				((ViewGroup)linearLayoutAdress.getParent()).removeView(linearLayoutAdress);
@@ -966,9 +1056,36 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 		 */
 		//setImageViewBitmapFromInternalStorageAsync(R.id.imageView_foto, client.getFotoFileName());
 		DManager.fetchDrawableOnThread(PreferenceManager.getString("server") + 
-				rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + contacto.getURLFoto(),
+				rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + Utils.getImageDPISufix(getActivity(), contacto.getURLFoto()),
 				(ImageView) this.getRootView().findViewById(R.id.imageView_foto));
+		setTextViewText(R.id.textView_tipo_canal,
+				contacto.getCargo());
+		setTextViewText(R.id.textView_tipo_cliente,
+				contacto.getEmpresa().trim());
+		((TextView) this.getRootView().findViewById(R.id.textView_tipo_cliente)).setClickable(true);
+		((TextView) this.getRootView().findViewById(R.id.textView_tipo_cliente)).setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				if((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE)
+				{
+					ClientDetailFragment transactionDetailFragment = ClientDetailFragment.newInstance(client);
+					showDialogFragment(transactionDetailFragment, "Cliente");
+				}
+				else
+				{
+					Intent intent = new Intent(getActivity(), ClientDetailActivity.class);
+					intent.putExtra(ARG_ITEM_ID, contacto.getIdCliente());
+					intent.putExtra(ARG_ITEM_TIPO_PERSONA, "J");
+					startActivity(intent);
+				}
+				
+			}});
 		setTextViewText(R.id.textView_client, contacto.getNombre() + " " + contacto.getApellido());
+		
+		PagerDetalles.setAdapter(pagerAdapter);
+		TabInfo.setBackgroundColor(getResources().getColor(R.color.tab_activated));
+		
 	}
 
 	@Override

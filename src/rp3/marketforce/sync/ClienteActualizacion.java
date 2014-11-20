@@ -29,7 +29,7 @@ public class ClienteActualizacion {
 				
 				data.put("IdCliente", cliente.getID());
 				data.put("CorreoElectronico", cliente.getCorreoElectronico());
-				data.put("EstadoCivil", cliente.getEstadoCivil());
+				//data.put("EstadoCivil", cliente.getEstadoCivil());
 				data.put("FechaNacimientoTicks", Convert.getDotNetTicksFromDate(cliente.getFechaNacimiento()));
 				
 				JSONArray direcciones = new JSONArray();

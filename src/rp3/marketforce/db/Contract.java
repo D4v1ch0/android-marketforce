@@ -67,6 +67,7 @@ public final class Contract {
 		public static final String FIELD_TIPOIDENTIFICACION_NOMBRE = rp3.data.models.Contract.IdentificationType.TABLE_NAME + "_" + rp3.data.models.Contract.IdentificationType.COLUMN_NAME ;
 		
 		public static final String QUERY_CLIENTES = "Clientes";
+		public static final String QUERY_CLIENTES_AND_CONTACTS = "ClientesAndContacts";
 		public static final String QUERY_CLIENTE_BY_ID = "ClienteById";
 		public static final String QUERY_CLIENT_SEARCH = "SimpleClientSearch";
 		

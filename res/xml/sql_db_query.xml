@@ -163,13 +163,47 @@
         tbContactoExt.Telefono1 AS tbContactoExt_Telefono1,
         tbContactoExt.Telefono2 AS tbContactoExt_Telefono2,
         tbContactoExt.Cargo AS tbContactoExt_Cargo,
-        tbContactoExt.Correo AS tbContactoExt_Correo
+        tbContactoExt.Correo AS tbContactoExt_Correo,
+        tbClienteExt.NombreCompleto AS tbClienteExt_NombreCompleto
         FROM tbContacto
         JOIN tbContactoExt
         ON tbContacto._id = tbContactoExt.docid
+        JOIN tbClienteExt
+    	ON tbContacto.IdCliente = tbClienteExt.docid
         WHERE tbContacto._id = ?
         ORDER BY  tbContactoExt.Apellido
      </statement>
+     
+     <statement name="ClientesAndContacts">
+        SELECT 
+        tbCliente._id AS _id,
+        tbCliente.TipoPersona,
+        tbClienteExt.Nombre1,
+       	tbClienteExt.Apellido1 ,
+       	tbClienteExt.Identificacion ,
+       	tbClienteExt.CorreoElectronico,
+       	tbClienteExt.Direccion,
+       	tbClienteExt.Telefono
+       	FROM tbClienteExt       	 
+       	INNER JOIN tbCliente 
+       	ON tbCliente._id = tbClienteExt.docid       	 
+        UNION ALL
+        SELECT  
+        tbContacto._id, 
+        'C' AS TipoPersona,
+        tbContactoExt.Nombre AS Nombre1,
+        tbContactoExt.Apellido AS Apellido1,
+        '' AS Identificacion,
+        tbContactoExt.Correo AS CorreoElectronico,
+        tbClienteDireccion.Direccion AS Direccion,
+        tbContactoExt.Telefono1 AS Telefono
+        FROM tbContactoExt
+        INNER JOIN tbContacto
+        ON tbContacto._id = tbContactoExt.docid
+        JOIN tbClienteDireccion
+        ON tbContacto.IdCliente = tbClienteDireccion.IdCliente 
+        AND tbContacto.IdClienteDireccion = tbClienteDireccion.IdClienteDireccion       	
+    </statement>
     
 	 <statement name="SimpleClientSearch">
         SELECT 

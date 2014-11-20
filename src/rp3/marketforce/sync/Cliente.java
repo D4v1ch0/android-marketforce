@@ -84,8 +84,10 @@ public class Cliente {
 							clienteDir.setIdCiudad(str.getInt("IdCiudad"));
 							clienteDir.setIdCliente(str.getLong("IdCliente"));							
 							clienteDir.setIdClienteDireccion(str.getInt("IdClienteDireccion"));
-							clienteDir.setLatitud(str.getDouble("Latitud"));
-							clienteDir.setLongitud(str.getDouble("Longitud"));
+							if(!str.isNull("Latitud"))
+								clienteDir.setLatitud(str.getDouble("Latitud"));
+							if(!str.isNull("Longitud"))
+								clienteDir.setLongitud(str.getDouble("Longitud"));
 							clienteDir.setReferencia(""+str.getString("Referencia"));
 							clienteDir.setTelefono1(""+str.getString("Telefono1"));
 							clienteDir.setTelefono2(""+str.getString("Telefono2"));

@@ -74,7 +74,7 @@
             android:name="rp3.marketforce.cliente.ClientDetailActivity"
             android:label="@string/app_name"
                         android:configChanges="orientation|keyboardHidden|screenSize"
-            >
+            android:theme="@style/MyAppTheme">
         </activity>
         <activity
             android:name="rp3.marketforce.ruta.RutasDetailActivity"

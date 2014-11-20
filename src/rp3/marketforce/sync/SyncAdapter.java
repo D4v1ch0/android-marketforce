@@ -28,7 +28,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 			ContentProviderClient provider, SyncResult syncResult) {		
 		super.onPerformSync(account, extras, authority, provider, syncResult);	
 		
-		//android.os.Debug.waitForDebugger();
+		android.os.Debug.waitForDebugger();
 		String syncType = extras.getString(ARG_SYNC_TYPE);
 		
 		DataBase db = null;		
@@ -63,6 +63,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 				
 				if(result == SYNC_EVENT_SUCCESS){
 					result = rp3.marketforce.sync.Rutas.executeSync(db,null,null);				
+					addDefaultMessage(result);
+				}
+				
+				if(result == SYNC_EVENT_SUCCESS){
+					result = rp3.marketforce.sync.Tareas.executeSync(db,null,null);				
 					addDefaultMessage(result);
 				}
 				

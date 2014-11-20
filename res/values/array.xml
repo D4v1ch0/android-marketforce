@@ -8,6 +8,8 @@
     	<item>Género</item>
     	<item>Estado Civil</item>
     	<item>Cargo</item>
+    	<item>Teléfono 1</item>
+    	<item>Teléfono 2</item>
      </array>
      
     <array name="testArrayDetailsJuridico">  

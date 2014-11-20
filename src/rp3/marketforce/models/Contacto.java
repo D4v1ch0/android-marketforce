@@ -26,6 +26,7 @@ public class Contacto extends rp3.data.entity.EntityBase<Contacto>{
 	private String correo;
 	private String cargo;
 	private String URLFoto;
+	private String empresa;
 	
 	@Override
 	public long getID() {
@@ -131,6 +132,12 @@ public class Contacto extends rp3.data.entity.EntityBase<Contacto>{
 		this.idContacto = idContacto;
 	}
 	
+	public String getEmpresa() {
+		return empresa;
+	}
+	public void setEmpresa(String empresa) {
+		this.empresa = empresa;
+	}
 	@Override
 	protected boolean insertDb(DataBase db) {
 		boolean result = super.insertDb(db);
@@ -157,6 +164,7 @@ public class Contacto extends rp3.data.entity.EntityBase<Contacto>{
 			do
 			{
 				Contacto setter = new Contacto();
+				setter.setId(CursorUtils.getLong(s, Contract.Contacto._ID));
 				setter.setApellido(CursorUtils.getString(s, Contract.Contacto.FIELD_APELLIDO));
 				setter.setNombre(CursorUtils.getString(s, Contract.Contacto.FIELD_NOMBRE));
 				setter.setIdCliente(CursorUtils.getLong(s, Contract.Contacto.FIELD_ID_CLIENTE));
@@ -192,6 +200,7 @@ public class Contacto extends rp3.data.entity.EntityBase<Contacto>{
 				setter.setTelefono1(CursorUtils.getString(s, Contract.Contacto.FIELD_TELEFONO1));
 				setter.setTelefono2(CursorUtils.getString(s, Contract.Contacto.FIELD_TELEFONO2));
 				setter.setURLFoto(CursorUtils.getString(s, Contract.Contacto.FIELD_URL_FOTO));
+				setter.setEmpresa(CursorUtils.getString(s, Contract.Cliente.FIELD_NOMBRE_COMPLETO));
 
 		}
 		s.close();

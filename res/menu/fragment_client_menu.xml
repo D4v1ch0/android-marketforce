@@ -34,4 +34,5 @@
           android:actionViewClass="android.widget.SearchView"   
           android:showAsAction="always|collapseActionView"          
           />
+      <item android:id="@+id/action_contacts" android:title="@string/menu_toggle_contactos" android:checked="false" android:checkable="true"></item>
 </menu>

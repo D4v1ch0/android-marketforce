@@ -139,5 +139,4 @@ public class DrawableManager {
         HttpResponse response = httpClient.execute(request);
         return response.getEntity().getContent();
     }
-
 }

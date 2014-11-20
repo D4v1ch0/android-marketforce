@@ -41,6 +41,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
     public LinearLayout linearLayout_rootParent;
     
     private LoaderCliente loaderCliente;
+    private boolean isContacts = false;
     
     private Menu menu;
     
@@ -186,6 +187,26 @@ public class ClientListFragment extends rp3.app.BaseFragment {
      	 
      	 if(item.getItemId() == R.id.item_order_name || item.getItemId() == R.id.item_order_last_name){
      		 callOrderBy(item.getItemId());
+     		 return true;
+     	 }
+     	 if(item.getItemId() == R.id.action_contacts)
+     	 {
+     		 if(isContacts)
+     		 {
+     			 isContacts = false;
+     			 menu.findItem(R.id.action_contacts).setChecked(false);
+     		 }
+     		 else
+     		 {
+     			 isContacts = true;
+     			 menu.findItem(R.id.action_contacts).setChecked(true);
+     		 }
+     		 
+     		Bundle args = new Bundle();
+    		args.putString(LoaderCliente.STRING_SEARCH, "");
+    		args.putBoolean(LoaderCliente.STRING_BOOLEAN, true);
+    	    getLoaderManager().restartLoader(0, args, loaderCliente);
+     		 
      		 return true;
      	 }
 	    	
@@ -334,7 +355,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
     		Search = bundle.getString(STRING_SEARCH);
     		flag = bundle.getBoolean(STRING_BOOLEAN);
     		
-			return new ClientLoader(getActivity(), getDataBase(), flag, Search);
+			return new ClientLoader(getActivity(), getDataBase(), flag, Search, isContacts);
     		
 		}
 
@@ -345,6 +366,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 			lista = data;			
 			OrderBy(ORDER_BY_NAME);
 			clienteListFragmentCallback.onFinalizaConsulta();
+			adapter.notifyDataSetChanged();
 		}
 
 		@Override

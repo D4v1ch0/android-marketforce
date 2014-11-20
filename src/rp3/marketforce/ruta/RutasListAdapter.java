@@ -6,7 +6,6 @@ import java.util.Date;
 
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
-import rp3.marketforce.cliente.ClientFragment;
 import rp3.marketforce.headerlistview.SectionAdapter;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.ruta.RutasListFragment.TransactionListFragmentListener;
@@ -48,7 +47,7 @@ public class RutasListAdapter extends SectionAdapter{
 	
 	@Override
 	public Object getItem(int pos) {	
-		return null;
+		return list_agenda.get(pos);
 	}
 	
 	@Override
@@ -58,7 +57,7 @@ public class RutasListAdapter extends SectionAdapter{
 
 	@Override
 	public int numberOfSections() {
-		return header.size();
+		return list_agenda.size();
 	}
 
 	@Override
@@ -79,7 +78,7 @@ public class RutasListAdapter extends SectionAdapter{
 //		if (convertView == null)
 	      convertView = (View) inflater.inflate(this.contex.getApplicationContext().getResources().getLayout(R.layout.headerlist_ruta_list), null);
 //		
-		((TextView) convertView.findViewById(R.id.textView_headerlist_client_list)).setText(""+header.get(section));
+		((TextView) convertView.findViewById(R.id.textView_headerlist_ruta_list)).setText(""+header.get(section));
 		
 		return convertView;
 	}
@@ -147,12 +146,6 @@ public class RutasListAdapter extends SectionAdapter{
 	@Override
 	public Object getRowItem(int section, int row) {
 		return null;
-	}
-	
-	public void setNewList(ArrayList<ArrayList<Agenda>> new_list_agenda)
-	{
-		this.list_agenda = new_list_agenda;
-		notifyDataSetChanged();
 	}
 	
 	@Override
