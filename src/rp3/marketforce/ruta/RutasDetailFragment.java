@@ -10,6 +10,7 @@ import rp3.marketforce.actividades.GrupoActivity;
 import rp3.marketforce.actividades.MultipleActivity;
 import rp3.marketforce.actividades.SeleccionActivity;
 import rp3.marketforce.actividades.TextoActivity;
+import rp3.marketforce.models.Actividad;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.AgendaTareaActividades;
@@ -204,17 +205,17 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
 						AgendaTarea setter = adapter.getItem(position);
 						if(setter.getTipoTarea().equalsIgnoreCase("A") || setter.getTipoTarea().equalsIgnoreCase("R"))
 						{
-							AgendaTareaActividades ata = AgendaTareaActividades.getActividadSimple(getDataBase(), setter.getIdRuta(), setter.getIdAgenda(), setter.getIdTarea());
+							Actividad ata = Actividad.getActividadSimple(getDataBase(), setter.getIdRuta());
 							if(ata.getTipo() != null)
 							{
 								if(ata.getTipo().equalsIgnoreCase("C"))
-									showTareaCheckbox(ata);	
+									showTareaCheckbox(ata, setter);	
 								if(ata.getTipo().equalsIgnoreCase("M"))
-									showTareaMultiSeleccion(ata);
+									showTareaMultiSeleccion(ata, setter);
 								if(ata.getTipo().equalsIgnoreCase("S"))
-									showTareaSeleccion(ata);
+									showTareaSeleccion(ata, setter);
 								if(ata.getTipo().equalsIgnoreCase("T"))
-									showTareaTexto(ata);
+									showTareaTexto(ata, setter);
 							}
 						}
 						if(setter.getTipoTarea().equalsIgnoreCase("E"))
@@ -241,38 +242,38 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
 		return super.onOptionsItemSelected(item);
 	}
 	
-	public void showTareaTexto(AgendaTareaActividades agt)
+	public void showTareaTexto(Actividad ata, AgendaTarea setter)
 	{
 		Intent intent = new Intent(getContext(), TextoActivity.class);
-		intent.putExtra(ARG_ITEM_ID, agt.getIdTarea());
-		intent.putExtra(ARG_AGENDA_ID,(long) agt.getIdAgenda());
-		intent.putExtra(ARG_RUTA_ID, agt.getIdRuta());
+		intent.putExtra(ARG_ITEM_ID, ata.getIdTarea());
+		intent.putExtra(ARG_AGENDA_ID,(long) setter.getIdAgenda());
+		intent.putExtra(ARG_RUTA_ID, setter.getIdRuta());
 		startActivity(intent);
 	}
 	
-	public void showTareaSeleccion(AgendaTareaActividades agt)
+	public void showTareaSeleccion(Actividad ata, AgendaTarea setter)
 	{
 		Intent intent = new Intent(getContext(), SeleccionActivity.class);
-		intent.putExtra(ARG_ITEM_ID, agt.getIdTarea());
-		intent.putExtra(ARG_AGENDA_ID, agt.getIdAgenda());
-		intent.putExtra(ARG_RUTA_ID, agt.getIdRuta());
+		intent.putExtra(ARG_ITEM_ID, ata.getIdTarea());
+		intent.putExtra(ARG_AGENDA_ID, setter.getIdAgenda());
+		intent.putExtra(ARG_RUTA_ID, setter.getIdRuta());
 		startActivity(intent);
 	}
-	public void showTareaMultiSeleccion(AgendaTareaActividades agt)
+	public void showTareaMultiSeleccion(Actividad ata, AgendaTarea setter)
 	{
 		Intent intent = new Intent(getContext(), MultipleActivity.class);
-		intent.putExtra(ARG_ITEM_ID, agt.getIdTarea());
-		intent.putExtra(ARG_AGENDA_ID, agt.getIdAgenda());
-		intent.putExtra(ARG_RUTA_ID, agt.getIdRuta());
+		intent.putExtra(ARG_ITEM_ID, ata.getIdTarea());
+		intent.putExtra(ARG_AGENDA_ID, setter.getIdAgenda());
+		intent.putExtra(ARG_RUTA_ID, setter.getIdRuta());
 		startActivity(intent);
 	}
     
-	public void showTareaCheckbox(AgendaTareaActividades agt)
+	public void showTareaCheckbox(Actividad ata, AgendaTarea setter)
 	{
 		Intent intent = new Intent(getContext(), CheckboxActivity.class);
-		intent.putExtra(ARG_ITEM_ID, agt.getIdTarea());
-		intent.putExtra(ARG_AGENDA_ID, agt.getIdAgenda());
-		intent.putExtra(ARG_RUTA_ID, agt.getIdRuta());
+		intent.putExtra(ARG_ITEM_ID, ata.getIdTarea());
+		intent.putExtra(ARG_AGENDA_ID, setter.getIdAgenda());
+		intent.putExtra(ARG_RUTA_ID, setter.getIdRuta());
 		startActivity(intent);
 	}
 	

@@ -261,14 +261,10 @@ public final class Contract {
 		public static final String COLUMN_RUTA_ID = "IdRuta";
 		public static final String COLUMN_AGENDA_ID = "IdAgenda";
 		public static final String COLUMN_TAREA_ID = "IdTarea";
-		public static final String COLUMN_NOMBRE_TAREA = "NombreTarea";
-		public static final String COLUMN_TIPO_TAREA = "TipoTarea";
 		public static final String COLUMN_ESTADO_TAREA = "EstadoTarea";		
 		
 		public static final String FIELD_RUTA_ID = COLUMN_RUTA_ID;
 		public static final String FIELD_AGENDA_ID = COLUMN_AGENDA_ID;
-		public static final String FIELD_NOMBRE_TAREA = COLUMN_NOMBRE_TAREA;
-		public static final String FIELD_TIPO_TAREA = COLUMN_TIPO_TAREA;
 		public static final String FIELD_ESTADO_TAREA = COLUMN_ESTADO_TAREA;
 		public static final String FIELD_TAREA_ID = COLUMN_TAREA_ID;
 		public static final String FIELD_ESTADO_TAREA_DESCRIPCION = "tbEstadoTarea_Value_" + rp3.data.models.Contract.GeneralValue.COLUMN_VALUE;
@@ -280,29 +276,17 @@ public final class Contract {
 		
 		public static final String TABLE_NAME = "tbAgendaTareaActividades";
 		
-		public static final String COLUMN_DESCRIPCION = "Descripcion";
 		public static final String COLUMN_AGENDA_ID = "IdAgenda";
 		public static final String COLUMN_RUTA_ID = "IdRuta";
 		public static final String COLUMN_TAREA_ID = "IdTarea";
 		public static final String COLUMN_TAREA_ACTIVIDAD_ID = "IdTareaActividad";
-		public static final String COLUMN_TAREA_ACTIVIDAD_PADRE_ID = "IdTareaActividadPadre";
-		public static final String COLUMN_TAREA_OPCION_ID = "IdTareaOpcion";
-		public static final String COLUMN_TIPO_ACTIVIDAD_ID = "IdTipoActividad";
-		public static final String COLUMN_ORDEN = "Orden";
 		public static final String COLUMN_RESULTADO = "Resultado";
-		public static final String COLUMN_TIPO = "Tipo";
 		
-		public static final String FIELD_DESCRIPCION = COLUMN_DESCRIPCION;
 		public static final String FIELD_AGENDA_ID = COLUMN_AGENDA_ID;
 		public static final String FIELD_RUTA_ID = COLUMN_RUTA_ID;
 		public static final String FIELD_TAREA_ID = COLUMN_TAREA_ID;
 		public static final String FIELD_TAREA_ACTIVIDAD_ID = COLUMN_TAREA_ACTIVIDAD_ID;
-		public static final String FIELD_TAREA_ACTIVIDAD_PADRE_ID = COLUMN_TAREA_ACTIVIDAD_PADRE_ID;
-		public static final String FIELD_TAREA_OPCION_ID = COLUMN_TAREA_OPCION_ID;
-		public static final String FIELD_TIPO_ACTIVIDAD_ID = COLUMN_TIPO_ACTIVIDAD_ID;
-		public static final String FIELD_ORDEN = COLUMN_ORDEN;
 		public static final String FIELD_RESULTADO = COLUMN_RESULTADO;
-		public static final String FIELD_TIPO = COLUMN_TIPO;
 	}
    
    public static abstract class AgendaTareaOpciones implements BaseColumns {
@@ -322,5 +306,47 @@ public final class Contract {
 		public static final String FIELD_TAREA_ID = COLUMN_TAREA_ID;
 		public static final String FIELD_TAREA_ACTIVIDAD_ID = COLUMN_TAREA_ACTIVIDAD_ID;
 		public static final String FIELD_ORDEN = COLUMN_ORDEN;
+	}
+   
+   public static abstract class Tareas implements BaseColumns {
+		
+		public static final String TABLE_NAME = "tbTarea";
+		
+		public static final String COLUMN_TAREA_ID = "IdTarea";
+		public static final String COLUMN_NOMBRE_TAREA = "NombreTarea";
+		public static final String COLUMN_TIPO_TAREA = "TipoTarea";
+		public static final String COLUMN_ESTADO_TAREA = "EstadoTarea";		
+		
+		public static final String FIELD_NOMBRE_TAREA = COLUMN_NOMBRE_TAREA;
+		public static final String FIELD_TIPO_TAREA = COLUMN_TIPO_TAREA;
+		public static final String FIELD_ESTADO_TAREA = COLUMN_ESTADO_TAREA;
+		public static final String FIELD_TAREA_ID = COLUMN_TAREA_ID;
+		public static final String FIELD_ESTADO_TAREA_DESCRIPCION = "tbEstadoTarea_Value_" + rp3.data.models.Contract.GeneralValue.COLUMN_VALUE;
+	}
+   
+   public static abstract class Actividades implements BaseColumns {
+		
+		public static final String TABLE_NAME = "tbActividad";
+		
+		public static final String COLUMN_DESCRIPCION = "Descripcion";
+		public static final String COLUMN_TAREA_ID = "IdTarea";
+		public static final String COLUMN_TAREA_ACTIVIDAD_ID = "IdTareaActividad";
+		public static final String COLUMN_TAREA_ACTIVIDAD_PADRE_ID = "IdTareaActividadPadre";
+		public static final String COLUMN_TIPO_ACTIVIDAD_ID = "IdTipoActividad";
+		public static final String COLUMN_ORDEN = "Orden";
+		public static final String COLUMN_TIPO = "Tipo";
+		
+		public static final String FIELD_DESCRIPCION = COLUMN_DESCRIPCION;
+		public static final String FIELD_TAREA_ID = COLUMN_TAREA_ID;
+		public static final String FIELD_TAREA_ACTIVIDAD_ID = COLUMN_TAREA_ACTIVIDAD_ID;
+		public static final String FIELD_TAREA_ACTIVIDAD_PADRE_ID = COLUMN_TAREA_ACTIVIDAD_PADRE_ID;
+		public static final String FIELD_TIPO_ACTIVIDAD_ID = COLUMN_TIPO_ACTIVIDAD_ID;
+		public static final String FIELD_ORDEN = COLUMN_ORDEN;
+		public static final String FIELD_TIPO = COLUMN_TIPO;
+		
+		public static final String QUERY_ACTIVIDADES_GRUPALES = "ActividadesGrupales";
+		public static final String QUERY_ACTIVIDADES_HIJAS = "ActividadesHijas";
+		public static final String QUERY_ACTIVIDAD_SIMPLE = "ActividadSimple";
+		public static final String QUERY_ACTIVIDAD_SIMPLE_NO_GRUPAL = "ActividadSimpleNoGrupal";
 	}
 }

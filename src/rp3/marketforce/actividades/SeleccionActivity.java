@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rp3.marketforce.R;
+import rp3.marketforce.models.Actividad;
 import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.AgendaTareaActividades;
 import rp3.marketforce.models.AgendaTareaOpciones;
@@ -15,7 +16,8 @@ import android.widget.ArrayAdapter;
 
 public class SeleccionActivity extends ActividadActivity {
 	
-	AgendaTareaActividades ata;
+	Actividad ata;
+	private AgendaTareaActividades act;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -31,16 +33,16 @@ public class SeleccionActivity extends ActividadActivity {
 	    
 	    if(id_padre == 0)
 	    {
-	    	ata = AgendaTareaActividades.getActividadSimple(getDataBase(), id_ruta, id_agenda, id_actividad);
+	    	ata = Actividad.getActividadSimple(getDataBase(), id_tarea);
 	    }
 	    else
 	    {
-	    	ata = AgendaTareaActividades.getActividadSimpleFromParent(getDataBase(), id_ruta, id_agenda, id_tarea, id_actividad, id_padre);
+	    	ata = Actividad.getActividadSimple(getDataBase(), id_tarea, id_padre);
 	    }
 	    
 	    setTextViewText(R.id.label_pregunta_actividad, ata.getDescripcion());
 	    
-	    List<AgendaTareaOpciones> ag_opcs = AgendaTareaOpciones.getOpciones(getDataBase(), ata.getIdAgenda(), ata.getIdTarea(), ata.getIdTareaActividad());
+	    List<AgendaTareaOpciones> ag_opcs = AgendaTareaOpciones.getOpciones(getDataBase(), ata.getIdTarea(), ata.getIdTareaActividad());
 		List<String> opciones = new ArrayList<String>();
 		
 		for(AgendaTareaOpciones opcion: ag_opcs)
@@ -50,15 +52,23 @@ public class SeleccionActivity extends ActividadActivity {
 		
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,opciones);
 		setSpinnerAdapter(R.id.actividad_seleccion_respuesta, adapter);
-	
-	    // TODO Auto-generated method stub
+		
+		act = AgendaTareaActividades.getActividadSimple(getDataBase(), id_ruta, id_agenda, id_tarea, ata.getIdTareaActividad());
+		if(act != null)
+		{
+			setSpinnerSelectionByPosition(R.id.actividad_seleccion_respuesta, opciones.indexOf(act.getResultado()));
+		}
+		else
+		{
+			act = initActividad(ata.getIdTareaActividad());
+		}
 	}
 
 	@Override
 	public void aceptarCambios(View v) {
 		String respuesta = getSpinnerGeneralValueSelectedCode(R.id.actividad_seleccion_respuesta);
-		ata.setResultado(respuesta);
-		AgendaTareaActividades.update(getDataBase(), ata);
+		act.setResultado(respuesta);
+		AgendaTareaActividades.update(getDataBase(), act);
 		if(id_padre == 0)
 		{
 			AgendaTarea agt = AgendaTarea.getTarea(getDataBase(), id_agenda, id_ruta, id_tarea);

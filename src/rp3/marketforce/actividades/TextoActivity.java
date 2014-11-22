@@ -2,15 +2,18 @@ package rp3.marketforce.actividades;
 
 import rp3.app.BaseActivity;
 import rp3.marketforce.R;
+import rp3.marketforce.models.Actividad;
 import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.AgendaTareaActividades;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.widget.CheckBox;
 
 public class TextoActivity extends ActividadActivity {
 
-	AgendaTareaActividades ata;
+	Actividad ata;
+	private AgendaTareaActividades act;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -27,28 +30,37 @@ public class TextoActivity extends ActividadActivity {
 	    
 	    if(id_padre == 0)
 	    {
-	    	ata = AgendaTareaActividades.getActividadSimple(getDataBase(), id_ruta, id_agenda, id_actividad);
+	    	ata = Actividad.getActividadSimple(getDataBase(), id_tarea);
 	    }
 	    else
 	    {
-	    	ata = AgendaTareaActividades.getActividadSimpleFromParent(getDataBase(), id_ruta, id_agenda, id_tarea, id_actividad, id_padre);
+	    	ata = Actividad.getActividadSimple(getDataBase(), id_tarea, id_actividad);
 	    }
 	    
 	    setTextViewText(R.id.label_pregunta_actividad, ata.getDescripcion());
 	    setTextViewText(R.id.detail_activity_number, numero + "");
-	    if(!ata.getResultado().equalsIgnoreCase("null"))
-	    {
-	    	setTextViewText(R.id.actividad_texto_respuesta, ata.getResultado());
-	    }
+	    act = AgendaTareaActividades.getActividadSimple(getDataBase(), id_ruta, id_agenda, id_tarea, ata.getIdTareaActividad());
+		if(act != null)
+		{
+			if(act.getResultado() != null && !act.getResultado().equalsIgnoreCase("null"))
+		    {
+		    	setTextViewText(R.id.actividad_texto_respuesta, act.getResultado());
+		    }
+		}
+		else
+		{
+			act = initActividad(ata.getIdTareaActividad());
+		}
+	    
 	}
 
 	@Override
 	public void aceptarCambios(View v) {
-		ata.setResultado(getTextViewString(R.id.actividad_texto_respuesta));
-		AgendaTareaActividades.update(getDataBase(), ata);
+		act.setResultado(getTextViewString(R.id.actividad_texto_respuesta));
+		AgendaTareaActividades.update(getDataBase(), act);
 		if(id_padre == 0)
 		{
-			AgendaTarea agt = AgendaTarea.getTarea(getDataBase(), ata.getIdAgenda(), ata.getIdRuta(), ata.getIdTarea());
+			AgendaTarea agt = AgendaTarea.getTarea(getDataBase(), act.getIdAgenda(), act.getIdRuta(), ata.getIdTarea());
 			agt.setEstadoTarea("R");
 			AgendaTarea.update(getDataBase(), agt);
 		}

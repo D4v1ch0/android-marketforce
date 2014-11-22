@@ -117,9 +117,9 @@ public class Rutas {
 							agendaTarea.setIdTarea(str.getInt("IdTarea"));
 							agendaTarea.setIdRuta(str.getInt("IdRuta"));
 							agendaTarea.setIdAgenda(str.getInt("IdAgenda"));						
-							agendaTarea.setNombreTarea(str.getString("Nombre"));
+							//agendaTarea.setNombreTarea(str.getString("Nombre"));
 							agendaTarea.setEstadoTarea(str.getString("EstadoTarea"));
-							agendaTarea.setTipoTarea(str.getString("TipoTarea"));
+							//agendaTarea.setTipoTarea(str.getString("TipoTarea"));
 							
 							rp3.marketforce.models.AgendaTarea.insert(db, agendaTarea);							
 						}

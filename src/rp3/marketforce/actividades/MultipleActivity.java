@@ -3,6 +3,7 @@ package rp3.marketforce.actividades;
 import java.util.List;
 
 import rp3.marketforce.R;
+import rp3.marketforce.models.Actividad;
 import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.AgendaTareaActividades;
 import rp3.marketforce.models.AgendaTareaOpciones;
@@ -15,9 +16,10 @@ import android.widget.LinearLayout;
 
 public class MultipleActivity extends  ActividadActivity {
 	
-	AgendaTareaActividades ata;
+	Actividad ata;
 	LinearLayout Grupo;
 	String[] respuestas;
+	private AgendaTareaActividades act;
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -35,22 +37,33 @@ public class MultipleActivity extends  ActividadActivity {
 	    
 	    if(id_padre == 0)
 	    {
-	    	ata = AgendaTareaActividades.getActividadSimple(getDataBase(), id_ruta, id_agenda, id_actividad);
+	    	ata = Actividad.getActividadSimple(getDataBase(), id_tarea);
 	    }
 	    else
 	    {
-	    	ata = AgendaTareaActividades.getActividadSimpleFromParent(getDataBase(), id_ruta, id_agenda, id_tarea, id_actividad, id_padre);
+	    	ata = Actividad.getActividadSimple(getDataBase(), id_tarea, id_actividad);
 	    }
 	    
 	    setTextViewText(R.id.label_pregunta_actividad, ata.getDescripcion());
 	    setTextViewText(R.id.detail_activity_number, numero + "");
-	    respuestas = ata.getResultado().split(",");
-	    List<AgendaTareaOpciones> ag_opcs = AgendaTareaOpciones.getOpciones(getDataBase(), ata.getIdAgenda(), ata.getIdTarea(), ata.getIdTareaActividad());
+	    act = AgendaTareaActividades.getActividadSimple(getDataBase(), id_ruta, id_agenda, id_tarea, ata.getIdTareaActividad());
+		if(act != null)
+		{
+			if(act.getResultado() != null)
+				respuestas = act.getResultado().split(",");
+		}
+		else
+		{
+			act = initActividad(ata.getIdTareaActividad());
+		}
+	    
+	    List<AgendaTareaOpciones> ag_opcs = AgendaTareaOpciones.getOpciones(getDataBase(), act.getIdTarea(), ata.getIdTareaActividad());
 	    for(AgendaTareaOpciones opcion: ag_opcs)
 		{
 	    	CheckBox setter = new CheckBox(this);
 	    	setter.setButtonDrawable(R.drawable.custom_checkbox);
-	    	setter.setChecked(existeRespuesta(opcion.getDescripcion()));
+	    	if(respuestas != null)
+	    		setter.setChecked(existeRespuesta(opcion.getDescripcion()));
 	    	setter.setText(opcion.getDescripcion());
 	    	setter.setPadding(30, 15, 0, 15);
 			Grupo.addView(setter);
@@ -69,8 +82,8 @@ public class MultipleActivity extends  ActividadActivity {
 		if(respuesta.length()>0)
 			respuesta = respuesta.substring(0, respuesta.length()-1);
 		
-		ata.setResultado(respuesta);
-		AgendaTareaActividades.update(getDataBase(), ata);
+		act.setResultado(respuesta);
+		AgendaTareaActividades.update(getDataBase(), act);
 		if(id_padre == 0)
 		{
 			AgendaTarea agt = AgendaTarea.getTarea(getDataBase(), id_agenda, id_ruta, id_tarea);

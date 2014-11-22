@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rp3.marketforce.R;
+import rp3.marketforce.models.Actividad;
 import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.AgendaTareaActividades;
 import rp3.marketforce.models.AgendaTareaOpciones;
@@ -32,7 +33,6 @@ import android.widget.TextView;
 public class GrupoActivity extends ActividadActivity {
 	
 	LinearLayout Container;
-	AgendaTareaActividades ata;
 	int contador = 0;
 
 	/** Called when the activity is first created. */
@@ -48,15 +48,14 @@ public class GrupoActivity extends ActividadActivity {
 			setContentView(R.layout.layout_grupo_actividad);
 		}
 	    
-	    ata = AgendaTareaActividades.getActividadSimple(getDataBase(), id_ruta, id_agenda, id_actividad);
 	    Container = (LinearLayout) findViewById(R.id.actividad_agrupar);
 	    
-	    List<AgendaTareaActividades> list_atas = AgendaTareaActividades.getActividadesGrupales(getDataBase(), ata.getIdRuta(), ata.getIdAgenda(), ata.getIdTarea());
-	    for(AgendaTareaActividades actividad : list_atas)
+	    List<Actividad> list_atas = Actividad.getActividadesGrupalesByTarea(getDataBase(), id_actividad);
+	    for(Actividad actividad : list_atas)
 	    {
 	    	if(actividad.getTipo().equalsIgnoreCase("G"))
 				agregarGrupo(actividad);
-	    	for(AgendaTareaActividades actividad_hija : actividad.getActividades_hijas())
+	    	for(Actividad actividad_hija : actividad.getActividades_hijas())
 	    	{
 		    	if(actividad_hija.getTipo().equalsIgnoreCase("C"))
 		    		agregarCheckbox(actividad_hija);	
@@ -73,7 +72,7 @@ public class GrupoActivity extends ActividadActivity {
 	    
 	}
 	
-	public void agregarGrupo(AgendaTareaActividades act)
+	public void agregarGrupo(Actividad actividad)
 	{
 		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		contador = 0;
@@ -81,8 +80,8 @@ public class GrupoActivity extends ActividadActivity {
 		TextView texto = new TextView(this);
 		params.setMargins(15, 0, 0, 35);
 		texto.setLayoutParams(params);
-		SpannableString content = new SpannableString(act.getDescripcion());
-		content.setSpan(new UnderlineSpan(), 0, act.getDescripcion().length(), 0);
+		SpannableString content = new SpannableString(actividad.getDescripcion());
+		content.setSpan(new UnderlineSpan(), 0, actividad.getDescripcion().length(), 0);
 		texto.setText(content);
 		texto.setTextColor(getResources().getColor(R.color.tab_inactivated));
 		texto.setGravity(Gravity.LEFT);
@@ -105,7 +104,7 @@ public class GrupoActivity extends ActividadActivity {
 		}
 	}
 	
-	public void agregarCheckbox(final AgendaTareaActividades act)
+	public void agregarCheckbox(final Actividad actividad_hija)
 	{
 		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 4);
 		LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 1);
@@ -125,17 +124,27 @@ public class GrupoActivity extends ActividadActivity {
 		check.setMinWidth(100);
 		check.setPadding(30, 0, 0, 0);
 		
-		texto.setText(act.getDescripcion());
+		texto.setText(actividad_hija.getDescripcion());
 		texto.setTypeface(Typeface.DEFAULT_BOLD);
-		if(act.getResultado().equals("true"))
-			check.setChecked(true);
+		AgendaTareaActividades act = AgendaTareaActividades.getActividadSimple(getDataBase(), id_ruta, id_agenda, id_actividad, actividad_hija.getIdTareaActividad());
+		if(act != null)
+		{
+			if(act.getResultado() != null && act.getResultado().equalsIgnoreCase("true"))
+				check.setChecked(true);
+		}
+		else
+		{
+			act = initActividad(actividad_hija.getIdTareaActividad());
+		}
+		final AgendaTareaActividades resp = act;
+			
 		check.setOnCheckedChangeListener(new OnCheckedChangeListener(){
 
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
-				act.setResultado(isChecked + "");
-				AgendaTareaActividades.update(getDataBase(), act);
+				resp.setResultado(isChecked + "");
+				AgendaTareaActividades.update(getDataBase(), resp);
 			}});
 		
 		layout.addView(texto);
@@ -160,7 +169,7 @@ public class GrupoActivity extends ActividadActivity {
 		}
 	}
 	
-	public void agregarTexto(final AgendaTareaActividades act)
+	public void agregarTexto(final Actividad actividad_hija)
 	{		
 		LinearLayout layout = new LinearLayout(this);
 		TextView texto = new TextView(this);
@@ -168,7 +177,7 @@ public class GrupoActivity extends ActividadActivity {
 		LinearLayout innerContainer = new LinearLayout(this);
 		contador ++;
 		
-		texto.setText(act.getDescripcion());
+		texto.setText(actividad_hija.getDescripcion());
 		texto.setTypeface(Typeface.DEFAULT_BOLD);
 		if(getResources().getString(R.string.is_tablet).equalsIgnoreCase("true"))
 		{
@@ -183,19 +192,29 @@ public class GrupoActivity extends ActividadActivity {
 		textoResp.setFocusableInTouchMode(false);
 		textoResp.setMaxLines(1);
 		final int posicion = contador;
-		if(!act.getResultado().equalsIgnoreCase("null"))
-			textoResp.setText(act.getResultado());
+		AgendaTareaActividades act = AgendaTareaActividades.getActividadSimple(getDataBase(), id_ruta, id_agenda, id_actividad, actividad_hija.getIdTareaActividad());
+		if(act != null)
+		{
+			if(act.getResultado() != null && !act.getResultado().equalsIgnoreCase("null"))
+				textoResp.setText(act.getResultado());
+		}
+		else
+		{
+			act = initActividad(actividad_hija.getIdTareaActividad());
+		}
+		final AgendaTareaActividades resp = act;
+		
 		layout.setClickable(true);
 		layout.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(getApplication(), TextoActivity.class);
-				intent.putExtra(RutasDetailFragment.ARG_ITEM_ID, (int)act.getIdTareaActividad());
-				intent.putExtra(RutasDetailFragment.ARG_AGENDA_ID, (long) act.getIdAgenda());
-				intent.putExtra(RutasDetailFragment.ARG_RUTA_ID, (int) act.getIdRuta());
-				intent.putExtra(ARG_PADRE_ID, (int) act.getIdTareaActividadPadre());
-				intent.putExtra(ARG_TAREA, (int) act.getIdTarea());
+				intent.putExtra(RutasDetailFragment.ARG_ITEM_ID, (int)actividad_hija.getIdTareaActividad());
+				intent.putExtra(RutasDetailFragment.ARG_AGENDA_ID, (long) resp.getIdAgenda());
+				intent.putExtra(RutasDetailFragment.ARG_RUTA_ID, (int) resp.getIdRuta());
+				intent.putExtra(ARG_PADRE_ID, (int) actividad_hija.getIdTareaActividadPadre());
+				intent.putExtra(ARG_TAREA, (int) actividad_hija.getIdTarea());
 				intent.putExtra(ARG_THEME, R.style.AppDialogTheme);
 				intent.putExtra(ARG_NUMERO, posicion);
 				startActivity(intent);
@@ -223,7 +242,7 @@ public class GrupoActivity extends ActividadActivity {
 		}
 	}
 	
-	public void agregarSeleccion(final AgendaTareaActividades act)
+	public void agregarSeleccion(final Actividad actividad_hija)
 	{
 		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		LinearLayout layout = new LinearLayout(this);
@@ -236,7 +255,7 @@ public class GrupoActivity extends ActividadActivity {
 		layout.setLayoutParams(params);
 		combo.setLayoutParams(params);
 
-		texto.setText(act.getDescripcion());
+		texto.setText(actividad_hija.getDescripcion());
 		texto.setTypeface(Typeface.DEFAULT_BOLD);
 		if(getResources().getString(R.string.is_tablet).equalsIgnoreCase("true"))
 		{
@@ -248,7 +267,7 @@ public class GrupoActivity extends ActividadActivity {
 			layout.setOrientation(LinearLayout.VERTICAL);
 		}
 		
-		List<AgendaTareaOpciones> ag_opcs = AgendaTareaOpciones.getOpciones(getDataBase(), act.getIdAgenda(), act.getIdTarea(), act.getIdTareaActividad());
+		List<AgendaTareaOpciones> ag_opcs = AgendaTareaOpciones.getOpciones(getDataBase(), actividad_hija.getIdTarea(), actividad_hija.getIdTareaActividad());
 		List<String> opciones = new ArrayList<String>();
 		
 		for(AgendaTareaOpciones opcion: ag_opcs)
@@ -258,14 +277,25 @@ public class GrupoActivity extends ActividadActivity {
 		
 		final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item,opciones);
 		combo.setAdapter(adapter);
-		combo.setSelection(adapter.getPosition(act.getResultado()));
+		
+		AgendaTareaActividades act = AgendaTareaActividades.getActividadSimple(getDataBase(), id_ruta, id_agenda, id_actividad, actividad_hija.getIdTareaActividad());
+		if(act != null)
+		{
+			combo.setSelection(adapter.getPosition(act.getResultado()));
+		}
+		else
+		{
+			act = initActividad(actividad_hija.getIdTareaActividad());
+		}
+		final AgendaTareaActividades resp = act;
+		
 		combo.setOnItemSelectedListener(new OnItemSelectedListener(){
 
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view,
 					int position, long id) {
-				act.setResultado(adapter.getItem(position));
-				AgendaTareaActividades.update(getDataBase(), act);
+				resp.setResultado(adapter.getItem(position));
+				AgendaTareaActividades.update(getDataBase(), resp);
 				
 			}
 
@@ -297,7 +327,7 @@ public class GrupoActivity extends ActividadActivity {
 		}
 	}
 	
-	public void agregarMultiple(final AgendaTareaActividades act)
+	public void agregarMultiple(final Actividad actividad_hija)
 	{
 		LinearLayout layout = new LinearLayout(this);
 		LinearLayout innerContainer = new LinearLayout(this);
@@ -305,7 +335,7 @@ public class GrupoActivity extends ActividadActivity {
 		TextView textoResp = new TextView(this);
 		contador ++;
 		
-		texto.setText(act.getDescripcion());
+		texto.setText(actividad_hija.getDescripcion());
 		texto.setTypeface(Typeface.DEFAULT_BOLD);
 		if(getResources().getString(R.string.is_tablet).equalsIgnoreCase("true"))
 		{
@@ -319,19 +349,30 @@ public class GrupoActivity extends ActividadActivity {
 		textoResp.setEnabled(false);
 		textoResp.setMaxLines(1);
 		final int posicion = contador;
-		if(!act.getResultado().equalsIgnoreCase("null"))
-			textoResp.setText(act.getResultado());
+		
+		AgendaTareaActividades act = AgendaTareaActividades.getActividadSimple(getDataBase(), id_ruta, id_agenda, id_actividad, actividad_hija.getIdTareaActividad());
+		if(act != null)
+		{
+			if(act.getResultado() != null && !act.getResultado().equalsIgnoreCase("null"))
+				textoResp.setText(act.getResultado());
+		}
+		else
+		{
+			act = initActividad(actividad_hija.getIdTareaActividad());
+		}
+		final AgendaTareaActividades resp = act;
+		
 		layout.setClickable(true);
 		layout.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(getApplication(), MultipleActivity.class);
-				intent.putExtra(RutasDetailFragment.ARG_ITEM_ID, (int)act.getIdTareaActividad());
-				intent.putExtra(RutasDetailFragment.ARG_AGENDA_ID, (long) act.getIdAgenda());
-				intent.putExtra(RutasDetailFragment.ARG_RUTA_ID, (int) act.getIdRuta());
-				intent.putExtra(ARG_PADRE_ID, (int) act.getIdTareaActividadPadre());
-				intent.putExtra(ARG_TAREA, (int) act.getIdTarea());
+				intent.putExtra(RutasDetailFragment.ARG_ITEM_ID, (int)actividad_hija.getIdTareaActividad());
+				intent.putExtra(RutasDetailFragment.ARG_AGENDA_ID, (long) resp.getIdAgenda());
+				intent.putExtra(RutasDetailFragment.ARG_RUTA_ID, (int) resp.getIdRuta());
+				intent.putExtra(ARG_PADRE_ID, (int) actividad_hija.getIdTareaActividadPadre());
+				intent.putExtra(ARG_TAREA, (int) actividad_hija.getIdTarea());
 				intent.putExtra(ARG_THEME, R.style.AppDialogTheme);
 				intent.putExtra(ARG_NUMERO, posicion);
 				startActivity(intent);
@@ -361,7 +402,7 @@ public class GrupoActivity extends ActividadActivity {
 
 	@Override
 	public void aceptarCambios(View v) {
-		AgendaTarea agt = AgendaTarea.getTarea(getDataBase(), ata.getIdAgenda(), ata.getIdRuta(), ata.getIdTarea());
+		AgendaTarea agt = AgendaTarea.getTarea(getDataBase(), id_agenda, id_ruta, id_actividad);
 		agt.setEstadoTarea("R");
 		AgendaTarea.update(getDataBase(), agt);
 		finish();
@@ -457,12 +498,12 @@ public class GrupoActivity extends ActividadActivity {
 	@Override
 	protected void onResume() {
 		Container.removeAllViews();
-		List<AgendaTareaActividades> list_atas = AgendaTareaActividades.getActividadesGrupales(getDataBase(), ata.getIdRuta(), ata.getIdAgenda(), ata.getIdTarea());
-	    for(AgendaTareaActividades actividad : list_atas)
+		List<Actividad> list_atas = Actividad.getActividadesGrupalesByTarea(getDataBase(), id_actividad);
+	    for(Actividad actividad : list_atas)
 	    {
 	    	if(actividad.getTipo().equalsIgnoreCase("G"))
 				agregarGrupo(actividad);
-	    	for(AgendaTareaActividades actividad_hija : actividad.getActividades_hijas())
+	    	for(Actividad actividad_hija : actividad.getActividades_hijas())
 	    	{
 		    	if(actividad_hija.getTipo().equalsIgnoreCase("C"))
 		    		agregarCheckbox(actividad_hija);	

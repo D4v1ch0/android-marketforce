@@ -131,7 +131,6 @@
       IdRuta INTEGER,
       IdTarea INTEGER,
       IdTareaActividad INTEGER,
-      IdTipoActividad INTEGER,
       Resultado TEXT
       )
 	</statement>

@@ -357,14 +357,73 @@
        tbAgendaTarea.IdRuta,
 	   tbAgendaTarea.IdAgenda,
 	   tbAgendaTarea.IdTarea,
-	   tbAgendaTarea.NombreTarea,
-	   tbAgendaTarea.TipoTarea,
-	   tbAgendaTarea.EstadoTarea,
+	   tbTarea.NombreTarea,
+	   tbTarea.TipoTarea,
+	   tbTarea.EstadoTarea,
 	   tbEstadoTarea.Value AS tbEstadoTarea_Value_Value
 	   FROM tbAgendaTarea
 	   JOIN tbGeneralValue tbEstadoTarea
 	   ON tbEstadoTarea.GeneralTableId = 1014
        AND tbAgendaTarea.EstadoTarea = tbEstadoTarea.Code
+       JOIN tbTarea
+	   ON tbTarea.IdTarea = tbAgendaTarea.IdTarea
        WHERE IdAgenda = ? AND IdRuta = ?
+     </statement>
+     
+	 <statement name="ActividadesGrupales">
+       SELECT
+       tbActividad._id,
+       tbActividad.Descripcion,
+       tbActividad.IdTarea,
+       tbActividad.IdTareaActividad,
+       tbActividad.IdTareaActividadPadre,
+       tbActividad.IdTipoActividad,
+       tbActividad.Orden,
+       tbActividad.Tipo
+	   FROM  tbActividad
+	   WHERE IdTarea = ?
+	   AND Tipo = 'G'
+     </statement>
+     
+	 <statement name="ActividadesHijas">
+       SELECT
+       tbActividad._id,
+       tbActividad.Descripcion,
+       tbActividad.IdTarea,
+       tbActividad.IdTareaActividad,
+       tbActividad.IdTareaActividadPadre,
+       tbActividad.IdTipoActividad,
+       tbActividad.Orden,
+       tbActividad.Tipo
+	   FROM  tbActividad
+	   WHERE IdTarea = ? AND IdTareaActividadPadre = ?
+     </statement>
+     
+	 <statement name="ActividadSimple">
+       SELECT
+       tbActividad._id,
+       tbActividad.Descripcion,
+       tbActividad.IdTarea,
+       tbActividad.IdTareaActividad,
+       tbActividad.IdTareaActividadPadre,
+       tbActividad.IdTipoActividad,
+       tbActividad.Orden,
+       tbActividad.Tipo
+	   FROM  tbActividad
+	   WHERE IdTarea = ? AND IdTareaActividad = ?
+     </statement>
+     
+	 <statement name="ActividadSimpleNoGrupal">
+       SELECT
+       tbActividad._id,
+       tbActividad.Descripcion,
+       tbActividad.IdTarea,
+       tbActividad.IdTareaActividad,
+       tbActividad.IdTareaActividadPadre,
+       tbActividad.IdTipoActividad,
+       tbActividad.Orden,
+       tbActividad.Tipo
+	   FROM  tbActividad
+	   WHERE IdTarea = ?
      </statement>
 </sql>

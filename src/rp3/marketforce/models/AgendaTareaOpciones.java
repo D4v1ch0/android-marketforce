@@ -107,7 +107,7 @@ public class AgendaTareaOpciones extends rp3.data.entity.EntityBase<AgendaTareaO
 		this.orden = orden;
 	}
 	
-	public static List<AgendaTareaOpciones> getOpciones(DataBase db, long id_agenda, long id_tarea, long id_actividad)
+	public static List<AgendaTareaOpciones> getOpciones(DataBase db, long id_tarea, long id_actividad)
 	{
 		List<AgendaTareaOpciones> list_opc = new ArrayList<AgendaTareaOpciones>();
 		
@@ -116,8 +116,7 @@ public class AgendaTareaOpciones extends rp3.data.entity.EntityBase<AgendaTareaO
 				Contract.AgendaTareaOpciones.COLUMN_ORDEN,Contract.AgendaTareaOpciones.COLUMN_RUTA_ID, 
 				Contract.AgendaTareaOpciones.COLUMN_TAREA_ACTIVIDAD_ID, Contract.AgendaTareaActividades.COLUMN_TAREA_ID},
 				Contract.AgendaTareaOpciones.COLUMN_TAREA_ID + " = ? AND " +
-				Contract.AgendaTareaOpciones.COLUMN_AGENDA_ID + " = ? AND " +
-				Contract.AgendaTareaOpciones.COLUMN_TAREA_ACTIVIDAD_ID + " = ?", new String[] {id_tarea + "", id_agenda + "", id_actividad + ""},
+				Contract.AgendaTareaOpciones.COLUMN_TAREA_ACTIVIDAD_ID + " = ?", new String[] {id_tarea + "", id_actividad + ""},
 				null, null, Contract.AgendaTareaOpciones.COLUMN_ORDEN);
 		
 		if(c.moveToFirst())

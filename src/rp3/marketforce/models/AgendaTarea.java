@@ -3,6 +3,7 @@ package rp3.marketforce.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import rp3.data.entity.EntityBase;
 import rp3.db.QueryDir;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.db.Contract;
@@ -63,8 +64,6 @@ public class AgendaTarea extends rp3.data.entity.EntityBase<AgendaTarea> {
 		setValue(Contract.AgendaTarea.COLUMN_RUTA_ID, this.idRuta);
 		setValue(Contract.AgendaTarea.COLUMN_AGENDA_ID, this.idAgenda);		
 		setValue(Contract.AgendaTarea.COLUMN_TAREA_ID, this.idTarea);		
-		setValue(Contract.AgendaTarea.COLUMN_NOMBRE_TAREA, this.nombreTarea);
-		setValue(Contract.AgendaTarea.COLUMN_TIPO_TAREA, this.tipoTarea);
 		setValue(Contract.AgendaTarea.COLUMN_ESTADO_TAREA, this.estadoTarea);
 	}
 
@@ -140,8 +139,8 @@ public class AgendaTarea extends rp3.data.entity.EntityBase<AgendaTarea> {
 			agdt.setIdRuta(CursorUtils.getInt(c, Contract.AgendaTarea.FIELD_RUTA_ID));	
 			agdt.setIdTarea(CursorUtils.getInt(c, Contract.AgendaTarea.FIELD_TAREA_ID));
 			agdt.setIdAgenda(CursorUtils.getLong(c, Contract.AgendaTarea.FIELD_AGENDA_ID));
-			agdt.setNombreTarea(CursorUtils.getString(c, Contract.AgendaTarea.FIELD_NOMBRE_TAREA));
-			agdt.setTipoTarea(CursorUtils.getString(c, Contract.AgendaTarea.FIELD_TIPO_TAREA));
+			agdt.setNombreTarea(CursorUtils.getString(c, Contract.Tareas.FIELD_NOMBRE_TAREA));
+			agdt.setTipoTarea(CursorUtils.getString(c, Contract.Tareas.FIELD_TIPO_TAREA));
 			agdt.setEstadoTarea(CursorUtils.getString(c, Contract.AgendaTarea.FIELD_ESTADO_TAREA));
 			agdt.setEstadoTareaDescripcion(CursorUtils.getString(c, Contract.AgendaTarea.FIELD_ESTADO_TAREA_DESCRIPCION));
 			agdt.setActividades(AgendaTareaActividades.getActividades(db, agdt.getIdRuta(), agdt.getIdAgenda(), agdt.getIdTarea()));
@@ -153,8 +152,8 @@ public class AgendaTarea extends rp3.data.entity.EntityBase<AgendaTarea> {
 	public static AgendaTarea getTarea(DataBase db, long idAgenda, int idRuta, int idTarea){
 				
 		Cursor c = db.query(Contract.AgendaTarea.TABLE_NAME, new String[] {Contract.AgendaTarea._ID, Contract.AgendaTarea.COLUMN_AGENDA_ID,
-				Contract.AgendaTarea.COLUMN_ESTADO_TAREA, Contract.AgendaTarea.COLUMN_NOMBRE_TAREA, Contract.AgendaTarea.COLUMN_RUTA_ID,
-				Contract.AgendaTarea.COLUMN_TAREA_ID, Contract.AgendaTarea.COLUMN_TIPO_TAREA}, 
+				Contract.AgendaTarea.COLUMN_ESTADO_TAREA, Contract.AgendaTarea.COLUMN_RUTA_ID,
+				Contract.AgendaTarea.COLUMN_TAREA_ID}, 
 				Contract.AgendaTarea.COLUMN_AGENDA_ID + " = ? AND " + 
 				Contract.AgendaTarea.COLUMN_RUTA_ID + " = ? AND " +
 				Contract.AgendaTarea.COLUMN_TAREA_ID + " = ? ", new String[] { idAgenda + "", idRuta + "", idTarea + ""});
@@ -167,8 +166,8 @@ public class AgendaTarea extends rp3.data.entity.EntityBase<AgendaTarea> {
 			tarea.setIdRuta(CursorUtils.getInt(c, Contract.AgendaTarea.FIELD_RUTA_ID));	
 			tarea.setIdTarea(CursorUtils.getInt(c, Contract.AgendaTarea.FIELD_TAREA_ID));
 			tarea.setIdAgenda(CursorUtils.getLong(c, Contract.AgendaTarea.FIELD_AGENDA_ID));
-			tarea.setNombreTarea(CursorUtils.getString(c, Contract.AgendaTarea.FIELD_NOMBRE_TAREA));
-			tarea.setTipoTarea(CursorUtils.getString(c, Contract.AgendaTarea.FIELD_TIPO_TAREA));
+			//tarea.setNombreTarea(CursorUtils.getString(c, Contract.Tareas.FIELD_NOMBRE_TAREA));
+			//tarea.setTipoTarea(CursorUtils.getString(c, Contract.Tareas.FIELD_TIPO_TAREA));
 			tarea.setEstadoTarea(CursorUtils.getString(c, Contract.AgendaTarea.FIELD_ESTADO_TAREA));
 			
 		}
@@ -179,10 +178,6 @@ public class AgendaTarea extends rp3.data.entity.EntityBase<AgendaTarea> {
 	{
 		db.delete(Contract.AgendaTarea.TABLE_NAME, Contract.AgendaTarea.COLUMN_RUTA_ID + " = ? AND " + 
 				Contract.AgendaTarea.COLUMN_AGENDA_ID + " = ? ", new String[] {idRuta + "", idAgenda + ""});
-	}
-
-	
-
-	
+	}	
 
 }

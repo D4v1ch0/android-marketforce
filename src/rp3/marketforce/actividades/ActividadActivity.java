@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import rp3.app.BaseActivity;
 import rp3.marketforce.R;
+import rp3.marketforce.models.AgendaTareaActividades;
 import rp3.marketforce.ruta.RutasDetailFragment;
 
 public abstract class ActividadActivity extends BaseActivity {
@@ -41,5 +42,16 @@ public abstract class ActividadActivity extends BaseActivity {
 	public void cancelarCambios(View v)
 	{
 		finish();
+	}
+	
+	protected AgendaTareaActividades initActividad(int idActividad)
+	{
+		AgendaTareaActividades act = new AgendaTareaActividades();
+		act.setIdAgenda((int) id_agenda);
+		act.setIdTarea(id_actividad);
+		act.setIdRuta(id_ruta);
+		act.setIdTareaActividad(idActividad);
+		AgendaTareaActividades.insert(getDataBase(), act);
+		return act;
 	}
 }
