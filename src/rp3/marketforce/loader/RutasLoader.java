@@ -25,7 +25,7 @@ public class RutasLoader extends
 		List<Agenda> result = null;
 		
 		if(flag || search.equalsIgnoreCase(""))
-		   result = Agenda.getAgenda(db);
+		   result = Agenda.getAgendaSemanal(db);
 		else
 			result = Agenda.getAgendaSearch(db, search);
 		

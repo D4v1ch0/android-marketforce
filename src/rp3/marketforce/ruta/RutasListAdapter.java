@@ -4,9 +4,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.applidium.headerlistview.SectionAdapter;
+
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
-import rp3.marketforce.headerlistview.SectionAdapter;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.ruta.RutasListFragment.TransactionListFragmentListener;
 import android.annotation.SuppressLint;
@@ -43,11 +44,6 @@ public class RutasListAdapter extends SectionAdapter{
 		this.transactionListFragmentCallback = transactionListFragmentCallback;
 		
 		 format4= new SimpleDateFormat("HH:mm");
-	}
-	
-	@Override
-	public Object getItem(int pos) {	
-		return list_agenda.get(pos);
 	}
 	
 	@Override
@@ -146,6 +142,13 @@ public class RutasListAdapter extends SectionAdapter{
 	@Override
 	public Object getRowItem(int section, int row) {
 		return null;
+	}
+	
+	public void changeList(ArrayList<ArrayList<Agenda>> list_agenda, ArrayList<String> header)
+	{
+		this.list_agenda = list_agenda;
+		this.header = header;
+		notifyDataSetChanged();
 	}
 	
 	@Override

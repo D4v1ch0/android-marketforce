@@ -5,17 +5,21 @@
     android:background="@color/color_backgroun_list"
     android:orientation="vertical" >
     
-
-<LinearLayout 
-    android:id="@+id/linearLayout_headerlist_ruta_list"
+<android.support.v4.widget.SwipeRefreshLayout  
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipe_container"
     android:layout_width="match_parent"
     android:layout_height="0dp"
-    android:layout_weight="1"
-    android:padding="10dp"
-    android:background="@color/color_backgroun_list"
-    android:orientation="vertical" >
-    
-</LinearLayout>
+    android:layout_weight="1">
+	<com.applidium.headerlistview.HeaderListView
+	    android:id="@+id/linearLayout_headerlist_ruta_list"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:background="@color/color_backgroun_list"
+	    android:orientation="vertical" >
+	    
+	</com.applidium.headerlistview.HeaderListView >
+</android.support.v4.widget.SwipeRefreshLayout>
 
 <HorizontalScrollView
     android:id="@+id/horizontalScrollView"

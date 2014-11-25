@@ -62,7 +62,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 				}
 				
 				if(result == SYNC_EVENT_SUCCESS){
-					result = rp3.marketforce.sync.Rutas.executeSync(db,null,null);				
+					result = rp3.marketforce.sync.Rutas.executeSync(db,null,null, false);				
 					addDefaultMessage(result);
 				}
 				
@@ -117,7 +117,8 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 			
 			else if(syncType.equals(SYNC_TYPE_ACTUALIZAR_AGENDA)){
 				long inicio = extras.getLong(RutasListFragment.ARG_INICIO);
-				result = rp3.marketforce.sync.Rutas.executeSync(db,inicio,(long) 1);				
+				long fin = extras.getLong(RutasListFragment.ARG_FIN);
+				result = rp3.marketforce.sync.Rutas.executeSync(db, inicio, fin, true);				
 				addDefaultMessage(result);
 			}
 			

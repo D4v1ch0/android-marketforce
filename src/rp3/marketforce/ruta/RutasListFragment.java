@@ -6,12 +6,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import com.applidium.headerlistview.HeaderListView;
+
 import rp3.data.MessageCollection;
 import rp3.marketforce.R;
-import rp3.marketforce.headerlistview.HeaderListView;
 import rp3.marketforce.loader.RutasLoader;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.sync.SyncAdapter;
+import rp3.util.Convert;
 import rp3.util.DateTime;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -21,10 +23,11 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -35,9 +38,12 @@ import android.widget.TextView;
 public class RutasListFragment extends rp3.app.BaseFragment {
 		    
 	public static String ARG_INICIO = "inicio";
+	public static String ARG_FIN = "fin";
 	
     private TransactionListFragmentListener transactionListFragmentCallback;
-    private LinearLayout linearLayout_rootParent;
+    private SwipeRefreshLayout pullRefresher;
+    private View LoadingFooter;
+    //private LinearLayout linearLayout_rootParent;
     private HeaderListView headerlist;
     private LoaderRutas loaderRutas;
     private List<Agenda> list_agenda;
@@ -96,7 +102,7 @@ public class RutasListFragment extends rp3.app.BaseFragment {
         
         calendar = Calendar.getInstance();
         day_month =  calendar.get(Calendar.DAY_OF_MONTH);
-        day_week  =  calendar.get(Calendar.DAY_OF_WEEK) - 1;
+        day_week  =  calendar.get(Calendar.DAY_OF_WEEK);
         month = calendar.get(Calendar.MONTH);
         
         if(day_week == 0)
@@ -113,6 +119,8 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 		format2 = new SimpleDateFormat("EEEE");
 		format3 = new SimpleDateFormat("dd");
 		format4 = new SimpleDateFormat("MMMM");
+		
+		LoadingFooter = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.item_list_loading, null, false);
     }
     
     @Override
@@ -120,9 +128,34 @@ public class RutasListFragment extends rp3.app.BaseFragment {
     	super.onFragmentCreateView(rootView, savedInstanceState);
     	
     	inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE); 
-    	linearLayout_rootParent = (LinearLayout) rootView.findViewById(R.id.linearLayout_headerlist_ruta_list);
+    	//linearLayout_rootParent = (LinearLayout) rootView.findViewById(R.id.linearLayout_headerlist_ruta_list);
+    	headerlist = (HeaderListView) rootView.findViewById(R.id.linearLayout_headerlist_ruta_list);
+    	pullRefresher = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
     	horizontalScrollView = (HorizontalScrollView) rootView.findViewById(R.id.horizontalScrollView);
     	
+    	pullRefresher.setRefreshing(false);
+    	
+    	pullRefresher.setOnRefreshListener(new OnRefreshListener(){
+
+			@Override
+			public void onRefresh() {
+					if(Convert.getTicksFromDate(arrayAgenda.get(0).get(0).getFechaInicio()) > Agenda.getFirstAgenda(getDataBase()))
+					{
+						pullRefresher.setRefreshing(false);
+						headerlist.getListView().removeFooterView(LoadingFooter);
+						list_agenda = Agenda.getAgenda(getDataBase());
+						orderDate();
+						adapter.changeList(arrayAgenda, header);
+					}
+					else
+					{
+						long fin = Agenda.getFirstAgenda(getDataBase());
+						Bundle bundle = new Bundle();
+						bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ACTUALIZAR_AGENDA);
+						bundle.putLong(ARG_FIN, fin);
+						requestSync(bundle);
+					}
+			}});
     	
     	linearLayout_horizontal = (LinearLayout) rootView.findViewById(R.id.linearLayout_horizontal);
     	
@@ -171,7 +204,7 @@ public class RutasListFragment extends rp3.app.BaseFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         
-        linearLayout_rootParent.removeView(headerlist);
+        //linearLayout_rootParent.removeView(headerlist);
         
     }
     
@@ -183,8 +216,11 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 		if(messages.hasErrorMessage()){
 			showDialogMessage(messages);
 		}
-		
-		searchTransactions("");
+		pullRefresher.setRefreshing(false);
+		headerlist.getListView().removeFooterView(LoadingFooter);
+		list_agenda = Agenda.getAgenda(getDataBase());
+		orderDate();
+		adapter.changeList(arrayAgenda, header);
 	}
 	
 	
@@ -216,11 +252,11 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 					{
 						if(headerlist == null)
 						{
-							headerlist = new HeaderListView(getActivity());
+							//headerlist = (HeaderListView) rootView.findViewById(R.id.linearLayout_headerlist_ruta_list);
 							headerlist.getListView().setDivider(null);
 							headerlist.getListView().setDividerHeight(0);
 							headerlist.getListView().setSelector(getActivity().getResources().getDrawable(R.drawable.bkg_rutas));
-							linearLayout_rootParent.addView(headerlist);
+							//linearLayout_rootParent.addView(headerlist);
 							
 							headerlist.getListView().setOnScrollListener(new OnScrollListener(){
 
@@ -232,16 +268,24 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 
 								@Override
 								public void onScroll(AbsListView view, int firstVisibleItem,
-										int visibleItemCount, int totalItemCount) {
-									if(totalItemCount - visibleItemCount < 3)
-									{
-										long inicio = Agenda.getLastAgenda(getDataBase());
-										Bundle bundle = new Bundle();
-										bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ACTUALIZAR_AGENDA);
-										bundle.putLong(ARG_INICIO, inicio);
-										requestSync(bundle);
-									}
-									
+										int visibleItemCount, int totalItemCount) {									
+									   if(firstVisibleItem == 0 && visibleItemCount != 0)
+									   {
+										   pullRefresher.setEnabled(true);
+									   }
+									   else
+									   {
+										   pullRefresher.setEnabled(false);
+										   if(totalItemCount <= (firstVisibleItem+visibleItemCount) && headerlist.getListView().getFooterViewsCount() == 0)
+										   {
+											   headerlist.getListView().addFooterView(LoadingFooter);
+											   long inicio = Agenda.getLastAgenda(getDataBase());
+											   Bundle bundle = new Bundle();
+											   bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ACTUALIZAR_AGENDA);
+											   bundle.putLong(ARG_INICIO, inicio);
+											   requestSync(bundle);
+										   }
+									   }
 								}});
 						}
 						
@@ -277,14 +321,23 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 										   mPaintRiel();
 									   }
 									   
-									   if(totalItemCount - visibleItemCount < 3)
-										{
-											long inicio = Agenda.getLastAgenda(getDataBase());
-											Bundle bundle = new Bundle();
-											bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ACTUALIZAR_AGENDA);
-											bundle.putLong(ARG_INICIO, inicio);
-											requestSync(bundle);
-										}
+									   if(firstVisibleItem == 0 && visibleItemCount != 0)
+									   {
+										   pullRefresher.setEnabled(true);
+									   }
+									   else
+									   {
+										   pullRefresher.setEnabled(false);
+										   if(totalItemCount <= (firstVisibleItem+visibleItemCount) && headerlist.getListView().getFooterViewsCount() == 0)
+										   {
+											   headerlist.getListView().addFooterView(LoadingFooter);
+											   long inicio = Agenda.getLastAgenda(getDataBase());
+											   Bundle bundle = new Bundle();
+											   bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ACTUALIZAR_AGENDA);
+											   bundle.putLong(ARG_INICIO, inicio);
+											   requestSync(bundle);
+										   }
+									   }
 								
 							}
 						});
@@ -366,7 +419,10 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 			 if(list_agenda.size()> 0)
 			 {
 				 header = new ArrayList<String>();
+				 List<String> headerAnteriores = new ArrayList<String>();
 				 arrayAgenda = new ArrayList<ArrayList<Agenda>>();
+				 List<ArrayList<Agenda>> arrayAgendaAnteriores = new ArrayList<ArrayList<Agenda>>();
+				 String fechaAnterior = null;
 				 Calendar cal = Calendar.getInstance();		
 				 
 				 ArrayList<Agenda> anteriores = null; 
@@ -379,8 +435,15 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 					
 					if(diff >= 0)
 					{
+						if(anteriores != null && anteriores.size() > 0)
+						{
+							arrayAgendaAnteriores.add(anteriores);
+							anteriores = null;
+						}
+						
 						cal.setTime(agd.getFechaInicio());
-						int day_w = cal.get(Calendar.DAY_OF_WEEK)-1;
+						String date = cal.getTime().toString();
+						int day_w = cal.get(Calendar.DAY_OF_WEEK);
 						int day_m = cal.get(Calendar.DAY_OF_MONTH);
 						int current_month = cal.get(Calendar.MONTH);
 						
@@ -397,7 +460,7 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 					{
 						 cal = Calendar.getInstance();
 						 cal.add(Calendar.DAY_OF_YEAR, 1);
-						 int day_week_aux = cal.get(Calendar.DAY_OF_WEEK)-1;
+						 int day_week_aux = cal.get(Calendar.DAY_OF_WEEK);
 						 int day_mont_aux = cal.get(Calendar.DAY_OF_MONTH);
 						 int current_month_aux = cal.get(Calendar.MONTH);
 						 
@@ -442,8 +505,20 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 					}
 					}else
 					{
-						if(anteriores == null)
+						if(fechaAnterior == null)
+						{
+							fechaAnterior = format1.format(agd.getFechaInicio());
+							headerAnteriores.add(format1.format(agd.getFechaInicio()));
 							anteriores = new ArrayList<Agenda>();
+						}
+						
+						if(!fechaAnterior.equalsIgnoreCase(format1.format(agd.getFechaInicio())))
+						{
+							headerAnteriores.add(format1.format(agd.getFechaInicio()));
+							fechaAnterior = format1.format(agd.getFechaInicio());
+							arrayAgendaAnteriores.add(anteriores);
+							anteriores = new ArrayList<Agenda>();
+						}
 						
 						anteriores.add(agd);
 					}
@@ -466,7 +541,9 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 					 cal.add(Calendar.DAY_OF_YEAR, 1);
 					 date = format1.format(cal.getTime());
 					 header.add(1,date);
-				 }				 				 
+				 }				 	
+				 header.addAll(0, headerAnteriores);
+				 arrayAgenda.addAll(0, arrayAgendaAnteriores);
 			 }
 	 }
     
@@ -520,7 +597,7 @@ public class RutasListFragment extends rp3.app.BaseFragment {
     	super.onResume();
     	
     	if(headerlist!=null && headerlist.getParent() == null){    		
-    		linearLayout_rootParent.addView(headerlist);    		
+    		//linearLayout_rootParent.addView(headerlist);    		
     		headerlist.setAdapter(adapter);
     		paintDates();    		    		
     	}

@@ -275,6 +275,24 @@
         ORDER BY tbAgenda.FechaInicio, tbAgendaExt.NombreCompleto
      </statement>
      
+	  <statement name="AgendaSemanal">
+       SELECT  
+        tbAgenda._id, 
+        tbAgenda.IdRuta,
+        tbAgenda.IdAgenda,        
+        tbAgenda.FechaInicio,
+        tbAgenda.FechaFin,
+        tbAgenda.EstadoAgenda,
+        tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
+        tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
+        tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad
+        FROM tbAgenda
+        JOIN tbAgendaExt
+        ON tbAgenda._id = tbAgendaExt.docid
+        WHERE tbAgenda.FechaInicio >= ?
+        ORDER BY tbAgenda.FechaInicio, tbAgendaExt.NombreCompleto
+     </statement>
+     
 	  
 	  <statement name="AgendaByAgendaID">
        SELECT  

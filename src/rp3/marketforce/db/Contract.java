@@ -216,6 +216,7 @@ public final class Contract {
 		public static final String COLUMN_FECHA_INICIO_REAL = "FechaInicioReal";
 		public static final String COLUMN_FECHA_FIN_REAL = "FechaFinReal";
 		public static final String COLUMN_ENVIADO = "Enviado";
+		public static final String COLUMN_CONTACTO_ID = "IdContacto";
 		
 		public static final String FIELD_RUTA_ID = COLUMN_RUTA_ID;
 		public static final String FIELD_AGENDA_ID = COLUMN_AGENDA_ID;
@@ -228,6 +229,7 @@ public final class Contract {
 		public static final String FIELD_FECHA_INICIO_REAL = COLUMN_FECHA_INICIO_REAL;
 		public static final String FIELD_FECHA_FIN_REAL = COLUMN_FECHA_FIN_REAL;
 		public static final String FIELD_ENVIADO = COLUMN_ENVIADO;
+		public static final String FIELD_CONTACTO_ID = COLUMN_CONTACTO_ID;
 		public static final String FIELD_CLIENTE_URL_FOTO = Contract.Cliente.TABLE_NAME + "_" + Contract.Cliente.COLUMN_URL_FOTO;
 		public static final String FIELD_CLIENTE_NOMBRE = Contract.AgendaExt.TABLE_NAME + "_" + Contract.AgendaExt.COLUMN_NOMBRE;		
 		public static final String FIELD_CLIENTE_DIRECCION = Contract.AgendaExt.TABLE_NAME + "_" + Contract.AgendaExt.COLUMN_DIRECCION;
@@ -237,6 +239,7 @@ public final class Contract {
 		public static final String FIELD_ESTADO_AGENDA_DESCRIPCION = "tbEstadoAgenda_" + rp3.data.models.Contract.GeneralValue.COLUMN_VALUE;
 		
 		public static final String QUERY_AGENDA = "AgendaByCliente";
+		public static final String QUERY_AGENDA_SEMANAL = "AgendaSemanal";
 		public static final String QUERY_AGENDA_ID = "AgendaByAgendaID";
 		public static final String QUERY_AGENDA_SEARCH = "SimpleRutaSearch";
 	} 

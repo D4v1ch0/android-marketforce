@@ -20,36 +20,56 @@ import android.util.Log;
 
 public class Rutas {
 
-		public static int executeSync(DataBase db, Long inicio, Long fin){
-			WebService webService = new WebService("MartketForce","Agenda");		
+		public static int executeSync(DataBase db, Long inicio, Long fin, boolean inList){
+			WebService webService = new WebService("MartketForce","Agenda");			
 			
-			//inicio = rp3.marketforce.models.Agenda.getLastAgenda(db);
-			//webService.addParameter("@fechainicio", 635451264000000000l);
-			//webService.addParameter("@fechafin", 635477183990000000l);	
-			
-			if(inicio == null || inicio == 0){
-				Calendar dateIni = DateTime.getCurrentCalendar();
-				dateIni.add(Calendar.DATE, -7);
-				inicio = Convert.getDotNetTicksFromDate(dateIni.getTime());											
+			if(inList)
+			{
+				if((inicio == null || inicio == 0) && !(fin == null || fin == 0))
+				{
+					Date date = Convert.getDateFromTicks(fin);
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(date);
+					cal.add(Calendar.DATE, - 7);
+					inicio = Convert.getDotNetTicksFromDate(cal.getTime());
+					fin = Convert.getDotNetTicksFromDate(Convert.getDateFromTicks(fin));	
+				}
+				else
+				{
+					Date date = Convert.getDateFromTicks(inicio);
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(date);
+					cal.add(Calendar.DATE, 7);
+					inicio = Convert.getDotNetTicksFromDate(Convert.getDateFromTicks(inicio));
+					fin = Convert.getDotNetTicksFromDate(cal.getTime());
+				}
 			}
 			else
 			{
-				inicio = Convert.getDotNetTicksFromDate(Convert.getDateFromTicks(inicio));
+				if(inicio == null || inicio == 0){
+					Calendar dateIni = DateTime.getCurrentCalendar();
+					dateIni.add(Calendar.DATE, -7);
+					inicio = Convert.getDotNetTicksFromDate(dateIni.getTime());											
+				}
+				else
+				{
+					inicio = Convert.getDotNetTicksFromDate(Convert.getDateFromTicks(inicio));
+				}
+				
+				Date ini = Convert.getDateFromDotNetTicks(inicio);
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(ini);
+				if(fin == null || fin == 0)
+				{
+					cal.add(Calendar.DATE, 14);
+				}
+				else
+				{
+					cal.add(Calendar.DATE, 7);
+				}
+				
+				fin = Convert.getDotNetTicksFromDate(cal.getTime());
 			}
-			
-			Date ini = Convert.getDateFromDotNetTicks(inicio);
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(ini);
-			if(fin == null || fin == 0)
-			{
-				cal.add(Calendar.DATE, 14);
-			}
-			else
-			{
-				cal.add(Calendar.DATE, 7);
-			}
-			
-			fin = Convert.getDotNetTicksFromDate(cal.getTime());
 			
 			webService.addParameter("@fechainicio", inicio);
 			webService.addParameter("@fechafin", fin);

@@ -1,6 +1,7 @@
 package rp3.marketforce.models;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import rp3.db.QueryDir;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.db.Contract;
 import rp3.marketforce.models.Cliente.ClientExt;
+import rp3.util.Convert;
 import rp3.util.CursorUtils;
 import android.database.Cursor;
 import android.util.Log;
@@ -21,6 +23,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 	private int idCliente;
 	private int idClienteDireccion;
 	private int idProgramacionRuta;
+	private int idContacto;
 	private Date fechaInicio;
 	private Date fechaFin;
 	private Date fechaInicioReal;
@@ -70,6 +73,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 		setValue(Contract.Agenda.COLUMN_FECHA_INICIO_REAL, this.fechaInicioReal);
 		setValue(Contract.Agenda.COLUMN_FECHA_FIN_REAL, this.fechaFinReal);
 		setValue(Contract.Agenda.COLUMN_ENVIADO, this.enviado);
+		setValue(Contract.Agenda.COLUMN_CONTACTO_ID, this.idContacto);
 	}
 
 	@Override
@@ -212,6 +216,14 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 		Cliente = cliente;
 	}
 	
+	public int getIdContacto() {
+		return idContacto;
+	}
+
+	public void setIdContacto(int idContacto) {
+		this.idContacto = idContacto;
+	}
+
 	public Date getFechaInicioReal() {
 		return fechaInicioReal;
 	}
@@ -233,6 +245,37 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
         String query = QueryDir.getQuery( Contract.Agenda.QUERY_AGENDA );
 		
 		Cursor c = db.rawQuery(query);
+		
+		List<Agenda> list = new ArrayList<Agenda>();
+		while(c.moveToNext()){
+			
+			Agenda agd = new Agenda();
+			agd.setID(CursorUtils.getInt(c, Contract.Agenda._ID));
+			agd.setFechaInicio(CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_INCICIO));
+			agd.setFechaFin(CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_FIN));
+			agd.setEstadoAgenda(CursorUtils.getString(c, Contract.Agenda.FIELD_ESTADO_AGENDA));
+			agd.setNombreCompleto(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_NOMBRE));
+			agd.setEstadoAgenda(CursorUtils.getString(c, Contract.Agenda.FIELD_ESTADO_AGENDA));
+			agd.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));				
+			//agd.setEstadoAgendaDescripcion(CursorUtils.getString(c, Contract.Agenda.FIELD_ESTADO_AGENDA_DESCRIPCION));
+			
+			ClienteDireccion cld = new ClienteDireccion();
+			cld.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));			
+			agd.setCiudad(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_CIUDAD));			
+			agd.setClienteDireccion(cld);
+			
+			list.add(agd);
+		}
+		return list;
+	}
+	
+	public static List<Agenda> getAgendaSemanal(DataBase db){
+		
+        String query = QueryDir.getQuery( Contract.Agenda.QUERY_AGENDA_SEMANAL );
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DATE, -1);
+		
+		Cursor c = db.rawQuery(query, Convert.getTicksFromDate(cal.getTime()));
 		
 		List<Agenda> list = new ArrayList<Agenda>();
 		while(c.moveToNext()){
@@ -303,7 +346,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 		
 		Cursor c = db.query(Contract.Agenda.TABLE_NAME, new String[] {Contract.Agenda.COLUMN_AGENDA_ID, Contract.Agenda.COLUMN_CLIENTE_ID,
 				Contract.Agenda.COLUMN_RUTA_ID, Contract.Agenda.COLUMN_FECHA_INICIO_REAL, Contract.Agenda.COLUMN_FECHA_FIN_REAL,
-				Contract.Agenda.COLUMN_ESTADO_AGENDA}, 
+				Contract.Agenda.COLUMN_ESTADO_AGENDA, Contract.Agenda.COLUMN_CONTACTO_ID}, 
 				Contract.Agenda._ID + " = ? AND " +
 				Contract.Agenda.COLUMN_ESTADO_AGENDA + " = 'V' AND " +
 				Contract.Agenda.COLUMN_ENVIADO + " = 0", id);
@@ -314,6 +357,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			
 			agd = new Agenda();
 			agd.setIdRuta(CursorUtils.getInt(c, Contract.Agenda.COLUMN_RUTA_ID));
+			agd.setIdContacto(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CONTACTO_ID));
 			agd.setIdAgenda((int) id);
 			agd.setIdCliente(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_ID));
 			agd.setFechaInicioReal(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_INICIO_REAL));
@@ -356,6 +400,11 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 	public static long getLastAgenda(DataBase db)
 	{
 		return db.queryMaxLong(Contract.Agenda.TABLE_NAME, Contract.Agenda.COLUMN_FECHA_FIN);
+	}
+	
+	public static long getFirstAgenda(DataBase db)
+	{
+		return db.queryMinLong(Contract.Agenda.TABLE_NAME, Contract.Agenda.COLUMN_FECHA_INICIO);
 	}
 	
 	

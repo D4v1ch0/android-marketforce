@@ -110,7 +110,6 @@ public class AgendaTareaOpciones extends rp3.data.entity.EntityBase<AgendaTareaO
 	public static List<AgendaTareaOpciones> getOpciones(DataBase db, long id_tarea, long id_actividad)
 	{
 		List<AgendaTareaOpciones> list_opc = new ArrayList<AgendaTareaOpciones>();
-		
 		Cursor c = db.query(Contract.AgendaTareaOpciones.TABLE_NAME,
 				new String[] {Contract.AgendaTareaOpciones._ID,Contract.AgendaTareaOpciones.COLUMN_AGENDA_ID, Contract.AgendaTareaOpciones.COLUMN_DESCRIPCION,
 				Contract.AgendaTareaOpciones.COLUMN_ORDEN,Contract.AgendaTareaOpciones.COLUMN_RUTA_ID, 
