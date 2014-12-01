@@ -93,7 +93,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 			}});
 		
 		if(!hasFragment(R.id.content_transaction_list))		
-			setFragment(R.id.content_transaction_list, rutasListFragment );				
+			setFragment(R.id.content_transaction_list, rutasListFragment );	
 		
 		if(slidingPane.isOpen() && 
 				rootView.findViewById(R.id.content_transaction_list).getLayoutParams().width != LayoutParams.MATCH_PARENT)		
