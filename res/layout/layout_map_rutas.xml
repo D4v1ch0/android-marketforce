@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+
+        <fragment
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            class="com.google.android.gms.maps.MapFragment" />
+
+        <ListView
+            android:id="@+id/map_list"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_map"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:background="@color/color_white_maps_list" >
+
+        </ListView>
+
+        <ImageButton
+            android:id="@+id/map_expand"
+            style="@style/Widget.Button.Theme"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/expand_map"
+            android:layout_above="@+id/map_list"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/ic_action_expand" />
+
+        <ImageButton
+            android:id="@+id/map_collapse"
+            style="@style/Widget.Button.Theme"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/expand_map"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/ic_action_collapse"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/map_contact"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_map"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:background="@color/color_white_maps_list"
+            android:paddingBottom="10dp" >
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="0.4"
+                android:gravity="center"
+                android:orientation="vertical" >
+
+                <ImageView
+                    android:id="@+id/map_image"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/user" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.6"
+                android:orientation="vertical"
+                android:padding="5dp" >
+
+                <TextView
+                    android:id="@+id/map_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="Medium Text"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/color_text_title"
+                    android:textSize="@dimen/text_medium_size" />
+
+                <TextView
+                    android:id="@+id/map_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:drawableLeft="@drawable/ic_phone"
+                    android:drawablePadding="5dp"
+                    android:gravity="center_vertical"
+                    android:onClick="CallPhone"
+                    android:text="Medium Text"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="@dimen/text_small_size" />
+
+                <TextView
+                    android:id="@+id/map_mail"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:drawableLeft="@drawable/ic_email"
+                    android:drawablePadding="5dp"
+                    android:gravity="center_vertical"
+                    android:onClick="SendEmail"
+                    android:text="Medium Text"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="@dimen/text_small_size" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/map_posicion"
+            style="@style/Widget.Button.Theme"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:onClick="ClickPosicion"
+            android:text="@string/label_posicion" />
+
+        <Button
+            android:id="@+id/map_como_llegar"
+            style="@style/Widget.Button.Theme"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:onClick="ClickComoLlegar"
+            android:text="@string/label_como_llegar" />
+
+        <Button
+            android:id="@+id/map_ruta_por_fecha"
+            style="@style/Widget.Button.Theme"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="ClickRutas"
+            android:text="@string/label_rutas_por_fecha" />
+
+    </LinearLayout>
+
+</LinearLayout>

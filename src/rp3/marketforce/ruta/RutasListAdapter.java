@@ -22,8 +22,10 @@ import android.widget.TextView;
 @SuppressLint("SimpleDateFormat")
 public class RutasListAdapter extends SectionAdapter{
 	
+	private boolean action = true;
 	private LayoutInflater inflater;
 	private Context contex;
+	private ArrayList<Agenda> one_list;
 	private ArrayList<ArrayList<Agenda>> list_agenda;
 	private ArrayList<String> header;
 	private TransactionListFragmentListener transactionListFragmentCallback;
@@ -42,6 +44,7 @@ public class RutasListAdapter extends SectionAdapter{
 		this.list_agenda = list_agenda;
 		this.header = header;
 		this.transactionListFragmentCallback = transactionListFragmentCallback;
+		getListAgenda();
 		
 		 format4= new SimpleDateFormat("HH:mm");
 	}
@@ -75,7 +78,7 @@ public class RutasListAdapter extends SectionAdapter{
 	      convertView = (View) inflater.inflate(this.contex.getApplicationContext().getResources().getLayout(R.layout.headerlist_ruta_list), null);
 //		
 		((TextView) convertView.findViewById(R.id.textView_headerlist_ruta_list)).setText(""+header.get(section));
-		
+		one_list.add(null);
 		return convertView;
 	}
 
@@ -144,28 +147,51 @@ public class RutasListAdapter extends SectionAdapter{
 		return null;
 	}
 	
+	private void getListAgenda()
+	{
+		one_list = new ArrayList<Agenda>();
+		for(ArrayList<Agenda> list : list_agenda)
+		{
+			one_list.add(null);
+			for(Agenda agd : list)
+			{
+				one_list.add(agd);
+			}
+		}
+	}
+	
+	public Agenda getAgendaFromHeaderList(int position)
+	{
+		return one_list.get(position);
+	}
+	
 	public void changeList(ArrayList<ArrayList<Agenda>> list_agenda, ArrayList<String> header)
 	{
 		this.list_agenda = list_agenda;
 		this.header = header;
+		getListAgenda();
 		notifyDataSetChanged();
 	}
 	
 	@Override
     public void onRowItemClick(AdapterView<?> parent, View view, int section, int row, long id) {
         super.onRowItemClick(parent, view, section, row, id);
-        
-        RutasListFragment.SECTION = section;
-        section_= section;
-    	row_ = row;
-        
-        if(transactionListFragmentCallback.allowSelectedItem())
+        if(action)
         {
-        	notifyDataSetChanged();
+	        RutasListFragment.SECTION = section;
+	        section_= section;
+	    	row_ = row;
+	        
+	        if(transactionListFragmentCallback.allowSelectedItem())
+	        {
+	        	notifyDataSetChanged();
+	        }
+	        
+	        if(transactionListFragmentCallback != null)
+	        	transactionListFragmentCallback.onTransactionSelected(list_agenda.get(section).get(row).getID());
         }
+        action = true;
         
-        if(transactionListFragmentCallback != null)
-        	transactionListFragmentCallback.onTransactionSelected(list_agenda.get(section).get(row).getID());
        }
 	
 	@SuppressLint("DefaultLocale")
@@ -173,6 +199,14 @@ public class RutasListAdapter extends SectionAdapter{
 	    if(original.length() == 0)
 	        return original;
 	    return original.substring(0, 1).toUpperCase() + original.substring(1);
+	}
+
+	public boolean isAction() {
+		return action;
+	}
+
+	public void setAction(boolean action) {
+		this.action = action;
 	}
 	
 }

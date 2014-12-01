@@ -1,6 +1,7 @@
 package rp3.marketforce.sync;
 
 import rp3.db.sqlite.DataBase;
+import rp3.marketforce.ruta.CrearVisitaFragment;
 import rp3.marketforce.ruta.RutasDetailFragment;
 import rp3.marketforce.ruta.RutasListFragment;
 import rp3.sync.SyncAudit;
@@ -14,10 +15,13 @@ import android.util.Log;
 public class SyncAdapter extends rp3.content.SyncAdapter {
 	
 	public static String SYNC_TYPE_GENERAL = "general";
+	public static String SYNC_TYPE_ACT_AGENDA = "actagenda";
 	public static String SYNC_TYPE_ENVIAR_UBICACION = "sendlocation";
 	public static String SYNC_TYPE_CLIENTE_UPDATE = "clienteupdate";
 	public static String SYNC_TYPE_ENVIAR_AGENDA = "sendagenda";
 	public static String SYNC_TYPE_ACTUALIZAR_AGENDA = "actagenda";
+	public static String SYNC_TYPE_REPROGRAMAR_AGENDA = "reprogramar";
+	public static String SYNC_TYPE_INSERTAR_AGENDA = "insertarAgenda";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -64,6 +68,9 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 				if(result == SYNC_EVENT_SUCCESS){
 					result = rp3.marketforce.sync.Rutas.executeSync(db,null,null, false);				
 					addDefaultMessage(result);
+					if(result == SYNC_EVENT_SUCCESS){
+						SyncAudit.insert(SYNC_TYPE_ACT_AGENDA, SYNC_EVENT_SUCCESS);
+					}
 				}
 				
 				if(result == SYNC_EVENT_SUCCESS){
@@ -112,6 +119,18 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 			else if(syncType.equals(SYNC_TYPE_ENVIAR_AGENDA)){
 				int id = extras.getInt(RutasDetailFragment.ARG_AGENDA_ID);
 				result = Agenda.executeSync(db, id);
+				addDefaultMessage(result);
+			}
+			
+			else if(syncType.equals(SYNC_TYPE_REPROGRAMAR_AGENDA)){
+				int id = extras.getInt(RutasDetailFragment.ARG_AGENDA_ID);
+				result = Agenda.executeSyncReschedule(db, id);
+				addDefaultMessage(result);
+			}
+			
+			else if(syncType.equals(SYNC_TYPE_INSERTAR_AGENDA)){
+				String agenda = extras.getString(CrearVisitaFragment.ARG_AGENDA);
+				result = Agenda.executeSyncInsert(db, agenda);
 				addDefaultMessage(result);
 			}
 			

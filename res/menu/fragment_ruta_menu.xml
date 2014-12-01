@@ -8,4 +8,9 @@
           android:actionViewClass="android.widget.SearchView"   
           android:showAsAction="always|collapseActionView"          
           />
+      <item android:id="@+id/action_crear_visita" android:icon="@drawable/ic_action_new" android:title="@string/label_crear_visita"
+          android:showAsAction="always|collapseActionView"     ></item>
+      <item android:id="@+id/action_ver_ruta" android:title="@string/label_menu_ver_rutas"></item>
+      <item android:id="@+id/action_ver_posicion" android:title="@string/label_menu_ver_posicion"></item>
+      <item android:id="@+id/action_como_llegar" android:title="@string/label_menu_como_llegar"></item>
 </menu>

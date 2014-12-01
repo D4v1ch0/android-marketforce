@@ -305,6 +305,7 @@
         tbAgenda.FechaFin,
         tbAgenda.EstadoAgenda,
         tbAgenda.FechaInicioReal,
+        tbAgenda.FechaFinReal,
         tbCliente.URLFoto AS tbCliente_URLFoto,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
@@ -377,7 +378,7 @@
 	   tbAgendaTarea.IdTarea,
 	   tbTarea.NombreTarea,
 	   tbTarea.TipoTarea,
-	   tbTarea.EstadoTarea,
+	   tbAgendaTarea.EstadoTarea,
 	   tbEstadoTarea.Value AS tbEstadoTarea_Value_Value
 	   FROM tbAgendaTarea
 	   JOIN tbGeneralValue tbEstadoTarea

@@ -5,6 +5,7 @@ import java.util.Calendar;
 import rp3.configuration.PreferenceManager;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
+import rp3.marketforce.actividades.ActividadActivity;
 import rp3.marketforce.actividades.CheckboxActivity;
 import rp3.marketforce.actividades.GrupoActivity;
 import rp3.marketforce.actividades.MultipleActivity;
@@ -19,6 +20,7 @@ import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.DrawableManager;
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +29,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class RutasDetailFragment extends rp3.app.BaseFragment {
     
@@ -44,6 +47,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
     private ListaTareasAdapter adapter;
     private ListView lista_tarea;
     private DrawableManager DManager;
+    private boolean soloVista = true;
     
     public interface TransactionDetailListener{
     	public void onDeleteSuccess(Cliente transaction);
@@ -106,7 +110,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
 		if(agenda != null){			
 		  DManager.fetchDrawableOnThread(PreferenceManager.getString("server") + 
 					rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + agenda.getCliente().getURLFoto(),
-					(ImageView) this.getRootView().findViewById(R.id.imageView1));
+					(ImageView) this.getRootView().findViewById(R.id.map_image));
 					   
 		   setTextViewText(R.id.textView_name, agenda.getNombreCompleto());
 		   setTextViewText(R.id.textView_movil, agenda.getClienteDireccion().getTelefono1());
@@ -114,7 +118,25 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
 		   setTextViewText(R.id.textView_address, agenda.getClienteDireccion().getDireccion());
 		   setTextViewDateText(R.id.textView_fecha, agenda.getFechaInicio());		
 		   setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());
-		   
+
+				((TextView) rootView.findViewById(R.id.textView_mail)).setClickable(true);
+				((TextView) rootView.findViewById(R.id.textView_mail)).setOnClickListener(new OnClickListener(){
+
+							@Override
+							public void onClick(View v) {
+								Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+							            "mailto",agenda.getCliente().getCorreoElectronico(), null));
+								startActivity(Intent.createChooser(intent, "Send Email"));
+							}});
+				((TextView) rootView.findViewById(R.id.textView_movil)).setClickable(true);
+				((TextView) rootView.findViewById(R.id.textView_movil)).setOnClickListener(new OnClickListener(){
+							@Override
+							public void onClick(View v) {
+								String uri = "tel:" + agenda.getClienteDireccion().getTelefono1();
+								Intent intent = new Intent(Intent.ACTION_CALL);
+								intent.setData(Uri.parse(uri));
+								startActivity(intent);
+							}});
 		   setButtonClickListener(R.id.detail_agenda_button_iniciar, new OnClickListener(){
 
 			@Override
@@ -131,6 +153,23 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
 				
 			}});
 		   
+		   setButtonClickListener(R.id.detail_agenda_button_modificar, new OnClickListener(){
+
+				@Override
+				public void onClick(View v) {
+					setViewVisibility(R.id.detail_agenda_button_iniciar, View.GONE);
+					setViewVisibility(R.id.detail_agenda_button_fin, View.VISIBLE);
+					setViewVisibility(R.id.detail_agenda_button_cancelar, View.VISIBLE);
+					setViewVisibility(R.id.detail_agenda_button_modificar, View.GONE);
+					agenda.setEstadoAgenda(Contants.ESTADO_GESTIONANDO);
+					agenda.setEstadoAgendaDescripcion(Contants.DESC_GESTIONANDO);
+					agenda.setFechaInicioReal(Calendar.getInstance().getTime());
+					Agenda.update(getDataBase(), agenda);
+					((ImageView) rootView.findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_in_process);
+					 setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());
+					
+				}});
+		   
 		   setButtonClickListener(R.id.detail_agenda_button_cancelar, new OnClickListener(){
 
 				@Override
@@ -138,10 +177,19 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
 					setViewVisibility(R.id.detail_agenda_button_iniciar, View.VISIBLE);
 					setViewVisibility(R.id.detail_agenda_button_fin, View.GONE);
 					setViewVisibility(R.id.detail_agenda_button_cancelar, View.GONE);
-					agenda.setEstadoAgenda(Contants.ESTADO_PENDIENTE);
-					agenda.setEstadoAgendaDescripcion(Contants.DESC_PENDIENTE);
+					if(agenda.getFechaFinReal() == null || agenda.getFechaFinReal().getTime() < 0)
+					{
+						agenda.setEstadoAgenda(Contants.ESTADO_PENDIENTE);
+						agenda.setEstadoAgendaDescripcion(Contants.DESC_PENDIENTE);
+						((ImageView) rootView.findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_pending);
+					}
+					else
+					{
+						agenda.setEstadoAgenda(Contants.ESTADO_VISITADO);
+						agenda.setEstadoAgendaDescripcion(Contants.DESC_VISITADO);
+						((ImageView) rootView.findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_visited);
+					}
 					Agenda.update(getDataBase(), agenda);
-					((ImageView) rootView.findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_pending);
 					 setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());
 				}});
 		   
@@ -149,9 +197,10 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
 
 				@Override
 				public void onClick(View v) {
-					setViewVisibility(R.id.detail_agenda_button_iniciar, View.VISIBLE);
+					setViewVisibility(R.id.detail_agenda_button_iniciar, View.GONE);
 					setViewVisibility(R.id.detail_agenda_button_fin, View.GONE);
 					setViewVisibility(R.id.detail_agenda_button_cancelar, View.GONE);
+					setViewVisibility(R.id.detail_agenda_button_modificar, View.VISIBLE);
 					agenda.setEstadoAgenda(Contants.ESTADO_VISITADO);
 					agenda.setEstadoAgendaDescripcion(Contants.DESC_VISITADO);
 					agenda.setFechaFinReal(Calendar.getInstance().getTime());
@@ -189,6 +238,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
 				setViewVisibility(R.id.detail_agenda_button_iniciar, View.GONE);
 				setViewVisibility(R.id.detail_agenda_button_fin, View.GONE);
 				setViewVisibility(R.id.detail_agenda_button_cancelar, View.GONE);
+				setViewVisibility(R.id.detail_agenda_button_modificar, View.VISIBLE);
 			}
 		   
 		   if(agenda.getAgendaTareas() != null){
@@ -200,27 +250,30 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
+					
 					if(agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO))
+						soloVista = false;
+					else
+						soloVista = true;
+					
+					AgendaTarea setter = adapter.getItem(position);
+					if(setter.getTipoTarea().equalsIgnoreCase("A") || setter.getTipoTarea().equalsIgnoreCase("R"))
 					{
-						AgendaTarea setter = adapter.getItem(position);
-						if(setter.getTipoTarea().equalsIgnoreCase("A") || setter.getTipoTarea().equalsIgnoreCase("R"))
+						Actividad ata = Actividad.getActividadSimple(getDataBase(), setter.getIdRuta());
+						if(ata.getTipo() != null)
 						{
-							Actividad ata = Actividad.getActividadSimple(getDataBase(), setter.getIdRuta());
-							if(ata.getTipo() != null)
-							{
-								if(ata.getTipo().equalsIgnoreCase("C"))
-									showTareaCheckbox(ata, setter);	
-								if(ata.getTipo().equalsIgnoreCase("M"))
-									showTareaMultiSeleccion(ata, setter);
-								if(ata.getTipo().equalsIgnoreCase("S"))
-									showTareaSeleccion(ata, setter);
-								if(ata.getTipo().equalsIgnoreCase("T"))
-									showTareaTexto(ata, setter);
-							}
+							if(ata.getTipo().equalsIgnoreCase("C"))
+								showTareaCheckbox(ata, setter);	
+							if(ata.getTipo().equalsIgnoreCase("M"))
+								showTareaMultiSeleccion(ata, setter);
+							if(ata.getTipo().equalsIgnoreCase("S"))
+								showTareaSeleccion(ata, setter);
+							if(ata.getTipo().equalsIgnoreCase("T"))
+								showTareaTexto(ata, setter);
 						}
-						if(setter.getTipoTarea().equalsIgnoreCase("E"))
-							showTareaGrupo(setter);	
 					}
+					if(setter.getTipoTarea().equalsIgnoreCase("E"))
+						showTareaGrupo(setter);	
 				}});
 		   }
 		   
@@ -248,6 +301,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
 		intent.putExtra(ARG_ITEM_ID, ata.getIdTarea());
 		intent.putExtra(ARG_AGENDA_ID,(long) setter.getIdAgenda());
 		intent.putExtra(ARG_RUTA_ID, setter.getIdRuta());
+		intent.putExtra(ActividadActivity.ARG_VISTA, soloVista);
 		startActivity(intent);
 	}
 	
@@ -257,6 +311,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
 		intent.putExtra(ARG_ITEM_ID, ata.getIdTarea());
 		intent.putExtra(ARG_AGENDA_ID, setter.getIdAgenda());
 		intent.putExtra(ARG_RUTA_ID, setter.getIdRuta());
+		intent.putExtra(ActividadActivity.ARG_VISTA, soloVista);
 		startActivity(intent);
 	}
 	public void showTareaMultiSeleccion(Actividad ata, AgendaTarea setter)
@@ -265,6 +320,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
 		intent.putExtra(ARG_ITEM_ID, ata.getIdTarea());
 		intent.putExtra(ARG_AGENDA_ID, setter.getIdAgenda());
 		intent.putExtra(ARG_RUTA_ID, setter.getIdRuta());
+		intent.putExtra(ActividadActivity.ARG_VISTA, soloVista);
 		startActivity(intent);
 	}
     
@@ -274,6 +330,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
 		intent.putExtra(ARG_ITEM_ID, ata.getIdTarea());
 		intent.putExtra(ARG_AGENDA_ID, setter.getIdAgenda());
 		intent.putExtra(ARG_RUTA_ID, setter.getIdRuta());
+		intent.putExtra(ActividadActivity.ARG_VISTA, soloVista);
 		startActivity(intent);
 	}
 	
@@ -283,6 +340,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
 		intent.putExtra(ARG_ITEM_ID, agt.getIdTarea());
 		intent.putExtra(ARG_AGENDA_ID, agt.getIdAgenda());
 		intent.putExtra(ARG_RUTA_ID, agt.getIdRuta());
+		intent.putExtra(ActividadActivity.ARG_VISTA, soloVista);
 		startActivity(intent);
 	}
 }

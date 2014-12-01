@@ -54,8 +54,8 @@ public class ListaTareasAdapter extends BaseAdapter{
 		  else
 			  id_icon = R.drawable.ic_realizado;
 		  
-			((TextView) convertView.findViewById(R.id.textView2)).setCompoundDrawablesWithIntrinsicBounds(0, 0, id_icon, 0);
-			((TextView) convertView.findViewById(R.id.textView2)).setText(agendaTarea.get(position).getEstadoTareaDescripcion());
+			((TextView) convertView.findViewById(R.id.map_phone)).setCompoundDrawablesWithIntrinsicBounds(0, 0, id_icon, 0);
+			((TextView) convertView.findViewById(R.id.map_phone)).setText(agendaTarea.get(position).getEstadoTareaDescripcion());
 			
 			((TextView) convertView.findViewById(R.id.detail_agenda_estado)).setText(agendaTarea.get(position).getNombreTarea());
 			((TextView) convertView.findViewById(R.id.detail_tarea_num)).setText(position + 1 + "");

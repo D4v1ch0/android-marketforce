@@ -14,12 +14,14 @@ public abstract class ActividadActivity extends BaseActivity {
 	public static String ARG_PADRE_ID = "padre";
 	public static String ARG_TAREA = "tarea";
 	public static String ARG_NUMERO = "numero";
+	public static String ARG_VISTA = "vista";
 	
 	protected int id_actividad;
 	protected long id_agenda;
 	protected int id_ruta;
 	protected int id_padre;
 	protected int id_tarea;
+	protected boolean soloVista;
 	
 	@SuppressLint("NewApi")
 	@Override
@@ -35,6 +37,7 @@ public abstract class ActividadActivity extends BaseActivity {
 		id_ruta = getIntent().getExtras().getInt(RutasDetailFragment.ARG_RUTA_ID, 0);
 		id_padre = getIntent().getExtras().getInt(ARG_PADRE_ID, 0);
 		id_tarea = getIntent().getExtras().getInt(ARG_TAREA, 0);
+		soloVista = getIntent().getExtras().getBoolean(ARG_VISTA, false);
 	}
 	
 	public abstract void aceptarCambios(View v);

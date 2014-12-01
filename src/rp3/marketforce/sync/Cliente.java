@@ -24,7 +24,7 @@ public class Cliente {
 			{			
 				webService.addCurrentAuthToken();
 				long fecha = rp3.util.Convert.getDotNetTicksFromDate(SyncAudit.getLastSyncDate(rp3.marketforce.sync.SyncAdapter.SYNC_TYPE_CLIENTE_UPDATE, SyncAdapter.SYNC_EVENT_SUCCESS));
-				webService.addLongParameter("ultimaactualizacion", fecha);
+				webService.addLongParameter("@ultimaactualizacion", fecha);
 				
 				try {
 					webService.invokeWebService();

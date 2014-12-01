@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.CheckBox;
+import android.widget.TextView;
 
 public class TextoActivity extends ActividadActivity {
 
@@ -50,6 +51,11 @@ public class TextoActivity extends ActividadActivity {
 		else
 		{
 			act = initActividad(ata.getIdTareaActividad());
+		}
+		
+		if(soloVista)
+		{
+			((TextView) findViewById(R.id.actividad_texto_respuesta)).setEnabled(false); 
 		}
 	    
 	}

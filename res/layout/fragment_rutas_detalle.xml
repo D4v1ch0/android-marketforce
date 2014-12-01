@@ -13,7 +13,7 @@
         android:layout_height="wrap_content" >
 
         <ImageView
-            android:id="@+id/imageView1"
+            android:id="@+id/map_image"
             android:layout_width="130dp"
             android:layout_height="130dp"
             android:scaleType="fitCenter"
@@ -146,6 +146,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/label_button_cancelar"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/detail_agenda_button_modificar"
+            style="@style/Widget.Button.Theme"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/label_button_modificar_gestion"
             android:visibility="gone" />
 
         <Button

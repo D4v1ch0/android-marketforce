@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/actividad_grupo"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-
-    <ScrollView
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/scrollView1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1" >
+        android:layout_height="match_parent" >
 
         <LinearLayout
-            android:id="@+id/actividad_agrupar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="5dp"
             android:orientation="vertical" >
-        </LinearLayout>
-    </ScrollView>
 
-    <LinearLayout
+            <LinearLayout
+                android:id="@+id/tareas_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:orientation="vertical" >
+
+            </LinearLayout>
+            
+            <LinearLayout
         android:id="@+id/actividad_grupos_botones"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
@@ -31,7 +29,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="cancelarCambios"
             android:text="@string/label_button_cancelar_act" />
 
         <Button
@@ -41,8 +38,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_weight="1"
-            android:onClick="aceptarCambios"
             android:text="@string/label_button_aceptar_act" />
     </LinearLayout>
 
-</LinearLayout>
+        </LinearLayout>
+    </ScrollView>

@@ -383,6 +383,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			cl.setCanalDescripcion(CursorUtils.getString(c, Contract.Cliente.FIELD_CANAL_DESCRIPCION));
 			cl.setURLFoto(CursorUtils.getString(c, Contract.Cliente.FIELD_URL_FOTO));
 			cl.setTipoPersona(CursorUtils.getString(c, Contract.Cliente.FIELD_TIPO_PERSONA));
+			cl.setClienteDirecciones(ClienteDireccion.getClienteDirecciones(db, cl.getID()));
 			
 			
 			list.add(cl);

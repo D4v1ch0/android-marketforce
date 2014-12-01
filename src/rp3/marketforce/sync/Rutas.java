@@ -13,6 +13,7 @@ import rp3.connection.WebService;
 import rp3.content.SyncAdapter;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.db.Contract;
+import rp3.sync.SyncAudit;
 import rp3.util.Convert;
 import rp3.util.CursorUtils;
 import rp3.util.DateTime;
@@ -21,7 +22,8 @@ import android.util.Log;
 public class Rutas {
 
 		public static int executeSync(DataBase db, Long inicio, Long fin, boolean inList){
-			WebService webService = new WebService("MartketForce","Agenda");			
+			WebService webService = new WebService("MartketForce","Agenda");		
+			long fecha = rp3.util.Convert.getDotNetTicksFromDate(SyncAudit.getLastSyncDate(rp3.marketforce.sync.SyncAdapter.SYNC_TYPE_ACT_AGENDA, SyncAdapter.SYNC_EVENT_SUCCESS));
 			
 			if(inList)
 			{
@@ -73,7 +75,8 @@ public class Rutas {
 			
 			webService.addParameter("@fechainicio", inicio);
 			webService.addParameter("@fechafin", fin);
-			//webService.addParameter("@incluiractividades", false);
+			if(!inList)
+				webService.addParameter("@ultimaactualizacion", fecha);
 			
 			try
 			{			
@@ -110,6 +113,11 @@ public class Rutas {
 												
 						agenda.setFechaInicio( Convert.getDateFromDotNetTicks(type.getLong("FechaInicioTicks")) );
 						agenda.setFechaFin( Convert.getDateFromDotNetTicks(type.getLong("FechaFinTicks")) );
+						if(!type.isNull("FechaInicioGestionTicks"))
+						{
+							agenda.setFechaInicioReal( Convert.getDateFromDotNetTicks(type.getLong("FechaInicioGestionTicks")) );
+							agenda.setFechaFinReal( Convert.getDateFromDotNetTicks(type.getLong("FechaFinGestionTicks")) );
+						}
 						agenda.setCiudad(type.getString("Ciudad"));
 						agenda.setNombreCompleto(type.getString("NombresCompletos"));
 						agenda.setDireccion(type.getString("Direccion"));

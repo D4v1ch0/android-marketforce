@@ -9,6 +9,7 @@ import java.util.List;
 import com.applidium.headerlistview.HeaderListView;
 
 import rp3.data.MessageCollection;
+import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.loader.RutasLoader;
 import rp3.marketforce.models.Agenda;
@@ -18,6 +19,7 @@ import rp3.util.DateTime;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -28,11 +30,15 @@ import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 public class RutasListFragment extends rp3.app.BaseFragment {
@@ -155,6 +161,7 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 						bundle.putLong(ARG_FIN, fin);
 						requestSync(bundle);
 					}
+					paintDates();
 			}});
     	
     	linearLayout_horizontal = (LinearLayout) rootView.findViewById(R.id.linearLayout_horizontal);
@@ -216,11 +223,14 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 		if(messages.hasErrorMessage()){
 			showDialogMessage(messages);
 		}
+		
 		pullRefresher.setRefreshing(false);
-		headerlist.getListView().removeFooterView(LoadingFooter);
+		if(headerlist.getListView().getFooterViewsCount() != 0)
+			headerlist.getListView().removeFooterView(LoadingFooter);
 		list_agenda = Agenda.getAgenda(getDataBase());
 		orderDate();
 		adapter.changeList(arrayAgenda, header);
+		paintDates();
 	}
 	
 	
@@ -341,6 +351,41 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 								
 							}
 						});
+
+				    	headerlist.getListView().setOnItemLongClickListener(new OnItemLongClickListener(){
+
+							@Override
+							public boolean onItemLongClick(
+									AdapterView<?> parent, View view,
+									final int position, long id) {
+								adapter.setAction(false);
+								PopupMenu popup = new PopupMenu(getContext(), view);
+				                
+				                popup.getMenuInflater()
+				                    .inflate(R.menu.list_item_ruta_menu, popup.getMenu());
+				                
+				                if(adapter.getAgendaFromHeaderList(position).getEstadoAgenda().equals(Contants.ESTADO_VISITADO) || 
+				                		adapter.getAgendaFromHeaderList(position).getEstadoAgenda().equals(Contants.ESTADO_GESTIONANDO))
+				                	popup.getMenu().getItem(0).setEnabled(false);
+				                
+				                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+				                    public boolean onMenuItemClick(MenuItem item) {
+				                        switch(item.getItemId())
+				                        {
+				                        	case R.id.item_menu_reprogramar_visita:
+				                        		Intent intent = new Intent(getActivity(), ReprogramarActivity.class);
+				                        		intent.putExtra(ReprogramarActivity.ARG_AGENDA, adapter.getAgendaFromHeaderList(position).getID());
+				                        		startActivity(intent);
+				                        	break;
+				                        }
+				                        return true;
+				                    }
+				                });
+
+				                popup.show();
+									
+								return false;
+							}});
 				    	
 				    	paintDates();
 					}

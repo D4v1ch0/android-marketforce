@@ -5,6 +5,7 @@ import rp3.marketforce.R;
 import rp3.widget.SlidingPaneLayout;
 import rp3.widget.SlidingPaneLayout.PanelSlideListener;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.text.TextUtils;
@@ -50,7 +51,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 		super.onCreate(savedInstanceState);
 		
 		setRetainInstance(true);				
-				
+			
 		rutasListFragment = RutasListFragment.newInstance();					
 	}
 	
@@ -110,10 +111,13 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	  	 {
 	  		 searchView.setVisibility(View.GONE);
 	  		 menu.removeItem(R.id.action_search_ruta);
+	  		 menu.removeItem(R.id.action_crear_visita);
 	  	 }
 	  	 else
 	  	 {
 	  		 searchView.setVisibility(View.VISIBLE);
+	  		 menu.removeItem(R.id.action_como_llegar);
+	  		 menu.removeItem(R.id.action_ver_posicion);
 	  	 }
   	 }
   	  
@@ -163,6 +167,27 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	    	switch(item.getItemId())
 	    	{
 	    		case R.id.action_search_ruta:    	
+	    			return true;
+	    		case R.id.action_crear_visita:
+	    			Intent intent = new Intent(getActivity(), CrearVisitaActivity.class);
+	    			startActivity(intent);
+	    			return true;
+	    		case R.id.action_ver_posicion:   
+	    			Intent intent2 = new Intent(getActivity(), MapaActivity.class);
+	    			intent2.putExtra(MapaActivity.ACTION_TYPE, MapaActivity.ACTION_POSICION);
+	    			intent2.putExtra(MapaActivity.ARG_AGENDA, selectedTransactionId);
+	    			startActivity(intent2);
+	    			return true;
+	    		case R.id.action_ver_ruta:
+	    			Intent intent3 = new Intent(getActivity(), MapaActivity.class);
+	    			intent3.putExtra(MapaActivity.ACTION_TYPE, MapaActivity.ACTION_RUTAS);
+	    			startActivity(intent3);
+	    			return true;
+	    		case R.id.action_como_llegar:
+	    			Intent intent4 = new Intent(getActivity(), MapaActivity.class);
+	    			intent4.putExtra(MapaActivity.ACTION_TYPE, MapaActivity.ACTION_LLEGAR);
+	    			intent4.putExtra(MapaActivity.ARG_AGENDA, selectedTransactionId);
+	    			startActivity(intent4);
 	    			return true;
 	    	}
 	    	return super.onOptionsItemSelected(item);

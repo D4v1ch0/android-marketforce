@@ -16,6 +16,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
@@ -300,6 +301,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	
 	private void renderClienteNatural(View rootView)
 	{
+		boolean telf = false, email = false;
 		hideDialogConfirmation();
 		(rootView.findViewById(R.id.imageView_edit_detail_client))
 				.setOnClickListener(new View.OnClickListener() {
@@ -344,6 +346,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 				if (client.getCorreoElectronico() != null)
 					if (!client.getCorreoElectronico().equals("null"))
 						str_titulo = "" + client.getCorreoElectronico();
+				email = true;
 
 				flag = false;
 				break;
@@ -403,6 +406,21 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 					((TextView) view_rowlist
 							.findViewById(R.id.textView_content))
 							.setText(str_titulo);
+				if(email)
+				{
+					((TextView) view_rowlist
+							.findViewById(R.id.textView_content)).setClickable(true);
+					((TextView) view_rowlist
+							.findViewById(R.id.textView_content)).setOnClickListener(new OnClickListener(){
+
+								@Override
+								public void onClick(View v) {
+									Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+								            "mailto",str_titulo, null));
+									startActivity(Intent.createChooser(intent, "Send Email"));
+								}});
+					email = false;
+				}
 
 				linearLayoutRigth.addView(view_rowlist);
 
@@ -461,6 +479,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 								str_titulo = ""
 										+ client.getClienteDirecciones()
 												.get(x).getTelefono1();
+						telf = true;
 
 						break;
 
@@ -469,6 +488,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 						if (client.getClienteDirecciones().get(x).getTelefono2() != null)
 							if (!client.getClienteDirecciones().get(x).getTelefono2().equals("null"))
 								str_titulo = "" + client.getClienteDirecciones().get(x).getTelefono2();
+						telf =true;
 
 						break;
 
@@ -503,6 +523,23 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 							.findViewById(R.id.textView_content))
 							.setText(str_titulo);
 					linearLayoutAdress.addView(view_rowlist);
+					
+					if(telf)
+					{
+						((TextView) view_rowlist
+								.findViewById(R.id.textView_content)).setClickable(true);
+						((TextView) view_rowlist
+								.findViewById(R.id.textView_content)).setOnClickListener(new OnClickListener(){
+
+									@Override
+									public void onClick(View v) {
+										String uri = "tel:" + str_titulo;
+										Intent intent = new Intent(Intent.ACTION_CALL);
+										intent.setData(Uri.parse(uri));
+										startActivity(intent);
+									}});
+						telf = false;
+					}
 
 					if (y + 1 == testArrayDetailsAdress.length)
 						view_rowlist.findViewById(R.id.view_bottom)
@@ -595,6 +632,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	
 	private void renderClienteJuridico(View rootView)
 	{
+		boolean telf = false, email = false;
 		hideDialogConfirmation();
 		(rootView.findViewById(R.id.imageView_edit_detail_client))
 				.setOnClickListener(new View.OnClickListener() {
@@ -632,7 +670,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 				if (client.getCorreoElectronico() != null)
 					if (!client.getCorreoElectronico().equals("null"))
 						str_titulo = "" + client.getCorreoElectronico();
-
+				email = true;
 				flag = false;
 				break;
 				
@@ -690,6 +728,22 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 					((TextView) view_rowlist
 							.findViewById(R.id.textView_content))
 							.setText(str_titulo);
+				
+				if(email)
+				{
+					((TextView) view_rowlist
+							.findViewById(R.id.textView_content)).setClickable(true);
+					((TextView) view_rowlist
+							.findViewById(R.id.textView_content)).setOnClickListener(new OnClickListener(){
+
+								@Override
+								public void onClick(View v) {
+									Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+								            "mailto",str_titulo, null));
+									startActivity(Intent.createChooser(intent, "Send Email"));
+								}});
+					email = false;
+				}
 
 				linearLayoutRigth.addView(view_rowlist);
 
@@ -748,6 +802,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 								str_titulo = ""
 										+ client.getClienteDirecciones()
 												.get(x).getTelefono1();
+						telf = true;
 
 						break;
 
@@ -756,6 +811,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 						if (client.getClienteDirecciones().get(x).getTelefono2() != null)
 							if (!client.getClienteDirecciones().get(x).getTelefono2().equals("null"))
 								str_titulo = "" + client.getClienteDirecciones().get(x).getTelefono2();
+						telf = true;
 
 						break;
 
@@ -790,6 +846,23 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 							.findViewById(R.id.textView_content))
 							.setText(str_titulo);
 					linearLayoutAdress.addView(view_rowlist);
+					
+					if(telf)
+					{
+						((TextView) view_rowlist
+								.findViewById(R.id.textView_content)).setClickable(true);
+						((TextView) view_rowlist
+								.findViewById(R.id.textView_content)).setOnClickListener(new OnClickListener(){
+
+									@Override
+									public void onClick(View v) {
+										String uri = "tel:" + str_titulo;
+										Intent intent = new Intent(Intent.ACTION_CALL);
+										intent.setData(Uri.parse(uri));
+										startActivity(intent);
+									}});
+						telf = false;
+					}
 
 					if (y + 1 == testArrayDetailsAdress.length)
 						view_rowlist.findViewById(R.id.view_bottom)
@@ -895,6 +968,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	
 	private void renderContacto(View rootView)
 	{
+		boolean telf = false, email = false;
 		hideDialogConfirmation();
 		(rootView.findViewById(R.id.imageView_edit_detail_client)).setVisibility(View.GONE);
 
@@ -915,7 +989,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 				if (contacto.getCorreo() != null)
 					if (!contacto.getCorreo().equals("null"))
 						str_titulo = "" + contacto.getCorreo();
-
+				email = true;
 				flag = false;
 				break;
 				
@@ -936,6 +1010,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 					if (!contacto.getTelefono1().equals("null"))
 						str_titulo = ""
 								+ contacto.getTelefono1();
+					telf = true;
 
 				break;
 
@@ -944,6 +1019,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 				etiqueta = testArrayDetails[x];
 					if (!contacto.getTelefono2().equals("null"))
 						str_titulo = "" + contacto.getTelefono2();
+					telf = true;
 
 				break;
 
@@ -966,6 +1042,39 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 					((TextView) view_rowlist
 							.findViewById(R.id.textView_content))
 							.setText(str_titulo);
+				
+				if(telf)
+				{
+					((TextView) view_rowlist
+							.findViewById(R.id.textView_content)).setClickable(true);
+					((TextView) view_rowlist
+							.findViewById(R.id.textView_content)).setOnClickListener(new OnClickListener(){
+
+								@Override
+								public void onClick(View v) {
+									String uri = "tel:" + str_titulo;
+									Intent intent = new Intent(Intent.ACTION_CALL);
+									intent.setData(Uri.parse(uri));
+									startActivity(intent);
+								}});
+					telf = false;
+				}
+				
+				if(email)
+				{
+					((TextView) view_rowlist
+							.findViewById(R.id.textView_content)).setClickable(true);
+					((TextView) view_rowlist
+							.findViewById(R.id.textView_content)).setOnClickListener(new OnClickListener(){
+
+								@Override
+								public void onClick(View v) {
+									Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+								            "mailto",str_titulo, null));
+									startActivity(Intent.createChooser(intent, "Send Email"));
+								}});
+					email = false;
+				}
 
 				linearLayoutRigth.addView(view_rowlist);
 
@@ -1011,6 +1120,8 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 							if (!cd.getTelefono1().equals("null"))
 								str_titulo = ""
 										+ cd.getTelefono1();
+							
+							telf = true;
 
 						break;
 
@@ -1019,6 +1130,8 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 						etiqueta = testArrayDetails[y];
 							if (!cd.getTelefono2().equals("null"))
 								str_titulo = "" + cd.getTelefono2();
+							
+							telf = true;
 
 						break;
 
@@ -1038,6 +1151,23 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 								.findViewById(R.id.textView_content))
 								.setText(str_titulo);
 						linearLayoutAdress.addView(view_rowlist);
+						
+						if(telf)
+						{
+							((TextView) view_rowlist
+									.findViewById(R.id.textView_content)).setClickable(true);
+							((TextView) view_rowlist
+									.findViewById(R.id.textView_content)).setOnClickListener(new OnClickListener(){
+
+										@Override
+										public void onClick(View v) {
+											String uri = "tel:" + str_titulo;
+											Intent intent = new Intent(Intent.ACTION_CALL);
+											intent.setData(Uri.parse(uri));
+											startActivity(intent);
+										}});
+							telf = false;
+						}
 	
 						if (y + 1 == testArrayDetailsAdress.length)
 							view_rowlist.findViewById(R.id.view_bottom)

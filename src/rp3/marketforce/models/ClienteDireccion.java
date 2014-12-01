@@ -244,6 +244,8 @@ public class ClienteDireccion extends rp3.data.entity.EntityBase<ClienteDireccio
 			tpd.setIdCiudad(CursorUtils.getInt(c, Contract.ClienteDireccion.FIELD_CIUDAD_ID));
 			tpd.setTelefono1(CursorUtils.getString(c, Contract.ClienteDireccion.FIELD_TELEFONO1));
 			tpd.setTelefono2(CursorUtils.getString(c, Contract.ClienteDireccion.FIELD_TELEFONO2));
+			tpd.setLatitud(CursorUtils.getDouble(c, Contract.ClienteDireccion.FIELD_LATITUD));
+			tpd.setLongitud(CursorUtils.getDouble(c, Contract.ClienteDireccion.FIELD_LONGITUD));
 			
 		}
 		return tpd;

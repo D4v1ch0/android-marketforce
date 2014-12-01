@@ -2,4 +2,6 @@
 
     <!-- Default screen margins, per the Android Design guidelines. -->
 	<dimen name="transaction_edit_resume_values_marginleft">5dp</dimen>
+	<dimen name="list_map">140dp</dimen>
+	<dimen name="expand_map">20dp</dimen>
 </resources>

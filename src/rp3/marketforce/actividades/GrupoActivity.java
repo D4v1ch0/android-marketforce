@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -69,6 +70,12 @@ public class GrupoActivity extends ActividadActivity {
 	    }
 	    
 	    Container.removeViewAt(Container.getChildCount()-1);
+	    
+	    if(soloVista)
+		{
+	    	((Button) findViewById(R.id.actividad_aceptar)).setVisibility(View.GONE);
+	    	((Button) findViewById(R.id.actividad_cancelar)).setVisibility(View.GONE);
+		}
 	    
 	}
 	
@@ -147,6 +154,12 @@ public class GrupoActivity extends ActividadActivity {
 				AgendaTareaActividades.update(getDataBase(), resp);
 			}});
 		
+		//se coloca validacion para que la actividad no sea modificable
+		if(soloVista)
+		{
+		    	check.setEnabled(false);
+		}
+		
 		layout.addView(texto);
 		innerContainer = getNumero();
 		innerContainer.addView(layout);
@@ -219,6 +232,12 @@ public class GrupoActivity extends ActividadActivity {
 				intent.putExtra(ARG_NUMERO, posicion);
 				startActivity(intent);
 			}});
+		
+		//se coloca validacion para que la actividad no sea modificable
+		if(soloVista)
+		{
+			layout.setEnabled(false);
+		}
 		
 		layout.addView(texto);
 		innerContainer = getNumero();
@@ -305,6 +324,12 @@ public class GrupoActivity extends ActividadActivity {
 				
 			}});
 		
+		//se coloca validacion para que la actividad no sea modificable
+		if(soloVista)
+		{
+			combo.setEnabled(false);
+		}
+		
 		layout.addView(texto);
 		innerContainer = getNumero();
 		innerContainer.addView(layout);
@@ -377,6 +402,12 @@ public class GrupoActivity extends ActividadActivity {
 				intent.putExtra(ARG_NUMERO, posicion);
 				startActivity(intent);
 			}});
+		
+		//se coloca validacion para que la actividad no sea modificable
+		if(soloVista)
+		{
+			layout.setEnabled(false);
+		}
 		
 		layout.addView(texto);
 		innerContainer = getNumero();
@@ -515,6 +546,11 @@ public class GrupoActivity extends ActividadActivity {
 					agregarTexto(actividad_hija);
 	    	}
 	    }
+	    if(soloVista)
+		{
+	    	((Button) findViewById(R.id.actividad_aceptar)).setVisibility(View.GONE);
+	    	((Button) findViewById(R.id.actividad_cancelar)).setVisibility(View.GONE);
+		}
 		super.onResume();
 	}
 	

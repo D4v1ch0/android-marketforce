@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 public class SeleccionActivity extends ActividadActivity {
 	
@@ -61,6 +63,11 @@ public class SeleccionActivity extends ActividadActivity {
 		else
 		{
 			act = initActividad(ata.getIdTareaActividad());
+		}
+		
+		if(soloVista)
+		{
+			((Spinner) findViewById(R.id.actividad_seleccion_respuesta)).setEnabled(false); 
 		}
 	}
 

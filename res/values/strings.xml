@@ -58,5 +58,18 @@
     <string name="menu_toggle_contactos">Ver Contactos</string>
     <string name="loading">Cargando...</string>
     <string name="label_contacto">Contacto:</string>
+    <string name="label_button_modificar_gestion">Modificar Gestión</string>
+    <string name="menu_reprogramar_agenda">Reprogramar Agenda</string>
+    <string name="label_desde">Desde:</string>
+    <string name="label_hasta">Hasta:</string>
+    <string name="label_cliente">Cliente</string>
+    <string name="label_crear_visita">Crear Visita</string>
+    <string name="label_conf_tareas">Configurar Tareas</string>
+    <string name="label_menu_ver_rutas">Ver Rutas</string>
+    <string name="label_menu_ver_posicion">Ver Posición</string>
+    <string name="label_menu_como_llegar">Como Llegar</string>
+    <string name="label_rutas_por_fecha">Rutas Por Fecha</string>
+    <string name="label_como_llegar">Como Llegar</string>
+    <string name="label_posicion">Posición</string>
 
 </resources>

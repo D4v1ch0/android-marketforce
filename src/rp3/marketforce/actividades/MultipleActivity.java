@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class MultipleActivity extends  ActividadActivity {
 	
@@ -66,6 +67,10 @@ public class MultipleActivity extends  ActividadActivity {
 	    		setter.setChecked(existeRespuesta(opcion.getDescripcion()));
 	    	setter.setText(opcion.getDescripcion());
 	    	setter.setPadding(30, 15, 0, 15);
+	    	if(soloVista)
+			{
+				setter.setEnabled(false); 
+			}
 			Grupo.addView(setter);
 		}
 	}
