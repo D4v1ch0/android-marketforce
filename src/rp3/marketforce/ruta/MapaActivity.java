@@ -56,6 +56,8 @@ import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.TranslateAnimation;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -82,6 +84,7 @@ public class MapaActivity extends BaseActivity {
 	LinearLayout persona;
 	Agenda agenda;
 	DrawableManager DManager;
+	List<Marker> markers;
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -92,6 +95,8 @@ public class MapaActivity extends BaseActivity {
 	    setContentView(R.layout.layout_map_rutas);
 	    map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
 	        .getMap();
+	    
+	    map.getUiSettings().setZoomControlsEnabled(false);
 	    
 	    expand = (ImageButton) findViewById(R.id.map_expand);
 	    collapse = (ImageButton) findViewById(R.id.map_collapse);
@@ -214,6 +219,16 @@ public class MapaActivity extends BaseActivity {
 		List<Agenda> list_agendas = Agenda.getRutaDia(getDataBase(), c);
 		RutasMapaAdapter adapter = new RutasMapaAdapter(getApplicationContext(), list_agendas);
 		listview.setAdapter(adapter);
+		listview.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				markers.get(position).showInfoWindow();
+				map.animateCamera(CameraUpdateFactory.newLatLngZoom(markers.get(position).getPosition(), 12), 1000, null);
+			}
+		});
+		markers = new ArrayList<Marker>();
 		
 		for(int i = 0; i < list_agendas.size(); i ++)
 		{
@@ -222,6 +237,7 @@ public class MapaActivity extends BaseActivity {
 			Marker mark = map.addMarker(new MarkerOptions().position(pos)
 			        .title(list_agendas.get(i).getCliente().getNombreCompleto().trim()));
 			mark.showInfoWindow();
+			markers.add(mark);
 			
 			map.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 12), 2000, null);
 			
@@ -268,7 +284,7 @@ public class MapaActivity extends BaseActivity {
 								@Override
 								public void onClick(View v) {
 										slideToBottom(listview, false);
-										slideToBottom(expand, true);								
+										slideToBottom(expand, true);		
 								}
 							});
 							
@@ -336,7 +352,7 @@ public class MapaActivity extends BaseActivity {
 		    setTextViewText(R.id.map_mail, agenda.getCliente().getCorreoElectronico());
 		    
 		    DManager.fetchDrawableOnThread(PreferenceManager.getString("server") + 
-					rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + Utils.getImageDPISufix(this, agenda.getCliente().getURLFoto()),
+					rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + agenda.getCliente().getURLFoto(),
 					(ImageView) findViewById(R.id.map_image));
 			
 			Runnable runnable = new Runnable() {
@@ -421,7 +437,7 @@ public class MapaActivity extends BaseActivity {
 	    setTextViewText(R.id.map_mail, agenda.getCliente().getCorreoElectronico());
 	    
 	    DManager.fetchDrawableOnThread(PreferenceManager.getString("server") + 
-				rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + Utils.getImageDPISufix(this, agenda.getCliente().getURLFoto()),
+				rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + agenda.getCliente().getURLFoto(),
 				(ImageView) findViewById(R.id.map_image));
 	    
 	    expand.setVisibility(View.VISIBLE);

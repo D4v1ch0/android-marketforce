@@ -1,9 +1,12 @@
 package rp3.marketforce.ruta;
 
+import java.util.ArrayList;
+
 import rp3.app.BaseFragment;
 import rp3.marketforce.R;
 import rp3.widget.SlidingPaneLayout;
 import rp3.widget.SlidingPaneLayout.PanelSlideListener;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,8 +16,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.TextureView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 
@@ -102,8 +107,34 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 			mTwoPane = false;					
 	}	
 	
+	@SuppressLint("NewApi")
 	@Override
 	public void onAfterCreateOptionsMenu(Menu menu) {	
+		
+		final String overflowDesc = "overflow";
+        // The top-level window
+        final ViewGroup decor = (ViewGroup) getActivity().getWindow().getDecorView();
+        // Wait a moment to ensure the overflow button can be located
+        decor.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                // The List that contains the matching views
+                final ArrayList<View> outViews = new ArrayList<View>();
+                // Traverse the view-hierarchy and locate the overflow button
+                decor.findViewsWithText(outViews, overflowDesc,
+                        View.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                // Guard against any errors
+                if (outViews.isEmpty()) {
+                    return;
+                }
+                // Do something with the view
+                final ImageButton overflow = (ImageButton) outViews.get(0);
+                overflow.setImageResource(R.drawable.ic_rutas);
+
+            }
+
+        }, 500);
 		
   	 SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search_ruta));
   	 if(slidingPane!=null){

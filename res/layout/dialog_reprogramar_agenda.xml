@@ -12,15 +12,25 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:orientation="vertical" >
+                android:background="@color/color_title_dialog"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="5dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/bg_button_bg_main"
+                    android:orientation="vertical" >
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/reprogramar_visita_cliente"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
                     android:text="Medium Text"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -43,14 +53,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_margin="5dp"
+                    android:layout_marginTop="10dp"
                     android:orientation="vertical" >
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_margin="5dp"
                         android:orientation="vertical" >
 
                         <TextView
@@ -59,19 +68,30 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="@string/label_desde"
-                            android:textAppearance="?android:attr/textAppearanceMedium" />
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:textColor="@color/color_text_sky_blue"
+                            android:textStyle="bold" />
 
-                        <TimePicker
-                            android:id="@+id/reprogramar_visita_desde"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center" />
+                            android:background="@color/bg_layout_dates"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="20dp" >
+
+                            <TimePicker
+                                android:id="@+id/reprogramar_visita_desde"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/color_background_white" />
+
+                        </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
                         android:orientation="vertical" >
 
                         <TextView
@@ -80,13 +100,26 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="@string/label_hasta"
-                            android:textAppearance="?android:attr/textAppearanceMedium" />
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:textColor="@color/color_text_sky_blue"
+                            android:textStyle="bold" />
 
-                        <TimePicker
-                            android:id="@+id/reprogramar_visita_hasta"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center" />
+                            android:layout_gravity="center"
+                            android:background="@color/bg_layout_dates"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="20dp" >
+
+                            <TimePicker
+                                android:id="@+id/reprogramar_visita_hasta"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/color_background_white" />
+
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

@@ -10,10 +10,12 @@ import rp3.marketforce.models.Agenda;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.util.Convert;
 import android.app.Activity;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.TimePicker;
 
 public class ReprogramarActivity extends BaseActivity {

@@ -273,7 +273,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 		
         String query = QueryDir.getQuery( Contract.Agenda.QUERY_AGENDA_SEMANAL );
 		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.DATE, -1);
+		//cal.set(Calendar.HOUR, 0);
 		
 		Cursor c = db.rawQuery(query, Convert.getTicksFromDate(cal.getTime()));
 		

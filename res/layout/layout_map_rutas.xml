@@ -22,7 +22,8 @@
             android:layout_height="@dimen/list_map"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:background="@color/color_white_maps_list" >
+            android:background="@color/color_white_maps_list"
+            android:cacheColorHint="@color/bg_button_bg_main_pressed" >
 
         </ListView>
 
@@ -52,7 +53,8 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:background="@color/color_white_maps_list"
-            android:paddingBottom="10dp" >
+            android:paddingBottom="10dp"
+            android:visibility="gone" >
 
             <LinearLayout
                 android:layout_width="0dp"

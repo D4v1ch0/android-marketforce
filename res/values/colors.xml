@@ -26,7 +26,10 @@
      <color name="color_backgroun_list">#F1F1F1</color>
      <color name="tab_activated">#328fca</color>
      <color name="tab_inactivated">#3dafda</color>
-     <color name="color_white_maps_list">#99FFFFFF</color>
+     <color name="color_white_maps_list">#DDFFFFFF</color>
+     <color name="color_title_dialog">#c7e9f5</color>
+     <color name="color_text_sky_blue">#2582b4</color>
+     <color name="bg_layout_dates">#c4c6c8</color>
      
      
      

@@ -55,7 +55,7 @@ public class RutasMapaAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
-		convertView = (View) inflater.inflate(this.ctx.getApplicationContext().getResources().getLayout(R.layout.rowlist_rutas_list), null);
+		convertView = (View) inflater.inflate(this.ctx.getApplicationContext().getResources().getLayout(R.layout.rowlist_rutas_mapa), null);
 		
 		Agenda agd = list.get(position);
 		date = agd.getFechaInicio();
