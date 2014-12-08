@@ -17,4 +17,5 @@ public class Contants {
 	public final static String DESC_PENDIENTE = "Pendiente";
 	public final static String DESC_VISITADO = "Visitado";
 	public final static String DESC_REPROGRAMADO = "Reprogramado";
+	
 }

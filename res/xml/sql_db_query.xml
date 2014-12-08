@@ -329,6 +329,14 @@
         AND tbAgenda.EstadoAgenda = tbEstadoAgenda.Code 
         WHERE tbAgenda._id = ?
      </statement>
+     
+	 <statement name="AgendaConteo">
+  		SELECT 
+  		count(*) as conteo 
+  		FROM tbAgenda
+		WHERE EstadoAgenda = ? AND FechaInicio >= ?
+		AND FechaFin &lt;= ?
+     </statement>
 	  
 	 <statement name="SimpleRutaSearch">
         SELECT 

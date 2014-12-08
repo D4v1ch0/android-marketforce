@@ -1,6 +1,7 @@
 <resources>
 
     <string name="app_name">RP3 Market Force</string>
+    <string name="title_option_setinicio">Inicio</string>
     <string name="title_option_setrutas">Rutas</string>
     <string name="title_option_setclientes">Clientes</string>
     <string name="title_option_setpedido">Pedido</string>
@@ -71,5 +72,12 @@
     <string name="label_rutas_por_fecha">Rutas Por Fecha</string>
     <string name="label_como_llegar">Como Llegar</string>
     <string name="label_posicion">Posición</string>
+    <string name="abreviatura_visitado">VIS</string>
+    <string name="abreviatura_no_visitado">NVI</string>
+    <string name="abreviatura_pendiente">PEN</string>
+    <string name="label_efectividad">Efectividad:</string>
+    <string name="label_hoy">Hoy</string>
+    <string name="label_desde_graph">Desde %s</string>
+    <string name="label_empty_agenda">No hay visitas programadas para hoy</string>
 
 </resources>

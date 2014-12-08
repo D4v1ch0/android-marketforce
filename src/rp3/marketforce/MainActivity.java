@@ -11,6 +11,7 @@ import rp3.app.NavActivity;
 import rp3.app.nav.NavItem;
 import rp3.data.MessageCollection;
 import rp3.marketforce.cliente.ClientFragment;
+import rp3.marketforce.dashboard.DashboardFragment;
 import rp3.marketforce.ruta.RutasFragment;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.runtime.Session;
@@ -24,14 +25,15 @@ import android.view.MenuItem;
 
 public class MainActivity extends rp3.app.NavActivity{
 	
-	public static final int NAV_RUTAS  			= 1;
-	public static final int NAV_CLIENTES 		= 2;
-	public static final int NAV_PEDIDO 			= 3;
-	public static final int NAV_REUNIONES 		= 4;
-	public static final int NAV_RECORDATORIOS 	= 5;
-	public static final int NAV_SINCRONIZAR 	= 6;
-	public static final int NAV_AJUSTES 		= 7;
-	public static final int NAV_CERRAR_SESION 	= 8;
+	public static final int NAV_DASHBOARD		= 1;
+	public static final int NAV_RUTAS  			= 2;
+	public static final int NAV_CLIENTES 		= 3;
+	public static final int NAV_PEDIDO 			= 4;
+	public static final int NAV_REUNIONES 		= 5;
+	public static final int NAV_RECORDATORIOS 	= 6;
+	public static final int NAV_SINCRONIZAR 	= 7;
+	public static final int NAV_AJUSTES 		= 8;
+	public static final int NAV_CERRAR_SESION 	= 9;
 	
 	public static Intent newIntent(Context c){
 		Intent i = new Intent(c, MainActivity.class);
@@ -49,7 +51,7 @@ public class MainActivity extends rp3.app.NavActivity{
 		
 		
 		if(savedInstanceState == null){
-			int startNav = NAV_CLIENTES;			
+			int startNav = NAV_DASHBOARD;			
 			setNavigationSelection(startNav);  									
 		}
 	}
@@ -59,6 +61,7 @@ public class MainActivity extends rp3.app.NavActivity{
 	public void navConfig(List<NavItem> navItems, NavActivity currentActivity) {		
 		super.navConfig(navItems, currentActivity);
 		
+		NavItem dashboard = new NavItem(NAV_DASHBOARD, R.string.title_option_setinicio ,R.drawable.ic_action_select_all);
 		NavItem rutas = new NavItem(NAV_RUTAS, R.string.title_option_setrutas ,R.drawable.ic_rutas);
 		NavItem clientes = new NavItem(NAV_CLIENTES, R.string.title_option_setclientes, R.drawable.ic_clientes);
 		NavItem pedido = new NavItem(NAV_PEDIDO, R.string.title_option_setpedido, R.drawable.ic_pedido);
@@ -75,6 +78,7 @@ public class MainActivity extends rp3.app.NavActivity{
 		settingsGroup.addChildItem(ajustes);
 		settingsGroup.addChildItem(cerrarsesion);
 		
+		navItems.add(dashboard);
 		navItems.add(rutas);
 		navItems.add(clientes);
 		navItems.add(pedido);
@@ -89,6 +93,9 @@ public class MainActivity extends rp3.app.NavActivity{
 		super.onNavItemSelected(item);
 
 		switch (item.getId()) {
+		case NAV_DASHBOARD:
+			setNavFragment(DashboardFragment.newInstance(0), item.getTitle());
+			break;
 		case NAV_RUTAS:
 			setNavFragment(RutasFragment.newInstance(0),
 				    item.getTitle());
@@ -164,6 +171,10 @@ public class MainActivity extends rp3.app.NavActivity{
 			{
 				finish();
 			}
+		}
+		else
+		{
+			finish();
 		}
 	}
 	

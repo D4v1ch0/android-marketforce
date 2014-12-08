@@ -391,13 +391,15 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 					    headerlist.setAdapter(adapter);
 				    	
 				    	header_position = new ArrayList<String>();
-				    	header_position.add("0");
 				    	
 				    	cont = 0;
 				    	for(int m = 0; m< list_agenda_in_adapter.size();m++)
 				    	{
-				    		cont = (+1);
-				    	  header_position.add(""+cont);
+				    		if(list_agenda_in_adapter.get(m).getNombreCompleto() == null)
+				    		{
+				    			cont++;
+				    			header_position.add("" + m);
+				    		}
 				    	  
 				    	}				  
 				    	setListenersList();
@@ -427,47 +429,53 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 		    	for(Agenda fec : list_agenda_in_adapter)
 				{
 		    		if(fec.getNombreCompleto() == null)
-		    	       try {
-		    	       calendar.setTime(fec.getFechaInicio());
-		    	       
-						final View view_ = inflater.inflate(R.layout.rowlist_date, null);
-					    view_.setLayoutParams(params);
-					    
-					    ((TextView) view_.findViewById(R.id.textView_week)).setText(format2.format(calendar.getTime()).substring(0, 3));
-					    ((TextView) view_.findViewById(R.id.textView_day)).setText(format3.format(calendar.getTime()));
-					    ((TextView) view_.findViewById(R.id.textView_month)).setText(format4.format(calendar.getTime()).substring(0, 3));
-					    
-					    view_.setId(56+x);
-					    x++;
-					    linearLayout_horizontal.addView(view_);
-					    
-					    view_.setOnClickListener(new View.OnClickListener() {
-							
-							@Override
-							public void onClick(View v) {
+		    		{
+			    	       try {
+			    	       calendar.setTime(fec.getFechaInicio());
+			    	       
+							final View view_ = inflater.inflate(R.layout.rowlist_date, null);
+						    view_.setLayoutParams(params);
+						    
+						    ((TextView) view_.findViewById(R.id.textView_week)).setText(format2.format(calendar.getTime()).substring(0, 3));
+						    ((TextView) view_.findViewById(R.id.textView_day)).setText(format3.format(calendar.getTime()));
+						    ((TextView) view_.findViewById(R.id.textView_month)).setText(format4.format(calendar.getTime()).substring(0, 3));
+						    
+						    view_.setId(56+x);
+						    x++;
+						    linearLayout_horizontal.addView(view_);
+						    
+						    view_.setOnClickListener(new View.OnClickListener() {
 								
-								cont = 0 ;
-								SECTION = v.getId()-56;
-								
-								if(adapter != null)
-									adapter.notifyDataSetChanged();
-								
-								for(int m = 0; m< list_agenda_in_adapter.size();m++)
-									if(m < SECTION)
-									   cont = (+1);
-								
-								scrollV = cont;
-								headerlist.setSelection(cont);
-								
-								mPaintRiel();
+								@Override
+								public void onClick(View v) {
+									
+									cont = 0 ;
+									SECTION = v.getId()-56;
+									
+									if(adapter != null)
+										adapter.notifyDataSetChanged();
+									
+									int x = 0;
+									for(int m = 0; m< list_agenda_in_adapter.size();m++)
+										if(x <= SECTION && list_agenda_in_adapter.get(m).getNombreCompleto() == null)
+										{
+										   cont = m;
+										   x++;
+										}
+									
+									scrollV = cont;
+									headerlist.setSelection(cont);
+									
+									mPaintRiel();
+								}
+							});
+							  
+							} catch (Exception e) {
+								e.printStackTrace();
 							}
-						});
-						  
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
+			    	        mPaintRiel();
+					}
 				}
-		    	mPaintRiel();
 			}
 	 }
 	 
@@ -499,31 +507,36 @@ public class RutasListFragment extends rp3.app.BaseFragment {
     private void mPaintRiel()
     {
     	int bgColor = getActivity().getResources().getColor(R.color.bg_button_bg_main);
+    	int x = 0;
     	for(int y = 0 ; y < list_agenda_in_adapter.size() ; y++)
-		{ 
-    		View st =  linearLayout_horizontal.findViewById((y+56));
-    		
-    		if(st != null)
+		{
+    		if(list_agenda_in_adapter.get(y).getNombreCompleto() == null)
     		{
-				if((st.getId()-56) == SECTION)
-				{
-					st.setBackgroundColor(bgColor);
-					((TextView) st.findViewById(R.id.textView_week)).setTextColor(Color.WHITE);
-					((TextView) st.findViewById(R.id.textView_day)).setTextColor(Color.WHITE);
-					((TextView) st.findViewById(R.id.textView_month)).setTextColor(Color.WHITE);
-					if(!isViewVisible(st))
-						horizontalScrollView.scrollTo(st.getLeft(), 0);
-				}
-				else
-				{
-					if(st != null)
+	    		View st =  linearLayout_horizontal.findViewById((x+56));
+	    		
+	    		if(st != null)
+	    		{
+					if((st.getId()-56) == SECTION)
 					{
-						st.setBackgroundColor(Color.TRANSPARENT);
-						((TextView) st.findViewById(R.id.textView_week)).setTextColor(Color.BLACK);
-						((TextView) st.findViewById(R.id.textView_day)).setTextColor(Color.BLACK);
-						((TextView) st.findViewById(R.id.textView_month)).setTextColor(Color.BLACK);
+						st.setBackgroundColor(bgColor);
+						((TextView) st.findViewById(R.id.textView_week)).setTextColor(Color.WHITE);
+						((TextView) st.findViewById(R.id.textView_day)).setTextColor(Color.WHITE);
+						((TextView) st.findViewById(R.id.textView_month)).setTextColor(Color.WHITE);
+						if(!isViewVisible(st))
+							horizontalScrollView.scrollTo(st.getLeft(), 0);
 					}
-				}
+					else
+					{
+						if(st != null)
+						{
+							st.setBackgroundColor(Color.TRANSPARENT);
+							((TextView) st.findViewById(R.id.textView_week)).setTextColor(Color.BLACK);
+							((TextView) st.findViewById(R.id.textView_day)).setTextColor(Color.BLACK);
+							((TextView) st.findViewById(R.id.textView_month)).setTextColor(Color.BLACK);
+						}
+					}
+					x++;
+	    		}
     		}
 		}
     }

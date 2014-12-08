@@ -112,9 +112,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	public void onAfterCreateOptionsMenu(Menu menu) {	
 		
 		final String overflowDesc = "overflow";
-        // The top-level window
         final ViewGroup decor = (ViewGroup) getActivity().getWindow().getDecorView();
-        // Wait a moment to ensure the overflow button can be located
         decor.postDelayed(new Runnable() {
 
             @Override

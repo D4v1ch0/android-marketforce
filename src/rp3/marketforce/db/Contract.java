@@ -242,6 +242,7 @@ public final class Contract {
 		public static final String QUERY_AGENDA_SEMANAL = "AgendaSemanal";
 		public static final String QUERY_AGENDA_ID = "AgendaByAgendaID";
 		public static final String QUERY_AGENDA_SEARCH = "SimpleRutaSearch";
+		public static final String QUERY_CONTEO = "AgendaConteo";
 	} 
 	
 	public static abstract class AgendaExt implements BaseColumns {

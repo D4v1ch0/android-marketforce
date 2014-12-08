@@ -404,14 +404,16 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 	public static List<Agenda> getRutaDia(DataBase db, Calendar cal) {
 		
 		long inicio = Convert.getTicksFromDate(cal.getTime());
-		cal.add(Calendar.DATE, 1);
+		cal.set(Calendar.HOUR_OF_DAY, 23);
+		cal.set(Calendar.MINUTE, 59);
+		cal.set(Calendar.SECOND, 59);
 		long fin = Convert.getTicksFromDate(cal.getTime());
 		
 		Cursor c = db.query(Contract.Agenda.TABLE_NAME, new String[] {Contract.Agenda.COLUMN_AGENDA_ID, Contract.Agenda.COLUMN_CLIENTE_ID,
 				Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID, Contract.Agenda.COLUMN_FECHA_INICIO, Contract.Agenda.COLUMN_FECHA_FIN,
 				Contract.Agenda.COLUMN_ESTADO_AGENDA}, 
 				Contract.Agenda.COLUMN_FECHA_INICIO + " >= ? AND " +
-				Contract.Agenda.COLUMN_FECHA_FIN + " <= ?", new String [] {inicio + "", fin + "" });
+				Contract.Agenda.COLUMN_FECHA_FIN + " <= ?", new String [] {inicio + "", fin + "" }, null, null, Contract.Agenda.COLUMN_FECHA_INICIO + " ASC");
 		
 		List<Agenda> list = new ArrayList<Agenda>();
 		
@@ -444,6 +446,18 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 	public static long getFirstAgenda(DataBase db)
 	{
 		return db.queryMinLong(Contract.Agenda.TABLE_NAME, Contract.Agenda.COLUMN_FECHA_INICIO);
+	}
+	
+	public static int getCountVisitados(DataBase db, String estado, long inicio, long fin)
+	{
+		String query = QueryDir.getQuery( Contract.Agenda.QUERY_CONTEO );
+		Cursor c = db.rawQuery(query, new String[]{estado, inicio + "", fin + ""});
+		int cont = 0;
+		if(c.moveToFirst())
+		{
+			cont = CursorUtils.getInt(c,"conteo");
+		}
+		return cont;
 	}
 	
 	
