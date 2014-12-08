@@ -18,8 +18,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.TextView;
 import android.widget.ListView;
 
 public class DashboardAgendaFragment extends BaseFragment {
@@ -63,7 +63,12 @@ public class DashboardAgendaFragment extends BaseFragment {
 	    	View empty = inflater.inflate(R.layout.rowlist_empty_agenda, null);
 	    	if(((LinearLayout)empty.getParent()) != null)
 	    		((LinearLayout)empty.getParent()).removeView(empty);
-	    	getActivity().addContentView(empty, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+	    	if(list_agenda.size() <= 0)
+	    	{
+	    		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+	    		empty.setLayoutParams(params);
+	    		((LinearLayout) rootView).addView(empty);
+	    	}
 	    	
 	    	DashboardAgendaAdapter adapter = new DashboardAgendaAdapter(getActivity(), list_agenda);
 	    	
@@ -121,8 +126,10 @@ public class DashboardAgendaFragment extends BaseFragment {
     			}
     			else
     			{
-    				int restante = (int) ((diff / (1000*60)) % 60);
-    				((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_tiempo)).setText("Faltan " + restante +  " minutos para esta reunion.");
+    				int horas = (int) (diff / (1000*60*60));
+    				int restante = (int) (diff / (1000*60));
+    				int minutos =  restante - (horas * 60);
+    				((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_tiempo)).setText("Faltan " + horas +  " horas con " + minutos +  " minutos para esta reunion.");
     			}
 				DManager.fetchDrawableOnThread(PreferenceManager.getString("server") + 
     					rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + agd.getCliente().getURLFoto(),

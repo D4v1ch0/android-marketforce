@@ -92,8 +92,10 @@ public class DashboardAgendaAdapter extends BaseAdapter{
 		}
 		else
 		{
+			int horas = (int) (diff / (1000*60*60));
 			int restante = (int) (diff / (1000*60));
-			((TextView) convertView.findViewById(R.id.dashboard_agenda_tiempo)).setText("Faltan " + restante +  " minutos para esta reunion.");
+			int minutos =  restante - (horas * 60);
+			((TextView) convertView.findViewById(R.id.dashboard_agenda_tiempo)).setText("Faltan " + horas +  " horas con " + minutos +  " minutos para esta reunion.");
 		}
 		DManager.fetchDrawableOnThread(PreferenceManager.getString("server") + 
 				rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + agd.getCliente().getURLFoto(),
