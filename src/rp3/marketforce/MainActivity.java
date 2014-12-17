@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
+import rp3.app.BaseFragment;
 import rp3.app.NavActivity;
 import rp3.app.nav.NavItem;
 import rp3.data.MessageCollection;
@@ -17,6 +18,8 @@ import rp3.marketforce.sync.SyncAdapter;
 import rp3.runtime.Session;
 import rp3.widget.SlidingPaneLayout;
 import android.annotation.SuppressLint;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -49,7 +52,10 @@ public class MainActivity extends rp3.app.NavActivity{
 		
 		//extractDatabase();
 		
-		
+		this.setNavHeaderTitle(Session.getUser().getLogonName());
+		this.setNavHeaderSubtitle("RP3 Retail");
+		showNavHeader(true);
+		setNavHeaderIcon(getResources().getDrawable(R.drawable.ic_action_person_light));
 		if(savedInstanceState == null){
 			int startNav = NAV_DASHBOARD;			
 			setNavigationSelection(startNav);  									
@@ -75,15 +81,15 @@ public class MainActivity extends rp3.app.NavActivity{
 		NavItem cerrarsesion = new NavItem(NAV_CERRAR_SESION, R.string.title_option_setcerrar_sesion, R.drawable.ic_cerrar_sesion);
 		
 		settingsGroup.addChildItem(sincronizar);
-		settingsGroup.addChildItem(ajustes);
+		//settingsGroup.addChildItem(ajustes);
 		settingsGroup.addChildItem(cerrarsesion);
 		
 		navItems.add(dashboard);
 		navItems.add(rutas);
 		navItems.add(clientes);
-		navItems.add(pedido);
-		navItems.add(reuniones);
-		navItems.add(recordatorios);
+		//navItems.add(pedido);
+		//navItems.add(reuniones);
+		//navItems.add(recordatorios);
 		navItems.add(settingsGroup);
 		
 	}
@@ -190,6 +196,15 @@ public class MainActivity extends rp3.app.NavActivity{
 		}
 		
 	}
+      
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	List<android.support.v4.app.Fragment> frags = getSupportFragmentManager().getFragments();
+    	for(android.support.v4.app.Fragment fr: frags){
+            fr.onActivityResult(requestCode, resultCode, data);
+        }
+    	super.onActivityResult(requestCode, resultCode, data);
+    }
       
       @SuppressLint("NewApi")
 	public void extractDatabase()

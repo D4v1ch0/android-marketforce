@@ -10,8 +10,13 @@
           />
       <item android:id="@+id/action_crear_visita" android:icon="@drawable/ic_action_new" android:title="@string/label_crear_visita"
           android:showAsAction="always|collapseActionView"     ></item>
-      <item android:id="@+id/action_ver_ruta" android:title="@string/label_menu_ver_rutas"></item>
-      <item android:id="@+id/action_ver_posicion" android:title="@string/label_menu_ver_posicion"></item>
-      <item android:id="@+id/action_como_llegar" android:title="@string/label_menu_como_llegar">
+      <item android:id="@+id/submenu_rutas" android:showAsAction="ifRoom" android:title="Padre Rutas" android:icon="@drawable/ic_rutas">
+          <menu>
+              <item android:id="@+id/action_ver_ruta" android:title="@string/label_menu_ver_rutas"></item>
+		      <item android:id="@+id/action_ver_posicion" android:title="@string/label_menu_ver_posicion"></item>
+		      <item android:id="@+id/action_como_llegar" android:title="@string/label_menu_como_llegar"></item>
+          </menu>
       </item>
+      <item android:id="@+id/action_cambiar_contacto" android:title="@string/action_cambiar_contacto"></item>
+      <item android:id="@+id/action_observaciones" android:title="@string/action_observaciones"></item>
 </menu>

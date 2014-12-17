@@ -77,11 +77,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
         
         DManager = new DrawableManager();
         
-        if(idAgenda != 0){        	
-        	agenda = Agenda.getAgenda(getDataBase(), idAgenda);
-        }
-        
-        if(agenda != null){
+        if(idAgenda != 0){
         	super.setContentView(R.layout.fragment_rutas_detalle);
         }
         else{
@@ -98,6 +94,29 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
     public void onResume() {
     	super.onResume();
     	agenda = Agenda.getAgenda(getDataBase(), idAgenda);
+    	if(agenda.getIdContacto() != 0)
+		  {
+	    	  String apellido = "";
+			  if(agenda.getContacto().getApellido() != null)
+				  apellido = agenda.getContacto().getApellido();
+			  setTextViewText(R.id.textView_name, agenda.getContacto().getNombre() + " " + apellido);
+			  DManager.fetchDrawableOnThread(PreferenceManager.getString("server") + 
+						rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + agenda.getContacto().getURLFoto(),
+						(ImageView) this.getRootView().findViewById(R.id.map_image));
+			  if(agenda.getContacto().getCargo() != null)
+				  setTextViewText(R.id.textView_tipo_canal, agenda.getContacto().getCargo().trim());
+			  else
+				  setTextViewText(R.id.textView_tipo_canal, "");
+			  setTextViewText(R.id.textView_tipo_cliente, agenda.getContacto().getEmpresa().trim());
+		  }
+		  else
+		  {
+			  DManager.fetchDrawableOnThread(PreferenceManager.getString("server") + 
+						rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + agenda.getCliente().getURLFoto(),
+						(ImageView) this.getRootView().findViewById(R.id.map_image));
+						   
+			  setTextViewText(R.id.textView_name, agenda.getNombreCompleto());
+		  }
     	adapter = new ListaTareasAdapter(getActivity(), agenda.getAgendaTareas());
     	lista_tarea.setAdapter(adapter);
     	adapter.notifyDataSetChanged();
@@ -107,12 +126,10 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
 	@Override
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {    	
     	 
-		if(agenda != null){			
-		  DManager.fetchDrawableOnThread(PreferenceManager.getString("server") + 
-					rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + agenda.getCliente().getURLFoto(),
-					(ImageView) this.getRootView().findViewById(R.id.map_image));
-					   
-		   setTextViewText(R.id.textView_name, agenda.getNombreCompleto());
+		if(idAgenda != 0){        	
+        	agenda = Agenda.getAgenda(getDataBase(), idAgenda);
+        }
+		if(agenda != null){					  
 		   setTextViewText(R.id.textView_movil, agenda.getClienteDireccion().getTelefono1());
 		   setTextViewText(R.id.textView_mail, agenda.getCliente().getCorreoElectronico());
 		   setTextViewText(R.id.textView_address, agenda.getClienteDireccion().getDireccion());
@@ -201,6 +218,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
 					setViewVisibility(R.id.detail_agenda_button_fin, View.GONE);
 					setViewVisibility(R.id.detail_agenda_button_cancelar, View.GONE);
 					setViewVisibility(R.id.detail_agenda_button_modificar, View.VISIBLE);
+					agenda = Agenda.getAgenda(getDataBase(), idAgenda);
 					agenda.setEstadoAgenda(Contants.ESTADO_VISITADO);
 					agenda.setEstadoAgendaDescripcion(Contants.DESC_VISITADO);
 					agenda.setFechaFinReal(Calendar.getInstance().getTime());
@@ -259,7 +277,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
 					AgendaTarea setter = adapter.getItem(position);
 					if(setter.getTipoTarea().equalsIgnoreCase("A") || setter.getTipoTarea().equalsIgnoreCase("R"))
 					{
-						Actividad ata = Actividad.getActividadSimple(getDataBase(), setter.getIdRuta());
+						Actividad ata = Actividad.getActividadSimple(getDataBase(), setter.getIdTarea());
 						if(ata.getTipo() != null)
 						{
 							if(ata.getTipo().equalsIgnoreCase("C"))

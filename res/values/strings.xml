@@ -79,5 +79,36 @@
     <string name="label_hoy">Hoy</string>
     <string name="label_desde_graph">Desde %s</string>
     <string name="label_empty_agenda">No hay visitas programadas para hoy</string>
+    <string name="action_cambiar_contacto">Cambiar Contacto</string>
+    <string name="action_observaciones">Observaciones</string>
+    <string name="label_tipo_persona">Tipo Persona</string>
+    <string name="label_primer_nombre">Primer Nombre</string>
+    <string name="label_segundo_nombre">Segundo Nombre</string>
+    <string name="label_primer_apellido">Primer Apellido</string>
+    <string name="label_segundo_apellido">Segundo Apellido</string>
+    <string name="label_tipo_identificacion">Tipo Identificación</string>
+    <string name="label_identificacion">Identificación</string>
+    <string name="label_genero">Género</string>
+    <string name="label_tipo_cliente">Tipo de Cliente</string>
+    <string name="label_canal">Canal</string>
+    <string name="label_nombre">Nombre</string>
+    <string name="label_razon_social">Razón Social</string>
+    <string name="label_pagina_web">Página Web</string>
+    <string name="label_actividad_economica">Actividad Económica</string>
+    <string name="label_agregar_direccion">Agregar Dirección</string>
+    <string name="label_tipo_direccion">Tipo Dirección</string>
+    <string name="label_es_principal">Es Principal</string>
+    <string name="label_obtener_ubicacion">Obtener Ubicación</string>
+    <string name="label_latitud">Latitud</string>
+    <string name="label_longitud">Longitud</string>
+    <string name="label_agregar_contacto">Agregar Contacto</string>
+    <string name="label_cargo">Cargo</string>
+    <string name="label_nombres">Nombres</string>
+    <string name="label_apellidos">Apellidos</string>
+    <string name="action_crear_cliente">Crear Cliente</string>
+    <string name="label_eliminar_direccion">Eliminar Dirección</string>
+    <string name="label_eliminar_contacto">Eliminar Contacto</string>
+    <string name="label_grabar">Grabar</string>
+    <string name="label_cancelar">Cancelar</string>
 
 </resources>

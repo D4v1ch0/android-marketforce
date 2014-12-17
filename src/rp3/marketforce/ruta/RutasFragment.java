@@ -1,7 +1,5 @@
 package rp3.marketforce.ruta;
 
-import java.util.ArrayList;
-
 import rp3.app.BaseFragment;
 import rp3.marketforce.R;
 import rp3.widget.SlidingPaneLayout;
@@ -14,16 +12,13 @@ import android.support.v4.view.MenuItemCompat;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.TextureView;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 
-public class RutasFragment extends BaseFragment implements RutasListFragment.TransactionListFragmentListener{
+public class RutasFragment extends BaseFragment implements RutasListFragment.TransactionListFragmentListener, ContactsAgendaFragment.SaveContactsListener{
 
 	public static final String ARG_TRANSACTIONTYPEID = "transactionTypeId";
 	private static final int PARALLAX_SIZE = 0;
@@ -36,6 +31,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	
 	private RutasListFragment rutasListFragment;
 	private RutasDetailFragment rutasDetailfragment;
+	private ObservacionesFragment obsFragment;
 	private SlidingPaneLayout slidingPane;
     
 	public static RutasFragment newInstance(int transactionTypeId) {
@@ -57,7 +53,8 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 		
 		setRetainInstance(true);				
 			
-		rutasListFragment = RutasListFragment.newInstance();					
+		rutasListFragment = RutasListFragment.newInstance();
+		obsFragment = null;
 	}
 	
 	@Override
@@ -98,7 +95,12 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 			}});
 		
 		if(!hasFragment(R.id.content_transaction_list))		
-			setFragment(R.id.content_transaction_list, rutasListFragment );	
+		{
+			setFragment(R.id.content_transaction_list, rutasListFragment );
+		}
+		
+		if(obsFragment != null && !obsFragment.closed)
+			this.showDialogFragment(obsFragment, "");
 		
 		if(slidingPane.isOpen() && 
 				rootView.findViewById(R.id.content_transaction_list).getLayoutParams().width != LayoutParams.MATCH_PARENT)		
@@ -109,31 +111,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	
 	@SuppressLint("NewApi")
 	@Override
-	public void onAfterCreateOptionsMenu(Menu menu) {	
-		
-		final String overflowDesc = "overflow";
-        final ViewGroup decor = (ViewGroup) getActivity().getWindow().getDecorView();
-        decor.postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                // The List that contains the matching views
-                final ArrayList<View> outViews = new ArrayList<View>();
-                // Traverse the view-hierarchy and locate the overflow button
-                decor.findViewsWithText(outViews, overflowDesc,
-                        View.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
-                // Guard against any errors
-                if (outViews.isEmpty()) {
-                    return;
-                }
-                // Do something with the view
-                final ImageButton overflow = (ImageButton) outViews.get(0);
-                overflow.setImageResource(R.drawable.ic_rutas);
-
-            }
-
-        }, 500);
-		
+	public void onAfterCreateOptionsMenu(Menu menu) {			
   	 SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search_ruta));
   	 if(slidingPane!=null){
 	  	 if(!slidingPane.isOpen())
@@ -145,8 +123,16 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	  	 else
 	  	 {
 	  		 searchView.setVisibility(View.VISIBLE);
-	  		 menu.removeItem(R.id.action_como_llegar);
-	  		 menu.removeItem(R.id.action_ver_posicion);
+	  		 for(int i = 0; i < menu.size(); i ++)
+	  		 {
+	  			 if(menu.getItem(i).getItemId() == R.id.submenu_rutas)
+	  			 {
+	  				 menu.getItem(i).getSubMenu().removeItem(R.id.action_como_llegar);
+	  				 menu.getItem(i).getSubMenu().removeItem(R.id.action_ver_posicion);
+	  			 }
+	  		 }
+	  		 menu.removeItem(R.id.action_cambiar_contacto);
+	  		 menu.removeItem(R.id.action_observaciones);
 	  	 }
   	 }
   	  
@@ -218,9 +204,24 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	    			intent4.putExtra(MapaActivity.ARG_AGENDA, selectedTransactionId);
 	    			startActivity(intent4);
 	    			return true;
+	    		case R.id.action_cambiar_contacto:
+	    			this.showDialogFragment(ContactsAgendaFragment.newInstance(selectedTransactionId), ContactsAgendaFragment.TAG);
+	    			return true;
+	    		case R.id.action_observaciones:
+	    			obsFragment = ObservacionesFragment.newInstance(selectedTransactionId);
+	    			this.showDialogFragment(obsFragment, "");
+	    			return true;
 	    	}
 	    	return super.onOptionsItemSelected(item);
 	    }
+	 
+	 @Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		 if(requestCode == ObservacionesFragment.PHOTO_1 || requestCode == ObservacionesFragment.PHOTO_2 || requestCode == ObservacionesFragment.PHOTO_3)
+		 {
+			 obsFragment.onActivityResult(requestCode, resultCode, data);
+		 }
+	}
 		
 	@Override
 	public void onTransactionSelected(long id) {
@@ -240,6 +241,13 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	@Override
 	public boolean allowSelectedItem() {		
 		return mTwoPane;
+	}
+
+	@Override
+	public void Refresh() {
+		rutasDetailfragment.onResume();
+		rutasListFragment.Refresh();
+		
 	}	
 	
 }

@@ -89,6 +89,7 @@ public class MapaActivity extends BaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
+	    setTitle("Mapa");
 	
 	    ctx = this;
 	    DManager = new DrawableManager();

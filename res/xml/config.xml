@@ -54,6 +54,21 @@
                     <webMethod>GET</webMethod>
                 </method>
                 <method>
+                    <name>CreateCliente</name>
+                    <action>cliente/create</action>
+                    <webMethod>POST</webMethod>
+                </method>
+                <method>
+                    <name>SetFotos</name>
+                    <action>cliente/setfotocliente</action>
+                    <webMethod>POST</webMethod>
+                </method>
+                <method>
+                    <name>SetMediaAgenda</name>
+                    <action>agenda/setagendamedia</action>
+                    <webMethod>POST</webMethod>
+                </method>
+                <method>
                     <name>Agenda</name>
                     <action>agenda/get?fechainicio=@fechainicio&amp;fechafin=@fechafin&amp;ultimaactualizacion=@ultimaactualizacion</action>
                     <webMethod>GET</webMethod>

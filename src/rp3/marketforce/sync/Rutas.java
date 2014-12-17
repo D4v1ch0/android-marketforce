@@ -109,7 +109,14 @@ public class Rutas {
 						agenda.setIdRuta(type.getInt("IdRuta"));
 						agenda.setIdCliente(type.getInt("IdCliente"));
 						agenda.setIdClienteDireccion(type.getInt("IdClienteDireccion"));
-//						agenda.setIdProgramacionRuta(type.getInt("IdProgramacionRuta"));
+						if(!type.isNull("IdClienteContacto"))
+						{
+							agenda.setIdContacto(type.getInt("IdClienteContacto"));
+						}
+						if(!type.isNull("Observacion"))
+						{
+							agenda.setObservaciones(type.getString("Observacion"));
+						}
 												
 						agenda.setFechaInicio( Convert.getDateFromDotNetTicks(type.getLong("FechaInicioTicks")) );
 						agenda.setFechaFin( Convert.getDateFromDotNetTicks(type.getLong("FechaFinTicks")) );

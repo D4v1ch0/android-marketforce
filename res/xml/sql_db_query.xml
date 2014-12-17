@@ -28,16 +28,16 @@
        	tbTipoCliente.Descripcion AS tbTipoCliente_Descripcion,
        	tbCanal.Descripcion AS tbCanal_Descripcion
         FROM tbCliente
-    	JOIN tbClienteExt
+    	LEFT JOIN tbClienteExt
     	ON tbCliente._id = tbClienteExt.docid
-    	JOIN tbTipoCliente
+    	LEFT JOIN tbTipoCliente
     	ON tbTipoCliente._id = tbCliente.IdTipoCliente
-    	JOIN tbCanal
+    	LEFT JOIN tbCanal
     	ON tbCanal._id = tbCliente.IdCanal
-    	JOIN tbGeneralValue tbEstadoCivil
+    	LEFT JOIN tbGeneralValue tbEstadoCivil
     	ON tbEstadoCivil.GeneralTableId = 1002
     	AND tbEstadoCivil.Code = tbCliente.EstadoCivil
-    	JOIN tbGeneralValue tbGenero
+    	LEFT JOIN tbGeneralValue tbGenero
     	ON tbGenero.GeneralTableId = 1003
     	AND tbGenero.Code = tbCliente.Genero    	
     </statement>
@@ -73,17 +73,17 @@
         FROM tbCliente
     	JOIN tbClienteExt
     	ON tbCliente._id = tbClienteExt.docid
-    	JOIN tbTipoCliente
+    	LEFT JOIN tbTipoCliente
     	ON tbTipoCliente._id = tbCliente.IdTipoCliente
-    	JOIN tbCanal
+    	LEFT JOIN tbCanal
     	ON tbCanal._id = tbCliente.IdCanal
-    	JOIN tbGeneralValue tbEstadoCivil
+    	LEFT JOIN tbGeneralValue tbEstadoCivil
     	ON tbEstadoCivil.GeneralTableId = 1002
     	AND tbEstadoCivil.Code = tbCliente.EstadoCivil
-    	JOIN tbGeneralValue tbGenero
+    	LEFT JOIN tbGeneralValue tbGenero
     	ON tbGenero.GeneralTableId = 1003
     	AND tbGenero.Code = tbCliente.Genero
-    	JOIN tbIdentificationType
+    	LEFT JOIN tbIdentificationType
     	ON tbIdentificationType._id = tbCliente.IdTipoIdentificacion
     	WHERE tbCliente._id = ?
     </statement>
@@ -104,7 +104,7 @@
         tbClienteDireccion.Longitud,
         tbGeopoliticalStructure.Name AS tbGeopoliticalStructure_Name
         FROM tbClienteDireccion
-    	JOIN tbGeopoliticalStructure
+    	LEFT JOIN tbGeopoliticalStructure
     	ON tbGeopoliticalStructure._id = tbClienteDireccion.IdCiudad
     	WHERE tbClienteDireccion.IdCliente = ?
     </statement>
@@ -125,7 +125,7 @@
         tbClienteDireccion.Longitud,
         tbGeopoliticalStructure.Name AS tbGeopoliticalStructure_Name
         FROM tbClienteDireccion
-    	JOIN tbGeopoliticalStructure
+    	LEFT JOIN tbGeopoliticalStructure
     	ON tbGeopoliticalStructure._id = tbClienteDireccion.IdCiudad
     	WHERE tbClienteDireccion.IdCliente = ? 
     	AND tbClienteDireccion.IdClienteDireccion = ?
@@ -171,6 +171,29 @@
         JOIN tbClienteExt
     	ON tbContacto.IdCliente = tbClienteExt.docid
         WHERE tbContacto._id = ?
+        ORDER BY  tbContactoExt.Apellido
+     </statement>
+     
+     <statement name="ContactoByIdCliente">
+       SELECT  
+        tbContacto._id, 
+        tbContacto.IdContacto,
+        tbContacto.IdCliente,        
+        tbContacto.IdClienteDireccion,
+        tbContacto.URLFoto,
+        tbContactoExt.Nombre AS tbContactoExt_Nombre,
+        tbContactoExt.Apellido AS tbContactoExt_Apellido,
+        tbContactoExt.Telefono1 AS tbContactoExt_Telefono1,
+        tbContactoExt.Telefono2 AS tbContactoExt_Telefono2,
+        tbContactoExt.Cargo AS tbContactoExt_Cargo,
+        tbContactoExt.Correo AS tbContactoExt_Correo,
+        tbClienteExt.NombreCompleto AS tbClienteExt_NombreCompleto
+        FROM tbContacto
+        JOIN tbContactoExt
+        ON tbContacto._id = tbContactoExt.docid
+        JOIN tbClienteExt
+    	ON tbContacto.IdCliente = tbClienteExt.docid
+        WHERE tbContacto.IdContacto = ? AND tbContacto.IdCliente = ?
         ORDER BY  tbContactoExt.Apellido
      </statement>
      
@@ -266,6 +289,8 @@
         tbAgenda.FechaInicio,
         tbAgenda.FechaFin,
         tbAgenda.EstadoAgenda,
+        tbAgenda.IdContacto,
+        tbAgenda.IdCliente,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
         tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad
@@ -283,6 +308,8 @@
         tbAgenda.FechaInicio,
         tbAgenda.FechaFin,
         tbAgenda.EstadoAgenda,
+        tbAgenda.IdContacto,
+        tbAgenda.IdCliente,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
         tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad
@@ -300,12 +327,20 @@
         tbAgenda.IdRuta,
         tbAgenda.IdAgenda,        
         tbAgenda.IdCliente, 
+        tbAgenda.IdContacto, 
         tbAgenda.IdClienteDireccion,
         tbAgenda.FechaInicio,
         tbAgenda.FechaFin,
         tbAgenda.EstadoAgenda,
         tbAgenda.FechaInicioReal,
         tbAgenda.FechaFinReal,
+        tbAgenda.Foto1Ext,
+        tbAgenda.Foto2Ext,
+        tbAgenda.Foto3Ext,
+        tbAgenda.Foto1Int,
+        tbAgenda.Foto2Int,
+        tbAgenda.Foto3Int,
+        tbAgenda.Observaciones,
         tbCliente.URLFoto AS tbCliente_URLFoto,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
@@ -343,6 +378,8 @@
         tbAgenda._id AS tbAgenda__id,
         tbAgenda.IdRuta,
         tbAgenda.IdAgenda,
+        tbAgenda.IdContacto,
+        tbAgenda.IdCliente,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
         tbAgenda.EstadoAgenda AS tbAgenda_EstadoAgenda,

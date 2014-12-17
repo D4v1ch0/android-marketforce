@@ -187,6 +187,7 @@ public final class Contract {
 		
 		public static final String QUERY_CONTACTOS = "ContactosByCliente";
 		public static final String QUERY_CONTACTOS_ID = "ContactoById";
+		public static final String QUERY_CONTACTOS_ID_CLIENTE = "ContactoByIdCliente";
 		
 	}
 	
@@ -217,6 +218,13 @@ public final class Contract {
 		public static final String COLUMN_FECHA_FIN_REAL = "FechaFinReal";
 		public static final String COLUMN_ENVIADO = "Enviado";
 		public static final String COLUMN_CONTACTO_ID = "IdContacto";
+		public static final String COLUMN_OBSERVACIONES = "Observaciones";
+		public static final String COLUMN_FOTO1_EXT = "Foto1Ext";
+		public static final String COLUMN_FOTO1_INT = "Foto1Int";
+		public static final String COLUMN_FOTO2_EXT = "Foto2Ext";
+		public static final String COLUMN_FOTO2_INT = "Foto2Int";
+		public static final String COLUMN_FOTO3_EXT = "Foto3Ext";
+		public static final String COLUMN_FOTO3_INT = "Foto3Int";
 		
 		public static final String FIELD_RUTA_ID = COLUMN_RUTA_ID;
 		public static final String FIELD_AGENDA_ID = COLUMN_AGENDA_ID;
@@ -230,6 +238,13 @@ public final class Contract {
 		public static final String FIELD_FECHA_FIN_REAL = COLUMN_FECHA_FIN_REAL;
 		public static final String FIELD_ENVIADO = COLUMN_ENVIADO;
 		public static final String FIELD_CONTACTO_ID = COLUMN_CONTACTO_ID;
+		public static final String FIELD_OBSERVACIONES = COLUMN_OBSERVACIONES;
+		public static final String FIELD_FOTO1_EXT = COLUMN_FOTO1_EXT;
+		public static final String FIELD_FOTO1_INT = COLUMN_FOTO1_INT;
+		public static final String FIELD_FOTO2_EXT = COLUMN_FOTO2_EXT;
+		public static final String FIELD_FOTO2_INT = COLUMN_FOTO2_INT;
+		public static final String FIELD_FOTO3_EXT = COLUMN_FOTO3_EXT;
+		public static final String FIELD_FOTO3_INT = COLUMN_FOTO3_INT;
 		public static final String FIELD_CLIENTE_URL_FOTO = Contract.Cliente.TABLE_NAME + "_" + Contract.Cliente.COLUMN_URL_FOTO;
 		public static final String FIELD_CLIENTE_NOMBRE = Contract.AgendaExt.TABLE_NAME + "_" + Contract.AgendaExt.COLUMN_NOMBRE;		
 		public static final String FIELD_CLIENTE_DIRECCION = Contract.AgendaExt.TABLE_NAME + "_" + Contract.AgendaExt.COLUMN_DIRECCION;

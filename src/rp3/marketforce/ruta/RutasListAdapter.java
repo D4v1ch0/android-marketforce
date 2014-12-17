@@ -75,8 +75,22 @@ public class RutasListAdapter extends BaseAdapter{
 			 str_range =hour_inicio;
 			
 			((TextView) convertView.findViewById(R.id.textView_horas)).setText(str_range);
-			 
-			((TextView) convertView.findViewById(R.id.textView_nombre)).setText(""+agd.getNombreCompleto());
+			if(agd.getIdContacto() == 0)
+			{
+				((TextView) convertView.findViewById(R.id.textView_nombre)).setText(""+agd.getNombreCompleto());
+				((TextView) convertView.findViewById(R.id.textView_cargo_canal)).setText(""+agd.getCliente().getCanalDescripcion());
+			}
+			else
+			{
+				String apellido = "";
+				String cargo = "";
+				if(agd.getContacto().getApellido() != null)
+					apellido = agd.getContacto().getApellido();
+				if(agd.getContacto().getCargo() != null)
+					cargo = agd.getContacto().getCargo() + " - ";
+				((TextView) convertView.findViewById(R.id.textView_nombre)).setText(""+agd.getContacto().getNombre() + " " + apellido);
+				((TextView) convertView.findViewById(R.id.textView_cargo_canal)).setText(""+cargo + agd.getNombreCompleto());
+			}
 			
 			if(agd.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO))
 				((ImageView) convertView.findViewById(R.id.itemlist_rutas_estado)).setImageResource(R.drawable.circle_in_process);

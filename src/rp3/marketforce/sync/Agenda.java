@@ -14,6 +14,7 @@ import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
 import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.AgendaTareaActividades;
+import rp3.marketforce.utils.Utils;
 import rp3.util.Convert;
 
 public class Agenda {
@@ -29,9 +30,9 @@ public class Agenda {
 		{
 			jObject.put("IdAgenda", agendaUpload.getIdAgenda());
 			jObject.put("IdRuta", agendaUpload.getIdRuta());
-			//jObject.put("IdClienteContacto", agendaUpload.getIdContacto());
+			jObject.put("IdClienteContacto", agendaUpload.getIdContacto());
 			jObject.put("EstadoAgenda", agendaUpload.getEstadoAgenda());
-			//jObject.put("IdCliente", agendaUpload.getIdCliente());
+			jObject.put("Observaciones", agendaUpload.getObservaciones());
 			jObject.put("FechaInicioTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaInicio()));
 			jObject.put("FechaFinTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaFin()));
 			jObject.put("FechaInicioGestionTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaInicioReal()));
@@ -106,6 +107,123 @@ public class Agenda {
 			
 		}finally{
 			webService.close();
+		}
+		
+		if(agendaUpload.getFoto1Int() != null && agendaUpload.getFoto1Int().length() > 0)
+		{
+			webService = new WebService("MartketForce","SetMediaAgenda");	
+			
+			jObject = new JSONObject();
+			try
+			{
+				jObject.put("IdAgenda", agendaUpload.getIdAgenda());
+				jObject.put("IdRuta", agendaUpload.getIdRuta());
+				jObject.put("IdMedia", agendaUpload.getEstadoAgenda());
+				jObject.put("Nombre", agendaUpload.getIdAgenda() + "_Foto1.jpg");
+				jObject.put("Contenido", Utils.CroppedBitmapToBase64(agendaUpload.getFoto1Int()));
+			}
+			catch(Exception ex)
+			{
+				
+			}
+			
+			webService.addParameter("media", jObject);
+			
+			try
+			{			
+				webService.addCurrentAuthToken();
+				
+				try {
+					webService.invokeWebService();
+				} catch (HttpResponseException e) {
+					if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+						return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+					return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+				} catch (Exception e) {
+					return SyncAdapter.SYNC_EVENT_ERROR;
+				}
+				
+			}finally{
+				webService.close();
+			}
+		}
+		
+		if(agendaUpload.getFoto2Int() != null && agendaUpload.getFoto2Int().length() > 0)
+		{
+			webService = new WebService("MartketForce","SetMediaAgenda");	
+			
+			jObject = new JSONObject();
+			try
+			{
+				jObject.put("IdAgenda", agendaUpload.getIdAgenda());
+				jObject.put("IdRuta", agendaUpload.getIdRuta());
+				jObject.put("IdMedia", agendaUpload.getEstadoAgenda());
+				jObject.put("Nombre", agendaUpload.getIdAgenda() + "_Foto2.jpg");
+				jObject.put("Contenido", Utils.CroppedBitmapToBase64(agendaUpload.getFoto2Int()));
+			}
+			catch(Exception ex)
+			{
+				
+			}
+			
+			webService.addParameter("media", jObject);
+			
+			try
+			{			
+				webService.addCurrentAuthToken();
+				
+				try {
+					webService.invokeWebService();
+				} catch (HttpResponseException e) {
+					if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+						return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+					return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+				} catch (Exception e) {
+					return SyncAdapter.SYNC_EVENT_ERROR;
+				}
+				
+			}finally{
+				webService.close();
+			}
+		}
+		
+		if(agendaUpload.getFoto3Int() != null && agendaUpload.getFoto3Int().length() > 0)
+		{
+			webService = new WebService("MartketForce","SetMediaAgenda");	
+			
+			jObject = new JSONObject();
+			try
+			{
+				jObject.put("IdAgenda", agendaUpload.getIdAgenda());
+				jObject.put("IdRuta", agendaUpload.getIdRuta());
+				jObject.put("IdMedia", agendaUpload.getEstadoAgenda());
+				jObject.put("Nombre", agendaUpload.getIdAgenda() + "_Foto3.jpg");
+				jObject.put("Contenido", Utils.CroppedBitmapToBase64(agendaUpload.getFoto3Int()));
+			}
+			catch(Exception ex)
+			{
+				
+			}
+			
+			webService.addParameter("media", jObject);
+			
+			try
+			{			
+				webService.addCurrentAuthToken();
+				
+				try {
+					webService.invokeWebService();
+				} catch (HttpResponseException e) {
+					if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+						return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+					return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+				} catch (Exception e) {
+					return SyncAdapter.SYNC_EVENT_ERROR;
+				}
+				
+			}finally{
+				webService.close();
+			}
 		}
 		
 		return SyncAdapter.SYNC_EVENT_SUCCESS;		

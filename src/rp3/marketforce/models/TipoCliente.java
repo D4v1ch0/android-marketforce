@@ -49,7 +49,7 @@ public class TipoCliente extends rp3.data.entity.EntityBase<TipoCliente>{
 
 	@Override
 	public String getDescription() {
-		return null;
+		return this.descripcion;
 	}
 
 	public String getDescripcion() {
@@ -61,7 +61,7 @@ public class TipoCliente extends rp3.data.entity.EntityBase<TipoCliente>{
 	}
 
 	public static List<TipoCliente> getTipoCliente(DataBase db, String code){
-		Cursor c = db.query(Contract.Cliente.TABLE_NAME, new String[]{
+		Cursor c = db.query(Contract.TipoCliente.TABLE_NAME, new String[]{
 			Contract.TipoCliente._ID,
 			Contract.TipoCliente.COLUMN_DESCRIPCION
 		});
@@ -76,6 +76,5 @@ public class TipoCliente extends rp3.data.entity.EntityBase<TipoCliente>{
 		}
 		return list;
 	}
-
 	
 }

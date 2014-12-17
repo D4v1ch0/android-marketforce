@@ -30,35 +30,41 @@ public class EnviarUbicacionReceiver extends WakefulBroadcastReceiver    {
 		//rp3.configuration.Configuration.TryInitializeConfiguration(context);
 		//String horaLimite = rp3.configuration.Configuration.getAppConfiguration().get(Contants.ALARM_CANCEL_TIME);
 		//String[] tiempoLimite = horaLimite.split("H");
-		
-		Calendar calendarCurrent = Calendar.getInstance();
-		calendarCurrent.setTimeInMillis(System.currentTimeMillis());
-		
-		Calendar calendarLimit = Calendar.getInstance();
-		calendarLimit.setTimeInMillis(System.currentTimeMillis());
-		calendarLimit.set(Calendar.HOUR_OF_DAY, 20);
-		calendarLimit.set(Calendar.MINUTE, 30);
-		
-		if(calendarCurrent.getTimeInMillis() < calendarLimit.getTimeInMillis())
+		try
 		{
-			LocationUtils.getLocation(context, new OnLocationResultListener() {
-				
-				@Override
-				public void getLocationResult(Location location) {				
-					if(location!=null){			
-						Bundle settingsBundle = new Bundle() ;
-						settingsBundle.putDouble(EnviarUbicacion.ARG_LATITUD, location.getLatitude());
-						settingsBundle.putDouble(EnviarUbicacion.ARG_LONGITUD, location.getLongitude());			
-						settingsBundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ENVIAR_UBICACION);
-						
-						rp3.sync.SyncUtils.requestSync(settingsBundle);
-					}	
-				}
-			});
+			Calendar calendarCurrent = Calendar.getInstance();
+			calendarCurrent.setTimeInMillis(System.currentTimeMillis());
+			
+			Calendar calendarLimit = Calendar.getInstance();
+			calendarLimit.setTimeInMillis(System.currentTimeMillis());
+			calendarLimit.set(Calendar.HOUR_OF_DAY, 20);
+			calendarLimit.set(Calendar.MINUTE, 30);
+			
+			if(calendarCurrent.getTimeInMillis() < calendarLimit.getTimeInMillis())
+			{
+				LocationUtils.getLocation(context, new OnLocationResultListener() {
+					
+					@Override
+					public void getLocationResult(Location location) {				
+						if(location!=null){			
+							Bundle settingsBundle = new Bundle() ;
+							settingsBundle.putDouble(EnviarUbicacion.ARG_LATITUD, location.getLatitude());
+							settingsBundle.putDouble(EnviarUbicacion.ARG_LONGITUD, location.getLongitude());			
+							settingsBundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ENVIAR_UBICACION);
+							
+							rp3.sync.SyncUtils.requestSync(settingsBundle);
+						}	
+					}
+				});
+			}
+			else
+			{
+				cancelAlarm(context);
+			}
 		}
-		else
+		catch(Exception ex)
 		{
-			cancelAlarm(context);
+			
 		}
 	}
 	

@@ -13,21 +13,50 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical" >
+
             <FrameLayout
-		        android:id="@+id/dashboard_frame_graphics"
-		        android:layout_width="match_parent"
-		        android:layout_height="0dp"
-		        android:layout_weight="1" >
+                android:id="@+id/dashboard_frame_graphics"
+                android:layout_width="@dimen/half_screen"
+                android:layout_height="0dp"
+                android:layout_weight="1" >
 		
 		    </FrameLayout>
-		
-		    <FrameLayout
-		        android:id="@+id/dashboard_frame_agenda"
-		        android:layout_width="match_parent"
-		        android:layout_height="0dp"
-		        android:layout_weight="1" >
-		
-		    </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/bg_button_bg_main_pressed"
+                android:orientation="vertical" >
+
+            </LinearLayout>
+
+            <ScrollView
+                android:id="@+id/scrollView1"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical" >
+
+                    <FrameLayout
+                        android:id="@+id/dashboard_frame_agenda"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" >
+
+                    </FrameLayout>
+
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/bg_button_bg_main_pressed" >
+
         </LinearLayout>
 
         <LinearLayout

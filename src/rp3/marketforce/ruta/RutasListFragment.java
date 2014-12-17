@@ -556,16 +556,14 @@ public class RutasListFragment extends rp3.app.BaseFragment {
     
     @Override
     public void onResume() {
-    	super.onResume();
-//    	if(headerlist!=null && headerlist.getParent() == null){    		
-//    		//pullRefresher.addView(headerlist);    		
-//    		headerlist.setAdapter(adapter);
-//    		paintDates();    		    		
-//    	}
-//    	if(adapter != null){
-//    		adapter.notifyDataSetChanged();
-//    		mPaintRiel();
-//    	}    	    	
+    	super.onResume();	    	
+    }
+    
+    public void Refresh() {	    	
+    	list_agenda = Agenda.getAgenda(getDataBase());
+		orderDate();
+		adapter.changeList(list_agenda_in_adapter);
+		paintDates();
     }
     
 }

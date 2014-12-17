@@ -49,7 +49,7 @@ public class Canal extends rp3.data.entity.EntityBase<Canal>{
 
 	@Override
 	public String getDescription() {
-		return null;
+		return this.descripcion;
 	}
 
 	public String getDescripcion() {
@@ -61,7 +61,7 @@ public class Canal extends rp3.data.entity.EntityBase<Canal>{
 	}
 
 	public static List<Canal> getCanal(DataBase db, String code){
-		Cursor c = db.query(Contract.Cliente.TABLE_NAME, new String[]{
+		Cursor c = db.query(Contract.Canal.TABLE_NAME, new String[]{
 			Contract.Canal._ID,
 			Contract.Canal.COLUMN_DESCRIPCION
 		});

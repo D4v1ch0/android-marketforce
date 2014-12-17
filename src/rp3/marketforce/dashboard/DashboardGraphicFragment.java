@@ -14,9 +14,11 @@ import com.jjoe64.graphview.ValueDependentColor;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Paint.Align;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.support.v4.view.PagerTabStrip;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -28,7 +30,6 @@ import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.utils.DetailsPageAdapter;
 import rp3.util.Convert;
-import rp3.widget.ViewPager;
 
 public class DashboardGraphicFragment extends BaseFragment {
 	
@@ -41,6 +42,8 @@ public class DashboardGraphicFragment extends BaseFragment {
 
 	private ViewPager PagerDetalles;
 	private DetailsPageAdapter pagerAdapter;
+	private PagerTabStrip tabStrip;
+	private List<String> titles;
 	
 	@Override
 	public void onAttach(Activity activity) {
@@ -63,12 +66,15 @@ public class DashboardGraphicFragment extends BaseFragment {
 	
 	 public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
 	    	super.onFragmentCreateView(rootView, savedInstanceState);
+	    	titles = new ArrayList<String>();
 	    	PagerDetalles = (ViewPager) getRootView().findViewById(R.id.dashboard_graphics_pager);
+	    	tabStrip = (PagerTabStrip) getRootView().findViewById(R.id.pager_header);
+	    	tabStrip.setTabIndicatorColor(getResources().getColor(R.color.color_text_sky_blue));
 	    	pagerAdapter = new DetailsPageAdapter();
 	    	pagerAdapter.addView(createGraphics(false));
 	    	pagerAdapter.addView(createGraphics(true));
-	    	PagerDetalles.setAdapter(pagerAdapter);
-	    	
+	    	pagerAdapter.setTitles(titles.toArray(new String[]{}));
+	    	PagerDetalles.setAdapter(pagerAdapter);	    	
 	 }
 	 
 	 @SuppressLint("SimpleDateFormat")
@@ -144,11 +150,15 @@ public class DashboardGraphicFragment extends BaseFragment {
 			}
 			((TextView) parent.findViewById(R.id.dashboard_porcentaje_hoy)).setText("" + (efectividad) + "%");
 			
-	 	BarGraphView interim = new BarGraphView(getActivity(), getString(R.string.label_hoy));
+	 	BarGraphView interim = new BarGraphView(getActivity(), "");
 	 	if(resumen)
 	 	{
 	 		SimpleDateFormat format1 = new SimpleDateFormat("dd/MM");
-	 		interim.setTitle(String.format(getString(R.string.label_desde_graph), format1.format(Convert.getDateFromTicks(time_inicio))));
+	 		titles.add((String.format(getString(R.string.label_desde_graph), format1.format(Convert.getDateFromTicks(time_inicio)))));
+	 	}
+	 	else
+	 	{
+	 		titles.add(getString(R.string.label_hoy));
 	 	}
 	 	interim.setHorizontalLabels(new String[]{ getString(R.string.abreviatura_visitado), getString(R.string.abreviatura_no_visitado), getString(R.string.abreviatura_pendiente)});
 	 	interim.setManualYAxisBounds(tope, 0);
@@ -192,4 +202,23 @@ public class DashboardGraphicFragment extends BaseFragment {
 		}
 		return labels.toArray(new String[]{});
 	}
+	 
+	 public class PagerTabStripBugfix extends PagerTabStrip {
+
+		    public PagerTabStripBugfix(Context context) {
+				super(context);
+				// TODO Auto-generated constructor stub
+			}
+
+			@Override
+		    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		        super.onMeasure(
+		                MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.EXACTLY), 
+		                heightMeasureSpec);
+		    }    
+
+
+		}
 }
+
+

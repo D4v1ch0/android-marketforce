@@ -31,7 +31,7 @@ public class TextoActivity extends ActividadActivity {
 	    
 	    if(id_padre == 0)
 	    {
-	    	ata = Actividad.getActividadSimple(getDataBase(), id_tarea);
+	    	ata = Actividad.getActividadSimple(getDataBase(), id_actividad);
 	    }
 	    else
 	    {

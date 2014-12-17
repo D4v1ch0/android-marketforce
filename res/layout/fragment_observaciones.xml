@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageButton
+            android:id="@+id/obs_foto1"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:minHeight="100dp"
+            android:padding="3dp"
+            android:src="@drawable/ic_action_camera" />
+
+        <ImageButton
+            android:id="@+id/obs_foto2"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:minHeight="100dp"
+            android:padding="3dp"
+            android:src="@drawable/ic_action_camera" />
+
+        <ImageButton
+            android:id="@+id/obs_foto3"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:minHeight="100dp"
+            android:padding="3dp"
+            android:src="@drawable/ic_action_camera" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@string/action_observaciones"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/obs_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textMultiLine"
+            android:minLines="3" >
+
+            <requestFocus />
+        </EditText>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/obs_aceptar"
+            style="@style/Widget.Button.Theme"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:text="@string/label_button_aceptar_act" />
+
+        <Button
+            android:id="@+id/obs_cancelar"
+            style="@style/Widget.Button.Theme"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/label_button_cancelar_act" />
+
+    </LinearLayout>
+
+</LinearLayout>
+</ScrollView>

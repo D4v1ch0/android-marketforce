@@ -4,6 +4,7 @@ import rp3.app.BaseFragment;
 import rp3.marketforce.R;
 import rp3.marketforce.cliente.ClientDetailFragment.ClienteDetailFragmentListener;
 import rp3.marketforce.cliente.ClientListFragment.ClienteListFragmentListener;
+import rp3.marketforce.cliente.ClientListFragment.LoaderCliente;
 import rp3.marketforce.models.Cliente;
 import rp3.widget.SlidingPaneLayout;
 import rp3.widget.SlidingPaneLayout.PanelSlideListener;
@@ -11,9 +12,11 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.EditText;
@@ -165,6 +168,20 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
 		
 		transactionDetailFragment = ClientDetailFragment.newInstance(cl);
 		setFragment(R.id.content_transaction_detail, transactionDetailFragment);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId())
+		{
+		case R.id.action_crear_cliente:
+			Intent intent = new Intent(this.getActivity(), CrearClienteActivity.class);
+			startActivity(intent);
+			break;
+		default:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 	
 	@Override

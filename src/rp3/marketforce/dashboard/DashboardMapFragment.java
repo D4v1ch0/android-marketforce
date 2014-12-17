@@ -30,9 +30,14 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.InflateException;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import rp3.app.BaseFragment;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
@@ -40,8 +45,10 @@ import rp3.marketforce.models.Agenda;
 public class DashboardMapFragment extends BaseFragment{
 
 	
-	private GoogleMap map;
+	GoogleMap map;
 	List<Marker> markers;
+	boolean instantiated = false;
+	private static View view;
 	
 	public static DashboardMapFragment newInstance() {
 		DashboardMapFragment fragment = new DashboardMapFragment();
@@ -49,11 +56,26 @@ public class DashboardMapFragment extends BaseFragment{
 	}
 	
 	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	    if (view != null) {
+	        ViewGroup parent = (ViewGroup) view.getParent();
+	        if (parent != null)
+	            parent.removeView(view);
+	    }
+	    try {
+	        view = inflater.inflate(R.layout.fragment_dashboard_map, container, false);
+	    } catch (InflateException e) {
+	        /* map is already there, just return view as it is */
+	    }
+	    return view;
+	}
+	
+	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		
 //		setContentView(R.layout.fragment_client,R.menu.fragment_client);
-		setContentView(R.layout.fragment_dashboard_map);
+		//setContentView(R.layout.fragment_dashboard_map);
 	}
 	
 	@Override
@@ -69,7 +91,7 @@ public class DashboardMapFragment extends BaseFragment{
 	
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
     	super.onFragmentCreateView(rootView, savedInstanceState);
-    	map = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.map)).getMap();
+    	map = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.dashboard_map)).getMap();
     	
     	Calendar cal = Calendar.getInstance();
     	List<Agenda> list_agendas = Agenda.getRutaDia(getDataBase(), Calendar.getInstance());
@@ -98,10 +120,6 @@ public class DashboardMapFragment extends BaseFragment{
 	{
 		final String url = makeURL(source.latitude, source.longitude, dest.latitude, dest.longitude);
 		
-		final ProgressDialog dialog = new ProgressDialog(getActivity());
-		dialog.setMessage("Fijando Ruta");
-		dialog.show();
-		
 		Runnable runnable = new Runnable() {
 		      @Override
 		      public void run() {
@@ -112,7 +130,6 @@ public class DashboardMapFragment extends BaseFragment{
 
 						@Override
 						public void run() {
-							dialog.dismiss();
 							drawPath(resp);
 						}
 			    		

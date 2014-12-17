@@ -91,5 +91,10 @@ public class DetailsPageAdapter extends PagerAdapter {
 	  {
 	    return views.get (position);
 	  }
+	  
+	  public void setTitles(String[] titles)
+	  {
+		  this.titles = titles;
+	  }
 
 }

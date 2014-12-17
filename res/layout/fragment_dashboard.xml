@@ -12,6 +12,14 @@
 
     </FrameLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/bg_button_bg_main_pressed"
+        android:orientation="vertical" >
+
+    </LinearLayout>
+
     <FrameLayout
         android:id="@+id/dashboard_frame_agenda"
         android:layout_width="match_parent"

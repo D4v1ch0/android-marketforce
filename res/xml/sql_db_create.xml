@@ -92,6 +92,13 @@
       FechaFinReal INTEGER,
       Enviado BOOLEAN,
       EstadoAgenda TEXT,
+      Observaciones TEXT,
+      Foto1Ext TEXT,
+      Foto1Int TEXT,
+      Foto2Ext TEXT,
+      Foto2Int TEXT,
+      Foto3Ext TEXT,
+      Foto3Int TEXT,
       IdContacto INTEGER
       )
 	</statement>
