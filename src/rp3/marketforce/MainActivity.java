@@ -10,12 +10,24 @@ import java.util.List;
 import rp3.app.BaseFragment;
 import rp3.app.NavActivity;
 import rp3.app.nav.NavItem;
+import rp3.configuration.PreferenceManager;
 import rp3.data.MessageCollection;
 import rp3.marketforce.cliente.ClientFragment;
 import rp3.marketforce.dashboard.DashboardFragment;
+import rp3.marketforce.db.Contract;
+import rp3.marketforce.models.Actividad;
+import rp3.marketforce.models.Agenda;
+import rp3.marketforce.models.AgendaTarea;
+import rp3.marketforce.models.AgendaTareaActividades;
+import rp3.marketforce.models.Cliente;
+import rp3.marketforce.models.ClienteDireccion;
+import rp3.marketforce.models.Contacto;
+import rp3.marketforce.models.Tarea;
+import rp3.marketforce.resumen.DashboardGrupoFragment;
 import rp3.marketforce.ruta.RutasFragment;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.runtime.Session;
+import rp3.sync.SyncAudit;
 import rp3.widget.SlidingPaneLayout;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
@@ -37,6 +49,7 @@ public class MainActivity extends rp3.app.NavActivity{
 	public static final int NAV_SINCRONIZAR 	= 7;
 	public static final int NAV_AJUSTES 		= 8;
 	public static final int NAV_CERRAR_SESION 	= 9;
+	public static final int NAV_RESUMEN		 	= 10;
 	
 	public static Intent newIntent(Context c){
 		Intent i = new Intent(c, MainActivity.class);
@@ -70,6 +83,7 @@ public class MainActivity extends rp3.app.NavActivity{
 		NavItem dashboard = new NavItem(NAV_DASHBOARD, R.string.title_option_setinicio ,R.drawable.ic_action_select_all);
 		NavItem rutas = new NavItem(NAV_RUTAS, R.string.title_option_setrutas ,R.drawable.ic_rutas);
 		NavItem clientes = new NavItem(NAV_CLIENTES, R.string.title_option_setclientes, R.drawable.ic_clientes);
+		NavItem grupo = new NavItem(NAV_RESUMEN, R.string.title_option_resumen, R.drawable.ic_action_sort_by_size);
 		NavItem pedido = new NavItem(NAV_PEDIDO, R.string.title_option_setpedido, R.drawable.ic_pedido);
 		NavItem reuniones = new NavItem(NAV_REUNIONES, R.string.title_option_setreuniones, R.drawable.ic_reuniones);
 		NavItem recordatorios = new NavItem(NAV_RECORDATORIOS, R.string.title_option_setrecordatorios, R.drawable.ic_recordatorios);
@@ -87,6 +101,8 @@ public class MainActivity extends rp3.app.NavActivity{
 		navItems.add(dashboard);
 		navItems.add(rutas);
 		navItems.add(clientes);
+		if(PreferenceManager.getBoolean(Contants.KEY_ES_SUPERVISOR))
+			navItems.add(grupo);
 		//navItems.add(pedido);
 		//navItems.add(reuniones);
 		//navItems.add(recordatorios);
@@ -108,6 +124,10 @@ public class MainActivity extends rp3.app.NavActivity{
 			break;
 		case NAV_CLIENTES:
 			setNavFragment(ClientFragment.newInstance(item.getId()),
+		    item.getTitle());
+			break;
+		case NAV_RESUMEN:
+			setNavFragment(DashboardGrupoFragment.newInstance(item.getId()),
 		    item.getTitle());
 			break;
 		case NAV_PEDIDO:	
@@ -137,6 +157,15 @@ public class MainActivity extends rp3.app.NavActivity{
 			break;
 		case NAV_CERRAR_SESION:	
 			Session.logOut();
+			Agenda.deleteAll(getDataBase(), Contract.Agenda.TABLE_NAME);
+			Tarea.deleteAll(getDataBase(), Contract.Agenda.TABLE_NAME);
+			Cliente.deleteAll(getDataBase(), Contract.Agenda.TABLE_NAME);
+			ClienteDireccion.deleteAll(getDataBase(), Contract.Agenda.TABLE_NAME);
+			Contacto.deleteAll(getDataBase(), Contract.Agenda.TABLE_NAME);
+			Actividad.deleteAll(getDataBase(), Contract.Agenda.TABLE_NAME);
+			AgendaTarea.deleteAll(getDataBase(), Contract.Agenda.TABLE_NAME);
+			AgendaTareaActividades.deleteAll(getDataBase(), Contract.Agenda.TABLE_NAME);
+			SyncAudit.clearAudit();
 			startActivity( new Intent(this, StartActivity.class));
 			finish();
 			break;
@@ -214,7 +243,7 @@ public class MainActivity extends rp3.app.NavActivity{
   		file.setReadable(true);
   		file.setWritable(true);
   		
-  		File file2 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath()+"prueba.db");
+  		File file2 = new File(Environment.getExternalStorageDirectory() + "/prueba.db");
   		file2.setExecutable(true);
   		file2.setReadable(true);
   		file2.setWritable(true);

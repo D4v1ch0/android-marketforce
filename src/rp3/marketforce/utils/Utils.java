@@ -142,14 +142,21 @@ public class Utils {
 	
 	public static String CroppedBitmapToBase64(String filename)
 	{
-		Bitmap bm = BitmapFactory.decodeFile(filename);
-		int menor = 0;
-		menor = Math.min(bm.getWidth(), bm.getHeight());
-		Bitmap croppedBmp = Bitmap.createBitmap(bm, 0, 0, menor, menor);
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();  
-		croppedBmp.compress(Bitmap.CompressFormat.JPEG, 75, baos); //bm is the bitmap object   
-		byte[] b = baos.toByteArray(); 
-		String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
-		return encodedImage;
+		try
+		{
+			Bitmap bm = BitmapFactory.decodeFile(filename);
+			int menor = 0;
+			menor = Math.min(bm.getWidth(), bm.getHeight());
+			Bitmap croppedBmp = Bitmap.createBitmap(bm, 0, 0, menor, menor);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();  
+			croppedBmp.compress(Bitmap.CompressFormat.JPEG, 75, baos); //bm is the bitmap object   
+			byte[] b = baos.toByteArray(); 
+			String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
+			return encodedImage;
+		}
+		catch(Exception ex)
+		{
+			return null;
+		}
 	}
 }

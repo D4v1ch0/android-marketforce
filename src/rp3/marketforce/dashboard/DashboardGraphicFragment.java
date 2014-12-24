@@ -19,6 +19,7 @@ import android.graphics.Paint.Align;
 import android.os.Bundle;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -44,6 +45,7 @@ public class DashboardGraphicFragment extends BaseFragment {
 	private DetailsPageAdapter pagerAdapter;
 	private PagerTabStrip tabStrip;
 	private List<String> titles;
+	private List<Integer> visitas;
 	
 	@Override
 	public void onAttach(Activity activity) {
@@ -67,6 +69,7 @@ public class DashboardGraphicFragment extends BaseFragment {
 	 public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
 	    	super.onFragmentCreateView(rootView, savedInstanceState);
 	    	titles = new ArrayList<String>();
+	    	visitas = new ArrayList<Integer>();
 	    	PagerDetalles = (ViewPager) getRootView().findViewById(R.id.dashboard_graphics_pager);
 	    	tabStrip = (PagerTabStrip) getRootView().findViewById(R.id.pager_header);
 	    	tabStrip.setTabIndicatorColor(getResources().getColor(R.color.color_text_sky_blue));
@@ -75,6 +78,22 @@ public class DashboardGraphicFragment extends BaseFragment {
 	    	pagerAdapter.addView(createGraphics(true));
 	    	pagerAdapter.setTitles(titles.toArray(new String[]{}));
 	    	PagerDetalles.setAdapter(pagerAdapter);	    	
+	    	PagerDetalles.setOnPageChangeListener(new OnPageChangeListener() {
+				
+				@Override
+				public void onPageSelected(int arg0) {	
+				}
+				
+				@Override
+				public void onPageScrolled(int arg0, float arg1, int arg2) {
+					((TextView)getRootView().findViewById(R.id.grupo_total_visitas)).setText(visitas.get(arg0) + " Visitas");
+				}
+				
+				@Override
+				public void onPageScrollStateChanged(int arg0) {	
+				}
+			});    	
+	    	PagerDetalles.setCurrentItem(0);
 	 }
 	 
 	 @SuppressLint("SimpleDateFormat")
@@ -136,6 +155,7 @@ public class DashboardGraphicFragment extends BaseFragment {
 	 	    , new GraphViewData(2, no_visitado)
 	 	    , new GraphViewData(3, pendientes)
 	 	});
+	 	visitas.add(visitados + no_visitado + pendientes);
 	 	
 			mayor = Math.max(visitados, no_visitado);
 			mayor = Math.max(pendientes, mayor);
@@ -149,6 +169,8 @@ public class DashboardGraphicFragment extends BaseFragment {
 				efectividad = (int) (coef * 100);
 			}
 			((TextView) parent.findViewById(R.id.dashboard_porcentaje_hoy)).setText("" + (efectividad) + "%");
+			SimpleDateFormat format2 = new SimpleDateFormat("HH:mm");
+			((TextView) parent.findViewById(R.id.dashboard_hora_hoy)).setText(format2.format(Calendar.getInstance().getTime()));
 			
 	 	BarGraphView interim = new BarGraphView(getActivity(), "");
 	 	if(resumen)
@@ -164,6 +186,7 @@ public class DashboardGraphicFragment extends BaseFragment {
 	 	interim.setManualYAxisBounds(tope, 0);
 	 	interim.setVerticalLabels(getVerticalLabels(tope));
 	 	interim.getGraphViewStyle().setVerticalLabelsAlign(Align.RIGHT);
+	 	interim.getGraphViewStyle().setTextSize(getResources().getDimension(R.dimen.text_small_size));
 	 	interim.addSeries(seriesHoy);
 	 	((LinearLayout)parent.findViewById(R.id.dashboard_graphic_hoy)).addView(interim);
 	 	return parent;

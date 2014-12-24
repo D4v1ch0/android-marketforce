@@ -57,8 +57,12 @@ public class DashboardAgendaAdapter extends BaseAdapter{
 	public View getView(int position, View convertView, ViewGroup parent) {
 		convertView = (View) inflater.inflate(this.ctx.getApplicationContext().getResources().getLayout(R.layout.rowlist_dashboard_agenda), null);
 		final Agenda agd = list_agenda.get(position);
-		
-		((TextView) convertView.findViewById(R.id.dashboard_agenda_rowlist_nombre)).setText(agd.getCliente().getNombreCompleto().trim());
+		if(agd.getCliente() == null)
+			return convertView;
+		if(agd.getCliente().getNombreCompleto() != null)
+			((TextView) convertView.findViewById(R.id.dashboard_agenda_rowlist_nombre)).setText(agd.getCliente().getNombreCompleto().trim());
+		else
+			((TextView) convertView.findViewById(R.id.dashboard_agenda_rowlist_nombre)).setText(agd.getCliente().getNombre1());
 		((TextView) convertView.findViewById(R.id.dashboard_agenda_phone)).setText(agd.getClienteDireccion().getTelefono1());
 		((TextView) convertView.findViewById(R.id.dashboard_agenda_mail)).setText(agd.getCliente().getCorreoElectronico());
 		
@@ -95,7 +99,16 @@ public class DashboardAgendaAdapter extends BaseAdapter{
 			int horas = (int) (diff / (1000*60*60));
 			int restante = (int) (diff / (1000*60));
 			int minutos =  restante - (horas * 60);
-			((TextView) convertView.findViewById(R.id.dashboard_agenda_tiempo)).setText("Faltan " + horas +  " horas con " + minutos +  " minutos para esta reunion.");
+			if(horas != 0)
+				((TextView) convertView.findViewById(R.id.dashboard_agenda_tiempo)).setText("Faltan " + horas +  " horas con " + minutos +  " minutos.");
+			else
+			{
+				((TextView) convertView.findViewById(R.id.dashboard_agenda_tiempo)).setText("Faltan " + minutos +  " minutos.");
+				if(minutos < 30)
+					((TextView) convertView.findViewById(R.id.dashboard_agenda_tiempo)).setTextColor(ctx.getResources().getColor(R.color.color_unvisited));
+			}
+			
+			
 		}
 		DManager.fetchDrawableOnThread(PreferenceManager.getString("server") + 
 				rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + agd.getCliente().getURLFoto(),

@@ -13,13 +13,19 @@ import android.widget.Toast;
 
 public class CrearClienteActivity extends BaseActivity {
 
+	public static String ARG_IDCLIENTE = "idcliente";
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
+	    long id_cliente = 0;
+	    if(getIntent().getExtras() != null && getIntent().getExtras().containsKey(ARG_IDCLIENTE))
+	    {
+	    	id_cliente = getIntent().getExtras().getLong(ARG_IDCLIENTE);
+	    }
 	    setTitle("Crear Cliente");
 	    setContentView(R.layout.layout_simple_content);
 	    if (!hasFragment(rp3.core.R.id.content)) {
-	    	CrearClienteFragment newFragment = CrearClienteFragment.newInstance();
+	    	CrearClienteFragment newFragment = CrearClienteFragment.newInstance(id_cliente);
             setFragment(rp3.core.R.id.content, newFragment);    
         } 	
 	}

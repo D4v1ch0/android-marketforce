@@ -37,6 +37,7 @@ public final class Contract {
 		public static final String COLUMN_CALIFICACION = "Calificacion";
 		public static final String COLUMN_URL_FOTO = "URLFoto";
 		public static final String COLUMN_TIPO_PERSONA = "TipoPersona";
+		public static final String COLUMN_NUEVO = "Nuevo";
 				
 		public static final String FIELD_ID_TIPO_IDENTIFICACION = COLUMN_ID_TIPO_IDENTIFICACION;		
 		public static final String FIELD_GENERO = COLUMN_GENERO;
@@ -46,7 +47,8 @@ public final class Contract {
 		public static final String FIELD_CANAL_ID = COLUMN_CANAL_ID;
 		public static final String FIELD_CALIFICACION = COLUMN_CALIFICACION;	
 		public static final String FIELD_URL_FOTO = COLUMN_URL_FOTO;	
-		public static final String FIELD_TIPO_PERSONA = COLUMN_TIPO_PERSONA;	
+		public static final String FIELD_TIPO_PERSONA = COLUMN_TIPO_PERSONA;
+		public static final String FIELD_NUEVO = COLUMN_NUEVO;
 		
 		public static final String FIELD_IDENTIFICACION = Contract.ClientExt.TABLE_NAME + "_" + Contract.ClientExt.COLUMN_IDENTIFICACION;
 		public static final String FIELD_NOMBRE1 = Contract.ClientExt.TABLE_NAME + "_" + Contract.ClientExt.COLUMN_NOMBRE1;
@@ -225,6 +227,9 @@ public final class Contract {
 		public static final String COLUMN_FOTO2_INT = "Foto2Int";
 		public static final String COLUMN_FOTO3_EXT = "Foto3Ext";
 		public static final String COLUMN_FOTO3_INT = "Foto3Int";
+		public static final String COLUMN_MOTIVO_NO_VISITA_ID = "IdMotivoNoVisita";
+		public static final String COLUMN_LONGITUD = "Longitud";
+		public static final String COLUMN_LATITUD = "Latitud";
 		
 		public static final String FIELD_RUTA_ID = COLUMN_RUTA_ID;
 		public static final String FIELD_AGENDA_ID = COLUMN_AGENDA_ID;
@@ -245,6 +250,9 @@ public final class Contract {
 		public static final String FIELD_FOTO2_INT = COLUMN_FOTO2_INT;
 		public static final String FIELD_FOTO3_EXT = COLUMN_FOTO3_EXT;
 		public static final String FIELD_FOTO3_INT = COLUMN_FOTO3_INT;
+		public static final String FIELD_MOTIVO_NO_VISITA_ID = COLUMN_MOTIVO_NO_VISITA_ID;
+		public static final String FIELD_LONGITUD = COLUMN_LONGITUD;
+		public static final String FIELD_LATITUD = COLUMN_LATITUD;
 		public static final String FIELD_CLIENTE_URL_FOTO = Contract.Cliente.TABLE_NAME + "_" + Contract.Cliente.COLUMN_URL_FOTO;
 		public static final String FIELD_CLIENTE_NOMBRE = Contract.AgendaExt.TABLE_NAME + "_" + Contract.AgendaExt.COLUMN_NOMBRE;		
 		public static final String FIELD_CLIENTE_DIRECCION = Contract.AgendaExt.TABLE_NAME + "_" + Contract.AgendaExt.COLUMN_DIRECCION;
@@ -367,5 +375,29 @@ public final class Contract {
 		public static final String QUERY_ACTIVIDADES_HIJAS = "ActividadesHijas";
 		public static final String QUERY_ACTIVIDAD_SIMPLE = "ActividadSimple";
 		public static final String QUERY_ACTIVIDAD_SIMPLE_NO_GRUPAL = "ActividadSimpleNoGrupal";
+	}
+   
+   public static abstract class AgentesResumen implements BaseColumns {
+		
+		public static final String TABLE_NAME = "tbAgentesResumen";
+		
+		public static final String COLUMN_ID_AGENTE = "IdAgente";
+		public static final String COLUMN_NOMBRES= "Nombres";
+		public static final String COLUMN_APELLIDOS= "Apellidos";
+		public static final String COLUMN_FECHA = "Fecha";
+		public static final String COLUMN_GESTIONADOS = "Gestionados";
+		public static final String COLUMN_NO_GESTIONADOS = "NoGestionados";
+		public static final String COLUMN_PENDIENTES = "Pendientes";
+		
+		public static final String FIELD_ID_AGENTE = COLUMN_ID_AGENTE;
+		public static final String FIELD_NOMBRES = COLUMN_NOMBRES;
+		public static final String FIELD_APELLIDOS = COLUMN_APELLIDOS;
+		public static final String FIELD_FECHA = COLUMN_FECHA;
+		public static final String FIELD_GESTIONADOS = COLUMN_GESTIONADOS;
+		public static final String FIELD_NO_GESTIONADOS = COLUMN_NO_GESTIONADOS;
+		public static final String FIELD_PENDIENTES = COLUMN_PENDIENTES;
+		
+		public static final String QUERY_RESUMEN = "ResumenAgentes";
+
 	}
 }

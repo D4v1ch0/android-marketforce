@@ -4,11 +4,21 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.Paint.Align;
+import android.graphics.Paint.Style;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,23 +75,48 @@ public class RutasMapaAdapter extends BaseAdapter {
 		((TextView) convertView.findViewById(R.id.textView_horas)).setText(str_range);
 		 
 		((TextView) convertView.findViewById(R.id.textView_nombre)).setText(""+agd.getCliente().getNombreCompleto());
-		
-		if(agd.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO))
-			((ImageView) convertView.findViewById(R.id.itemlist_rutas_estado)).setImageResource(R.drawable.circle_in_process);
-		if(agd.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_NO_VISITADO))
-			((ImageView) convertView.findViewById(R.id.itemlist_rutas_estado)).setImageResource(R.drawable.circle_unvisited);
-		if(agd.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_PENDIENTE))
-			((ImageView) convertView.findViewById(R.id.itemlist_rutas_estado)).setImageResource(R.drawable.circle_pending);
-		if(agd.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_REPROGRAMADO))
-			((ImageView) convertView.findViewById(R.id.itemlist_rutas_estado)).setImageResource(R.drawable.circle_reprogramed);
-		if(agd.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_VISITADO))
-			((ImageView) convertView.findViewById(R.id.itemlist_rutas_estado)).setImageResource(R.drawable.circle_visited);
+
+		((ImageView) convertView.findViewById(R.id.itemlist_rutas_estado)).setImageBitmap(writeTextOnDrawable(R.drawable.map_position, position + 1 + ""));
 		
 		
 		if(agd.getClienteDireccion() != null)
 			((TextView) convertView.findViewById(R.id.textView_address)).setText(""+agd.getClienteDireccion().getDireccion());
 		
 		return convertView;
+	}
+	
+	private Bitmap writeTextOnDrawable(int drawableId, String text) {
+
+	    Bitmap bm = BitmapFactory.decodeResource(ctx.getResources(), drawableId)
+	            .copy(Bitmap.Config.ARGB_8888, true);
+
+	    //Typeface tf = Typeface.create("Helvetica", Typeface.BOLD);
+
+	    Paint paint = new Paint();
+	    paint.setStyle(Style.FILL);
+	    paint.setColor(Color.WHITE);
+	    //paint.setTypeface(tf);
+	    paint.setTextAlign(Align.CENTER);
+	    paint.setTextSize(ctx.getResources().getDimension(R.dimen.text_small_size));
+
+	    Rect textRect = new Rect();
+	    paint.getTextBounds(text, 0, text.length(), textRect);
+
+	    Canvas canvas = new Canvas(bm);
+
+	    //If the text is bigger than the canvas , reduce the font size
+	    if(textRect.width() >= (canvas.getWidth() - 4))     //the padding on either sides is considered as 4, so as to appropriately fit in the text
+	        paint.setTextSize(ctx.getResources().getDimension(R.dimen.text_small_size));        //Scaling needs to be used for different dpi's
+
+	    //Calculate the positions
+	    int xPos = (canvas.getWidth() / 2);     //-2 is for regulating the x position offset
+
+	    //"- ((paint.descent() + paint.ascent()) / 2)" is the distance from the baseline to the center.
+	    int yPos = (int) ((canvas.getHeight() / 2) - ((paint.descent() + paint.ascent()) / 2)) ;  
+
+	    canvas.drawText(text, xPos, yPos, paint);
+
+	    return  bm;
 	}
 
 }

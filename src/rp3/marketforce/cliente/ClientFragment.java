@@ -132,6 +132,7 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
 	 	 {
 	 		 searchView.setVisibility(View.GONE);
 	 		 menu.removeItem(R.id.action_search);
+	 		 menu.removeItem(R.id.action_crear_cliente);
 	 	 }
 	 	 else
 	 	 {

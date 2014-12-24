@@ -35,17 +35,19 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 import rp3.app.BaseActivity;
 import rp3.app.BaseFragment;
+import rp3.configuration.PreferenceManager;
 import rp3.content.SimpleDictionaryAdapter;
 import rp3.content.SimpleGeneralValueAdapter;
 import rp3.content.SimpleIdentifiableAdapter;
 import rp3.data.models.GeneralValue;
 import rp3.data.models.IdentificationType;
+import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Canal;
 import rp3.marketforce.models.Cliente;
@@ -54,6 +56,7 @@ import rp3.marketforce.models.Contacto;
 import rp3.marketforce.models.TipoCliente;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.DetailsPageAdapter;
+import rp3.marketforce.utils.DrawableManager;
 import rp3.marketforce.utils.Utils;
 import rp3.util.ConnectionUtils;
 import rp3.util.GooglePlayServicesUtils;
@@ -61,9 +64,12 @@ import rp3.widget.ViewPager;
 
 public class CrearClienteFragment extends BaseFragment {
 	
-	public static CrearClienteFragment newInstance()
+	public static CrearClienteFragment newInstance(long id_cliente)
 	{
 		CrearClienteFragment fragment = new CrearClienteFragment();
+		Bundle args = new Bundle();
+		args.putLong(ARG_CLIENTE, id_cliente);
+		fragment.setArguments(args);
 		return fragment;
 	}
 
@@ -77,6 +83,7 @@ public class CrearClienteFragment extends BaseFragment {
 	private LinearLayout ContactosContainer, DireccionContainer;
 	private List<LinearLayout> listViewDirecciones, listViewContactos;
 	private int curentPage;
+	private long idCliente = 0;
 	Uri photo = Utils.getOutputMediaFileUri(Utils.MEDIA_TYPE_IMAGE);
 	boolean isClient;
 	int posContact = -1;
@@ -130,6 +137,8 @@ public class CrearClienteFragment extends BaseFragment {
 		JSONObject jObject = new JSONObject();
 		try
 		{
+			if(idCliente != 0)
+				jObject.put("IdCliente", idCliente);
 			jObject.put("IdCanal", ((Spinner)info.findViewById(R.id.cliente_canal)).getAdapter().getItemId(((Spinner)info.findViewById(R.id.cliente_canal)).getSelectedItemPosition()));
 			jObject.put("IdTipoIdentificacion", ((Spinner)info.findViewById(R.id.cliente_tipo_identificacion)).getAdapter().getItemId(((Spinner)info.findViewById(R.id.cliente_tipo_identificacion)).getSelectedItemPosition()));
 			jObject.put("Identificacion", ((EditText)info.findViewById(R.id.cliente_identificacion)).getText().toString());
@@ -162,6 +171,8 @@ public class CrearClienteFragment extends BaseFragment {
 			{
 				JSONObject cliDir = new JSONObject();
 				cliDir.put("IdClienteDireccion", i+1);
+				if(idCliente != 0)
+					cliDir.put("IdCliente", idCliente);
 				cliDir.put("Direccion", ((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_direccion)).getText().toString());
 				cliDir.put("TipoDireccion", ((GeneralValue)((Spinner)listViewDirecciones.get(i).findViewById(R.id.cliente_tipo_direccion_spinner)).getSelectedItem()).getCode());
 				cliDir.put("EsPrincipal", ((CheckBox)listViewDirecciones.get(i).findViewById(R.id.cliente_es_principal)).isChecked());
@@ -181,6 +192,8 @@ public class CrearClienteFragment extends BaseFragment {
 			{
 				JSONObject cliCont = new JSONObject();
 				cliCont.put("IdClienteContacto", i+1);
+				if(idCliente != 0)
+					cliCont.put("IdCliente", idCliente);
 				cliCont.put("Nombre", ((EditText)listViewContactos.get(i).findViewById(R.id.cliente_nombres)).getText().toString());
 				cliCont.put("Apellido", ((EditText)listViewContactos.get(i).findViewById(R.id.cliente_apellidos)).getText().toString());
 				cliCont.put("Cargo", ((EditText)listViewContactos.get(i).findViewById(R.id.cliente_cargo)).getText().toString());
@@ -194,7 +207,10 @@ public class CrearClienteFragment extends BaseFragment {
 			jObject.put("ClienteContactos", jArrayContactos);
 			
 			Bundle bundle = new Bundle();
-			bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_CLIENTE_CREATE);
+			if(idCliente != 0)
+				bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_CLIENTE_UPDATE_FULL);
+			else
+				bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_CLIENTE_CREATE);
 			bundle.putString(ARG_CLIENTE, jObject.toString());
 			requestSync(bundle);
 		}
@@ -284,7 +300,7 @@ public class CrearClienteFragment extends BaseFragment {
 		((Spinner) info.findViewById(R.id.cliente_tipo_cliente)).setAdapter(tipoCliente);
 		((Spinner) info.findViewById(R.id.cliente_canal)).setAdapter(tipoCanal);
 		((Spinner) info.findViewById(R.id.cliente_tipo_identificacion)).setAdapter(tipoIdentificacion);
-		((ImageView) info.findViewById(R.id.cliente_foto)).setOnClickListener(new OnClickListener(){
+		((ImageButton) info.findViewById(R.id.cliente_foto)).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
 				isClient = true;	
@@ -345,8 +361,102 @@ public class CrearClienteFragment extends BaseFragment {
 				setPageConfig(arg0);
 				
 			}});
+		if(getArguments().containsKey(ARG_CLIENTE) && getArguments().getLong(ARG_CLIENTE) != 0)
+		{
+			idCliente = getArguments().getLong(ARG_CLIENTE);
+			setDatosClientes();
+		}
 	}
 	
+	private void setDatosClientes() {
+		DrawableManager DManager = new DrawableManager();
+		Cliente cli = Cliente.getClienteID(getDataBase(), idCliente, true);
+		((Spinner)info.findViewById(R.id.cliente_canal)).setSelection(getPosition(((Spinner)info.findViewById(R.id.cliente_canal)).getAdapter(), cli.getIdCanal()));
+		((Spinner)info.findViewById(R.id.cliente_tipo_identificacion)).setSelection(getPosition(((Spinner)info.findViewById(R.id.cliente_tipo_identificacion)).getAdapter(), cli.getTipoIdentificacionId()));
+		((EditText)info.findViewById(R.id.cliente_identificacion)).setText(cli.getIdentificacion());
+		((Spinner)info.findViewById(R.id.crear_cliente_tipo_persona)).setSelection(getPosition(((Spinner)info.findViewById(R.id.crear_cliente_tipo_persona)).getAdapter(), cli.getTipoPersona()));
+		((Spinner)info.findViewById(R.id.cliente_tipo_cliente)).setSelection(getPosition(((Spinner)info.findViewById(R.id.cliente_tipo_cliente)).getAdapter(), cli.getIdTipoCliente()));
+		DManager.fetchDrawableOnThread(PreferenceManager.getString("server") + 
+				rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + Utils.getImageDPISufix(getActivity(), cli.getURLFoto()), 
+				(ImageButton)info.findViewById(R.id.cliente_foto));
+		if(cli.getTipoPersona().equalsIgnoreCase("N"))
+		{
+			((EditText)info.findViewById(R.id.cliente_primer_nombre)).setText(cli.getNombre1());
+			((EditText)info.findViewById(R.id.cliente_segundo_nombre)).setText(cli.getNombre2());
+			((EditText)info.findViewById(R.id.cliente_primer_apellido)).setText(cli.getApellido1());
+			((EditText)info.findViewById(R.id.cliente_segundo_apellido)).setText(cli.getApellido2());
+			((EditText)info.findViewById(R.id.cliente_correo)).setText(cli.getCorreoElectronico());
+			((Spinner)info.findViewById(R.id.cliente_genero)).setSelection(getPosition(((Spinner)info.findViewById(R.id.cliente_genero)).getAdapter(), cli.getGenero()));
+			((Spinner)info.findViewById(R.id.cliente_estado_civil)).setSelection(getPosition(((Spinner)info.findViewById(R.id.cliente_estado_civil)).getAdapter(), cli.getGenero()));
+		}
+		else
+		{
+			((EditText)info.findViewById(R.id.cliente_nombre)).setText(cli.getNombre1());
+			((EditText)info.findViewById(R.id.cliente_actividad_economica)).setText(cli.getActividadEconomica());
+			((EditText)info.findViewById(R.id.cliente_correo_juridico)).setText(cli.getCorreoElectronico());
+			((EditText)info.findViewById(R.id.cliente_razon_social)).setText(cli.getRazonSocial());
+			((EditText)info.findViewById(R.id.cliente_pagina_web)).setText(cli.getPaginaWeb());
+		}
+		
+		if(!cli.isNuevo())
+		{
+			((Spinner)info.findViewById(R.id.cliente_canal)).setEnabled(false);
+			((Spinner)info.findViewById(R.id.cliente_tipo_identificacion)).setEnabled(false);
+			((EditText)info.findViewById(R.id.cliente_identificacion)).setEnabled(false);
+			((Spinner)info.findViewById(R.id.crear_cliente_tipo_persona)).setEnabled(false);
+			((Spinner)info.findViewById(R.id.cliente_tipo_cliente)).setEnabled(false);
+			((EditText)info.findViewById(R.id.cliente_primer_nombre)).setEnabled(false);
+			((EditText)info.findViewById(R.id.cliente_segundo_nombre)).setEnabled(false);
+			((EditText)info.findViewById(R.id.cliente_primer_apellido)).setEnabled(false);
+			((EditText)info.findViewById(R.id.cliente_segundo_apellido)).setEnabled(false);
+			((Spinner)info.findViewById(R.id.cliente_genero)).setEnabled(false);
+			((EditText)info.findViewById(R.id.cliente_nombre)).setEnabled(false);
+			((EditText)info.findViewById(R.id.cliente_actividad_economica)).setEnabled(false);
+			((EditText)info.findViewById(R.id.cliente_razon_social)).setEnabled(false);
+			((EditText)info.findViewById(R.id.cliente_pagina_web)).setEnabled(false);
+			((ImageButton)info.findViewById(R.id.cliente_foto)).setEnabled(false);
+		}
+		
+		for(int i = 0; i < cli.getClienteDirecciones().size(); i ++)
+		{
+			addDireccion();
+			((Button)listViewDirecciones.get(i).findViewById(R.id.eliminar_direccion)).setVisibility(View.GONE);
+			((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_direccion)).setText(cli.getClienteDirecciones().get(i).getDireccion());
+			((Spinner)listViewDirecciones.get(i).findViewById(R.id.cliente_tipo_direccion_spinner)).setSelection(
+					getPosition(((Spinner)listViewDirecciones.get(i).findViewById(R.id.cliente_tipo_direccion_spinner)).getAdapter(), cli.getClienteDirecciones().get(i).getTipoDireccion()));
+			((CheckBox)listViewDirecciones.get(i).findViewById(R.id.cliente_es_principal)).setChecked(cli.getClienteDirecciones().get(i).getEsPrincipal());
+			((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_telefono1)).setText(cli.getClienteDirecciones().get(i).getTelefono1());
+			((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_telefono2)).setText(cli.getClienteDirecciones().get(i).getTelefono2());
+			((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_referencia)).setText(cli.getClienteDirecciones().get(i).getReferencia());
+			if(cli.getClienteDirecciones().get(i).getLongitud() != 0)
+			{
+				((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_longitud)).setText("" + cli.getClienteDirecciones().get(i).getLongitud());
+				((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_latitud)).setText("" + cli.getClienteDirecciones().get(i).getLatitud());
+			}
+			if(!cli.isNuevo())
+				((Spinner)listViewDirecciones.get(i).findViewById(R.id.cliente_tipo_direccion_spinner)).setEnabled(false);
+		}
+		
+		for(int i = 0; i < cli.getContactos().size(); i ++)
+		{
+			addContacto();
+			((Button)listViewContactos.get(i).findViewById(R.id.eliminar_contacto)).setVisibility(View.GONE);
+			((EditText)listViewContactos.get(i).findViewById(R.id.cliente_nombres)).setText(cli.getContactos().get(i).getNombre());
+			((EditText)listViewContactos.get(i).findViewById(R.id.cliente_apellidos)).setText(cli.getContactos().get(i).getApellido());
+			((EditText)listViewContactos.get(i).findViewById(R.id.cliente_cargo)).setText(cli.getContactos().get(i).getCargo());
+			((EditText)listViewContactos.get(i).findViewById(R.id.cliente_telefono1_contacto)).setText(cli.getContactos().get(i).getTelefono1());
+			((EditText)listViewContactos.get(i).findViewById(R.id.cliente_telefono2_contacto)).setText(cli.getContactos().get(i).getTelefono2());
+			((EditText)listViewContactos.get(i).findViewById(R.id.cliente_correo_contacto)).setText(cli.getContactos().get(i).getCorreo());
+			((Spinner)listViewContactos.get(i).findViewById(R.id.cliente_direccion_contacto)).setSelection(
+					getPosition(((Spinner)listViewContactos.get(i).findViewById(R.id.cliente_direccion_contacto)).getAdapter(), (int) cli.getContactos().get(i).getIdClienteDireccion()));
+			DManager.fetchDrawableOnThread(PreferenceManager.getString("server") + 
+					rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + Utils.getImageDPISufix(getActivity(), cli.getContactos().get(i).getURLFoto()), 
+					(ImageButton)listViewContactos.get(i).findViewById(R.id.cliente_contacto_foto));
+		}
+		
+		
+	}
+
 	@Override
 	public void onDailogDatePickerChange(int id, Calendar c) {
 		SimpleDateFormat format1 = new SimpleDateFormat("dd MMMM yyyy");
@@ -434,7 +544,7 @@ public class CrearClienteFragment extends BaseFragment {
 			}});
 		contactPhotos.add("");
 		((Spinner) contacto.findViewById(R.id.cliente_direccion_contacto)).setAdapter(getDirecciones());
-		((ImageView) contacto.findViewById(R.id.cliente_contacto_foto)).setOnClickListener(new OnClickListener(){
+		((ImageButton) contacto.findViewById(R.id.cliente_contacto_foto)).setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
@@ -483,12 +593,12 @@ public class CrearClienteFragment extends BaseFragment {
 				path = Utils.getPath(data.getData(), getActivity());
 			if(isClient)
 			{
-				((ImageView) info.findViewById(R.id.cliente_foto)).setImageBitmap(Utils.resizeBitMapImage(path, 500, 500));
+				((ImageButton) info.findViewById(R.id.cliente_foto)).setImageBitmap(Utils.resizeBitMapImage(path, 500, 500));
 				cliente.setURLFoto(path);
 			}
 			else
 			{
-				((ImageView) listViewContactos.get(posContact).findViewById(R.id.cliente_contacto_foto)).setImageBitmap(Utils.resizeBitMapImage(path, 500, 500));
+				((ImageButton) listViewContactos.get(posContact).findViewById(R.id.cliente_contacto_foto)).setImageBitmap(Utils.resizeBitMapImage(path, 500, 500));
 				contactPhotos.set(posContact, path);
 			}        
 	    }
@@ -538,6 +648,27 @@ public class CrearClienteFragment extends BaseFragment {
 			return false;
 		}
 		return true;
+	}
+	
+	private int getPosition(SpinnerAdapter spinnerAdapter, int i)
+	{
+		int position = -1;
+		for(int f = 0; f < spinnerAdapter.getCount(); f++)
+		{
+			if(spinnerAdapter.getItemId(f) == i)
+				position = f;
+		}
+		return position;
+	}
+	private int getPosition(SpinnerAdapter spinnerAdapter, String i)
+	{
+		int position = -1;
+		for(int f = 0; f < spinnerAdapter.getCount(); f++)
+		{
+			if(((GeneralValue)spinnerAdapter.getItem(f)).getCode().equals(i))
+				position = f;
+		}
+		return position;
 	}
 
 }

@@ -43,9 +43,14 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Align;
+import android.graphics.Paint.Style;
+import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.net.Uri;
@@ -236,7 +241,8 @@ public class MapaActivity extends BaseActivity {
 			LatLng pos = new LatLng(list_agendas.get(i).getClienteDireccion().getLatitud(), list_agendas.get(i).getClienteDireccion().getLongitud());
 			
 			Marker mark = map.addMarker(new MarkerOptions().position(pos)
-			        .title(list_agendas.get(i).getCliente().getNombreCompleto().trim()));
+			        .title(list_agendas.get(i).getCliente().getNombreCompleto().trim())
+			        .icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.map_position, i + 1 + ""))));
 			mark.showInfoWindow();
 			markers.add(mark);
 			
@@ -478,7 +484,7 @@ public class MapaActivity extends BaseActivity {
                     LatLng dest= list.get(z+1);
                     Polyline line = map.addPolyline(new PolylineOptions()
                     .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude,   dest.longitude))
-                    .width(10).color(getResources().getColor(R.color.bg_button_bg_main))
+                    .width(7).color(getResources().getColor(R.color.color_unvisited))
                     .geodesic(true));
                 }
 
@@ -570,6 +576,40 @@ public class MapaActivity extends BaseActivity {
 
 		canvas.drawText(number, 0, 50, paint); // paint defines the text color, stroke width, size
 		return BitmapDescriptorFactory.fromBitmap(bmp);
+	}
+	
+	private Bitmap writeTextOnDrawable(int drawableId, String text) {
+
+	    Bitmap bm = BitmapFactory.decodeResource(getResources(), drawableId)
+	            .copy(Bitmap.Config.ARGB_8888, true);
+
+	    //Typeface tf = Typeface.create("Helvetica", Typeface.BOLD);
+
+	    Paint paint = new Paint();
+	    paint.setStyle(Style.FILL);
+	    paint.setColor(Color.WHITE);
+	    //paint.setTypeface(tf);
+	    paint.setTextAlign(Align.CENTER);
+	    paint.setTextSize(getResources().getDimension(R.dimen.text_small_size));
+
+	    Rect textRect = new Rect();
+	    paint.getTextBounds(text, 0, text.length(), textRect);
+
+	    Canvas canvas = new Canvas(bm);
+
+	    //If the text is bigger than the canvas , reduce the font size
+	    if(textRect.width() >= (canvas.getWidth() - 4))     //the padding on either sides is considered as 4, so as to appropriately fit in the text
+	        paint.setTextSize(getResources().getDimension(R.dimen.text_small_size));        //Scaling needs to be used for different dpi's
+
+	    //Calculate the positions
+	    int xPos = (canvas.getWidth() / 2);     //-2 is for regulating the x position offset
+
+	    //"- ((paint.descent() + paint.ascent()) / 2)" is the distance from the baseline to the center.
+	    int yPos = (int) ((canvas.getHeight() / 2) - ((paint.descent() + paint.ascent()) / 2)) ;  
+
+	    canvas.drawText(text, xPos, yPos, paint);
+
+	    return  bm;
 	}
 
 }

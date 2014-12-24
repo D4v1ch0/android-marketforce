@@ -53,6 +53,7 @@
         tbCliente.Calificacion,
         tbCliente.URLFoto,
         tbCliente.TipoPersona,
+        tbCliente.Nuevo,
         tbClienteExt.Nombre1 AS tbClienteExt_Nombre1,
         tbClienteExt.Nombre2 AS tbClienteExt_Nombre2,
        	tbClienteExt.Apellido1 AS tbClienteExt_Apellido1,
@@ -291,6 +292,7 @@
         tbAgenda.EstadoAgenda,
         tbAgenda.IdContacto,
         tbAgenda.IdCliente,
+        tbAgenda.IdMotivoNoVisita,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
         tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad
@@ -489,5 +491,17 @@
        tbActividad.Tipo
 	   FROM  tbActividad
 	   WHERE IdTarea = ?
+     </statement>
+     
+	 <statement name="ResumenAgentes">
+       SELECT Nombres, 
+		Apellidos, 
+		SUM(Gestionados) as Gestionados,
+		SUM(NoGestionados) as NoGestionados, 
+		SUM(Pendientes) as Pendientes 
+		FROM tbAgentesResumen
+		WHERE Fecha >= ?
+		AND Fecha &lt;= ?
+		GROUP BY IdAgente
      </statement>
 </sql>

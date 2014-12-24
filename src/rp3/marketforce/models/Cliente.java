@@ -33,6 +33,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 	private int idTipoCliente;
 	private int idCanal;
 	private int Calificacion;
+	private boolean nuevo;
 	
 	private String direccion;
 	private String telefono;
@@ -86,6 +87,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 		setValue(Contract.Cliente.COLUMN_ESTADO_CIVIL, this.estadoCivil);	
 		setValue(Contract.Cliente.COLUMN_URL_FOTO, this.URLFoto);
 		setValue(Contract.Cliente.COLUMN_TIPO_PERSONA, this.tipoPersona);
+		setValue(Contract.Cliente.COLUMN_NUEVO, this.nuevo);
 	}
 
 	@Override
@@ -350,6 +352,16 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 		return result;
 	}
 	
+	public static boolean getClienteNuevo(DataBase db, long id){
+		Cursor c = db.query(Contract.Cliente.TABLE_NAME, new String[]{Contract.Cliente.COLUMN_NUEVO},
+				Contract.Cliente._ID + " = ?", id);
+		boolean rest = false;
+		while(c.moveToNext()){
+			rest = CursorUtils.getBoolean(c, Contract.Cliente.COLUMN_NUEVO);
+		}
+		return rest;
+	}
+	
 	public static List<Cliente> getCliente(DataBase db){
 		
 		String query = QueryDir.getQuery(Contract.Cliente.QUERY_CLIENTES);
@@ -459,6 +471,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			client.setActividadEconomica(CursorUtils.getString(c, Contract.Cliente.FIELD_ACTIVIDAD_ECONOMICA));
 			client.setPaginaWeb(CursorUtils.getString(c, Contract.Cliente.FIELD_PAGINA_WEB));
 			client.setRazonSocial(CursorUtils.getString(c, Contract.Cliente.FIELD_RAZON_SOCIAL));
+			client.setNuevo(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_NUEVO));
 			
 			client.setContactos(Contacto.getContactoIdCliente(db, client.getID()));
 			
@@ -635,6 +648,14 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 
 	public void setContactos(List<Contacto> contactos) {
 		this.contactos = contactos;
+	}
+
+	public boolean isNuevo() {
+		return nuevo;
+	}
+
+	public void setNuevo(boolean nuevo) {
+		this.nuevo = nuevo;
 	}
 	
 }

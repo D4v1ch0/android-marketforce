@@ -37,6 +37,8 @@ public class Agenda {
 			jObject.put("FechaFinTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaFin()));
 			jObject.put("FechaInicioGestionTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaInicioReal()));
 			jObject.put("FechaFinGestionTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaFinReal()));
+			jObject.put("Latitud", agendaUpload.getLatitud());
+			jObject.put("Longitud", agendaUpload.getLongitud());
 			
 			JSONArray jArrayTareas = new JSONArray();
 			for(AgendaTarea agt : agendaUpload.getAgendaTareas())
@@ -254,6 +256,53 @@ public class Agenda {
 		}
 		
 		webService.addParameter("agendas", jArray);
+		
+		try
+		{			
+			webService.addCurrentAuthToken();
+			
+			try {
+				webService.invokeWebService();
+				String error = webService.getStringResponse();
+				agendaUpload.setEnviado(true);
+				rp3.marketforce.models.Agenda.update(db, agendaUpload);
+			} catch (HttpResponseException e) {
+				if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+					return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+				return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+			} catch (Exception e) {
+				return SyncAdapter.SYNC_EVENT_ERROR;
+			}
+			
+		}finally{
+			webService.close();
+		}
+		
+		return SyncAdapter.SYNC_EVENT_SUCCESS;		
+	}
+	
+	public static int executeSyncNoVisita(DataBase db, int idAgenda){
+		WebService webService = new WebService("MartketForce","MotivoNoVisitaAgenda");			
+		
+		rp3.marketforce.models.Agenda agendaUpload = rp3.marketforce.models.Agenda.getAgendaUpload(db, idAgenda);
+		
+		JSONArray jArray = new JSONArray();
+		JSONObject jObject = new JSONObject();
+		try
+		{
+			jObject.put("IdAgenda", agendaUpload.getIdAgenda());
+			jObject.put("IdRuta", agendaUpload.getIdRuta());
+			jObject.put("Observacion", agendaUpload.getObservaciones());
+			jObject.put("MotivoNoGestion", agendaUpload.getIdMotivoNoVisita());
+			
+			jArray.put(jObject);
+		}
+		catch(Exception ex)
+		{
+			
+		}
+		
+		webService.addParameter("agendasNoGestion", jArray);
 		
 		try
 		{			

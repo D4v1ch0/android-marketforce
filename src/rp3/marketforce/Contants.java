@@ -5,6 +5,7 @@ public class Contants {
 	public final static int GENERAL_TABLE_GENERO = 1003;
 	public final static int GENERAL_TABLE_TIPO_DIRECCION = 1004;
 	public final static int GENERAL_TABLE_TIPO_PERSONA = 1022;
+	public final static int GENERAL_TABLE_MOTIVOS_NO_VISITA = 1030;
 	public final static String IMAGE_FOLDER = "imagesFolder";
 	public final static String ALARM_CANCEL_TIME = "cancelAlarmTime";
 	
@@ -19,5 +20,11 @@ public class Contants {
 	public final static String DESC_PENDIENTE = "Pendiente";
 	public final static String DESC_VISITADO = "Visitado";
 	public final static String DESC_REPROGRAMADO = "Reprogramado";
+	
+	public final static String KEY_IDAGENTE = "IdAgente";
+	public final static String KEY_IDRUTA = "IdRuta";
+	public final static String KEY_ES_SUPERVISOR = "EsSupervisor";
+	public final static String KEY_ES_AGENTE = "EsAgente";
+	public final static String KEY_ES_ADMINISTRADOR = "EsAdministrador";
 	
 }

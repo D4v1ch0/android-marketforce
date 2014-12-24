@@ -72,16 +72,16 @@
     <string name="label_rutas_por_fecha">Rutas Por Fecha</string>
     <string name="label_como_llegar">Como Llegar</string>
     <string name="label_posicion">Posición</string>
-    <string name="abreviatura_visitado">VIS</string>
-    <string name="abreviatura_no_visitado">NVI</string>
-    <string name="abreviatura_pendiente">PEN</string>
+    <string name="abreviatura_visitado">Visitado</string>
+    <string name="abreviatura_no_visitado">No visitado</string>
+    <string name="abreviatura_pendiente">Próximo</string>
     <string name="label_efectividad">Efectividad:</string>
     <string name="label_hoy">Hoy</string>
     <string name="label_desde_graph">Desde %s</string>
     <string name="label_empty_agenda">No hay visitas programadas para hoy</string>
     <string name="action_cambiar_contacto">Cambiar Contacto</string>
     <string name="action_observaciones">Observaciones</string>
-    <string name="label_tipo_persona">Tipo Persona</string>
+    <string name="label_tipo_persona">Tipo de Persona</string>
     <string name="label_primer_nombre">Primer Nombre</string>
     <string name="label_segundo_nombre">Segundo Nombre</string>
     <string name="label_primer_apellido">Primer Apellido</string>
@@ -98,7 +98,7 @@
     <string name="label_agregar_direccion">Agregar Dirección</string>
     <string name="label_tipo_direccion">Tipo Dirección</string>
     <string name="label_es_principal">Es Principal</string>
-    <string name="label_obtener_ubicacion">Obtener Ubicación</string>
+    <string name="label_obtener_ubicacion">Ubicación</string>
     <string name="label_latitud">Latitud</string>
     <string name="label_longitud">Longitud</string>
     <string name="label_agregar_contacto">Agregar Contacto</string>
@@ -106,9 +106,15 @@
     <string name="label_nombres">Nombres</string>
     <string name="label_apellidos">Apellidos</string>
     <string name="action_crear_cliente">Crear Cliente</string>
-    <string name="label_eliminar_direccion">Eliminar Dirección</string>
-    <string name="label_eliminar_contacto">Eliminar Contacto</string>
+    <string name="label_eliminar_direccion">Eliminar</string>
+    <string name="label_eliminar_contacto">Eliminar</string>
     <string name="label_grabar">Grabar</string>
     <string name="label_cancelar">Cancelar</string>
+    <string name="label_action_motivos_no_visita">Motivos de No Visita</string>
+    <string name="label_motivo_no_visita">Motivo De No Visita</string>
+    <string name="label_agente">Agentes</string>
+    <string name="label_asignar_imagen">Asignar Imagen</string>
+    <string name="label_numero">Número</string>
+    <string name="title_option_resumen">Resumen</string>
 
 </resources>

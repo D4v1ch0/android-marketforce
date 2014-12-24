@@ -48,7 +48,7 @@ public class ContactsAgendaFragment extends BaseFragment {
         if(idAgenda != 0){        	
         	agenda = Agenda.getAgenda(getDataBase(), idAgenda);
         }
-        super.setContentView(R.layout.fragment_dashboard_agenda);
+        super.setContentView(R.layout.fragment_list_contactos);
 	}
 	
 	@Override
@@ -65,13 +65,14 @@ public class ContactsAgendaFragment extends BaseFragment {
 	@Override
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
 		saveListener = (SaveContactsListener) getParentFragment();
+		getDialog().setTitle("Escoger Contacto");
 		final List<Contacto> contacts = Contacto.getContactoIdCliente(getDataBase(), agenda.getIdCliente());
 		Contacto new_cont = new Contacto();
 		new_cont.setNombre("Nuevo Contacto");
 		contacts.add(new_cont);
 		ContactsAdapter adapter = new ContactsAdapter(getContext(), contacts);
-		((ListView) rootView.findViewById(R.id.dashboard_agenda_list)).setAdapter(adapter);
-		((ListView) rootView.findViewById(R.id.dashboard_agenda_list)).setOnItemClickListener(new OnItemClickListener() {
+		((ListView) rootView.findViewById(R.id.list_contactos_agenda)).setAdapter(adapter);
+		((ListView) rootView.findViewById(R.id.list_contactos_agenda)).setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,

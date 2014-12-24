@@ -22,7 +22,8 @@
 	  IdCanal INTEGER,
 	  Calificacion INTEGER,
 	  URLFoto TEXT,
-	  TipoPersona TEXT
+	  TipoPersona TEXT,
+	  Nuevo BOOLEAN
       )
 	</statement>
 	<statement>
@@ -99,7 +100,10 @@
       Foto2Int TEXT,
       Foto3Ext TEXT,
       Foto3Int TEXT,
-      IdContacto INTEGER
+      IdContacto INTEGER,
+      IdMotivoNoVisita TEXT,
+      Latitud REAL,
+	  Longitud REAL
       )
 	</statement>
 	
@@ -165,6 +169,19 @@
       IdTarea INTEGER,
       IdTareaActividad INTEGER,
       Orden INTEGER
+      )
+	</statement>
+	
+	<statement>
+	  CREATE TABLE tbAgentesResumen(
+      _id INTEGER PRIMARY KEY AUTOINCREMENT,
+      IdAgente INTEGER,
+      Nombres TEXT,
+      Apellidos TEXT,
+      Fecha INTEGER,
+      Gestionados INTEGER,
+      NoGestionados INTEGER,
+      Pendientes INTEGER
       )
 	</statement>
 </sql>

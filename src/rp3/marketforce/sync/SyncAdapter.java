@@ -1,8 +1,11 @@
 package rp3.marketforce.sync;
 
+import rp3.configuration.PreferenceManager;
 import rp3.db.sqlite.DataBase;
+import rp3.marketforce.Contants;
 import rp3.marketforce.cliente.CrearClienteFragment;
 import rp3.marketforce.ruta.CrearVisitaFragment;
+import rp3.marketforce.ruta.MotivoNoVisitaFragment;
 import rp3.marketforce.ruta.RutasDetailFragment;
 import rp3.marketforce.ruta.RutasListFragment;
 import rp3.sync.SyncAudit;
@@ -19,11 +22,13 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 	public static String SYNC_TYPE_ACT_AGENDA = "actagenda";
 	public static String SYNC_TYPE_ENVIAR_UBICACION = "sendlocation";
 	public static String SYNC_TYPE_CLIENTE_UPDATE = "clienteupdate";
+	public static String SYNC_TYPE_CLIENTE_UPDATE_FULL = "clienteupdatefull";
 	public static String SYNC_TYPE_CLIENTE_CREATE = "clientecreate";
 	public static String SYNC_TYPE_ENVIAR_AGENDA = "sendagenda";
 	public static String SYNC_TYPE_ACTUALIZAR_AGENDA = "actagenda";
 	public static String SYNC_TYPE_REPROGRAMAR_AGENDA = "reprogramar";
 	public static String SYNC_TYPE_INSERTAR_AGENDA = "insertarAgenda";
+	public static String SYNC_TYPE_AGENDA_NO_VISITA = "agendaNoVisita";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -76,6 +81,16 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 				}
 				
 				if(result == SYNC_EVENT_SUCCESS){
+					result = rp3.marketforce.sync.Agente.executeSync(db);				
+					addDefaultMessage(result);
+				}
+				
+				if(result == SYNC_EVENT_SUCCESS && PreferenceManager.getBoolean(Contants.KEY_ES_SUPERVISOR)){
+					result = rp3.marketforce.sync.Agente.executeSyncGetAgente(db);				
+					addDefaultMessage(result);
+				}
+				
+				if(result == SYNC_EVENT_SUCCESS){
 					result = rp3.marketforce.sync.Tareas.executeSync(db,null,null);				
 					addDefaultMessage(result);
 				}
@@ -124,6 +139,12 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 				addDefaultMessage(result);
 			}
 			
+			else if(syncType.equals(SYNC_TYPE_CLIENTE_UPDATE_FULL)){
+				String cliente = extras.getString(CrearClienteFragment.ARG_CLIENTE);
+				result = Cliente.executeSyncUpdateFull(db, cliente);
+				addDefaultMessage(result);
+			}
+			
 			else if(syncType.equals(SYNC_TYPE_ENVIAR_AGENDA)){
 				int id = extras.getInt(RutasDetailFragment.ARG_AGENDA_ID);
 				result = Agenda.executeSync(db, id);
@@ -139,6 +160,12 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 			else if(syncType.equals(SYNC_TYPE_INSERTAR_AGENDA)){
 				String agenda = extras.getString(CrearVisitaFragment.ARG_AGENDA);
 				result = Agenda.executeSyncInsert(db, agenda);
+				addDefaultMessage(result);
+			}
+			
+			else if(syncType.equals(SYNC_TYPE_AGENDA_NO_VISITA)){
+				int id = extras.getInt(MotivoNoVisitaFragment.ARG_AGENDA);
+				result = Agenda.executeSyncNoVisita(db, id);
 				addDefaultMessage(result);
 			}
 			

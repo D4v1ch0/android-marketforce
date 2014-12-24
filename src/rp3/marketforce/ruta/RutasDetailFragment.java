@@ -2,7 +2,9 @@ package rp3.marketforce.ruta;
 
 import java.util.Calendar;
 
+import rp3.app.BaseActivity;
 import rp3.configuration.PreferenceManager;
+import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.actividades.ActividadActivity;
@@ -16,10 +18,15 @@ import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.AgendaTareaActividades;
 import rp3.marketforce.models.Cliente;
+import rp3.marketforce.sync.EnviarUbicacion;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.DrawableManager;
+import rp3.util.LocationUtils;
+import rp3.util.LocationUtils.OnLocationResultListener;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -222,14 +229,32 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
 					agenda.setEstadoAgenda(Contants.ESTADO_VISITADO);
 					agenda.setEstadoAgendaDescripcion(Contants.DESC_VISITADO);
 					agenda.setFechaFinReal(Calendar.getInstance().getTime());
-					//agenda.setEnviado(true);
+					final Context ctx = getContext();
+					try
+					{
+					LocationUtils.getLocation(ctx, new OnLocationResultListener() {
+						
+						@Override
+						public void getLocationResult(Location location) {				
+							if(location!=null){		
+								agenda.setLatitud(location.getLatitude());
+								agenda.setLongitud(location.getLongitude());
+							}
+								BaseActivity act = (BaseActivity) ctx;
+								Agenda.update(act.getDataBase(), agenda);
+								Bundle bundle = new Bundle();
+								bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ENVIAR_AGENDA);
+								bundle.putInt(ARG_AGENDA_ID, (int) idAgenda);
+								act.requestSync(bundle);
+	
+						}
+					});
+					}
+					catch(Exception ex)
+					{	}
 					Agenda.update(getDataBase(), agenda);
 					((ImageView) rootView.findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_visited);
 					setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());	
-					Bundle bundle = new Bundle();
-					bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ENVIAR_AGENDA);
-					bundle.putInt(ARG_AGENDA_ID, (int) idAgenda);
-					requestSync(bundle);
 				}});
 		   
 		   if(agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO))

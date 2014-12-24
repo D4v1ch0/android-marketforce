@@ -131,7 +131,6 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 		 * Se instancia Drawable Manager para carga de imagenes;
 		 */
 		DManager = new DrawableManager();
-		
 		if (getParentFragment() == null)
 			setRetainInstance(true);
 
@@ -1235,10 +1234,9 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	}
 
 	public void onDetailItemEdit(long transactionDetailId) {
-		if (Screen.isMinLargeLayoutSize(getActivity()))
-			showDetailDialog(transactionDetailId);
-		else
-			startDetailEditActivity(transactionDetailId);
+		Intent intent = new Intent(getActivity(), CrearClienteActivity.class);
+		intent.putExtra(CrearClienteActivity.ARG_IDCLIENTE, transactionDetailId);
+		startActivity(intent);
 	}
 	
 

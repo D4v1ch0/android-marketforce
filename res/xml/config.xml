@@ -84,6 +84,11 @@
                     <webMethod>POST</webMethod>
                 </method>
                 <method>
+                    <name>MotivoNoVisitaAgenda</name>
+                    <action>agenda/SetMotivoNoGestion</action>
+                    <webMethod>POST</webMethod>
+                </method>
+                <method>
                     <name>InsertarAgenda</name>
                     <action>agenda/insert</action>
                     <webMethod>POST</webMethod>
@@ -96,6 +101,16 @@
                 <method>
                     <name>GetCanales</name>
                     <action>canal/get</action>
+                    <webMethod>GET</webMethod>
+                </method>
+                <method>
+                    <name>GetAgente</name>
+                    <action>agente/getAgente</action>
+                    <webMethod>GET</webMethod>
+                </method>
+                <method>
+                    <name>GetResumenGestionAgentes</name>
+                    <action>gestion/getresumengestionagentes?idagentesupervisor=@idagentesupervisor</action>
                     <webMethod>GET</webMethod>
                 </method>
                 <method>
@@ -116,6 +131,11 @@
                 <method>
                     <name>UpdateCliente</name>
                     <action>cliente/update</action>
+                    <webMethod>POST</webMethod>
+                </method> 
+                <method>
+                    <name>UpdateClienteFull</name>
+                    <action>cliente/updatefull</action>
                     <webMethod>POST</webMethod>
                 </method>               
             </methods>     

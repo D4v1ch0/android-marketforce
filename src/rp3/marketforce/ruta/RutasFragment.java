@@ -100,7 +100,10 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 		}
 		
 		if(obsFragment != null && !obsFragment.closed)
+		{
+			obsFragment.dismiss();
 			this.showDialogFragment(obsFragment, "");
+		}
 		
 		if(slidingPane.isOpen() && 
 				rootView.findViewById(R.id.content_transaction_list).getLayoutParams().width != LayoutParams.MATCH_PARENT)		
@@ -133,6 +136,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	  		 }
 	  		 menu.removeItem(R.id.action_cambiar_contacto);
 	  		 menu.removeItem(R.id.action_observaciones);
+	  		 menu.removeItem(R.id.action_no_visita);
 	  	 }
   	 }
   	  
@@ -210,6 +214,9 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	    		case R.id.action_observaciones:
 	    			obsFragment = ObservacionesFragment.newInstance(selectedTransactionId);
 	    			this.showDialogFragment(obsFragment, "");
+	    			return true;
+	    		case R.id.action_no_visita:
+	    			this.showDialogFragment(MotivoNoVisitaFragment.newInstance(selectedTransactionId), MotivoNoVisitaFragment.TAG);
 	    			return true;
 	    	}
 	    	return super.onOptionsItemSelected(item);

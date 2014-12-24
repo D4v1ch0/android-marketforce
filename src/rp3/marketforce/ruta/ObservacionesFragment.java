@@ -35,6 +35,7 @@ public class ObservacionesFragment extends BaseFragment {
 	private long idAgenda;
 	private Agenda agenda;
 	public boolean closed = false;
+	public View parentView;
 
 	public static ObservacionesFragment newInstance(long idAgenda)
 	{
@@ -67,12 +68,33 @@ public class ObservacionesFragment extends BaseFragment {
 	    
 	@Override
 	public void onResume() {
+		((Button) parentView.findViewById(R.id.obs_aceptar)).setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				agenda.setObservaciones(getTextViewString(R.id.obs_text));
+				Agenda.update(getDataBase(), agenda);
+				closed = true;
+				dismiss();
+			}
+		});
+		
+		((Button) parentView.findViewById(R.id.obs_cancelar)).setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				closed = true;
+				dismiss();
+			}
+		});
 	    super.onResume();
 	}
 	
 	@Override
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
 		super.onFragmentCreateView(rootView, savedInstanceState);
+		parentView = rootView;
+		getDialog().setTitle("Observaciones");
 		if(agenda.getFoto1Int() != null)
 			((ImageButton) rootView.findViewById(R.id.obs_foto1)).setImageBitmap(Utils.resizeBitMapImage(agenda.getFoto1Int(), MAX_WIDTH, MAX_HEIGHT));
 		if(agenda.getFoto2Int() != null)
@@ -115,26 +137,6 @@ public class ObservacionesFragment extends BaseFragment {
 			    intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); 
 			    getActivity().startActivityForResult(intent, PHOTO_3);
 				
-			}
-		});
-		
-		((Button) rootView.findViewById(R.id.obs_aceptar)).setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				agenda.setObservaciones(getTextViewString(R.id.obs_text));
-				Agenda.update(getDataBase(), agenda);
-				closed = true;
-				dismiss();
-			}
-		});
-		
-		((Button) rootView.findViewById(R.id.obs_cancelar)).setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				closed = true;
-				dismiss();
 			}
 		});
 	}
