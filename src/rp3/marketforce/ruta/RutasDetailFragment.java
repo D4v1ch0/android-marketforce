@@ -1,5 +1,7 @@
 package rp3.marketforce.ruta;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import rp3.app.BaseActivity;
@@ -21,14 +23,27 @@ import rp3.marketforce.models.Cliente;
 import rp3.marketforce.sync.EnviarUbicacion;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.DrawableManager;
+import rp3.marketforce.utils.Utils;
 import rp3.util.LocationUtils;
 import rp3.util.LocationUtils.OnLocationResultListener;
 import android.app.Activity;
+import android.content.ContentProviderOperation;
+import android.content.ContentProviderResult;
 import android.content.Context;
 import android.content.Intent;
+import android.content.OperationApplicationException;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.RemoteException;
+import android.provider.ContactsContract;
+import android.provider.ContactsContract.CommonDataKinds.Phone;
+import android.provider.ContactsContract.CommonDataKinds.StructuredName;
+import android.provider.ContactsContract.Contacts;
+import android.provider.ContactsContract.Data;
+import android.provider.ContactsContract.Intents;
+import android.provider.ContactsContract.RawContacts;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -55,6 +70,8 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
     private ListView lista_tarea;
     private DrawableManager DManager;
     private boolean soloVista = true;
+	private SimpleDateFormat format1;
+	private SimpleDateFormat format2;
     
     public interface TransactionDetailListener{
     	public void onDeleteSuccess(Cliente transaction);
@@ -71,7 +88,9 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);                
+        super.onCreate(savedInstanceState); 
+        format1 = new SimpleDateFormat("EEEE dd MMMM yyyy, HH:mm");
+        format2 = new SimpleDateFormat("HH:mm");
 
         if(getParentFragment()==null)
         	setRetainInstance(true);
@@ -124,6 +143,11 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
 						   
 			  setTextViewText(R.id.textView_name, agenda.getNombreCompleto());
 		  }
+    	if(agenda.getObservaciones() != null && agenda.getObservaciones().length() > 0)
+		   {
+			   setTextViewText(R.id.detail_agenda_observacion, agenda.getObservaciones());
+			   ((TextView)getRootView().findViewById(R.id.detail_agenda_observacion)).setTextColor(getResources().getColor(R.color.default_text));
+		   }
     	adapter = new ListaTareasAdapter(getActivity(), agenda.getAgendaTareas());
     	lista_tarea.setAdapter(adapter);
     	adapter.notifyDataSetChanged();
@@ -140,7 +164,23 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
 		   setTextViewText(R.id.textView_movil, agenda.getClienteDireccion().getTelefono1());
 		   setTextViewText(R.id.textView_mail, agenda.getCliente().getCorreoElectronico());
 		   setTextViewText(R.id.textView_address, agenda.getClienteDireccion().getDireccion());
-		   setTextViewDateText(R.id.textView_fecha, agenda.getFechaInicio());		
+		   setTextViewText(R.id.textView_fecha, format1.format(agenda.getFechaInicio()) + " - " + format2.format(agenda.getFechaFin()));		
+		   if(agenda.getObservaciones() != null && agenda.getObservaciones().length() > 0)
+		   {
+			   setTextViewText(R.id.detail_agenda_observacion, agenda.getObservaciones());
+			   ((TextView)rootView.findViewById(R.id.detail_agenda_observacion)).setTextColor(getResources().getColor(R.color.default_text));
+		   }
+		   
+		   rootView.findViewById(R.id.detail_agenda_observacion).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				ObservacionesFragment obsFragment = ObservacionesFragment.newInstance(agenda.getID());
+				showDialogFragment(obsFragment, "");
+			}
+		   });
+		   
+			
+			
 		   setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());
 
 				((TextView) rootView.findViewById(R.id.textView_mail)).setClickable(true);
@@ -157,9 +197,14 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
 							@Override
 							public void onClick(View v) {
 								String uri = "tel:" + agenda.getClienteDireccion().getTelefono1();
-								Intent intent = new Intent(Intent.ACTION_CALL);
+								Intent intent = new Intent(Intent.ACTION_DIAL);
 								intent.setData(Uri.parse(uri));
-								startActivity(intent);
+								Uri mUri = Uri.parse("smsto:" + Utils.convertToSMSNumber(agenda.getClienteDireccion().getTelefono1()));
+					            Intent mIntent = new Intent(Intent.ACTION_SENDTO, mUri);
+					            mIntent.putExtra("chat",true);
+					            Intent chooserIntent = Intent.createChooser(mIntent, "Seleccionar Acción");
+					            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { intent });
+					            startActivity(chooserIntent);
 							}});
 		   setButtonClickListener(R.id.detail_agenda_button_iniciar, new OnClickListener(){
 
@@ -318,6 +363,17 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
 					if(setter.getTipoTarea().equalsIgnoreCase("E"))
 						showTareaGrupo(setter);	
 				}});
+			   
+			   if(agenda.getAgendaTareas().size() == 0)
+			   {
+				   rootView.findViewById(R.id.listView_tareas).setVisibility(View.GONE);
+				   rootView.findViewById(R.id.detail_agenda_empty_tareas).setVisibility(View.VISIBLE);
+			   }
+		   }
+		   else
+		   {
+			   rootView.findViewById(R.id.listView_tareas).setVisibility(View.GONE);
+			   rootView.findViewById(R.id.detail_agenda_empty_tareas).setVisibility(View.VISIBLE);
 		   }
 		   
 		}
@@ -345,6 +401,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
 		intent.putExtra(ARG_AGENDA_ID,(long) setter.getIdAgenda());
 		intent.putExtra(ARG_RUTA_ID, setter.getIdRuta());
 		intent.putExtra(ActividadActivity.ARG_VISTA, soloVista);
+		intent.putExtra(ActividadActivity.ARG_TITULO, setter.getNombreTarea());
 		startActivity(intent);
 	}
 	
@@ -355,6 +412,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
 		intent.putExtra(ARG_AGENDA_ID, setter.getIdAgenda());
 		intent.putExtra(ARG_RUTA_ID, setter.getIdRuta());
 		intent.putExtra(ActividadActivity.ARG_VISTA, soloVista);
+		intent.putExtra(ActividadActivity.ARG_TITULO, setter.getNombreTarea());
 		startActivity(intent);
 	}
 	public void showTareaMultiSeleccion(Actividad ata, AgendaTarea setter)
@@ -364,6 +422,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
 		intent.putExtra(ARG_AGENDA_ID, setter.getIdAgenda());
 		intent.putExtra(ARG_RUTA_ID, setter.getIdRuta());
 		intent.putExtra(ActividadActivity.ARG_VISTA, soloVista);
+		intent.putExtra(ActividadActivity.ARG_TITULO, setter.getNombreTarea());
 		startActivity(intent);
 	}
     
@@ -374,6 +433,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
 		intent.putExtra(ARG_AGENDA_ID, setter.getIdAgenda());
 		intent.putExtra(ARG_RUTA_ID, setter.getIdRuta());
 		intent.putExtra(ActividadActivity.ARG_VISTA, soloVista);
+		intent.putExtra(ActividadActivity.ARG_TITULO, setter.getNombreTarea());
 		startActivity(intent);
 	}
 	
@@ -384,6 +444,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment {
 		intent.putExtra(ARG_AGENDA_ID, agt.getIdAgenda());
 		intent.putExtra(ARG_RUTA_ID, agt.getIdRuta());
 		intent.putExtra(ActividadActivity.ARG_VISTA, soloVista);
+		intent.putExtra(ActividadActivity.ARG_TITULO, agt.getNombreTarea());
 		startActivity(intent);
 	}
 }

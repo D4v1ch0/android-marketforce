@@ -35,9 +35,11 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 import rp3.app.BaseActivity;
 import rp3.app.BaseFragment;
@@ -92,6 +94,9 @@ public class CrearClienteFragment extends BaseFragment {
 	private FrameLayout info;
 	private FrameLayout direccion;
 	private FrameLayout contacto;
+	private ImageView ArrowInfo;
+	private ImageView ArrowCont;
+	private ImageView ArrowDir;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -134,91 +139,127 @@ public class CrearClienteFragment extends BaseFragment {
 	}
 	
 	private void Grabar() {
-		JSONObject jObject = new JSONObject();
-		try
-		{
+		Cliente cli = new Cliente();
 			if(idCliente != 0)
-				jObject.put("IdCliente", idCliente);
-			jObject.put("IdCanal", ((Spinner)info.findViewById(R.id.cliente_canal)).getAdapter().getItemId(((Spinner)info.findViewById(R.id.cliente_canal)).getSelectedItemPosition()));
-			jObject.put("IdTipoIdentificacion", ((Spinner)info.findViewById(R.id.cliente_tipo_identificacion)).getAdapter().getItemId(((Spinner)info.findViewById(R.id.cliente_tipo_identificacion)).getSelectedItemPosition()));
-			jObject.put("Identificacion", ((EditText)info.findViewById(R.id.cliente_identificacion)).getText().toString());
-			jObject.put("TipoPersona", ((GeneralValue)((Spinner)info.findViewById(R.id.crear_cliente_tipo_persona)).getSelectedItem()).getCode());
-			jObject.put("IdTipoCliente", ((Spinner)info.findViewById(R.id.cliente_tipo_cliente)).getAdapter().getItemId(((Spinner)info.findViewById(R.id.cliente_tipo_cliente)).getSelectedItemPosition()));
-			jObject.put("Foto", cliente.getURLFoto());
+				cli = Cliente.getClienteID(getDataBase(), idCliente, true);
+			cli.setIdCanal((int) ((Spinner)info.findViewById(R.id.cliente_canal)).getAdapter().getItemId(((Spinner)info.findViewById(R.id.cliente_canal)).getSelectedItemPosition()));
+			cli.setIdTipoIdentificacion((int) ((Spinner)info.findViewById(R.id.cliente_tipo_identificacion)).getAdapter().getItemId(((Spinner)info.findViewById(R.id.cliente_tipo_identificacion)).getSelectedItemPosition()));
+			cli.setIdentificacion(((EditText)info.findViewById(R.id.cliente_identificacion)).getText().toString());
+			cli.setTipoPersona(((GeneralValue)((Spinner)info.findViewById(R.id.crear_cliente_tipo_persona)).getSelectedItem()).getCode());
+			cli.setIdTipoCliente((int) ((Spinner)info.findViewById(R.id.cliente_tipo_cliente)).getAdapter().getItemId(((Spinner)info.findViewById(R.id.cliente_tipo_cliente)).getSelectedItemPosition()));
+			if(cliente.getURLFoto() != null && !cliente.getURLFoto().trim().equals(""))
+				cli.setURLFoto(cliente.getURLFoto());
 			if(((Spinner) info.findViewById(R.id.crear_cliente_tipo_persona)).getSelectedItemPosition() == 1)
 			{
-				jObject.put("Nombre1", ((EditText)info.findViewById(R.id.cliente_primer_nombre)).getText().toString());
-				jObject.put("Nombre2", ((EditText)info.findViewById(R.id.cliente_segundo_nombre)).getText().toString());
-				jObject.put("Apellido1", ((EditText)info.findViewById(R.id.cliente_primer_apellido)).getText().toString());
-				jObject.put("Apellido2", ((EditText)info.findViewById(R.id.cliente_segundo_apellido)).getText().toString());
-				jObject.put("CorreoElectronico", ((EditText)info.findViewById(R.id.cliente_correo)).getText().toString());
-				jObject.put("Genero", ((GeneralValue)((Spinner)info.findViewById(R.id.cliente_genero)).getSelectedItem()).getCode());
-				jObject.put("EstadoCivil", ((GeneralValue)((Spinner)info.findViewById(R.id.cliente_estado_civil)).getSelectedItem()).getCode());
+				cli.setNombre1(((EditText)info.findViewById(R.id.cliente_primer_nombre)).getText().toString());
+				cli.setNombre2(((EditText)info.findViewById(R.id.cliente_segundo_nombre)).getText().toString());
+				cli.setApellido1(((EditText)info.findViewById(R.id.cliente_primer_apellido)).getText().toString());
+				cli.setApellido2(((EditText)info.findViewById(R.id.cliente_segundo_apellido)).getText().toString());
+				cli.setCorreoElectronico(((EditText)info.findViewById(R.id.cliente_correo)).getText().toString());
+				cli.setGenero(((GeneralValue)((Spinner)info.findViewById(R.id.cliente_genero)).getSelectedItem()).getCode());
+				cli.setEstadoCivil(((GeneralValue)((Spinner)info.findViewById(R.id.cliente_estado_civil)).getSelectedItem()).getCode());
+				cli.setNombreCompleto(cli.getNombre1() + " " + cli.getNombre2() + " " + cli.getApellido1() + " " + cli.getApellido2());
+				cli.setFechaNacimiento(cliente.getFechaNacimiento());
 			}
 			else
 			{
-				jObject.put("Apellido1", "");
-				jObject.put("Nombre1", ((EditText)info.findViewById(R.id.cliente_nombre)).getText().toString());
-				jObject.put("ActividadEconomica", ((EditText)info.findViewById(R.id.cliente_actividad_economica)).getText().toString());
-				jObject.put("CorreoElectronico", ((EditText)info.findViewById(R.id.cliente_correo_juridico)).getText().toString());
-				jObject.put("RazonSocial", ((EditText)info.findViewById(R.id.cliente_razon_social)).getText().toString());
-				jObject.put("PaginaWeb", ((EditText)info.findViewById(R.id.cliente_pagina_web)).getText().toString());
-				jObject.put("Genero", ((GeneralValue)((Spinner)info.findViewById(R.id.cliente_genero)).getSelectedItem()).getCode());
-				jObject.put("EstadoCivil", ((GeneralValue)((Spinner)info.findViewById(R.id.cliente_estado_civil)).getSelectedItem()).getCode());
+				cli.setApellido1("");
+				cli.setNombre1(((EditText)info.findViewById(R.id.cliente_nombre)).getText().toString());
+				cli.setActividadEconomica(((EditText)info.findViewById(R.id.cliente_actividad_economica)).getText().toString());
+				cli.setCorreoElectronico(((EditText)info.findViewById(R.id.cliente_correo_juridico)).getText().toString());
+				cli.setRazonSocial(((EditText)info.findViewById(R.id.cliente_razon_social)).getText().toString());
+				cli.setPaginaWeb(((EditText)info.findViewById(R.id.cliente_pagina_web)).getText().toString());
+				cli.setGenero(((GeneralValue)((Spinner)info.findViewById(R.id.cliente_genero)).getSelectedItem()).getCode());
+				cli.setEstadoCivil(((GeneralValue)((Spinner)info.findViewById(R.id.cliente_estado_civil)).getSelectedItem()).getCode());
+				cli.setNombreCompleto(cli.getNombre1());
 			}
-			JSONArray jArrayDirecciones = new JSONArray();
+			cli.setPendiente(true);
+			List<Contacto> cliContactos = cli.getContactos();
+			cli.setContactos(null);
+			List<ClienteDireccion> cliDirecciones = cli.getClienteDirecciones();
+			cli.setClienteDirecciones(null);
+			if(cli.getID() == 0 )
+				Cliente.insert(getDataBase(), cli);
+			else
+				Cliente.update(getDataBase(), cli);
+
 			for(int i = 0; i < listViewDirecciones.size(); i ++)
 			{
-				JSONObject cliDir = new JSONObject();
-				cliDir.put("IdClienteDireccion", i+1);
-				if(idCliente != 0)
-					cliDir.put("IdCliente", idCliente);
-				cliDir.put("Direccion", ((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_direccion)).getText().toString());
-				cliDir.put("TipoDireccion", ((GeneralValue)((Spinner)listViewDirecciones.get(i).findViewById(R.id.cliente_tipo_direccion_spinner)).getSelectedItem()).getCode());
-				cliDir.put("EsPrincipal", ((CheckBox)listViewDirecciones.get(i).findViewById(R.id.cliente_es_principal)).isChecked());
-				cliDir.put("Telefono1", ((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_telefono1)).getText().toString());
-				cliDir.put("Telefono2", ((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_telefono2)).getText().toString());
-				cliDir.put("Referencia", ((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_referencia)).getText().toString());
+				ClienteDireccion cliDir = new ClienteDireccion();
+				if(cliDirecciones != null && cliDirecciones.size() > i)
+				{
+					cliDir = cliDirecciones.get(i);
+				}
+				else
+				{
+					//cliDir.setIdClienteDireccion(i+1);
+					if(idCliente != 0)
+						cliDir.setIdCliente(cli.getIdCliente());
+				}
+				cliDir.set_idCliente(cli.getID());
+				cliDir.setDireccion(((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_direccion)).getText().toString());
+				cliDir.setTipoDireccion(((GeneralValue)((Spinner)listViewDirecciones.get(i).findViewById(R.id.cliente_tipo_direccion_spinner)).getSelectedItem()).getCode());
+				cliDir.setEsPrincipal(((CheckBox)listViewDirecciones.get(i).findViewById(R.id.cliente_es_principal)).isChecked());
+				cliDir.setTelefono1(((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_telefono1)).getText().toString());
+				cliDir.setTelefono2(((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_telefono2)).getText().toString());
+				cliDir.setReferencia(((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_referencia)).getText().toString());
 				if(!((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_longitud)).getText().toString().equals(""))
 				{
-					cliDir.put("Longitud", Double.parseDouble(((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_longitud)).getText().toString()));
-					cliDir.put("Latitud", Double.parseDouble(((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_latitud)).getText().toString()));
+					cliDir.setLongitud(Double.parseDouble(((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_longitud)).getText().toString()));
+					cliDir.setLatitud(Double.parseDouble(((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_latitud)).getText().toString()));
 				}
-				jArrayDirecciones.put(cliDir);
+				if(cliDir.getID() == 0)
+					ClienteDireccion.insert(getDataBase(), cliDir);
+				else
+					ClienteDireccion.update(getDataBase(), cliDir);
+				
+				if(i == 0)
+				{
+					cli.setDireccion(cliDir.getDireccion());
+					cli.setTelefono(cliDir.getTelefono1());
+					Cliente.update(getDataBase(), cli);
+				}
 			}
-			jObject.put("ClienteDirecciones",jArrayDirecciones);
-			JSONArray jArrayContactos = new JSONArray();
+
 			for(int i = 0; i < listViewContactos.size(); i ++)
 			{
-				JSONObject cliCont = new JSONObject();
-				cliCont.put("IdClienteContacto", i+1);
-				if(idCliente != 0)
-					cliCont.put("IdCliente", idCliente);
-				cliCont.put("Nombre", ((EditText)listViewContactos.get(i).findViewById(R.id.cliente_nombres)).getText().toString());
-				cliCont.put("Apellido", ((EditText)listViewContactos.get(i).findViewById(R.id.cliente_apellidos)).getText().toString());
-				cliCont.put("Cargo", ((EditText)listViewContactos.get(i).findViewById(R.id.cliente_cargo)).getText().toString());
-				cliCont.put("Telefono1", ((EditText)listViewContactos.get(i).findViewById(R.id.cliente_telefono1_contacto)).getText().toString());
-				cliCont.put("Telefono2", ((EditText)listViewContactos.get(i).findViewById(R.id.cliente_telefono2_contacto)).getText().toString());
-				cliCont.put("CorreoElectronico", ((EditText)listViewContactos.get(i).findViewById(R.id.cliente_correo_contacto)).getText().toString());
-				cliCont.put("IdClienteDireccion", ((Spinner)listViewContactos.get(i).findViewById(R.id.cliente_direccion_contacto)).getSelectedItemPosition()+1);
-				cliCont.put("Foto", contactPhotos.get(i));
-				jArrayContactos.put(cliCont);
+				Contacto cliCont = new Contacto();
+				if(cliContactos != null && cliContactos.size() > i)
+				{
+					cliCont = cliContactos.get(i);
+				}
+				else
+				{
+					//cliCont.setIdContacto(i+1);
+					if(idCliente != 0)
+						cliCont.setIdCliente(cli.getIdCliente());
+				}
+				cliCont.set_idCliente(cli.getID());
+				cliCont.setNombre(((EditText)listViewContactos.get(i).findViewById(R.id.cliente_nombres)).getText().toString());
+				cliCont.setApellido(((EditText)listViewContactos.get(i).findViewById(R.id.cliente_apellidos)).getText().toString());
+				cliCont.setCargo(((EditText)listViewContactos.get(i).findViewById(R.id.cliente_cargo)).getText().toString());
+				cliCont.setTelefono1(((EditText)listViewContactos.get(i).findViewById(R.id.cliente_telefono1_contacto)).getText().toString());
+				cliCont.setTelefono2(((EditText)listViewContactos.get(i).findViewById(R.id.cliente_telefono2_contacto)).getText().toString());
+				cliCont.setCorreo(((EditText)listViewContactos.get(i).findViewById(R.id.cliente_correo_contacto)).getText().toString());
+				cliCont.setIdClienteDireccion(((Spinner)listViewContactos.get(i).findViewById(R.id.cliente_direccion_contacto)).getSelectedItemPosition()+1);
+				cliCont.setURLFoto(contactPhotos.get(i));
+				
+				if(cliCont.getID() == 0)
+					Contacto.insert(getDataBase(), cliCont);
+				else
+					Contacto.update(getDataBase(), cliCont);
 			}
-			jObject.put("ClienteContactos", jArrayContactos);
 			
-			Bundle bundle = new Bundle();
-			if(idCliente != 0)
-				bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_CLIENTE_UPDATE_FULL);
-			else
-				bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_CLIENTE_CREATE);
-			bundle.putString(ARG_CLIENTE, jObject.toString());
-			requestSync(bundle);
-		}
-		catch(Exception ex)
-		{
-			Log.e("Error", ex.getMessage());
-		}
-		
+			if(ConnectionUtils.isNetAvailable(getActivity()))
+			{
+				Bundle bundle = new Bundle();
+				if(idCliente != 0)
+					bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_CLIENTE_UPDATE_FULL);
+				else
+					bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_CLIENTE_CREATE);
+				bundle.putLong(ARG_CLIENTE, cli.getID());
+				requestSync(bundle);
+			}
 	}
 
 	@Override
@@ -233,6 +274,9 @@ public class CrearClienteFragment extends BaseFragment {
 		TabInfo = (ImageButton) getRootView().findViewById((R.id.detail_tab_info));
 		TabDirecciones = (ImageButton) getRootView().findViewById((R.id.detail_tab_direccion));
 		TabContactos = (ImageButton) getRootView().findViewById((R.id.detail_tab_contactos));
+		ArrowInfo = (ImageView) getRootView().findViewById((R.id.detail_tab_info_arrow));
+		ArrowDir = (ImageView) getRootView().findViewById((R.id.detail_tab_direccion_arrow));
+		ArrowCont = (ImageView) getRootView().findViewById((R.id.detail_tab_contactos_arrow));
 		PagerDetalles = (ViewPager) rootView.findViewById(R.id.crear_cliente_pager);
 		
 		pagerAdapter = new DetailsPageAdapter();
@@ -240,7 +284,7 @@ public class CrearClienteFragment extends BaseFragment {
 				Context.LAYOUT_INFLATER_SERVICE);
 		info = (FrameLayout) LayoutInflater.from(getContext()).inflate(R.layout.fragment_crear_cliente_info, null);
 		direccion = (FrameLayout) LayoutInflater.from(getContext()).inflate(R.layout.fragment_crear_cliente_direccion, null);
-		((Button) direccion.findViewById(R.id.agregar_direccion)).setOnClickListener(new OnClickListener(){
+		((TextView) direccion.findViewById(R.id.agregar_direccion)).setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
@@ -250,7 +294,7 @@ public class CrearClienteFragment extends BaseFragment {
 		DireccionContainer = (LinearLayout) direccion.findViewById(R.id.crear_cliente_container_direccion);
 		
 		contacto = (FrameLayout) LayoutInflater.from(getContext()).inflate(R.layout.fragment_crear_cliente_contacto, null);
-		((Button) contacto.findViewById(R.id.agregar_contacto)).setOnClickListener(new OnClickListener(){
+		((TextView) contacto.findViewById(R.id.agregar_contacto)).setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
@@ -510,11 +554,6 @@ public class CrearClienteFragment extends BaseFragment {
 			public void onClick(View v) {
 				if (GooglePlayServicesUtils.servicesConnected((BaseActivity)getActivity())) {
 
-					if (!ConnectionUtils.isNetAvailable(getActivity())) {
-						showDialogMessage(R.string.message_error_sync_no_net_available);
-						return;
-					}
-
 					final Location location = getLastLocation();
 
 					((EditText)listViewDirecciones.get(pos).findViewById(R.id.cliente_longitud)).setText(""+location.getLongitude());
@@ -564,18 +603,27 @@ public class CrearClienteFragment extends BaseFragment {
 			TabInfo.setBackgroundColor(getResources().getColor(R.color.tab_activated));
 			TabDirecciones.setBackgroundColor(getResources().getColor(R.color.tab_inactivated));
 			TabContactos.setBackgroundColor(getResources().getColor(R.color.tab_inactivated));
+			ArrowInfo.setVisibility(View.VISIBLE);
+			ArrowDir.setVisibility(View.INVISIBLE);
+			ArrowCont.setVisibility(View.INVISIBLE);
 		}
 		if(title.equalsIgnoreCase("Direcciones"))
 		{
 			TabInfo.setBackgroundColor(getResources().getColor(R.color.tab_inactivated));
 			TabDirecciones.setBackgroundColor(getResources().getColor(R.color.tab_activated));
 			TabContactos.setBackgroundColor(getResources().getColor(R.color.tab_inactivated));
+			ArrowInfo.setVisibility(View.INVISIBLE);
+			ArrowDir.setVisibility(View.VISIBLE);
+			ArrowCont.setVisibility(View.INVISIBLE);
 		}
 		if(title.equalsIgnoreCase("Contactos"))
 		{
 			TabInfo.setBackgroundColor(getResources().getColor(R.color.tab_inactivated));
 			TabDirecciones.setBackgroundColor(getResources().getColor(R.color.tab_inactivated));
 			TabContactos.setBackgroundColor(getResources().getColor(R.color.tab_activated));
+			ArrowInfo.setVisibility(View.INVISIBLE);
+			ArrowDir.setVisibility(View.INVISIBLE);
+			ArrowCont.setVisibility(View.VISIBLE);
 			for(int i = 0; i < listViewContactos.size(); i ++)
 			{
 				((Spinner)listViewContactos.get(i).findViewById(R.id.cliente_direccion_contacto)).setAdapter(getDirecciones());

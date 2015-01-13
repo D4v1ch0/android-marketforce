@@ -15,6 +15,7 @@ public abstract class ActividadActivity extends BaseActivity {
 	public static String ARG_TAREA = "tarea";
 	public static String ARG_NUMERO = "numero";
 	public static String ARG_VISTA = "vista";
+	public static String ARG_TITULO = "vista";
 	
 	protected int id_actividad;
 	protected long id_agenda;
@@ -31,6 +32,7 @@ public abstract class ActividadActivity extends BaseActivity {
 		{
 			getActionBar().setHomeButtonEnabled(true);
 			getActionBar().setDisplayHomeAsUpEnabled(true);
+			getActionBar().setTitle(getIntent().getExtras().getString(ARG_TITULO, "RP3 MarketForce"));
 		}
 		id_actividad = getIntent().getExtras().getInt(RutasDetailFragment.ARG_ITEM_ID, 0);
 		id_agenda = getIntent().getExtras().getLong(RutasDetailFragment.ARG_AGENDA_ID, 0);

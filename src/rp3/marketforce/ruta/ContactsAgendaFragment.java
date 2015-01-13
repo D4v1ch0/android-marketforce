@@ -66,7 +66,10 @@ public class ContactsAgendaFragment extends BaseFragment {
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
 		saveListener = (SaveContactsListener) getParentFragment();
 		getDialog().setTitle("Escoger Contacto");
-		final List<Contacto> contacts = Contacto.getContactoIdCliente(getDataBase(), agenda.getIdCliente());
+		boolean id_interno = true;
+		if(agenda.getIdCliente() != 0)
+			id_interno = false;
+		final List<Contacto> contacts = Contacto.getContactoIdCliente(getDataBase(), agenda.getIdCliente(), id_interno);
 		Contacto new_cont = new Contacto();
 		new_cont.setNombre("Nuevo Contacto");
 		contacts.add(new_cont);

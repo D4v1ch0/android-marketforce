@@ -13,7 +13,8 @@
 	</statement> 
 	<statement>
       CREATE TABLE tbCliente(
-      _id INTEGER PRIMARY KEY,	 
+      _id INTEGER PRIMARY KEY AUTOINCREMENT,	 
+      IdCliente INTEGER,	
 	  IdTipoIdentificacion INTEGER,	  	  
 	  Genero TEXT,
 	  EstadoCivil TEXT,
@@ -23,7 +24,8 @@
 	  Calificacion INTEGER,
 	  URLFoto TEXT,
 	  TipoPersona TEXT,
-	  Nuevo BOOLEAN
+	  Nuevo BOOLEAN,
+	  Pendiente BOOLEAN
       )
 	</statement>
 	<statement>
@@ -46,6 +48,7 @@
 	<statement>
 	  CREATE TABLE tbClienteDireccion(
       _id INTEGER PRIMARY KEY AUTOINCREMENT,
+      _IdCliente INTEGER,
 	  IdCliente INTEGER,
 	  IdClienteDireccion INTEGER,
 	  Direccion TEXT,
@@ -62,7 +65,8 @@
 	<statement>
       CREATE TABLE tbContacto(
       _id INTEGER PRIMARY KEY AUTOINCREMENT,	 
-	  IdContacto INTEGER,	  	  
+	  IdContacto INTEGER,	 
+	  _IdCliente INTEGER, 	  
 	  IdCliente INTEGER,
 	  IdClienteDireccion INTEGER,
 	  URLFoto TEXT	  
@@ -81,11 +85,13 @@
     </statement>
 	<statement>
 	  CREATE TABLE tbAgenda(
-      _id INTEGER PRIMARY KEY,
+      _id INTEGER PRIMARY KEY AUTOINCREMENT,
       IdRuta INTEGER,
       IdAgenda INTEGER,
       IdCliente INTEGER,
+      _IdCliente INTEGER,
       IdClienteDireccion INTEGER,
+      _IdClienteDireccion INTEGER,
       IdProgramacionRuta INTEGER,
       FechaInicio INTEGER,
       FechaFin INTEGER,
@@ -101,6 +107,7 @@
       Foto3Ext TEXT,
       Foto3Int TEXT,
       IdContacto INTEGER,
+      _IdContacto INTEGER,
       IdMotivoNoVisita TEXT,
       Latitud REAL,
 	  Longitud REAL
@@ -121,6 +128,7 @@
       _id INTEGER PRIMARY KEY,
       IdRuta INTEGER,
       IdAgenda INTEGER, 
+      _IdAgenda INTEGER, 
       IdTarea INTEGER,      
       EstadoTarea TEXT
       )
@@ -182,6 +190,16 @@
       Gestionados INTEGER,
       NoGestionados INTEGER,
       Pendientes INTEGER
+      )
+	</statement>
+	
+	<statement>
+	  CREATE TABLE tbUbicacion(
+      _id INTEGER PRIMARY KEY AUTOINCREMENT,
+      Latitud REAL,
+      Longitud REAL,
+      Fecha INTEGER,
+      Pendiente BOOLEAN
       )
 	</statement>
 </sql>

@@ -9,11 +9,14 @@ import rp3.marketforce.R.layout;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.util.Convert;
+import rp3.util.Screen;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
@@ -31,7 +34,18 @@ public class ReprogramarActivity extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+	    
 	    setContentView(R.layout.dialog_reprogramar_agenda);
+	    if(Screen.getOrientation() == Screen.ORIENTATION_LANDSCAPE && Screen.isMinLargeLayoutSize(this))
+	    {
+	    	DisplayMetrics metrics = new DisplayMetrics();
+	    	getWindowManager().getDefaultDisplay().getMetrics(metrics);
+	    	WindowManager.LayoutParams params = getWindow().getAttributes();    
+	    	params.height = metrics.heightPixels - 100;  
+	    	params.width = metrics.widthPixels - 100;   
+
+	    	this.getWindow().setAttributes(params); 
+	    }
 	    
 	    idAgenda = getIntent().getExtras().getLong(ARG_AGENDA);
 	    
@@ -89,6 +103,7 @@ public class ReprogramarActivity extends BaseActivity {
 		agenda.setFechaFin(calFin.getTime());
 		agenda.setEstadoAgenda(Contants.ESTADO_REPROGRAMADO);
 		agenda.setEstadoAgendaDescripcion(Contants.DESC_REPROGRAMADO);
+		agenda.setEnviado(false);
 		
 		Bundle bundle = new Bundle();
 		bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_REPROGRAMAR_AGENDA);

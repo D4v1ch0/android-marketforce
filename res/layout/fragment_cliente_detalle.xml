@@ -105,50 +105,114 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <ImageButton
-            android:id="@+id/detail_tab_info"
-            style="@style/Widget.Button.Theme"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/tab_inactivated"
-            android:src="@drawable/ic_pedido" />
-
         <LinearLayout
-            android:layout_width="1dp"
+            android:id="@+id/detail_tab_info_layout"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@color/tab_activated"
+            android:layout_weight="1"
+            android:gravity="center"
             android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" >
+
+                <ImageButton
+                    android:id="@+id/detail_tab_info"
+                    style="@style/Widget.Button.Theme"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/tab_inactivated"
+                    android:src="@drawable/ic_datos" />
+
+                <LinearLayout
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/tab_activated"
+                    android:orientation="vertical" >
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/detail_tab_info_arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/arrow" />
 
         </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/detail_tab_direccion"
-            style="@style/Widget.Button.Theme"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/tab_inactivated"
-            android:src="@drawable/ic_rutas"
-            android:visibility="gone" />
-
         <LinearLayout
-            android:layout_width="1dp"
+            android:id="@+id/detail_tab_direccion_layout"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@color/tab_activated"
-            android:orientation="vertical" >
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" >
+
+                <ImageButton
+                    android:id="@+id/detail_tab_direccion"
+                    style="@style/Widget.Button.Theme"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/tab_inactivated"
+                    android:src="@drawable/ic_ubicacion" />
+
+                <LinearLayout
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/tab_activated"
+                    android:orientation="vertical" >
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/detail_tab_direccion_arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/arrow" />
 
         </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/detail_tab_contactos"
-            style="@style/Widget.Button.Theme"
+        <LinearLayout
+            android:id="@+id/detail_tab_contactos_layout"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@color/tab_inactivated"
-            android:src="@drawable/ic_clientes"
-            android:visibility="gone" />
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <ImageButton
+                android:id="@+id/detail_tab_contactos"
+                style="@style/Widget.Button.Theme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/tab_inactivated"
+                android:src="@drawable/ic_clientes" />
+
+            <ImageView
+                android:id="@+id/detail_tab_contactos_arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/arrow" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

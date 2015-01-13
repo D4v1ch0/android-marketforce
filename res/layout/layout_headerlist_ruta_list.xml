@@ -16,7 +16,7 @@
             android:id="@+id/linearLayout_headerlist_ruta_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/color_backgroun_list"
+            android:background="@drawable/list_bckgrnd"
             android:orientation="vertical" >
         </ListView>
     </android.support.v4.widget.SwipeRefreshLayout>

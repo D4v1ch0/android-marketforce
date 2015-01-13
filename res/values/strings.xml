@@ -2,11 +2,12 @@
 
     <string name="app_name">RP3 Market Force</string>
     <string name="title_option_setinicio">Inicio</string>
-    <string name="title_option_setrutas">Rutas</string>
+    <string name="title_option_setrutas">Agenda</string>
     <string name="title_option_setclientes">Clientes</string>
     <string name="title_option_setpedido">Pedido</string>
     <string name="title_option_setreuniones">Reuniones</string>
     <string name="title_option_setrecordatorios">Recordatorios</string>
+    <string name="title_option_recorrido">Mi Recorrido</string>
     <string name="title_option_setsincronizar">Sincronizar</string>
     <string name="title_option_setajustes">Ajustes</string>
     <string name="title_option_setcerrar_sesion">Cerrar Sesión</string>
@@ -95,13 +96,13 @@
     <string name="label_razon_social">Razón Social</string>
     <string name="label_pagina_web">Página Web</string>
     <string name="label_actividad_economica">Actividad Económica</string>
-    <string name="label_agregar_direccion">Agregar Dirección</string>
+    <string name="label_agregar_direccion">Añadir Dirección</string>
     <string name="label_tipo_direccion">Tipo Dirección</string>
     <string name="label_es_principal">Es Principal</string>
     <string name="label_obtener_ubicacion">Ubicación</string>
     <string name="label_latitud">Latitud</string>
     <string name="label_longitud">Longitud</string>
-    <string name="label_agregar_contacto">Agregar Contacto</string>
+    <string name="label_agregar_contacto">Añadir contacto del cliente</string>
     <string name="label_cargo">Cargo</string>
     <string name="label_nombres">Nombres</string>
     <string name="label_apellidos">Apellidos</string>
@@ -116,5 +117,11 @@
     <string name="label_asignar_imagen">Asignar Imagen</string>
     <string name="label_numero">Número</string>
     <string name="title_option_resumen">Resumen</string>
+    <string name="label_olvidar_contrasena">¿Olvidó su contraseña?</string>
+    <string name="label_agregue_observacion">Agregue una observación</string>
+    <string name="label_sin_tareas">No tiene tareas asignadas</string>
+    <string name="label_inicio_server">Antes de empezar, escoja el servidor.</string>
+    <string name="label_demo">Demo</string>
+    <string name="label_ingreso_server">Ingrese el código de su servidor</string>
 
 </resources>

@@ -45,7 +45,8 @@
                     android:id="@+id/label_pregunta_actividad"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="TextView" />
+                    android:text="TextView"
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:id="@+id/actividad_multiple_respuesta"

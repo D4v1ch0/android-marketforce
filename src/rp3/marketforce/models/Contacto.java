@@ -16,6 +16,7 @@ import rp3.util.CursorUtils;
 public class Contacto extends rp3.data.entity.EntityBase<Contacto>{
 
 	private long id;
+	private long _idCliente;
 	private long idContacto;
 	private long idCliente;
 	private long idClienteDireccion;
@@ -51,6 +52,7 @@ public class Contacto extends rp3.data.entity.EntityBase<Contacto>{
 	@Override
 	public void setValues() {				
 		setValue(Contract.Contacto.COLUMN_ID_CONTACTO, this.idContacto);
+		setValue(Contract.Contacto.COLUMN_CLIENTE_ID_EXT, this._idCliente);
 		setValue(Contract.Contacto.COLUMN_ID_CLIENTE, this.idCliente);
 		setValue(Contract.Contacto.COLUMN_ID_CLIENTE_DIRECCION, this.idClienteDireccion);							
 		setValue(Contract.Contacto.COLUMN_URL_FOTO, this.URLFoto);	
@@ -132,6 +134,12 @@ public class Contacto extends rp3.data.entity.EntityBase<Contacto>{
 		this.idContacto = idContacto;
 	}
 	
+	public long get_idCliente() {
+		return _idCliente;
+	}
+	public void set_idCliente(long _idCliente) {
+		this._idCliente = _idCliente;
+	}
 	public String getEmpresa() {
 		return empresa;
 	}
@@ -154,10 +162,14 @@ public class Contacto extends rp3.data.entity.EntityBase<Contacto>{
     	db.delete(Contract.Contacto.TABLE_NAME, Contract.Contacto.COLUMN_ID_CLIENTE + " = ?", id);
     }
 	
-	public static List<Contacto> getContactoIdCliente(DataBase db, long idCliente)
+	public static List<Contacto> getContactoIdCliente(DataBase db, long idCliente, boolean interno)
 	{
 		List<Contacto> listaContactos = new ArrayList<Contacto>();
-		String query = QueryDir.getQuery(Contract.Contacto.QUERY_CONTACTOS);
+		String query = "";
+		if(interno)
+			query = QueryDir.getQuery(Contract.Contacto.QUERY_CONTACTOS_INTERNO);
+		else
+			query = QueryDir.getQuery(Contract.Contacto.QUERY_CONTACTOS);
 		Cursor s = db.rawQuery(query, idCliente);
 		if(s.moveToFirst())
 		{
@@ -168,6 +180,7 @@ public class Contacto extends rp3.data.entity.EntityBase<Contacto>{
 				setter.setApellido(CursorUtils.getString(s, Contract.Contacto.FIELD_APELLIDO));
 				setter.setNombre(CursorUtils.getString(s, Contract.Contacto.FIELD_NOMBRE));
 				setter.setIdCliente(CursorUtils.getLong(s, Contract.Contacto.FIELD_ID_CLIENTE));
+				setter.set_idCliente(CursorUtils.getLong(s, Contract.Contacto.COLUMN_CLIENTE_ID_EXT));
 				setter.setIdClienteDireccion(CursorUtils.getLong(s, Contract.Contacto.FIELD_ID_CLIENTE_DIRECCION));
 				setter.setIdContacto(CursorUtils.getLong(s, Contract.Contacto.FIELD_ID_CONTACTO));
 				setter.setCargo(CursorUtils.getString(s, Contract.Contacto.FIELD_CARGO));

@@ -60,7 +60,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:visibility="gone" >
 
             <ImageButton
                 android:id="@+id/button_help"
@@ -78,6 +79,19 @@
                 android:contentDescription="@string/action_settings"
                 android:src="@drawable/ic_action_settings" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/agregar_direccion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="22dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="forgotPassword"
+            android:text="@string/label_olvidar_contrasena"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
         
     </RelativeLayout>
 

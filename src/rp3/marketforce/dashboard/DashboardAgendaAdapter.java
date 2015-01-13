@@ -1,5 +1,6 @@
 package rp3.marketforce.dashboard;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.ruta.RutasListFragment.TransactionListFragmentListener;
 import rp3.marketforce.utils.DrawableManager;
+import rp3.marketforce.utils.Utils;
 
 import android.content.Context;
 import android.content.Intent;
@@ -27,12 +29,14 @@ public class DashboardAgendaAdapter extends BaseAdapter{
 	LayoutInflater inflater;
 	DrawableManager DManager;
 	Context ctx;
+	private SimpleDateFormat format4;
 	
 	public DashboardAgendaAdapter(Context c, List<Agenda> list_agenda){
 		this.inflater = LayoutInflater.from(c);
 		this.ctx = c;
 		this.list_agenda = list_agenda;
 		DManager = new DrawableManager();
+		format4= new SimpleDateFormat("HH:mm");
 	}
 
 	@Override
@@ -64,6 +68,7 @@ public class DashboardAgendaAdapter extends BaseAdapter{
 		else
 			((TextView) convertView.findViewById(R.id.dashboard_agenda_rowlist_nombre)).setText(agd.getCliente().getNombre1());
 		((TextView) convertView.findViewById(R.id.dashboard_agenda_phone)).setText(agd.getClienteDireccion().getTelefono1());
+		((TextView) convertView.findViewById(R.id.dashboard_agenda_hora)).setText(format4.format(agd.getFechaInicio()));
 		((TextView) convertView.findViewById(R.id.dashboard_agenda_mail)).setText(agd.getCliente().getCorreoElectronico());
 		
 		((TextView) convertView.findViewById(R.id.dashboard_agenda_mail)).setClickable(true);
@@ -80,9 +85,14 @@ public class DashboardAgendaAdapter extends BaseAdapter{
 					@Override
 					public void onClick(View v) {
 						String uri = "tel:" + agd.getClienteDireccion().getTelefono1();
-						Intent intent = new Intent(Intent.ACTION_CALL);
+						Intent intent = new Intent(Intent.ACTION_DIAL);
 						intent.setData(Uri.parse(uri));
-						ctx.startActivity(intent);
+						Uri mUri = Uri.parse("smsto:" + Utils.convertToSMSNumber(agd.getClienteDireccion().getTelefono1()));
+			            Intent mIntent = new Intent(Intent.ACTION_SENDTO, mUri);
+			            mIntent.putExtra("chat",true);
+			            Intent chooserIntent = Intent.createChooser(mIntent, "Seleccionar Acción");
+			            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { intent });
+			            ctx.startActivity(chooserIntent);
 					}});
 		
 		Calendar cal = Calendar.getInstance();

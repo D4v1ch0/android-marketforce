@@ -3,9 +3,13 @@ package rp3.marketforce.content;
 import java.util.Calendar;
 import java.util.Random;
 
+import rp3.app.BaseActivity;
+import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
+import rp3.marketforce.models.Ubicacion;
 import rp3.marketforce.sync.EnviarUbicacion;
 import rp3.marketforce.sync.SyncAdapter;
+import rp3.util.ConnectionUtils;
 import rp3.util.LocationUtils;
 import rp3.util.LocationUtils.OnLocationResultListener;
 import android.app.AlarmManager;
@@ -22,7 +26,7 @@ import android.widget.Toast;
 public class EnviarUbicacionReceiver extends WakefulBroadcastReceiver    {
 
 	@Override
-	public void onReceive(Context context, Intent intent) {			
+	public void onReceive(final Context context, Intent intent) {			
 		/*
 		 * Antes de subir posicion actual, se chequea si se paso la hora establecida como limite
 		 * para enviar al servicio web la posicion.
@@ -45,15 +49,45 @@ public class EnviarUbicacionReceiver extends WakefulBroadcastReceiver    {
 				LocationUtils.getLocation(context, new OnLocationResultListener() {
 					
 					@Override
-					public void getLocationResult(Location location) {				
-						if(location!=null){			
-							Bundle settingsBundle = new Bundle() ;
-							settingsBundle.putDouble(EnviarUbicacion.ARG_LATITUD, location.getLatitude());
-							settingsBundle.putDouble(EnviarUbicacion.ARG_LONGITUD, location.getLongitude());			
-							settingsBundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ENVIAR_UBICACION);
-							
-							rp3.sync.SyncUtils.requestSync(settingsBundle);
-						}	
+					public void getLocationResult(Location location) {	
+						try
+						{
+							if(location!=null){			
+								if(ConnectionUtils.isNetAvailable(context))
+								{
+									Bundle settingsBundle = new Bundle() ;
+									settingsBundle.putDouble(EnviarUbicacion.ARG_LATITUD, location.getLatitude());
+									settingsBundle.putDouble(EnviarUbicacion.ARG_LONGITUD, location.getLongitude());			
+									settingsBundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ENVIAR_UBICACION);
+									
+									Ubicacion ub = new Ubicacion();
+									ub.setLatitud(location.getLatitude());
+									ub.setLongitud(location.getLongitude());
+									ub.setFecha(Calendar.getInstance().getTimeInMillis());
+									ub.setPendiente(false);
+									Ubicacion.insert(DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class), ub);
+									
+									rp3.sync.SyncUtils.requestSync(settingsBundle);
+									
+									Bundle bundle = new Bundle();
+									bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_BATCH);
+									rp3.sync.SyncUtils.requestSync(bundle);
+								}
+								else
+								{
+									Ubicacion ub = new Ubicacion();
+									ub.setLatitud(location.getLatitude());
+									ub.setLongitud(location.getLongitude());
+									ub.setFecha(Calendar.getInstance().getTimeInMillis());
+									ub.setPendiente(true);
+									Ubicacion.insert(DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class), ub);
+								}
+							}	
+						}
+						catch(Exception e)
+						{
+							e.printStackTrace();
+						}
 					}
 				});
 			}

@@ -60,6 +60,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	private ImageButton TabInfo;
 	private ImageButton TabDirecciones;
 	private ImageButton TabContactos;
+	private ImageView ArrowInfo, ArrowDir, ArrowCont;
 
 	/*
 	 * Posiciones y pivots de campos para clientes naturales y contactos
@@ -171,6 +172,9 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 		TabInfo = (ImageButton) getRootView().findViewById((R.id.detail_tab_info));
 		TabDirecciones = (ImageButton) getRootView().findViewById((R.id.detail_tab_direccion));
 		TabContactos = (ImageButton) getRootView().findViewById((R.id.detail_tab_contactos));
+		ArrowInfo = (ImageView) getRootView().findViewById((R.id.detail_tab_info_arrow));
+		ArrowDir = (ImageView) getRootView().findViewById((R.id.detail_tab_direccion_arrow));
+		ArrowCont = (ImageView) getRootView().findViewById((R.id.detail_tab_contactos_arrow));
 		
 		if(linearLayoutRigth == null)
 		{
@@ -283,18 +287,27 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 			TabInfo.setBackgroundColor(getResources().getColor(R.color.tab_activated));
 			TabDirecciones.setBackgroundColor(getResources().getColor(R.color.tab_inactivated));
 			TabContactos.setBackgroundColor(getResources().getColor(R.color.tab_inactivated));
+			ArrowInfo.setVisibility(View.VISIBLE);
+			ArrowDir.setVisibility(View.INVISIBLE);
+			ArrowCont.setVisibility(View.INVISIBLE);
 		}
 		if(title.equalsIgnoreCase("Direcciones"))
 		{
 			TabInfo.setBackgroundColor(getResources().getColor(R.color.tab_inactivated));
 			TabDirecciones.setBackgroundColor(getResources().getColor(R.color.tab_activated));
 			TabContactos.setBackgroundColor(getResources().getColor(R.color.tab_inactivated));
+			ArrowInfo.setVisibility(View.INVISIBLE);
+			ArrowDir.setVisibility(View.VISIBLE);
+			ArrowCont.setVisibility(View.INVISIBLE);
 		}
 		if(title.equalsIgnoreCase("Contactos"))
 		{
 			TabInfo.setBackgroundColor(getResources().getColor(R.color.tab_inactivated));
 			TabDirecciones.setBackgroundColor(getResources().getColor(R.color.tab_inactivated));
 			TabContactos.setBackgroundColor(getResources().getColor(R.color.tab_activated));
+			ArrowInfo.setVisibility(View.INVISIBLE);
+			ArrowDir.setVisibility(View.INVISIBLE);
+			ArrowCont.setVisibility(View.VISIBLE);
 		}
 	}
 	
@@ -437,7 +450,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 				&& client.getClienteDirecciones().size() > 0) {
 			setViewVisibility(R.id.linearLayout_content_adress,
 					View.VISIBLE);
-			setViewVisibility(R.id.detail_tab_direccion, View.VISIBLE);
+			setViewVisibility(R.id.detail_tab_direccion_layout, View.VISIBLE);
 			testArrayDetailsAdress = this.getActivity().getResources()
 					.getStringArray(R.array.testArrayDetailsAdress);
 
@@ -555,7 +568,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 		{
 			setViewVisibility(R.id.linearLayout_content_contactos,
 					View.VISIBLE);
-			setViewVisibility(R.id.detail_tab_contactos, View.VISIBLE);
+			setViewVisibility(R.id.detail_tab_contactos_layout, View.VISIBLE);
 			testArrayDetails = this.getActivity().getResources()
 					.getStringArray(R.array.testArrayDetails);
 
@@ -760,7 +773,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 				&& client.getClienteDirecciones().size() > 0) {
 			setViewVisibility(R.id.linearLayout_content_adress,
 					View.VISIBLE);
-			setViewVisibility(R.id.detail_tab_direccion, View.VISIBLE);
+			setViewVisibility(R.id.detail_tab_direccion_layout, View.VISIBLE);
 			testArrayDetailsAdress = this.getActivity().getResources()
 					.getStringArray(R.array.testArrayDetailsAdress);
 
@@ -877,7 +890,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 		if(client.getContactos() != null && client.getContactos().size() > 0)
 		{
 			linearLayoutContact.setVisibility(View.VISIBLE);
-			setViewVisibility(R.id.detail_tab_contactos, View.VISIBLE);
+			setViewVisibility(R.id.detail_tab_contactos_layout, View.VISIBLE);
 			testArrayDetails = this.getActivity().getResources()
 					.getStringArray(R.array.testArrayDetails);
 
@@ -1091,7 +1104,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 		if (contacto.getIdClienteDireccion() != 0) {
 			setViewVisibility(R.id.linearLayout_content_adress,
 					View.VISIBLE);
-			setViewVisibility(R.id.detail_tab_direccion, View.VISIBLE);
+			setViewVisibility(R.id.detail_tab_direccion_layout, View.VISIBLE);
 			testArrayDetailsAdress = this.getActivity().getResources()
 					.getStringArray(R.array.testArrayDetailsAdress);
 

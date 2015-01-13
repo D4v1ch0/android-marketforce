@@ -159,4 +159,14 @@ public class Utils {
 			return null;
 		}
 	}
+	
+	public static String convertToSMSNumber(String number)
+	{
+		if(number.length() >= 0 && number.startsWith("0"))
+		{
+			number = number.substring(1);
+			number = "+593" + number;
+		}
+		return number;
+	}
 }

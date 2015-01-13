@@ -105,7 +105,7 @@ public class Rutas {
 					try {
 						JSONObject type = types.getJSONObject(i);
 						rp3.marketforce.models.Agenda agenda = new rp3.marketforce.models.Agenda();
-						agenda.setID(type.getLong("IdAgenda"));
+						agenda.setIdAgenda((int) type.getLong("IdAgenda"));
 						agenda.setIdRuta(type.getInt("IdRuta"));
 						agenda.setIdCliente(type.getInt("IdCliente"));
 						agenda.setIdClienteDireccion(type.getInt("IdClienteDireccion"));
@@ -130,10 +130,11 @@ public class Rutas {
 						agenda.setDireccion(type.getString("Direccion"));
 						
 						agenda.setEstadoAgenda(type.getString("EstadoAgenda"));
+						agenda.setEnviado(true);
 						
 						rp3.marketforce.models.AgendaTarea.deleteTareas(db, agenda.getIdRuta(), agenda.getID());
 						
-						rp3.marketforce.models.Agenda getter = rp3.marketforce.models.Agenda.getAgenda(db, agenda.getID());
+						rp3.marketforce.models.Agenda getter = rp3.marketforce.models.Agenda.getAgendaServer(db, agenda.getIdAgenda());
 						if(getter == null)
 						{
 							rp3.marketforce.models.Agenda.insert(db, agenda);

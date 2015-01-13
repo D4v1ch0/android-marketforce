@@ -1,6 +1,5 @@
 package rp3.marketforce.sync;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,21 +8,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.ksoap2.transport.HttpResponseException;
 
-import rp3.configuration.PreferenceManager;
 import rp3.connection.HttpConnection;
 import rp3.connection.WebService;
 import rp3.content.SyncAdapter;
 import rp3.db.sqlite.DataBase;
-import rp3.marketforce.Contants;
-import rp3.marketforce.db.Contract;
-import rp3.marketforce.db.Contract.Contacto;
+import rp3.marketforce.models.ClienteDireccion;
 import rp3.marketforce.utils.Utils;
 import rp3.sync.SyncAudit;
-import rp3.util.BitmapUtils;
 import rp3.util.Convert;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Base64;
 import android.util.Log;
 
 public class Cliente {
@@ -68,7 +60,7 @@ public class Cliente {
 						cl.setEstadoCivil(type.getString("EstadoCivil"));
 						cl.setGenero(type.getString("Genero"));
 						cl.setIdCanal(type.getInt("IdCanal"));
-						cl.setID(type.getLong("IdCliente"));
+						cl.setIdCliente(type.getLong("IdCliente"));
 						cl.setIdTipoIdentificacion(type.getInt("IdTipoIdentificacion"));
 						cl.setIdentificacion(type.getString("Identificacion"));
 						cl.setIdTipoCliente(type.getInt("IdTipoCliente"));
@@ -84,7 +76,7 @@ public class Cliente {
 																	
 						JSONArray strs = type.getJSONArray("ClienteDirecciones");
 						
-						rp3.marketforce.models.ClienteDireccion.deleteClienteDireccionIdCliente(db, cl.getID());
+						rp3.marketforce.models.ClienteDireccion.deleteClienteDireccionIdCliente(db, cl.getIdCliente());
 						
 						for(int j=0; j < strs.length(); j++){
 							JSONObject str = strs.getJSONObject(j);
@@ -118,7 +110,7 @@ public class Cliente {
 						
 						strs = type.getJSONArray("ClienteContactos");
 						
-						rp3.marketforce.models.Contacto.deleteContactoIdCliente(db, cl.getID());
+						rp3.marketforce.models.Contacto.deleteContactoIdCliente(db, cl.getIdCliente());
 						
 						for(int j=0; j < strs.length(); j++){
 							JSONObject str = strs.getJSONObject(j);
@@ -139,7 +131,7 @@ public class Cliente {
 							
 							rp3.marketforce.models.Contacto.insert(db, clienteCont);
 						}
-						if(rp3.marketforce.models.Cliente.getClienteID(db, cl.getID(), false) == null)
+						if(rp3.marketforce.models.Cliente.getClienteIDServer(db, cl.getIdCliente(), false) == null)
 						{
 							rp3.marketforce.models.Cliente.insert(db, cl);
 						}
@@ -162,16 +154,71 @@ public class Cliente {
 			return SyncAdapter.SYNC_EVENT_SUCCESS;		
 		}
 		
-		public static int executeSyncCreate(DataBase db, String cliente){
+		public static int executeSyncCreate(DataBase db, long cliente){
 			WebService webService = new WebService("MartketForce","CreateCliente");			
 			
 			int id = 0;
-			rp3.marketforce.models.Cliente cl = new rp3.marketforce.models.Cliente();
+			rp3.marketforce.models.Cliente cl = rp3.marketforce.models.Cliente.getClienteID(db, cliente, true);
 			JSONObject jObject = new JSONObject();
 			JSONArray jArray = new JSONArray();
 			try
 			{
-				jObject = new JSONObject(cliente);
+				jObject = new JSONObject();
+				
+				jObject.put("Apellido1", cl.getApellido1());
+				jObject.put("Apellido2", cl.getApellido2());
+				jObject.put("CorreoElectronico", cl.getCorreoElectronico());
+				jObject.put("EstadoCivil", cl.getEstadoCivil());
+				jObject.put("Genero", cl.getGenero());
+				jObject.put("IdCanal", cl.getIdCanal());
+				jObject.put("IdInterno", cl.getID());
+				jObject.put("IdTipoIdentificacion", cl.getTipoIdentificacionId());
+				jObject.put("Identificacion", cl.getIdentificacion());
+				jObject.put("IdTipoCliente", cl.getIdTipoCliente());
+				jObject.put("Nombre1", cl.getNombre1());
+				jObject.put("Nombre2", cl.getNombre2());
+				jObject.put("FechaNacimientoTicks", Convert.getDotNetTicksFromDate(cl.getFechaNacimiento()));
+				jObject.put("NombresCompletos", cl.getNombreCompleto());
+				jObject.put("Foto", cl.getURLFoto());
+				jObject.put("TipoPersona", cl.getTipoPersona());
+				jObject.put("ActividadEconomica", cl.getActividadEconomica());
+				jObject.put("PaginaWeb", cl.getPaginaWeb());
+				jObject.put("RazonSocial", cl.getRazonSocial());
+				
+				JSONArray jArrayDirecciones = new JSONArray();
+				for(int i = 0; i < cl.getClienteDirecciones().size(); i++)
+				{
+					JSONObject jObjectDir = new JSONObject();
+					jObjectDir.put("Direccion", cl.getClienteDirecciones().get(i).getDireccion());
+					jObjectDir.put("IdInterno", cl.getClienteDirecciones().get(i).getID());
+					jObjectDir.put("Latitud", cl.getClienteDirecciones().get(i).getLatitud());
+					jObjectDir.put("Longitud", cl.getClienteDirecciones().get(i).getLongitud());
+					jObjectDir.put("Referencia", cl.getClienteDirecciones().get(i).getReferencia());
+					jObjectDir.put("Telefono1", cl.getClienteDirecciones().get(i).getTelefono1());
+					jObjectDir.put("Telefono2", cl.getClienteDirecciones().get(i).getTelefono2());
+					jObjectDir.put("TipoDireccion", cl.getClienteDirecciones().get(i).getTipoDireccion());
+					jObjectDir.put("EsPrincipal", cl.getClienteDirecciones().get(i).getEsPrincipal());
+					jArrayDirecciones.put(jObjectDir);
+				}
+				jObject.put("ClienteDirecciones", jArrayDirecciones);
+				
+				JSONArray jArrayContactos = new JSONArray();
+				for(int i = 0; i < cl.getContactos().size(); i++)
+				{
+					JSONObject jObjectCont = new JSONObject();
+					jObjectCont.put("IdInterno", cl.getContactos().get(i).getID());
+					jObjectCont.put("IdClienteDireccion", cl.getContactos().get(i).getIdClienteDireccion());
+					jObjectCont.put("Nombre", cl.getContactos().get(i).getNombre());
+					jObjectCont.put("Apellido", cl.getContactos().get(i).getApellido());
+					jObjectCont.put("Cargo", cl.getContactos().get(i).getCargo());
+					jObjectCont.put("Telefono1", cl.getContactos().get(i).getTelefono1());
+					jObjectCont.put("Telefono2", cl.getContactos().get(i).getTelefono2());
+					jObjectCont.put("CorreoElectronico", cl.getContactos().get(i).getCorreo());
+					jObjectCont.put("Foto", cl.getContactos().get(i).getURLFoto());
+					jArrayContactos.put(jObjectCont);
+				}
+				jObject.put("ClienteContactos", jArrayContactos);
+				
 				jArray.put(jObject);
 			}
 			catch(Exception ex)
@@ -193,105 +240,29 @@ public class Cliente {
 					{
 						JSONObject type = responseArray.getJSONObject(s);
 						id = type.getInt("IdServer");
+						
+						cl.setIdCliente(id);
+						rp3.marketforce.models.Cliente.update(db, cl);
+						JSONArray direcciones = type.getJSONArray("Direcciones");
+						for(int i = 0; i < direcciones.length(); i++)
+						{
+							JSONObject jObjectDir = direcciones.getJSONObject(i);
+							ClienteDireccion cliDir = cl.getClienteDirecciones().get(i);
+							cliDir.setIdCliente(id);
+							cliDir.setIdClienteDireccion(jObjectDir.getInt("IdServer"));
+							ClienteDireccion.update(db, cliDir);
+						}
+						JSONArray contactos = type.getJSONArray("Contactos");
+						for(int i = 0; i < contactos.length(); i++)
+						{
+							JSONObject jObjectCont = contactos.getJSONObject(i);
+							rp3.marketforce.models.Contacto cliCon = cl.getContactos().get(i);
+							cliCon.setIdCliente(id);
+							cliCon.setIdContacto(jObjectCont.getInt("IdServer"));
+							rp3.marketforce.models.Contacto.update(db, cliCon);
+						}
 					}
-					
-					JSONObject type = jObject;
-					
-					cl.setNombre1(type.getString("Nombre1"));
-					cl.setApellido1(type.getString("Apellido1"));
-					cl.setTipoPersona(type.getString("TipoPersona"));
-					cl.setNuevo(true);
-					if(cl.getTipoPersona().equals("N"))
-					{
-						cl.setApellido2(type.getString("Apellido2"));
-						cl.setCorreoElectronico(type.getString("CorreoElectronico"));
-						cl.setEstadoCivil(type.getString("EstadoCivil"));
-						cl.setGenero(type.getString("Genero"));
-						cl.setNombre2(type.getString("Nombre2"));
-						String nombres = cl.getNombre1() + " " + cl.getNombre2();
-						String apellidos = cl.getApellido1() + " " + cl.getApellido2();
-						cl.setNombreCompleto(nombres.trim() + " " + apellidos.trim());
-					}
-					else
-					{
-						cl.setActividadEconomica(type.getString("ActividadEconomica"));
-						cl.setCorreoElectronico(type.getString("CorreoElectronico"));
-						cl.setPaginaWeb(type.getString("PaginaWeb"));
-						cl.setRazonSocial(type.getString("RazonSocial"));
-						cl.setNombreCompleto(cl.getNombre1());
-						cl.setEstadoCivil(type.getString("EstadoCivil"));
-						cl.setGenero(type.getString("Genero"));
-					}
-					
-					cl.setIdCanal(type.getInt("IdCanal"));
-					cl.setID(id);
-					cl.setIdTipoIdentificacion(type.getInt("IdTipoIdentificacion"));
-					cl.setIdentificacion(type.getString("Identificacion"));
-					cl.setIdTipoCliente(type.getInt("IdTipoCliente"));
-					//cl.setFechaNacimiento(Convert.getDateFromDotNetTicks(type.getLong("FechaNacimientoTicks")));
-					
-																
-					JSONArray strs = type.getJSONArray("ClienteDirecciones");
-					
-					rp3.marketforce.models.ClienteDireccion.deleteClienteDireccionIdCliente(db, cl.getID());
-					
-					for(int j=0; j < strs.length(); j++){
-						JSONObject str = strs.getJSONObject(j);
-						rp3.marketforce.models.ClienteDireccion  clienteDir = new rp3.marketforce.models.ClienteDireccion();
-						
-						clienteDir.setDireccion(""+str.getString("Direccion"));							
-						
-						//clienteDir.setIdCiudad(str.getInt("IdCiudad"));
-						clienteDir.setIdCliente(id);							
-						clienteDir.setIdClienteDireccion(str.getInt("IdClienteDireccion"));
-						if(!str.isNull("Latitud"))
-							clienteDir.setLatitud(str.getDouble("Latitud"));
-						if(!str.isNull("Longitud"))
-							clienteDir.setLongitud(str.getDouble("Longitud"));
-						clienteDir.setReferencia(""+str.getString("Referencia"));
-						clienteDir.setTelefono1(""+str.getString("Telefono1"));
-						clienteDir.setTelefono2(""+str.getString("Telefono2"));
-						clienteDir.setTipoDireccion(""+str.getString("TipoDireccion"));
-						
-						if(str.getBoolean("EsPrincipal")){
-							clienteDir.setEsPrincipal(true);
-							cl.setDireccion(clienteDir.getDireccion());
-							cl.setTelefono(clienteDir.getTelefono1());
-						}								
-						else
-						   clienteDir.setEsPrincipal(false);
-						
-						rp3.marketforce.models.ClienteDireccion.insert(db, clienteDir);
-					}
-					
-					strs = type.getJSONArray("ClienteContactos");
-					
-					rp3.marketforce.models.Contacto.deleteContactoIdCliente(db, cl.getID());
-					List<rp3.marketforce.models.Contacto> contactos = new ArrayList<rp3.marketforce.models.Contacto>();
-					
-					for(int j=0; j < strs.length(); j++){
-						JSONObject str = strs.getJSONObject(j);
-						rp3.marketforce.models.Contacto  clienteCont = new rp3.marketforce.models.Contacto();
-						
-						clienteCont.setIdContacto(str.getLong("IdClienteContacto"));							
-						
-						clienteCont.setIdCliente(id);							
-						clienteCont.setIdClienteDireccion(str.getInt("IdClienteDireccion"));
-						clienteCont.setNombre(""+str.getString("Nombre"));
-						clienteCont.setApellido(""+str.getString("Apellido"));
-						clienteCont.setCargo(""+str.getString("Cargo"));
-						clienteCont.setTelefono1(""+str.getString("Telefono1"));
-						clienteCont.setTelefono2(""+str.getString("Telefono2"));
-						clienteCont.setCorreo(""+str.getString("CorreoElectronico"));
-						clienteCont.setURLFoto(""+str.getString("Foto"));
-						
-						rp3.marketforce.models.Contacto.insert(db, clienteCont);
-						contactos.add(clienteCont);
-					}
-					rp3.marketforce.models.Cliente.insert(db, cl);
-					cl.setContactos(contactos);
-
-					
+										
 				} catch (HttpResponseException e) {
 					if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
 						return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
@@ -362,15 +333,73 @@ public class Cliente {
 			return SyncAdapter.SYNC_EVENT_SUCCESS;		
 		}
 		
-		public static int executeSyncUpdateFull(DataBase db, String cliente){
+		public static int executeSyncUpdateFull(DataBase db, long cliente){
 			WebService webService = new WebService("MartketForce","UpdateClienteFull");			
 			
-			rp3.marketforce.models.Cliente cl = null;
+			rp3.marketforce.models.Cliente cl = rp3.marketforce.models.Cliente.getClienteID(db, cliente, true);
 			JSONObject jObject = new JSONObject();
 			JSONArray jArray = new JSONArray();
 			try
 			{
-				jObject = new JSONObject(cliente);
+				jObject = new JSONObject();
+				
+				jObject.put("Apellido1", cl.getApellido1());
+				jObject.put("Apellido2", cl.getApellido2());
+				jObject.put("CorreoElectronico", cl.getCorreoElectronico());
+				jObject.put("EstadoCivil", cl.getEstadoCivil());
+				jObject.put("Genero", cl.getGenero());
+				jObject.put("IdCanal", cl.getIdCanal());
+				jObject.put("IdInterno", cl.getID());
+				jObject.put("IdCliente", cl.getIdCliente());
+				jObject.put("IdTipoIdentificacion", cl.getTipoIdentificacionId());
+				jObject.put("Identificacion", cl.getIdentificacion());
+				jObject.put("IdTipoCliente", cl.getIdTipoCliente());
+				jObject.put("Nombre1", cl.getNombre1());
+				jObject.put("Nombre2", cl.getNombre2());
+				jObject.put("FechaNacimientoTicks", Convert.getDotNetTicksFromDate(cl.getFechaNacimiento()));
+				jObject.put("NombresCompletos", cl.getNombreCompleto());
+				jObject.put("Foto", cl.getURLFoto());
+				jObject.put("TipoPersona", cl.getTipoPersona());
+				jObject.put("ActividadEconomica", cl.getActividadEconomica());
+				jObject.put("PaginaWeb", cl.getPaginaWeb());
+				jObject.put("RazonSocial", cl.getRazonSocial());
+				
+				JSONArray jArrayDirecciones = new JSONArray();
+				for(int i = 0; i < cl.getClienteDirecciones().size(); i++)
+				{
+					JSONObject jObjectDir = new JSONObject();
+					jObjectDir.put("Direccion", cl.getClienteDirecciones().get(i).getDireccion());
+					jObjectDir.put("IdInterno", cl.getClienteDirecciones().get(i).getID());
+					jObjectDir.put("IdClienteDireccion", cl.getClienteDirecciones().get(i).getIdClienteDireccion());
+					jObjectDir.put("Latitud", cl.getClienteDirecciones().get(i).getLatitud());
+					jObjectDir.put("Longitud", cl.getClienteDirecciones().get(i).getLongitud());
+					jObjectDir.put("Referencia", cl.getClienteDirecciones().get(i).getReferencia());
+					jObjectDir.put("Telefono1", cl.getClienteDirecciones().get(i).getTelefono1());
+					jObjectDir.put("Telefono2", cl.getClienteDirecciones().get(i).getTelefono2());
+					jObjectDir.put("TipoDireccion", cl.getClienteDirecciones().get(i).getTipoDireccion());
+					jObjectDir.put("EsPrincipal", cl.getClienteDirecciones().get(i).getEsPrincipal());
+					jArrayDirecciones.put(jObjectDir);
+				}
+				jObject.put("ClienteDirecciones", jArrayDirecciones);
+				
+				JSONArray jArrayContactos = new JSONArray();
+				for(int i = 0; i < cl.getContactos().size(); i++)
+				{
+					JSONObject jObjectCont = new JSONObject();
+					jObjectCont.put("IdInterno", cl.getContactos().get(i).getID());
+					jObjectCont.put("IdClienteContacto", cl.getContactos().get(i).getIdContacto());
+					jObjectCont.put("IdClienteDireccion", cl.getContactos().get(i).getIdClienteDireccion());
+					jObjectCont.put("Nombre", cl.getContactos().get(i).getNombre());
+					jObjectCont.put("Apellido", cl.getContactos().get(i).getApellido());
+					jObjectCont.put("Cargo", cl.getContactos().get(i).getCargo());
+					jObjectCont.put("Telefono1", cl.getContactos().get(i).getTelefono1());
+					jObjectCont.put("Telefono2", cl.getContactos().get(i).getTelefono2());
+					jObjectCont.put("CorreoElectronico", cl.getContactos().get(i).getCorreo());
+					jObjectCont.put("Foto", cl.getContactos().get(i).getURLFoto());
+					jArrayContactos.put(jObjectCont);
+				}
+				jObject.put("ClienteContactos", jArrayContactos);
+				
 				jArray.put(jObject);
 			}
 			catch(Exception ex)
@@ -386,104 +415,37 @@ public class Cliente {
 				
 				try {
 					webService.invokeWebService();
-					
-					JSONObject type = jObject;
-					
-					cl = rp3.marketforce.models.Cliente.getClienteID(db, type.getLong("IdCliente"), true);
-					cl.setNombre1(type.getString("Nombre1"));
-					cl.setApellido1(type.getString("Apellido1"));
-					cl.setTipoPersona(type.getString("TipoPersona"));
-					cl.setNuevo(true);
-					if(cl.getTipoPersona().equals("N"))
+					JSONObject codigos = webService.getJSONObjectResponse();
+					JSONArray responseArray = codigos.getJSONArray("Codigos");
+					for(int s = 0; s < responseArray.length(); s ++)
 					{
-						cl.setApellido2(type.getString("Apellido2"));
-						cl.setCorreoElectronico(type.getString("CorreoElectronico"));
-						cl.setEstadoCivil(type.getString("EstadoCivil"));
-						cl.setGenero(type.getString("Genero"));
-						cl.setNombre2(type.getString("Nombre2"));
-						String nombres = cl.getNombre1() + " " + cl.getNombre2();
-						String apellidos = cl.getApellido1() + " " + cl.getApellido2();
-						cl.setNombreCompleto(nombres.trim() + " " + apellidos.trim());
+						JSONObject type = responseArray.getJSONObject(s);
+						JSONArray direcciones = type.getJSONArray("Direcciones");
+						for(int i = 0; i < direcciones.length(); i++)
+						{
+							JSONObject jObjectDir = direcciones.getJSONObject(i);
+							ClienteDireccion cliDir = cl.getClienteDirecciones().get(i);
+							if(cliDir.get_idCliente() == jObjectDir.getInt("IdInterno"))
+							{
+								cliDir.setIdCliente(cl.getIdCliente());
+								cliDir.setIdClienteDireccion(jObjectDir.getInt("IdServer"));
+								ClienteDireccion.update(db, cliDir);
+							}
+						}
+						JSONArray contactos = type.getJSONArray("Contactos");
+						for(int i = 0; i < contactos.length(); i++)
+						{
+							JSONObject jObjectCont = contactos.getJSONObject(i);
+							rp3.marketforce.models.Contacto cliCon = cl.getContactos().get(i);
+							if(cliCon.get_idCliente() == jObjectCont.getInt("IdInterno"))
+							{
+								cliCon.setIdCliente(cl.getIdCliente());
+								cliCon.setIdContacto(jObjectCont.getInt("IdServer"));
+								rp3.marketforce.models.Contacto.update(db, cliCon);
+							}
+						}
 					}
-					else
-					{
-						cl.setActividadEconomica(type.getString("ActividadEconomica"));
-						cl.setCorreoElectronico(type.getString("CorreoElectronico"));
-						cl.setPaginaWeb(type.getString("PaginaWeb"));
-						cl.setRazonSocial(type.getString("RazonSocial"));
-						cl.setNombreCompleto(cl.getNombre1());
-						cl.setEstadoCivil(type.getString("EstadoCivil"));
-						cl.setGenero(type.getString("Genero"));
-					}
-					
-					cl.setIdCanal(type.getInt("IdCanal"));
-					cl.setIdTipoIdentificacion(type.getInt("IdTipoIdentificacion"));
-					cl.setIdentificacion(type.getString("Identificacion"));
-					cl.setIdTipoCliente(type.getInt("IdTipoCliente"));
-					//cl.setFechaNacimiento(Convert.getDateFromDotNetTicks(type.getLong("FechaNacimientoTicks")));
-					
-																
-					JSONArray strs = type.getJSONArray("ClienteDirecciones");
-					
-					rp3.marketforce.models.ClienteDireccion.deleteClienteDireccionIdCliente(db, cl.getID());
-					
-					for(int j=0; j < strs.length(); j++){
-						JSONObject str = strs.getJSONObject(j);
-						rp3.marketforce.models.ClienteDireccion  clienteDir = new rp3.marketforce.models.ClienteDireccion();
-						
-						clienteDir.setDireccion(""+str.getString("Direccion"));							
-						
-						//clienteDir.setIdCiudad(str.getInt("IdCiudad"));
-						clienteDir.setIdCliente(cl.getID());							
-						clienteDir.setIdClienteDireccion(str.getInt("IdClienteDireccion"));
-						if(!str.isNull("Latitud"))
-							clienteDir.setLatitud(str.getDouble("Latitud"));
-						if(!str.isNull("Longitud"))
-							clienteDir.setLongitud(str.getDouble("Longitud"));
-						clienteDir.setReferencia(""+str.getString("Referencia"));
-						clienteDir.setTelefono1(""+str.getString("Telefono1"));
-						clienteDir.setTelefono2(""+str.getString("Telefono2"));
-						clienteDir.setTipoDireccion(""+str.getString("TipoDireccion"));
-						
-						if(str.getBoolean("EsPrincipal")){
-							clienteDir.setEsPrincipal(true);
-							cl.setDireccion(clienteDir.getDireccion());
-							cl.setTelefono(clienteDir.getTelefono1());
-						}								
-						else
-						   clienteDir.setEsPrincipal(false);
-						
-						rp3.marketforce.models.ClienteDireccion.insert(db, clienteDir);
-					}
-					
-					strs = type.getJSONArray("ClienteContactos");
-					
-					rp3.marketforce.models.Contacto.deleteContactoIdCliente(db, cl.getID());
-					List<rp3.marketforce.models.Contacto> contactos = new ArrayList<rp3.marketforce.models.Contacto>();
-					
-					for(int j=0; j < strs.length(); j++){
-						JSONObject str = strs.getJSONObject(j);
-						rp3.marketforce.models.Contacto  clienteCont = new rp3.marketforce.models.Contacto();
-						
-						clienteCont.setIdContacto(str.getLong("IdClienteContacto"));							
-						
-						clienteCont.setIdCliente(cl.getID());							
-						clienteCont.setIdClienteDireccion(str.getInt("IdClienteDireccion"));
-						clienteCont.setNombre(""+str.getString("Nombre"));
-						clienteCont.setApellido(""+str.getString("Apellido"));
-						clienteCont.setCargo(""+str.getString("Cargo"));
-						clienteCont.setTelefono1(""+str.getString("Telefono1"));
-						clienteCont.setTelefono2(""+str.getString("Telefono2"));
-						clienteCont.setCorreo(""+str.getString("CorreoElectronico"));
-						clienteCont.setURLFoto(""+str.getString("Foto"));
-						
-						rp3.marketforce.models.Contacto.insert(db, clienteCont);
-						contactos.add(clienteCont);
-					}
-					rp3.marketforce.models.Cliente.update(db, cl);
-					cl.setContactos(contactos);
-
-					
+										
 				} catch (HttpResponseException e) {
 					if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
 						return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
@@ -501,9 +463,9 @@ public class Cliente {
 			JSONObject jFotos = new JSONObject();
 			try
 			{				
-				jFotos.put("IdCliente", cl.getID());
+				jFotos.put("IdCliente", cl.getIdCliente());
 				jFotos.put("IdContacto", "");
-				jFotos.put("Nombre", cl.getNombre1() + "_" + cl.getApellido1() + "_" + cl.getID() + ".jpg" );
+				jFotos.put("Nombre", cl.getNombre1() + "_" + cl.getApellido1() + "_" + cl.getIdCliente() + ".jpg" );
 				String foto = Utils.CroppedBitmapToBase64(jObject.getString("Foto"));
 				if(foto != null)
 				{
@@ -522,9 +484,9 @@ public class Cliente {
 				{
 					jFotos = new JSONObject();
 					webService = new WebService("MartketForce","SetFotos");
-					jFotos.put("IdCliente", cl.getID());
+					jFotos.put("IdCliente", cl.getIdCliente());
 					jFotos.put("IdContacto", cl.getContactos().get(r).getIdContacto());
-					jFotos.put("Nombre", cl.getContactos().get(r).getNombre() + "_" + cl.getContactos().get(r).getApellido() + "_" + cl.getID() + "_" + cl.getContactos().get(r).getIdContacto() + ".jpg" );
+					jFotos.put("Nombre", cl.getContactos().get(r).getNombre() + "_" + cl.getContactos().get(r).getApellido() + "_" + cl.getIdCliente() + "_" + cl.getContactos().get(r).getIdContacto() + ".jpg" );
 					foto = Utils.CroppedBitmapToBase64(cl.getContactos().get(r).getURLFoto());
 					if(foto != null)
 					{
@@ -550,6 +512,349 @@ public class Cliente {
 			}		
 				
 				
+			
+			return SyncAdapter.SYNC_EVENT_SUCCESS;
+		}
+		
+		public static int executeSyncPendientes(DataBase db){
+			WebService webService = new WebService("MartketForce","UpdateClienteFull");			
+			
+			List<rp3.marketforce.models.Cliente> clientes = rp3.marketforce.models.Cliente.getClientePendientes(db, true);
+			JSONObject jObject = new JSONObject();
+			JSONArray jArray = new JSONArray();
+			for(int s = 0; s < clientes.size(); s ++)
+			{
+				rp3.marketforce.models.Cliente cl = clientes.get(s);
+				try
+				{
+					jObject = new JSONObject();
+					
+					jObject.put("Apellido1", cl.getApellido1());
+					jObject.put("Apellido2", cl.getApellido2());
+					jObject.put("CorreoElectronico", cl.getCorreoElectronico());
+					jObject.put("EstadoCivil", cl.getEstadoCivil());
+					jObject.put("Genero", cl.getGenero());
+					jObject.put("IdCanal", cl.getIdCanal());
+					jObject.put("IdInterno", cl.getID());
+					jObject.put("IdCliente", cl.getIdCliente());
+					jObject.put("IdTipoIdentificacion", cl.getTipoIdentificacionId());
+					jObject.put("Identificacion", cl.getIdentificacion());
+					jObject.put("IdTipoCliente", cl.getIdTipoCliente());
+					jObject.put("Nombre1", cl.getNombre1());
+					jObject.put("Nombre2", cl.getNombre2());
+					jObject.put("FechaNacimientoTicks", Convert.getDotNetTicksFromDate(cl.getFechaNacimiento()));
+					jObject.put("NombresCompletos", cl.getNombreCompleto());
+					jObject.put("Foto", cl.getURLFoto());
+					jObject.put("TipoPersona", cl.getTipoPersona());
+					jObject.put("ActividadEconomica", cl.getActividadEconomica());
+					jObject.put("PaginaWeb", cl.getPaginaWeb());
+					jObject.put("RazonSocial", cl.getRazonSocial());
+					
+					JSONArray jArrayDirecciones = new JSONArray();
+					for(int i = 0; i < cl.getClienteDirecciones().size(); i++)
+					{
+						JSONObject jObjectDir = new JSONObject();
+						jObjectDir.put("Direccion", cl.getClienteDirecciones().get(i).getDireccion());
+						jObjectDir.put("IdInterno", cl.getClienteDirecciones().get(i).getID());
+						jObjectDir.put("IdClienteDireccion", cl.getClienteDirecciones().get(i).getIdClienteDireccion());
+						jObjectDir.put("Latitud", cl.getClienteDirecciones().get(i).getLatitud());
+						jObjectDir.put("Longitud", cl.getClienteDirecciones().get(i).getLongitud());
+						jObjectDir.put("Referencia", cl.getClienteDirecciones().get(i).getReferencia());
+						jObjectDir.put("Telefono1", cl.getClienteDirecciones().get(i).getTelefono1());
+						jObjectDir.put("Telefono2", cl.getClienteDirecciones().get(i).getTelefono2());
+						jObjectDir.put("TipoDireccion", cl.getClienteDirecciones().get(i).getTipoDireccion());
+						jObjectDir.put("EsPrincipal", cl.getClienteDirecciones().get(i).getEsPrincipal());
+						jArrayDirecciones.put(jObjectDir);
+					}
+					jObject.put("ClienteDirecciones", jArrayDirecciones);
+					
+					JSONArray jArrayContactos = new JSONArray();
+					for(int i = 0; i < cl.getContactos().size(); i++)
+					{
+						JSONObject jObjectCont = new JSONObject();
+						jObjectCont.put("IdInterno", cl.getContactos().get(i).getID());
+						jObjectCont.put("IdClienteContacto", cl.getContactos().get(i).getIdContacto());
+						jObjectCont.put("IdClienteDireccion", cl.getContactos().get(i).getIdClienteDireccion());
+						jObjectCont.put("Nombre", cl.getContactos().get(i).getNombre());
+						jObjectCont.put("Apellido", cl.getContactos().get(i).getApellido());
+						jObjectCont.put("Cargo", cl.getContactos().get(i).getCargo());
+						jObjectCont.put("Telefono1", cl.getContactos().get(i).getTelefono1());
+						jObjectCont.put("Telefono2", cl.getContactos().get(i).getTelefono2());
+						jObjectCont.put("CorreoElectronico", cl.getContactos().get(i).getCorreo());
+						jObjectCont.put("Foto", cl.getContactos().get(i).getURLFoto());
+						jArrayContactos.put(jObjectCont);
+					}
+					jObject.put("ClienteContactos", jArrayContactos);
+					
+					jArray.put(jObject);
+				}
+				catch(Exception ex)
+				{
+					
+				}
+			}
+			
+			webService.addParameter("Clientes", jArray);
+			
+			try
+			{			
+				webService.addCurrentAuthToken();
+				
+				try {
+					webService.invokeWebService();
+					JSONObject codigos = webService.getJSONObjectResponse();
+					JSONArray responseArray = codigos.getJSONArray("Codigos");
+					for(int s = 0; s < responseArray.length(); s ++)
+					{
+						
+						JSONObject type = responseArray.getJSONObject(s);
+						for(rp3.marketforce.models.Cliente cl : clientes)
+						{
+							if(cl.getIdCliente() == type.getInt("IdServer"))
+							{
+								JSONArray direcciones = type.getJSONArray("Direcciones");
+								//cl.setPendiente(false);
+								//rp3.marketforce.models.Cliente.update(db, cl);
+								for(int i = 0; i < direcciones.length(); i++)
+								{
+									JSONObject jObjectDir = direcciones.getJSONObject(i);
+									ClienteDireccion cliDir = cl.getClienteDirecciones().get(i);
+									if(cliDir.get_idCliente() == jObjectDir.getInt("IdInterno"))
+									{
+										cliDir.setIdCliente(cl.getIdCliente());
+										cliDir.setIdClienteDireccion(jObjectDir.getInt("IdServer"));
+										ClienteDireccion.update(db, cliDir);
+									}
+								}
+								JSONArray contactos = type.getJSONArray("Contactos");
+								for(int i = 0; i < contactos.length(); i++)
+								{
+									JSONObject jObjectCont = contactos.getJSONObject(i);
+									rp3.marketforce.models.Contacto cliCon = cl.getContactos().get(i);
+									if(cliCon.get_idCliente() == jObjectCont.getInt("IdInterno"))
+									{
+										cliCon.setIdCliente(cl.getIdCliente());
+										cliCon.setIdContacto(jObjectCont.getInt("IdServer"));
+										rp3.marketforce.models.Contacto.update(db, cliCon);
+									}
+								}
+							}
+						}
+					}
+										
+				} catch (HttpResponseException e) {
+					if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+						return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+					return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+				} catch (Exception e) {
+					return SyncAdapter.SYNC_EVENT_ERROR;
+				}
+				
+			}finally{
+				webService.close();
+			}	
+				
+			
+			return SyncAdapter.SYNC_EVENT_SUCCESS;
+		}
+		
+		public static int executeSyncInserts(DataBase db){
+			WebService webService = new WebService("MartketForce","CreateCliente");			
+			
+			int id = 0;
+			List<rp3.marketforce.models.Cliente> clientes = rp3.marketforce.models.Cliente.getClienteInserts(db, true);
+			List<rp3.marketforce.models.Cliente> clientesConId = new ArrayList<rp3.marketforce.models.Cliente>();
+			JSONObject jObject = new JSONObject();
+			JSONArray jArray = new JSONArray();
+			for(int s = 0 ; s < clientes.size(); s ++)
+			{
+				rp3.marketforce.models.Cliente cl = clientes.get(s);
+				try
+				{
+					jObject = new JSONObject();
+					
+					jObject.put("Apellido1", cl.getApellido1());
+					jObject.put("Apellido2", cl.getApellido2());
+					jObject.put("CorreoElectronico", cl.getCorreoElectronico());
+					jObject.put("EstadoCivil", cl.getEstadoCivil());
+					jObject.put("Genero", cl.getGenero());
+					jObject.put("IdCanal", cl.getIdCanal());
+					jObject.put("IdInterno", cl.getID());
+					jObject.put("IdTipoIdentificacion", cl.getTipoIdentificacionId());
+					jObject.put("Identificacion", cl.getIdentificacion());
+					jObject.put("IdTipoCliente", cl.getIdTipoCliente());
+					jObject.put("Nombre1", cl.getNombre1());
+					jObject.put("Nombre2", cl.getNombre2());
+					jObject.put("FechaNacimientoTicks", Convert.getDotNetTicksFromDate(cl.getFechaNacimiento()));
+					jObject.put("NombresCompletos", cl.getNombreCompleto());
+					jObject.put("Foto", cl.getURLFoto());
+					jObject.put("TipoPersona", cl.getTipoPersona());
+					jObject.put("ActividadEconomica", cl.getActividadEconomica());
+					jObject.put("PaginaWeb", cl.getPaginaWeb());
+					jObject.put("RazonSocial", cl.getRazonSocial());
+					
+					JSONArray jArrayDirecciones = new JSONArray();
+					for(int i = 0; i < cl.getClienteDirecciones().size(); i++)
+					{
+						JSONObject jObjectDir = new JSONObject();
+						jObjectDir.put("Direccion", cl.getClienteDirecciones().get(i).getDireccion());
+						jObjectDir.put("IdInterno", cl.getClienteDirecciones().get(i).getID());
+						jObjectDir.put("Latitud", cl.getClienteDirecciones().get(i).getLatitud());
+						jObjectDir.put("Longitud", cl.getClienteDirecciones().get(i).getLongitud());
+						jObjectDir.put("Referencia", cl.getClienteDirecciones().get(i).getReferencia());
+						jObjectDir.put("Telefono1", cl.getClienteDirecciones().get(i).getTelefono1());
+						jObjectDir.put("Telefono2", cl.getClienteDirecciones().get(i).getTelefono2());
+						jObjectDir.put("TipoDireccion", cl.getClienteDirecciones().get(i).getTipoDireccion());
+						jObjectDir.put("EsPrincipal", cl.getClienteDirecciones().get(i).getEsPrincipal());
+						jArrayDirecciones.put(jObjectDir);
+					}
+					jObject.put("ClienteDirecciones", jArrayDirecciones);
+					
+					JSONArray jArrayContactos = new JSONArray();
+					for(int i = 0; i < cl.getContactos().size(); i++)
+					{
+						JSONObject jObjectCont = new JSONObject();
+						jObjectCont.put("IdInterno", cl.getContactos().get(i).getID());
+						jObjectCont.put("IdClienteDireccion", cl.getContactos().get(i).getIdClienteDireccion());
+						jObjectCont.put("Nombre", cl.getContactos().get(i).getNombre());
+						jObjectCont.put("Apellido", cl.getContactos().get(i).getApellido());
+						jObjectCont.put("Cargo", cl.getContactos().get(i).getCargo());
+						jObjectCont.put("Telefono1", cl.getContactos().get(i).getTelefono1());
+						jObjectCont.put("Telefono2", cl.getContactos().get(i).getTelefono2());
+						jObjectCont.put("CorreoElectronico", cl.getContactos().get(i).getCorreo());
+						jObjectCont.put("Foto", cl.getContactos().get(i).getURLFoto());
+						jArrayContactos.put(jObjectCont);
+					}
+					jObject.put("ClienteContactos", jArrayContactos);
+					
+					jArray.put(jObject);
+				}
+				catch(Exception ex)
+				{
+					
+				}
+			}
+			
+			webService.addParameter("Clientes", jArray);
+			
+			try
+			{			
+				webService.addCurrentAuthToken();
+				
+				try {
+					webService.invokeWebService();
+					JSONObject codigos = webService.getJSONObjectResponse();
+					JSONArray responseArray = codigos.getJSONArray("Codigos");
+					for(int s = 0; s < responseArray.length(); s ++)
+					{
+						JSONObject type = responseArray.getJSONObject(s);
+						for(rp3.marketforce.models.Cliente cl : clientes)
+						{
+							if(cl.getID() == type.getInt("IdInterno"))
+							{
+								id = type.getInt("IdServer");
+								
+								cl.setIdCliente(id);
+								cl.setPendiente(false);
+								rp3.marketforce.models.Cliente.update(db, cl);
+								List<rp3.marketforce.models.Agenda> agds = rp3.marketforce.models.Agenda.getAgendaClienteInterno(db, cl.getID());
+								for(rp3.marketforce.models.Agenda agd : agds)
+								{
+									agd.setIdCliente(id);
+									agd.setIdClienteDireccion(1);
+									rp3.marketforce.models.Agenda.update(db, agd);
+								}
+								clientesConId.add(cl);
+								JSONArray direcciones = type.getJSONArray("Direcciones");
+								for(int i = 0; i < direcciones.length(); i++)
+								{
+									JSONObject jObjectDir = direcciones.getJSONObject(i);
+									ClienteDireccion cliDir = cl.getClienteDirecciones().get(i);
+									cliDir.setIdCliente(id);
+									cliDir.setIdClienteDireccion(jObjectDir.getInt("IdServer"));
+									ClienteDireccion.update(db, cliDir);
+								}
+								JSONArray contactos = type.getJSONArray("Contactos");
+								for(int i = 0; i < contactos.length(); i++)
+								{
+									JSONObject jObjectCont = contactos.getJSONObject(i);
+									rp3.marketforce.models.Contacto cliCon = cl.getContactos().get(i);
+									cliCon.setIdCliente(id);
+									cliCon.setIdContacto(jObjectCont.getInt("IdServer"));
+									rp3.marketforce.models.Contacto.update(db, cliCon);
+								}
+							}
+						}
+					}
+										
+				} catch (HttpResponseException e) {
+					if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+						return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+					return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+				} catch (Exception e) {
+					return SyncAdapter.SYNC_EVENT_ERROR;
+				}
+				
+			}finally{
+				webService.close();
+			}
+			
+			for(int i = 0; i < clientesConId.size(); i ++)
+			{
+				rp3.marketforce.models.Cliente cl = clientesConId.get(i);
+				webService = new WebService("MartketForce","SetFotos");			
+				
+				JSONObject jFotos = new JSONObject();
+				try
+				{				
+					jFotos.put("IdCliente", cl.getIdCliente());
+					jFotos.put("IdContacto", "");
+					jFotos.put("Nombre", cl.getNombre1() + "_" + cl.getApellido1() + "_" + cl.getIdCliente() + ".jpg" );
+					String foto = Utils.CroppedBitmapToBase64(jObject.getString("Foto"));
+					if(foto != null)
+					{
+						jFotos.put("Contenido", foto);
+						
+						webService.addParameter("clientefoto", jFotos);
+						webService.addCurrentAuthToken();
+						webService.invokeWebService();
+						String nom_foto = webService.getStringResponse();
+						nom_foto = nom_foto.replaceAll("\"", "");
+						cl.setURLFoto(nom_foto);
+						rp3.marketforce.models.Cliente.update(db, cl);
+					}
+					
+					for(int r = 0; r < cl.getContactos().size(); r ++)
+					{
+						jFotos = new JSONObject();
+						webService = new WebService("MartketForce","SetFotos");
+						jFotos.put("IdCliente", cl.getIdCliente());
+						jFotos.put("IdContacto", cl.getContactos().get(r).getIdContacto());
+						jFotos.put("Nombre", cl.getContactos().get(r).getNombre() + "_" + cl.getContactos().get(r).getApellido() + "_" + cl.getIdCliente() + "_" + cl.getContactos().get(r).getIdContacto() + ".jpg" );
+						foto = Utils.CroppedBitmapToBase64(cl.getContactos().get(r).getURLFoto());
+						if(foto != null)
+						{
+							jFotos.put("Contenido", foto);
+							webService.addParameter("clientefoto", jFotos);
+							webService.addCurrentAuthToken();
+							webService.invokeWebService();
+							String nom_foto = webService.getStringResponse();
+							rp3.marketforce.models.Contacto ct = cl.getContactos().get(r);
+							nom_foto = nom_foto.replaceAll("\"", "");
+							ct.setURLFoto(nom_foto);
+							rp3.marketforce.models.Contacto.update(db, ct);
+						}
+					}
+				} catch (HttpResponseException e) {
+					if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+						return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+					return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+				} catch (Exception e) {
+					return SyncAdapter.SYNC_EVENT_ERROR;
+				}finally{
+					webService.close();
+				}		
+			}
 			
 			return SyncAdapter.SYNC_EVENT_SUCCESS;		
 		}

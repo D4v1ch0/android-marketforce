@@ -77,6 +77,7 @@ public class RutasListFragment extends rp3.app.BaseFragment {
     public static int SECTION = 0;
     private List<String> header_position;
     private int scrollV = 0;
+    private View lastItem = null;
     
     public static RutasListFragment newInstance() {
     	RutasListFragment fragment = new RutasListFragment();
@@ -139,6 +140,7 @@ public class RutasListFragment extends rp3.app.BaseFragment {
     	inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE); 
     	//linearLayout_rootParent = (LinearLayout) rootView.findViewById(R.id.linearLayout_headerlist_ruta_list);
     	headerlist = (ListView) rootView.findViewById(R.id.linearLayout_headerlist_ruta_list);
+    	headerlist.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
     	pullRefresher = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
     	horizontalScrollView = (HorizontalScrollView) rootView.findViewById(R.id.horizontalScrollView);
     	
@@ -148,6 +150,34 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 
 			@Override
 			public void onRefresh() {
+				if(list_agenda_in_adapter == null || list_agenda_in_adapter.size() == 0)
+				{
+					Agenda.getAgenda(getDataBase());
+					if(list_agenda.size() == 0)
+					{
+						long fin = Agenda.getFirstAgenda(getDataBase());
+						Bundle bundle = new Bundle();
+						bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ACTUALIZAR_AGENDA);
+						bundle.putLong(ARG_FIN, fin);
+						requestSync(bundle);
+					}
+					else
+					{
+						pullRefresher.setRefreshing(false);
+						try
+						{
+							headerlist.removeFooterView(LoadingFooter);
+						}
+						catch(Exception ex)
+						{
+							
+						}
+						orderDate();
+						adapter.changeList(list_agenda_in_adapter);
+					}
+				}
+				else
+				{
 					if(Convert.getTicksFromDate(list_agenda_in_adapter.get(0).getFechaInicio()) > Agenda.getFirstAgenda(getDataBase()))
 					{
 						pullRefresher.setRefreshing(false);
@@ -171,7 +201,8 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 						bundle.putLong(ARG_FIN, fin);
 						requestSync(bundle);
 					}
-					paintDates();
+				}
+				paintDates();
 			}});
     	
     	linearLayout_horizontal = (LinearLayout) rootView.findViewById(R.id.linearLayout_horizontal);
@@ -254,7 +285,8 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 		}
 		list_agenda = Agenda.getAgenda(getDataBase());
 		orderDate();
-		adapter.changeList(list_agenda_in_adapter);
+		if(list_agenda_in_adapter != null)
+			adapter.changeList(list_agenda_in_adapter);
 		paintDates();
 	}
 	
@@ -300,11 +332,20 @@ public class RutasListFragment extends rp3.app.BaseFragment {
     	
     	headerlist.setOnItemClickListener(new OnItemClickListener() {
 
+			@SuppressLint("ResourceAsColor")
 			@Override
 			public void onItemClick(AdapterView<?> parent,
 					View view, int position, long id) {
+				
 				if(adapter.isAction() && adapter.getItem(position).getNombreCompleto() != null)
+				{
 					transactionListFragmentCallback.onTransactionSelected(list_agenda_in_adapter.get(position).getID());
+					view.setSelected(true);
+					view.setBackgroundResource(R.drawable.list_bckgrnd_selected);
+					if(lastItem != null)
+						lastItem.setBackgroundResource(R.drawable.list_bckgrnd);
+					lastItem = view;
+				}
 				
 				adapter.setAction(true);
 				

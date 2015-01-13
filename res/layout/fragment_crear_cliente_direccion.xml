@@ -10,15 +10,22 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp" >
 
-        <Button
+        <TextView
             android:id="@+id/agregar_direccion"
-            style="@style/Widget.Button.Theme"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:text="@string/label_agregar_direccion" />
+            android:clickable="true"
+            android:drawableLeft="@drawable/ic_new_item"
+            android:drawablePadding="5dp"
+            android:gravity="center_vertical"
+            android:text="@string/label_agregar_direccion"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/color_text_sky_blue" />
 
     </LinearLayout>
 

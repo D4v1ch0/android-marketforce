@@ -25,6 +25,7 @@ import android.widget.TimePicker;
 import android.widget.AutoCompleteTextView.OnDismissListener;
 import android.widget.Spinner;
 import android.widget.Button;
+import android.widget.Toast;
 import rp3.app.BaseFragment;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
@@ -148,6 +149,12 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 				calFin.set(Calendar.HOUR_OF_DAY, hastaPicker.getCurrentHour());
 				calFin.set(Calendar.MINUTE, hastaPicker.getCurrentMinute());
 				
+				if(cal.getTime().getTime() > calFin.getTime().getTime())
+				{
+					Toast.makeText(getActivity(), "Fecha Desde no puede ser mayor a Fecha Hasta.", Toast.LENGTH_LONG).show();
+					return;
+				}
+				
 				agenda.setFechaInicio(cal.getTime());
 				agenda.setFechaFin(calFin.getTime());
 				
@@ -157,12 +164,16 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 				agenda.setDireccion(agenda.getCliente().getClienteDirecciones().get(getSpinnerSelectedPosition(R.id.crear_visita_direccion)).getDireccion());
 				agenda.setEstadoAgenda(Contants.ESTADO_PENDIENTE);
 				agenda.setEstadoAgendaDescripcion(Contants.DESC_PENDIENTE);
-				agenda.setIdCliente((int) agenda.getCliente().getID());
+				agenda.setIdCliente((int) agenda.getCliente().getIdCliente());
+				agenda.set_idCliente(agenda.getCliente().getID());
 				agenda.setIdClienteDireccion(agenda.getClienteDireccion().getIdClienteDireccion());
+				agenda.set_idClienteDireccion(agenda.getClienteDireccion().getID());
 				agenda.setIdRuta(0);
 				agenda.setNombreCompleto(agenda.getCliente().getNombreCompleto().trim());
-				agenda.setID(0);
+				//agenda.setID(0);
 				agenda.setIdAgenda(0);
+				agenda.setEnviado(false);
+				Agenda.insert(getDataBase(), agenda);
 				
 				
 				List<AgendaTarea> agendaTareas = new ArrayList<AgendaTarea>();
@@ -170,18 +181,19 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 				{
 					AgendaTarea agendaTarea = new AgendaTarea();
 					agendaTarea.setIdAgenda(0);
+					agendaTarea.set_idAgenda(agenda.getID());
 					agendaTarea.setEstadoTarea("P");
 					agendaTarea.setIdRuta(0);
 					agendaTarea.setIdTarea(tarea.getIdTarea());
-					agendaTareas.add(agendaTarea);
+					AgendaTarea.insert(getDataBase(), agendaTarea);
 				}
 				
-				agenda.setAgendaTareaList(agendaTareas);
-				String json = AgendaToJSON(agenda);
+				//agenda.setAgendaTareaList(agendaTareas);
+				//String json = AgendaToJSON(agenda);
 				
 				Bundle bundle = new Bundle();
 				bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_INSERTAR_AGENDA);
-				bundle.putString(ARG_AGENDA,json);
+				bundle.putLong(ARG_AGENDA, agenda.getID());
 				requestSync(bundle);
 				
 				finish();

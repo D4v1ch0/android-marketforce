@@ -29,6 +29,8 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 	public static String SYNC_TYPE_REPROGRAMAR_AGENDA = "reprogramar";
 	public static String SYNC_TYPE_INSERTAR_AGENDA = "insertarAgenda";
 	public static String SYNC_TYPE_AGENDA_NO_VISITA = "agendaNoVisita";
+	public static String SYNC_TYPE_BATCH = "batch";
+	public static String SYNC_TYPE_TODO = "todo";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -134,13 +136,13 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 			}
 			
 			else if(syncType.equals(SYNC_TYPE_CLIENTE_CREATE)){
-				String cliente = extras.getString(CrearClienteFragment.ARG_CLIENTE);
+				long cliente = extras.getLong(CrearClienteFragment.ARG_CLIENTE);
 				result = Cliente.executeSyncCreate(db, cliente);
 				addDefaultMessage(result);
 			}
 			
 			else if(syncType.equals(SYNC_TYPE_CLIENTE_UPDATE_FULL)){
-				String cliente = extras.getString(CrearClienteFragment.ARG_CLIENTE);
+				long cliente = extras.getLong(CrearClienteFragment.ARG_CLIENTE);
 				result = Cliente.executeSyncUpdateFull(db, cliente);
 				addDefaultMessage(result);
 			}
@@ -158,7 +160,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 			}
 			
 			else if(syncType.equals(SYNC_TYPE_INSERTAR_AGENDA)){
-				String agenda = extras.getString(CrearVisitaFragment.ARG_AGENDA);
+				long agenda = extras.getLong(CrearVisitaFragment.ARG_AGENDA);
 				result = Agenda.executeSyncInsert(db, agenda);
 				addDefaultMessage(result);
 			}
@@ -174,6 +176,94 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 				long fin = extras.getLong(RutasListFragment.ARG_FIN);
 				result = rp3.marketforce.sync.Rutas.executeSync(db, inicio, fin, true);				
 				addDefaultMessage(result);
+			}
+			
+			else if(syncType.equals(SYNC_TYPE_BATCH)){
+				result = Cliente.executeSyncInserts(db);
+				addDefaultMessage(result);
+				
+				result = Cliente.executeSyncPendientes(db);
+				addDefaultMessage(result);
+				
+				result = Agenda.executeSyncInserts(db);
+				addDefaultMessage(result);
+				
+				result = Agenda.executeSyncPendientes(db);
+				addDefaultMessage(result);
+				
+				result = EnviarUbicacion.executeSyncPendientes(db);
+				addDefaultMessage(result);
+			}
+			
+			else if(syncType.equals(SYNC_TYPE_TODO)){
+				result = Cliente.executeSyncInserts(db);
+				addDefaultMessage(result);
+				
+				result = Cliente.executeSyncPendientes(db);
+				addDefaultMessage(result);
+				
+				result = Agenda.executeSyncInserts(db);
+				addDefaultMessage(result);
+				
+				result = Agenda.executeSyncPendientes(db);
+				addDefaultMessage(result);
+				
+				result = EnviarUbicacion.executeSyncPendientes(db);
+				addDefaultMessage(result);
+				
+				result = rp3.sync.GeopoliticalStructure.executeSync(db);				
+				addDefaultMessage(result);
+				
+				if(result == SYNC_EVENT_SUCCESS){
+					result = rp3.sync.GeneralValue.executeSync(db);
+					addDefaultMessage(result);
+				}
+				
+				if(result == SYNC_EVENT_SUCCESS){
+					result = rp3.sync.IdentificationType.executeSync(db);
+					addDefaultMessage(result);
+				}
+				
+				if(result == SYNC_EVENT_SUCCESS){
+					result = rp3.marketforce.sync.Cliente.executeSync(db);				
+					addDefaultMessage(result);
+					if(result == SYNC_EVENT_SUCCESS){
+						SyncAudit.insert(SYNC_TYPE_CLIENTE_UPDATE, SYNC_EVENT_SUCCESS);
+					}
+				}
+				
+				if(result == SYNC_EVENT_SUCCESS){
+					result = rp3.marketforce.sync.Rutas.executeSync(db,null,null, false);				
+					addDefaultMessage(result);
+					if(result == SYNC_EVENT_SUCCESS){
+						SyncAudit.insert(SYNC_TYPE_ACT_AGENDA, SYNC_EVENT_SUCCESS);
+					}
+				}
+				
+				if(result == SYNC_EVENT_SUCCESS){
+					result = rp3.marketforce.sync.Agente.executeSync(db);				
+					addDefaultMessage(result);
+				}
+				
+				if(result == SYNC_EVENT_SUCCESS && PreferenceManager.getBoolean(Contants.KEY_ES_SUPERVISOR)){
+					result = rp3.marketforce.sync.Agente.executeSyncGetAgente(db);				
+					addDefaultMessage(result);
+				}
+				
+				if(result == SYNC_EVENT_SUCCESS){
+					result = rp3.marketforce.sync.Tareas.executeSync(db,null,null);				
+					addDefaultMessage(result);
+				}
+				
+				if(result == SYNC_EVENT_SUCCESS){
+					result = rp3.marketforce.sync.Canal.executeSync(db);				
+					addDefaultMessage(result);
+				}
+
+				if(result == SYNC_EVENT_SUCCESS){
+					result = rp3.marketforce.sync.TipoCliente.executeSync(db);				
+					addDefaultMessage(result);
+				}
 			}
 			
 			SyncAudit.insert(syncType, result);

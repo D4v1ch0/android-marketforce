@@ -8,6 +8,8 @@ public class Contants {
 	public final static int GENERAL_TABLE_MOTIVOS_NO_VISITA = 1030;
 	public final static String IMAGE_FOLDER = "imagesFolder";
 	public final static String ALARM_CANCEL_TIME = "cancelAlarmTime";
+	public final static String KEY_FIRST_TIME = "firstTime";
+	public final static String KEY_FORGOT_PASSWORD = "forgotPassword";
 	
 	public final static String ESTADO_GESTIONANDO = "G";
 	public final static String ESTADO_NO_VISITADO = "NV";

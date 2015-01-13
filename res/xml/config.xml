@@ -6,6 +6,7 @@
         <allowHelpOnAut>TRUE</allowHelpOnAut>
         <imagesFolder>/Content/AgendaComercial/img/clientes/</imagesFolder>
         <cancelAlarmTime>22H00</cancelAlarmTime>
+        <forgotPassword>http://54.94.162.88/MarketForce/Security/Account/RequestingPasswordRecovery</forgotPassword>
     </appConfiguration>
     <dataBaseConfiguration>       
        <name>Rp3MarketForce.db</name>
@@ -79,6 +80,11 @@
                     <webMethod>POST</webMethod>
                 </method>
                 <method>
+                    <name>UpdateAgendaFull</name>
+                    <action>agenda/updatefull</action>
+                    <webMethod>POST</webMethod>
+                </method>
+                <method>
                     <name>ReprogramarAgenda</name>
                     <action>agenda/reprogramar</action>
                     <webMethod>POST</webMethod>
@@ -124,10 +130,15 @@
                     <webMethod>GET</webMethod>
                 </method>
                 <method>
+                    <name>SetUbicaciones</name>
+                    <action>agente/setubicaciones</action>
+                    <webMethod>POST</webMethod>
+                </method> 
+                <method>
                     <name>SetUbicacion</name>
                     <action>agente/setubicacion?latitud=@latitud&amp;longitud=@longitud</action>
                     <webMethod>POST</webMethod>
-                </method> 
+                </method>
                 <method>
                     <name>UpdateCliente</name>
                     <action>cliente/update</action>

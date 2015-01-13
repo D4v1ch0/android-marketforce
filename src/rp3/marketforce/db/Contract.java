@@ -28,7 +28,7 @@ public final class Contract {
 		public static final String TABLE_NAME = "tbCliente";
 				
 		public static final String COLUMN_ID_TIPO_IDENTIFICACION = "IdTipoIdentificacion";
-		
+		public static final String COLUMN_ID_CLIENTE = "IdCliente";
 		public static final String COLUMN_GENERO = "Genero";
 		public static final String COLUMN_ESTADO_CIVIL = "EstadoCivil";
 		public static final String COLUMN_FECHA_NACIMIENTO = "FechaNacimiento";
@@ -38,8 +38,10 @@ public final class Contract {
 		public static final String COLUMN_URL_FOTO = "URLFoto";
 		public static final String COLUMN_TIPO_PERSONA = "TipoPersona";
 		public static final String COLUMN_NUEVO = "Nuevo";
+		public static final String COLUMN_PENDIENTE = "Pendiente";
 				
-		public static final String FIELD_ID_TIPO_IDENTIFICACION = COLUMN_ID_TIPO_IDENTIFICACION;		
+		public static final String FIELD_ID_TIPO_IDENTIFICACION = COLUMN_ID_TIPO_IDENTIFICACION;	
+		public static final String FIELD_ID_CLIENTE = COLUMN_ID_CLIENTE;	
 		public static final String FIELD_GENERO = COLUMN_GENERO;
 		public static final String FIELD_ESTADO_CIVIL = COLUMN_ESTADO_CIVIL;
 		public static final String FIELD_FECHA_NACIMIENTO = COLUMN_FECHA_NACIMIENTO;
@@ -49,6 +51,7 @@ public final class Contract {
 		public static final String FIELD_URL_FOTO = COLUMN_URL_FOTO;	
 		public static final String FIELD_TIPO_PERSONA = COLUMN_TIPO_PERSONA;
 		public static final String FIELD_NUEVO = COLUMN_NUEVO;
+		public static final String FIELD_PENDIENTE = COLUMN_PENDIENTE;
 		
 		public static final String FIELD_IDENTIFICACION = Contract.ClientExt.TABLE_NAME + "_" + Contract.ClientExt.COLUMN_IDENTIFICACION;
 		public static final String FIELD_NOMBRE1 = Contract.ClientExt.TABLE_NAME + "_" + Contract.ClientExt.COLUMN_NOMBRE1;
@@ -71,6 +74,9 @@ public final class Contract {
 		public static final String QUERY_CLIENTES = "Clientes";
 		public static final String QUERY_CLIENTES_AND_CONTACTS = "ClientesAndContacts";
 		public static final String QUERY_CLIENTE_BY_ID = "ClienteById";
+		public static final String QUERY_CLIENTE_INSERTS = "ClienteInserts";
+		public static final String QUERY_CLIENTE_PENDIENTES = "ClientePendientes";
+		public static final String QUERY_CLIENTE_BY_ID_SERVER = "ClienteByIdServer";
 		public static final String QUERY_CLIENT_SEARCH = "SimpleClientSearch";
 		
 //		 private static final String QUERY_TRANSACTION_MAINFIELDS = 
@@ -137,6 +143,7 @@ public final class Contract {
 		
 		public static final String TABLE_NAME = "tbClienteDireccion";
 		
+		public static final String COLUMN_CLIENTE_ID_EXT = "_IdCliente";
 		public static final String COLUMN_CLIENTE_ID = "IdCliente";
 		public static final String COLUMN_CLIENTE_DIRECCION_ID = "IdClienteDireccion";
 		public static final String COLUMN_DIRECCION = "Direccion";  
@@ -163,6 +170,7 @@ public final class Contract {
 		public static final String FIELD_CIUDAD = rp3.data.models.Contract.GeopoliticalStructure.TABLE_NAME+"_"+rp3.data.models.Contract.GeopoliticalStructure.COLUMN_NAME;
 		
 		public static final String QUERY_CLIENTE_DIRECCION_BY_ID = "ClienteDireccionById";
+		public static final String QUERY_CLIENTE_DIRECCION_BY_ID_INTERNO = "ClienteDireccionByIdInterno";
 		public static final String QUERY_CLIENTE_DIRECCION_BY_ID_DIRECCION = "ClienteDireccionByIdDireccion";
 	}
 	
@@ -171,7 +179,7 @@ public final class Contract {
 		public static final String TABLE_NAME = "tbContacto";
 				
 		public static final String COLUMN_ID_CONTACTO = "IdContacto";
-		
+		public static final String COLUMN_CLIENTE_ID_EXT = "_IdCliente";
 		public static final String COLUMN_ID_CLIENTE = "IdCliente";
 		public static final String COLUMN_ID_CLIENTE_DIRECCION = "IdClienteDireccion";
 		public static final String COLUMN_URL_FOTO = "URLFoto";
@@ -188,6 +196,7 @@ public final class Contract {
 		public static final String FIELD_URL_FOTO = COLUMN_URL_FOTO;	
 		
 		public static final String QUERY_CONTACTOS = "ContactosByCliente";
+		public static final String QUERY_CONTACTOS_INTERNO = "ContactosByClienteInterno";
 		public static final String QUERY_CONTACTOS_ID = "ContactoById";
 		public static final String QUERY_CONTACTOS_ID_CLIENTE = "ContactoByIdCliente";
 		
@@ -211,7 +220,9 @@ public final class Contract {
 		public static final String COLUMN_RUTA_ID = "IdRuta";
 		public static final String COLUMN_AGENDA_ID = "IdAgenda";
 		public static final String COLUMN_CLIENTE_ID = "IdCliente";
+		public static final String COLUMN_CLIENTE_ID_EXT = "_IdCliente";
 		public static final String COLUMN_CLIENTE_DIRECCION_ID = "IdClienteDireccion";
+		public static final String COLUMN_CLIENTE_DIRECCION_ID_EXT = "_IdClienteDireccion";
 		public static final String COLUMN_PROGRAMACION_RUTA_ID = "IdProgramacionRuta";
 		public static final String COLUMN_FECHA_INICIO = "FechaInicio";
 		public static final String COLUMN_FECHA_FIN = "FechaFin";
@@ -220,6 +231,7 @@ public final class Contract {
 		public static final String COLUMN_FECHA_FIN_REAL = "FechaFinReal";
 		public static final String COLUMN_ENVIADO = "Enviado";
 		public static final String COLUMN_CONTACTO_ID = "IdContacto";
+		public static final String COLUMN_CONTACTO_ID_EXT = "_IdContacto";
 		public static final String COLUMN_OBSERVACIONES = "Observaciones";
 		public static final String COLUMN_FOTO1_EXT = "Foto1Ext";
 		public static final String COLUMN_FOTO1_INT = "Foto1Int";
@@ -264,6 +276,7 @@ public final class Contract {
 		public static final String QUERY_AGENDA = "AgendaByCliente";
 		public static final String QUERY_AGENDA_SEMANAL = "AgendaSemanal";
 		public static final String QUERY_AGENDA_ID = "AgendaByAgendaID";
+		public static final String QUERY_AGENDA_ID_SERVER = "AgendaByAgendaIDServer";
 		public static final String QUERY_AGENDA_SEARCH = "SimpleRutaSearch";
 		public static final String QUERY_CONTEO = "AgendaConteo";
 	} 
@@ -287,6 +300,7 @@ public final class Contract {
 				
 		public static final String COLUMN_RUTA_ID = "IdRuta";
 		public static final String COLUMN_AGENDA_ID = "IdAgenda";
+		public static final String COLUMN_AGENDA_ID_EXT = "_IdAgenda";
 		public static final String COLUMN_TAREA_ID = "IdTarea";
 		public static final String COLUMN_ESTADO_TAREA = "EstadoTarea";		
 		
@@ -297,6 +311,7 @@ public final class Contract {
 		public static final String FIELD_ESTADO_TAREA_DESCRIPCION = "tbEstadoTarea_Value_" + rp3.data.models.Contract.GeneralValue.COLUMN_VALUE;
 		
 		public static final String QUERY_AGENDA_TAREA = "AgendaTarea";
+		public static final String QUERY_AGENDA_TAREA_INTERNO = "AgendaTareaIdInterno";
 	}
     
    public static abstract class AgendaTareaActividades implements BaseColumns {
@@ -398,6 +413,21 @@ public final class Contract {
 		public static final String FIELD_PENDIENTES = COLUMN_PENDIENTES;
 		
 		public static final String QUERY_RESUMEN = "ResumenAgentes";
+
+	}
+   
+   public static abstract class Ubicacion implements BaseColumns {
+		
+		public static final String TABLE_NAME = "tbUbicacion";
+		
+		public static final String COLUMN_LATITUD = "Latitud";
+		public static final String COLUMN_LONGITUD= "Longitud";
+		public static final String COLUMN_FECHA= "Fecha";
+		public static final String COLUMN_PENDIENTE= "Pendiente";
+
+		public static final String FIELD_LATITUD = COLUMN_LATITUD;
+		public static final String FIELD_LONGITUD = COLUMN_LONGITUD;
+		public static final String FIELD_FECHA = COLUMN_FECHA;
 
 	}
 }

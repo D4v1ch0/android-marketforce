@@ -4,12 +4,14 @@ import java.util.Calendar;
 import java.util.Random;
 
 import rp3.configuration.Configuration;
+import rp3.configuration.PreferenceManager;
 import rp3.content.SimpleCallback;
 import rp3.data.MessageCollection;
 import rp3.marketforce.content.EnviarUbicacionReceiver;
 import rp3.marketforce.db.DbOpenHelper;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.sync.SyncAudit;
+import rp3.util.ConnectionUtils;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -24,6 +26,11 @@ public class StartActivity extends rp3.app.StartActivity{
 	protected void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
 		Configuration.TryInitializeConfiguration(this, DbOpenHelper.class);	
+		if(PreferenceManager.getBoolean(Contants.KEY_FIRST_TIME, true))
+		{
+			startActivity(new Intent(this, ServerActivity.class));
+			finish();
+		}
 	}
 	
 	private void setServiceRecurring(){
@@ -44,8 +51,7 @@ public class StartActivity extends rp3.app.StartActivity{
 		am.setInexactRepeating(AlarmManager.RTC_WAKEUP,
 			calendar.getTimeInMillis() + (i1 * 1000 * 5),
 			1000 * 60 * 10, pi);
-		
-	//AlarmManager.INTERVAL_FIFTEEN_MINUTES
+
 	}
 
 	@Override
@@ -58,7 +64,11 @@ public class StartActivity extends rp3.app.StartActivity{
 	}
 	
 	public void onSyncComplete(Bundle data, final MessageCollection messages) {
-		if(data.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_GENERAL)){
+		if(!data.containsKey(SyncAdapter.ARG_SYNC_TYPE) && !ConnectionUtils.isNetAvailable(this))
+		{
+			callNextActivity();
+		}
+		else if(data.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_GENERAL)){
 			if(messages.hasErrorMessage())
 				showDialogMessage(messages, new SimpleCallback() {				
 					@Override

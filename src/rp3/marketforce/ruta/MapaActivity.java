@@ -90,6 +90,7 @@ public class MapaActivity extends BaseActivity {
 	Agenda agenda;
 	DrawableManager DManager;
 	List<Marker> markers;
+	View lastItem;
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -231,6 +232,11 @@ public class MapaActivity extends BaseActivity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				markers.get(position).showInfoWindow();
+				view.setSelected(true);
+				view.setBackgroundResource(R.drawable.list_bckgrnd_selected);
+				if(lastItem != null)
+					lastItem.setBackgroundResource(R.drawable.list_bckgrnd);
+				lastItem = view;
 				map.animateCamera(CameraUpdateFactory.newLatLngZoom(markers.get(position).getPosition(), 12), 1000, null);
 			}
 		});
@@ -321,9 +327,14 @@ public class MapaActivity extends BaseActivity {
 	public void CallPhone(View v)
 	{
 		String uri = "tel:" + agenda.getClienteDireccion().getTelefono1();
-		Intent intent = new Intent(Intent.ACTION_CALL);
+		Intent intent = new Intent(Intent.ACTION_DIAL);
 		intent.setData(Uri.parse(uri));
-		startActivity(intent);
+		Uri mUri = Uri.parse("smsto:" + Utils.convertToSMSNumber(agenda.getClienteDireccion().getTelefono1()));
+        Intent mIntent = new Intent(Intent.ACTION_SENDTO, mUri);
+        mIntent.putExtra("chat",true);
+        Intent chooserIntent = Intent.createChooser(mIntent, "Seleccionar Acción");
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { intent });
+        startActivity(chooserIntent);
 	}
 
 	private void setRuta(long id) {

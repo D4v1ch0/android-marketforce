@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="rp3.marketforce"
-    android:versionCode="9"
-    android:versionName="1.2" >
+    android:versionCode="11"
+    android:versionName="1.2.2" >
 
     <uses-sdk
         android:minSdkVersion="13"
@@ -10,10 +10,6 @@
     <permission
         android:name="com.vogella.android.locationapi.maps.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
-
-    <uses-feature
-        android:glEsVersion="0x00020000"
-        android:required="true" />
     
     
     	<uses-permission android:name="android.permission.INTERNET" />
@@ -31,6 +27,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
     
 
     <application
@@ -147,6 +144,7 @@
             android:value="AIzaSyC_7DHljEV8KjzrxpMnkwXDmsfeEjErLD0" />
         <activity android:name=".ruta.MapaActivity"></activity>
         <activity android:name=".cliente.CrearClienteActivity"></activity>
+        <activity android:name="ServerActivity" android:theme="@style/AppTheme.NoTitleBar"></activity>
         
     </application>
 

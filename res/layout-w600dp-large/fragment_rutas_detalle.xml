@@ -1,0 +1,246 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/transaction_detail"
+    style="?android:attr/textAppearanceLarge"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp"
+    tools:context=".TransactionDetailFragment" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:id="@+id/map_image"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:src="@drawable/user" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="0.4"
+            android:gravity="center_vertical"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textView_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textSize="@dimen/text_large_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView_tipo_cliente"
+                style="@style/Widget.TextView.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:paddingRight="12dp"
+                android:text="Distribuirdor"
+                android:textColor="@color/bg_button_bg_main"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView_tipo_canal"
+                style="@style/Widget.TextView.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:paddingRight="12dp"
+                android:singleLine="true"
+                android:text="Mayorista"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:background="@color/bg_button_bg_main_pressed" >
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_weight="0.4"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left|right" >
+
+                <ImageView
+                    android:id="@+id/detail_agenda_image_status"
+                    android:layout_width="14dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/circle_shape" />
+
+                <TextView
+                    android:id="@+id/detail_agenda_estado"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:paddingLeft="5dp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView_movil"
+                style="@style/Widget.TextView.XSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:drawableLeft="@drawable/ic_phone"
+                android:drawablePadding="8dp"
+                android:gravity="center"
+                android:textSize="@dimen/text_medium_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView_mail"
+                style="@style/Widget.TextView.XSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_email"
+                android:drawablePadding="8dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:singleLine="true"
+                android:textSize="@dimen/text_medium_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:drawableLeft="@drawable/ic_home"
+                android:drawablePadding="8dp"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textSize="@dimen/text_small_size" />
+
+            <TextView
+                android:id="@+id/textView_fecha"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:drawableLeft="@drawable/ic_calendar"
+                android:drawablePadding="8dp"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textSize="@dimen/text_small_size" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp" >
+
+        <Button
+            android:id="@+id/detail_agenda_button_cancelar"
+            style="@style/Widget.Button.Theme"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/label_button_cancelar"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/detail_agenda_button_modificar"
+            style="@style/Widget.Button.Theme"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/label_button_modificar_gestion"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/detail_agenda_button_iniciar"
+            style="@style/Widget.Button.Theme"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_weight="1"
+            android:text="@string/label_button_iniciar" />
+
+        <Button
+            android:id="@+id/detail_agenda_button_fin"
+            style="@style/Widget.Button.Theme"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_weight="1"
+            android:text="@string/label_button_fin"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <ListView
+            android:id="@+id/listView_tareas"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.7"
+            android:divider="@color/bg_button_bg_main_pressed"
+            android:dividerHeight="1dp" >
+        </ListView>
+
+        <LinearLayout
+            android:id="@+id/detail_agenda_empty_tareas"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.7"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:text="@string/label_sin_tareas"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/bg_layout_dates"
+                android:orientation="vertical" >
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/detail_agenda_observacion"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="5dp"
+            android:layout_weight="0.3"
+            android:background="@color/apptheme_color"
+            android:clickable="true"
+            android:drawableRight="@drawable/ic_registrarse"
+            android:gravity="center_vertical"
+            android:padding="5dp"
+            android:text="@string/label_agregue_observacion"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/color_text_sky_blue" />
+
+    </LinearLayout>
+
+</LinearLayout>

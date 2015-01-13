@@ -72,6 +72,7 @@ public class MotivoNoVisitaFragment extends BaseFragment {
 				agenda.setIdMotivoNoVisita(((GeneralValue)((Spinner) rootView.findViewById(R.id.no_visita_motivos)).getSelectedItem()).getCode());
 				agenda.setEstadoAgenda(Contants.ESTADO_NO_VISITADO);
 				agenda.setEstadoAgendaDescripcion(Contants.DESC_NO_VISITADO);
+				agenda.setEnviado(false);
 				Agenda.update(getDataBase(), agenda);
 				Bundle bundle = new Bundle();
 				bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_AGENDA_NO_VISITA);

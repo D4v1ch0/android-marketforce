@@ -15,6 +15,7 @@ public class AgendaTarea extends rp3.data.entity.EntityBase<AgendaTarea> {
 	private long id;
 	private int idRuta;
 	private long idAgenda;
+	private long _idAgenda;
 	private int idTarea;
 	private String nombreTarea;
 	private String tipoTarea;
@@ -62,7 +63,8 @@ public class AgendaTarea extends rp3.data.entity.EntityBase<AgendaTarea> {
 	public void setValues() {
 				
 		setValue(Contract.AgendaTarea.COLUMN_RUTA_ID, this.idRuta);
-		setValue(Contract.AgendaTarea.COLUMN_AGENDA_ID, this.idAgenda);		
+		setValue(Contract.AgendaTarea.COLUMN_AGENDA_ID, this.idAgenda);	
+		setValue(Contract.AgendaTarea.COLUMN_AGENDA_ID_EXT, this._idAgenda);	
 		setValue(Contract.AgendaTarea.COLUMN_TAREA_ID, this.idTarea);		
 		setValue(Contract.AgendaTarea.COLUMN_ESTADO_TAREA, this.estadoTarea);
 	}
@@ -109,6 +111,14 @@ public class AgendaTarea extends rp3.data.entity.EntityBase<AgendaTarea> {
 		this.tipoTarea = tipoTarea;
 	}
 	
+	public long get_idAgenda() {
+		return _idAgenda;
+	}
+
+	public void set_idAgenda(long _idAgenda) {
+		this._idAgenda = _idAgenda;
+	}
+
 	public List<AgendaTareaActividades> getActividades() {
 		return actividades;
 	}
@@ -125,17 +135,21 @@ public class AgendaTarea extends rp3.data.entity.EntityBase<AgendaTarea> {
 		this.estadoTareaDescripcion = estadoTareaDescripcion;
 	}	
 	
-	public static List<AgendaTarea> getAgendaTareas(DataBase db, long idAgenda, int idRuta){
-		String query = QueryDir.getQuery(Contract.AgendaTarea.QUERY_AGENDA_TAREA);
-				
-		Cursor c = db.rawQuery(query, new String[] { String.valueOf(idAgenda), String.valueOf(idRuta) });
+	public static List<AgendaTarea> getAgendaTareas(DataBase db, long idAgenda, int idRuta, boolean interno){
+		String query = "";
+		if(interno)
+			query = QueryDir.getQuery(Contract.AgendaTarea.QUERY_AGENDA_TAREA_INTERNO);
+		else
+			query = QueryDir.getQuery(Contract.AgendaTarea.QUERY_AGENDA_TAREA);
 		
+		Cursor c = db.rawQuery(query, new String[] { String.valueOf(idAgenda), String.valueOf(idRuta) });
 		
 		List<AgendaTarea> list = new ArrayList<AgendaTarea>();
 		while(c.moveToNext()){
 			
 			AgendaTarea agdt = new AgendaTarea();
 			agdt.setID(CursorUtils.getInt(c, Contract.AgendaTarea._ID));
+			agdt.set_idAgenda(CursorUtils.getInt(c, Contract.AgendaTarea.COLUMN_AGENDA_ID_EXT));
 			agdt.setIdRuta(CursorUtils.getInt(c, Contract.AgendaTarea.FIELD_RUTA_ID));	
 			agdt.setIdTarea(CursorUtils.getInt(c, Contract.AgendaTarea.FIELD_TAREA_ID));
 			agdt.setIdAgenda(CursorUtils.getLong(c, Contract.AgendaTarea.FIELD_AGENDA_ID));

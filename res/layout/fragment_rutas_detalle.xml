@@ -175,15 +175,66 @@
             android:layout_weight="1"
             android:text="@string/label_button_fin"
             android:visibility="gone" />
+
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/listView_tareas"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="@color/bg_button_bg_main_pressed"
-        android:dividerHeight="1dp" >
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
 
-    </ListView>
+        <ListView
+            android:id="@+id/listView_tareas"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.7"
+            android:divider="@color/bg_button_bg_main_pressed"
+            android:dividerHeight="1dp" >
+        </ListView>
+
+        <LinearLayout
+            android:id="@+id/detail_agenda_empty_tareas"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.7"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:text="@string/label_sin_tareas"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/bg_layout_dates"
+                android:orientation="vertical" >
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/detail_agenda_observacion"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="5dp"
+            android:layout_weight="0.3"
+            android:background="@color/apptheme_color"
+            android:clickable="true"
+            android:drawableRight="@drawable/ic_registrarse"
+            android:gravity="center_vertical"
+            android:padding="5dp"
+            android:text="@string/label_agregue_observacion"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/color_text_sky_blue" />
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -42,11 +42,11 @@
 
                 <DatePicker
                     android:id="@+id/reprogramar_ruta_calendario"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:foregroundGravity="center"
-                    android:measureAllChildren="false"
+                    android:foregroundGravity="fill"
+                    android:measureAllChildren="true"
                     android:spinnersShown="false" />
 
                 <LinearLayout

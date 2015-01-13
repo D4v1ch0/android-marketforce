@@ -13,6 +13,7 @@ import android.database.Cursor;
 public class ClienteDireccion extends rp3.data.entity.EntityBase<ClienteDireccion>{
 
 	private long id;
+	private long _idCliente;
 	private long idCliente;
 	private int idClienteDireccion;
 	private String direccion;
@@ -50,18 +51,19 @@ public class ClienteDireccion extends rp3.data.entity.EntityBase<ClienteDireccio
 	@Override
 	public void setValues() {
 		if(getAction() == ACTION_INSERT){
-			setValue(Contract.ClienteDireccion.COLUMN_CLIENTE_ID, this.idCliente);
-			setValue(Contract.ClienteDireccion.COLUMN_CLIENTE_DIRECCION_ID, this.idClienteDireccion);
 			setValue(Contract.ClienteDireccion.COLUMN_TIPO_DIRECCION, this.tipoDireccion);
 			setValue(Contract.ClienteDireccion.COLUMN_CIUDAD_ID, this.idCiudad);
 			setValue(Contract.ClienteDireccion.COLUMN_ES_PRINCIPAL, this.esPrincipal);			
 		}
+		setValue(Contract.ClienteDireccion.COLUMN_CLIENTE_ID, this.idCliente);
+		setValue(Contract.ClienteDireccion.COLUMN_CLIENTE_DIRECCION_ID, this.idClienteDireccion);
 		setValue(Contract.ClienteDireccion.COLUMN_DIRECCION, this.direccion);
 		setValue(Contract.ClienteDireccion.COLUMN_TELEFONO1, this.telefono1);
 		setValue(Contract.ClienteDireccion.COLUMN_TELEFONO2, this.telefono2);
 		setValue(Contract.ClienteDireccion.COLUMN_REFERENCIA, this.referencia);
 		setValue(Contract.ClienteDireccion.COLUMN_LATITUD, this.latitud);
 		setValue(Contract.ClienteDireccion.COLUMN_LONGITUD, this.longitud);
+		setValue(Contract.ClienteDireccion.COLUMN_CLIENTE_ID_EXT, this._idCliente);
 		
 	}
 
@@ -163,6 +165,14 @@ public class ClienteDireccion extends rp3.data.entity.EntityBase<ClienteDireccio
 		this.longitud = longitud;
 	}
 
+	public long get_idCliente() {
+		return _idCliente;
+	}
+
+	public void set_idCliente(long _idCliente) {
+		this._idCliente = _idCliente;
+	}
+
 	public String getCiudadDescripcion() {
 		return ciudadDescripcion;
 	}
@@ -171,9 +181,14 @@ public class ClienteDireccion extends rp3.data.entity.EntityBase<ClienteDireccio
 		this.ciudadDescripcion = ciudadDescripcion;
 	}
 
-	public static List<ClienteDireccion> getClienteDirecciones(DataBase db, long id){
+	public static List<ClienteDireccion> getClienteDirecciones(DataBase db, long id, boolean interno){
 		
-		String query = QueryDir.getQuery(Contract.ClienteDireccion.QUERY_CLIENTE_DIRECCION_BY_ID);
+		String query ="";
+		if(interno)
+			query = QueryDir.getQuery(Contract.ClienteDireccion.QUERY_CLIENTE_DIRECCION_BY_ID_INTERNO);
+		else
+			query = QueryDir.getQuery(Contract.ClienteDireccion.QUERY_CLIENTE_DIRECCION_BY_ID);
+		
     	Cursor c = db.rawQuery(query, id );		
 		
 		List<ClienteDireccion> list = new ArrayList<ClienteDireccion>();
@@ -181,6 +196,7 @@ public class ClienteDireccion extends rp3.data.entity.EntityBase<ClienteDireccio
 			ClienteDireccion tpd = new ClienteDireccion();
 			tpd.setID(CursorUtils.getInt(c,Contract.ClienteDireccion._ID));
 			tpd.setIdCliente(CursorUtils.getLong(c, Contract.ClienteDireccion.FIELD_CLIENTE_ID));
+			tpd.set_idCliente(CursorUtils.getLong(c, Contract.ClienteDireccion.COLUMN_CLIENTE_ID_EXT));
 			tpd.setIdClienteDireccion(CursorUtils.getInt(c, Contract.ClienteDireccion.FIELD_CLIENTE_DIRECCION_ID));
 			tpd.setDireccion(CursorUtils.getString(c, Contract.ClienteDireccion.FIELD_DIRECCION));
 			tpd.setEsPrincipal(CursorUtils.getBoolean(c, Contract.ClienteDireccion.FIELD_ES_PRINCIPAL));

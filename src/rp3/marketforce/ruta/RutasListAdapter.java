@@ -78,7 +78,13 @@ public class RutasListAdapter extends BaseAdapter{
 			if(agd.getIdContacto() == 0)
 			{
 				((TextView) convertView.findViewById(R.id.textView_nombre)).setText(""+agd.getNombreCompleto());
-				((TextView) convertView.findViewById(R.id.textView_cargo_canal)).setText(""+agd.getCliente().getCanalDescripcion());
+				try
+				{
+					((TextView) convertView.findViewById(R.id.textView_cargo_canal)).setText(""+agd.getCliente().getCanalDescripcion());
+				}
+				catch(Exception ex)
+				{
+				}
 			}
 			else
 			{
