@@ -48,7 +48,7 @@
                     android:src="@drawable/circle_visited" />
 
                 <ImageView
-                    android:id="@+id/imageView2"
+                    android:id="@+id/recorrido_anterior"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.15"

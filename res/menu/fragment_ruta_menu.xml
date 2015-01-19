@@ -18,6 +18,5 @@
           </menu>
       </item>
       <item android:id="@+id/action_cambiar_contacto" android:title="@string/action_cambiar_contacto"></item>
-      <item android:id="@+id/action_observaciones" android:title="@string/action_observaciones"></item>
       <item android:id="@+id/action_no_visita" android:title="@string/label_action_motivos_no_visita"></item>
 </menu>

@@ -400,6 +400,10 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			cl.setURLFoto(CursorUtils.getString(c, Contract.Cliente.FIELD_URL_FOTO));
 			cl.setTipoPersona(CursorUtils.getString(c, Contract.Cliente.FIELD_TIPO_PERSONA));
 			cl.setClienteDirecciones(ClienteDireccion.getClienteDirecciones(db, cl.getIdCliente(), false));
+			if(cl.getIdCliente() == 0)
+				cl.setContactos(Contacto.getContactoIdCliente(db, cl.getID(), true));
+			else
+				cl.setContactos(Contacto.getContactoIdCliente(db, cl.getIdCliente(), false));
 			
 			
 			list.add(cl);
@@ -424,10 +428,14 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			cl.setDireccion(CursorUtils.getString(c,Contract.ClientExt.COLUMN_DIRECCION));
 			cl.setTelefono(CursorUtils.getString(c,Contract.ClientExt.COLUMN_TELEFONO));
 			cl.setTipoPersona(CursorUtils.getString(c, Contract.Cliente.COLUMN_TIPO_PERSONA));
+			cl.setIdCliente(CursorUtils.getInt(c, Contract.Cliente.COLUMN_ID_CLIENTE));
+			if(cl.getTipoPersona().equalsIgnoreCase("C"))
+				cl.setNombreCompleto(cl.getApellido1() + " " + cl.getNombre1() + " - " + CursorUtils.getString(c, Contract.ContactoExt.COLUMN_CARGO)
+						+ " de " + getClienteIDServer(db, cl.getIdCliente(), false).getNombreCompleto());
+			else
+				cl.setNombreCompleto(CursorUtils.getString(c, Contract.ClientExt.COLUMN_NOMBRE_COMPLETO));
 			
-			ClienteDireccion cd = new ClienteDireccion();
-			cd.setDireccion(CursorUtils.getString(c,Contract.ClientExt.COLUMN_DIRECCION));
-			cd.setTelefono1(CursorUtils.getString(c,Contract.ClientExt.COLUMN_TELEFONO));
+			cl.setClienteDirecciones(ClienteDireccion.getClienteDirecciones(db, cl.getIdCliente(), false));
 			
 			
 			list.add(cl);

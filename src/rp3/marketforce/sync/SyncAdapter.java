@@ -3,6 +3,7 @@ package rp3.marketforce.sync;
 import rp3.configuration.PreferenceManager;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
+import rp3.marketforce.ServerActivity;
 import rp3.marketforce.cliente.CrearClienteFragment;
 import rp3.marketforce.ruta.CrearVisitaFragment;
 import rp3.marketforce.ruta.MotivoNoVisitaFragment;
@@ -29,6 +30,8 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 	public static String SYNC_TYPE_REPROGRAMAR_AGENDA = "reprogramar";
 	public static String SYNC_TYPE_INSERTAR_AGENDA = "insertarAgenda";
 	public static String SYNC_TYPE_AGENDA_NO_VISITA = "agendaNoVisita";
+	public static String SYNC_TYPE_SOLO_RESUMEN = "resumen";
+	public static String SYNC_TYPE_SERVER_CODE = "servidor";
 	public static String SYNC_TYPE_BATCH = "batch";
 	public static String SYNC_TYPE_TODO = "todo";
 	
@@ -106,6 +109,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 					result = rp3.marketforce.sync.TipoCliente.executeSync(db);				
 					addDefaultMessage(result);
 				}
+				
+				if(result == SYNC_EVENT_SUCCESS){
+					result = rp3.marketforce.sync.Agente.executeSyncParametros(db);				
+					addDefaultMessage(result);
+				}
 				/*
 				 * Se comenta carga de fotos ya que se la hara mediante un lazy loader.
 				 * Para esto se cargara tambien en el modelo Cliente la url de la foto para poder cargarla
@@ -129,7 +137,19 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 				}catch(Exception e){
 					Log.e("Sync Adapter", e.getMessage());
 				}
-			}else if(syncType.equals(SYNC_TYPE_CLIENTE_UPDATE)){
+			}
+			else if(syncType.equals(SYNC_TYPE_SERVER_CODE)){
+				String code = extras.getString(ServerActivity.SERVER_CODE);
+				result = Server.executeSync(code);
+				addDefaultMessage(result);
+			}
+			else if(syncType.equals(SYNC_TYPE_CLIENTE_UPDATE)){
+				long id = extras.getLong(ClienteActualizacion.ARG_CLIENTE_ID);
+				result = ClienteActualizacion.executeSync(db, id);
+				addDefaultMessage(result);
+			}
+			
+			else if(syncType.equals(SYNC_TYPE_SOLO_RESUMEN)){
 				long id = extras.getLong(ClienteActualizacion.ARG_CLIENTE_ID);
 				result = ClienteActualizacion.executeSync(db, id);
 				addDefaultMessage(result);

@@ -19,6 +19,7 @@ import android.widget.ImageButton;
 import rp3.app.BaseFragment;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
+import rp3.marketforce.models.Cliente;
 import rp3.marketforce.utils.Utils;
 
 public class ObservacionesFragment extends BaseFragment {
@@ -45,6 +46,10 @@ public class ObservacionesFragment extends BaseFragment {
 		fragment.setArguments(arguments);
 		return fragment;
 	}
+	
+	public interface ObservacionesFragmentListener {
+        public void onResumir();
+    }
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,6 +80,7 @@ public class ObservacionesFragment extends BaseFragment {
 				agenda.setObservaciones(getTextViewString(R.id.obs_text));
 				Agenda.update(getDataBase(), agenda);
 				closed = true;
+				getParentFragment().onResume();
 				dismiss();
 			}
 		});

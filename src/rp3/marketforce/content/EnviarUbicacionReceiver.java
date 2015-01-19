@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Random;
 
 import rp3.app.BaseActivity;
+import rp3.configuration.PreferenceManager;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
 import rp3.marketforce.models.Ubicacion;
@@ -23,7 +24,7 @@ import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 import android.widget.Toast;
 
-public class EnviarUbicacionReceiver extends WakefulBroadcastReceiver    {
+public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 
 	@Override
 	public void onReceive(final Context context, Intent intent) {			
@@ -36,15 +37,24 @@ public class EnviarUbicacionReceiver extends WakefulBroadcastReceiver    {
 		//String[] tiempoLimite = horaLimite.split("H");
 		try
 		{
+			if(context == null)
+				Log.e("RP3 Marketforce", "Context is null");
+			else
+				Log.e("RP3 Marketforce", "Context is ok");
 			Calendar calendarCurrent = Calendar.getInstance();
 			calendarCurrent.setTimeInMillis(System.currentTimeMillis());
 			
-			Calendar calendarLimit = Calendar.getInstance();
-			calendarLimit.setTimeInMillis(System.currentTimeMillis());
-			calendarLimit.set(Calendar.HOUR_OF_DAY, 20);
-			calendarLimit.set(Calendar.MINUTE, 30);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTimeInMillis(System.currentTimeMillis());
+			Calendar cal = Calendar.getInstance();
+			cal.setTimeInMillis(PreferenceManager.getInt(Contants.KEY_ALARMA_FIN));
+			calendar.set(Calendar.HOUR_OF_DAY, cal.get(Calendar.HOUR_OF_DAY));
+			calendar.set(Calendar.MINUTE, cal.get(Calendar.MINUTE));
 			
-			if(calendarCurrent.getTimeInMillis() < calendarLimit.getTimeInMillis())
+			String prueba = cal.getTime().toString();
+			String prueba2 = calendar.getTime().toString();
+			
+			if(calendarCurrent.getTimeInMillis() < calendar.getTimeInMillis())
 			{
 				LocationUtils.getLocation(context, new OnLocationResultListener() {
 					
@@ -128,7 +138,15 @@ public class EnviarUbicacionReceiver extends WakefulBroadcastReceiver    {
 		calendar.add(Calendar.DATE, 1);
 		calendar.set(Calendar.HOUR_OF_DAY, 8);
 		calendar.set(Calendar.MINUTE, 30);
+		Calendar cal = Calendar.getInstance();
+		int time = PreferenceManager.getInt(Contants.KEY_ALARMA_INICIO);
+		cal.setTimeInMillis(time);
+		calendar.set(Calendar.HOUR_OF_DAY, cal.get(Calendar.HOUR_OF_DAY));
+		calendar.set(Calendar.MINUTE, cal.get(Calendar.MINUTE));
 				
+		String prueba = cal.getTime().toString();
+		String prueba2 = calendar.getTime().toString();
+		
 		Random r = new Random();
 		int i1 = r.nextInt(5);
 		
@@ -136,7 +154,7 @@ public class EnviarUbicacionReceiver extends WakefulBroadcastReceiver    {
 		//am.cancel(pi); // cancel any existing alarms
 		am.setInexactRepeating(AlarmManager.RTC_WAKEUP,
 				calendar.getTimeInMillis() + (i1 * 1000 * 5),
-				1000 * 60 * 10, pi);
+				1000 * 60 * PreferenceManager.getInt(Contants.KEY_ALARMA_INTERVALO), pi);
 	}
 	
 }

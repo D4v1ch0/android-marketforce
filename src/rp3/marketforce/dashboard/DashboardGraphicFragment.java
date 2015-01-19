@@ -61,6 +61,13 @@ public class DashboardGraphicFragment extends BaseFragment {
 	}
 	
 	@Override
+	public void onResume() {
+		super.onResume();
+		if(pagerAdapter != null)
+			pagerAdapter.notifyDataSetChanged();
+	}
+	
+	@Override
 	public void onStart() {		
 		super.onStart();
 			
@@ -71,28 +78,11 @@ public class DashboardGraphicFragment extends BaseFragment {
 	    	titles = new ArrayList<String>();
 	    	visitas = new ArrayList<Integer>();
 	    	PagerDetalles = (ViewPager) getRootView().findViewById(R.id.dashboard_graphics_pager);
-	    	tabStrip = (PagerTabStrip) getRootView().findViewById(R.id.pager_header);
-	    	tabStrip.setTabIndicatorColor(getResources().getColor(R.color.color_text_sky_blue));
 	    	pagerAdapter = new DetailsPageAdapter();
 	    	pagerAdapter.addView(createGraphics(false));
 	    	pagerAdapter.addView(createGraphics(true));
 	    	pagerAdapter.setTitles(titles.toArray(new String[]{}));
-	    	PagerDetalles.setAdapter(pagerAdapter);	    	
-	    	PagerDetalles.setOnPageChangeListener(new OnPageChangeListener() {
-				
-				@Override
-				public void onPageSelected(int arg0) {	
-				}
-				
-				@Override
-				public void onPageScrolled(int arg0, float arg1, int arg2) {
-					((TextView)getRootView().findViewById(R.id.grupo_total_visitas)).setText(visitas.get(arg0) + " Visitas");
-				}
-				
-				@Override
-				public void onPageScrollStateChanged(int arg0) {	
-				}
-			});    	
+	    	PagerDetalles.setAdapter(pagerAdapter);	    	   	
 	    	PagerDetalles.setCurrentItem(0);
 	 }
 	 
@@ -155,7 +145,7 @@ public class DashboardGraphicFragment extends BaseFragment {
 	 	    , new GraphViewData(2, no_visitado)
 	 	    , new GraphViewData(3, pendientes)
 	 	});
-	 	visitas.add(visitados + no_visitado + pendientes);
+	 	((TextView) parent.findViewById(R.id.grupo_total_visitas)).setText((visitados + no_visitado + pendientes) + " Visitas");
 	 	
 			mayor = Math.max(visitados, no_visitado);
 			mayor = Math.max(pendientes, mayor);
@@ -176,11 +166,11 @@ public class DashboardGraphicFragment extends BaseFragment {
 	 	if(resumen)
 	 	{
 	 		SimpleDateFormat format1 = new SimpleDateFormat("dd/MM");
-	 		titles.add((String.format(getString(R.string.label_desde_graph), format1.format(Convert.getDateFromTicks(time_inicio)))));
+	 		((TextView) parent.findViewById(R.id.title_pager)).setText((String.format(getString(R.string.label_desde_graph), format1.format(Convert.getDateFromTicks(time_inicio)))));
 	 	}
 	 	else
 	 	{
-	 		titles.add(getString(R.string.label_hoy));
+	 		((TextView) parent.findViewById(R.id.title_pager)).setText(R.string.label_hoy);
 	 	}
 	 	interim.setHorizontalLabels(new String[]{ getString(R.string.abreviatura_visitado), getString(R.string.abreviatura_no_visitado), getString(R.string.abreviatura_pendiente)});
 	 	interim.setManualYAxisBounds(tope, 0);

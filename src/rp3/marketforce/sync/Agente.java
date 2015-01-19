@@ -32,6 +32,7 @@ public class Agente {
 				PreferenceManager.setValue(Contants.KEY_ES_SUPERVISOR, jObject.getBoolean(Contants.KEY_ES_SUPERVISOR));
 				PreferenceManager.setValue(Contants.KEY_ES_AGENTE, jObject.getBoolean(Contants.KEY_ES_AGENTE));
 				PreferenceManager.setValue(Contants.KEY_ES_ADMINISTRADOR, jObject.getBoolean(Contants.KEY_ES_ADMINISTRADOR));
+				PreferenceManager.setValue(Contants.KEY_CARGO, jObject.getString(Contants.KEY_CARGO));
 			} catch (HttpResponseException e) {
 				if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
 					return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
@@ -73,6 +74,35 @@ public class Agente {
 					resumen.setPendientes(jObject.getInt("Proximos"));
 					AgenteResumen.insert(db, resumen);
 				}
+			} catch (HttpResponseException e) {
+				if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+					return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+				return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+			} catch (Exception e) {
+				return SyncAdapter.SYNC_EVENT_ERROR;
+			}
+			
+		}finally{
+			webService.close();
+		}
+		
+		return SyncAdapter.SYNC_EVENT_SUCCESS;		
+	}
+	
+	public static int executeSyncParametros(DataBase db){
+		WebService webService = new WebService("MartketForce","GetParametros");			
+			
+		try
+		{			
+			webService.addCurrentAuthToken();
+			
+			try {
+				webService.invokeWebService();
+				JSONObject jObject = webService.getJSONObjectResponse();
+				PreferenceManager.setValue(Contants.KEY_ALARMA_INICIO, jObject.getInt(Contants.KEY_ALARMA_INICIO));
+				PreferenceManager.setValue(Contants.KEY_ALARMA_FIN, jObject.getInt(Contants.KEY_ALARMA_FIN));
+				PreferenceManager.setValue(Contants.KEY_ALARMA_INTERVALO, jObject.getInt(Contants.KEY_ALARMA_INTERVALO));
+				PreferenceManager.setValue(Contants.KEY_PREFIJO_TELEFONICO, jObject.getString(Contants.KEY_PREFIJO_TELEFONICO));
 			} catch (HttpResponseException e) {
 				if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
 					return SyncAdapter.SYNC_EVENT_AUTH_ERROR;

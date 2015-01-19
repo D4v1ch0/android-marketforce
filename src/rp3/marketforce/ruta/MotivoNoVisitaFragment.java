@@ -79,6 +79,7 @@ public class MotivoNoVisitaFragment extends BaseFragment {
 				bundle.putInt(ARG_AGENDA, (int) idAgenda);
 				requestSync(bundle);
 				saveListener.Refresh();
+				getParentFragment().onResume();
 				dismiss();
 				
 			}});

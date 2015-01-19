@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -38,12 +39,17 @@ import android.graphics.Rect;
 import android.graphics.Paint.Align;
 import android.graphics.Paint.Style;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import rp3.app.BaseFragment;
+import rp3.maps.utils.SphericalUtil;
+import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.Ubicacion;
@@ -53,6 +59,9 @@ public class RecorridoFragment  extends BaseFragment {
 	private GoogleMap map;
 	private ArrayList<Marker> markers;
 	private static View view;
+	private Calendar cal;
+	private SimpleDateFormat format1;
+	private LatLng ult;
 
 	public static RecorridoFragment newInstance() {
 		RecorridoFragment fragment = new RecorridoFragment();
@@ -62,7 +71,7 @@ public class RecorridoFragment  extends BaseFragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		setContentView(R.layout.fragment_dashboard_map);
+		setContentView(R.layout.fragment_recorrido);
 		
 	}
 	@Override
@@ -79,10 +88,12 @@ public class RecorridoFragment  extends BaseFragment {
 	            parent.removeView(view);
 	    }
 	    try {
-	        view = inflater.inflate(R.layout.fragment_dashboard_map, container, false);
+	        view = inflater.inflate(R.layout.fragment_recorrido, container, false);
 	    } catch (InflateException e) {
 	        /* map is already there, just return view as it is */
 	    }
+	    format1 = new SimpleDateFormat("EEEE dd");
+	    cal = Calendar.getInstance();
 	    setMapa();
 	    return view;
 	}
@@ -95,31 +106,77 @@ public class RecorridoFragment  extends BaseFragment {
 	
 	private void setMapa()
 	{
-		map = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.dashboard_map)).getMap();
-
-    	Calendar cal = Calendar.getInstance();
+		ult = null;
+		map = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.recorrido_map)).getMap();
+		map.clear();
+		map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Contants.LATITUD, Contants.LONGITUD), Contants.ZOOM), 1, null);
+		
+		if(Calendar.getInstance().get(Calendar.DAY_OF_YEAR) - (cal.get(Calendar.DAY_OF_YEAR)) > 6)
+			view.findViewById(R.id.recorrido_anterior).setVisibility(View.GONE);
+		else
+			view.findViewById(R.id.recorrido_anterior).setVisibility(View.VISIBLE);
+		
+		if(Calendar.getInstance().get(Calendar.DAY_OF_YEAR) - (cal.get(Calendar.DAY_OF_YEAR)) <= 0)
+			view.findViewById(R.id.recorrido_siguiente).setVisibility(View.GONE);
+		else
+			view.findViewById(R.id.recorrido_siguiente).setVisibility(View.VISIBLE);
+		
+		((TextView)view.findViewById(R.id.recorrido_dia)).setText(format1.format(cal.getTime()).substring(0, 1).toUpperCase() + format1.format(cal.getTime()).substring(1));
+		view.findViewById(R.id.recorrido_siguiente).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				irSiguiente();
+			}});
+		
+		view.findViewById(R.id.recorrido_anterior).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				irAnterior();
+			}});
+    	
     	List<Ubicacion> list_ubicaciones = Ubicacion.getRecorrido(getDataBase(), cal);
     	markers = new ArrayList<Marker>();
     	
     	for(int i = 0; i < list_ubicaciones.size(); i ++)
 		{
+    		double distance = 16;
 			LatLng pos = new LatLng(list_ubicaciones.get(i).getLatitud(), list_ubicaciones.get(i).getLongitud());
 			
-			Marker mark = map.addMarker(new MarkerOptions().position(pos)
-					.icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.map_position, i + 1 + ""))));
-			mark.showInfoWindow();
-			markers.add(mark);			
+			if(ult != null)
+				distance = SphericalUtil.computeDistanceBetween(pos, ult);
+			else
+				ult = pos;
 			
-			map.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 12), 2000, null);
-			
-			if(i != 0)
+			if(distance > 15)
 			{
-				LatLng org = new LatLng(list_ubicaciones.get(i-1).getLatitud(), list_ubicaciones.get(i-1).getLongitud());
-				showRuta(org, pos);
+				Marker mark = map.addMarker(new MarkerOptions().position(pos)
+						.icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.map_position, i + 1 + ""))));
+				mark.showInfoWindow();
+				markers.add(mark);			
+				
+				map.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 12), 2000, null);
+				
+				if(i != 0)
+				{
+					LatLng org = new LatLng(list_ubicaciones.get(i-1).getLatitud(), list_ubicaciones.get(i-1).getLongitud());
+					showRuta(org, pos);
+				}
+				
+				ult = pos;
 			}
 		}
 	}
 	
+	protected void irSiguiente() {
+		cal.add(Calendar.DATE, 1);
+		setMapa();
+	}
+
+	protected void irAnterior() {
+		cal.add(Calendar.DATE, -1);
+		setMapa();
+	}
+
 	private void showRuta(LatLng source, LatLng dest)
 	{
 		final String url = makeURL(source.latitude, source.longitude, dest.latitude, dest.longitude);

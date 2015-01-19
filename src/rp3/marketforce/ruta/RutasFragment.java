@@ -1,7 +1,10 @@
 package rp3.marketforce.ruta;
 
 import rp3.app.BaseFragment;
+import rp3.marketforce.Contants;
 import rp3.marketforce.R;
+import rp3.marketforce.models.Agenda;
+import rp3.util.Screen;
 import rp3.widget.SlidingPaneLayout;
 import rp3.widget.SlidingPaneLayout.PanelSlideListener;
 import android.annotation.SuppressLint;
@@ -17,6 +20,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
+import android.widget.Toast;
 
 public class RutasFragment extends BaseFragment implements RutasListFragment.TransactionListFragmentListener, ContactsAgendaFragment.SaveContactsListener{
 
@@ -116,7 +120,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	@Override
 	public void onAfterCreateOptionsMenu(Menu menu) {			
   	 SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search_ruta));
-  	 if(slidingPane!=null){
+  	 if(slidingPane!=null && !Screen.isLargeLayoutSize(getActivity())){
 	  	 if(!slidingPane.isOpen())
 	  	 {
 	  		 searchView.setVisibility(View.GONE);
@@ -135,7 +139,6 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	  			 }
 	  		 }
 	  		 menu.removeItem(R.id.action_cambiar_contacto);
-	  		 menu.removeItem(R.id.action_observaciones);
 	  		 menu.removeItem(R.id.action_no_visita);
 	  	 }
   	 }
@@ -192,10 +195,17 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	    			startActivity(intent);
 	    			return true;
 	    		case R.id.action_ver_posicion:   
-	    			Intent intent2 = new Intent(getActivity(), MapaActivity.class);
-	    			intent2.putExtra(MapaActivity.ACTION_TYPE, MapaActivity.ACTION_POSICION);
-	    			intent2.putExtra(MapaActivity.ARG_AGENDA, selectedTransactionId);
-	    			startActivity(intent2);
+	    			if(selectedTransactionId != 0)
+	    			{
+		    			Intent intent2 = new Intent(getActivity(), MapaActivity.class);
+		    			intent2.putExtra(MapaActivity.ACTION_TYPE, MapaActivity.ACTION_POSICION);
+		    			intent2.putExtra(MapaActivity.ARG_AGENDA, selectedTransactionId);
+		    			startActivity(intent2);
+	    			}
+	    			else
+	    			{
+	    				Toast.makeText(getContext(), "Debe seleccionar una agenda.", Toast.LENGTH_LONG).show();
+	    			}
 	    			return true;
 	    		case R.id.action_ver_ruta:
 	    			Intent intent3 = new Intent(getActivity(), MapaActivity.class);
@@ -203,20 +213,42 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	    			startActivity(intent3);
 	    			return true;
 	    		case R.id.action_como_llegar:
-	    			Intent intent4 = new Intent(getActivity(), MapaActivity.class);
-	    			intent4.putExtra(MapaActivity.ACTION_TYPE, MapaActivity.ACTION_LLEGAR);
-	    			intent4.putExtra(MapaActivity.ARG_AGENDA, selectedTransactionId);
-	    			startActivity(intent4);
+	    			if(selectedTransactionId != 0)
+	    			{
+		    			Intent intent4 = new Intent(getActivity(), MapaActivity.class);
+		    			intent4.putExtra(MapaActivity.ACTION_TYPE, MapaActivity.ACTION_LLEGAR);
+		    			intent4.putExtra(MapaActivity.ARG_AGENDA, selectedTransactionId);
+		    			startActivity(intent4);
+	    			}
+	    			else
+	    			{
+	    				Toast.makeText(getContext(), R.string.warning_seleccionar_agenda, Toast.LENGTH_LONG).show();
+	    			}
 	    			return true;
 	    		case R.id.action_cambiar_contacto:
-	    			this.showDialogFragment(ContactsAgendaFragment.newInstance(selectedTransactionId), ContactsAgendaFragment.TAG);
-	    			return true;
-	    		case R.id.action_observaciones:
-	    			obsFragment = ObservacionesFragment.newInstance(selectedTransactionId);
-	    			this.showDialogFragment(obsFragment, "");
+	    			if(selectedTransactionId != 0)
+	    			{
+	    				if(!Agenda.getAgendaEstado(getDataBase(), selectedTransactionId).equalsIgnoreCase(Contants.ESTADO_NO_VISITADO))
+	    					this.showDialogFragment(ContactsAgendaFragment.newInstance(selectedTransactionId), ContactsAgendaFragment.TAG);
+	    				else
+	    					Toast.makeText(getContext(), R.string.warning_modificar_contacto_no_visitada, Toast.LENGTH_LONG).show();
+	    			}
+	    			else
+	    			{
+	    				Toast.makeText(getContext(), R.string.warning_seleccionar_agenda, Toast.LENGTH_LONG).show();
+	    			}
 	    			return true;
 	    		case R.id.action_no_visita:
-	    			this.showDialogFragment(MotivoNoVisitaFragment.newInstance(selectedTransactionId), MotivoNoVisitaFragment.TAG);
+	    			if(selectedTransactionId != 0)
+	    			{
+	    				if(Agenda.getAgendaEstado(getDataBase(), selectedTransactionId).equalsIgnoreCase(Contants.ESTADO_PENDIENTE) ||
+	    				   Agenda.getAgendaEstado(getDataBase(), selectedTransactionId).equalsIgnoreCase(Contants.ESTADO_REPROGRAMADO))
+	    					this.showDialogFragment(MotivoNoVisitaFragment.newInstance(selectedTransactionId), MotivoNoVisitaFragment.TAG);
+	    			}
+	    			else
+	    			{
+	    				Toast.makeText(getContext(), R.string.warning_seleccionar_agenda, Toast.LENGTH_LONG).show();
+	    			}
 	    			return true;
 	    	}
 	    	return super.onOptionsItemSelected(item);
@@ -226,7 +258,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		 if(requestCode == ObservacionesFragment.PHOTO_1 || requestCode == ObservacionesFragment.PHOTO_2 || requestCode == ObservacionesFragment.PHOTO_3)
 		 {
-			 obsFragment.onActivityResult(requestCode, resultCode, data);
+			 rutasDetailfragment.obsFragment.onActivityResult(requestCode, resultCode, data);
 		 }
 	}
 		

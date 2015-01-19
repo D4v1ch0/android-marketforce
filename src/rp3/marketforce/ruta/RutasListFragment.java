@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import com.applidium.headerlistview.HeaderListView;
-
 import rp3.data.MessageCollection;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
@@ -16,6 +14,7 @@ import rp3.marketforce.models.Agenda;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.util.Convert;
 import rp3.util.DateTime;
+import rp3.util.Screen;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -285,8 +284,16 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 		}
 		list_agenda = Agenda.getAgenda(getDataBase());
 		orderDate();
+		
 		if(list_agenda_in_adapter != null)
+		{
+			if(adapter == null)
+			{
+				adapter = new RutasListAdapter(getActivity(),list_agenda_in_adapter,transactionListFragmentCallback);
+				headerlist.setAdapter(adapter);
+			}
 			adapter.changeList(list_agenda_in_adapter);
+		}
 		paintDates();
 	}
 	
@@ -339,12 +346,8 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 				
 				if(adapter.isAction() && adapter.getItem(position).getNombreCompleto() != null)
 				{
+					
 					transactionListFragmentCallback.onTransactionSelected(list_agenda_in_adapter.get(position).getID());
-					view.setSelected(true);
-					view.setBackgroundResource(R.drawable.list_bckgrnd_selected);
-					if(lastItem != null)
-						lastItem.setBackgroundResource(R.drawable.list_bckgrnd);
-					lastItem = view;
 				}
 				
 				adapter.setAction(true);

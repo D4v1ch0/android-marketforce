@@ -27,9 +27,11 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.GeolocationPermissions;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -48,6 +50,7 @@ import rp3.content.SimpleDictionaryAdapter;
 import rp3.content.SimpleGeneralValueAdapter;
 import rp3.content.SimpleIdentifiableAdapter;
 import rp3.data.models.GeneralValue;
+import rp3.data.models.GeopoliticalStructure;
 import rp3.data.models.IdentificationType;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
@@ -97,6 +100,8 @@ public class CrearClienteFragment extends BaseFragment {
 	private ImageView ArrowInfo;
 	private ImageView ArrowCont;
 	private ImageView ArrowDir;
+	private List<GeopoliticalStructure> ciudades;
+	private List<String> ciudades_string;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -203,6 +208,16 @@ public class CrearClienteFragment extends BaseFragment {
 				cliDir.setTelefono1(((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_telefono1)).getText().toString());
 				cliDir.setTelefono2(((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_telefono2)).getText().toString());
 				cliDir.setReferencia(((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_referencia)).getText().toString());
+				cliDir.setCiudadDescripcion(((AutoCompleteTextView)listViewDirecciones.get(i).findViewById(R.id.cliente_ciudad)).getText().toString());
+				try
+				{
+					cliDir.setIdCiudad((int) ciudades.get(ciudades_string.indexOf(((AutoCompleteTextView)listViewDirecciones.get(i).findViewById(R.id.cliente_ciudad)).getText().toString())).getID());
+				}
+				catch(Exception ex)
+				{
+					Toast.makeText(getContext(), "Ingrese correctamente la ciudad en una de las direcciones ingresadas.", Toast.LENGTH_LONG).show();
+					return;
+				}
 				if(!((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_longitud)).getText().toString().equals(""))
 				{
 					cliDir.setLongitud(Double.parseDouble(((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_longitud)).getText().toString()));
@@ -270,6 +285,11 @@ public class CrearClienteFragment extends BaseFragment {
 		{
 		listViewDirecciones = new ArrayList<LinearLayout>();
 		listViewContactos = new ArrayList<LinearLayout>();
+		ciudades = GeopoliticalStructure.getGeopoliticalStructureByType(getDataBase(), 3);
+		ciudades_string = new ArrayList<String>();
+		
+		for(GeopoliticalStructure gs : ciudades)
+			ciudades_string.add(gs.getName());
 		
 		TabInfo = (ImageButton) getRootView().findViewById((R.id.detail_tab_info));
 		TabDirecciones = (ImageButton) getRootView().findViewById((R.id.detail_tab_direccion));
@@ -472,6 +492,7 @@ public class CrearClienteFragment extends BaseFragment {
 			((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_telefono1)).setText(cli.getClienteDirecciones().get(i).getTelefono1());
 			((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_telefono2)).setText(cli.getClienteDirecciones().get(i).getTelefono2());
 			((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_referencia)).setText(cli.getClienteDirecciones().get(i).getReferencia());
+			((AutoCompleteTextView)listViewDirecciones.get(i).findViewById(R.id.cliente_ciudad)).setText(cli.getClienteDirecciones().get(i).getCiudadDescripcion());
 			if(cli.getClienteDirecciones().get(i).getLongitud() != 0)
 			{
 				((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_longitud)).setText("" + cli.getClienteDirecciones().get(i).getLongitud());
@@ -562,8 +583,11 @@ public class CrearClienteFragment extends BaseFragment {
 				
 			}});
 		SimpleGeneralValueAdapter tipoDireccionAdapter = new SimpleGeneralValueAdapter(getContext(), getDataBase(), rp3.marketforce.Contants.GENERAL_TABLE_TIPO_DIRECCION);
-		
 		((Spinner) direccion.findViewById(R.id.cliente_tipo_direccion_spinner)).setAdapter(tipoDireccionAdapter);
+		
+		final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(),android.R.layout.simple_list_item_1,ciudades_string);
+		((AutoCompleteTextView)direccion.findViewById(R.id.cliente_ciudad)).setAdapter(adapter);
+		((AutoCompleteTextView)direccion.findViewById(R.id.cliente_ciudad)).setThreshold(1);
 		
 		DireccionContainer.addView(direccion);
 		listViewDirecciones.add(direccion);

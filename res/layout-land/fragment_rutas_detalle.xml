@@ -101,6 +101,7 @@
                 android:drawableLeft="@drawable/ic_phone"
                 android:drawablePadding="8dp"
                 android:gravity="center"
+                android:textColor="@drawable/text_feedback"
                 android:textSize="@dimen/text_medium_size"
                 android:textStyle="bold" />
 
@@ -114,6 +115,7 @@
                 android:ellipsize="end"
                 android:gravity="center"
                 android:singleLine="true"
+                android:textColor="@drawable/text_feedback"
                 android:textSize="@dimen/text_medium_size"
                 android:textStyle="bold" />
 
@@ -205,7 +207,7 @@
             android:visibility="gone" >
 
             <TextView
-                android:id="@+id/textView1"
+                android:id="@+id/recorrido_dia"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

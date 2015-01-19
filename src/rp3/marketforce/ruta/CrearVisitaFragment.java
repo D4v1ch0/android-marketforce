@@ -1,5 +1,6 @@
 package rp3.marketforce.ruta;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -20,6 +21,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.AutoCompleteTextView.OnDismissListener;
@@ -34,6 +36,7 @@ import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.AgendaTareaActividades;
 import rp3.marketforce.models.Cliente;
 import rp3.marketforce.models.ClienteDireccion;
+import rp3.marketforce.models.Contacto;
 import rp3.marketforce.models.Tarea;
 import rp3.marketforce.ruta.TareasFragment.EditTareasDialogListener;
 import rp3.marketforce.sync.SyncAdapter;
@@ -51,6 +54,12 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 	private DatePicker calendar;
 	private TimePicker desdePicker;
 	private TimePicker hastaPicker;
+	TimePicker timePicker;
+    private int TIME_PICKER_INTERVAL = 5;
+     NumberPicker minutePicker;
+     List<String> displayedValues;
+
+	protected boolean mIgnoreEvent;
 
 	public static CrearVisitaFragment newInstance() {
 		CrearVisitaFragment fragment = new CrearVisitaFragment();
@@ -69,12 +78,22 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 		calendar = (DatePicker) rootView.findViewById(R.id.reprogramar_ruta_calendario);
 	    desdePicker = (TimePicker) rootView.findViewById(R.id.reprogramar_visita_desde);
 	    hastaPicker = (TimePicker) rootView.findViewById(R.id.reprogramar_visita_hasta);
+	    
+	    setTimePickerInterval(desdePicker);
+	    setTimePickerInterval(hastaPicker);
+	    
+	    if(Calendar.getInstance().get(Calendar.MINUTE) > 30)
+	    	hastaPicker.setCurrentHour(desdePicker.getCurrentHour() + 1);
+	    else
+		    hastaPicker.setCurrentHour(desdePicker.getCurrentHour());
+	    
+	    hastaPicker.setCurrentMinute(desdePicker.getCurrentMinute() + 30);
 		
 	    Calendar cal = Calendar.getInstance();
 	    cal.set(Calendar.HOUR_OF_DAY, 0);
 	    calendar.setMinDate(cal.getTimeInMillis());
 	    
-		list_cliente = Cliente.getCliente(getDataBase());
+		list_cliente = Cliente.getClientAndContacts(getDataBase());
 		for(Cliente cli : list_cliente)
 		{
 			list_nombres.add(cli.getNombreCompleto().trim());
@@ -144,10 +163,10 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 				calFin.set(Calendar.YEAR, calendar.getYear());
 				
 				cal.set(Calendar.HOUR_OF_DAY, desdePicker.getCurrentHour());
-				cal.set(Calendar.MINUTE, desdePicker.getCurrentMinute());
+				cal.set(Calendar.MINUTE, desdePicker.getCurrentMinute() * TIME_PICKER_INTERVAL);
 				
 				calFin.set(Calendar.HOUR_OF_DAY, hastaPicker.getCurrentHour());
-				calFin.set(Calendar.MINUTE, hastaPicker.getCurrentMinute());
+				calFin.set(Calendar.MINUTE, hastaPicker.getCurrentMinute() * TIME_PICKER_INTERVAL);
 				
 				if(cal.getTime().getTime() > calFin.getTime().getTime())
 				{
@@ -158,7 +177,22 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 				agenda.setFechaInicio(cal.getTime());
 				agenda.setFechaFin(calFin.getTime());
 				
-				agenda.setCliente(list_cliente.get(list_nombres.indexOf(cliente_auto.getText().toString())));
+				if(list_nombres.indexOf(cliente_auto.getText().toString()) == -1)
+				{
+					Toast.makeText(getContext(), "Nombre de Cliente o Contacto incorrecto.", Toast.LENGTH_LONG).show();
+					return;
+				}
+				Cliente cli = list_cliente.get(list_nombres.indexOf(cliente_auto.getText().toString()));
+				if(cli.getTipoPersona().equalsIgnoreCase("C"))
+				{
+					Contacto cont = Contacto.getContactoId(getDataBase(), cli.getID());
+					agenda.setIdContacto((int) cont.getIdContacto());
+					agenda.set_idContacto(cli.getID());
+				}
+				if(cli.getIdCliente() == 0)
+					agenda.setCliente(Cliente.getClienteID(getDataBase(), cli.getID(), true));
+				else
+					agenda.setCliente(Cliente.getClienteIDServer(getDataBase(), cli.getIdCliente(), true));
 				agenda.setClienteDireccion(agenda.getCliente().getClienteDirecciones().get(getSpinnerSelectedPosition(R.id.crear_visita_direccion)));
 				agenda.setCiudad(agenda.getCliente().getClienteDireccionPrincipal().getCiudadDescripcion());
 				agenda.setDireccion(agenda.getCliente().getClienteDirecciones().get(getSpinnerSelectedPosition(R.id.crear_visita_direccion)).getDireccion());
@@ -175,8 +209,6 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 				agenda.setEnviado(false);
 				Agenda.insert(getDataBase(), agenda);
 				
-				
-				List<AgendaTarea> agendaTareas = new ArrayList<AgendaTarea>();
 				for(Tarea tarea : list_tareas)
 				{
 					AgendaTarea agendaTarea = new AgendaTarea();
@@ -218,8 +250,7 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if(savedInstanceState == null)
-			super.setContentView(R.layout.layout_crear_visita);
+		super.setContentView(R.layout.layout_crear_visita);
 	}
 
 
@@ -235,6 +266,32 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 	public void onFinishTareasDialog(List<Tarea> tareas) {
 		this.list_tareas = tareas;
 	}
+	
+	@SuppressLint("NewApi")
+    private void setTimePickerInterval(TimePicker timePicker) {
+         try {
+                Class<?> classForid = Class.forName("com.android.internal.R$id");
+               // Field timePickerField = classForid.getField("timePicker");  
+
+                Field field = classForid.getField("minute");
+                minutePicker = (NumberPicker) timePicker
+                        .findViewById(field.getInt(null));
+
+                minutePicker.setMinValue(0);
+                minutePicker.setMaxValue(11);
+                displayedValues = new ArrayList<String>();
+                for (int i = 0; i < 60; i += TIME_PICKER_INTERVAL) {
+                    displayedValues.add(String.format("%02d", i));
+                }
+                for (int i = 0; i < 60; i += TIME_PICKER_INTERVAL) {
+                    displayedValues.add(String.format("%02d", i));
+                }
+                minutePicker.setDisplayedValues(displayedValues
+                        .toArray(new String[0]));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+    }
 	
 	public String AgendaToJSON(Agenda agenda)
 	{

@@ -8,6 +8,7 @@ import rp3.marketforce.cliente.ClientListFragment.LoaderCliente;
 import rp3.marketforce.models.Cliente;
 import rp3.widget.SlidingPaneLayout;
 import rp3.widget.SlidingPaneLayout.PanelSlideListener;
+import android.R.anim;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.SearchManager;
@@ -96,11 +97,14 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
 			@Override
 			public void onPanelOpened(View panel) {
 				getActivity().invalidateOptionsMenu();
+				getActivity().getActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
 			}
 
 			@Override
 			public void onPanelClosed(View panel) {
 				getActivity().invalidateOptionsMenu();
+				getActivity().getActionBar().setHomeButtonEnabled(false);
+				getActivity().getActionBar().setHomeButtonEnabled(true);
 			}});
 		
 //		if(getChildFragmentManager().findFragmentById(R.id.transaction_detail) == null){			

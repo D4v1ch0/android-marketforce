@@ -9,6 +9,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import rp3.marketforce.R;
+import rp3.util.BitmapUtils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -76,6 +77,32 @@ public class DrawableManager {
             return ctx.getResources().getDrawable(R.drawable.user);
         }
     }
+    
+    public Bitmap fetchBitmap(String urlString) {
+        if (mMemoryCache.get(urlString) != null) {
+            return mMemoryCache.get(urlString);
+        }
+
+        Log.d(this.getClass().getSimpleName(), "image url:" + urlString);
+        try {
+            InputStream is = fetch(urlString);
+            Bitmap bitmap = BitmapFactory.decodeStream(is);
+
+            if (bitmap != null) {
+            	mMemoryCache.put(urlString, bitmap);
+            } else {
+              Log.w(this.getClass().getSimpleName(), "could not get thumbnail");
+            }
+
+			return bitmap;
+        } catch (MalformedURLException e) {
+            Log.e(this.getClass().getSimpleName(), "fetchDrawable failed", e);
+            return null;
+        } catch (IOException e) {
+            Log.e(this.getClass().getSimpleName(), "fetchDrawable failed", e);
+            return null;
+        }
+    }
 
     public void fetchDrawableOnThread(final String urlString, final ImageView imageView) {
     	ctx = imageView.getContext();
@@ -97,6 +124,41 @@ public class DrawableManager {
             	public void run() {
             		//	TODO : set imageView to a "pending" image
                 	Drawable drawable = fetchDrawable(urlString);
+                	Message message = handler.obtainMessage(1, drawable);
+                	handler.sendMessage(message);
+            	}
+        	};
+        	thread.start();
+        }
+    }
+    
+    public void fetchDrawableOnThreadRounded(final String urlString, final ImageView imageView) {
+    	ctx = imageView.getContext();
+        if (mMemoryCache.get(urlString) != null) {
+        	Bitmap bitmap = mMemoryCache.get(urlString);
+            bitmap = BitmapUtils.getRoundedRectBitmap(mMemoryCache.get(urlString), bitmap.getHeight() );
+            imageView.setImageBitmap(bitmap);
+        }
+        else
+        {
+
+        	final Handler handler = new Handler() {
+            	@Override
+            	public void handleMessage(Message message) {
+                	Bitmap bitmap = (Bitmap) message.obj;
+                	if(bitmap != null)
+                	{
+                		bitmap = BitmapUtils.getRoundedRectBitmap(mMemoryCache.get(urlString), bitmap.getHeight());
+                		imageView.setImageBitmap(bitmap);
+                	}
+            	}
+        	};
+
+        	Thread thread = new Thread() {
+            	@Override
+            	public void run() {
+            		//	TODO : set imageView to a "pending" image
+                	Bitmap drawable = fetchBitmap(urlString);
                 	Message message = handler.obtainMessage(1, drawable);
                 	handler.sendMessage(message);
             	}

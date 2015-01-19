@@ -365,8 +365,10 @@
         FROM tbContacto
         JOIN tbContactoExt
         ON tbContacto._id = tbContactoExt.docid
+        JOIN tbCliente
+        ON tbCliente.IdCliente = tbContacto.IdCliente
         JOIN tbClienteExt
-    	ON tbContacto.IdCliente = tbClienteExt.docid
+    	ON tbCliente._id = tbClienteExt.docid
         WHERE tbContacto._id = ?
         ORDER BY  tbContactoExt.Apellido
      </statement>
@@ -388,8 +390,10 @@
         FROM tbContacto
         JOIN tbContactoExt
         ON tbContacto._id = tbContactoExt.docid
+        JOIN tbCliente
+        ON tbCliente.IdCliente = tbContacto.IdCliente
         JOIN tbClienteExt
-    	ON tbContacto.IdCliente = tbClienteExt.docid
+    	ON tbCliente._id = tbClienteExt.docid
         WHERE tbContacto.IdContacto = ? AND tbContacto.IdCliente = ?
         ORDER BY  tbContactoExt.Apellido
      </statement>
@@ -397,26 +401,32 @@
      <statement name="ClientesAndContacts">
         SELECT 
         tbCliente._id AS _id,
+        tbCliente.IdCliente AS IdCliente,
         tbCliente.TipoPersona,
         tbClienteExt.Nombre1,
        	tbClienteExt.Apellido1 ,
        	tbClienteExt.Identificacion ,
        	tbClienteExt.CorreoElectronico,
        	tbClienteExt.Direccion,
-       	tbClienteExt.Telefono
+       	tbClienteExt.Telefono,
+       	tbClienteExt.NombreCompleto,
+       	'' AS Cargo
        	FROM tbClienteExt       	 
        	INNER JOIN tbCliente 
        	ON tbCliente._id = tbClienteExt.docid       	 
         UNION ALL
         SELECT  
         tbContacto._id, 
+        tbContacto.IdCliente,
         'C' AS TipoPersona,
         tbContactoExt.Nombre AS Nombre1,
         tbContactoExt.Apellido AS Apellido1,
         '' AS Identificacion,
         tbContactoExt.Correo AS CorreoElectronico,
         tbClienteDireccion.Direccion AS Direccion,
-        tbContactoExt.Telefono1 AS Telefono
+        tbContactoExt.Telefono1 AS Telefono,
+        '' AS NombreCompleto,
+        tbContactoExt.Cargo AS Cargo
         FROM tbContactoExt
         INNER JOIN tbContacto
         ON tbContacto._id = tbContactoExt.docid

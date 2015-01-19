@@ -95,14 +95,15 @@ public class MapaActivity extends BaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
-	    setTitle("Mapa");
+	    setTitle("Ruta");
 	
 	    ctx = this;
 	    DManager = new DrawableManager();
 	    setContentView(R.layout.layout_map_rutas);
+	    setHomeAsUpEnabled(true, true);
 	    map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
 	        .getMap();
-	    
+	    map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Contants.LATITUD, Contants.LONGITUD), Contants.ZOOM), 1, null);
 	    map.getUiSettings().setZoomControlsEnabled(false);
 	    
 	    expand = (ImageButton) findViewById(R.id.map_expand);
@@ -217,7 +218,7 @@ public class MapaActivity extends BaseActivity {
 	
 	@Override
 	public void onDailogDatePickerChange(int id, Calendar c) {
-		c.set(Calendar.HOUR, 0);
+		c.set(Calendar.HOUR_OF_DAY, 0);
 		c.set(Calendar.MINUTE, 0);
 		c.set(Calendar.SECOND, 0);
 		map.clear();

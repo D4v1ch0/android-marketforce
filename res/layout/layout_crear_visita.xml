@@ -62,23 +62,6 @@
                     android:layout_height="wrap_content" />
 
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" >
-
-                <Button
-                    android:id="@+id/crear_visita_conf_tarea"
-                    style="@style/Widget.Button.Theme"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:background="@color/nav_item_divider"
-                    android:text="@string/label_conf_tareas"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
             
             <LinearLayout
             android:layout_width="match_parent"
@@ -185,7 +168,24 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <Button
+                    android:id="@+id/crear_visita_conf_tarea"
+                    style="@style/Widget.Button.Theme"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:background="@color/nav_item_divider"
+                    android:text="@string/label_conf_tareas"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp" >
 
                 <Button
                     android:id="@+id/actividad_cancelar"

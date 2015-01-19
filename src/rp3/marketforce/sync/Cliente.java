@@ -194,6 +194,7 @@ public class Cliente {
 					jObjectDir.put("Latitud", cl.getClienteDirecciones().get(i).getLatitud());
 					jObjectDir.put("Longitud", cl.getClienteDirecciones().get(i).getLongitud());
 					jObjectDir.put("Referencia", cl.getClienteDirecciones().get(i).getReferencia());
+					jObjectDir.put("IdCiudad", cl.getClienteDirecciones().get(i).getIdCiudad());
 					jObjectDir.put("Telefono1", cl.getClienteDirecciones().get(i).getTelefono1());
 					jObjectDir.put("Telefono2", cl.getClienteDirecciones().get(i).getTelefono2());
 					jObjectDir.put("TipoDireccion", cl.getClienteDirecciones().get(i).getTipoDireccion());
@@ -560,6 +561,7 @@ public class Cliente {
 						jObjectDir.put("Latitud", cl.getClienteDirecciones().get(i).getLatitud());
 						jObjectDir.put("Longitud", cl.getClienteDirecciones().get(i).getLongitud());
 						jObjectDir.put("Referencia", cl.getClienteDirecciones().get(i).getReferencia());
+						jObjectDir.put("IdCiudad", cl.getClienteDirecciones().get(i).getIdCiudad());
 						jObjectDir.put("Telefono1", cl.getClienteDirecciones().get(i).getTelefono1());
 						jObjectDir.put("Telefono2", cl.getClienteDirecciones().get(i).getTelefono2());
 						jObjectDir.put("TipoDireccion", cl.getClienteDirecciones().get(i).getTipoDireccion());
@@ -702,6 +704,7 @@ public class Cliente {
 						jObjectDir.put("Latitud", cl.getClienteDirecciones().get(i).getLatitud());
 						jObjectDir.put("Longitud", cl.getClienteDirecciones().get(i).getLongitud());
 						jObjectDir.put("Referencia", cl.getClienteDirecciones().get(i).getReferencia());
+						jObjectDir.put("IdCiudad", cl.getClienteDirecciones().get(i).getIdCiudad());
 						jObjectDir.put("Telefono1", cl.getClienteDirecciones().get(i).getTelefono1());
 						jObjectDir.put("Telefono2", cl.getClienteDirecciones().get(i).getTelefono2());
 						jObjectDir.put("TipoDireccion", cl.getClienteDirecciones().get(i).getTipoDireccion());

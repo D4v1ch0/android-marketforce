@@ -2,17 +2,11 @@ package rp3.marketforce.utils;
 
 import java.util.ArrayList;
 
-import rp3.marketforce.MainActivity;
 import rp3.widget.ViewPager;
 
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.TextView;
 
 public class DetailsPageAdapter extends PagerAdapter {
 

@@ -39,6 +39,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import rp3.app.BaseFragment;
+import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
 
@@ -92,6 +93,7 @@ public class DashboardMapFragment extends BaseFragment{
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
     	super.onFragmentCreateView(rootView, savedInstanceState);
     	map = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.dashboard_map)).getMap();
+    	map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Contants.LATITUD, Contants.LONGITUD), Contants.ZOOM), 1, null);
     	
     	Calendar cal = Calendar.getInstance();
     	List<Agenda> list_agendas = Agenda.getRutaDia(getDataBase(), Calendar.getInstance());

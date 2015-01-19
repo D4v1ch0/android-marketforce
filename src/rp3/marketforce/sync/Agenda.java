@@ -244,9 +244,7 @@ public class Agenda {
 		{
 			jObject.put("IdAgenda", agendaUpload.getIdAgenda());
 			jObject.put("IdRuta", agendaUpload.getIdRuta());
-			//jObject.put("IdClienteContacto", agendaUpload.getIdContacto());
 			jObject.put("EstadoAgenda", agendaUpload.getEstadoAgenda());
-			//jObject.put("IdCliente", agendaUpload.getIdCliente());
 			jObject.put("FechaInicioTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaInicio()));
 			jObject.put("FechaFinTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaFin()));
 			

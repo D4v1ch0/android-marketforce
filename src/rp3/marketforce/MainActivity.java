@@ -45,6 +45,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -83,10 +84,10 @@ public class MainActivity extends rp3.app.NavActivity{
 		
 //		Session.Start(this);
 		
-		extractDatabase();
+		//extractDatabase();
 		
-		this.setNavHeaderTitle(Session.getUser().getLogonName());
-		this.setNavHeaderSubtitle("RP3 Retail");
+		this.setNavHeaderTitle(Session.getUser().getFullName());
+		this.setNavHeaderSubtitle(PreferenceManager.getString(Contants.KEY_CARGO));
 		showNavHeader(true);
 		setNavHeaderIcon(getResources().getDrawable(R.drawable.ic_user_new));
 		if(savedInstanceState == null){
@@ -110,7 +111,7 @@ public class MainActivity extends rp3.app.NavActivity{
 				@Override
 				public void onPanelOpened(View panel) {
 					lastTitle = getTitle().toString();
-					setTitle("MARKET FORCE");
+					setTitle("RP3 Market Force");
 				}
 
 				@Override
@@ -136,7 +137,7 @@ public class MainActivity extends rp3.app.NavActivity{
 	
 				public void onDrawerOpened(View drawerView) {
 					lastTitle = getActionBar().getTitle().toString();
-					getActionBar().setTitle("MARKET FORCE");
+					getActionBar().setTitle("RP3 Market Force");
 					// calling onPrepareOptionsMenu() to hide action bar icons
 					invalidateOptionsMenu();
 				}
@@ -169,7 +170,8 @@ public class MainActivity extends rp3.app.NavActivity{
 		settingsGroup.addChildItem(cerrarsesion);
 		
 		navItems.add(dashboard);
-		navItems.add(rutas);
+		if(PreferenceManager.getInt(Contants.KEY_IDRUTA) != 0)
+			navItems.add(rutas);
 		navItems.add(clientes);
 		navItems.add(recorrido);
 		if(PreferenceManager.getBoolean(Contants.KEY_ES_SUPERVISOR))
@@ -349,6 +351,12 @@ public class MainActivity extends rp3.app.NavActivity{
 				}
             }
         }).start();
+    }
+    
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+    	super.onConfigurationChanged(newConfig);
+    	getActionBar().setTitle(lastTitle);
     }
     
     private void pushNotification(Context ctx, Agenda agd, String message)

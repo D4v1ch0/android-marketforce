@@ -23,6 +23,8 @@ import android.widget.TextView;
 import android.widget.ListView;
 
 public class DashboardAgendaFragment extends BaseFragment {
+	
+	DashboardAgendaAdapter adapter;
 
 	public static DashboardAgendaFragment newInstance() {
 		DashboardAgendaFragment fragment = new DashboardAgendaFragment();
@@ -43,6 +45,13 @@ public class DashboardAgendaFragment extends BaseFragment {
 	}
 	
 	@Override
+	public void onResume() {
+		super.onResume();
+		if(adapter != null )
+			adapter.notifyDataSetChanged();
+	}
+	
+	@Override
 	public void onStart() {		
 		super.onStart();
 			
@@ -54,7 +63,10 @@ public class DashboardAgendaFragment extends BaseFragment {
     	DrawableManager DManager = new DrawableManager();
     	
     	Calendar cal = Calendar.getInstance();
-    	List<Agenda> list_agenda = Agenda.getRutaDia(getDataBase(), Calendar.getInstance());
+    	cal.set(Calendar.HOUR_OF_DAY, 0);
+    	cal.set(Calendar.MINUTE, 0);
+    	cal.set(Calendar.SECOND, 0);
+    	List<Agenda> list_agenda = Agenda.getRutaDiaDashboard(getDataBase(), cal);
     	
     	if(((ListView) rootView.findViewById(R.id.dashboard_agenda_list)) != null)
     	{
@@ -70,7 +82,7 @@ public class DashboardAgendaFragment extends BaseFragment {
 	    		((LinearLayout) rootView).addView(empty);
 	    	}
 	    	
-	    	DashboardAgendaAdapter adapter = new DashboardAgendaAdapter(getActivity(), list_agenda);
+	    	adapter = new DashboardAgendaAdapter(getActivity(), list_agenda);
 	    	
 	    	((ListView) rootView.findViewById(R.id.dashboard_agenda_list)).setAdapter(adapter);
 	    	((ListView) rootView.findViewById(R.id.dashboard_agenda_list)).setEmptyView(empty);

@@ -55,9 +55,19 @@
                     <webMethod>GET</webMethod>
                 </method>
                 <method>
+                    <name>GetServer</name>
+                    <action>application/getclient?applicationid=@applicationid&amp;validationCode=@validationCode</action>
+                    <webMethod>GET</webMethod>
+                </method>
+                <method>
                     <name>CreateCliente</name>
                     <action>cliente/create</action>
                     <webMethod>POST</webMethod>
+                </method>
+                <method>
+                    <name>GetParametros</name>
+                    <action>parametro/getall</action>
+                    <webMethod>GET</webMethod>
                 </method>
                 <method>
                     <name>SetFotos</name>

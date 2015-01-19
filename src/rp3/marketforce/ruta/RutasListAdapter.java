@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.applidium.headerlistview.SectionAdapter;
-
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
@@ -113,7 +111,7 @@ public class RutasListAdapter extends BaseAdapter{
 			if(agd.getClienteDireccion() != null)
 				((TextView) convertView.findViewById(R.id.textView_address)).setText(""+agd.getClienteDireccion().getDireccion());				
 			
-			convertView.setBackgroundResource(R.drawable.border_bottom);
+			//convertView.setBackgroundResource(R.drawable.border_bottom);
 		}
 		return convertView;
 	}

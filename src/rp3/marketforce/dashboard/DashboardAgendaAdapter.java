@@ -100,15 +100,20 @@ public class DashboardAgendaAdapter extends BaseAdapter{
 		cal_init.setTime(agd.getFechaInicio());
 		long time_now = cal.getTimeInMillis();
 		long diff = cal_init.getTimeInMillis() - cal.getTimeInMillis();
+		
+		int horas = (int) (diff / (1000*60*60));
+		int restante = (int) (diff / (1000*60));
+		int minutos =  restante - (horas * 60);
 		if(diff < 0)
 		{
-			((TextView) convertView.findViewById(R.id.dashboard_agenda_tiempo)).setText("");
+			if(horas != 0)
+				((TextView) convertView.findViewById(R.id.dashboard_agenda_tiempo)).setText("Hace " + Math.abs(horas) + " horas y " + Math.abs(minutos) + " minutos.");
+			else
+				((TextView) convertView.findViewById(R.id.dashboard_agenda_tiempo)).setText("Hace " + Math.abs(minutos) + " minutos.");
+			((TextView) convertView.findViewById(R.id.dashboard_agenda_tiempo)).setTextColor(ctx.getResources().getColor(R.color.color_unvisited));
 		}
 		else
 		{
-			int horas = (int) (diff / (1000*60*60));
-			int restante = (int) (diff / (1000*60));
-			int minutos =  restante - (horas * 60);
 			if(horas != 0)
 				((TextView) convertView.findViewById(R.id.dashboard_agenda_tiempo)).setText("Faltan " + horas +  " horas con " + minutos +  " minutos.");
 			else

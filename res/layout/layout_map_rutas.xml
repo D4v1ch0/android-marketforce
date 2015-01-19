@@ -94,7 +94,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_gravity="center_horizontal"
-                    android:layout_weight="1"
+                    android:layout_weight="0.5"
                     android:clickable="true"
                     android:drawableLeft="@drawable/ic_phone"
                     android:drawablePadding="5dp"
@@ -102,13 +102,14 @@
                     android:onClick="CallPhone"
                     android:text="Medium Text"
                     android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@drawable/text_feedback"
                     android:textSize="@dimen/text_small_size" />
 
                 <TextView
                     android:id="@+id/map_mail"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_weight="0.5"
                     android:clickable="true"
                     android:drawableLeft="@drawable/ic_email"
                     android:drawablePadding="5dp"
@@ -116,6 +117,7 @@
                     android:onClick="SendEmail"
                     android:text="Medium Text"
                     android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@drawable/text_feedback"
                     android:textSize="@dimen/text_small_size" />
 
             </LinearLayout>

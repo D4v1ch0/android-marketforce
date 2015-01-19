@@ -417,6 +417,9 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 		
         String query = QueryDir.getQuery( Contract.Agenda.QUERY_AGENDA_SEMANAL );
 		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
 		
 		Cursor c = db.rawQuery(query, Convert.getTicksFromDate(cal.getTime()));
 		
@@ -608,6 +611,20 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 		return agd;
 	}
 	
+	public static String getAgendaEstado(DataBase db, long id){
+		
+		Cursor c = db.query(Contract.Agenda.TABLE_NAME, new String[] {Contract.Agenda._ID, Contract.Agenda.COLUMN_AGENDA_ID,
+				Contract.Agenda.COLUMN_ESTADO_AGENDA}, 
+				Contract.Agenda._ID + " = ? ", id);
+		
+		String estado = "";
+		if(c.moveToFirst())
+		{
+			estado = CursorUtils.getString(c, Contract.Agenda.COLUMN_ESTADO_AGENDA);
+		}
+		return estado;
+	}
+	
 	public static List<Agenda> getAgendaClienteInterno(DataBase db, long id){
 		
 		Cursor c = db.query(Contract.Agenda.TABLE_NAME, new String[] {Contract.Agenda._ID, Contract.Agenda.COLUMN_AGENDA_ID, Contract.Agenda.COLUMN_CLIENTE_ID,
@@ -794,7 +811,56 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 				Contract.Agenda.COLUMN_CLIENTE_ID_EXT, Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID_EXT,
 				Contract.Agenda.COLUMN_ESTADO_AGENDA}, 
 				Contract.Agenda.COLUMN_FECHA_INICIO + " >= ? AND " +
-				Contract.Agenda.COLUMN_FECHA_FIN + " <= ?", new String [] {inicio + "", fin + "" }, null, null, Contract.Agenda.COLUMN_FECHA_INICIO + " ASC");
+				Contract.Agenda.COLUMN_FECHA_INICIO + " <= ?", new String [] {inicio + "", fin + "" }, null, null, Contract.Agenda.COLUMN_FECHA_INICIO + " ASC");
+		
+		List<Agenda> list = new ArrayList<Agenda>();
+		
+		if(c.moveToFirst())
+		{
+			do
+			{
+				Agenda agd = new Agenda();
+				agd.setID(CursorUtils.getInt(c, Contract.Agenda.COLUMN_AGENDA_ID));
+				agd.setIdAgenda(CursorUtils.getInt(c, Contract.Agenda.COLUMN_AGENDA_ID));
+				agd.setIdCliente(CursorUtils.getInt(c, Contract.Agenda.FIELD_CLIENTE_ID));
+				agd.setIdClienteDireccion(CursorUtils.getInt(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION_ID));
+				agd.setFechaInicio(CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_INCICIO));
+				agd.setFechaFin(CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_FIN));
+				agd.setEstadoAgenda(CursorUtils.getString(c, Contract.Agenda.COLUMN_ESTADO_AGENDA));
+				agd.set_idCliente(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_ID_EXT));
+				agd.set_idClienteDireccion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID_EXT));
+				
+				if(agd.getIdCliente() == 0)
+					agd.setCliente(rp3.marketforce.models.Cliente.getClienteID(db, agd.get_idCliente(), true));
+				else
+					agd.setCliente(rp3.marketforce.models.Cliente.getClienteIDServer(db, agd.getIdCliente(), false));
+				
+				if(agd.getIdClienteDireccion() == 0)
+					agd.setClienteDireccion(ClienteDireccion.getClienteDireccionIdDireccion(db, agd.getIdCliente(), agd.getIdClienteDireccion()));
+				else
+					agd.setClienteDireccion(ClienteDireccion.getClienteDireccionIdDireccion(db, agd.getIdCliente(), agd.getIdClienteDireccion()));
+				list.add(agd);
+			}while(c.moveToNext());
+		}
+		
+		return list;
+	}
+	
+	public static List<Agenda> getRutaDiaDashboard(DataBase db,	Calendar cal) {
+		long inicio = Convert.getTicksFromDate(cal.getTime());
+		cal.set(Calendar.HOUR_OF_DAY, 23);
+		cal.set(Calendar.MINUTE, 59);
+		cal.set(Calendar.SECOND, 59);
+		long fin = Convert.getTicksFromDate(cal.getTime());
+		
+		Cursor c = db.query(Contract.Agenda.TABLE_NAME, new String[] {Contract.Agenda._ID, Contract.Agenda.COLUMN_AGENDA_ID, Contract.Agenda.COLUMN_CLIENTE_ID,
+				Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID, Contract.Agenda.COLUMN_FECHA_INICIO, Contract.Agenda.COLUMN_FECHA_FIN,
+				Contract.Agenda.COLUMN_CLIENTE_ID_EXT, Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID_EXT,
+				Contract.Agenda.COLUMN_ESTADO_AGENDA}, 
+				Contract.Agenda.COLUMN_FECHA_INICIO + " >= ? AND " +
+				Contract.Agenda.COLUMN_FECHA_INICIO + " <= ? AND (" + 
+				Contract.Agenda.COLUMN_ESTADO_AGENDA + " = 'P' OR " +
+				Contract.Agenda.COLUMN_ESTADO_AGENDA + " = 'R' )", new String [] {inicio + "", fin + "" }, null, null, Contract.Agenda.COLUMN_FECHA_INICIO + " ASC");
 		
 		List<Agenda> list = new ArrayList<Agenda>();
 		

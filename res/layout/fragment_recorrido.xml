@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <fragment
+        android:id="@+id/recorrido_map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_weight="1"
+        class="com.google.android.gms.maps.MapFragment"
+        android:clickable="true" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="@color/color_white_maps_list"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="5dp" >
+
+        <TextView
+            android:id="@+id/recorrido_dia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Medium Text"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/color_text_sky_blue" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/recorrido_siguiente"
+        style="@style/Widget.Button.Theme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        android:padding="0dp"
+        android:src="@drawable/ic_action_previous_item" />
+
+    <ImageView
+        android:id="@+id/recorrido_anterior"
+        style="@style/Widget.Button.Theme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        android:padding="0dp"
+        android:src="@drawable/ic_action_next_item_dark" />
+
+</RelativeLayout>

@@ -13,7 +13,7 @@
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/recorrido_dia"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_inicio_server"
@@ -41,6 +41,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/server_code_button"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -54,6 +55,60 @@
             android:layout_margin="20dp"
             android:onClick="EscojerServer"
             android:text="@string/label_ingreso_server" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/server_code_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_codigo_server"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/server_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPassword" >
+
+            <requestFocus />
+        </EditText>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/button3"
+                style="@style/Widget.Button.Theme"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:onClick="CancelCode"
+                android:text="@string/action_cancel" />
+
+            <Button
+                android:id="@+id/button2"
+                style="@style/Widget.Button.Theme"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="SendCode"
+                android:text="@string/action_accept" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
