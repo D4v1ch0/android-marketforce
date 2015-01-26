@@ -4,12 +4,15 @@ import rp3.app.BaseActivity;
 import rp3.configuration.PreferenceManager;
 import rp3.content.SimpleCallback;
 import rp3.data.MessageCollection;
+import rp3.marketforce.sync.Server;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.util.ConnectionUtils;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 public class ServerActivity extends BaseActivity {
 	
@@ -23,11 +26,17 @@ public class ServerActivity extends BaseActivity {
 	    setContentView(R.layout.layout_choose_server);
 	}
 	
-	public void IrDemo(View v)
+	public void IrStart()
 	{
 		PreferenceManager.setValue(Contants.KEY_FIRST_TIME, false);
 		startActivity(new Intent(this, StartActivity.class));
 		finish();
+	}
+	
+	public void IrDemo(View v)
+	{
+		showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait);
+		new ServerOperation().execute(Contants.DEFAULT_APP);
 	}
 	
 	public void EscojerServer(View v)
@@ -45,24 +54,34 @@ public class ServerActivity extends BaseActivity {
 	public void SendCode(View v)
 	{
 		showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait);
-		Bundle bundle = new Bundle();
-		bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SERVER_CODE);
-		bundle.putString(SERVER_CODE, getText(R.id.server_code).toString());
-		requestSync(bundle);
+		new ServerOperation().execute(getTextViewString(R.id.server_code).toString());
 	}
 	
-	public void onSyncComplete(Bundle data, final MessageCollection messages) {
-		closeDialogProgress();
-		if(data.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_SERVER_CODE)){
-			if(messages.hasErrorMessage())
-				showDialogMessage(messages, new SimpleCallback() {				
-					@Override
-					public void onExecute(Object... params) {
-						if(!messages.hasErrorMessage())
-							IrDemo(getRootView());
-					}
-				});
-		}
-	}
+	 private class ServerOperation extends AsyncTask<String, Void, String> {
+
+	        @Override
+	        protected String doInBackground(String... params) {
+	            int code = Server.executeSync(params[0]);
+	            if(code == SyncAdapter.SYNC_EVENT_SUCCESS)
+	            	return "";
+	            else
+	            	return "Código Incorrecto.";
+	        }
+
+	        @Override
+	        protected void onPostExecute(String result) {
+	        	closeDialogProgress();
+	        	if(result.equalsIgnoreCase(""))
+	        		IrStart();
+	        	else
+	        		Toast.makeText(context, result, Toast.LENGTH_LONG).show();
+	        }
+
+	        @Override
+	        protected void onPreExecute() {}
+
+	        @Override
+	        protected void onProgressUpdate(Void... values) {}
+	    }
 
 }

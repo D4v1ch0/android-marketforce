@@ -15,7 +15,7 @@ public abstract class ActividadActivity extends BaseActivity {
 	public static String ARG_TAREA = "tarea";
 	public static String ARG_NUMERO = "numero";
 	public static String ARG_VISTA = "vista";
-	public static String ARG_TITULO = "vista";
+	public static String ARG_TITULO = "titulo";
 	
 	protected int id_actividad;
 	protected long id_agenda;

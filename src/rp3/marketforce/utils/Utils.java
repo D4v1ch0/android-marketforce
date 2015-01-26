@@ -2,7 +2,11 @@ package rp3.marketforce.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import android.app.Activity;
@@ -168,5 +172,35 @@ public class Utils {
 			number = "+593" + number;
 		}
 		return number;
+	}
+	
+	public static void ErrorToFile(Exception ex)
+	{
+		File file = new File(Environment.getExternalStorageDirectory()+ "/test.log");
+		PrintStream ps = null;
+		try {
+			ps = new PrintStream( new FileOutputStream(file, true));
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		ps.append("\r\n");
+		ex.printStackTrace(ps);
+		ps.close();
+	}
+	
+	public static void ErrorToFile(String ex)
+	{
+		File file = new File(Environment.getExternalStorageDirectory()+ "/test.log");
+		PrintStream ps = null;
+		try {
+			ps = new PrintStream(new FileOutputStream(file, true));
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		ps.append("\r\n");
+		ps.append(ex);
+		ps.close();
 	}
 }

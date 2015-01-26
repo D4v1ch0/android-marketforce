@@ -14,7 +14,7 @@
             android:id="@+id/dashboard_agenda_imagen"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/ic_user" />
+            android:src="@drawable/user" />
 
     </LinearLayout>
 

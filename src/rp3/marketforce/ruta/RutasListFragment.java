@@ -45,7 +45,7 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-public class RutasListFragment extends rp3.app.BaseFragment {
+public class RutasListFragment extends rp3.app.BaseFragment{
 		    
 	public static String ARG_INICIO = "inicio";
 	public static String ARG_FIN = "fin";
@@ -151,7 +151,6 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 			public void onRefresh() {
 				if(list_agenda_in_adapter == null || list_agenda_in_adapter.size() == 0)
 				{
-					Agenda.getAgenda(getDataBase());
 					if(list_agenda.size() == 0)
 					{
 						long fin = Agenda.getFirstAgenda(getDataBase());
@@ -267,11 +266,7 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 	public void onSyncComplete(Bundle data, MessageCollection messages) {		
 		super.onSyncComplete(data, messages);
 		
-		closeDialogProgress();
-		if(messages.hasErrorMessage()){
-			showDialogMessage(messages);
-		}
-		
+		closeDialogProgress();		
 		pullRefresher.setRefreshing(false);
 		try
 		{
@@ -282,7 +277,15 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 		{
 			
 		}
-		list_agenda = Agenda.getAgenda(getDataBase());
+		if(list_agenda_in_adapter == null || list_agenda_in_adapter.size() == 0)
+    		list_agenda = Agenda.getAgenda(getDataBase());
+		else
+		{
+			if(Convert.getTicksFromDate(list_agenda_in_adapter.get(0).getFechaInicio()) > Agenda.getFirstAgenda(getDataBase()))
+				list_agenda = Agenda.getAgendaSemanal(getDataBase());
+			else
+				list_agenda = Agenda.getAgenda(getDataBase());
+		}
 		orderDate();
 		
 		if(list_agenda_in_adapter != null)
@@ -381,6 +384,12 @@ public class RutasListFragment extends rp3.app.BaseFragment {
 	                        		Intent intent = new Intent(getActivity(), ReprogramarActivity.class);
 	                        		intent.putExtra(ReprogramarActivity.ARG_AGENDA, adapter.getItem(position).getID());
 	                        		startActivity(intent);
+	                        	break;
+	                        	case R.id.item_menu_crear_visita:
+	                        		Intent intent2 = new Intent(getActivity(), CrearVisitaActivity.class);
+	                        		intent2.putExtra(CrearVisitaFragment.ARG_IDAGENDA, (int) adapter.getItem(position).getID());
+	                        		intent2.putExtra(CrearVisitaFragment.ARG_FROM, "Agenda");
+	                        		startActivity(intent2);
 	                        	break;
 	                        }
 	                        return true;
@@ -603,8 +612,17 @@ public class RutasListFragment extends rp3.app.BaseFragment {
     	super.onResume();	    	
     }
     
-    public void Refresh() {	    	
-    	list_agenda = Agenda.getAgenda(getDataBase());
+    public void Refresh() {	  
+    	
+    	if(list_agenda_in_adapter == null || list_agenda_in_adapter.size() == 0)
+    		list_agenda = Agenda.getAgenda(getDataBase());
+		else
+		{
+			if(Convert.getTicksFromDate(list_agenda_in_adapter.get(0).getFechaInicio()) > Agenda.getFirstAgenda(getDataBase()))
+				list_agenda = Agenda.getAgendaSemanal(getDataBase());
+			else
+				list_agenda = Agenda.getAgenda(getDataBase());
+		}
 		orderDate();
 		adapter.changeList(list_agenda_in_adapter);
 		paintDates();

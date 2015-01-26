@@ -255,10 +255,10 @@
         tbClienteDireccion.Referencia,
         tbClienteDireccion.Latitud,
         tbClienteDireccion.Longitud,
-        tbGeopoliticalStructure.Name AS tbGeopoliticalStructure_Name
+        tbGeopoliticalStructureExt.Name AS tbGeopoliticalStructure_Name
         FROM tbClienteDireccion
-    	LEFT JOIN tbGeopoliticalStructure
-    	ON tbGeopoliticalStructure._id = tbClienteDireccion.IdCiudad
+    	LEFT JOIN tbGeopoliticalStructureExt
+    	ON tbGeopoliticalStructureExt.docid = tbClienteDireccion.IdCiudad
     	WHERE tbClienteDireccion.IdCliente = ?
     </statement>
     
@@ -277,10 +277,10 @@
         tbClienteDireccion.Referencia,
         tbClienteDireccion.Latitud,
         tbClienteDireccion.Longitud,
-        tbGeopoliticalStructure.Name AS tbGeopoliticalStructure_Name
+        tbGeopoliticalStructureExt.Name AS tbGeopoliticalStructure_Name
         FROM tbClienteDireccion
-    	LEFT JOIN tbGeopoliticalStructure
-    	ON tbGeopoliticalStructure._id = tbClienteDireccion.IdCiudad
+    	LEFT JOIN tbGeopoliticalStructureExt
+    	ON tbGeopoliticalStructureExt.docid = tbClienteDireccion.IdCiudad
     	WHERE tbClienteDireccion._IdCliente = ?
     </statement>
     
@@ -298,10 +298,10 @@
         tbClienteDireccion.Referencia,
         tbClienteDireccion.Latitud,
         tbClienteDireccion.Longitud,
-        tbGeopoliticalStructure.Name AS tbGeopoliticalStructure_Name
+        tbGeopoliticalStructureExt.Name AS tbGeopoliticalStructure_Name
         FROM tbClienteDireccion
-    	LEFT JOIN tbGeopoliticalStructure
-    	ON tbGeopoliticalStructure._id = tbClienteDireccion.IdCiudad
+    	LEFT JOIN tbGeopoliticalStructureExt
+    	ON tbGeopoliticalStructureExt.docid = tbClienteDireccion.IdCiudad
     	WHERE tbClienteDireccion.IdCliente = ? 
     	AND tbClienteDireccion.IdClienteDireccion = ?
     </statement>
@@ -627,7 +627,7 @@
         JOIN tbGeneralValue tbEstadoAgenda
         ON tbEstadoAgenda.GeneralTableId = 1013
         AND tbAgenda.EstadoAgenda = tbEstadoAgenda.Code 
-        WHERE tbAgenda._id = ?
+        WHERE tbAgenda.IdAgenda = ?
      </statement>
      
 	 <statement name="AgendaConteo">

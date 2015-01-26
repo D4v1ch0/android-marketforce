@@ -7,109 +7,113 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="10dp"
         android:layout_weight="1"
-        android:gravity="center|bottom"
+        android:gravity="center"
         android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/recorrido_dia"
+        <ImageView
+            android:id="@+id/imageView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/label_inicio_server"
+            android:layout_marginBottom="15dp"
+            android:src="@drawable/ic_login" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="@string/label_demo"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/color_text_sky_blue" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical" >
-
-        <Button
-            android:id="@+id/button1"
-            style="@style/Widget.Button.Theme"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:onClick="IrDemo"
-            android:text="@string/label_demo" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/server_code_button"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical" >
-
-        <Button
-            android:id="@+id/Button01"
-            style="@style/Widget.Button.Theme"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:onClick="EscojerServer"
-            android:text="@string/label_ingreso_server" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/server_code_layout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="5dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone" >
+            android:textColor="@color/color_text_sky_blue"
+            android:textSize="@dimen/text_small_size"
+            android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/label_codigo_server"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:text="@string/label_texto_presentacion"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/text_small_size" />
 
-        <EditText
-            android:id="@+id/server_code"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPassword" >
+    </LinearLayout>
 
-            <requestFocus />
-        </EditText>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical" >
 
         <LinearLayout
+            android:id="@+id/server_code_button"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical" >
 
             <Button
-                android:id="@+id/button3"
+                android:id="@+id/button1"
                 style="@style/Widget.Button.Theme"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                android:layout_weight="1"
-                android:onClick="CancelCode"
-                android:text="@string/action_cancel" />
+                android:layout_margin="20dp"
+                android:onClick="IrDemo"
+                android:text="@string/label_button_demo" />
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/Button01"
                 style="@style/Widget.Button.Theme"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="SendCode"
-                android:text="@string/action_accept" />
-
+                android:layout_margin="20dp"
+                android:onClick="EscojerServer"
+                android:text="@string/label_ingreso_server" />
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/server_code_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <EditText
+                android:id="@+id/server_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="@string/label_ingrese_codigo"
+                android:inputType="textPassword" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <Button
+                    android:id="@+id/button3"
+                    style="@style/Widget.Button.Theme"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:onClick="CancelCode"
+                    android:text="@string/action_cancel" />
+
+                <Button
+                    android:id="@+id/button2"
+                    style="@style/Widget.Button.Theme"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="SendCode"
+                    android:text="@string/action_accept" />
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

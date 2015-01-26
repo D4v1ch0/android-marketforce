@@ -25,12 +25,15 @@ public class StartActivity extends rp3.app.StartActivity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
-		Configuration.TryInitializeConfiguration(this, DbOpenHelper.class);	
 		if(PreferenceManager.getBoolean(Contants.KEY_FIRST_TIME, true))
 		{
 			startActivity(new Intent(this, ServerActivity.class));
 			finish();
 		}
+		else
+			Configuration.reinitializeConfiguration(context, DbOpenHelper.class);
+		Configuration.TryInitializeConfiguration(this, DbOpenHelper.class);	
+		
 	}
 	
 	private void setServiceRecurring(){
@@ -41,7 +44,7 @@ public class StartActivity extends rp3.app.StartActivity{
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(System.currentTimeMillis());
 		Calendar cal = Calendar.getInstance();
-		int time = PreferenceManager.getInt(Contants.KEY_ALARMA_INICIO);
+		long time = PreferenceManager.getLong(Contants.KEY_ALARMA_INICIO);
 		cal.setTimeInMillis(time);
 		calendar.set(Calendar.HOUR_OF_DAY, cal.get(Calendar.HOUR_OF_DAY));
 		calendar.set(Calendar.MINUTE, cal.get(Calendar.MINUTE));

@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.ksoap2.transport.HttpResponseException;
 
+import rp3.configuration.PreferenceManager;
 import rp3.connection.HttpConnection;
 import rp3.connection.WebService;
 import rp3.content.SyncAdapter;
@@ -31,7 +32,7 @@ public class Agenda {
 		try
 		{
 			jObject.put("IdAgenda", agendaUpload.getIdAgenda());
-			jObject.put("IdRuta", agendaUpload.getIdRuta());
+			jObject.put("IdRuta", PreferenceManager.getInt(Contants.KEY_IDRUTA));
 			jObject.put("IdClienteContacto", agendaUpload.getIdContacto());
 			jObject.put("EstadoAgenda", agendaUpload.getEstadoAgenda());
 			jObject.put("Observaciones", agendaUpload.getObservaciones());
@@ -57,7 +58,7 @@ public class Agenda {
 				{
 					JSONObject jObjectActividad = new JSONObject();
 					//jObjectActividad.put("IdAgenda", ata.getIdAgenda());
-					if(ata.getResultado().equals("null"))
+					if(ata.getResultado() == null || ata.getResultado().equals("null"))
 						jObjectActividad.put("Resultado", " ");
 					else if(ata.getResultado().equals("true"))
 						jObjectActividad.put("Resultado", "Sí");
@@ -121,7 +122,7 @@ public class Agenda {
 			try
 			{
 				jObject.put("IdAgenda", agendaUpload.getIdAgenda());
-				jObject.put("IdRuta", agendaUpload.getIdRuta());
+				jObject.put("IdRuta", PreferenceManager.getInt(Contants.KEY_IDRUTA));
 				jObject.put("IdMedia", agendaUpload.getEstadoAgenda());
 				jObject.put("Nombre", agendaUpload.getIdAgenda() + "_Foto1.jpg");
 				jObject.put("Contenido", Utils.CroppedBitmapToBase64(agendaUpload.getFoto1Int()));
@@ -160,7 +161,7 @@ public class Agenda {
 			try
 			{
 				jObject.put("IdAgenda", agendaUpload.getIdAgenda());
-				jObject.put("IdRuta", agendaUpload.getIdRuta());
+				jObject.put("IdRuta", PreferenceManager.getInt(Contants.KEY_IDRUTA));
 				jObject.put("IdMedia", agendaUpload.getEstadoAgenda());
 				jObject.put("Nombre", agendaUpload.getIdAgenda() + "_Foto2.jpg");
 				jObject.put("Contenido", Utils.CroppedBitmapToBase64(agendaUpload.getFoto2Int()));
@@ -199,7 +200,7 @@ public class Agenda {
 			try
 			{
 				jObject.put("IdAgenda", agendaUpload.getIdAgenda());
-				jObject.put("IdRuta", agendaUpload.getIdRuta());
+				jObject.put("IdRuta", PreferenceManager.getInt(Contants.KEY_IDRUTA));
 				jObject.put("IdMedia", agendaUpload.getEstadoAgenda());
 				jObject.put("Nombre", agendaUpload.getIdAgenda() + "_Foto3.jpg");
 				jObject.put("Contenido", Utils.CroppedBitmapToBase64(agendaUpload.getFoto3Int()));
@@ -243,7 +244,7 @@ public class Agenda {
 		try
 		{
 			jObject.put("IdAgenda", agendaUpload.getIdAgenda());
-			jObject.put("IdRuta", agendaUpload.getIdRuta());
+			jObject.put("IdRuta", PreferenceManager.getInt(Contants.KEY_IDRUTA));
 			jObject.put("EstadoAgenda", agendaUpload.getEstadoAgenda());
 			jObject.put("FechaInicioTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaInicio()));
 			jObject.put("FechaFinTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaFin()));
@@ -291,7 +292,7 @@ public class Agenda {
 		try
 		{
 			jObject.put("IdAgenda", agendaUpload.getIdAgenda());
-			jObject.put("IdRuta", agendaUpload.getIdRuta());
+			jObject.put("IdRuta", PreferenceManager.getInt(Contants.KEY_IDRUTA));
 			jObject.put("Observacion", agendaUpload.getObservaciones());
 			jObject.put("MotivoNoGestion", agendaUpload.getIdMotivoNoVisita());
 			
@@ -371,6 +372,7 @@ public class Agenda {
 				int id = webService.getIntegerResponse();
 
 				agenda.setIdAgenda(id);
+				agenda.setIdRuta(PreferenceManager.getInt(Contants.KEY_IDRUTA));
 				
 				rp3.marketforce.models.Agenda.update(db, agenda);
 				
@@ -733,6 +735,11 @@ public class Agenda {
 			
 			try {
 				webService.invokeWebService();
+				for(rp3.marketforce.models.Agenda agd : agendas)
+				{
+					agd.setEnviado(true);
+					rp3.marketforce.models.Agenda.update(db, agd);
+				}
 			} catch (HttpResponseException e) {
 				if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
 					return SyncAdapter.SYNC_EVENT_AUTH_ERROR;

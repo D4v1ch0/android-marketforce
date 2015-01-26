@@ -27,7 +27,7 @@
                 </method>
                 <method>
                     <name>GetGeopoliticalStructures</name>
-                    <action>General/GetGeopoliticalStructures</action>
+                    <action>General/GetGeopoliticalStructuresView?FecModParameter=@FecModParameter</action>
                     <webMethod>GET</webMethod>
                 </method>
                 <method>
@@ -159,6 +159,18 @@
                     <action>cliente/updatefull</action>
                     <webMethod>POST</webMethod>
                 </method>               
+            </methods>     
+        </webServiceData>
+           <webServiceData>
+            <name>ServerVerification</name>
+            <url>http://54.94.162.88/rp3deploy/api</url>
+            <type>REST</type>            
+            <methods>
+                <method>
+                    <name>GetServer</name>
+                    <action>application/getclient?applicationid=@applicationid&amp;validationCode=@validationCode</action>
+                    <webMethod>GET</webMethod>
+                </method>              
             </methods>     
         </webServiceData>
     </webServiceConfiguration>

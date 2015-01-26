@@ -34,6 +34,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 	public static String SYNC_TYPE_SERVER_CODE = "servidor";
 	public static String SYNC_TYPE_BATCH = "batch";
 	public static String SYNC_TYPE_TODO = "todo";
+	public static String SYNC_TYPE_GEOPOLITICAL = "geopolitical";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -137,6 +138,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 				}catch(Exception e){
 					Log.e("Sync Adapter", e.getMessage());
 				}
+			}
+			else if(syncType.equals(SYNC_TYPE_GEOPOLITICAL))
+			{
+				result = rp3.sync.GeopoliticalStructure.executeSync(db);				
+				addDefaultMessage(result);
 			}
 			else if(syncType.equals(SYNC_TYPE_SERVER_CODE)){
 				String code = extras.getString(ServerActivity.SERVER_CODE);

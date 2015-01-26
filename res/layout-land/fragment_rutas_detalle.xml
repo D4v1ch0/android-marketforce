@@ -10,13 +10,26 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical" >
 
-        <ImageView
-            android:id="@+id/map_image"
-            android:layout_width="130dp"
-            android:layout_height="130dp"
-            android:src="@drawable/user" />
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:id="@+id/map_image"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/user" />
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/circulo" />
+
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -32,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:textSize="@dimen/text_large_size"
+                android:textSize="@dimen/text_medium_plus_size"
                 android:textStyle="bold" />
 
             <TextView
@@ -54,8 +67,8 @@
                 android:ellipsize="end"
                 android:paddingRight="12dp"
                 android:singleLine="true"
-                android:text="Mayorista"
-                android:textStyle="bold" />
+                android:text="Mayorista" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -69,7 +82,6 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_weight="0.4"
             android:orientation="vertical" >
 
@@ -88,8 +100,9 @@
                     android:id="@+id/detail_agenda_estado"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:paddingLeft="5dp" />
+
             </LinearLayout>
 
             <TextView
@@ -202,7 +215,7 @@
             android:id="@+id/detail_agenda_empty_tareas"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.5"
+            android:layout_weight="1"
             android:orientation="vertical"
             android:visibility="gone" >
 

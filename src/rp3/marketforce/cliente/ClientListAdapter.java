@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.TextView;
 
 @SuppressLint("SimpleDateFormat")
@@ -39,6 +40,7 @@ public class ClientListAdapter extends SectionAdapter{
 	private List<String> headersortList;
 	private int order;
 	private ClienteListFragmentListener clienteListFragmentCallback;
+	private boolean action = true;
 	
 	private final int ORDER_BY_NAME = 5;
     private final int ORDER_BY_LAST_NAME = 6;
@@ -143,6 +145,7 @@ public class ClientListAdapter extends SectionAdapter{
 	    convertView = (View) inflater.inflate(this.contex.getApplicationContext().getResources().getLayout(R.layout.rowlist_client_list), null);
 		
 		Cliente current =  dataList.get(section).get(row);
+		convertView.setId((int) current.getID());
 				
 		switch (order) {
 		case ORDER_BY_NAME:
@@ -195,8 +198,8 @@ public class ClientListAdapter extends SectionAdapter{
     }
 
 	@Override
-	public Object getRowItem(int section, int row) {
-		return null;
+	public Cliente getRowItem(int section, int row) {
+		return dataList.get(section).get(row);
 	}
 	
 	@Override
@@ -210,9 +213,28 @@ public class ClientListAdapter extends SectionAdapter{
         	notifyDataSetChanged();
         }
         
-        if(clienteListFragmentCallback != null)
-        	clienteListFragmentCallback.onClienteSelected(dataList.get(section).get(row));        
+        if(clienteListFragmentCallback != null && action)
+        	clienteListFragmentCallback.onClienteSelected(dataList.get(section).get(row)); 
+        else
+        	action = true;
        
        }
+	public int getSection()
+	{
+		return section_;
+	}
+	
+	public int getRow()
+	{
+		return row_;
+	}
+
+	public boolean isAction() {
+		return action;
+	}
+
+	public void setAction(boolean action) {
+		this.action = action;
+	}
 	
 }

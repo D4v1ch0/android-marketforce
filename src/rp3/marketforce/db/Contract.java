@@ -167,7 +167,7 @@ public final class Contract {
 		public static final String FIELD_REFERENCIA = COLUMN_REFERENCIA;
 		public static final String FIELD_LATITUD = COLUMN_LATITUD;
 		public static final String FIELD_LONGITUD = COLUMN_LONGITUD;
-		public static final String FIELD_CIUDAD = rp3.data.models.Contract.GeopoliticalStructure.TABLE_NAME+"_"+rp3.data.models.Contract.GeopoliticalStructure.COLUMN_NAME;
+		public static final String FIELD_CIUDAD = rp3.data.models.Contract.GeopoliticalStructure.TABLE_NAME+"_"+rp3.data.models.Contract.GeopoliticalStructureExt.COLUMN_NAME;
 		
 		public static final String QUERY_CLIENTE_DIRECCION_BY_ID = "ClienteDireccionById";
 		public static final String QUERY_CLIENTE_DIRECCION_BY_ID_INTERNO = "ClienteDireccionByIdInterno";

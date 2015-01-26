@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -69,30 +70,31 @@ public class ObservacionesFragment extends BaseFragment {
 	@Override
 	public void onAttach(Activity activity) {    	
 	    super.onAttach(activity);
+	    setRetainInstance(true);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId())
+		{
+		case R.id.action_save:
+			agenda.setObservaciones(getTextViewString(R.id.obs_text));
+			Agenda.update(getDataBase(), agenda);
+			closed = true;
+			finish();
+			break;
+		case R.id.action_cancel:
+			closed = true;
+			finish();
+			break;
+		default:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 	    
 	@Override
 	public void onResume() {
-		((Button) parentView.findViewById(R.id.obs_aceptar)).setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				agenda.setObservaciones(getTextViewString(R.id.obs_text));
-				Agenda.update(getDataBase(), agenda);
-				closed = true;
-				getParentFragment().onResume();
-				dismiss();
-			}
-		});
-		
-		((Button) parentView.findViewById(R.id.obs_cancelar)).setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				closed = true;
-				dismiss();
-			}
-		});
 	    super.onResume();
 	}
 	
@@ -100,7 +102,6 @@ public class ObservacionesFragment extends BaseFragment {
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
 		super.onFragmentCreateView(rootView, savedInstanceState);
 		parentView = rootView;
-		getDialog().setTitle("Observaciones");
 		if(agenda.getFoto1Int() != null)
 			((ImageButton) rootView.findViewById(R.id.obs_foto1)).setImageBitmap(Utils.resizeBitMapImage(agenda.getFoto1Int(), MAX_WIDTH, MAX_HEIGHT));
 		if(agenda.getFoto2Int() != null)

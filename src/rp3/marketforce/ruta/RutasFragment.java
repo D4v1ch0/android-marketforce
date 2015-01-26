@@ -37,6 +37,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	private RutasDetailFragment rutasDetailfragment;
 	private ObservacionesFragment obsFragment;
 	private SlidingPaneLayout slidingPane;
+	private boolean openPane = true;
     
 	public static RutasFragment newInstance(int transactionTypeId) {
 		RutasFragment fragment = new RutasFragment();
@@ -65,10 +66,12 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	public void onStart() {		
 		super.onStart();
 		
-		if(selectedTransactionId != 0){
+		if(selectedTransactionId != 0 && openPane){
 			if(!mTwoPane)			
 				slidingPane.closePane();			
-		}		
+		}
+		else
+			openPane = true;
 	}
 	
 	
@@ -90,7 +93,8 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 			@Override
 			public void onPanelOpened(View panel) {
 				getActivity().invalidateOptionsMenu();
-				//rutasListFragment.searchTransactions("");
+				if(selectedTransactionId != 0)
+					rutasListFragment.Refresh();
 			}
 
 			@Override
@@ -126,6 +130,17 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	  		 searchView.setVisibility(View.GONE);
 	  		 menu.removeItem(R.id.action_search_ruta);
 	  		 menu.removeItem(R.id.action_crear_visita);
+	  		 if(selectedTransactionId != 0)
+	  		 {
+	  			 String estado = Agenda.getAgendaEstado(getDataBase(), selectedTransactionId);
+		  		 if(estado.equalsIgnoreCase(Contants.ESTADO_NO_VISITADO) || estado.equalsIgnoreCase(Contants.ESTADO_VISITADO))
+		  		 	menu.removeItem(R.id.action_cambiar_contacto);
+		  		 if(!estado.equalsIgnoreCase(Contants.ESTADO_PENDIENTE) && !estado.equalsIgnoreCase(Contants.ESTADO_REPROGRAMADO))
+		  		 {
+		  		 	menu.removeItem(R.id.action_no_visita);
+		  		 	menu.removeItem(R.id.action_reprogramar);
+		  		 }
+	  		 }
 	  	 }
 	  	 else
 	  	 {
@@ -140,6 +155,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	  		 }
 	  		 menu.removeItem(R.id.action_cambiar_contacto);
 	  		 menu.removeItem(R.id.action_no_visita);
+	  		 menu.removeItem(R.id.action_reprogramar);
 	  	 }
   	 }
   	  
@@ -193,6 +209,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	    		case R.id.action_crear_visita:
 	    			Intent intent = new Intent(getActivity(), CrearVisitaActivity.class);
 	    			startActivity(intent);
+	    			openPane = false;
 	    			return true;
 	    		case R.id.action_ver_posicion:   
 	    			if(selectedTransactionId != 0)
@@ -210,6 +227,8 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	    		case R.id.action_ver_ruta:
 	    			Intent intent3 = new Intent(getActivity(), MapaActivity.class);
 	    			intent3.putExtra(MapaActivity.ACTION_TYPE, MapaActivity.ACTION_RUTAS);
+	    			if(selectedTransactionId != 0 && !slidingPane.isOpen())
+	    				intent3.putExtra(MapaActivity.ARG_AGENDA, selectedTransactionId);
 	    			startActivity(intent3);
 	    			return true;
 	    		case R.id.action_como_llegar:
@@ -250,6 +269,21 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	    				Toast.makeText(getContext(), R.string.warning_seleccionar_agenda, Toast.LENGTH_LONG).show();
 	    			}
 	    			return true;
+	    		case R.id.action_reprogramar:
+	    			if(selectedTransactionId != 0)
+	    			{
+	    				if(Agenda.getAgendaEstado(getDataBase(), selectedTransactionId).equalsIgnoreCase(Contants.ESTADO_PENDIENTE) ||
+	    				   Agenda.getAgendaEstado(getDataBase(), selectedTransactionId).equalsIgnoreCase(Contants.ESTADO_REPROGRAMADO))
+	    				{
+	    					Intent reprogramar = new Intent(getContext(), ReprogramarActivity.class);
+	    					reprogramar.putExtra(ReprogramarActivity.ARG_AGENDA, selectedTransactionId);
+                			startActivity(reprogramar);
+	    				}
+	    			}
+	    			else
+	    			{
+	    				Toast.makeText(getContext(), R.string.warning_seleccionar_agenda, Toast.LENGTH_LONG).show();
+	    			}
 	    	}
 	    	return super.onOptionsItemSelected(item);
 	    }

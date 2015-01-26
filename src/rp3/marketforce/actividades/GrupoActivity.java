@@ -67,6 +67,7 @@ public class GrupoActivity extends ActividadActivity {
 				if(actividad_hija.getTipo().equalsIgnoreCase("T"))
 					agregarTexto(actividad_hija);
 	    	}
+	    	
 	    }
 	    
 	    Container.removeViewAt(Container.getChildCount()-1);

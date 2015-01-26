@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="rp3.marketforce"
-    android:versionCode="13"
-    android:versionName="1.2.2b" >
+    android:versionCode="16"
+    android:versionName="1.2.2e" >
 
     <uses-sdk
         android:minSdkVersion="13"
@@ -143,6 +143,7 @@
         <activity android:name=".ruta.MapaActivity"></activity>
         <activity android:name=".cliente.CrearClienteActivity"></activity>
         <activity android:name="ServerActivity" android:theme="@style/AppTheme.NoTitleBar"></activity>
+        <activity android:name=".ruta.ObservacionesActivity" android:theme="@style/MyAppPopupTheme"></activity>
         
     </application>
 

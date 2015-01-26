@@ -63,8 +63,15 @@ public class DashboardGraphicFragment extends BaseFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		if(pagerAdapter != null)
-			pagerAdapter.notifyDataSetChanged();
+		titles = new ArrayList<String>();
+    	visitas = new ArrayList<Integer>();
+    	PagerDetalles = (ViewPager) getRootView().findViewById(R.id.dashboard_graphics_pager);
+    	pagerAdapter = new DetailsPageAdapter();
+    	pagerAdapter.addView(createGraphics(false));
+    	pagerAdapter.addView(createGraphics(true));
+    	pagerAdapter.setTitles(titles.toArray(new String[]{}));
+    	PagerDetalles.setAdapter(pagerAdapter);	    	   	
+    	PagerDetalles.setCurrentItem(0);
 	}
 	
 	@Override
@@ -75,15 +82,7 @@ public class DashboardGraphicFragment extends BaseFragment {
 	
 	 public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
 	    	super.onFragmentCreateView(rootView, savedInstanceState);
-	    	titles = new ArrayList<String>();
-	    	visitas = new ArrayList<Integer>();
-	    	PagerDetalles = (ViewPager) getRootView().findViewById(R.id.dashboard_graphics_pager);
-	    	pagerAdapter = new DetailsPageAdapter();
-	    	pagerAdapter.addView(createGraphics(false));
-	    	pagerAdapter.addView(createGraphics(true));
-	    	pagerAdapter.setTitles(titles.toArray(new String[]{}));
-	    	PagerDetalles.setAdapter(pagerAdapter);	    	   	
-	    	PagerDetalles.setCurrentItem(0);
+	    	
 	 }
 	 
 	 @SuppressLint("SimpleDateFormat")
@@ -178,6 +177,8 @@ public class DashboardGraphicFragment extends BaseFragment {
 	 	interim.getGraphViewStyle().setVerticalLabelsAlign(Align.RIGHT);
 	 	interim.getGraphViewStyle().setTextSize(getResources().getDimension(R.dimen.text_small_size));
 	 	interim.addSeries(seriesHoy);
+	 	interim.setDrawValuesOnTop(true);
+	 	interim.setValuesOnTopColor(getContext().getResources().getColor(R.color.color_text_sky_blue));
 	 	((LinearLayout)parent.findViewById(R.id.dashboard_graphic_hoy)).addView(interim);
 	 	return parent;
 	 }
@@ -193,6 +194,8 @@ public class DashboardGraphicFragment extends BaseFragment {
 		}
 		else
 		{
+			while(mayor % (NUM_VERTICAL_LABELS - 1) != 0)
+				mayor++;
 			return mayor;
 		}
 	 }
@@ -207,8 +210,10 @@ public class DashboardGraphicFragment extends BaseFragment {
 		}
 		else
 		{
+			while(tope % (NUM_VERTICAL_LABELS - 1) != 0)
+				tope++;
 			int coeficiente = tope / (NUM_VERTICAL_LABELS - 1);
-			for(int i = NUM_VERTICAL_LABELS-1; i >= 0; i--)
+			for(int i = NUM_VERTICAL_LABELS - 1; i >= 0; i--)
 			{
 				labels.add(""+(i*coeficiente));
 			}

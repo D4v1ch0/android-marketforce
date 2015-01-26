@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -91,11 +92,14 @@ public class MapaActivity extends BaseActivity {
 	DrawableManager DManager;
 	List<Marker> markers;
 	View lastItem;
+
+	private SimpleDateFormat format1;
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    setTitle("Ruta");
+	    format1 = new SimpleDateFormat("EEEE dd MMMM yyyy");
 	
 	    ctx = this;
 	    DManager = new DrawableManager();
@@ -125,7 +129,19 @@ public class MapaActivity extends BaseActivity {
 	    if(action.equalsIgnoreCase(ACTION_LLEGAR))
 	    	setRuta(getIntent().getExtras().getLong(ARG_AGENDA));
 	    if(action.equalsIgnoreCase(ACTION_RUTAS))
-	    	showRutaPorFecha();
+	    {
+	    	ComoLlegar.setVisibility(View.GONE);
+			Posicion.setVisibility(View.GONE);
+	    	if(getIntent().getExtras().containsKey(ARG_AGENDA))
+	    	{
+	    		agenda = Agenda.getAgenda(getDataBase(), getIntent().getExtras().getLong(ARG_AGENDA));
+	    		Calendar c =  Calendar.getInstance();
+	    		c.setTime(agenda.getFechaInicio());
+	    		onDailogDatePickerChange(0, c);
+	    	}
+	    	else
+	    		onDailogDatePickerChange(0, Calendar.getInstance());
+	    }
 	}
 	
 	public void ClickPosicion(View v)
@@ -140,7 +156,17 @@ public class MapaActivity extends BaseActivity {
 	
 	public void ClickRutas(View v)
 	{
-		showRutaPorFecha();
+		ComoLlegar.setVisibility(View.GONE);
+		Posicion.setVisibility(View.GONE);
+		if(agenda == null)
+			showRutaPorFecha();
+		else
+		{
+			Calendar c =  Calendar.getInstance();
+			c.setTime(agenda.getFechaInicio());
+			onDailogDatePickerChange(0, c);
+		}
+			
 	}
 	
 	public void slideToBottom(final View view, boolean enable){
@@ -221,6 +247,8 @@ public class MapaActivity extends BaseActivity {
 		c.set(Calendar.HOUR_OF_DAY, 0);
 		c.set(Calendar.MINUTE, 0);
 		c.set(Calendar.SECOND, 0);
+		agenda = null;
+		RutasFechas.setText(format1.format(c.getTime()).substring(0, 1).toUpperCase() + format1.format(c.getTime()).substring(1));
 		map.clear();
 		persona.setVisibility(View.GONE);
 		

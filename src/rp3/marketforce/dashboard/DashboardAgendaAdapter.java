@@ -11,9 +11,11 @@ import rp3.marketforce.models.Agenda;
 import rp3.marketforce.ruta.RutasListFragment.TransactionListFragmentListener;
 import rp3.marketforce.utils.DrawableManager;
 import rp3.marketforce.utils.Utils;
+import rp3.util.BitmapUtils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -125,7 +127,10 @@ public class DashboardAgendaAdapter extends BaseAdapter{
 			
 			
 		}
-		DManager.fetchDrawableOnThread(PreferenceManager.getString("server") + 
+		((ImageView) convertView.findViewById(R.id.dashboard_agenda_imagen)).setImageBitmap(BitmapUtils.getRoundedRectBitmap(
+				BitmapFactory.decodeResource(ctx.getResources(), R.drawable.user), 
+				ctx.getResources().getDimensionPixelOffset(R.dimen.image_size)));
+		DManager.fetchDrawableOnThreadRounded(PreferenceManager.getString("server") + 
 				rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + agd.getCliente().getURLFoto(),
 				(ImageView) convertView.findViewById(R.id.dashboard_agenda_imagen));
 		return convertView;

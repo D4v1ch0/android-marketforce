@@ -14,6 +14,7 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.view.Menu;
@@ -97,7 +98,10 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
 			@Override
 			public void onPanelOpened(View panel) {
 				getActivity().invalidateOptionsMenu();
-				getActivity().getActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
+				if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.JELLY_BEAN_MR2) {
+					getActivity().getActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
+				}
+				
 			}
 
 			@Override

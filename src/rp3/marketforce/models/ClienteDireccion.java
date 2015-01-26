@@ -52,8 +52,7 @@ public class ClienteDireccion extends rp3.data.entity.EntityBase<ClienteDireccio
 	public void setValues() {
 		if(getAction() == ACTION_INSERT){
 			setValue(Contract.ClienteDireccion.COLUMN_TIPO_DIRECCION, this.tipoDireccion);
-			setValue(Contract.ClienteDireccion.COLUMN_CIUDAD_ID, this.idCiudad);
-			setValue(Contract.ClienteDireccion.COLUMN_ES_PRINCIPAL, this.esPrincipal);			
+			setValue(Contract.ClienteDireccion.COLUMN_CIUDAD_ID, this.idCiudad);		
 		}
 		setValue(Contract.ClienteDireccion.COLUMN_CLIENTE_ID, this.idCliente);
 		setValue(Contract.ClienteDireccion.COLUMN_CLIENTE_DIRECCION_ID, this.idClienteDireccion);
@@ -64,6 +63,7 @@ public class ClienteDireccion extends rp3.data.entity.EntityBase<ClienteDireccio
 		setValue(Contract.ClienteDireccion.COLUMN_LATITUD, this.latitud);
 		setValue(Contract.ClienteDireccion.COLUMN_LONGITUD, this.longitud);
 		setValue(Contract.ClienteDireccion.COLUMN_CLIENTE_ID_EXT, this._idCliente);
+		setValue(Contract.ClienteDireccion.COLUMN_ES_PRINCIPAL, this.esPrincipal);	
 		
 	}
 

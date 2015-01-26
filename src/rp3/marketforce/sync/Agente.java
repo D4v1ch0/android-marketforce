@@ -99,8 +99,8 @@ public class Agente {
 			try {
 				webService.invokeWebService();
 				JSONObject jObject = webService.getJSONObjectResponse();
-				PreferenceManager.setValue(Contants.KEY_ALARMA_INICIO, jObject.getInt(Contants.KEY_ALARMA_INICIO));
-				PreferenceManager.setValue(Contants.KEY_ALARMA_FIN, jObject.getInt(Contants.KEY_ALARMA_FIN));
+				PreferenceManager.setValue(Contants.KEY_ALARMA_INICIO, Convert.getDateFromDotNetTicks(jObject.getLong(Contants.KEY_ALARMA_INICIO)));
+				PreferenceManager.setValue(Contants.KEY_ALARMA_FIN, Convert.getDateFromDotNetTicks(jObject.getLong(Contants.KEY_ALARMA_FIN)));
 				PreferenceManager.setValue(Contants.KEY_ALARMA_INTERVALO, jObject.getInt(Contants.KEY_ALARMA_INTERVALO));
 				PreferenceManager.setValue(Contants.KEY_PREFIJO_TELEFONICO, jObject.getString(Contants.KEY_PREFIJO_TELEFONICO));
 			} catch (HttpResponseException e) {

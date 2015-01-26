@@ -431,7 +431,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			cl.setIdCliente(CursorUtils.getInt(c, Contract.Cliente.COLUMN_ID_CLIENTE));
 			if(cl.getTipoPersona().equalsIgnoreCase("C"))
 				cl.setNombreCompleto(cl.getApellido1() + " " + cl.getNombre1() + " - " + CursorUtils.getString(c, Contract.ContactoExt.COLUMN_CARGO)
-						+ " de " + getClienteIDServer(db, cl.getIdCliente(), false).getNombreCompleto());
+						+ " de " + getClienteIDServer(db, cl.getIdCliente(), false).getNombreCompleto().trim());
 			else
 				cl.setNombreCompleto(CursorUtils.getString(c, Contract.ClientExt.COLUMN_NOMBRE_COMPLETO));
 			

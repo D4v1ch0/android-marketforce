@@ -31,6 +31,7 @@ import android.widget.Toast;
 import rp3.app.BaseFragment;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
+import rp3.marketforce.db.Contract;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.AgendaTareaActividades;
@@ -41,11 +42,14 @@ import rp3.marketforce.models.Tarea;
 import rp3.marketforce.ruta.TareasFragment.EditTareasDialogListener;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.util.Convert;
+import rp3.util.CursorUtils;
 
 @SuppressLint("NewApi")
 public class CrearVisitaFragment extends BaseFragment implements EditTareasDialogListener {
 	
 	public static String ARG_AGENDA = "agenda";
+	public static String ARG_IDAGENDA = "idagenda";
+	public static String ARG_FROM = "from";
 	
 	private AutoCompleteTextView cliente_auto;
 	private ArrayList<String> list_nombres;
@@ -61,8 +65,12 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 
 	protected boolean mIgnoreEvent;
 
-	public static CrearVisitaFragment newInstance() {
+	public static CrearVisitaFragment newInstance(long id, String text) {
+		Bundle arguments = new Bundle();
+        arguments.putLong(ARG_IDAGENDA, id);
+        arguments.putString(ARG_FROM, text);
 		CrearVisitaFragment fragment = new CrearVisitaFragment();
+		fragment.setArguments(arguments);
 		return fragment;
     }
 	
@@ -87,7 +95,8 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 	    else
 		    hastaPicker.setCurrentHour(desdePicker.getCurrentHour());
 	    
-	    hastaPicker.setCurrentMinute(desdePicker.getCurrentMinute() + 30);
+	    desdePicker.setCurrentMinute(Calendar.getInstance().get(Calendar.MINUTE) / 5);
+	    hastaPicker.setCurrentMinute(desdePicker.getCurrentMinute() + 6);
 		
 	    Calendar cal = Calendar.getInstance();
 	    cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -245,7 +254,66 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 			public void onClick(View v) {
 				showDialogFragment(TareasFragment.newInstance(list_tareas), "Tareas");
 			}});
+		
+		if(getArguments().getString(ARG_FROM).equalsIgnoreCase("Cliente"))
+			setDatosCliente(getArguments().getLong(ARG_IDAGENDA));
+		else
+			setDatos(getArguments().getLong(ARG_IDAGENDA));
 	}
+
+	private void setDatosCliente(long id) {
+		if(id != 0)
+		{
+			Cliente cli = Cliente.getClienteID(getDataBase(), id, false);
+
+			cliente_auto.setText(cli.getNombreCompleto().trim());
+			
+			cliente_auto.dismissDropDown();
+			ArrayList<String> direcciones = new ArrayList<String>();
+			int position = list_nombres.indexOf(cliente_auto.getText().toString());
+			if(position != -1)
+			{
+				for(ClienteDireccion cliDir : list_cliente.get(position).getClienteDirecciones())
+				{
+					direcciones.add(cliDir.getDireccion());
+				}
+				ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_dropdown_item_1line, direcciones);
+				((Spinner) getRootView().findViewById(R.id.crear_visita_direccion)).setAdapter(adapter);
+			}
+		}		
+		
+	}
+
+
+	private void setDatos(long id) {
+		if(id != 0)
+		{
+			Agenda agd = Agenda.getAgenda(getDataBase(), id);
+			if(agd.getIdContacto() != 0 || agd.get_idContacto() != 0)
+			{
+				cliente_auto.setText(agd.getContacto().getApellido() + " " + agd.getContacto().getNombre() + " - " + agd.getContacto().getCargo()
+				+ " de " + Cliente.getClienteIDServer(getDataBase(), agd.getIdCliente(), false).getNombreCompleto().trim());
+			}
+			else
+			{
+				cliente_auto.setText(agd.getCliente().getNombreCompleto());
+			}
+			
+			cliente_auto.dismissDropDown();
+			ArrayList<String> direcciones = new ArrayList<String>();
+			int position = list_nombres.indexOf(cliente_auto.getText().toString());
+			if(position != -1)
+			{
+				for(ClienteDireccion cliDir : list_cliente.get(position).getClienteDirecciones())
+				{
+					direcciones.add(cliDir.getDireccion());
+				}
+				ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_dropdown_item_1line, direcciones);
+				((Spinner) getRootView().findViewById(R.id.crear_visita_direccion)).setAdapter(adapter);
+			}
+		}		
+	}
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

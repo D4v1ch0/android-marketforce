@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.webkit.WebView.FindListener;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -330,13 +331,6 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 		inflater = (LayoutInflater) this.getActivity().getSystemService(
 				Context.LAYOUT_INFLATER_SERVICE);
 
-		linearLayoutRigth = (LinearLayout) rootView
-				.findViewById(R.id.linearLayout_content_rigth);
-		linearLayoutAdress = (LinearLayout) rootView
-				.findViewById(R.id.linearLayout_content_adress);
-		linearLayoutContact = (LinearLayout) rootView
-				.findViewById(R.id.linearLayout_content_contactos);
-
 		String etiqueta = "";
 		for (int x = 0; x < testArrayDetails.length; x++) {
 			etiqueta = "";
@@ -568,7 +562,8 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 		
 		if(client.getContactos() != null && client.getContactos().size() > 0)
 		{
-			setViewVisibility(R.id.linearLayout_content_contactos,
+			if(rootView.findViewById(R.id.linearLayout_content_contactos) != null)
+				setViewVisibility(R.id.linearLayout_content_contactos,
 					View.VISIBLE);
 			setViewVisibility(R.id.detail_tab_contactos_layout, View.VISIBLE);
 			testArrayDetails = this.getActivity().getResources()

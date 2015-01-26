@@ -63,33 +63,11 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textMultiLine"
-            android:minLines="3" >
+            android:lines="3"
+            android:maxLines="3" >
 
             <requestFocus />
         </EditText>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <Button
-            android:id="@+id/obs_cancelar"
-            style="@style/Widget.Button.Theme"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
-            android:layout_weight="1"
-            android:text="@string/label_button_cancelar_act" />
-
-        <Button
-            android:id="@+id/obs_aceptar"
-            style="@style/Widget.Button.Theme"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/label_button_aceptar_act" />
 
     </LinearLayout>
 

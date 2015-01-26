@@ -12,23 +12,18 @@ import rp3.marketforce.Contants;
 
 public class Server {
 	public static int executeSync(String code){
-		WebService webService = new WebService("MartketForce","GetServer");			
+		WebService webService = new WebService("ServerVerification","GetServer");			
 			
 		try
 		{			
-			webService.addCurrentAuthToken();
 			webService.addStringParameter("@applicationid", Contants.APPLICATION_ID);
 			webService.addStringParameter("@validationCode", code);
 			
 			try {
 				webService.invokeWebService();
 				JSONObject jObject = webService.getJSONObjectResponse();
-				PreferenceManager.setValue(Contants.KEY_IDAGENTE, jObject.getInt(Contants.KEY_IDAGENTE));
-				if(!jObject.isNull(Contants.KEY_IDRUTA))
-					PreferenceManager.setValue(Contants.KEY_IDRUTA, jObject.getInt(Contants.KEY_IDRUTA));
-				PreferenceManager.setValue(Contants.KEY_ES_SUPERVISOR, jObject.getBoolean(Contants.KEY_ES_SUPERVISOR));
-				PreferenceManager.setValue(Contants.KEY_ES_AGENTE, jObject.getBoolean(Contants.KEY_ES_AGENTE));
-				PreferenceManager.setValue(Contants.KEY_ES_ADMINISTRADOR, jObject.getBoolean(Contants.KEY_ES_ADMINISTRADOR));
+				PreferenceManager.setValue(Contants.KEY_CLIENT, jObject.getString("ClientName"));
+				PreferenceManager.setValue(Contants.KEY_SERVER, jObject.getString("Server"));
 			} catch (HttpResponseException e) {
 				if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
 					return SyncAdapter.SYNC_EVENT_AUTH_ERROR;

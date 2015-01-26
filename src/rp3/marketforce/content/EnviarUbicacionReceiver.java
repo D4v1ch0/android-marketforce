@@ -1,5 +1,8 @@
 package rp3.marketforce.content;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.util.Calendar;
 import java.util.Random;
 
@@ -10,6 +13,8 @@ import rp3.marketforce.Contants;
 import rp3.marketforce.models.Ubicacion;
 import rp3.marketforce.sync.EnviarUbicacion;
 import rp3.marketforce.sync.SyncAdapter;
+import rp3.marketforce.utils.Utils;
+import rp3.runtime.Session;
 import rp3.util.ConnectionUtils;
 import rp3.util.LocationUtils;
 import rp3.util.LocationUtils.OnLocationResultListener;
@@ -32,22 +37,21 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 		 * Antes de subir posicion actual, se chequea si se paso la hora establecida como limite
 		 * para enviar al servicio web la posicion.
 		 */
-		//rp3.configuration.Configuration.TryInitializeConfiguration(context);
-		//String horaLimite = rp3.configuration.Configuration.getAppConfiguration().get(Contants.ALARM_CANCEL_TIME);
-		//String[] tiempoLimite = horaLimite.split("H");
 		try
 		{
+			Session.Start(context);
+			rp3.configuration.Configuration.TryInitializeConfiguration(context);
 			if(context == null)
-				Log.e("RP3 Marketforce", "Context is null");
+				Utils.ErrorToFile("Context is null - " + Calendar.getInstance().getTime().toString());
 			else
-				Log.e("RP3 Marketforce", "Context is ok");
+				Utils.ErrorToFile("Context is ok - " + Calendar.getInstance().getTime().toString());
 			Calendar calendarCurrent = Calendar.getInstance();
 			calendarCurrent.setTimeInMillis(System.currentTimeMillis());
 			
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTimeInMillis(System.currentTimeMillis());
 			Calendar cal = Calendar.getInstance();
-			cal.setTimeInMillis(PreferenceManager.getInt(Contants.KEY_ALARMA_FIN));
+			cal.setTimeInMillis(PreferenceManager.getLong(Contants.KEY_ALARMA_FIN));
 			calendar.set(Calendar.HOUR_OF_DAY, cal.get(Calendar.HOUR_OF_DAY));
 			calendar.set(Calendar.MINUTE, cal.get(Calendar.MINUTE));
 			
@@ -96,7 +100,7 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 						}
 						catch(Exception e)
 						{
-							e.printStackTrace();
+							Utils.ErrorToFile(e);
 						}
 					}
 				});
@@ -108,7 +112,7 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 		}
 		catch(Exception ex)
 		{
-			
+			Utils.ErrorToFile(ex);
 		}
 	}
 	
@@ -136,10 +140,8 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(System.currentTimeMillis());
 		calendar.add(Calendar.DATE, 1);
-		calendar.set(Calendar.HOUR_OF_DAY, 8);
-		calendar.set(Calendar.MINUTE, 30);
 		Calendar cal = Calendar.getInstance();
-		int time = PreferenceManager.getInt(Contants.KEY_ALARMA_INICIO);
+		long time = PreferenceManager.getLong(Contants.KEY_ALARMA_INICIO);
 		cal.setTimeInMillis(time);
 		calendar.set(Calendar.HOUR_OF_DAY, cal.get(Calendar.HOUR_OF_DAY));
 		calendar.set(Calendar.MINUTE, cal.get(Calendar.MINUTE));

@@ -46,6 +46,7 @@ import android.widget.Toast;
 import rp3.app.BaseActivity;
 import rp3.app.BaseFragment;
 import rp3.configuration.PreferenceManager;
+import rp3.content.GeopoliticalStructureAdapter;
 import rp3.content.SimpleDictionaryAdapter;
 import rp3.content.SimpleGeneralValueAdapter;
 import rp3.content.SimpleIdentifiableAdapter;
@@ -101,7 +102,7 @@ public class CrearClienteFragment extends BaseFragment {
 	private ImageView ArrowCont;
 	private ImageView ArrowDir;
 	private List<GeopoliticalStructure> ciudades;
-	private List<String> ciudades_string;
+	private GeopoliticalStructureAdapter adapter;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -169,6 +170,8 @@ public class CrearClienteFragment extends BaseFragment {
 			else
 			{
 				cli.setApellido1("");
+				cli.setApellido2("");
+				cli.setNombre2("");
 				cli.setNombre1(((EditText)info.findViewById(R.id.cliente_nombre)).getText().toString());
 				cli.setActividadEconomica(((EditText)info.findViewById(R.id.cliente_actividad_economica)).getText().toString());
 				cli.setCorreoElectronico(((EditText)info.findViewById(R.id.cliente_correo_juridico)).getText().toString());
@@ -209,15 +212,8 @@ public class CrearClienteFragment extends BaseFragment {
 				cliDir.setTelefono2(((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_telefono2)).getText().toString());
 				cliDir.setReferencia(((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_referencia)).getText().toString());
 				cliDir.setCiudadDescripcion(((AutoCompleteTextView)listViewDirecciones.get(i).findViewById(R.id.cliente_ciudad)).getText().toString());
-				try
-				{
-					cliDir.setIdCiudad((int) ciudades.get(ciudades_string.indexOf(((AutoCompleteTextView)listViewDirecciones.get(i).findViewById(R.id.cliente_ciudad)).getText().toString())).getID());
-				}
-				catch(Exception ex)
-				{
-					Toast.makeText(getContext(), "Ingrese correctamente la ciudad en una de las direcciones ingresadas.", Toast.LENGTH_LONG).show();
-					return;
-				}
+				cliDir.setIdCiudad((int) GeopoliticalStructure.getGeopoliticalStructureName(getDataBase(),(((AutoCompleteTextView)listViewDirecciones.get(i).findViewById(R.id.cliente_ciudad)).getText().toString())).getID());
+
 				if(!((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_longitud)).getText().toString().equals(""))
 				{
 					cliDir.setLongitud(Double.parseDouble(((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_longitud)).getText().toString()));
@@ -285,11 +281,9 @@ public class CrearClienteFragment extends BaseFragment {
 		{
 		listViewDirecciones = new ArrayList<LinearLayout>();
 		listViewContactos = new ArrayList<LinearLayout>();
-		ciudades = GeopoliticalStructure.getGeopoliticalStructureByType(getDataBase(), 3);
-		ciudades_string = new ArrayList<String>();
+		//ciudades = GeopoliticalStructure.getGeopoliticalStructureCities(getDataBase());
 		
-		for(GeopoliticalStructure gs : ciudades)
-			ciudades_string.add(gs.getName());
+		adapter = new GeopoliticalStructureAdapter(getContext(), getDataBase());
 		
 		TabInfo = (ImageButton) getRootView().findViewById((R.id.detail_tab_info));
 		TabDirecciones = (ImageButton) getRootView().findViewById((R.id.detail_tab_direccion));
@@ -585,9 +579,8 @@ public class CrearClienteFragment extends BaseFragment {
 		SimpleGeneralValueAdapter tipoDireccionAdapter = new SimpleGeneralValueAdapter(getContext(), getDataBase(), rp3.marketforce.Contants.GENERAL_TABLE_TIPO_DIRECCION);
 		((Spinner) direccion.findViewById(R.id.cliente_tipo_direccion_spinner)).setAdapter(tipoDireccionAdapter);
 		
-		final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(),android.R.layout.simple_list_item_1,ciudades_string);
 		((AutoCompleteTextView)direccion.findViewById(R.id.cliente_ciudad)).setAdapter(adapter);
-		((AutoCompleteTextView)direccion.findViewById(R.id.cliente_ciudad)).setThreshold(1);
+		((AutoCompleteTextView)direccion.findViewById(R.id.cliente_ciudad)).setThreshold(3);
 		
 		DireccionContainer.addView(direccion);
 		listViewDirecciones.add(direccion);
@@ -718,6 +711,25 @@ public class CrearClienteFragment extends BaseFragment {
 		{
 			Toast.makeText(getContext(), "Falta identificación del cliente.", Toast.LENGTH_LONG).show();
 			return false;
+		}
+		
+		for(int i = 0; i < listViewDirecciones.size(); i++)
+		{
+			String dir =(((AutoCompleteTextView)listViewDirecciones.get(i).findViewById(R.id.cliente_ciudad)).getText().toString());
+			try
+			{
+				int id = ((int) GeopoliticalStructure.getGeopoliticalStructureName(getDataBase(),(((AutoCompleteTextView)listViewDirecciones.get(i).findViewById(R.id.cliente_ciudad)).getText().toString())).getID());
+				if(id == 0)
+				{
+					Toast.makeText(getContext(), "Ingrese correctamente la ciudad en una de las direcciones ingresadas.", Toast.LENGTH_LONG).show();
+					return false;
+				}
+			}
+			catch(Exception ex)
+			{
+				Toast.makeText(getContext(), "Ingrese correctamente la ciudad en una de las direcciones ingresadas.", Toast.LENGTH_LONG).show();
+				return false;
+			}
 		}
 		return true;
 	}

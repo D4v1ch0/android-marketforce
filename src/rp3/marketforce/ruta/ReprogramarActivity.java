@@ -1,5 +1,7 @@
 package rp3.marketforce.ruta;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import rp3.app.BaseActivity;
@@ -10,6 +12,7 @@ import rp3.marketforce.models.Agenda;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.util.Convert;
 import rp3.util.Screen;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -19,15 +22,19 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.TimePicker;
 
 public class ReprogramarActivity extends BaseActivity {
 	
+	private static final int TIME_PICKER_INTERVAL = 5;
 	public static String ARG_AGENDA = "idagenda";
 	private long idAgenda;
 	private DatePicker calendar;
 	private TimePicker desdePicker, hastaPicker;
 	private Agenda agenda;
+	private NumberPicker minutePicker;
+	private ArrayList<String> displayedValues;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -72,11 +79,15 @@ public class ReprogramarActivity extends BaseActivity {
 	    {
 	    	
 	    }
-	    desdePicker.setCurrentHour(agenda.getFechaInicio().getHours());
-	    desdePicker.setCurrentMinute(agenda.getFechaInicio().getMinutes());
 	    
+	    setTimePickerInterval(desdePicker);
+	    setTimePickerInterval(hastaPicker);
+	    
+	    desdePicker.setCurrentMinute(agenda.getFechaInicio().getMinutes() / 5);
+	    hastaPicker.setCurrentMinute(agenda.getFechaFin().getMinutes() / 5);
+	    
+	    desdePicker.setCurrentHour(agenda.getFechaInicio().getHours());	    
 	    hastaPicker.setCurrentHour(agenda.getFechaFin().getHours());
-	    hastaPicker.setCurrentMinute(agenda.getFechaFin().getMinutes());
 	    
 	}
 	
@@ -94,10 +105,10 @@ public class ReprogramarActivity extends BaseActivity {
 		calFin.set(Calendar.YEAR, calendar.getYear());
 		
 		cal.set(Calendar.HOUR_OF_DAY, desdePicker.getCurrentHour());
-		cal.set(Calendar.MINUTE, desdePicker.getCurrentMinute());
+		cal.set(Calendar.MINUTE, desdePicker.getCurrentMinute() * TIME_PICKER_INTERVAL);
 		
 		calFin.set(Calendar.HOUR_OF_DAY, hastaPicker.getCurrentHour());
-		calFin.set(Calendar.MINUTE, hastaPicker.getCurrentMinute());
+		calFin.set(Calendar.MINUTE, hastaPicker.getCurrentMinute() * TIME_PICKER_INTERVAL);
 		
 		agenda.setFechaInicio(cal.getTime());
 		agenda.setFechaFin(calFin.getTime());
@@ -119,5 +130,31 @@ public class ReprogramarActivity extends BaseActivity {
 	{
 		finish();
 	}
+	
+	@SuppressLint("NewApi")
+    private void setTimePickerInterval(TimePicker timePicker) {
+         try {
+                Class<?> classForid = Class.forName("com.android.internal.R$id");
+               // Field timePickerField = classForid.getField("timePicker");  
+
+                Field field = classForid.getField("minute");
+                minutePicker = (NumberPicker) timePicker
+                        .findViewById(field.getInt(null));
+
+                minutePicker.setMinValue(0);
+                minutePicker.setMaxValue(11);
+                displayedValues = new ArrayList<String>();
+                for (int i = 0; i < 60; i += TIME_PICKER_INTERVAL) {
+                    displayedValues.add(String.format("%02d", i));
+                }
+                for (int i = 0; i < 60; i += TIME_PICKER_INTERVAL) {
+                    displayedValues.add(String.format("%02d", i));
+                }
+                minutePicker.setDisplayedValues(displayedValues
+                        .toArray(new String[0]));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+    }
 
 }

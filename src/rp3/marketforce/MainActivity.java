@@ -14,6 +14,7 @@ import rp3.app.NavActivity;
 import rp3.app.nav.NavItem;
 import rp3.configuration.PreferenceManager;
 import rp3.data.MessageCollection;
+import rp3.data.models.GeopoliticalStructure;
 import rp3.marketforce.cliente.ClientFragment;
 import rp3.marketforce.content.EnviarUbicacionReceiver;
 import rp3.marketforce.dashboard.DashboardFragment;
@@ -71,6 +72,7 @@ public class MainActivity extends rp3.app.NavActivity{
 	public static final int NAV_RESUMEN		 	= 10;
 	public static final int NAV_RECORRIDO	 	= 11;
 	public String lastTitle = "";
+	private int selectedItem = -1;
 	
 	public static Intent newIntent(Context c){
 		Intent i = new Intent(c, MainActivity.class);
@@ -171,8 +173,10 @@ public class MainActivity extends rp3.app.NavActivity{
 		
 		navItems.add(dashboard);
 		if(PreferenceManager.getInt(Contants.KEY_IDRUTA) != 0)
+		{
 			navItems.add(rutas);
-		navItems.add(clientes);
+			navItems.add(clientes);
+		}
 		navItems.add(recorrido);
 		if(PreferenceManager.getBoolean(Contants.KEY_ES_SUPERVISOR))
 			navItems.add(grupo);
@@ -185,6 +189,7 @@ public class MainActivity extends rp3.app.NavActivity{
 	@Override
 	public void onNavItemSelected(NavItem item) {
 		super.onNavItemSelected(item);
+		selectedItem = item.getId();
 		switch (item.getId()) {
 		case NAV_DASHBOARD:
 			setNavFragment(DashboardFragment.newInstance(0), item.getTitle());
@@ -293,12 +298,23 @@ public class MainActivity extends rp3.app.NavActivity{
 			}
 			else
 			{
-				finish();
+				int startNav = NAV_DASHBOARD;			
+				setNavigationSelection(startNav);
+				getActionBar().setTitle(getString(R.string.title_option_setinicio));
+				lastTitle = getString(R.string.title_option_setinicio);
 			}
 		}
 		else
 		{
-			finish();
+			if(selectedItem == NAV_DASHBOARD)
+				finish();
+			else
+			{
+				int startNav = NAV_DASHBOARD;			
+				setNavigationSelection(startNav);
+				getActionBar().setTitle(getString(R.string.title_option_setinicio));
+				lastTitle = getString(R.string.title_option_setinicio);
+			}
 		}
 	}
 	

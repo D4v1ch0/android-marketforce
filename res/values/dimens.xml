@@ -5,4 +5,5 @@
 	<dimen name="list_map">140dp</dimen>
 	<dimen name="expand_map">20dp</dimen>
 	<dimen name="image_size">130dp</dimen>
+	<dimen name="text_medium_plus_size">19sp</dimen>
 </resources>

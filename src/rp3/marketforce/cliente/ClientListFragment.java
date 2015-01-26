@@ -4,18 +4,27 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.headerlistview.HeaderListView;
 import rp3.marketforce.loader.ClientLoader;
 import rp3.marketforce.models.Cliente;
+import rp3.marketforce.ruta.CrearVisitaActivity;
+import rp3.marketforce.ruta.CrearVisitaFragment;
+import rp3.marketforce.ruta.ReprogramarActivity;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnLongClickListener;
+import android.widget.AdapterView;
+import android.widget.PopupMenu;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.LinearLayout;
 
 public class ClientListFragment extends rp3.app.BaseFragment {
@@ -221,6 +230,8 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 	    			id_select = R.id.item_order_name;
 	    			
 	    		   OrderBy(ORDER_BY_NAME);
+	    		   
+	    		   break;
 		    			
 	               
 	                
@@ -229,6 +240,8 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 	    			id_select = R.id.item_order_last_name;
 	    				
 	    			OrderBy(ORDER_BY_LAST_NAME);
+	    			
+	    			break;
 	    				
 	              
 	    	}
@@ -294,6 +307,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 			}
 				adapter = new ClientListAdapter(this.getActivity(), list_order, headersortList, ORDER_BY_NAME, clienteListFragmentCallback);
 				headerList.setAdapter(adapter);
+				adapter.notifyDataSetChanged();
 			
 //			ORDER_IDENTIFICATOR	= ORDER_BY_NAME;
 			
@@ -301,8 +315,18 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 		case ORDER_BY_LAST_NAME:
 			
 			for(int x = 0 ; x < lista.size() ; x++)
-				if(!headersortList.contains(""+lista.get(x).getApellido1().charAt(0)))
-					headersortList.add(""+lista.get(x).getApellido1().charAt(0));
+			{
+				if(!lista.get(x).getTipoPersona().equalsIgnoreCase("J"))
+				{
+					if(!headersortList.contains(""+lista.get(x).getApellido1().charAt(0)))
+						headersortList.add(""+lista.get(x).getApellido1().charAt(0));
+				}
+				else
+				{
+					if(!headersortList.contains(""+lista.get(x).getNombre1().charAt(0)))
+						headersortList.add(""+lista.get(x).getNombre1().charAt(0));
+				}
+			}
 			
 			Collections.sort(headersortList);
 			
@@ -312,7 +336,24 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 				
 				for(int y = 0 ; y < lista.size() ; y++)
 				{
+					if(lista.get(y).getTipoPersona().equalsIgnoreCase("N") || lista.get(y).getTipoPersona().equalsIgnoreCase("C"))
 					if(headersortList.get(x).equals(""+lista.get(y).getApellido1().charAt(0)))
+					{
+						rp3.marketforce.models.Cliente cliente = new rp3.marketforce.models.Cliente();
+						
+						cliente.setID(lista.get(y).getID());						
+						cliente.setNombre1(lista.get(y).getNombre1());
+						cliente.setNombre2(lista.get(y).getNombre2());
+						cliente.setApellido1(lista.get(y).getApellido1());
+						cliente.setApellido2(lista.get(y).getApellido2());	
+						cliente.setTelefono(lista.get(y).getTelefono());
+						cliente.setDireccion(lista.get(y).getDireccion());
+						cliente.setCorreoElectronico(lista.get(y).getCorreoElectronico());	
+						cliente.setTipoPersona(lista.get(y).getTipoPersona());
+						
+						list_aux.add(cliente);
+					}
+					if(lista.get(y).getTipoPersona().equalsIgnoreCase("J") && headersortList.get(x).equals(""+lista.get(y).getNombre1().charAt(0)))
 					{
 						rp3.marketforce.models.Cliente cliente = new rp3.marketforce.models.Cliente();
 						
@@ -334,6 +375,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 			}
 				adapter = new ClientListAdapter(this.getActivity(), list_order, headersortList, ORDER_BY_LAST_NAME, clienteListFragmentCallback);
 				headerList.setAdapter(adapter);
+				adapter.notifyDataSetChanged();
 //			ORDER_IDENTIFICATOR	= ORDER_BY_LAST_NAME;
 			
 			break;
@@ -367,6 +409,35 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 			OrderBy(ORDER_BY_NAME);
 			clienteListFragmentCallback.onFinalizaConsulta();
 			adapter.notifyDataSetChanged();
+			headerList.getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
+
+				@Override
+				public boolean onItemLongClick(AdapterView<?> parent,
+						final View view, final int position, long id) {
+					PopupMenu popup = new PopupMenu(getContext(), view);
+	                
+	                popup.getMenuInflater()
+	                    .inflate(R.menu.list_item_client_menu, popup.getMenu());
+	                
+	                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+	                    public boolean onMenuItemClick(MenuItem item) {
+	                        switch(item.getItemId())
+	                        {
+	                        	case R.id.item_menu_clientes_crear_visita:
+	                        		Intent intent2 = new Intent(getActivity(), CrearVisitaActivity.class);
+	                        		intent2.putExtra(CrearVisitaFragment.ARG_IDAGENDA, view.getId());
+	                        		intent2.putExtra(CrearVisitaFragment.ARG_FROM, "Cliente");
+	                        		startActivity(intent2);
+	                        		adapter.setAction(true);
+	                        	break;
+	                        }
+	                        return true;
+	                    }
+	                });
+	                popup.show();
+					return false;
+				}
+			});
 		}
 
 		@Override

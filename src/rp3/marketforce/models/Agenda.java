@@ -754,6 +754,11 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 				agd.setLatitud(CursorUtils.getDouble(c, Contract.Agenda.COLUMN_LATITUD));
 				agd.setLongitud(CursorUtils.getDouble(c, Contract.Agenda.COLUMN_LONGITUD));
 				
+				Cliente cli = rp3.marketforce.models.Cliente.getClienteIDServer(db, agd.getIdCliente(), false);
+				ClienteDireccion cliDir = rp3.marketforce.models.ClienteDireccion.getClienteDireccionIdDireccion(db, agd.getIdCliente(),  agd.getIdClienteDireccion());
+				agd.setNombreCompleto(cli.getNombreCompleto().trim());
+				agd.setDireccion(cliDir.getDireccion());
+				
 				if(agd.getIdAgenda() == 0)
 					agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getID(), agd.getIdRuta(), true));
 				else
@@ -869,7 +874,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			do
 			{
 				Agenda agd = new Agenda();
-				agd.setID(CursorUtils.getInt(c, Contract.Agenda.COLUMN_AGENDA_ID));
+				agd.setID(CursorUtils.getInt(c, Contract.Agenda._ID));
 				agd.setIdAgenda(CursorUtils.getInt(c, Contract.Agenda.COLUMN_AGENDA_ID));
 				agd.setIdCliente(CursorUtils.getInt(c, Contract.Agenda.FIELD_CLIENTE_ID));
 				agd.setIdClienteDireccion(CursorUtils.getInt(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION_ID));

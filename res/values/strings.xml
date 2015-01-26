@@ -70,7 +70,7 @@
     <string name="label_menu_ver_rutas">Ver Rutas</string>
     <string name="label_menu_ver_posicion">Mostrar Ubicación</string>
     <string name="label_menu_como_llegar">Como Llegar</string>
-    <string name="label_rutas_por_fecha">Rutas Por Fecha</string>
+    <string name="label_rutas_por_fecha">Ruta</string>
     <string name="label_como_llegar">Como Llegar</string>
     <string name="label_posicion">Ubicación</string>
     <string name="abreviatura_visitado">Visitado</string>
@@ -121,8 +121,8 @@
     <string name="label_agregue_observacion">Agregue una observación</string>
     <string name="label_sin_tareas">No tiene tareas asignadas</string>
     <string name="label_inicio_server">Antes de empezar, escoja el servidor.</string>
-    <string name="label_demo">Demo</string>
-    <string name="label_ingreso_server">Ingrese el código de su servidor</string>
+    <string name="label_demo">¡Gracias por utilizar Market Force!</string>
+    <string name="label_ingreso_server">Tengo un código de licencia</string>
     <string name="warning_modificar_contacto_no_visitada">No puede modificar o asignar un contacto, a una agenda no visitada.</string>
     <string name="warning_seleccionar_agenda">Debe seleccionar una agenda</string>
     <string name="warning_gestionar_agenda">La agenda debe de tener el estado Gestionando para poder modificarla.</string>
@@ -132,5 +132,9 @@
     <string name="label_supervisor">Supervisor</string>
     <string name="label_administrador">Administrador</string>
     <string name="label_codigo_server">Código del Servidor</string>
+    <string name="label_crear_visita_datos">Crear Visita</string>
+    <string name="label_texto_presentacion">Escoja su tipo de licencia</string>
+    <string name="label_button_demo">No tengo licencia, utilizar DEMO</string>
+    <string name="label_ingrese_codigo">Ingrese el código</string>
 
 </resources>

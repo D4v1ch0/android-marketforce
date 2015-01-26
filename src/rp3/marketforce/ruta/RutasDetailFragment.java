@@ -46,7 +46,9 @@ import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.Intents;
 import android.provider.ContactsContract.RawContacts;
+import android.support.v4.view.MenuItemCompat;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -54,6 +56,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -122,6 +125,29 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
     }
     
     @Override
+    public void onAfterCreateOptionsMenu(Menu menu) {
+    	if(menu.findItem(R.id.action_search_ruta) != null)
+    	{
+	    	 SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search_ruta));
+			 searchView.setVisibility(View.GONE);
+	 		 menu.removeItem(R.id.action_search_ruta);
+	 		 menu.removeItem(R.id.action_crear_visita);
+	 		 if(idAgenda != 0)
+	 		 {
+	 			 String estado = Agenda.getAgendaEstado(getDataBase(), idAgenda);
+		  		 if(estado.equalsIgnoreCase(Contants.ESTADO_NO_VISITADO) || estado.equalsIgnoreCase(Contants.ESTADO_VISITADO))
+		  		 	menu.removeItem(R.id.action_cambiar_contacto);
+		  		 if(!estado.equalsIgnoreCase(Contants.ESTADO_PENDIENTE) && !estado.equalsIgnoreCase(Contants.ESTADO_REPROGRAMADO))
+		  		 {
+		  		 	menu.removeItem(R.id.action_no_visita);
+		  		 	menu.removeItem(R.id.action_reprogramar);
+		  		 }
+	 		 }
+    	}
+    	super.onAfterCreateOptionsMenu(menu);
+    }
+    
+    @Override
     public void onResume() {
     	super.onResume();
     	agenda = Agenda.getAgenda(getDataBase(), idAgenda);
@@ -186,9 +212,13 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 				setViewVisibility(R.id.detail_agenda_button_cancelar, View.GONE);
 				setViewVisibility(R.id.detail_agenda_button_modificar, View.VISIBLE);
 			}
+			setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());
 			
 			if(!ValidarAgendas())
+			{
 				   setViewVisibility(R.id.detail_agenda_button_iniciar, View.GONE);
+				   setViewVisibility(R.id.detail_agenda_button_modificar, View.GONE);
+			}
     	
     	adapter = new ListaTareasAdapter(getActivity(), agenda.getAgendaTareas());
     	lista_tarea.setAdapter(adapter);
@@ -216,8 +246,9 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 		   rootView.findViewById(R.id.detail_agenda_observacion).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				obsFragment = ObservacionesFragment.newInstance(agenda.getID());
-				showDialogFragment(obsFragment, "");
+				Intent intent = new Intent(getContext(), ObservacionesActivity.class);
+				intent.putExtra(ARG_ITEM_ID, agenda.getID());
+				startActivity(intent);
 			}
 		   });
 			
@@ -315,6 +346,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 					agenda.setEstadoAgenda(Contants.ESTADO_VISITADO);
 					agenda.setEstadoAgendaDescripcion(Contants.DESC_VISITADO);
 					agenda.setFechaFinReal(Calendar.getInstance().getTime());
+					agenda.setEnviado(false);
 					final Context ctx = getContext();
 					try
 					{
@@ -326,6 +358,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 								agenda.setLatitud(location.getLatitude());
 								agenda.setLongitud(location.getLongitude());
 							}
+								agenda.setEnviado(false);
 								BaseActivity act = (BaseActivity) ctx;
 								Agenda.update(act.getDataBase(), agenda);
 								Bundle bundle = new Bundle();
