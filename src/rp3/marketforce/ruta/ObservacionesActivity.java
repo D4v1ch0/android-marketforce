@@ -3,12 +3,14 @@ package rp3.marketforce.ruta;
 import rp3.app.BaseActivity;
 import rp3.marketforce.R;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 
 public class ObservacionesActivity extends BaseActivity {
+	ObservacionesFragment newFragment;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -29,9 +31,16 @@ public class ObservacionesActivity extends BaseActivity {
 	    id = getIntent().getLongExtra(RutasDetailFragment.ARG_ITEM_ID, 0);
 	    setTitle("Observaciones");
 	    if (!hasFragment(rp3.core.R.id.content)) {
-	    	ObservacionesFragment newFragment = ObservacionesFragment.newInstance(id);
+	    	newFragment = ObservacionesFragment.newInstance(id);
             setFragment(rp3.core.R.id.content, newFragment);    
         }
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		newFragment.onActivityResult(requestCode, resultCode, data);
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 }

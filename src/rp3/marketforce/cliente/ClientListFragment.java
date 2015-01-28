@@ -408,36 +408,39 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 			lista = data;			
 			OrderBy(ORDER_BY_NAME);
 			clienteListFragmentCallback.onFinalizaConsulta();
-			adapter.notifyDataSetChanged();
-			headerList.getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
-
-				@Override
-				public boolean onItemLongClick(AdapterView<?> parent,
-						final View view, final int position, long id) {
-					PopupMenu popup = new PopupMenu(getContext(), view);
-	                
-	                popup.getMenuInflater()
-	                    .inflate(R.menu.list_item_client_menu, popup.getMenu());
-	                
-	                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-	                    public boolean onMenuItemClick(MenuItem item) {
-	                        switch(item.getItemId())
-	                        {
-	                        	case R.id.item_menu_clientes_crear_visita:
-	                        		Intent intent2 = new Intent(getActivity(), CrearVisitaActivity.class);
-	                        		intent2.putExtra(CrearVisitaFragment.ARG_IDAGENDA, view.getId());
-	                        		intent2.putExtra(CrearVisitaFragment.ARG_FROM, "Cliente");
-	                        		startActivity(intent2);
-	                        		adapter.setAction(true);
-	                        	break;
-	                        }
-	                        return true;
-	                    }
-	                });
-	                popup.show();
-					return false;
-				}
-			});
+			if(adapter != null)
+			{
+				adapter.notifyDataSetChanged();
+				headerList.getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
+	
+					@Override
+					public boolean onItemLongClick(AdapterView<?> parent,
+							final View view, final int position, long id) {
+						PopupMenu popup = new PopupMenu(getContext(), view);
+		                
+		                popup.getMenuInflater()
+		                    .inflate(R.menu.list_item_client_menu, popup.getMenu());
+		                
+		                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+		                    public boolean onMenuItemClick(MenuItem item) {
+		                        switch(item.getItemId())
+		                        {
+		                        	case R.id.item_menu_clientes_crear_visita:
+		                        		Intent intent2 = new Intent(getActivity(), CrearVisitaActivity.class);
+		                        		intent2.putExtra(CrearVisitaFragment.ARG_IDAGENDA, view.getId());
+		                        		intent2.putExtra(CrearVisitaFragment.ARG_FROM, "Cliente");
+		                        		startActivity(intent2);
+		                        		adapter.setAction(true);
+		                        	break;
+		                        }
+		                        return true;
+		                    }
+		                });
+		                popup.show();
+						return false;
+					}
+				});
+			}
 		}
 
 		@Override

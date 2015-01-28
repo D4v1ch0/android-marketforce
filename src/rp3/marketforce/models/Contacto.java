@@ -157,6 +157,17 @@ public class Contacto extends rp3.data.entity.EntityBase<Contacto>{
 		return false;
 	};
 	
+	@Override
+	protected boolean updateDb(DataBase db) {
+		boolean result = super.updateDb(db);
+		if(result)
+		{
+			ContactoExt ext = new ContactoExt();
+			return ContactoExt.update(db, ext);
+		}
+		return false;
+	};
+	
 	public static void deleteContactoIdCliente(DataBase db, long id)
     {
     	db.delete(Contract.Contacto.TABLE_NAME, Contract.Contacto.COLUMN_ID_CLIENTE + " = ?", id);
@@ -262,6 +273,11 @@ public class Contacto extends rp3.data.entity.EntityBase<Contacto>{
 		public void setID(long idtext) {
 			id = idtext;
 			
+		}
+		
+		@Override
+		public String getWhere() {			
+			return Contract.ContactoExt.COLUMN_ID + " = ?";
 		}
 
 		@Override
