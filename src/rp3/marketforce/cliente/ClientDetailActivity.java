@@ -12,12 +12,14 @@ import rp3.marketforce.models.Contacto;
 import rp3.marketforce.utils.DetailsPageAdapter;
 import rp3.marketforce.utils.DrawableManager;
 import rp3.marketforce.utils.Utils;
+import rp3.util.BitmapUtils;
 import rp3.util.Screen;
 import rp3.widget.ViewPager;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.TypedValue;
@@ -498,7 +500,10 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
 		 * Se cambia la carga de foto por un lazy load
 		 */
 		//setImageViewBitmapFromInternalStorageAsync(R.id.imageView_foto, client.getFotoFileName());
-		DManager.fetchDrawableOnThread(PreferenceManager.getString("server") + 
+		((ImageView) this.getRootView().findViewById(R.id.imageView_foto)).setImageBitmap(BitmapUtils.getRoundedRectBitmap(
+				BitmapFactory.decodeResource(getResources(), R.drawable.user), 
+				getResources().getDimensionPixelOffset(R.dimen.image_size)));
+		DManager.fetchDrawableOnThreadRounded(PreferenceManager.getString("server") + 
 				rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + Utils.getImageDPISufix(getApplicationContext(), client.getURLFoto()),
 				(ImageView) this.getRootView().findViewById(R.id.imageView_foto));
 		setTextViewText(R.id.textView_tipo_canal,
@@ -774,7 +779,10 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
 		 * Se cambia la carga de foto por un lazy load
 		 */
 		//setImageViewBitmapFromInternalStorageAsync(R.id.imageView_foto, client.getFotoFileName());
-		DManager.fetchDrawableOnThread(PreferenceManager.getString("server") + 
+		((ImageView) this.getRootView().findViewById(R.id.imageView_foto)).setImageBitmap(BitmapUtils.getRoundedRectBitmap(
+				BitmapFactory.decodeResource(getResources(), R.drawable.user), 
+				getResources().getDimensionPixelOffset(R.dimen.image_size)));
+		DManager.fetchDrawableOnThreadRounded(PreferenceManager.getString("server") + 
 				rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + Utils.getImageDPISufix(getApplicationContext(), client.getURLFoto()),
 				(ImageView) this.getRootView().findViewById(R.id.imageView_foto));
 		setTextViewText(R.id.textView_tipo_canal,
@@ -950,7 +958,10 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
 		 * Se cambia la carga de foto por un lazy load
 		 */
 		//setImageViewBitmapFromInternalStorageAsync(R.id.imageView_foto, client.getFotoFileName());
-		DManager.fetchDrawableOnThread(PreferenceManager.getString("server") + 
+		((ImageView) this.getRootView().findViewById(R.id.imageView_foto)).setImageBitmap(BitmapUtils.getRoundedRectBitmap(
+				BitmapFactory.decodeResource(getResources(), R.drawable.user), 
+				getResources().getDimensionPixelOffset(R.dimen.image_size)));
+		DManager.fetchDrawableOnThreadRounded(PreferenceManager.getString("server") + 
 				rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + Utils.getImageDPISufix(getApplicationContext(), contacto.getURLFoto()),
 				(ImageView) findViewById(R.id.imageView_foto));
 		setTextViewText(R.id.textView_tipo_canal,

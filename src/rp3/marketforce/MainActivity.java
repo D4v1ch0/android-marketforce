@@ -15,17 +15,22 @@ import rp3.app.nav.NavItem;
 import rp3.configuration.PreferenceManager;
 import rp3.data.MessageCollection;
 import rp3.data.models.GeopoliticalStructure;
+import rp3.data.models.GeopoliticalStructure.GeopoliticalStructureExt;
 import rp3.marketforce.cliente.ClientFragment;
 import rp3.marketforce.content.EnviarUbicacionReceiver;
 import rp3.marketforce.dashboard.DashboardFragment;
 import rp3.marketforce.db.Contract;
+import rp3.marketforce.db.DbOpenHelper;
 import rp3.marketforce.models.Actividad;
 import rp3.marketforce.models.Agenda;
+import rp3.marketforce.models.Agenda.AgendaExt;
 import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.AgendaTareaActividades;
 import rp3.marketforce.models.Cliente;
+import rp3.marketforce.models.Cliente.ClientExt;
 import rp3.marketforce.models.ClienteDireccion;
 import rp3.marketforce.models.Contacto;
+import rp3.marketforce.models.Contacto.ContactoExt;
 import rp3.marketforce.models.Tarea;
 import rp3.marketforce.models.Ubicacion;
 import rp3.marketforce.recorrido.RecorridoFragment;
@@ -83,7 +88,7 @@ public class MainActivity extends rp3.app.NavActivity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);		
-		
+		rp3.configuration.Configuration.TryInitializeConfiguration(this, DbOpenHelper.class);
 //		Session.Start(this);
 		
 		//extractDatabase();
@@ -91,12 +96,23 @@ public class MainActivity extends rp3.app.NavActivity{
 		this.setNavHeaderTitle(Session.getUser().getFullName());
 		this.setNavHeaderSubtitle(PreferenceManager.getString(Contants.KEY_CARGO));
 		showNavHeader(true);
+		
 		setNavHeaderIcon(getResources().getDrawable(R.drawable.ic_user_new));
 		if(savedInstanceState == null){
 			int startNav = NAV_DASHBOARD;			
 			setNavigationSelection(startNav);  									
 		}
 		setAlarm();	
+		Bundle bundle = new Bundle();
+		bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_GEOPOLITICAL);
+		requestSync(bundle);
+		if(PreferenceManager.getBoolean(Contants.KEY_ES_SUPERVISOR))
+		{
+			Bundle bundle2 = new Bundle();
+			bundle2.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SOLO_RESUMEN);
+			requestSync(bundle2);
+		}
+			
 	}
 	
 	@Override
@@ -172,6 +188,7 @@ public class MainActivity extends rp3.app.NavActivity{
 		settingsGroup.addChildItem(cerrarsesion);
 		
 		navItems.add(dashboard);
+		int ruta = PreferenceManager.getInt(Contants.KEY_IDRUTA);
 		if(PreferenceManager.getInt(Contants.KEY_IDRUTA) != 0)
 		{
 			navItems.add(rutas);
@@ -246,13 +263,24 @@ public class MainActivity extends rp3.app.NavActivity{
 			break;
 		case NAV_CERRAR_SESION:	
 			Agenda.deleteAll(getDataBase(), Contract.Agenda.TABLE_NAME);
-			Tarea.deleteAll(getDataBase(), Contract.Agenda.TABLE_NAME);
-			Cliente.deleteAll(getDataBase(), Contract.Agenda.TABLE_NAME);
-			ClienteDireccion.deleteAll(getDataBase(), Contract.Agenda.TABLE_NAME);
-			Contacto.deleteAll(getDataBase(), Contract.Agenda.TABLE_NAME);
-			Actividad.deleteAll(getDataBase(), Contract.Agenda.TABLE_NAME);
-			AgendaTarea.deleteAll(getDataBase(), Contract.Agenda.TABLE_NAME);
-			AgendaTareaActividades.deleteAll(getDataBase(), Contract.Agenda.TABLE_NAME);
+			AgendaExt.deleteAll(getDataBase(), Contract.AgendaExt.TABLE_NAME);
+			Tarea.deleteAll(getDataBase(), Contract.Tareas.TABLE_NAME);
+			Cliente.deleteAll(getDataBase(), Contract.Cliente.TABLE_NAME);
+			ClientExt.deleteAll(getDataBase(), Contract.ClientExt.TABLE_NAME);
+			ClienteDireccion.deleteAll(getDataBase(), Contract.ClienteDireccion.TABLE_NAME);
+			Contacto.deleteAll(getDataBase(), Contract.Contacto.TABLE_NAME);
+			ContactoExt.deleteAll(getDataBase(), Contract.ContactoExt.TABLE_NAME);
+			Actividad.deleteAll(getDataBase(), Contract.Actividades.TABLE_NAME);
+			AgendaTarea.deleteAll(getDataBase(), Contract.AgendaTarea.TABLE_NAME);
+			AgendaTareaActividades.deleteAll(getDataBase(), Contract.AgendaTareaActividades.TABLE_NAME);
+			GeopoliticalStructure.deleteAll(getDataBase(), rp3.data.models.Contract.GeopoliticalStructure.TABLE_NAME);
+			GeopoliticalStructureExt.deleteAll(getDataBase(), rp3.data.models.Contract.GeopoliticalStructureExt.TABLE_NAME);
+			PreferenceManager.setValue(Contants.KEY_IDAGENTE, 0);
+			PreferenceManager.setValue(Contants.KEY_IDRUTA, 0);
+			PreferenceManager.setValue(Contants.KEY_ES_SUPERVISOR, false);
+			PreferenceManager.setValue(Contants.KEY_ES_AGENTE, false);
+			PreferenceManager.setValue(Contants.KEY_ES_ADMINISTRADOR, false);
+			PreferenceManager.setValue(Contants.KEY_CARGO, "");
 			SyncAudit.clearAudit();
 			AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
@@ -361,7 +389,7 @@ public class MainActivity extends rp3.app.NavActivity{
 					Thread.sleep(60000);
 					setAlarm();
 					
-				} catch (InterruptedException e) {
+				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}

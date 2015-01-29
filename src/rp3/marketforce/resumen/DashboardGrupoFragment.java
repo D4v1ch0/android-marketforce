@@ -216,10 +216,10 @@ public class DashboardGrupoFragment extends BaseFragment {
 	 	    , new GraphViewData(3, pendientes)
 	 	});
 
-			mayor = Math.max(visitados, no_visitado);
-			mayor = Math.max(pendientes, mayor);
-			tope = getTope(mayor);
-			
+	 	mayor = Math.max(visitados, no_visitado);
+		mayor = Math.max(pendientes, mayor);
+		tope = getTope(mayor);
+		
 	 	BarGraphView interim = new BarGraphView(getActivity(), "");
 	 	titles.add(title);
 	 	interim.setHorizontalLabels(new String[]{ getString(R.string.abreviatura_visitado), getString(R.string.abreviatura_no_visitado), getString(R.string.abreviatura_pendiente)});
@@ -228,6 +228,8 @@ public class DashboardGrupoFragment extends BaseFragment {
 	 	interim.getGraphViewStyle().setVerticalLabelsAlign(Align.RIGHT);
 	 	interim.getGraphViewStyle().setTextSize(getResources().getDimension(R.dimen.text_small_size));
 	 	interim.addSeries(seriesHoy);
+	 	interim.setDrawValuesOnTop(true);
+	 	interim.setValuesOnTopColor(getContext().getResources().getColor(R.color.color_text_sky_blue));
 	 	((LinearLayout)parent.findViewById(R.id.dashboard_grupo_grafico)).addView(interim);
 	 	
 	 	ResumenAdapter adapter = new ResumenAdapter(getContext(), list_resumen);
@@ -235,7 +237,7 @@ public class DashboardGrupoFragment extends BaseFragment {
 	 	return parent;
 	 }
 
-	 private int getTope(int mayor) {
+	private int getTope(int mayor) {
 		if(mayor < NUM_VERTICAL_LABELS)
 		{
 			int res = mayor % (NUM_VERTICAL_LABELS - 1);
@@ -246,6 +248,8 @@ public class DashboardGrupoFragment extends BaseFragment {
 		}
 		else
 		{
+			while(mayor % (NUM_VERTICAL_LABELS - 1) != 0)
+				mayor++;
 			return mayor;
 		}
 	 }
@@ -260,8 +264,10 @@ public class DashboardGrupoFragment extends BaseFragment {
 		}
 		else
 		{
+			while(tope % (NUM_VERTICAL_LABELS - 1) != 0)
+				tope++;
 			int coeficiente = tope / (NUM_VERTICAL_LABELS - 1);
-			for(int i = NUM_VERTICAL_LABELS-1; i >= 0; i--)
+			for(int i = NUM_VERTICAL_LABELS - 1; i >= 0; i--)
 			{
 				labels.add(""+(i*coeficiente));
 			}

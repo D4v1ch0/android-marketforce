@@ -1,5 +1,6 @@
 package rp3.marketforce.dashboard;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
@@ -53,6 +54,7 @@ public class DashboardAgendaFragment extends BaseFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
+		SimpleDateFormat format4 = new SimpleDateFormat("HH:mm");
 		DrawableManager DManager = new DrawableManager();
     	
     	Calendar cal = Calendar.getInstance();
@@ -95,6 +97,7 @@ public class DashboardAgendaFragment extends BaseFragment {
     	{
     		LayoutInflater inflater = LayoutInflater.from(getActivity());
     		
+    		((LinearLayout) getRootView().findViewById(R.id.dashboard_agenda_container)).removeAllViews();
     		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
     		if(list_agenda.size() <= 0)
     		{
@@ -118,6 +121,7 @@ public class DashboardAgendaFragment extends BaseFragment {
 
     			});
     			agenda_layout.setLayoutParams(params);
+    			((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_hora)).setText(format4.format(agd.getFechaInicio()));
     			((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_rowlist_nombre)).setText(agd.getCliente().getNombreCompleto().trim());
     			((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_phone)).setText(agd.getClienteDireccion().getTelefono1());
     			((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_mail)).setText(agd.getCliente().getCorreoElectronico());
@@ -144,17 +148,32 @@ public class DashboardAgendaFragment extends BaseFragment {
     			Calendar cal_hoy = Calendar.getInstance();
     			Calendar cal_init = Calendar.getInstance();
     			cal_init.setTime(agd.getFechaInicio());
+    			long time_now = cal.getTimeInMillis();
     			long diff = cal_init.getTimeInMillis() - cal_hoy.getTimeInMillis();
+    			
+    			int horas = (int) (diff / (1000*60*60));
+    			int restante = (int) (diff / (1000*60));
+    			int minutos =  restante - (horas * 60);
     			if(diff < 0)
     			{
-    				((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_tiempo)).setText("");
+    				if(horas != 0)
+    					((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_tiempo)).setText("Hace " + Math.abs(horas) + " horas y " + Math.abs(minutos) + " minutos.");
+    				else
+    					((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_tiempo)).setText("Hace " + Math.abs(minutos) + " minutos.");
+    				((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_tiempo)).setTextColor(getResources().getColor(R.color.color_unvisited));
     			}
     			else
     			{
-    				int horas = (int) (diff / (1000*60*60));
-    				int restante = (int) (diff / (1000*60));
-    				int minutos =  restante - (horas * 60);
-    				((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_tiempo)).setText("Faltan " + horas +  " horas con " + minutos +  " minutos para esta reunion.");
+    				if(horas != 0)
+    					((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_tiempo)).setText("Faltan " + horas +  " horas con " + minutos +  " minutos.");
+    				else
+    				{
+    					((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_tiempo)).setText("Faltan " + minutos +  " minutos.");
+    					if(minutos < 30)
+    						((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_tiempo)).setTextColor(getResources().getColor(R.color.color_unvisited));
+    				}
+    				
+    				
     			}
     			((ImageView) agenda_layout.findViewById(R.id.dashboard_agenda_imagen)).setImageBitmap(BitmapUtils.getRoundedRectBitmap(
     					BitmapFactory.decodeResource(getResources(), R.drawable.user), 

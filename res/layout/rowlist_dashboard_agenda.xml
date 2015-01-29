@@ -10,11 +10,23 @@
         android:layout_weight="0.4"
         android:gravity="center" >
 
-        <ImageView
-            android:id="@+id/dashboard_agenda_imagen"
+        <FrameLayout
             android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/user" />
+            android:layout_height="100dp" >
+
+            <ImageView
+                android:id="@+id/dashboard_agenda_imagen"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/user" />
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/circulo" />
+
+        </FrameLayout>
 
     </LinearLayout>
 

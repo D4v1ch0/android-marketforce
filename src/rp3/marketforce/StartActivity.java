@@ -73,16 +73,8 @@ public class StartActivity extends rp3.app.StartActivity{
 			Bundle bundle = new Bundle();
 			bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_GENERAL);
 			requestSync(bundle);
-		}else{
-			if(PreferenceManager.getBoolean(Contants.KEY_ES_SUPERVISOR))
-			{
-				Bundle bundle = new Bundle();
-				bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SOLO_RESUMEN);
-				requestSync(bundle);
-			}
-			else
-				callNextActivity();
-		}
+		}else
+			callNextActivity();
 	}
 	
 	public void onSyncComplete(Bundle data, final MessageCollection messages) {

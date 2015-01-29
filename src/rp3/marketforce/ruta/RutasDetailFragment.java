@@ -80,7 +80,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 	private SimpleDateFormat format1;
 	private SimpleDateFormat format2;
 	protected ObservacionesFragment obsFragment;
-    
+    public boolean reDoMenu = true;
     public interface TransactionDetailListener{
     	public void onDeleteSuccess(Cliente transaction);
     }
@@ -126,7 +126,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
     
     @Override
     public void onAfterCreateOptionsMenu(Menu menu) {
-    	if(menu.findItem(R.id.action_search_ruta) != null)
+    	if(menu.findItem(R.id.action_search_ruta) != null && reDoMenu)
     	{
 	    	 SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search_ruta));
 			 searchView.setVisibility(View.GONE);

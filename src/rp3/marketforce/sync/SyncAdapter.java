@@ -1,5 +1,7 @@
 package rp3.marketforce.sync;
 
+import java.util.Date;
+
 import rp3.configuration.PreferenceManager;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
@@ -10,6 +12,7 @@ import rp3.marketforce.ruta.MotivoNoVisitaFragment;
 import rp3.marketforce.ruta.RutasDetailFragment;
 import rp3.marketforce.ruta.RutasListFragment;
 import rp3.sync.SyncAudit;
+import rp3.util.Convert;
 import android.accounts.Account;
 import android.content.ContentProviderClient;
 import android.content.Context;
@@ -56,9 +59,6 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 			
 			if(syncType == null || syncType.equals(SYNC_TYPE_GENERAL)){								
 				db.beginTransaction();
-				
-				result = rp3.sync.GeopoliticalStructure.executeSync(db);				
-				addDefaultMessage(result);
 				
 				if(result == SYNC_EVENT_SUCCESS){
 					result = rp3.sync.GeneralValue.executeSync(db);
@@ -141,7 +141,15 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 			}
 			else if(syncType.equals(SYNC_TYPE_GEOPOLITICAL))
 			{
-				result = rp3.sync.GeopoliticalStructure.executeSync(db);				
+				long time = 0;
+				Date pru = SyncAudit.getLastSyncDate(SYNC_TYPE_GEOPOLITICAL, SYNC_EVENT_SUCCESS);
+				if(Convert.getTicksFromDate(pru) != 0)
+					result = rp3.sync.GeopoliticalStructure.executeSyncLastUpdate(db, Convert.getDotNetTicksFromDate(SyncAudit.getLastSyncDate(SYNC_TYPE_GEOPOLITICAL, SYNC_EVENT_SUCCESS)));
+				else
+					result = rp3.sync.GeopoliticalStructure.executeSync(db);
+				if(result == SYNC_EVENT_SUCCESS){
+					SyncAudit.insert(SYNC_TYPE_GEOPOLITICAL, SYNC_EVENT_SUCCESS);
+				}
 				addDefaultMessage(result);
 			}
 			else if(syncType.equals(SYNC_TYPE_SERVER_CODE)){
@@ -156,8 +164,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 			}
 			
 			else if(syncType.equals(SYNC_TYPE_SOLO_RESUMEN)){
-				long id = extras.getLong(ClienteActualizacion.ARG_CLIENTE_ID);
-				result = ClienteActualizacion.executeSync(db, id);
+				result = Agente.executeSyncGetAgente(db);
 				addDefaultMessage(result);
 			}
 			
@@ -235,9 +242,6 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 				addDefaultMessage(result);
 				
 				result = EnviarUbicacion.executeSyncPendientes(db);
-				addDefaultMessage(result);
-				
-				result = rp3.sync.GeopoliticalStructure.executeSync(db);				
 				addDefaultMessage(result);
 				
 				if(result == SYNC_EVENT_SUCCESS){

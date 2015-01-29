@@ -382,6 +382,7 @@ public class Agenda {
 					
 					agendaTarea.setIdAgenda(id);						
 					agendaTarea.setEstadoTarea("P");
+					agendaTarea.setIdRuta(PreferenceManager.getInt(Contants.KEY_IDRUTA));
 					
 					rp3.marketforce.models.AgendaTarea.update(db, agendaTarea);							
 				}
@@ -406,6 +407,8 @@ public class Agenda {
 		
 		List<rp3.marketforce.models.Agenda> agendas = rp3.marketforce.models.Agenda.getAgendaInserts(db);
 		List<rp3.marketforce.models.Agenda> agendasConId = new ArrayList<rp3.marketforce.models.Agenda>();
+		if(agendas.size() == 0)
+			return SyncAdapter.SYNC_EVENT_SUCCESS;	
 		
 		JSONArray jArray = new JSONArray();
 		for(int i = 0; i < agendas.size(); i ++)
@@ -653,6 +656,8 @@ public class Agenda {
 		WebService webService = new WebService("MartketForce","UpdateAgendaFull");			
 		
 		List<rp3.marketforce.models.Agenda> agendas = rp3.marketforce.models.Agenda.getAgendaPendientes(db);
+		if(agendas.size() == 0)
+			return SyncAdapter.SYNC_EVENT_SUCCESS;	
 		
 		JSONArray jArray = new JSONArray();
 		for(int i = 0; i < agendas.size(); i ++)

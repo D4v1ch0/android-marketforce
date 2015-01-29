@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -29,6 +30,14 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.Paint.Align;
+import android.graphics.Paint.Style;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -68,6 +77,7 @@ public class DashboardMapFragment extends BaseFragment{
 	    } catch (InflateException e) {
 	        /* map is already there, just return view as it is */
 	    }
+	    setMapa();
 	    return view;
 	}
 	
@@ -90,13 +100,16 @@ public class DashboardMapFragment extends BaseFragment{
 			
 	}
 	
-	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
-    	super.onFragmentCreateView(rootView, savedInstanceState);
-    	map = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.dashboard_map)).getMap();
+	public void setMapa()
+	{
+		map = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.dashboard_map)).getMap();
     	map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Contants.LATITUD, Contants.LONGITUD), Contants.ZOOM), 1, null);
     	
     	Calendar cal = Calendar.getInstance();
-    	List<Agenda> list_agendas = Agenda.getRutaDia(getDataBase(), Calendar.getInstance());
+    	cal.set(Calendar.HOUR_OF_DAY, 0);
+    	cal.set(Calendar.MINUTE, 0);
+    	cal.set(Calendar.SECOND, 0);
+    	List<Agenda> list_agendas = Agenda.getRutaDia(getDataBase(), cal);
     	markers = new ArrayList<Marker>();
     	
     	for(int i = 0; i < list_agendas.size(); i ++)
@@ -104,7 +117,8 @@ public class DashboardMapFragment extends BaseFragment{
 			LatLng pos = new LatLng(list_agendas.get(i).getClienteDireccion().getLatitud(), list_agendas.get(i).getClienteDireccion().getLongitud());
 			
 			Marker mark = map.addMarker(new MarkerOptions().position(pos)
-			        .title(list_agendas.get(i).getCliente().getNombreCompleto().trim()));
+			        .title(list_agendas.get(i).getCliente().getNombreCompleto().trim())
+			        .icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.map_position, i + 1 + ""))));
 			mark.showInfoWindow();
 			markers.add(mark);
 			
@@ -116,6 +130,11 @@ public class DashboardMapFragment extends BaseFragment{
 				showRuta(org, pos);
 			}
 		}
+	}
+	
+	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
+    	super.onFragmentCreateView(rootView, savedInstanceState);
+    	
 	}
 	
 	private void showRuta(LatLng source, LatLng dest)
@@ -255,4 +274,38 @@ public class DashboardMapFragment extends BaseFragment{
 
         return poly;
     }
+	
+	private Bitmap writeTextOnDrawable(int drawableId, String text) {
+
+	    Bitmap bm = BitmapFactory.decodeResource(getResources(), drawableId)
+	            .copy(Bitmap.Config.ARGB_8888, true);
+
+	    //Typeface tf = Typeface.create("Helvetica", Typeface.BOLD);
+
+	    Paint paint = new Paint();
+	    paint.setStyle(Style.FILL);
+	    paint.setColor(Color.WHITE);
+	    //paint.setTypeface(tf);
+	    paint.setTextAlign(Align.CENTER);
+	    paint.setTextSize(getResources().getDimension(R.dimen.text_small_size));
+
+	    Rect textRect = new Rect();
+	    paint.getTextBounds(text, 0, text.length(), textRect);
+
+	    Canvas canvas = new Canvas(bm);
+
+	    //If the text is bigger than the canvas , reduce the font size
+	    if(textRect.width() >= (canvas.getWidth() - 4))     //the padding on either sides is considered as 4, so as to appropriately fit in the text
+	        paint.setTextSize(getResources().getDimension(R.dimen.text_small_size));        //Scaling needs to be used for different dpi's
+
+	    //Calculate the positions
+	    int xPos = (canvas.getWidth() / 2);     //-2 is for regulating the x position offset
+
+	    //"- ((paint.descent() + paint.ascent()) / 2)" is the distance from the baseline to the center.
+	    int yPos = (int) ((canvas.getHeight() / 2) - ((paint.descent() + paint.ascent()) / 2)) ;  
+
+	    canvas.drawText(text, xPos, yPos, paint);
+
+	    return  bm;
+	}
 }

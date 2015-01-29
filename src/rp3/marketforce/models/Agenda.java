@@ -923,7 +923,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 				agd.setFechaFin(CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_FIN));
 				agd.setEstadoAgenda(CursorUtils.getString(c, Contract.Agenda.COLUMN_ESTADO_AGENDA));
 				
-				agd.setCliente(rp3.marketforce.models.Cliente.getClienteID(db, agd.getIdCliente(), false));
+				agd.setCliente(rp3.marketforce.models.Cliente.getClienteIDServer(db, agd.getIdCliente(), false));
 				agd.setClienteDireccion(ClienteDireccion.getClienteDireccionIdDireccion(db, agd.getIdCliente(), agd.getIdClienteDireccion()));
 				list.add(agd);
 			}while(c.moveToNext());

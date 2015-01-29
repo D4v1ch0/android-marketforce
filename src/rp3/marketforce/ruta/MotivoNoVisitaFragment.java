@@ -78,8 +78,17 @@ public class MotivoNoVisitaFragment extends BaseFragment {
 				bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_AGENDA_NO_VISITA);
 				bundle.putInt(ARG_AGENDA, (int) idAgenda);
 				requestSync(bundle);
-				saveListener.Refresh();
-				getParentFragment().onResume();
+				if(saveListener != null) 
+				{
+					saveListener.Refresh();
+					getParentFragment().onResume();
+				}
+				else
+				{
+					((RutasDetailActivity)getActivity()).onResume();
+				}
+				
+				
 				dismiss();
 				
 			}});

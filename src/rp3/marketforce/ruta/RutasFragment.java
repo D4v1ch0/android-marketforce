@@ -122,9 +122,9 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	
 	@SuppressLint("NewApi")
 	@Override
-	public void onAfterCreateOptionsMenu(Menu menu) {			
-  	 SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search_ruta));
-  	 if(slidingPane!=null && !Screen.isLargeLayoutSize(getActivity())){
+	public void onAfterCreateOptionsMenu(Menu menu) {	
+		SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search_ruta));
+		if(slidingPane!=null && !Screen.isLargeLayoutSize(getActivity())){
 	  	 if(!slidingPane.isOpen())
 	  	 {
 	  		 searchView.setVisibility(View.GONE);
@@ -141,6 +141,8 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 		  		 	menu.removeItem(R.id.action_reprogramar);
 		  		 }
 	  		 }
+	  		 if(rutasDetailfragment != null)
+	  			 rutasDetailfragment.reDoMenu = true;
 	  	 }
 	  	 else
 	  	 {
@@ -156,6 +158,8 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	  		 menu.removeItem(R.id.action_cambiar_contacto);
 	  		 menu.removeItem(R.id.action_no_visita);
 	  		 menu.removeItem(R.id.action_reprogramar);
+	  		if(rutasDetailfragment != null)
+	  			 rutasDetailfragment.reDoMenu = false;
 	  	 }
   	 }
   	  

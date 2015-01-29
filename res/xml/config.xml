@@ -27,7 +27,7 @@
                 </method>
                 <method>
                     <name>GetGeopoliticalStructures</name>
-                    <action>General/GetGeopoliticalStructuresView?FecModParameter=@FecModParameter</action>
+                    <action>General/GetGeopoliticalStructuresView?lastUpdate=@lastUpdate</action>
                     <webMethod>GET</webMethod>
                 </method>
                 <method>

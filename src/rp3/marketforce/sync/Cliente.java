@@ -521,6 +521,8 @@ public class Cliente {
 			WebService webService = new WebService("MartketForce","UpdateClienteFull");			
 			
 			List<rp3.marketforce.models.Cliente> clientes = rp3.marketforce.models.Cliente.getClientePendientes(db, true);
+			if(clientes.size() == 0)
+				return SyncAdapter.SYNC_EVENT_SUCCESS;
 			JSONObject jObject = new JSONObject();
 			JSONArray jArray = new JSONArray();
 			for(int s = 0; s < clientes.size(); s ++)
@@ -666,6 +668,8 @@ public class Cliente {
 			int id = 0;
 			List<rp3.marketforce.models.Cliente> clientes = rp3.marketforce.models.Cliente.getClienteInserts(db, true);
 			List<rp3.marketforce.models.Cliente> clientesConId = new ArrayList<rp3.marketforce.models.Cliente>();
+			if(clientes.size() == 0)
+				return SyncAdapter.SYNC_EVENT_SUCCESS;
 			JSONObject jObject = new JSONObject();
 			JSONArray jArray = new JSONArray();
 			for(int s = 0 ; s < clientes.size(); s ++)
