@@ -26,6 +26,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
     
 
     <application
@@ -144,6 +146,7 @@
         <activity android:name=".cliente.CrearClienteActivity"></activity>
         <activity android:name="ServerActivity" android:theme="@style/AppTheme.NoTitleBar"></activity>
         <activity android:name=".ruta.ObservacionesActivity" android:theme="@style/MyAppPopupTheme"></activity>
+        <activity android:name=".cliente.ImportContactsActivity"></activity>
         
     </application>
 

@@ -34,8 +34,8 @@
     <string name="label_fecha_nacimiento">Fecha Nacimiento</string>
     <string name="label_estado_civil">Estado Civil</string>
     <string name="label_referencia">Referencia</string>
-    <string name="label_telefono_1">Teléfono 1</string>
-    <string name="label_telefono_2">Teléfono 2</string>
+    <string name="label_telefono_1">Móvil</string>
+    <string name="label_telefono_2">Fijo</string>
     <string name="label_geo_posicion">Geo - Pos</string>
     <string name="label_datos_personales">Datos Personales</string>
     <string name="label_datos_contacto">Direcciones</string>
@@ -136,5 +136,15 @@
     <string name="label_texto_presentacion">Escoja su tipo de licencia</string>
     <string name="label_button_demo">No tengo licencia, utilizar DEMO</string>
     <string name="label_ingrese_codigo">Ingrese el código</string>
+    <string name="label"></string>
+    <string name="label_menu_importar_contactos">Importar Contactos</string>
+    <string name="label_escoger_origen">Escoja de donde desea importar los contactos:</string>
+    <string name="label_contactos_dispositivo">Contactos del dispositivo</string>
+    <string name="label_skype">Skype</string>
+    <string name="label_linkedin">LinkedIn</string>
+    <string name="label_gmail">Gmail</string>
+    <string name="label_facebook">Facebook</string>
+    <string name="label_seleccionar_todos">Seleccionar todos</string>
+    <string name="label_fecha">Fecha:</string>
 
 </resources>

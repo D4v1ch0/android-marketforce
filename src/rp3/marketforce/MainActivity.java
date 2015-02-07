@@ -88,9 +88,9 @@ public class MainActivity extends rp3.app.NavActivity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);		
+		Session.Start(this);
 		rp3.configuration.Configuration.TryInitializeConfiguration(this, DbOpenHelper.class);
-//		Session.Start(this);
-		
+
 		//extractDatabase();
 		
 		this.setNavHeaderTitle(Session.getUser().getFullName());

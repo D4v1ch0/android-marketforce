@@ -4,14 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.headerlistview.HeaderListView;
 import rp3.marketforce.loader.ClientLoader;
 import rp3.marketforce.models.Cliente;
 import rp3.marketforce.ruta.CrearVisitaActivity;
 import rp3.marketforce.ruta.CrearVisitaFragment;
-import rp3.marketforce.ruta.ReprogramarActivity;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -21,7 +19,6 @@ import android.support.v4.content.Loader;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnLongClickListener;
 import android.widget.AdapterView;
 import android.widget.PopupMenu;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -88,6 +85,20 @@ public class ClientListFragment extends rp3.app.BaseFragment {
         
         super.setContentView(R.layout.layout_headerlist_client_list);
     }   
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		if(currentTransactionBoolean){		    	 
+	    	 ejecutarConsulta();
+	     }
+	     else{
+		     Bundle args = new Bundle();
+			 args.putString(LoaderCliente.STRING_SEARCH, currentTransactionSearch);
+			 args.putBoolean(LoaderCliente.STRING_BOOLEAN, false);
+		     getLoaderManager().initLoader(0, args, loaderCliente);
+	     }
+	}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -105,15 +116,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 		     
 		     loaderCliente = new LoaderCliente();
 		     
-		     if(currentTransactionBoolean){		    	 
-		    	 ejecutarConsulta();
-		     }
-		     else{
-			     Bundle args = new Bundle();
-				 args.putString(LoaderCliente.STRING_SEARCH, currentTransactionSearch);
-				 args.putBoolean(LoaderCliente.STRING_BOOLEAN, false);
-			     getLoaderManager().initLoader(0, args, loaderCliente);
-		     }
+		     
 		     
         }
     }

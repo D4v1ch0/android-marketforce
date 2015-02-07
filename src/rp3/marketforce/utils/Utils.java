@@ -101,7 +101,7 @@ public class Utils {
 	}
 
 	/** Create a File for saving an image or video */
-	private static File getOutputMediaFile(int type){
+	public static File getOutputMediaFile(int type){
 
 	    File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
 	              Environment.DIRECTORY_PICTURES), "MarketForce");
@@ -119,6 +119,31 @@ public class Utils {
 	    if (type == MEDIA_TYPE_IMAGE){
 	        mediaFile = new File(mediaStorageDir.getPath() + File.separator +
 	        "IMG_"+ timeStamp + ".jpg");
+	    } else {
+	        return null;
+	    }
+
+	    return mediaFile;
+	}
+	
+	public static File getOutputMediaFile(int type, String suffix){
+
+	    File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+	              Environment.DIRECTORY_PICTURES), "MarketForce");
+
+	    if (! mediaStorageDir.exists()){
+	        if (! mediaStorageDir.mkdirs()){
+	            Log.d("MyCameraApp", "failed to create directory");
+	            return null;
+	        }
+	    }
+
+	    // Create a media file name
+	    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+	    File mediaFile;
+	    if (type == MEDIA_TYPE_IMAGE){
+	        mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+	        "IMG_"+ timeStamp + suffix + ".jpg");
 	    } else {
 	        return null;
 	    }

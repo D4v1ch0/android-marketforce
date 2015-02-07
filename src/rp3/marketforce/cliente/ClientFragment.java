@@ -161,11 +161,7 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
           searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
       }
       searchView.setIconifiedByDefault(false);
-//      
-//      menuItemActionEdit = menu.findItem(R.id.action_edit);
-//      menuItemActionDiscard = menu.findItem(R.id.action_discard);
-//      boolean visibleActionDetail = mTwoPane && selectedTransactionId != 0;
-//      setVisibleEditActionButtons(visibleActionDetail);
+
 	}
 	 
 	@Override
@@ -186,6 +182,9 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
 		case R.id.action_crear_cliente:
 			Intent intent = new Intent(this.getActivity(), CrearClienteActivity.class);
 			startActivity(intent);
+			break;
+		case R.id.action_import_contacts:
+			showDialogFragment(ImportChooseFragment.newInstance(), "Import");
 			break;
 		default:
 			break;

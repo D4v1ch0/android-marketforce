@@ -429,6 +429,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
     protected boolean ValidarAgendas() {
 		if(Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_GESTIONANDO, 0, Agenda.getLastAgenda(getDataBase())) > 0)
 		{
+			Toast.makeText(getContext(), "No puede gestionar otra agenda, si existe otra con estado Gestionando.", Toast.LENGTH_LONG).show();
 			return false;
 		}
 		

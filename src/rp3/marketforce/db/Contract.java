@@ -172,6 +172,7 @@ public final class Contract {
 		public static final String QUERY_CLIENTE_DIRECCION_BY_ID = "ClienteDireccionById";
 		public static final String QUERY_CLIENTE_DIRECCION_BY_ID_INTERNO = "ClienteDireccionByIdInterno";
 		public static final String QUERY_CLIENTE_DIRECCION_BY_ID_DIRECCION = "ClienteDireccionByIdDireccion";
+		public static final String QUERY_CLIENTE_DIRECCION_BY_ID_DIRECCION_INTERN = "ClienteDireccionByIdDireccionIntern";
 	}
 	
 	public static abstract class Contacto implements BaseColumns {

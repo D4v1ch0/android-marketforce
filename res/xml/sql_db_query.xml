@@ -306,6 +306,29 @@
     	AND tbClienteDireccion.IdClienteDireccion = ?
     </statement>
     
+     <statement name="ClienteDireccionByIdDireccionIntern">
+        SELECT 
+        tbClienteDireccion._id,
+        tbClienteDireccion.IdCliente,
+        tbClienteDireccion._IdCliente,
+        tbClienteDireccion.IdClienteDireccion,
+        tbClienteDireccion.TipoDireccion,
+        tbClienteDireccion.IdCiudad,
+        tbClienteDireccion.Direccion,
+        tbClienteDireccion.EsPrincipal,
+        tbClienteDireccion.Telefono1,
+        tbClienteDireccion.Telefono2,
+        tbClienteDireccion.Referencia,
+        tbClienteDireccion.Latitud,
+        tbClienteDireccion.Longitud,
+        tbGeopoliticalStructureExt.Name AS tbGeopoliticalStructure_Name
+        FROM tbClienteDireccion
+    	LEFT JOIN tbGeopoliticalStructureExt
+    	ON tbGeopoliticalStructureExt.docid = tbClienteDireccion.IdCiudad
+    	WHERE tbClienteDireccion._IdCliente = ? 
+    	AND tbClienteDireccion.IdClienteDireccion = ?
+    </statement>
+    
      <statement name="ContactosByCliente">
        SELECT  
         tbContacto._id, 

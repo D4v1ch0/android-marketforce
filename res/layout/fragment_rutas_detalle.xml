@@ -27,7 +27,7 @@
                 android:src="@drawable/user" />
 
             <ImageView
-                android:id="@+id/imageView1"
+                android:id="@+id/import_item_image"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:src="@drawable/circulo" />

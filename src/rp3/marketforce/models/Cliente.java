@@ -435,7 +435,10 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			else
 				cl.setNombreCompleto(CursorUtils.getString(c, Contract.ClientExt.COLUMN_NOMBRE_COMPLETO));
 			
-			cl.setClienteDirecciones(ClienteDireccion.getClienteDirecciones(db, cl.getIdCliente(), false));
+			if(cl.getIdCliente() == 0)
+				cl.setClienteDirecciones(ClienteDireccion.getClienteDirecciones(db, cl.getID(), true));
+			else
+				cl.setClienteDirecciones(ClienteDireccion.getClienteDirecciones(db, cl.getIdCliente(), false));
 			
 			
 			list.add(cl);

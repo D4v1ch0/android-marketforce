@@ -469,6 +469,9 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setID(CursorUtils.getInt(c, Contract.Agenda._ID));
 			agd.setIdRuta(CursorUtils.getInt(c, Contract.Agenda.COLUMN_RUTA_ID));
 			agd.setIdAgenda(CursorUtils.getInt(c, Contract.Agenda.COLUMN_AGENDA_ID));
+			agd.set_idCliente(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_ID_EXT));
+			agd.set_idClienteDireccion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID_EXT));
+			agd.set_idContacto(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CONTACTO_ID_EXT));
 			
 			agd.setIdCliente(CursorUtils.getInt(c, Contract.Agenda.FIELD_CLIENTE_ID));
 			agd.setIdClienteDireccion(CursorUtils.getInt(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION_ID));
@@ -890,7 +893,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 					agd.setCliente(rp3.marketforce.models.Cliente.getClienteIDServer(db, agd.getIdCliente(), false));
 				
 				if(agd.getIdClienteDireccion() == 0)
-					agd.setClienteDireccion(ClienteDireccion.getClienteDireccionIdDireccion(db, agd.getIdCliente(), agd.getIdClienteDireccion()));
+					agd.setClienteDireccion(ClienteDireccion.getClienteDireccionIdDireccionIntern(db, agd.get_idCliente(), agd.getIdClienteDireccion()));
 				else
 					agd.setClienteDireccion(ClienteDireccion.getClienteDireccionIdDireccion(db, agd.getIdCliente(), agd.getIdClienteDireccion()));
 				list.add(agd);

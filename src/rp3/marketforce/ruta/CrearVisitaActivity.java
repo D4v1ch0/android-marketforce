@@ -21,7 +21,7 @@ public class CrearVisitaActivity extends BaseActivity {
 	    		text = getIntent().getExtras().getString(CrearVisitaFragment.ARG_FROM);
 	    }
 	    	
-	    setContentView(rp3.core.R.layout.layout_simple_content);
+	    setContentView(rp3.core.R.layout.layout_simple_content, R.menu.fragment_crear_cliente);
 	    setTitle("Crear Agenda");
 	    setHomeAsUpEnabled(true, true);
 	    if (!hasFragment(rp3.core.R.id.content)) {

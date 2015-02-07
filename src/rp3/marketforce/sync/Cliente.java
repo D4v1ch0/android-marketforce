@@ -817,7 +817,7 @@ public class Cliente {
 					jFotos.put("IdCliente", cl.getIdCliente());
 					jFotos.put("IdContacto", "");
 					jFotos.put("Nombre", cl.getNombre1() + "_" + cl.getApellido1() + "_" + cl.getIdCliente() + ".jpg" );
-					String foto = Utils.CroppedBitmapToBase64(jObject.getString("Foto"));
+					String foto = Utils.CroppedBitmapToBase64(cl.getURLFoto());
 					if(foto != null)
 					{
 						jFotos.put("Contenido", foto);

@@ -1,26 +1,18 @@
 package rp3.marketforce.ruta;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ImageButton;
 import rp3.app.BaseFragment;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
-import rp3.marketforce.models.Cliente;
 import rp3.marketforce.utils.Utils;
 
 public class ObservacionesFragment extends BaseFragment {
