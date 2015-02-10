@@ -110,7 +110,10 @@
       _IdContacto INTEGER,
       IdMotivoNoVisita TEXT,
       Latitud REAL,
-	  Longitud REAL
+	  Longitud REAL,
+      Distancia INTEGER,
+      Duracion INTEGER,
+      TiempoViaje INTEGER
       )
 	</statement>
 	

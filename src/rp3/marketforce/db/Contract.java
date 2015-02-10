@@ -243,6 +243,9 @@ public final class Contract {
 		public static final String COLUMN_MOTIVO_NO_VISITA_ID = "IdMotivoNoVisita";
 		public static final String COLUMN_LONGITUD = "Longitud";
 		public static final String COLUMN_LATITUD = "Latitud";
+        public static final String COLUMN_DISTANCIA = "Distancia";
+        public static final String COLUMN_DURACION = "Duracion";
+        public static final String COLUMN_TIEMPO_VIAJE= "TiempoViaje";
 		
 		public static final String FIELD_RUTA_ID = COLUMN_RUTA_ID;
 		public static final String FIELD_AGENDA_ID = COLUMN_AGENDA_ID;
@@ -266,6 +269,9 @@ public final class Contract {
 		public static final String FIELD_MOTIVO_NO_VISITA_ID = COLUMN_MOTIVO_NO_VISITA_ID;
 		public static final String FIELD_LONGITUD = COLUMN_LONGITUD;
 		public static final String FIELD_LATITUD = COLUMN_LATITUD;
+        public static final String FIELD_DISTANCIA = COLUMN_DISTANCIA;
+        public static final String FIELD_DURACION = COLUMN_DURACION;
+        public static final String FIELD_TIEMPO_VIAJE = COLUMN_TIEMPO_VIAJE;
 		public static final String FIELD_CLIENTE_URL_FOTO = Contract.Cliente.TABLE_NAME + "_" + Contract.Cliente.COLUMN_URL_FOTO;
 		public static final String FIELD_CLIENTE_NOMBRE = Contract.AgendaExt.TABLE_NAME + "_" + Contract.AgendaExt.COLUMN_NOMBRE;		
 		public static final String FIELD_CLIENTE_DIRECCION = Contract.AgendaExt.TABLE_NAME + "_" + Contract.AgendaExt.COLUMN_DIRECCION;
