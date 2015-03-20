@@ -2,6 +2,7 @@ package rp3.marketforce.actividades;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import rp3.app.BaseActivity;
 import rp3.marketforce.R;
@@ -50,13 +51,33 @@ public abstract class ActividadActivity extends BaseActivity {
 	}
 	
 	protected AgendaTareaActividades initActividad(int idActividad)
-	{
-		AgendaTareaActividades act = new AgendaTareaActividades();
-		act.setIdAgenda((int) id_agenda);
-		act.setIdTarea(id_actividad);
-		act.setIdRuta(id_ruta);
-		act.setIdTareaActividad(idActividad);
-		AgendaTareaActividades.insert(getDataBase(), act);
-		return act;
-	}
+    {
+        AgendaTareaActividades act = new AgendaTareaActividades();
+        act.setIdAgenda((int) id_agenda);
+        act.setIdTarea(id_actividad);
+        act.setIdRuta(id_ruta);
+        act.setIdTareaActividad(idActividad);
+        //AgendaTareaActividades.insert(getDataBase(), act);
+        return act;
+    }
+
+    protected AgendaTareaActividades initActividadInsert(int idActividad)
+    {
+        AgendaTareaActividades act = new AgendaTareaActividades();
+        act.setIdAgenda((int) id_agenda);
+        act.setIdTarea(id_actividad);
+        act.setIdRuta(id_ruta);
+        act.setIdTareaActividad(idActividad);
+        AgendaTareaActividades.insert(getDataBase(), act);
+        return act;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home)
+        {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

@@ -113,7 +113,8 @@
 	  Longitud REAL,
       Distancia INTEGER,
       Duracion INTEGER,
-      TiempoViaje INTEGER
+      TiempoViaje INTEGER,
+      IdMotivoReprogramar TEXT
       )
 	</statement>
 	
@@ -154,7 +155,8 @@
       IdRuta INTEGER,
       IdTarea INTEGER,
       IdTareaActividad INTEGER,
-      Resultado TEXT
+      Resultado TEXT,
+      IdsResultados TEXT
       )
 	</statement>
 	

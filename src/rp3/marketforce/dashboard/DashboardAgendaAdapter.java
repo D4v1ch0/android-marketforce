@@ -63,15 +63,31 @@ public class DashboardAgendaAdapter extends BaseAdapter{
 	public View getView(int position, View convertView, ViewGroup parent) {
 		convertView = (View) inflater.inflate(this.ctx.getApplicationContext().getResources().getLayout(R.layout.rowlist_dashboard_agenda), null);
 		final Agenda agd = list_agenda.get(position);
-		if(agd.getCliente() == null)
-			return convertView;
-		if(agd.getCliente().getNombreCompleto() != null)
-			((TextView) convertView.findViewById(R.id.dashboard_agenda_rowlist_nombre)).setText(agd.getCliente().getNombreCompleto().trim());
-		else
-			((TextView) convertView.findViewById(R.id.dashboard_agenda_rowlist_nombre)).setText(agd.getCliente().getNombre1());
-		((TextView) convertView.findViewById(R.id.dashboard_agenda_phone)).setText(agd.getClienteDireccion().getTelefono1());
-		((TextView) convertView.findViewById(R.id.dashboard_agenda_hora)).setText(format4.format(agd.getFechaInicio()));
-		((TextView) convertView.findViewById(R.id.dashboard_agenda_mail)).setText(agd.getCliente().getCorreoElectronico());
+        ((ImageView) convertView.findViewById(R.id.dashboard_agenda_imagen)).setImageBitmap(BitmapUtils.getRoundedRectBitmap(
+                BitmapFactory.decodeResource(ctx.getResources(), R.drawable.user),
+                ctx.getResources().getDimensionPixelOffset(R.dimen.image_size)));
+        ((TextView) convertView.findViewById(R.id.dashboard_agenda_phone)).setText("");
+
+		if(agd.getCliente() == null) {
+            ((TextView) convertView.findViewById(R.id.dashboard_agenda_rowlist_nombre)).setText(agd.getNombreCompleto());
+            ((TextView) convertView.findViewById(R.id.dashboard_agenda_phone)).setText("");
+            ((TextView) convertView.findViewById(R.id.dashboard_agenda_hora)).setText(format4.format(agd.getFechaInicio()));
+            ((TextView) convertView.findViewById(R.id.dashboard_agenda_mail)).setText("");
+        }
+        else {
+            if (agd.getCliente().getNombreCompleto() != null)
+                ((TextView) convertView.findViewById(R.id.dashboard_agenda_rowlist_nombre)).setText(agd.getCliente().getNombreCompleto().trim());
+            else
+                ((TextView) convertView.findViewById(R.id.dashboard_agenda_rowlist_nombre)).setText(agd.getCliente().getNombre1());
+            if(agd.getClienteDireccion() != null)
+                ((TextView) convertView.findViewById(R.id.dashboard_agenda_phone)).setText(agd.getClienteDireccion().getTelefono1());
+
+            ((TextView) convertView.findViewById(R.id.dashboard_agenda_hora)).setText(format4.format(agd.getFechaInicio()));
+            ((TextView) convertView.findViewById(R.id.dashboard_agenda_mail)).setText(agd.getCliente().getCorreoElectronico());
+            DManager.fetchDrawableOnThreadRounded(PreferenceManager.getString("server") +
+                            rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + agd.getCliente().getURLFoto(),
+                    (ImageView) convertView.findViewById(R.id.dashboard_agenda_imagen));
+        }
 		
 		((TextView) convertView.findViewById(R.id.dashboard_agenda_mail)).setClickable(true);
 		((TextView) convertView.findViewById(R.id.dashboard_agenda_mail)).setOnClickListener(new OnClickListener(){
@@ -92,7 +108,7 @@ public class DashboardAgendaAdapter extends BaseAdapter{
 						Uri mUri = Uri.parse("smsto:" + Utils.convertToSMSNumber(agd.getClienteDireccion().getTelefono1()));
 			            Intent mIntent = new Intent(Intent.ACTION_SENDTO, mUri);
 			            mIntent.putExtra("chat",true);
-			            Intent chooserIntent = Intent.createChooser(mIntent, "Seleccionar Acción");
+			            Intent chooserIntent = Intent.createChooser(mIntent, "Seleccionar Acciï¿½n");
 			            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { intent });
 			            ctx.startActivity(chooserIntent);
 					}});
@@ -127,12 +143,7 @@ public class DashboardAgendaAdapter extends BaseAdapter{
 			
 			
 		}
-		((ImageView) convertView.findViewById(R.id.dashboard_agenda_imagen)).setImageBitmap(BitmapUtils.getRoundedRectBitmap(
-				BitmapFactory.decodeResource(ctx.getResources(), R.drawable.user), 
-				ctx.getResources().getDimensionPixelOffset(R.dimen.image_size)));
-		DManager.fetchDrawableOnThreadRounded(PreferenceManager.getString("server") + 
-				rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + agd.getCliente().getURLFoto(),
-				(ImageView) convertView.findViewById(R.id.dashboard_agenda_imagen));
+
 		return convertView;
 	}
 }

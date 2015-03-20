@@ -10,7 +10,7 @@ dependencies {
 android {
     compileSdkVersion 19
     buildToolsVersion '20.0.0'
-    compileOptions.encoding = 'ISO-8859-1'
+    compileOptions.encoding = 'UTF-8'
 
     sourceSets {
         main {

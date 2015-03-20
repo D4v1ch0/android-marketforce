@@ -277,8 +277,8 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 		case ORDER_BY_NAME:
 			
 			for(int x = 0 ; x < lista.size() ; x++)
-				if(!headersortList.contains(""+lista.get(x).getNombre1().charAt(0)))
-					headersortList.add(""+lista.get(x).getNombre1().charAt(0));
+				if(!headersortList.contains(""+lista.get(x).getNombre1().toUpperCase().charAt(0)))
+					headersortList.add(""+lista.get(x).getNombre1().toUpperCase().charAt(0));
 			
 			Collections.sort(headersortList);
 			
@@ -288,7 +288,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 				
 				for(int y = 0 ; y < lista.size() ; y++)
 				{
-					if(headersortList.get(x).equals(""+lista.get(y).getNombre1().charAt(0)))
+					if(headersortList.get(x).equals(""+lista.get(y).getNombre1().toUpperCase().charAt(0)))
 					{
 						rp3.marketforce.models.Cliente cliente = new rp3.marketforce.models.Cliente();
 						
@@ -321,13 +321,13 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 			{
 				if(!lista.get(x).getTipoPersona().equalsIgnoreCase("J"))
 				{
-					if(!headersortList.contains(""+lista.get(x).getApellido1().charAt(0)))
-						headersortList.add(""+lista.get(x).getApellido1().charAt(0));
+					if(!headersortList.contains(""+lista.get(x).getApellido1().toUpperCase().charAt(0)))
+						headersortList.add(""+lista.get(x).getApellido1().toUpperCase().charAt(0));
 				}
 				else
 				{
-					if(!headersortList.contains(""+lista.get(x).getNombre1().charAt(0)))
-						headersortList.add(""+lista.get(x).getNombre1().charAt(0));
+					if(!headersortList.contains(""+lista.get(x).getNombre1().toUpperCase().charAt(0)))
+						headersortList.add(""+lista.get(x).getNombre1().toUpperCase().charAt(0));
 				}
 			}
 			
@@ -340,7 +340,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 				for(int y = 0 ; y < lista.size() ; y++)
 				{
 					if(lista.get(y).getTipoPersona().equalsIgnoreCase("N") || lista.get(y).getTipoPersona().equalsIgnoreCase("C"))
-					if(headersortList.get(x).equals(""+lista.get(y).getApellido1().charAt(0)))
+					if(headersortList.get(x).equals(""+lista.get(y).getApellido1().toUpperCase().charAt(0)))
 					{
 						rp3.marketforce.models.Cliente cliente = new rp3.marketforce.models.Cliente();
 						
@@ -356,7 +356,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 						
 						list_aux.add(cliente);
 					}
-					if(lista.get(y).getTipoPersona().equalsIgnoreCase("J") && headersortList.get(x).equals(""+lista.get(y).getNombre1().charAt(0)))
+					if(lista.get(y).getTipoPersona().equalsIgnoreCase("J") && headersortList.get(x).equals(""+lista.get(y).getNombre1().toUpperCase().charAt(0)))
 					{
 						rp3.marketforce.models.Cliente cliente = new rp3.marketforce.models.Cliente();
 						

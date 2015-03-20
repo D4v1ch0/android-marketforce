@@ -43,6 +43,9 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.maps.model.LatLng;
+
 import rp3.app.BaseActivity;
 import rp3.app.BaseFragment;
 import rp3.configuration.PreferenceManager;
@@ -53,8 +56,10 @@ import rp3.content.SimpleIdentifiableAdapter;
 import rp3.data.models.GeneralValue;
 import rp3.data.models.GeopoliticalStructure;
 import rp3.data.models.IdentificationType;
+import rp3.maps.utils.SphericalUtil;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
+import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.Canal;
 import rp3.marketforce.models.Cliente;
 import rp3.marketforce.models.ClienteDireccion;
@@ -66,6 +71,8 @@ import rp3.marketforce.utils.DrawableManager;
 import rp3.marketforce.utils.Utils;
 import rp3.util.ConnectionUtils;
 import rp3.util.GooglePlayServicesUtils;
+import rp3.util.IdentificationValidator;
+import rp3.util.LocationUtils;
 import rp3.widget.ViewPager;
 
 public class CrearClienteFragment extends BaseFragment {
@@ -472,7 +479,7 @@ public class CrearClienteFragment extends BaseFragment {
 			((EditText)info.findViewById(R.id.cliente_actividad_economica)).setEnabled(false);
 			((EditText)info.findViewById(R.id.cliente_razon_social)).setEnabled(false);
 			((EditText)info.findViewById(R.id.cliente_pagina_web)).setEnabled(false);
-			((ImageButton)info.findViewById(R.id.cliente_foto)).setEnabled(false);
+			//((ImageButton)info.findViewById(R.id.cliente_foto)).setEnabled(false);
 		}
 		
 		for(int i = 0; i < cli.getClienteDirecciones().size(); i ++)
@@ -529,7 +536,7 @@ public class CrearClienteFragment extends BaseFragment {
 	    myAlertDialog.setTitle("Grabar Foto");
 	    myAlertDialog.setMessage("De donde desea obtener su foto?");
 
-	    myAlertDialog.setPositiveButton("Galería",
+	    myAlertDialog.setPositiveButton("Galerï¿½a",
 	            new DialogInterface.OnClickListener() {
 	                public void onClick(DialogInterface arg0, int arg1) {
 	                	Intent galleryIntent = new Intent();
@@ -569,10 +576,28 @@ public class CrearClienteFragment extends BaseFragment {
 			public void onClick(View v) {
 				if (GooglePlayServicesUtils.servicesConnected((BaseActivity)getActivity())) {
 
-					final Location location = getLastLocation();
+                    try
+                    {
+                        ((BaseActivity)getActivity()).showDialogProgress("GPS","Obteniendo PosiciÃ³n");
+                        LocationUtils.getLocation(getContext(), new LocationUtils.OnLocationResultListener() {
 
-					((EditText)listViewDirecciones.get(pos).findViewById(R.id.cliente_longitud)).setText(""+location.getLongitude());
-					((EditText)listViewDirecciones.get(pos).findViewById(R.id.cliente_latitud)).setText(""+location.getLatitude());
+                            @Override
+                            public void getLocationResult(Location location) {
+                                if (location != null) {
+                                    ((EditText) listViewDirecciones.get(pos).findViewById(R.id.cliente_longitud)).setText("" + location.getLongitude());
+                                    ((EditText) listViewDirecciones.get(pos).findViewById(R.id.cliente_latitud)).setText("" + location.getLatitude());
+                                }
+                                else
+                                {
+                                    Toast.makeText(getContext(), "Debe de activar su GPS.", Toast.LENGTH_SHORT).show();
+                                }
+                                ((BaseActivity)getActivity()).closeDialogProgress();
+                            }
+                        });
+                    }
+                    catch(Exception ex)
+                    {	}
+
 				}
 				
 			}});
@@ -683,7 +708,7 @@ public class CrearClienteFragment extends BaseFragment {
 	{
 		if(listViewDirecciones.size() <= 0)
 		{
-			Toast.makeText(getContext(), "No se puede agregar clientes sin dirección.", Toast.LENGTH_LONG).show();
+			Toast.makeText(getContext(), "No se puede agregar clientes sin direcciï¿½n.", Toast.LENGTH_LONG).show();
 			return false;
 		}
 		if(((Spinner) info.findViewById(R.id.crear_cliente_tipo_persona)).getSelectedItemPosition() == 1)
@@ -698,6 +723,14 @@ public class CrearClienteFragment extends BaseFragment {
 				Toast.makeText(getContext(), "Falta primer apellido de cliente.", Toast.LENGTH_LONG).show();
 				return false;
 			}
+            if(((EditText)info.findViewById(R.id.cliente_correo)).getText().toString().trim().length() > 0)
+            {
+                if(!((EditText)info.findViewById(R.id.cliente_correo)).getText().toString().trim().contains("@") ||
+                        !((EditText)info.findViewById(R.id.cliente_correo)).getText().toString().trim().contains(".")) {
+                    Toast.makeText(getContext(), "Mail incorrecto.", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+            }
 		}
 		else
 		{
@@ -706,11 +739,24 @@ public class CrearClienteFragment extends BaseFragment {
 				Toast.makeText(getContext(), "Falta nombre de cliente.", Toast.LENGTH_LONG).show();
 				return false;
 			}
+            if(((EditText)info.findViewById(R.id.cliente_correo_juridico)).getText().toString().trim().length() > 0)
+            {
+                if(!((EditText)info.findViewById(R.id.cliente_correo_juridico)).getText().toString().trim().contains("@") ||
+                        !((EditText)info.findViewById(R.id.cliente_correo_juridico)).getText().toString().trim().contains(".")) {
+                    Toast.makeText(getContext(), "Mail incorrecto.", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+            }
 		}
-		if(((EditText)info.findViewById(R.id.cliente_identificacion)).getText().toString().trim().length() <= 0)
+
+		if(((EditText)info.findViewById(R.id.cliente_identificacion)).getText().toString().trim().length() > 0 && idCliente == 0)
 		{
-			Toast.makeText(getContext(), "Falta identificación del cliente.", Toast.LENGTH_LONG).show();
-			return false;
+            if(!IdentificationValidator.ValidateIdentification(((EditText)info.findViewById(R.id.cliente_identificacion)).getText().toString(),
+                    (int) ((Spinner)info.findViewById(R.id.cliente_tipo_identificacion)).getAdapter().getItemId(((Spinner)info.findViewById(R.id.cliente_tipo_identificacion)).getSelectedItemPosition())))
+            {
+                Toast.makeText(getContext(), "NÃºmero de identificaciÃ³n incorrecto.", Toast.LENGTH_LONG).show();
+                return false;
+            }
 		}
 		
 		for(int i = 0; i < listViewDirecciones.size(); i++)

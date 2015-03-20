@@ -32,7 +32,7 @@ public class DashboardFragment extends BaseFragment {
 		super.onCreate(savedInstanceState);
 		getActivity().setTitle("Inicio");
 		
-		//setRetainInstance(true);				
+		//setRetainInstance(true);
 		setContentView(R.layout.fragment_dashboard);
 		graphicFragment = DashboardGraphicFragment.newInstance();	
 		agendaFragment = DashboardAgendaFragment.newInstance();	

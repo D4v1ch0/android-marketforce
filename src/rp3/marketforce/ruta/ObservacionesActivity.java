@@ -4,10 +4,14 @@ import rp3.app.BaseActivity;
 import rp3.marketforce.R;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
+
+import java.util.List;
 
 public class ObservacionesActivity extends BaseActivity {
 	ObservacionesFragment newFragment;
@@ -30,8 +34,9 @@ public class ObservacionesActivity extends BaseActivity {
 	    long id = 0;
 	    id = getIntent().getLongExtra(RutasDetailFragment.ARG_ITEM_ID, 0);
 	    setTitle("Observaciones");
+
 	    if (!hasFragment(rp3.core.R.id.content)) {
-	    	newFragment = ObservacionesFragment.newInstance(id);
+            newFragment = ObservacionesFragment.newInstance(id);
             setFragment(rp3.core.R.id.content, newFragment);    
         }
 	}
@@ -39,8 +44,26 @@ public class ObservacionesActivity extends BaseActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
-		newFragment.onActivityResult(requestCode, resultCode, data);
-		super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode != 0 && resultCode != 0)
+        {
+            List<Fragment> frags = getSupportFragmentManager().getFragments();
+            for(android.support.v4.app.Fragment fr: frags) {
+                fr.onActivityResult(requestCode, resultCode, data);
+            }
+        }
+
 	}
 
+    @Override
+    public void onStop() {
+
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+
+        super.onDestroy();
+    }
 }

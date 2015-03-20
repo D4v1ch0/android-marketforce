@@ -12,6 +12,7 @@ import rp3.connection.HttpConnection;
 import rp3.connection.WebService;
 import rp3.content.SyncAdapter;
 import rp3.db.sqlite.DataBase;
+import rp3.marketforce.Contants;
 import rp3.marketforce.db.Contract;
 import rp3.sync.SyncAudit;
 import rp3.util.Convert;
@@ -22,8 +23,11 @@ import android.util.Log;
 public class Rutas {
 
 		public static int executeSync(DataBase db, Long inicio, Long fin, boolean inList){
-			WebService webService = new WebService("MartketForce","Agenda");		
-			long fecha = rp3.util.Convert.getDotNetTicksFromDate(SyncAudit.getLastSyncDate(rp3.marketforce.sync.SyncAdapter.SYNC_TYPE_ACT_AGENDA, SyncAdapter.SYNC_EVENT_SUCCESS));
+			WebService webService = new WebService("MartketForce","Agenda");
+            Calendar fechaUlt = Calendar.getInstance();
+            fechaUlt.setTime(SyncAudit.getLastSyncDate(rp3.marketforce.sync.SyncAdapter.SYNC_TYPE_ACT_AGENDA, SyncAdapter.SYNC_EVENT_SUCCESS));
+            fechaUlt.add(Calendar.MINUTE, -15);
+			long fecha = rp3.util.Convert.getDotNetTicksFromDate(fechaUlt.getTime());
 			
 			if(inList)
 			{
@@ -69,7 +73,7 @@ public class Rutas {
 				{
 					cal.add(Calendar.DATE, 7);
 				}
-				
+
 				fin = Convert.getDotNetTicksFromDate(cal.getTime());
 			}
 			
@@ -105,60 +109,62 @@ public class Rutas {
 					try {
 						JSONObject type = types.getJSONObject(i);
 						rp3.marketforce.models.Agenda agenda = new rp3.marketforce.models.Agenda();
-						agenda.setIdAgenda((int) type.getLong("IdAgenda"));
-						agenda.setIdRuta(type.getInt("IdRuta"));
-						agenda.setIdCliente(type.getInt("IdCliente"));
-						agenda.setIdClienteDireccion(type.getInt("IdClienteDireccion"));
-						if(!type.isNull("IdClienteContacto"))
-						{
-							agenda.setIdContacto(type.getInt("IdClienteContacto"));
-						}
-						if(!type.isNull("Observacion"))
-						{
-							agenda.setObservaciones(type.getString("Observacion"));
-						}
-												
-						agenda.setFechaInicio( Convert.getDateFromDotNetTicks(type.getLong("FechaInicioTicks")) );
-						agenda.setFechaFin( Convert.getDateFromDotNetTicks(type.getLong("FechaFinTicks")) );
-						if(!type.isNull("FechaInicioGestionTicks"))
-						{
-							agenda.setFechaInicioReal( Convert.getDateFromDotNetTicks(type.getLong("FechaInicioGestionTicks")) );
-							agenda.setFechaFinReal( Convert.getDateFromDotNetTicks(type.getLong("FechaFinGestionTicks")) );
-						}
-						agenda.setCiudad(type.getString("Ciudad"));
-						agenda.setNombreCompleto(type.getString("NombresCompletos"));
-						agenda.setDireccion(type.getString("Direccion"));
-						
-						agenda.setEstadoAgenda(type.getString("EstadoAgenda"));
-						agenda.setEnviado(true);
-						
-						rp3.marketforce.models.AgendaTarea.deleteTareas(db, agenda.getIdRuta(), agenda.getID());
-						
-						rp3.marketforce.models.Agenda getter = rp3.marketforce.models.Agenda.getAgendaServer(db, agenda.getIdAgenda());
-						if(getter == null)
-						{
-							rp3.marketforce.models.Agenda.insert(db, agenda);
-						}
-						else
-						{
-							rp3.marketforce.models.Agenda.update(db, agenda);
-						}
-						
-						JSONArray strs = type.getJSONArray("AgendaTareas");
-						
-						for(int j=0; j < strs.length(); j++){
-							JSONObject str = strs.getJSONObject(j);
-							rp3.marketforce.models.AgendaTarea agendaTarea = new rp3.marketforce.models.AgendaTarea();						
-							
-							agendaTarea.setIdTarea(str.getInt("IdTarea"));
-							agendaTarea.setIdRuta(str.getInt("IdRuta"));
-							agendaTarea.setIdAgenda(str.getInt("IdAgenda"));						
-							//agendaTarea.setNombreTarea(str.getString("Nombre"));
-							agendaTarea.setEstadoTarea(str.getString("EstadoTarea"));
-							//agendaTarea.setTipoTarea(str.getString("TipoTarea"));
-							
-							rp3.marketforce.models.AgendaTarea.insert(db, agendaTarea);							
-						}
+
+                        if(type.getString("EstadoAgenda").equalsIgnoreCase(Contants.ESTADO_ELIMINADO))
+                        {
+                            rp3.marketforce.models.Agenda.deleteAgendaIdServer(db, (int) type.getLong("IdAgenda"));
+                        }
+                        else {
+
+                            agenda.setIdAgenda((int) type.getLong("IdAgenda"));
+                            agenda.setIdRuta(type.getInt("IdRuta"));
+                            agenda.setIdCliente(type.getInt("IdCliente"));
+                            agenda.setIdClienteDireccion(type.getInt("IdClienteDireccion"));
+                            if (!type.isNull("IdClienteContacto")) {
+                                agenda.setIdContacto(type.getInt("IdClienteContacto"));
+                            }
+                            if (!type.isNull("Observacion")) {
+                                agenda.setObservaciones(type.getString("Observacion"));
+                            }
+
+                            agenda.setFechaInicio(Convert.getDateFromDotNetTicks(type.getLong("FechaInicioTicks")));
+                            agenda.setFechaFin(Convert.getDateFromDotNetTicks(type.getLong("FechaFinTicks")));
+                            if (!type.isNull("FechaInicioGestionTicks")) {
+                                agenda.setFechaInicioReal(Convert.getDateFromDotNetTicks(type.getLong("FechaInicioGestionTicks")));
+                                agenda.setFechaFinReal(Convert.getDateFromDotNetTicks(type.getLong("FechaFinGestionTicks")));
+                            }
+                            agenda.setCiudad(type.getString("Ciudad"));
+                            agenda.setNombreCompleto(type.getString("NombresCompletos"));
+                            agenda.setDireccion(type.getString("Direccion"));
+
+                            agenda.setEstadoAgenda(type.getString("EstadoAgenda"));
+                            agenda.setEnviado(true);
+
+                            rp3.marketforce.models.AgendaTarea.deleteTareas(db, agenda.getIdRuta(), agenda.getIdAgenda());
+
+
+                            if (!rp3.marketforce.models.Agenda.existAgendaServer(db, agenda.getIdAgenda())) {
+                                rp3.marketforce.models.Agenda.insert(db, agenda);
+                            } else {
+                                rp3.marketforce.models.Agenda.update(db, agenda);
+                            }
+
+                            JSONArray strs = type.getJSONArray("AgendaTareas");
+
+                            for (int j = 0; j < strs.length(); j++) {
+                                JSONObject str = strs.getJSONObject(j);
+                                rp3.marketforce.models.AgendaTarea agendaTarea = new rp3.marketforce.models.AgendaTarea();
+
+                                agendaTarea.setIdTarea(str.getInt("IdTarea"));
+                                agendaTarea.setIdRuta(str.getInt("IdRuta"));
+                                agendaTarea.setIdAgenda(str.getInt("IdAgenda"));
+                                //agendaTarea.setNombreTarea(str.getString("Nombre"));
+                                agendaTarea.setEstadoTarea(str.getString("EstadoTarea"));
+                                //agendaTarea.setTipoTarea(str.getString("TipoTarea"));
+
+                                rp3.marketforce.models.AgendaTarea.insert(db, agendaTarea);
+                            }
+                        }
 						
 					} catch (JSONException e) {
 						Log.e("Error", e.toString());

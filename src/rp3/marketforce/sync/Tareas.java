@@ -10,6 +10,7 @@ import rp3.connection.HttpConnection;
 import rp3.connection.WebService;
 import rp3.content.SyncAdapter;
 import rp3.db.sqlite.DataBase;
+import rp3.marketforce.Contants;
 import rp3.marketforce.db.Contract;
 import android.util.Log;
 
@@ -44,48 +45,56 @@ public class Tareas {
 				
 				try {					
 						JSONObject type = types.getJSONObject(i);
-						rp3.marketforce.models.Tarea tarea = new rp3.marketforce.models.Tarea();						
-						
-						tarea.setIdTarea(type.getInt("IdTarea"));						
-						tarea.setNombreTarea(type.getString("Descripcion"));
-						tarea.setEstadoTarea(type.getString("Estado"));
-						tarea.setTipoTarea(type.getString("TipoTarea"));
-						
-						rp3.marketforce.models.Tarea.insert(db, tarea);	
-						
-						JSONArray strs = type.getJSONArray("TareaActividades");
-						
-						for(int j = 0; j < strs.length(); j++)
-						{
-							JSONObject str = strs.getJSONObject(j);
-							rp3.marketforce.models.Actividad actividad = new rp3.marketforce.models.Actividad();						
-							
-							actividad.setIdTarea(str.getInt("IdTarea"));						
-							actividad.setDescripcion(str.getString("Descripcion"));
-							if(!str.isNull("IdTareaActividadPadre"))
-								actividad.setIdTareaActividadPadre(str.getInt("IdTareaActividadPadre"));						
-							actividad.setIdTareaActividad(str.getInt("IdTareaActividad"));						
-							actividad.setTipo(str.getString("Tipo"));						
-							actividad.setOrden(str.getInt("Orden"));						
-							actividad.setIdTipoActividad(str.getInt("IdTipoActividad"));						
-							
-							rp3.marketforce.models.Actividad.insert(db, actividad);	
-							
-							JSONArray opcs = str.getJSONArray("TareaOpciones");
-							
-							for(int k = 0; k < opcs.length(); k++)
-							{
-								JSONObject opc = opcs.getJSONObject(k);
-								rp3.marketforce.models.AgendaTareaOpciones opcion = new rp3.marketforce.models.AgendaTareaOpciones();						
-								
-								opcion.setIdTarea(opc.getInt("IdTarea"));						
-								opcion.setDescripcion(opc.getString("Descripcion"));					
-								opcion.setIdTareaActividad(opc.getInt("IdTareaActividad"));											
-								opcion.setOrden(opc.getInt("Orden"));											
-								
-								rp3.marketforce.models.AgendaTareaOpciones.insert(db, opcion);
-							}
-						}
+						rp3.marketforce.models.Tarea tarea = new rp3.marketforce.models.Tarea();
+                        if(type.getString("Estado").equalsIgnoreCase(Contants.ESTADO_ELIMINADO))
+                        {
+                            rp3.marketforce.models.Tarea toDelete = rp3.marketforce.models.Tarea.getTareaId(db,type.getInt("IdTarea"));
+                            if(toDelete != null)
+                            {
+                                rp3.marketforce.models.Tarea.delete(db, toDelete);
+                            }
+                        }
+                        else {
+
+                            tarea.setIdTarea(type.getInt("IdTarea"));
+                            tarea.setNombreTarea(type.getString("Descripcion"));
+                            tarea.setEstadoTarea(type.getString("Estado"));
+                            tarea.setTipoTarea(type.getString("TipoTarea"));
+
+                            rp3.marketforce.models.Tarea.insert(db, tarea);
+
+                            JSONArray strs = type.getJSONArray("TareaActividades");
+
+                            for (int j = 0; j < strs.length(); j++) {
+                                JSONObject str = strs.getJSONObject(j);
+                                rp3.marketforce.models.Actividad actividad = new rp3.marketforce.models.Actividad();
+
+                                actividad.setIdTarea(str.getInt("IdTarea"));
+                                actividad.setDescripcion(str.getString("Descripcion"));
+                                if (!str.isNull("IdTareaActividadPadre"))
+                                    actividad.setIdTareaActividadPadre(str.getInt("IdTareaActividadPadre"));
+                                actividad.setIdTareaActividad(str.getInt("IdTareaActividad"));
+                                actividad.setTipo(str.getString("Tipo"));
+                                actividad.setOrden(str.getInt("Orden"));
+                                actividad.setIdTipoActividad(str.getInt("IdTipoActividad"));
+
+                                rp3.marketforce.models.Actividad.insert(db, actividad);
+
+                                JSONArray opcs = str.getJSONArray("TareaOpciones");
+
+                                for (int k = 0; k < opcs.length(); k++) {
+                                    JSONObject opc = opcs.getJSONObject(k);
+                                    rp3.marketforce.models.AgendaTareaOpciones opcion = new rp3.marketforce.models.AgendaTareaOpciones();
+
+                                    opcion.setIdTarea(opc.getInt("IdTarea"));
+                                    opcion.setDescripcion(opc.getString("Descripcion"));
+                                    opcion.setIdTareaActividad(opc.getInt("IdTareaActividad"));
+                                    opcion.setOrden(opc.getInt("Orden"));
+
+                                    rp3.marketforce.models.AgendaTareaOpciones.insert(db, opcion);
+                                }
+                            }
+                        }
 					}
 					
 				catch (JSONException e) {

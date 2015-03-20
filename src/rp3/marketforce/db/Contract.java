@@ -246,6 +246,7 @@ public final class Contract {
         public static final String COLUMN_DISTANCIA = "Distancia";
         public static final String COLUMN_DURACION = "Duracion";
         public static final String COLUMN_TIEMPO_VIAJE= "TiempoViaje";
+        public static final String COLUMN_MOTIVO_REPROGRAMACION= "IdMotivoReprogramar";
 		
 		public static final String FIELD_RUTA_ID = COLUMN_RUTA_ID;
 		public static final String FIELD_AGENDA_ID = COLUMN_AGENDA_ID;
@@ -272,6 +273,7 @@ public final class Contract {
         public static final String FIELD_DISTANCIA = COLUMN_DISTANCIA;
         public static final String FIELD_DURACION = COLUMN_DURACION;
         public static final String FIELD_TIEMPO_VIAJE = COLUMN_TIEMPO_VIAJE;
+        public static final String FIELD_MOTIVO_REPROGRAMACION = COLUMN_MOTIVO_REPROGRAMACION;
 		public static final String FIELD_CLIENTE_URL_FOTO = Contract.Cliente.TABLE_NAME + "_" + Contract.Cliente.COLUMN_URL_FOTO;
 		public static final String FIELD_CLIENTE_NOMBRE = Contract.AgendaExt.TABLE_NAME + "_" + Contract.AgendaExt.COLUMN_NOMBRE;		
 		public static final String FIELD_CLIENTE_DIRECCION = Contract.AgendaExt.TABLE_NAME + "_" + Contract.AgendaExt.COLUMN_DIRECCION;
@@ -281,6 +283,9 @@ public final class Contract {
 		public static final String FIELD_ESTADO_AGENDA_DESCRIPCION = "tbEstadoAgenda_" + rp3.data.models.Contract.GeneralValue.COLUMN_VALUE;
 		
 		public static final String QUERY_AGENDA = "AgendaByCliente";
+        public static final String QUERY_AGENDA_UPLOAD = "AgendaUpload";
+        public static final String QUERY_AGENDA_NO_CLIENTE = "AgendaByClienteNull";
+        public static final String QUERY_AGENDA_DASHBOARD = "AgendaDashboard";
 		public static final String QUERY_AGENDA_SEMANAL = "AgendaSemanal";
 		public static final String QUERY_AGENDA_ID = "AgendaByAgendaID";
 		public static final String QUERY_AGENDA_ID_SERVER = "AgendaByAgendaIDServer";
@@ -330,12 +335,14 @@ public final class Contract {
 		public static final String COLUMN_TAREA_ID = "IdTarea";
 		public static final String COLUMN_TAREA_ACTIVIDAD_ID = "IdTareaActividad";
 		public static final String COLUMN_RESULTADO = "Resultado";
+        public static final String COLUMN_IDS_RESULTADO = "IdsResultados";
 		
 		public static final String FIELD_AGENDA_ID = COLUMN_AGENDA_ID;
 		public static final String FIELD_RUTA_ID = COLUMN_RUTA_ID;
 		public static final String FIELD_TAREA_ID = COLUMN_TAREA_ID;
 		public static final String FIELD_TAREA_ACTIVIDAD_ID = COLUMN_TAREA_ACTIVIDAD_ID;
 		public static final String FIELD_RESULTADO = COLUMN_RESULTADO;
+        public static final String FIELD_IDS_RESULTADO = COLUMN_IDS_RESULTADO;
 	}
    
    public static abstract class AgendaTareaOpciones implements BaseColumns {
@@ -394,6 +401,7 @@ public final class Contract {
 		public static final String FIELD_TIPO = COLUMN_TIPO;
 		
 		public static final String QUERY_ACTIVIDADES_GRUPALES = "ActividadesGrupales";
+        public static final String QUERY_ACTIVIDADES_NO_GRUPALES = "ActividadesSinGrupo";
 		public static final String QUERY_ACTIVIDADES_HIJAS = "ActividadesHijas";
 		public static final String QUERY_ACTIVIDAD_SIMPLE = "ActividadSimple";
 		public static final String QUERY_ACTIVIDAD_SIMPLE_NO_GRUPAL = "ActividadSimpleNoGrupal";

@@ -11,6 +11,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -21,6 +23,8 @@ import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Toast;
+
+import java.lang.reflect.Field;
 
 public class RutasFragment extends BaseFragment implements RutasListFragment.TransactionListFragmentListener, ContactsAgendaFragment.SaveContactsListener{
 
@@ -38,8 +42,9 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	private ObservacionesFragment obsFragment;
 	private SlidingPaneLayout slidingPane;
 	private boolean openPane = true;
-    
-	public static RutasFragment newInstance(int transactionTypeId) {
+    private FragmentManager mRetainedChildFragmentManager;
+
+    public static RutasFragment newInstance(int transactionTypeId) {
 		RutasFragment fragment = new RutasFragment();
 		return fragment;
     }
@@ -47,19 +52,20 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		
 //		setContentView(R.layout.fragment_client,R.menu.fragment_client);
-		setContentView(R.layout.fragment_rutas, R.menu.fragment_ruta_menu);
+
 	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
 		
-		setRetainInstance(true);				
+		setRetainInstance(true);
+        setHasOptionsMenu(true);
 			
 		rutasListFragment = RutasListFragment.newInstance();
 		obsFragment = null;
+        setContentView(R.layout.fragment_rutas, R.menu.fragment_ruta_menu);
 	}
 	
 	@Override
@@ -73,9 +79,13 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 		else
 			openPane = true;
 	}
-	
-	
-	@Override
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {		
 		super.onFragmentCreateView(rootView, savedInstanceState);
 				
@@ -92,9 +102,14 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 
 			@Override
 			public void onPanelOpened(View panel) {
-				getActivity().invalidateOptionsMenu();
-				if(selectedTransactionId != 0)
-					rutasListFragment.Refresh();
+                try {
+                    getActivity().invalidateOptionsMenu();
+                    if(selectedTransactionId != 0)
+                        rutasListFragment.Refresh();
+                }
+                catch(Exception ex)
+                {}
+
 			}
 
 			@Override
@@ -102,7 +117,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 				getActivity().invalidateOptionsMenu();
 			}});
 		
-		if(!hasFragment(R.id.content_transaction_list))		
+		if(!hasFragment(R.id.content_transaction_list))
 		{
 			setFragment(R.id.content_transaction_list, rutasListFragment );
 		}
@@ -119,12 +134,14 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 		else
 			mTwoPane = false;					
 	}	
-	
-	@SuppressLint("NewApi")
+
 	@Override
-	public void onAfterCreateOptionsMenu(Menu menu) {	
-		SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search_ruta));
-		if(slidingPane!=null && !Screen.isLargeLayoutSize(getActivity())){
+	public void onAfterCreateOptionsMenu(Menu menu) {
+        SearchView searchView = null;
+        MenuItem prob = menu.findItem(R.id.action_search_ruta);
+        if(prob != null)
+		    searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search_ruta));
+        if(slidingPane!=null && !Screen.isLargeLayoutSize(getActivity())){
 	  	 if(!slidingPane.isOpen())
 	  	 {
 	  		 searchView.setVisibility(View.GONE);
@@ -162,41 +179,40 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	  			 rutasDetailfragment.reDoMenu = false;
 	  	 }
   	 }
-  	  
-  	 int searchPlateId = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
-  	 EditText searchPlate = (EditText) searchView.findViewById(searchPlateId);
-  	 searchPlate.setHintTextColor(getResources().getColor(R.color.color_hint));
-  	 searchPlate.setHint(getActivity().getResources().getString(R.string.hint_search_transaction_rutas));
-  	 searchPlate.setTextColor(getResources().getColor(R.color.apptheme_color));
-  	 searchPlate.setBackgroundResource(R.drawable.apptheme_edit_text_holo_light);
-  	   	  	 
-	 searchView.setOnQueryTextListener(new OnQueryTextListener() {
-			@Override
-			public boolean onQueryTextSubmit(String query) {
-				if(rutasListFragment != null)
-					rutasListFragment.searchTransactions(query);
-				return true;
-			}
-					
-			
-			@Override
-			public boolean onQueryTextChange(String newText) {
-				if(TextUtils.isEmpty(newText) && !TextUtils.isEmpty(textSearch)){
-					try
-					{
-						rutasListFragment.searchTransactions("");
-					}
-					catch(Exception ex)
-					{
-						
-					}
-				}
-				textSearch = newText;
-				
-				return true;
-				
-			}
-		});
+
+        if(searchView != null) {
+            int searchPlateId = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+            EditText searchPlate = (EditText) searchView.findViewById(searchPlateId);
+            searchPlate.setHintTextColor(getResources().getColor(R.color.color_hint));
+            searchPlate.setHint(getActivity().getResources().getString(R.string.hint_search_transaction_rutas));
+            searchPlate.setTextColor(getResources().getColor(R.color.apptheme_color));
+            searchPlate.setBackgroundResource(R.drawable.apptheme_edit_text_holo_light);
+
+            searchView.setOnQueryTextListener(new OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    if (rutasListFragment != null)
+                        rutasListFragment.searchTransactions(query);
+                    return true;
+                }
+
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    if (TextUtils.isEmpty(newText) && !TextUtils.isEmpty(textSearch)) {
+                        try {
+                            rutasListFragment.searchTransactions("");
+                        } catch (Exception ex) {
+
+                        }
+                    }
+                    textSearch = newText;
+
+                    return true;
+
+                }
+            });
+        }
 	}
 	
 	@Override

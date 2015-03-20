@@ -55,7 +55,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 		int result = 0;
 		
 		try{
-			db = DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class);
+            db = DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class);
 			
 			if(syncType == null || syncType.equals(SYNC_TYPE_GENERAL)){								
 				db.beginTransaction();
@@ -124,6 +124,17 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 				//	result = rp3.marketforce.sync.ClienteFoto.executeSync(db,null);				
 				//	addDefaultMessage(result);
 				//}
+
+                long time = 0;
+                Date pru = SyncAudit.getLastSyncDate(SYNC_TYPE_GEOPOLITICAL, SYNC_EVENT_SUCCESS);
+                if(Convert.getTicksFromDate(pru) != 0)
+                    result = rp3.sync.GeopoliticalStructure.executeSyncLastUpdate(db, Convert.getDotNetTicksFromDate(SyncAudit.getLastSyncDate(SYNC_TYPE_GEOPOLITICAL, SYNC_EVENT_SUCCESS)));
+                else
+                    result = rp3.sync.GeopoliticalStructure.executeSync(db);
+                if(result == SYNC_EVENT_SUCCESS){
+                    SyncAudit.insert(SYNC_TYPE_GEOPOLITICAL, SYNC_EVENT_SUCCESS);
+                }
+                addDefaultMessage(result);
 								
 				db.commitTransaction();
 				
@@ -141,16 +152,16 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 			}
 			else if(syncType.equals(SYNC_TYPE_GEOPOLITICAL))
 			{
-				long time = 0;
-				Date pru = SyncAudit.getLastSyncDate(SYNC_TYPE_GEOPOLITICAL, SYNC_EVENT_SUCCESS);
-				if(Convert.getTicksFromDate(pru) != 0)
-					result = rp3.sync.GeopoliticalStructure.executeSyncLastUpdate(db, Convert.getDotNetTicksFromDate(SyncAudit.getLastSyncDate(SYNC_TYPE_GEOPOLITICAL, SYNC_EVENT_SUCCESS)));
-				else
-					result = rp3.sync.GeopoliticalStructure.executeSync(db);
-				if(result == SYNC_EVENT_SUCCESS){
-					SyncAudit.insert(SYNC_TYPE_GEOPOLITICAL, SYNC_EVENT_SUCCESS);
-				}
-				addDefaultMessage(result);
+				//long time = 0;
+				//Date pru = SyncAudit.getLastSyncDate(SYNC_TYPE_GEOPOLITICAL, SYNC_EVENT_SUCCESS);
+				//if(Convert.getTicksFromDate(pru) != 0)
+				//	result = rp3.sync.GeopoliticalStructure.executeSyncLastUpdate(db, Convert.getDotNetTicksFromDate(SyncAudit.getLastSyncDate(SYNC_TYPE_GEOPOLITICAL, SYNC_EVENT_SUCCESS)));
+				//else
+				//	result = rp3.sync.GeopoliticalStructure.executeSync(db);
+				//if(result == SYNC_EVENT_SUCCESS){
+				//	SyncAudit.insert(SYNC_TYPE_GEOPOLITICAL, SYNC_EVENT_SUCCESS);
+				//}
+				//addDefaultMessage(result);
 			}
 			else if(syncType.equals(SYNC_TYPE_SERVER_CODE)){
 				String code = extras.getString(ServerActivity.SERVER_CODE);
@@ -226,6 +237,14 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 				
 				result = EnviarUbicacion.executeSyncPendientes(db);
 				addDefaultMessage(result);
+
+                if(result == SYNC_EVENT_SUCCESS){
+                    result = rp3.marketforce.sync.Rutas.executeSync(db,null,null, false);
+                    addDefaultMessage(result);
+                    if(result == SYNC_EVENT_SUCCESS){
+                        SyncAudit.insert(SYNC_TYPE_ACT_AGENDA, SYNC_EVENT_SUCCESS);
+                    }
+                }
 			}
 			
 			else if(syncType.equals(SYNC_TYPE_TODO)){
@@ -261,6 +280,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 						SyncAudit.insert(SYNC_TYPE_CLIENTE_UPDATE, SYNC_EVENT_SUCCESS);
 					}
 				}
+
+                if(result == SYNC_EVENT_SUCCESS){
+                    result = rp3.marketforce.sync.Cliente.executeSyncDeletes(db);
+                    addDefaultMessage(result);
+                }
 				
 				if(result == SYNC_EVENT_SUCCESS){
 					result = rp3.marketforce.sync.Rutas.executeSync(db,null,null, false);				
@@ -303,10 +327,9 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 			addDefaultMessage(SYNC_EVENT_ERROR);
 			SyncAudit.insert(syncType, SYNC_EVENT_ERROR);
 		} 
-		finally{			
-			db.endTransaction();
+		finally{
+            db.endTransaction();
 			db.close();
-			
 			notifySyncFinish();
 		}								
 	}

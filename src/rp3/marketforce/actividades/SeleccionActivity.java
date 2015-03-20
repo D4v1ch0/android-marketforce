@@ -46,6 +46,7 @@ public class SeleccionActivity extends ActividadActivity {
 	    
 	    List<AgendaTareaOpciones> ag_opcs = AgendaTareaOpciones.getOpciones(getDataBase(), ata.getIdTarea(), ata.getIdTareaActividad());
 		List<String> opciones = new ArrayList<String>();
+        opciones.add("");
 		
 		for(AgendaTareaOpciones opcion: ag_opcs)
 		{
@@ -75,7 +76,10 @@ public class SeleccionActivity extends ActividadActivity {
 	public void aceptarCambios(View v) {
 		String respuesta = getSpinnerGeneralValueSelectedCode(R.id.actividad_seleccion_respuesta);
 		act.setResultado(respuesta);
-		AgendaTareaActividades.update(getDataBase(), act);
+        if(act.getID() == 0)
+            AgendaTareaActividades.insert(getDataBase(), act);
+        else
+            AgendaTareaActividades.update(getDataBase(), act);
 		if(id_padre == 0)
 		{
 			AgendaTarea agt = AgendaTarea.getTarea(getDataBase(), id_agenda, id_ruta, id_tarea);

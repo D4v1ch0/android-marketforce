@@ -168,6 +168,32 @@ public class Actividad extends EntityBase<Actividad>
 		
 		return actividades;
 	}
+
+    public static List<Actividad> getActividadesNoGrupalesByTarea(DataBase db, long idTarea){
+
+        String query = QueryDir.getQuery( Contract.Actividades.QUERY_ACTIVIDADES_NO_GRUPALES );
+        Cursor c = db.rawQuery(query,""+idTarea);
+
+        List<Actividad> actividades = new ArrayList<Actividad>();
+
+        while(c.moveToNext())
+        {
+            Actividad act = new Actividad();
+            act.setId(CursorUtils.getLong(c,Contract.Actividades._ID));
+            act.setDescripcion(CursorUtils.getString(c,Contract.Actividades.COLUMN_DESCRIPCION));
+            act.setOrden(CursorUtils.getInt(c,Contract.Actividades.COLUMN_ORDEN));
+            act.setIdTareaActividad(CursorUtils.getInt(c,Contract.Actividades.COLUMN_TAREA_ACTIVIDAD_ID));
+            act.setIdTareaActividadPadre(CursorUtils.getInt(c,Contract.Actividades.COLUMN_TAREA_ACTIVIDAD_PADRE_ID));
+            act.setIdTarea(CursorUtils.getInt(c,Contract.Actividades.COLUMN_TAREA_ID));
+            act.setTipo(CursorUtils.getString(c,Contract.Actividades.COLUMN_TIPO));
+            act.setIdTipoActividad(CursorUtils.getInt(c,Contract.Actividades.COLUMN_TIPO_ACTIVIDAD_ID));
+            act.setActividades_hijas(getActividadesHijas(db, idTarea, act.getIdTareaActividad()));
+
+            actividades.add(act);
+        }
+
+        return actividades;
+    }
 	
 	public static Actividad getActividadSimple(DataBase db, long idTarea, long idActividad){
 		

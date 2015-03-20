@@ -55,6 +55,8 @@ public class ObservacionesFragment extends BaseFragment {
         
         if(idAgenda != 0){        	
         	agenda = Agenda.getAgenda(getDataBase(), idAgenda);
+            if(agenda == null)
+                agenda = Agenda.getAgendaClienteNull(getDataBase(), idAgenda);
         }
         super.setContentView(R.layout.fragment_observaciones);
 	}
@@ -109,7 +111,8 @@ public class ObservacionesFragment extends BaseFragment {
 			public void onClick(View v) {
 				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 			    fileUri = Utils.getOutputMediaFileUri(MEDIA_TYPE_IMAGE); 
-			    intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); 
+			    intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+                intent.putExtra("proof", fileUri.getPath());
 			    getActivity().startActivityForResult(intent, PHOTO_1);
 			}
 		});
@@ -133,14 +136,26 @@ public class ObservacionesFragment extends BaseFragment {
 				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
 			    fileUri = Utils.getOutputMediaFileUri(MEDIA_TYPE_IMAGE); 
-			    intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); 
+			    intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
 			    getActivity().startActivityForResult(intent, PHOTO_3);
 				
 			}
 		});
 	}
-	
-	@Override
+
+    @Override
+    public void onStop() {
+
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+
+        super.onDestroy();
+    }
+
+    @Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {
 			String path = fileUri.getPath();

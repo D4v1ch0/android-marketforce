@@ -76,8 +76,8 @@ public class MainActivity extends rp3.app.NavActivity{
 	public static final int NAV_CERRAR_SESION 	= 9;
 	public static final int NAV_RESUMEN		 	= 10;
 	public static final int NAV_RECORRIDO	 	= 11;
-	public String lastTitle = "";
-	private int selectedItem = -1;
+	public String lastTitle;
+	private int selectedItem;
 	
 	public static Intent newIntent(Context c){
 		Intent i = new Intent(c, MainActivity.class);
@@ -91,7 +91,7 @@ public class MainActivity extends rp3.app.NavActivity{
 		Session.Start(this);
 		rp3.configuration.Configuration.TryInitializeConfiguration(this, DbOpenHelper.class);
 
-		//extractDatabase();
+		extractDatabase();
 		
 		this.setNavHeaderTitle(Session.getUser().getFullName());
 		this.setNavHeaderSubtitle(PreferenceManager.getString(Contants.KEY_CARGO));
@@ -100,9 +100,16 @@ public class MainActivity extends rp3.app.NavActivity{
 		setNavHeaderIcon(getResources().getDrawable(R.drawable.ic_user_new));
 		if(savedInstanceState == null){
 			int startNav = NAV_DASHBOARD;			
-			setNavigationSelection(startNav);  									
+			setNavigationSelection(startNav);
+            selectedItem = startNav;
+            lastTitle = "Inicio";
 		}
-		setAlarm();	
+        else
+        {
+            selectedItem = savedInstanceState.getInt("Selected");
+            lastTitle = savedInstanceState.getString("Title");
+        }
+		setAlarm();
 		Bundle bundle = new Bundle();
 		bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_GEOPOLITICAL);
 		requestSync(bundle);
@@ -114,10 +121,18 @@ public class MainActivity extends rp3.app.NavActivity{
 		}
 			
 	}
-	
-	@Override
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString("Title", lastTitle);
+        outState.putInt("Selected", selectedItem);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
 	protected void onStart() {
 		super.onStart();
+        getActionBar().setTitle(lastTitle);
 		if(Screen.isMinLargeLayoutSize(getApplicationContext())){
 			SlidingPaneLayout sp = (SlidingPaneLayout) findViewById(rp3.core.R.id.drawer_layout);
 			sp.setPanelSlideListener(new PanelSlideListener(){
@@ -396,11 +411,12 @@ public class MainActivity extends rp3.app.NavActivity{
             }
         }).start();
     }
-    
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
     	super.onConfigurationChanged(newConfig);
     	getActionBar().setTitle(lastTitle);
+        invalidateOptionsMenu();
     }
     
     private void pushNotification(Context ctx, Agenda agd, String message)

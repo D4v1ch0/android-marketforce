@@ -525,6 +525,7 @@
         tbAgenda.Distancia,
         tbAgenda.Duracion,
         tbAgenda.TiempoViaje,
+        tbAgenda.IdMotivoReprogramar,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
         tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad
@@ -533,6 +534,90 @@
         ON tbAgenda._id = tbAgendaExt.docid
         ORDER BY tbAgenda.FechaInicio, tbAgendaExt.NombreCompleto
      </statement>
+    <statement name="AgendaByClienteNull">
+        SELECT
+        tbAgenda._id,
+        tbAgenda.IdRuta,
+        tbAgenda.IdAgenda,
+        tbAgenda.IdCliente,
+        tbAgenda._IdCliente,
+        tbAgenda.IdContacto,
+        tbAgenda._IdContacto,
+        tbAgenda.IdClienteDireccion,
+        tbAgenda._IdClienteDireccion,
+        tbAgenda.FechaInicio,
+        tbAgenda.FechaFin,
+        tbAgenda.EstadoAgenda,
+        tbAgenda.FechaInicioReal,
+        tbAgenda.FechaFinReal,
+        tbAgenda.Foto1Ext,
+        tbAgenda.Foto2Ext,
+        tbAgenda.Foto3Ext,
+        tbAgenda.Foto1Int,
+        tbAgenda.Foto2Int,
+        tbAgenda.Foto3Int,
+        tbAgenda.Observaciones,
+        tbAgenda.Distancia,
+        tbAgenda.Duracion,
+        tbAgenda.TiempoViaje,
+        tbAgenda.IdMotivoReprogramar,
+        tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
+        tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
+        tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad,
+        tbEstadoAgenda.Value AS tbEstadoAgenda_Value
+        FROM tbAgenda
+        JOIN tbAgendaExt
+        ON tbAgenda._id = tbAgendaExt.docid
+        JOIN tbGeneralValue tbEstadoAgenda
+        ON tbEstadoAgenda.GeneralTableId = 1013
+        AND tbAgenda.EstadoAgenda = tbEstadoAgenda.Code
+        WHERE tbAgenda._id = ?
+        ORDER BY tbAgenda.FechaInicio, tbAgendaExt.NombreCompleto
+    </statement>
+
+    <statement name="AgendaUpload">
+        SELECT
+        tbAgenda._id,
+        tbAgenda.IdRuta,
+        tbAgenda.IdAgenda,
+        tbAgenda.IdCliente,
+        tbAgenda._IdCliente,
+        tbAgenda.IdContacto,
+        tbAgenda._IdContacto,
+        tbAgenda.IdClienteDireccion,
+        tbAgenda._IdClienteDireccion,
+        tbAgenda.FechaInicio,
+        tbAgenda.FechaFin,
+        tbAgenda.EstadoAgenda,
+        tbAgenda.FechaInicioReal,
+        tbAgenda.FechaFinReal,
+        tbAgenda.Foto1Ext,
+        tbAgenda.Foto2Ext,
+        tbAgenda.Foto3Ext,
+        tbAgenda.Foto1Int,
+        tbAgenda.Foto2Int,
+        tbAgenda.Foto3Int,
+        tbAgenda.Observaciones,
+        tbAgenda.Distancia,
+        tbAgenda.Duracion,
+        tbAgenda.TiempoViaje,
+        tbAgenda.IdMotivoReprogramar,
+        tbAgenda.IdMotivoNoVisita,
+        tbAgenda.Latitud,
+        tbAgenda.Longitud,
+        tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
+        tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
+        tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad,
+        tbEstadoAgenda.Value AS tbEstadoAgenda_Value
+        FROM tbAgenda
+        JOIN tbAgendaExt
+        ON tbAgenda._id = tbAgendaExt.docid
+        JOIN tbGeneralValue tbEstadoAgenda
+        ON tbEstadoAgenda.GeneralTableId = 1013
+        AND tbAgenda.EstadoAgenda = tbEstadoAgenda.Code
+        WHERE tbAgenda._id = ? AND tbAgenda.Enviado = 0
+        ORDER BY tbAgenda.FechaInicio, tbAgendaExt.NombreCompleto
+    </statement>
      
 	  <statement name="AgendaSemanal">
        SELECT  
@@ -550,6 +635,7 @@
         tbAgenda.Distancia,
         tbAgenda.Duracion,
         tbAgenda.TiempoViaje,
+        tbAgenda.IdMotivoReprogramar,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
         tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad
@@ -559,6 +645,35 @@
         WHERE tbAgenda.FechaInicio >= ?
         ORDER BY tbAgenda.FechaInicio, tbAgendaExt.NombreCompleto
      </statement>
+
+    <statement name="AgendaDashboard">
+        SELECT
+        tbAgenda._id,
+        tbAgenda._IdCliente,
+        tbAgenda._IdContacto,
+        tbAgenda._IdClienteDireccion,
+        tbAgenda.IdRuta,
+        tbAgenda.IdAgenda,
+        tbAgenda.FechaInicio,
+        tbAgenda.FechaFin,
+        tbAgenda.EstadoAgenda,
+        tbAgenda.IdContacto,
+        tbAgenda.IdCliente,
+        tbAgenda.IdClienteDireccion,
+        tbAgenda.Distancia,
+        tbAgenda.Duracion,
+        tbAgenda.TiempoViaje,
+        tbAgenda.IdMotivoReprogramar,
+        tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
+        tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
+        tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad
+        FROM tbAgenda
+        JOIN tbAgendaExt
+        ON tbAgenda._id = tbAgendaExt.docid
+        WHERE tbAgenda.FechaInicio >= ? AND tbAgenda.FechaInicio  &lt;= ?
+        AND (tbAgenda.EstadoAgenda = 'P' OR tbAgenda.EstadoAgenda = 'R')
+        ORDER BY tbAgenda.FechaInicio, tbAgendaExt.NombreCompleto
+    </statement>
      
 	  
 	  <statement name="AgendaByAgendaID">
@@ -587,6 +702,7 @@
         tbAgenda.Distancia,
         tbAgenda.Duracion,
         tbAgenda.TiempoViaje,
+        tbAgenda.IdMotivoReprogramar,
         tbCliente.URLFoto AS tbCliente_URLFoto,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
@@ -639,6 +755,7 @@
         tbAgenda.Distancia,
         tbAgenda.Duracion,
         tbAgenda.TiempoViaje,
+        tbAgenda.IdMotivoReprogramar,
         tbCliente.URLFoto AS tbCliente_URLFoto,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
@@ -769,6 +886,22 @@
 	   WHERE IdTarea = ?
 	   AND Tipo = 'G'
      </statement>
+
+    <statement name="ActividadesSinGrupo">
+        SELECT
+        tbActividad._id,
+        tbActividad.Descripcion,
+        tbActividad.IdTarea,
+        tbActividad.IdTareaActividad,
+        tbActividad.IdTareaActividadPadre,
+        tbActividad.IdTipoActividad,
+        tbActividad.Orden,
+        tbActividad.Tipo
+        FROM  tbActividad
+        WHERE IdTarea = ?
+        AND Tipo &lt;&gt; 'G'
+        AND IdTareaActividadPadre = 0
+    </statement>
      
 	 <statement name="ActividadesHijas">
        SELECT

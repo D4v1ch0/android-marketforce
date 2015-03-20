@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import rp3.data.MessageCollection;
+import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.loader.RutasLoader;
@@ -77,6 +78,7 @@ public class RutasListFragment extends rp3.app.BaseFragment{
     private List<String> header_position;
     private int scrollV = 0;
     private View lastItem = null;
+    private DataBase db;
     
     public static RutasListFragment newInstance() {
     	RutasListFragment fragment = new RutasListFragment();
@@ -108,7 +110,8 @@ public class RutasListFragment extends rp3.app.BaseFragment{
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);		     
-        
+
+        db = this.getDataBase();
         calendar = Calendar.getInstance();
         day_month =  calendar.get(Calendar.DAY_OF_MONTH);
         day_week  =  calendar.get(Calendar.DAY_OF_WEEK);
@@ -116,14 +119,7 @@ public class RutasListFragment extends rp3.app.BaseFragment{
         
         if(day_week == 0)
            day_week = 7;
-        
-        loaderRutas = new  LoaderRutas();
-        Bundle args = new Bundle();
-        args.putString(LoaderRutas.STRING_SEARCH, "");
-        args.putBoolean(LoaderRutas.STRING_BOOLEAN, true);
-        
-        executeLoader(0, args, loaderRutas);
-        
+
 		format1 = new SimpleDateFormat("EEEE dd MMMM yyyy");
 		format2 = new SimpleDateFormat("EEEE");
 		format3 = new SimpleDateFormat("dd");
@@ -424,40 +420,38 @@ public class RutasListFragment extends rp3.app.BaseFragment{
 			@Override
 			public void onLoadFinished(Loader<List<Agenda>> arg0,
 					List<Agenda> data)
-			{			
-				list_agenda = data;
-				
-				if(list_agenda!= null)
-					if(list_agenda.size() > 0)
-					{
-						if(headerlist == null)
-						{
-							//headerlist = (HeaderListView) rootView.findViewById(R.id.linearLayout_headerlist_ruta_list);
-							headerlist.setDivider(null);
-							headerlist.setDividerHeight(0);
-							headerlist.setSelector(getActivity().getResources().getDrawable(R.drawable.bkg_rutas));
-							//linearLayout_rootParent.addView(headerlist);
-						}
-						
-						orderDate();
-						adapter = new RutasListAdapter(getActivity(),list_agenda_in_adapter,transactionListFragmentCallback);
-					    headerlist.setAdapter(adapter);
-				    	
-				    	header_position = new ArrayList<String>();
-				    	
-				    	cont = 0;
-				    	for(int m = 0; m< list_agenda_in_adapter.size();m++)
-				    	{
-				    		if(list_agenda_in_adapter.get(m).getNombreCompleto() == null)
-				    		{
-				    			cont++;
-				    			header_position.add("" + m);
-				    		}
-				    	  
-				    	}				  
-				    	setListenersList();
-				    	paintDates();
-					}
+			{
+                if(getActivity() != null) {
+                    list_agenda = data;
+
+                    if (list_agenda != null)
+                        if (list_agenda.size() > 0) {
+                            if (headerlist == null) {
+                                //headerlist = (HeaderListView) rootView.findViewById(R.id.linearLayout_headerlist_ruta_list);
+                                headerlist.setDivider(null);
+                                headerlist.setDividerHeight(0);
+                                headerlist.setSelector(getActivity().getResources().getDrawable(R.drawable.bkg_rutas));
+                                //linearLayout_rootParent.addView(headerlist);
+                            }
+
+                            orderDate();
+                            adapter = new RutasListAdapter(getActivity(), list_agenda_in_adapter, transactionListFragmentCallback);
+                            headerlist.setAdapter(adapter);
+
+                            header_position = new ArrayList<String>();
+
+                            cont = 0;
+                            for (int m = 0; m < list_agenda_in_adapter.size(); m++) {
+                                if (list_agenda_in_adapter.get(m).getNombreCompleto() == null) {
+                                    cont++;
+                                    header_position.add("" + m);
+                                }
+
+                            }
+                            setListenersList();
+                            paintDates();
+                        }
+                }
 			}
 
 			@Override
@@ -609,19 +603,24 @@ public class RutasListFragment extends rp3.app.BaseFragment{
     
     @Override
     public void onResume() {
-    	super.onResume();	    	
+    	super.onResume();
+        loaderRutas = new  LoaderRutas();
+        Bundle args = new Bundle();
+        args.putString(LoaderRutas.STRING_SEARCH, "");
+        args.putBoolean(LoaderRutas.STRING_BOOLEAN, true);
+        executeLoader(0, args, loaderRutas);
     }
     
     public void Refresh() {	  
-    	
+    	Context ctx = this.getContext();
     	if(list_agenda_in_adapter == null || list_agenda_in_adapter.size() == 0)
-    		list_agenda = Agenda.getAgenda(getDataBase());
+    		list_agenda = Agenda.getAgenda(this.getDataBase());
 		else
 		{
-			if(Convert.getTicksFromDate(list_agenda_in_adapter.get(0).getFechaInicio()) > Agenda.getFirstAgenda(getDataBase()))
-				list_agenda = Agenda.getAgendaSemanal(getDataBase());
+			if(Convert.getTicksFromDate(list_agenda_in_adapter.get(0).getFechaInicio()) > Agenda.getFirstAgenda(this.getDataBase()))
+				list_agenda = Agenda.getAgendaSemanal(this.getDataBase());
 			else
-				list_agenda = Agenda.getAgenda(getDataBase());
+				list_agenda = Agenda.getAgenda(this.getDataBase());
 		}
 		orderDate();
 		adapter.changeList(list_agenda_in_adapter);

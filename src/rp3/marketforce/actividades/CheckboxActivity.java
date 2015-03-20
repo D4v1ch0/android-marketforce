@@ -68,7 +68,10 @@ public class CheckboxActivity extends ActividadActivity {
 	@Override
 	public void aceptarCambios(View v) {
 		act.setResultado("" + ((CheckBox) findViewById(R.id.actividad_check_respuesta)).isChecked());
-		AgendaTareaActividades.update(getDataBase(), act);
+        if(act.getID() == 0)
+            AgendaTareaActividades.insert(getDataBase(), act);
+        else
+            AgendaTareaActividades.update(getDataBase(), act);
 		if(id_padre == 0)
 		{
 			AgendaTarea agt = AgendaTarea.getTarea(getDataBase(), id_agenda, id_ruta, id_tarea);

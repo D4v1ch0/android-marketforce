@@ -9,11 +9,14 @@ import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -21,15 +24,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.webkit.WebView.FindListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.DatePicker;
-import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.NumberPicker;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.AutoCompleteTextView.OnDismissListener;
@@ -39,10 +40,8 @@ import android.widget.Toast;
 import rp3.app.BaseFragment;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
-import rp3.marketforce.db.Contract;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.AgendaTarea;
-import rp3.marketforce.models.AgendaTareaActividades;
 import rp3.marketforce.models.Cliente;
 import rp3.marketforce.models.ClienteDireccion;
 import rp3.marketforce.models.Contacto;
@@ -50,7 +49,6 @@ import rp3.marketforce.models.Tarea;
 import rp3.marketforce.ruta.TareasFragment.EditTareasDialogListener;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.util.Convert;
-import rp3.util.CursorUtils;
 
 @SuppressLint("NewApi")
 public class CrearVisitaFragment extends BaseFragment implements EditTareasDialogListener {
@@ -58,24 +56,36 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 	public static String ARG_AGENDA = "agenda";
 	public static String ARG_IDAGENDA = "idagenda";
 	public static String ARG_FROM = "from";
+
+    public static final int DURACION_15_MINUTOS = 0;
+    public static final int DURACION_30_MINUTOS = 1;
+    public static final int DURACION_45_MINUTOS = 2;
+    public static final int DURACION_60_MINUTOS = 3;
+    public static final int DURACION_90_MINUTOS = 4;
+    public static final int DURACION_120_MINUTOS = 5;
+    public static final int DURACION_180_MINUTOS = 6;
+
+    public static final int ID_DURACION = 0;
+    public static final int ID_TIEMPO = 1;
 	
 	private AutoCompleteTextView cliente_auto;
 	private ArrayList<String> list_nombres;
 	private List<Cliente> list_cliente;
 	private List<Tarea> list_tareas;
 	private TimePicker desdePicker;
-	private TimePicker hastaPicker;
 	private Calendar fecha;
-	TimePicker timePicker;
+    private TextView Duracion, TiempoViaje, DesdeText;
     private int TIME_PICKER_INTERVAL = 5;
      NumberPicker minutePicker;
      List<String> displayedValues;
-     SimpleDateFormat format1 = new SimpleDateFormat("EEEE dd MMMM yyyy");
+     SimpleDateFormat format1 = new SimpleDateFormat("EEEE dd/MM/yyyy HH:mm");
+    private int duracion = 0, tiempo = 0;
 
 	protected boolean mIgnoreEvent;
 	private CaldroidFragment caldroidFragment;
+    private String[] arrayDuracion;
 
-	public static CrearVisitaFragment newInstance(long id, String text) {
+    public static CrearVisitaFragment newInstance(long id, String text) {
 		Bundle arguments = new Bundle();
         arguments.putLong(ARG_IDAGENDA, id);
         arguments.putString(ARG_FROM, text);
@@ -91,21 +101,15 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 		
 		list_nombres = new ArrayList<String>();
 		list_tareas = new ArrayList<Tarea>();
-		
+        arrayDuracion = this.getActivity().getResources()
+                .getStringArray(R.array.arrayDuracion);
+
 		cliente_auto = (AutoCompleteTextView) rootView.findViewById(R.id.crear_visita_cliente);
 	    desdePicker = (TimePicker) rootView.findViewById(R.id.reprogramar_visita_desde);
-	    hastaPicker = (TimePicker) rootView.findViewById(R.id.reprogramar_visita_hasta);
 	    
 	    setTimePickerInterval(desdePicker);
-	    setTimePickerInterval(hastaPicker);
-	    
-	    if(Calendar.getInstance().get(Calendar.MINUTE) > 30)
-	    	hastaPicker.setCurrentHour(desdePicker.getCurrentHour() + 1);
-	    else
-		    hastaPicker.setCurrentHour(desdePicker.getCurrentHour());
 	    
 	    desdePicker.setCurrentMinute(Calendar.getInstance().get(Calendar.MINUTE) / 5);
-	    hastaPicker.setCurrentMinute(desdePicker.getCurrentMinute() + 6);
 		
 	    Calendar cal = Calendar.getInstance();
 	    cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -115,7 +119,12 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 		{
 			list_nombres.add(cli.getNombreCompleto().trim());
 		}
-		final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(),android.R.layout.simple_list_item_1,list_nombres);
+		final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(),R.layout.spinner_small_text,list_nombres);
+
+        SpinnerAdapter adapterDuracion = new ArrayAdapter<String>(getContext(), R.layout.spinner_small_text, arrayDuracion);
+        Duracion = ((TextView) rootView.findViewById(R.id.crear_visita_duracion));
+        TiempoViaje = ((TextView) rootView.findViewById(R.id.crear_visita_tiempo_viaje));
+        DesdeText = ((TextView) rootView.findViewById(R.id.crear_visita_desde_text));
 
 		cliente_auto.setAdapter(adapter);
 		cliente_auto.setThreshold(1);
@@ -134,7 +143,7 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 					{
 						direcciones.add(cliDir.getDireccion());
 					}
-					ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_dropdown_item_1line, direcciones);
+					ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_small_text, direcciones);
 					((Spinner) rootView.findViewById(R.id.crear_visita_direccion)).setAdapter(adapter);
 				}
 				
@@ -152,7 +161,7 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 						{
 							direcciones.add(cliDir.getDireccion());
 						}
-						ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_dropdown_item_1line, direcciones);
+						ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_small_text, direcciones);
 						((Spinner) rootView.findViewById(R.id.crear_visita_direccion)).setAdapter(adapter);
 					}
 					
@@ -168,6 +177,32 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 			}});
 		
 		setCalendar();
+        DesdeText.setText(format1.format(fecha.getTime()));
+        Duracion.setText(arrayDuracion[0]);
+        TiempoViaje.setText(arrayDuracion[0]);
+
+        Duracion.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDuracion(ID_DURACION);
+            }
+        });
+        TiempoViaje.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDuracion(ID_TIEMPO);
+            }
+        });
+
+        ((LinearLayout) rootView.findViewById(R.id.crear_visita_desde_clickable)).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (rootView.findViewById(R.id.crear_visita_desde).getVisibility() == View.VISIBLE)
+                    rootView.findViewById(R.id.crear_visita_desde).setVisibility(View.GONE);
+                else
+                    rootView.findViewById(R.id.crear_visita_desde).setVisibility(View.VISIBLE);
+            }
+        });
 		
 		if(getArguments().getString(ARG_FROM).equalsIgnoreCase("Cliente"))
 			setDatosCliente(getArguments().getLong(ARG_IDAGENDA));
@@ -191,7 +226,7 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 				{
 					direcciones.add(cliDir.getDireccion());
 				}
-				ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_dropdown_item_1line, direcciones);
+				ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_small_text, direcciones);
 				((Spinner) getRootView().findViewById(R.id.crear_visita_direccion)).setAdapter(adapter);
 			}
 		}		
@@ -221,7 +256,7 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 				{
 					direcciones.add(cliDir.getDireccion());
 				}
-				ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_dropdown_item_1line, direcciones);
+				ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_small_text, direcciones);
 				((Spinner) getRootView().findViewById(R.id.crear_visita_direccion)).setAdapter(adapter);
 			}
 		}		
@@ -257,8 +292,26 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
                // Field timePickerField = classForid.getField("timePicker");  
 
                 Field field = classForid.getField("minute");
+                Field field2 = classForid.getField("hour");
                 minutePicker = (NumberPicker) timePicker
                         .findViewById(field.getInt(null));
+
+                minutePicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+                    @Override
+                    public void onValueChange(NumberPicker numberPicker, int i, int i2) {
+                        fecha.set(Calendar.MINUTE, i2 * TIME_PICKER_INTERVAL);
+                        DesdeText.setText(format1.format(fecha.getTime()));
+                    }
+                });
+
+                ((NumberPicker) timePicker
+                     .findViewById(field2.getInt(null))).setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+                     @Override
+                     public void onValueChange(NumberPicker numberPicker, int i, int i2) {
+                         fecha.set(Calendar.HOUR, i2);
+                         DesdeText.setText(format1.format(fecha.getTime()));
+                     }
+                });
 
                 minutePicker.setMinValue(0);
                 minutePicker.setMaxValue(11);
@@ -282,14 +335,36 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 		{
 		case R.id.action_save:
 			Agenda agenda = new Agenda();
+
+            switch(duracion)
+            {
+                case DURACION_15_MINUTOS: agenda.setDuracion(15); break;
+                case DURACION_30_MINUTOS: agenda.setDuracion(30); break;
+                case DURACION_45_MINUTOS: agenda.setDuracion(45); break;
+                case DURACION_60_MINUTOS: agenda.setDuracion(60); break;
+                case DURACION_90_MINUTOS: agenda.setDuracion(90); break;
+                case DURACION_120_MINUTOS: agenda.setDuracion(120); break;
+                case DURACION_180_MINUTOS: agenda.setDuracion(180); break;
+            }
+
+            switch(tiempo)
+            {
+                case DURACION_15_MINUTOS: agenda.setTiempoViaje(15); break;
+                case DURACION_30_MINUTOS: agenda.setTiempoViaje(30); break;
+                case DURACION_45_MINUTOS: agenda.setTiempoViaje(45); break;
+                case DURACION_60_MINUTOS: agenda.setTiempoViaje(60); break;
+                case DURACION_90_MINUTOS: agenda.setTiempoViaje(90); break;
+                case DURACION_120_MINUTOS: agenda.setTiempoViaje(120); break;
+                case DURACION_180_MINUTOS: agenda.setTiempoViaje(180); break;
+            }
 			
 			Calendar cal_hoy = Calendar.getInstance();
-			if((fecha.get(Calendar.YEAR) < cal_hoy.get(Calendar.YEAR)) || (fecha.get(Calendar.MONTH) < cal_hoy.get(Calendar.MONTH))
-					|| (fecha.get(Calendar.DATE) < cal_hoy.get(Calendar.DATE)) )
-			{
-				Toast.makeText(getActivity(), "Fecha no puede ser anterior a hoy.", Toast.LENGTH_LONG).show();
-				return true;
-			}
+			//if((fecha.get(Calendar.YEAR) < cal_hoy.get(Calendar.YEAR)) || (fecha.get(Calendar.MONTH) < cal_hoy.get(Calendar.MONTH))
+			//		|| (fecha.get(Calendar.DATE) < cal_hoy.get(Calendar.DATE)) )
+			//{
+			//	Toast.makeText(getActivity(), "Fecha no puede ser anterior a hoy.", Toast.LENGTH_LONG).show();
+			//	return true;
+			//}
 			
 			Calendar cal = Calendar.getInstance();
 			Calendar calFin = Calendar.getInstance();
@@ -304,15 +379,10 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 			
 			cal.set(Calendar.HOUR_OF_DAY, desdePicker.getCurrentHour());
 			cal.set(Calendar.MINUTE, desdePicker.getCurrentMinute() * TIME_PICKER_INTERVAL);
-			
-			calFin.set(Calendar.HOUR_OF_DAY, hastaPicker.getCurrentHour());
-			calFin.set(Calendar.MINUTE, hastaPicker.getCurrentMinute() * TIME_PICKER_INTERVAL);
-			
-			if(cal.getTime().getTime() > calFin.getTime().getTime())
-			{
-				Toast.makeText(getActivity(), "Fecha Desde no puede ser mayor a Fecha Hasta.", Toast.LENGTH_LONG).show();
-				return true;
-			}
+
+			calFin.set(Calendar.HOUR_OF_DAY, desdePicker.getCurrentHour());
+			calFin.set(Calendar.MINUTE, desdePicker.getCurrentMinute() * TIME_PICKER_INTERVAL);
+            calFin.add(Calendar.MINUTE, (int) agenda.getDuracion());
 			
 			agenda.setFechaInicio(cal.getTime());
 			agenda.setFechaFin(calFin.getTime());
@@ -334,7 +404,7 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 			else
 				agenda.setCliente(Cliente.getClienteIDServer(getDataBase(), cli.getIdCliente(), true));
 			agenda.setClienteDireccion(agenda.getCliente().getClienteDirecciones().get(getSpinnerSelectedPosition(R.id.crear_visita_direccion)));
-			agenda.setCiudad(agenda.getCliente().getClienteDireccionPrincipal().getCiudadDescripcion());
+			agenda.setCiudad(agenda.getCliente().getClienteDirecciones().get(getSpinnerSelectedPosition(R.id.crear_visita_direccion)).getCiudadDescripcion());
 			agenda.setDireccion(agenda.getCliente().getClienteDirecciones().get(getSpinnerSelectedPosition(R.id.crear_visita_direccion)).getDireccion());
 			agenda.setEstadoAgenda(Contants.ESTADO_PENDIENTE);
 			agenda.setEstadoAgendaDescripcion(Contants.DESC_PENDIENTE);
@@ -348,6 +418,9 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 			agenda.setIdAgenda(0);
 			agenda.setEnviado(false);
 			Agenda.insert(getDataBase(), agenda);
+            int last = getDataBase().getIntLastInsertRowId();
+            long last2 = getDataBase().getLongLastInsertRowId();
+
 			
 			for(Tarea tarea : list_tareas)
 			{
@@ -435,6 +508,9 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 	 				caldroidFragment.setBackgroundResourceForDate(R.color.caldroid_white, fecha.getTime());
 	 				caldroidFragment.setBackgroundResourceForDate(R.drawable.blue_border_date, date);
 	 				fecha.setTime(date);
+                    fecha.set(Calendar.HOUR_OF_DAY, desdePicker.getCurrentHour());
+                    fecha.set(Calendar.MINUTE, desdePicker.getCurrentMinute() * TIME_PICKER_INTERVAL);
+                    DesdeText.setText(format1.format(fecha.getTime()));
 	 			}
 
 	 			@Override
@@ -453,4 +529,34 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 	 	caldroidFragment.setCaldroidListener(listener);
 	 	caldroidFragment.setBackgroundResourceForDate(R.drawable.blue_border_date, fecha.getTime());
 	}
+
+    public void showDuracion(final int type)
+    {
+        AlertDialog.Builder builderSingle = new AlertDialog.Builder(
+                getContext());
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                getContext(),
+                android.R.layout.select_dialog_singlechoice, arrayDuracion);
+        builderSingle.setAdapter(arrayAdapter,
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(type == ID_DURACION)
+                        {
+                            duracion = which;
+                            Duracion.setText(arrayAdapter.getItem(which));
+                            dialog.dismiss();
+                        }
+                        else if(type == ID_TIEMPO)
+                        {
+                            tiempo = which;
+                            TiempoViaje.setText(arrayAdapter.getItem(which));
+                            dialog.dismiss();
+                        }
+
+                    }
+                });
+        builderSingle.show();
+    }
 }

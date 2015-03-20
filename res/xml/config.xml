@@ -27,7 +27,7 @@
                 </method>
                 <method>
                     <name>GetGeopoliticalStructures</name>
-                    <action>General/GetGeopoliticalStructuresView?lastUpdate=@lastUpdate</action>
+                    <action>General/GetGeopoliticalStructuresView?lastUpdate=@lastUpdate&amp;page=@page&amp;pageSize=@size</action>
                     <webMethod>GET</webMethod>
                 </method>
                 <method>
@@ -39,7 +39,12 @@
                     <name>GetIdentificationTypes</name>
                     <action>General/GetIdentificationTypes</action>
                     <webMethod>GET</webMethod>
-                </method>      
+                </method>
+                <method>
+                    <name>GetConnection</name>
+                    <action>General/Test</action>
+                    <webMethod>GET</webMethod>
+                </method>
             </methods>     
         </webServiceData>
            <webServiceData>
@@ -52,6 +57,11 @@
                 <method>
                     <name>GetClientes</name>
                     <action>cliente/getclientes?ultimaactualizacion=@ultimaactualizacion</action>
+                    <webMethod>GET</webMethod>
+                </method>
+                <method>
+                    <name>GetIdClientes</name>
+                    <action>cliente/getidclientes</action>
                     <webMethod>GET</webMethod>
                 </method>
                 <method>

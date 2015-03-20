@@ -121,10 +121,31 @@ public class DashboardAgendaFragment extends BaseFragment {
 
     			});
     			agenda_layout.setLayoutParams(params);
-    			((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_hora)).setText(format4.format(agd.getFechaInicio()));
-    			((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_rowlist_nombre)).setText(agd.getCliente().getNombreCompleto().trim());
-    			((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_phone)).setText(agd.getClienteDireccion().getTelefono1());
-    			((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_mail)).setText(agd.getCliente().getCorreoElectronico());
+                ((ImageView) agenda_layout.findViewById(R.id.dashboard_agenda_imagen)).setImageBitmap(BitmapUtils.getRoundedRectBitmap(
+                        BitmapFactory.decodeResource(getResources(), R.drawable.user),
+                        getResources().getDimensionPixelOffset(R.dimen.image_size)));
+                ((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_phone)).setText("");
+
+                if(agd.getCliente() == null) {
+                    ((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_rowlist_nombre)).setText(agd.getNombreCompleto());
+                    ((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_phone)).setText("");
+                    ((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_hora)).setText(format4.format(agd.getFechaInicio()));
+                    ((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_mail)).setText("");
+                }
+                else {
+                    if (agd.getCliente().getNombreCompleto() != null)
+                        ((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_rowlist_nombre)).setText(agd.getCliente().getNombreCompleto().trim());
+                    else
+                        ((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_rowlist_nombre)).setText(agd.getCliente().getNombre1());
+                    if(agd.getClienteDireccion() != null)
+                        ((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_phone)).setText(agd.getClienteDireccion().getTelefono1());
+
+                    ((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_hora)).setText(format4.format(agd.getFechaInicio()));
+                    ((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_mail)).setText(agd.getCliente().getCorreoElectronico());
+                    DManager.fetchDrawableOnThreadRounded(PreferenceManager.getString("server") +
+                                    rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + agd.getCliente().getURLFoto(),
+                            (ImageView) agenda_layout.findViewById(R.id.dashboard_agenda_imagen));
+                }
     			
     			((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_mail)).setClickable(true);
     			((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_mail)).setOnClickListener(new OnClickListener(){
@@ -175,12 +196,6 @@ public class DashboardAgendaFragment extends BaseFragment {
     				
     				
     			}
-    			((ImageView) agenda_layout.findViewById(R.id.dashboard_agenda_imagen)).setImageBitmap(BitmapUtils.getRoundedRectBitmap(
-    					BitmapFactory.decodeResource(getResources(), R.drawable.user), 
-    					getResources().getDimensionPixelOffset(R.dimen.image_size)));
-				DManager.fetchDrawableOnThreadRounded(PreferenceManager.getString("server") + 
-    					rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + agd.getCliente().getURLFoto(),
-    					(ImageView) agenda_layout.findViewById(R.id.dashboard_agenda_imagen));
 				
 				((LinearLayout) getRootView().findViewById(R.id.dashboard_agenda_container)).addView(agenda_layout);
     		}

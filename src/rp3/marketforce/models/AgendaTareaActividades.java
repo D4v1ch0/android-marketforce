@@ -22,6 +22,7 @@ public class AgendaTareaActividades extends rp3.data.entity.EntityBase<AgendaTar
 	private int IdTipoActividad;
 	private int orden;
 	private String resultado;
+    private String idsResultado;
 	private String tipo;
 	private List<AgendaTareaActividades> actividades_hijas;
 	
@@ -52,6 +53,7 @@ public class AgendaTareaActividades extends rp3.data.entity.EntityBase<AgendaTar
 		setValue(Contract.AgendaTareaActividades.COLUMN_TAREA_ID, this.idTarea);
 		setValue(Contract.AgendaTareaActividades.COLUMN_TAREA_ACTIVIDAD_ID, this.idTareaActividad);
 		setValue(Contract.AgendaTareaActividades.COLUMN_RESULTADO, this.resultado);
+        setValue(Contract.AgendaTareaActividades.COLUMN_IDS_RESULTADO, this.idsResultado);
 	}
 
 	@Override
@@ -151,8 +153,16 @@ public class AgendaTareaActividades extends rp3.data.entity.EntityBase<AgendaTar
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
 	}
-	
-	public List<AgendaTareaActividades> getActividades_hijas() {
+    public String getIdsResultado() {
+        return idsResultado;
+    }
+
+    public void setIdsResultado(String idsResultado) {
+        this.idsResultado = idsResultado;
+    }
+
+
+    public List<AgendaTareaActividades> getActividades_hijas() {
 		return actividades_hijas;
 	}
 
@@ -166,7 +176,7 @@ public class AgendaTareaActividades extends rp3.data.entity.EntityBase<AgendaTar
 		
 		Cursor c = db.query(Contract.AgendaTareaActividades.TABLE_NAME,
 				new String[] {Contract.AgendaTareaActividades._ID, Contract.AgendaTareaActividades.COLUMN_AGENDA_ID,
-				Contract.AgendaTareaActividades.COLUMN_RESULTADO, Contract.AgendaTareaActividades.COLUMN_RUTA_ID, 
+				Contract.AgendaTareaActividades.COLUMN_RESULTADO, Contract.AgendaTareaActividades.COLUMN_RUTA_ID, Contract.AgendaTareaActividades.COLUMN_IDS_RESULTADO,
 				Contract.AgendaTareaActividades.COLUMN_TAREA_ACTIVIDAD_ID,  
 				Contract.AgendaTareaActividades.COLUMN_TAREA_ID,},
 				Contract.AgendaTareaActividades.COLUMN_RUTA_ID + " = ? AND " +
@@ -182,6 +192,7 @@ public class AgendaTareaActividades extends rp3.data.entity.EntityBase<AgendaTar
 				actividad.setID(CursorUtils.getLong(c, Contract.AgendaTareaActividades._ID));
 				actividad.setIdAgenda(CursorUtils.getInt(c, Contract.AgendaTareaActividades.COLUMN_AGENDA_ID));
 				actividad.setResultado(CursorUtils.getString(c, Contract.AgendaTareaActividades.COLUMN_RESULTADO));
+                actividad.setIdsResultado(CursorUtils.getString(c, Contract.AgendaTareaActividades.COLUMN_IDS_RESULTADO));
 				actividad.setIdRuta(CursorUtils.getInt(c, Contract.AgendaTareaActividades.COLUMN_RUTA_ID));
 				actividad.setIdTareaActividad(CursorUtils.getInt(c, Contract.AgendaTareaActividades.COLUMN_TAREA_ACTIVIDAD_ID));
 				//actividad.setIdTareaActividadPadre(CursorUtils.getInt(c, Contract.Actividades.COLUMN_TAREA_ACTIVIDAD_PADRE_ID));
@@ -201,7 +212,7 @@ public class AgendaTareaActividades extends rp3.data.entity.EntityBase<AgendaTar
 		
 		Cursor c = db.query(Contract.AgendaTareaActividades.TABLE_NAME,
 				new String[] {Contract.AgendaTareaActividades._ID,Contract.AgendaTareaActividades.COLUMN_AGENDA_ID,
-				Contract.AgendaTareaActividades.COLUMN_RESULTADO,
+				Contract.AgendaTareaActividades.COLUMN_RESULTADO, Contract.AgendaTareaActividades.COLUMN_IDS_RESULTADO,
 				Contract.AgendaTareaActividades.COLUMN_RUTA_ID, Contract.AgendaTareaActividades.COLUMN_TAREA_ACTIVIDAD_ID,
 				Contract.AgendaTareaActividades.COLUMN_TAREA_ID},
 				//Contract.AgendaTareaActividades.COLUMN_TAREA_ACTIVIDAD_PADRE_ID + " = ? AND " +
@@ -220,6 +231,7 @@ public class AgendaTareaActividades extends rp3.data.entity.EntityBase<AgendaTar
 				actividad.setDescripcion(CursorUtils.getString(c, Contract.Actividades.COLUMN_DESCRIPCION));
 				actividad.setOrden(CursorUtils.getInt(c, Contract.Actividades.COLUMN_ORDEN));
 				actividad.setResultado(CursorUtils.getString(c, Contract.AgendaTareaActividades.COLUMN_RESULTADO));
+                actividad.setIdsResultado(CursorUtils.getString(c, Contract.AgendaTareaActividades.COLUMN_IDS_RESULTADO));
 				actividad.setIdRuta(CursorUtils.getInt(c, Contract.AgendaTareaActividades.COLUMN_RUTA_ID));
 				actividad.setIdTareaActividad(CursorUtils.getInt(c, Contract.AgendaTareaActividades.COLUMN_TAREA_ACTIVIDAD_ID));
 				actividad.setIdTareaActividadPadre(CursorUtils.getInt(c, Contract.Actividades.COLUMN_TAREA_ACTIVIDAD_PADRE_ID));
@@ -239,7 +251,7 @@ public class AgendaTareaActividades extends rp3.data.entity.EntityBase<AgendaTar
 		List<AgendaTareaActividades> lista_actividades = new ArrayList<AgendaTareaActividades>();
 		
 		Cursor c = db.query(Contract.AgendaTareaActividades.TABLE_NAME,
-				new String[] {Contract.AgendaTareaActividades._ID,Contract.AgendaTareaActividades.COLUMN_AGENDA_ID, Contract.AgendaTareaActividades.COLUMN_RESULTADO,
+				new String[] {Contract.AgendaTareaActividades._ID,Contract.AgendaTareaActividades.COLUMN_AGENDA_ID, Contract.AgendaTareaActividades.COLUMN_RESULTADO,Contract.AgendaTareaActividades.COLUMN_IDS_RESULTADO,
 				Contract.AgendaTareaActividades.COLUMN_RUTA_ID, Contract.AgendaTareaActividades.COLUMN_TAREA_ACTIVIDAD_ID, Contract.AgendaTareaActividades.COLUMN_TAREA_ID,},
 				Contract.AgendaTareaActividades.COLUMN_RUTA_ID + " = ? AND " +
 				Contract.AgendaTareaActividades.COLUMN_AGENDA_ID + " = ? AND " +
@@ -256,6 +268,7 @@ public class AgendaTareaActividades extends rp3.data.entity.EntityBase<AgendaTar
 				actividad.setIdAgenda(CursorUtils.getInt(c, Contract.AgendaTareaActividades.COLUMN_AGENDA_ID));
 				actividad.setDescripcion(CursorUtils.getString(c, Contract.Actividades.COLUMN_DESCRIPCION));
 				actividad.setOrden(CursorUtils.getInt(c, Contract.Actividades.COLUMN_ORDEN));
+                actividad.setIdsResultado(CursorUtils.getString(c, Contract.AgendaTareaActividades.COLUMN_IDS_RESULTADO));
 				actividad.setResultado(CursorUtils.getString(c, Contract.AgendaTareaActividades.COLUMN_RESULTADO));
 				actividad.setIdRuta(CursorUtils.getInt(c, Contract.AgendaTareaActividades.COLUMN_RUTA_ID));
 				actividad.setIdTareaActividad(CursorUtils.getInt(c, Contract.AgendaTareaActividades.COLUMN_TAREA_ACTIVIDAD_ID));
@@ -277,7 +290,7 @@ public class AgendaTareaActividades extends rp3.data.entity.EntityBase<AgendaTar
 		AgendaTareaActividades actividad = null;
 		
 		Cursor c = db.query(Contract.AgendaTareaActividades.TABLE_NAME,
-				new String[] {Contract.AgendaTareaActividades._ID,Contract.AgendaTareaActividades.COLUMN_AGENDA_ID, Contract.AgendaTareaActividades.COLUMN_RESULTADO,
+				new String[] {Contract.AgendaTareaActividades._ID,Contract.AgendaTareaActividades.COLUMN_AGENDA_ID, Contract.AgendaTareaActividades.COLUMN_RESULTADO,Contract.AgendaTareaActividades.COLUMN_IDS_RESULTADO,
 				Contract.AgendaTareaActividades.COLUMN_RUTA_ID, Contract.AgendaTareaActividades.COLUMN_TAREA_ACTIVIDAD_ID, Contract.AgendaTareaActividades.COLUMN_TAREA_ID},
 				Contract.AgendaTareaActividades.COLUMN_RUTA_ID + " = ? AND " +
 				Contract.AgendaTareaActividades.COLUMN_AGENDA_ID + " = ? AND " +
@@ -291,6 +304,7 @@ public class AgendaTareaActividades extends rp3.data.entity.EntityBase<AgendaTar
 			actividad.setIdAgenda(CursorUtils.getInt(c, Contract.AgendaTareaActividades.COLUMN_AGENDA_ID));
 			//actividad.setDescripcion(CursorUtils.getString(c, Contract.Actividades.COLUMN_DESCRIPCION));
 			//actividad.setOrden(CursorUtils.getInt(c, Contract.Actividades.COLUMN_ORDEN));
+            actividad.setIdsResultado(CursorUtils.getString(c, Contract.AgendaTareaActividades.COLUMN_IDS_RESULTADO));
 			actividad.setResultado(CursorUtils.getString(c, Contract.AgendaTareaActividades.COLUMN_RESULTADO));
 			actividad.setIdRuta(CursorUtils.getInt(c, Contract.AgendaTareaActividades.COLUMN_RUTA_ID));
 			actividad.setIdTareaActividad(CursorUtils.getInt(c, Contract.AgendaTareaActividades.COLUMN_TAREA_ACTIVIDAD_ID));
@@ -309,7 +323,7 @@ public class AgendaTareaActividades extends rp3.data.entity.EntityBase<AgendaTar
 		AgendaTareaActividades actividad = new AgendaTareaActividades();
 		
 		Cursor c = db.query(Contract.AgendaTareaActividades.TABLE_NAME,
-				new String[] {Contract.AgendaTareaActividades._ID,Contract.AgendaTareaActividades.COLUMN_AGENDA_ID, Contract.AgendaTareaActividades.COLUMN_RESULTADO,
+				new String[] {Contract.AgendaTareaActividades._ID,Contract.AgendaTareaActividades.COLUMN_AGENDA_ID, Contract.AgendaTareaActividades.COLUMN_RESULTADO,Contract.AgendaTareaActividades.COLUMN_IDS_RESULTADO,
 				Contract.AgendaTareaActividades.COLUMN_RUTA_ID, Contract.AgendaTareaActividades.COLUMN_TAREA_ACTIVIDAD_ID, Contract.AgendaTareaActividades.COLUMN_TAREA_ID},
 				Contract.AgendaTareaActividades.COLUMN_RUTA_ID + " = ? AND " +
 				Contract.AgendaTareaActividades.COLUMN_AGENDA_ID + " = ? AND " +
@@ -323,6 +337,7 @@ public class AgendaTareaActividades extends rp3.data.entity.EntityBase<AgendaTar
 			actividad.setIdAgenda(CursorUtils.getInt(c, Contract.AgendaTareaActividades.COLUMN_AGENDA_ID));
 			actividad.setDescripcion(CursorUtils.getString(c, Contract.Actividades.COLUMN_DESCRIPCION));
 			actividad.setOrden(CursorUtils.getInt(c, Contract.Actividades.COLUMN_ORDEN));
+            actividad.setIdsResultado(CursorUtils.getString(c, Contract.AgendaTareaActividades.COLUMN_IDS_RESULTADO));
 			actividad.setResultado(CursorUtils.getString(c, Contract.AgendaTareaActividades.COLUMN_RESULTADO));
 			actividad.setIdRuta(CursorUtils.getInt(c, Contract.AgendaTareaActividades.COLUMN_RUTA_ID));
 			actividad.setIdTareaActividad(CursorUtils.getInt(c, Contract.AgendaTareaActividades.COLUMN_TAREA_ACTIVIDAD_ID));

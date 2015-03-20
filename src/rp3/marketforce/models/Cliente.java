@@ -845,6 +845,18 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 
 	}
 
+    public static void deleteClientes(DataBase db, List<Integer> originalIds)
+    {
+        String idsNotDelete = "";
+        for(int i : originalIds)
+            idsNotDelete = idsNotDelete + i + ",";
+
+        if(idsNotDelete.length() > 0)
+        {
+            db.delete(Contract.Cliente.TABLE_NAME, Contract.Cliente.COLUMN_ID_CLIENTE + " NOT IN (" + idsNotDelete + "?)",0);
+        }
+    }
+
 	public List<Contacto> getContactos() {
 		return contactos;
 	}

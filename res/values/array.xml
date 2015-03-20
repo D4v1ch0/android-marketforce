@@ -36,10 +36,19 @@
     	<item>Viudo</item>
      </array>
      
-     <array name="testArrayEstado">  
-    	<item>Visitado</item>  
-    	<item>Pendiente</item>  
+     <array name="testArrayEstado">
+    	<item>Visitado</item>
+    	<item>Pendiente</item>
      </array>
-     
+
+    <array name="arrayDuracion">
+        <item>15 minutos</item>
+        <item>30 minutos</item>
+        <item>45 minutos</item>
+        <item>1 hora</item>
+        <item>1 hora, 30 minutos</item>
+        <item>2 horas</item>
+        <item>3 horas</item>
+    </array>
     
 </resources>

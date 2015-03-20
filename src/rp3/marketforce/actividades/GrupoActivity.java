@@ -9,6 +9,8 @@ import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.AgendaTareaActividades;
 import rp3.marketforce.models.AgendaTareaOpciones;
 import rp3.marketforce.ruta.RutasDetailFragment;
+import rp3.marketforce.utils.NothingSelectedSpinnerAdapter;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -16,7 +18,6 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.view.Gravity;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -30,11 +31,13 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class GrupoActivity extends ActividadActivity {
 	
 	LinearLayout Container;
 	int contador = 0;
+    List<Spinner> combos;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -50,8 +53,22 @@ public class GrupoActivity extends ActividadActivity {
 		}
 	    
 	    Container = (LinearLayout) findViewById(R.id.actividad_agrupar);
-	    
-	    List<Actividad> list_atas = Actividad.getActividadesGrupalesByTarea(getDataBase(), id_actividad);
+        combos = new ArrayList<Spinner>();
+
+        List<Actividad> list_atas = Actividad.getActividadesNoGrupalesByTarea(getDataBase(), id_actividad);
+        for(Actividad actividad : list_atas)
+        {
+            if(actividad.getTipo().equalsIgnoreCase("C"))
+                agregarCheckbox(actividad);
+            if(actividad.getTipo().equalsIgnoreCase("M"))
+                agregarMultiple(actividad);
+            if(actividad.getTipo().equalsIgnoreCase("S"))
+                agregarSeleccion(actividad);
+            if(actividad.getTipo().equalsIgnoreCase("T"))
+                agregarTexto(actividad);
+        }
+
+	    list_atas = Actividad.getActividadesGrupalesByTarea(getDataBase(), id_actividad);
 	    for(Actividad actividad : list_atas)
 	    {
 	    	if(actividad.getTipo().equalsIgnoreCase("G"))
@@ -59,7 +76,7 @@ public class GrupoActivity extends ActividadActivity {
 	    	for(Actividad actividad_hija : actividad.getActividades_hijas())
 	    	{
 		    	if(actividad_hija.getTipo().equalsIgnoreCase("C"))
-		    		agregarCheckbox(actividad_hija);	
+		    		agregarCheckbox(actividad_hija);
 				if(actividad_hija.getTipo().equalsIgnoreCase("M"))
 					agregarMultiple(actividad_hija);
 				if(actividad_hija.getTipo().equalsIgnoreCase("S"))
@@ -67,17 +84,16 @@ public class GrupoActivity extends ActividadActivity {
 				if(actividad_hija.getTipo().equalsIgnoreCase("T"))
 					agregarTexto(actividad_hija);
 	    	}
-	    	
 	    }
-	    
+
 	    Container.removeViewAt(Container.getChildCount()-1);
-	    
+
 	    if(soloVista)
 		{
 	    	((Button) findViewById(R.id.actividad_aceptar)).setVisibility(View.GONE);
 	    	((Button) findViewById(R.id.actividad_cancelar)).setVisibility(View.GONE);
 		}
-	    
+
 	}
 	
 	public void agregarGrupo(Actividad actividad)
@@ -142,7 +158,7 @@ public class GrupoActivity extends ActividadActivity {
 		}
 		else
 		{
-			act = initActividad(actividad_hija.getIdTareaActividad());
+			act = initActividadInsert(actividad_hija.getIdTareaActividad());
 		}
 		final AgendaTareaActividades resp = act;
 			
@@ -152,6 +168,10 @@ public class GrupoActivity extends ActividadActivity {
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
 				resp.setResultado(isChecked + "");
+                if(isChecked)
+                    resp.setIdsResultado("1");
+                else
+                    resp.setIdsResultado("0");
 				AgendaTareaActividades.update(getDataBase(), resp);
 			}});
 		
@@ -214,7 +234,7 @@ public class GrupoActivity extends ActividadActivity {
 		}
 		else
 		{
-			act = initActividad(actividad_hija.getIdTareaActividad());
+			act = initActividadInsert(actividad_hija.getIdTareaActividad());
 		}
 		final AgendaTareaActividades resp = act;
 		
@@ -267,7 +287,7 @@ public class GrupoActivity extends ActividadActivity {
 		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		LinearLayout layout = new LinearLayout(this);
 		TextView texto = new TextView(this);
-		Spinner combo = new Spinner(this);
+		final Spinner combo = new Spinner(this);
 		LinearLayout innerContainer = new LinearLayout(this);
 		contador ++;
 		
@@ -287,9 +307,9 @@ public class GrupoActivity extends ActividadActivity {
 			layout.setOrientation(LinearLayout.VERTICAL);
 		}
 		
-		List<AgendaTareaOpciones> ag_opcs = AgendaTareaOpciones.getOpciones(getDataBase(), actividad_hija.getIdTarea(), actividad_hija.getIdTareaActividad());
+		final List<AgendaTareaOpciones> ag_opcs = AgendaTareaOpciones.getOpciones(getDataBase(), actividad_hija.getIdTarea(), actividad_hija.getIdTareaActividad());
 		List<String> opciones = new ArrayList<String>();
-		
+
 		for(AgendaTareaOpciones opcion: ag_opcs)
 		{
 			opciones.add(opcion.getDescripcion());
@@ -297,25 +317,40 @@ public class GrupoActivity extends ActividadActivity {
 		
 		final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item,opciones);
 		combo.setAdapter(adapter);
+        combo.setAdapter(new NothingSelectedSpinnerAdapter(
+                adapter,
+                R.layout.spinner_empty_selected,
+                this));
+        combo.setPrompt("Seleccione una opción");
+        combos.add(combo);
 		
 		AgendaTareaActividades act = AgendaTareaActividades.getActividadSimple(getDataBase(), id_ruta, id_agenda, id_actividad, actividad_hija.getIdTareaActividad());
 		if(act != null)
 		{
-			combo.setSelection(adapter.getPosition(act.getResultado()));
+            if(act.getResultado() != null && !act.getResultado().equalsIgnoreCase(""))
+			    combo.setSelection(adapter.getPosition(act.getResultado())+1);
 		}
 		else
 		{
-			act = initActividad(actividad_hija.getIdTareaActividad());
+			act = initActividadInsert(actividad_hija.getIdTareaActividad());
 		}
 		final AgendaTareaActividades resp = act;
+        final int pos = combos.size();
 		
 		combo.setOnItemSelectedListener(new OnItemSelectedListener(){
 
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view,
 					int position, long id) {
-				resp.setResultado(adapter.getItem(position));
-				AgendaTareaActividades.update(getDataBase(), resp);
+                if(position > 0)
+                    resp.setResultado(adapter.getItem(position-1));
+                if(resp.getResultado() != null && !resp.getResultado().equalsIgnoreCase("")) {
+                    for (AgendaTareaOpciones opc : ag_opcs) {
+                        if (resp.getResultado().equalsIgnoreCase(opc.getDescripcion()))
+                            resp.setIdsResultado(opc.getOrden() + "");
+                    }
+                }
+                AgendaTareaActividades.update(getDataBase(), resp);
 				
 			}
 
@@ -384,7 +419,7 @@ public class GrupoActivity extends ActividadActivity {
 		}
 		else
 		{
-			act = initActividad(actividad_hija.getIdTareaActividad());
+			act = initActividadInsert(actividad_hija.getIdTareaActividad());
 		}
 		final AgendaTareaActividades resp = act;
 		
@@ -434,6 +469,14 @@ public class GrupoActivity extends ActividadActivity {
 
 	@Override
 	public void aceptarCambios(View v) {
+        for(Spinner combo : combos)
+        {
+            if(combo.getSelectedItemPosition() == 0)
+            {
+                Toast.makeText(this, "Faltan preguntas de selección sin responder.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
 		AgendaTarea agt = AgendaTarea.getTarea(getDataBase(), id_agenda, id_ruta, id_actividad);
 		agt.setEstadoTarea("R");
 		AgendaTarea.update(getDataBase(), agt);
@@ -530,7 +573,21 @@ public class GrupoActivity extends ActividadActivity {
 	@Override
 	protected void onResume() {
 		Container.removeAllViews();
-		List<Actividad> list_atas = Actividad.getActividadesGrupalesByTarea(getDataBase(), id_actividad);
+        combos = new ArrayList<Spinner>();
+        List<Actividad> list_atas = Actividad.getActividadesNoGrupalesByTarea(getDataBase(), id_actividad);
+        for(Actividad actividad : list_atas)
+        {
+            if(actividad.getTipo().equalsIgnoreCase("C"))
+                agregarCheckbox(actividad);
+            if(actividad.getTipo().equalsIgnoreCase("M"))
+                agregarMultiple(actividad);
+            if(actividad.getTipo().equalsIgnoreCase("S"))
+                agregarSeleccion(actividad);
+            if(actividad.getTipo().equalsIgnoreCase("T"))
+                agregarTexto(actividad);
+        }
+
+		list_atas = Actividad.getActividadesGrupalesByTarea(getDataBase(), id_actividad);
 	    for(Actividad actividad : list_atas)
 	    {
 	    	if(actividad.getTipo().equalsIgnoreCase("G"))
@@ -538,7 +595,7 @@ public class GrupoActivity extends ActividadActivity {
 	    	for(Actividad actividad_hija : actividad.getActividades_hijas())
 	    	{
 		    	if(actividad_hija.getTipo().equalsIgnoreCase("C"))
-		    		agregarCheckbox(actividad_hija);	
+		    		agregarCheckbox(actividad_hija);
 				if(actividad_hija.getTipo().equalsIgnoreCase("M"))
 					agregarMultiple(actividad_hija);
 				if(actividad_hija.getTipo().equalsIgnoreCase("S"))
@@ -555,13 +612,6 @@ public class GrupoActivity extends ActividadActivity {
 		super.onResume();
 	}
 	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if(item.getItemId() == android.R.id.home)
-		{
-			finish();
-		}
-		return super.onOptionsItemSelected(item);
-	}
+
 
 }

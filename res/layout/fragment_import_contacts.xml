@@ -12,13 +12,16 @@
 
         <CheckBox
             android:id="@+id/import_seleccionar_todos"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:button="@drawable/custom_checkbox"
-            android:padding="5dp"
             android:text="@string/label_seleccionar_todos"
             android:textColor="@color/color_text_title"
-            android:textSize="@dimen/text_medium_size" />
+            android:textSize="@dimen/text_medium_size"
+            android:paddingLeft="20dp"
+            android:paddingTop="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="5dp" />
 
     </LinearLayout>
 

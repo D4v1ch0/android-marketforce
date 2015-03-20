@@ -55,7 +55,10 @@ public class MultipleActivity extends  ActividadActivity {
 		}
 		else
 		{
-			act = initActividad(ata.getIdTareaActividad());
+            if(id_padre == 0)
+                act = initActividad(ata.getIdTareaActividad());
+            else
+                act = initActividadInsert(ata.getIdTareaActividad());
 		}
 	    
 	    List<AgendaTareaOpciones> ag_opcs = AgendaTareaOpciones.getOpciones(getDataBase(), act.getIdTarea(), ata.getIdTareaActividad());
@@ -76,25 +79,42 @@ public class MultipleActivity extends  ActividadActivity {
 	}
 	@Override
 	public void aceptarCambios(View v) {
-		String respuesta = "";
+		String respuesta = "", idsresultados = "";
+        List<AgendaTareaOpciones> ag_opcs = AgendaTareaOpciones.getOpciones(getDataBase(), act.getIdTarea(), ata.getIdTareaActividad());
 		for(int i = 0; i < Grupo.getChildCount();i++)
 		{
 			if(((CheckBox)Grupo.getChildAt(i)).isChecked())
 			{
 				respuesta = respuesta + ((CheckBox)Grupo.getChildAt(i)).getText() + ",";
+                for(AgendaTareaOpciones opc: ag_opcs)
+                {
+                    if(((CheckBox)Grupo.getChildAt(i)).getText().toString().equalsIgnoreCase(opc.getDescripcion()))
+                    {
+                        idsresultados = idsresultados + opc.getOrden() + ",";
+                    }
+                }
 			}
 		}
 		if(respuesta.length()>0)
 			respuesta = respuesta.substring(0, respuesta.length()-1);
+        if(idsresultados.length()>0)
+            idsresultados = idsresultados.substring(0, idsresultados.length()-1);
 		
 		act.setResultado(respuesta);
-		AgendaTareaActividades.update(getDataBase(), act);
+        act.setIdsResultado(idsresultados);
+
 		if(id_padre == 0)
 		{
+            if(act.getID() == 0)
+                AgendaTareaActividades.insert(getDataBase(), act);
+            else
+                AgendaTareaActividades.update(getDataBase(), act);
 			AgendaTarea agt = AgendaTarea.getTarea(getDataBase(), id_agenda, id_ruta, id_tarea);
 			agt.setEstadoTarea("R");
 			AgendaTarea.update(getDataBase(), agt);
 		}
+        else
+            AgendaTareaActividades.update(getDataBase(), act);
 		finish();
 		
 	}

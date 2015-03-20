@@ -103,33 +103,40 @@ public class DashboardMapFragment extends BaseFragment{
 	public void setMapa()
 	{
 		map = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.dashboard_map)).getMap();
-    	map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Contants.LATITUD, Contants.LONGITUD), Contants.ZOOM), 1, null);
-    	
-    	Calendar cal = Calendar.getInstance();
-    	cal.set(Calendar.HOUR_OF_DAY, 0);
-    	cal.set(Calendar.MINUTE, 0);
-    	cal.set(Calendar.SECOND, 0);
-    	List<Agenda> list_agendas = Agenda.getRutaDia(getDataBase(), cal);
-    	markers = new ArrayList<Marker>();
-    	
-    	for(int i = 0; i < list_agendas.size(); i ++)
-		{
-			LatLng pos = new LatLng(list_agendas.get(i).getClienteDireccion().getLatitud(), list_agendas.get(i).getClienteDireccion().getLongitud());
-			
-			Marker mark = map.addMarker(new MarkerOptions().position(pos)
-			        .title(list_agendas.get(i).getCliente().getNombreCompleto().trim())
-			        .icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.map_position, i + 1 + ""))));
-			mark.showInfoWindow();
-			markers.add(mark);
-			
-			map.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 12), 2000, null);
-			
-			if(i != 0)
-			{
-				LatLng org = new LatLng(list_agendas.get(i-1).getClienteDireccion().getLatitud(), list_agendas.get(i-1).getClienteDireccion().getLongitud());
-				showRuta(org, pos);
-			}
-		}
+        try {
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Contants.LATITUD, Contants.LONGITUD), Contants.ZOOM), 1, null);
+
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            List<Agenda> list_agendas = Agenda.getRutaDia(getDataBase(), cal);
+            markers = new ArrayList<Marker>();
+
+            for(int i = 0; i < list_agendas.size(); i ++)
+            {
+                LatLng pos = new LatLng(list_agendas.get(i).getClienteDireccion().getLatitud(), list_agendas.get(i).getClienteDireccion().getLongitud());
+
+                Marker mark = map.addMarker(new MarkerOptions().position(pos)
+                        .title(list_agendas.get(i).getCliente().getNombreCompleto().trim())
+                        .icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.map_position, i + 1 + ""))));
+                mark.showInfoWindow();
+                markers.add(mark);
+
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 12), 2000, null);
+
+                if(i != 0)
+                {
+                    LatLng org = new LatLng(list_agendas.get(i-1).getClienteDireccion().getLatitud(), list_agendas.get(i-1).getClienteDireccion().getLongitud());
+                    showRuta(org, pos);
+                }
+            }
+        }
+        catch(Exception ex)
+        {
+
+        }
+
 	}
 	
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {

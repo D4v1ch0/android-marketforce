@@ -146,5 +146,8 @@
     <string name="label_facebook">Facebook</string>
     <string name="label_seleccionar_todos">Seleccionar todos</string>
     <string name="label_fecha">Fecha:</string>
+    <string name="label_duracion">Duración:</string>
+    <string name="label_tiempo_viaje">Tiempo de Viaje:</string>
+    <string name="label_motivo">Motivo:</string>
 
 </resources>
