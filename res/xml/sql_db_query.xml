@@ -618,6 +618,50 @@
         WHERE tbAgenda._id = ? AND tbAgenda.Enviado = 0
         ORDER BY tbAgenda.FechaInicio, tbAgendaExt.NombreCompleto
     </statement>
+
+    <statement name="AgendaPendientes">
+        SELECT
+        tbAgenda._id,
+        tbAgenda.IdRuta,
+        tbAgenda.IdAgenda,
+        tbAgenda.IdCliente,
+        tbAgenda._IdCliente,
+        tbAgenda.IdContacto,
+        tbAgenda._IdContacto,
+        tbAgenda.IdClienteDireccion,
+        tbAgenda._IdClienteDireccion,
+        tbAgenda.FechaInicio,
+        tbAgenda.FechaFin,
+        tbAgenda.EstadoAgenda,
+        tbAgenda.FechaInicioReal,
+        tbAgenda.FechaFinReal,
+        tbAgenda.Foto1Ext,
+        tbAgenda.Foto2Ext,
+        tbAgenda.Foto3Ext,
+        tbAgenda.Foto1Int,
+        tbAgenda.Foto2Int,
+        tbAgenda.Foto3Int,
+        tbAgenda.Observaciones,
+        tbAgenda.Distancia,
+        tbAgenda.Duracion,
+        tbAgenda.TiempoViaje,
+        tbAgenda.IdMotivoReprogramar,
+        tbAgenda.IdMotivoNoVisita,
+        tbAgenda.Latitud,
+        tbAgenda.Longitud,
+        tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
+        tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
+        tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad,
+        tbEstadoAgenda.Value AS tbEstadoAgenda_Value
+        FROM tbAgenda
+        JOIN tbAgendaExt
+        ON tbAgenda._id = tbAgendaExt.docid
+        JOIN tbGeneralValue tbEstadoAgenda
+        ON tbEstadoAgenda.GeneralTableId = 1013
+        AND tbAgenda.EstadoAgenda = tbEstadoAgenda.Code
+        WHERE tbAgenda.Enviado = 0
+        ORDER BY tbAgenda.FechaInicio, tbAgendaExt.NombreCompleto
+    </statement>
      
 	  <statement name="AgendaSemanal">
        SELECT  

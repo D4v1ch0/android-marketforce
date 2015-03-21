@@ -11,6 +11,9 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
 
         <LinearLayout
             android:id="@+id/linearLayout_content_rigth"
@@ -32,12 +35,17 @@
                 android:textColor="@color/color_background_white"
                 android:visibility="gone" />
         </LinearLayout>
+        </ScrollView>
 
     </FrameLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
+
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
 
         <LinearLayout
             android:id="@+id/linearLayout_content_adress"
@@ -60,12 +68,17 @@
                 android:textColor="@color/color_background_white"
                 android:visibility="gone" />
         </LinearLayout>
+        </ScrollView>
 
     </FrameLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
+
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
 
         <LinearLayout
             android:id="@+id/linearLayout_content_contactos"
@@ -88,6 +101,7 @@
                 android:textColor="@color/color_background_white"
                 android:visibility="gone" />
         </LinearLayout>
+        </ScrollView>
 
     </FrameLayout>
 

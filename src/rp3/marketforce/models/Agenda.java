@@ -853,14 +853,9 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 	}
 	
 	public static List<Agenda> getAgendaPendientes(DataBase db){
-		Cursor c = db.query(Contract.Agenda.TABLE_NAME, new String[] {Contract.Agenda._ID, Contract.Agenda.COLUMN_AGENDA_ID, Contract.Agenda.COLUMN_CLIENTE_ID,
-				Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID, Contract.Agenda.COLUMN_RUTA_ID, Contract.Agenda.COLUMN_FECHA_INICIO_REAL, Contract.Agenda.COLUMN_FECHA_FIN_REAL,
-				Contract.Agenda.COLUMN_ESTADO_AGENDA, Contract.Agenda.COLUMN_CONTACTO_ID, Contract.Agenda.COLUMN_FECHA_INICIO, 
-				Contract.Agenda.COLUMN_FECHA_FIN, Contract.Agenda.COLUMN_OBSERVACIONES, Contract.Agenda.COLUMN_CONTACTO_ID, 
-				Contract.Agenda.COLUMN_FOTO1_INT, Contract.Agenda.COLUMN_FOTO2_INT, Contract.Agenda.COLUMN_FOTO3_INT, 
-				Contract.Agenda.COLUMN_MOTIVO_NO_VISITA_ID, Contract.Agenda.COLUMN_LATITUD, Contract.Agenda.COLUMN_LONGITUD, Contract.Agenda.COLUMN_DISTANCIA,
-                Contract.Agenda.COLUMN_DURACION, Contract.Agenda.COLUMN_TIEMPO_VIAJE, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION},
-				Contract.Agenda.COLUMN_ENVIADO + " = ? ", 0);
+        String query = QueryDir.getQuery( Contract.Agenda.QUERY_AGENDA_PENDIENTES );
+
+		Cursor c = db.rawQuery(query);
 		
 		List<Agenda> list_agenda = new ArrayList<Agenda>();
 		if(c.moveToFirst())
@@ -891,11 +886,8 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
                 agd.setDistancia(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DISTANCIA));
                 agd.setTiempoViaje(CursorUtils.getInt(c, Contract.Agenda.COLUMN_TIEMPO_VIAJE));
                 agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
-				
-				Cliente cli = rp3.marketforce.models.Cliente.getClienteIDServer(db, agd.getIdCliente(), false);
-				ClienteDireccion cliDir = rp3.marketforce.models.ClienteDireccion.getClienteDireccionIdDireccion(db, agd.getIdCliente(),  agd.getIdClienteDireccion());
-				agd.setNombreCompleto(cli.getNombreCompleto().trim());
-				agd.setDireccion(cliDir.getDireccion());
+                agd.setNombreCompleto(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_NOMBRE));
+                agd.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
 				
 				if(agd.getIdAgenda() == 0)
 					agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getID(), agd.getIdRuta(), true));

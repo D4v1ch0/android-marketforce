@@ -39,6 +39,7 @@ import rp3.marketforce.ruta.RutasFragment;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.runtime.Session;
 import rp3.sync.SyncAudit;
+import rp3.util.ConnectionUtils;
 import rp3.util.Screen;
 import rp3.widget.SlidingPaneLayout;
 import rp3.widget.SlidingPaneLayout.PanelSlideListener;
@@ -91,7 +92,7 @@ public class MainActivity extends rp3.app.NavActivity{
 		Session.Start(this);
 		rp3.configuration.Configuration.TryInitializeConfiguration(this, DbOpenHelper.class);
 
-		extractDatabase();
+		//extractDatabase();
 		
 		this.setNavHeaderTitle(Session.getUser().getFullName());
 		this.setNavHeaderSubtitle(PreferenceManager.getString(Contants.KEY_CARGO));
@@ -242,17 +243,23 @@ public class MainActivity extends rp3.app.NavActivity{
 		    item.getTitle());
 			lastTitle = item.getTitle();
 			break;
-		case NAV_RECORRIDO:	
-			setNavFragment(RecorridoFragment.newInstance(),
-				    item.getTitle());
-			lastTitle = item.getTitle();
+		case NAV_RECORRIDO:
+            if(!ConnectionUtils.isNetAvailable(this))
+            {
+                Toast.makeText(this, "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
+            }
+            else {
+                setNavFragment(RecorridoFragment.newInstance(),
+                        item.getTitle());
+                lastTitle = item.getTitle();
+            }
 			break;
 		case NAV_PEDIDO:	
 			setNavFragment(DefaultFragment.newInstance(0),
 				    item.getTitle());
 			lastTitle = item.getTitle();
 			break;
-		case NAV_REUNIONES:	
+		case NAV_REUNIONES:
 			setNavFragment(DefaultFragment.newInstance(0),
 				    item.getTitle());
 			lastTitle = item.getTitle();

@@ -88,7 +88,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	private static final int ITEM_CIUDAD = 4;
 	
 	/*
-	 * Posiciones y pivots de campos para clientes jurídicos
+	 * Posiciones y pivots de campos para clientes jurï¿½dicos
 	 */
 	private static final int ITEM_RAZON_SOCIAL = 1;
 	private static final int ITEM_ACTIVIDAD = 2;
@@ -363,9 +363,8 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 
 				etiqueta = testArrayDetails[x];
 				setTextViewText(R.id.textView_client, "");
-
-				setTextViewDateText(R.id.textView_client,
-						client.getFechaNacimiento());
+                if(client.getFechaNacimiento() != null && client.getFechaNacimiento().getTime() != 0)
+				    setTextViewDateText(R.id.textView_client, client.getFechaNacimiento());
 
 				flag = true;
 				break;
@@ -764,7 +763,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 							View.GONE);
 			}
 		}
-		FrameLayout fl = new FrameLayout(getActivity());
+		ScrollView fl = new ScrollView(getActivity());
 		((ViewGroup)linearLayoutRigth.getParent()).removeView(linearLayoutRigth);
 		fl.addView(linearLayoutRigth);
 		pagerAdapter.addView(fl);

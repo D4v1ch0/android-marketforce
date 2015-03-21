@@ -38,6 +38,7 @@ public class GrupoActivity extends ActividadActivity {
 	LinearLayout Container;
 	int contador = 0;
     List<Spinner> combos;
+    boolean sinGrupos;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -54,6 +55,7 @@ public class GrupoActivity extends ActividadActivity {
 	    
 	    Container = (LinearLayout) findViewById(R.id.actividad_agrupar);
         combos = new ArrayList<Spinner>();
+        sinGrupos = true;
 
         List<Actividad> list_atas = Actividad.getActividadesNoGrupalesByTarea(getDataBase(), id_actividad);
         for(Actividad actividad : list_atas)
@@ -68,6 +70,7 @@ public class GrupoActivity extends ActividadActivity {
                 agregarTexto(actividad);
         }
 
+        sinGrupos = false;
 	    list_atas = Actividad.getActividadesGrupalesByTarea(getDataBase(), id_actividad);
 	    for(Actividad actividad : list_atas)
 	    {
@@ -225,6 +228,7 @@ public class GrupoActivity extends ActividadActivity {
 		textoResp.setFocusable(false);
 		textoResp.setFocusableInTouchMode(false);
 		textoResp.setMaxLines(1);
+        textoResp.setHint("Escriba su respuesta");
 		final int posicion = contador;
 		AgendaTareaActividades act = AgendaTareaActividades.getActividadSimple(getDataBase(), id_ruta, id_agenda, id_actividad, actividad_hija.getIdTareaActividad());
 		if(act != null)
@@ -239,20 +243,23 @@ public class GrupoActivity extends ActividadActivity {
 		final AgendaTareaActividades resp = act;
 		
 		layout.setClickable(true);
-		layout.setOnClickListener(new OnClickListener(){
+        final boolean actSinGrupos = sinGrupos;
+        textoResp.setClickable(true);
+        textoResp.setOnClickListener(new OnClickListener(){
 
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(getApplication(), TextoActivity.class);
-				intent.putExtra(RutasDetailFragment.ARG_ITEM_ID, (int)actividad_hija.getIdTareaActividad());
-				intent.putExtra(RutasDetailFragment.ARG_AGENDA_ID, (long) resp.getIdAgenda());
-				intent.putExtra(RutasDetailFragment.ARG_RUTA_ID, (int) resp.getIdRuta());
-				intent.putExtra(ARG_PADRE_ID, (int) actividad_hija.getIdTareaActividadPadre());
-				intent.putExtra(ARG_TAREA, (int) actividad_hija.getIdTarea());
-				intent.putExtra(ARG_THEME, R.style.AppDialogTheme);
-				intent.putExtra(ARG_NUMERO, posicion);
-				startActivity(intent);
-			}});
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplication(), TextoActivity.class);
+                intent.putExtra(RutasDetailFragment.ARG_ITEM_ID, (int)actividad_hija.getIdTareaActividad());
+                intent.putExtra(RutasDetailFragment.ARG_AGENDA_ID, (long) resp.getIdAgenda());
+                intent.putExtra(RutasDetailFragment.ARG_RUTA_ID, (int) resp.getIdRuta());
+                intent.putExtra(ARG_PADRE_ID, (int) actividad_hija.getIdTareaActividadPadre());
+                intent.putExtra(ARG_TAREA, (int) actividad_hija.getIdTarea());
+                intent.putExtra(ARG_THEME, R.style.AppDialogTheme);
+                intent.putExtra(ARG_NUMERO, posicion);
+                intent.putExtra(ARG_SIN_GRUPO, actSinGrupos);
+                startActivity(intent);
+            }});
 		
 		//se coloca validacion para que la actividad no sea modificable
 		if(soloVista)
@@ -407,8 +414,9 @@ public class GrupoActivity extends ActividadActivity {
 		{
 			layout.setOrientation(LinearLayout.VERTICAL);
 		}
-		textoResp.setEnabled(false);
+		//textoResp.setEnabled(false);
 		textoResp.setMaxLines(1);
+        textoResp.setHint("Seleccione las opciones...");
 		final int posicion = contador;
 		
 		AgendaTareaActividades act = AgendaTareaActividades.getActividadSimple(getDataBase(), id_ruta, id_agenda, id_actividad, actividad_hija.getIdTareaActividad());
@@ -422,22 +430,27 @@ public class GrupoActivity extends ActividadActivity {
 			act = initActividadInsert(actividad_hija.getIdTareaActividad());
 		}
 		final AgendaTareaActividades resp = act;
-		
-		layout.setClickable(true);
-		layout.setOnClickListener(new OnClickListener(){
 
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(getApplication(), MultipleActivity.class);
-				intent.putExtra(RutasDetailFragment.ARG_ITEM_ID, (int)actividad_hija.getIdTareaActividad());
-				intent.putExtra(RutasDetailFragment.ARG_AGENDA_ID, (long) resp.getIdAgenda());
-				intent.putExtra(RutasDetailFragment.ARG_RUTA_ID, (int) resp.getIdRuta());
-				intent.putExtra(ARG_PADRE_ID, (int) actividad_hija.getIdTareaActividadPadre());
-				intent.putExtra(ARG_TAREA, (int) actividad_hija.getIdTarea());
-				intent.putExtra(ARG_THEME, R.style.AppDialogTheme);
-				intent.putExtra(ARG_NUMERO, posicion);
-				startActivity(intent);
-			}});
+        //textoResp.setFocusable(false);
+        //textoResp.setFocusableInTouchMode(false);
+		layout.setClickable(true);
+        final boolean actSinGrupos = sinGrupos;
+        textoResp.setClickable(true);
+        textoResp.setOnClickListener(new OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplication(), MultipleActivity.class);
+                intent.putExtra(RutasDetailFragment.ARG_ITEM_ID, (int)actividad_hija.getIdTareaActividad());
+                intent.putExtra(RutasDetailFragment.ARG_AGENDA_ID, (long) resp.getIdAgenda());
+                intent.putExtra(RutasDetailFragment.ARG_RUTA_ID, (int) resp.getIdRuta());
+                intent.putExtra(ARG_PADRE_ID, (int) actividad_hija.getIdTareaActividadPadre());
+                intent.putExtra(ARG_TAREA, (int) actividad_hija.getIdTarea());
+                intent.putExtra(ARG_THEME, R.style.AppDialogTheme);
+                intent.putExtra(ARG_NUMERO, posicion);
+                intent.putExtra(ARG_SIN_GRUPO, actSinGrupos);
+                startActivity(intent);
+            }});
 		
 		//se coloca validacion para que la actividad no sea modificable
 		if(soloVista)
@@ -574,6 +587,8 @@ public class GrupoActivity extends ActividadActivity {
 	protected void onResume() {
 		Container.removeAllViews();
         combos = new ArrayList<Spinner>();
+        contador = 0;
+        sinGrupos = true;
         List<Actividad> list_atas = Actividad.getActividadesNoGrupalesByTarea(getDataBase(), id_actividad);
         for(Actividad actividad : list_atas)
         {
@@ -587,6 +602,7 @@ public class GrupoActivity extends ActividadActivity {
                 agregarTexto(actividad);
         }
 
+        sinGrupos = false;
 		list_atas = Actividad.getActividadesGrupalesByTarea(getDataBase(), id_actividad);
 	    for(Actividad actividad : list_atas)
 	    {

@@ -21,8 +21,14 @@ public class CrearClienteActivity extends BaseActivity {
 	    if(getIntent().getExtras() != null && getIntent().getExtras().containsKey(ARG_IDCLIENTE))
 	    {
 	    	id_cliente = getIntent().getExtras().getLong(ARG_IDCLIENTE);
+            setTitle("Editar Cliente");
 	    }
-	    setTitle("Crear Cliente");
+        else
+        {
+            setTitle("Crear Cliente");
+        }
+
+        setHomeAsUpEnabled(true, true);
 	    setContentView(R.layout.layout_simple_content);
 	    if (!hasFragment(rp3.core.R.id.content)) {
 	    	CrearClienteFragment newFragment = CrearClienteFragment.newInstance(id_cliente);

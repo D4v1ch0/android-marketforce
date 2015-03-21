@@ -56,8 +56,9 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:hint="@string/label_direccion"
-                    android:inputType="textPostalAddress"
-                    android:textSize="@dimen/text_small_size" />
+                    android:inputType="textMultiLine"
+                    android:textSize="@dimen/text_small_size"
+                    android:maxLines="3" />
             </LinearLayout>
 
             <LinearLayout

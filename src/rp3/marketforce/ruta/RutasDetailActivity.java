@@ -4,6 +4,7 @@ import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.db.DbOpenHelper;
 import rp3.marketforce.models.Agenda;
+import rp3.util.ConnectionUtils;
 import rp3.util.Screen;
 import android.content.Context;
 import android.content.Intent;
@@ -73,8 +74,12 @@ public class RutasDetailActivity extends rp3.app.BaseActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
     	switch(item.getItemId())
     	{
-    		case R.id.action_ver_posicion:   
-    			if(transactionId != 0)
+    		case R.id.action_ver_posicion:
+                if(!ConnectionUtils.isNetAvailable(this))
+                {
+                    Toast.makeText(this, "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
+                }
+                else if(transactionId != 0)
     			{
 	    			Intent intent2 = new Intent(this, MapaActivity.class);
 	    			intent2.putExtra(MapaActivity.ACTION_TYPE, MapaActivity.ACTION_POSICION);
@@ -87,13 +92,23 @@ public class RutasDetailActivity extends rp3.app.BaseActivity{
     			}
     			return true;
     		case R.id.action_ver_ruta:
-    			Intent intent3 = new Intent(this, MapaActivity.class);
-    			intent3.putExtra(MapaActivity.ACTION_TYPE, MapaActivity.ACTION_RUTAS);
-    			intent3.putExtra(MapaActivity.ARG_AGENDA, transactionId);
-    			startActivity(intent3);
+                if(!ConnectionUtils.isNetAvailable(this))
+                {
+                    Toast.makeText(this, "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Intent intent3 = new Intent(this, MapaActivity.class);
+                    intent3.putExtra(MapaActivity.ACTION_TYPE, MapaActivity.ACTION_RUTAS);
+                    intent3.putExtra(MapaActivity.ARG_AGENDA, transactionId);
+                    startActivity(intent3);
+                }
     			return true;
     		case R.id.action_como_llegar:
-    			if(transactionId != 0)
+                if(!ConnectionUtils.isNetAvailable(this))
+                {
+                    Toast.makeText(this, "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
+                }
+                else if(transactionId != 0)
     			{
 	    			Intent intent4 = new Intent(this, MapaActivity.class);
 	    			intent4.putExtra(MapaActivity.ACTION_TYPE, MapaActivity.ACTION_LLEGAR);

@@ -4,6 +4,7 @@ import rp3.app.BaseFragment;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
+import rp3.util.ConnectionUtils;
 import rp3.util.Screen;
 import rp3.widget.SlidingPaneLayout;
 import rp3.widget.SlidingPaneLayout.PanelSlideListener;
@@ -231,8 +232,12 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	    			startActivity(intent);
 	    			openPane = false;
 	    			return true;
-	    		case R.id.action_ver_posicion:   
-	    			if(selectedTransactionId != 0)
+	    		case R.id.action_ver_posicion:
+                    if(!ConnectionUtils.isNetAvailable(getContext()))
+                    {
+                        Toast.makeText(getContext(), "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
+                    }
+                    else if(selectedTransactionId != 0)
 	    			{
 		    			Intent intent2 = new Intent(getActivity(), MapaActivity.class);
 		    			intent2.putExtra(MapaActivity.ACTION_TYPE, MapaActivity.ACTION_POSICION);
@@ -245,14 +250,24 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	    			}
 	    			return true;
 	    		case R.id.action_ver_ruta:
-	    			Intent intent3 = new Intent(getActivity(), MapaActivity.class);
-	    			intent3.putExtra(MapaActivity.ACTION_TYPE, MapaActivity.ACTION_RUTAS);
-	    			if(selectedTransactionId != 0 && !slidingPane.isOpen())
-	    				intent3.putExtra(MapaActivity.ARG_AGENDA, selectedTransactionId);
-	    			startActivity(intent3);
+                    if(!ConnectionUtils.isNetAvailable(getContext()))
+                    {
+                        Toast.makeText(getContext(), "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        Intent intent3 = new Intent(getActivity(), MapaActivity.class);
+                        intent3.putExtra(MapaActivity.ACTION_TYPE, MapaActivity.ACTION_RUTAS);
+                        if (selectedTransactionId != 0 && !slidingPane.isOpen())
+                            intent3.putExtra(MapaActivity.ARG_AGENDA, selectedTransactionId);
+                        startActivity(intent3);
+                    }
 	    			return true;
 	    		case R.id.action_como_llegar:
-	    			if(selectedTransactionId != 0)
+                    if(!ConnectionUtils.isNetAvailable(getContext()))
+                    {
+                        Toast.makeText(getContext(), "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
+                    }
+                    else if(selectedTransactionId != 0)
 	    			{
 		    			Intent intent4 = new Intent(getActivity(), MapaActivity.class);
 		    			intent4.putExtra(MapaActivity.ACTION_TYPE, MapaActivity.ACTION_LLEGAR);

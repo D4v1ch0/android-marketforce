@@ -15,6 +15,8 @@ public class TextoActivity extends ActividadActivity {
 
 	Actividad ata;
 	private AgendaTareaActividades act;
+    boolean actSinGrupo;
+
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -22,6 +24,7 @@ public class TextoActivity extends ActividadActivity {
 		int numero = getIntent().getExtras().getInt(ARG_NUMERO, 1);
 		int tema = getIntent().getExtras().getInt(ARG_THEME, R.style.MyAppTheme);
 		setTheme(tema);
+        actSinGrupo = getIntent().getExtras().getBoolean(ARG_SIN_GRUPO, false);
 		if(tema != R.style.MyAppTheme)
 		{
 			this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -31,7 +34,10 @@ public class TextoActivity extends ActividadActivity {
 	    
 	    if(id_padre == 0)
 	    {
-	    	ata = Actividad.getActividadSimple(getDataBase(), id_actividad);
+            if(actSinGrupo)
+                ata = Actividad.getActividadSimple(getDataBase(), id_tarea, id_actividad);
+            else
+	    	    ata = Actividad.getActividadSimple(getDataBase(), id_actividad);
 	    }
 	    else
 	    {
@@ -76,9 +82,11 @@ public class TextoActivity extends ActividadActivity {
                 AgendaTareaActividades.insert(getDataBase(), act);
             else
                 AgendaTareaActividades.update(getDataBase(), act);
-			AgendaTarea agt = AgendaTarea.getTarea(getDataBase(), act.getIdAgenda(), act.getIdRuta(), ata.getIdTarea());
-			agt.setEstadoTarea("R");
-			AgendaTarea.update(getDataBase(), agt);
+            if(!actSinGrupo) {
+                AgendaTarea agt = AgendaTarea.getTarea(getDataBase(), act.getIdAgenda(), act.getIdRuta(), ata.getIdTarea());
+                agt.setEstadoTarea("R");
+                AgendaTarea.update(getDataBase(), agt);
+            }
 		}
         else
             AgendaTareaActividades.update(getDataBase(), act);

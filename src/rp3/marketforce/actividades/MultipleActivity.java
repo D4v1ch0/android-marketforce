@@ -21,12 +21,15 @@ public class MultipleActivity extends  ActividadActivity {
 	LinearLayout Grupo;
 	String[] respuestas;
 	private AgendaTareaActividades act;
-	/** Called when the activity is first created. */
+    private boolean actSinGrupo;
+
+    /** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		int numero = getIntent().getExtras().getInt(ARG_NUMERO, 1);
 		int tema = getIntent().getExtras().getInt(ARG_THEME, R.style.MyAppTheme);
 		setTheme(tema);
+        actSinGrupo = getIntent().getExtras().getBoolean(ARG_SIN_GRUPO, false);
 		if(tema != R.style.MyAppTheme)
 		{
 			this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -38,7 +41,10 @@ public class MultipleActivity extends  ActividadActivity {
 	    
 	    if(id_padre == 0)
 	    {
-	    	ata = Actividad.getActividadSimple(getDataBase(), id_tarea);
+            if(actSinGrupo)
+                ata = Actividad.getActividadSimple(getDataBase(), id_tarea, id_actividad);
+            else
+                ata = Actividad.getActividadSimple(getDataBase(), id_actividad);
 	    }
 	    else
 	    {
@@ -109,9 +115,11 @@ public class MultipleActivity extends  ActividadActivity {
                 AgendaTareaActividades.insert(getDataBase(), act);
             else
                 AgendaTareaActividades.update(getDataBase(), act);
-			AgendaTarea agt = AgendaTarea.getTarea(getDataBase(), id_agenda, id_ruta, id_tarea);
-			agt.setEstadoTarea("R");
-			AgendaTarea.update(getDataBase(), agt);
+            if(!actSinGrupo) {
+                AgendaTarea agt = AgendaTarea.getTarea(getDataBase(), id_agenda, id_ruta, id_tarea);
+                agt.setEstadoTarea("R");
+                AgendaTarea.update(getDataBase(), agt);
+            }
 		}
         else
             AgendaTareaActividades.update(getDataBase(), act);

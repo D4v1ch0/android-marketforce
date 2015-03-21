@@ -435,12 +435,15 @@ public class CrearClienteFragment extends BaseFragment {
 	
 	private void setDatosClientes() {
 		DrawableManager DManager = new DrawableManager();
+        SimpleDateFormat format1 = new SimpleDateFormat("dd MMMM yyyy");
 		Cliente cli = Cliente.getClienteID(getDataBase(), idCliente, true);
 		((Spinner)info.findViewById(R.id.cliente_canal)).setSelection(getPosition(((Spinner)info.findViewById(R.id.cliente_canal)).getAdapter(), cli.getIdCanal()));
 		((Spinner)info.findViewById(R.id.cliente_tipo_identificacion)).setSelection(getPosition(((Spinner)info.findViewById(R.id.cliente_tipo_identificacion)).getAdapter(), cli.getTipoIdentificacionId()));
 		((EditText)info.findViewById(R.id.cliente_identificacion)).setText(cli.getIdentificacion());
 		((Spinner)info.findViewById(R.id.crear_cliente_tipo_persona)).setSelection(getPosition(((Spinner)info.findViewById(R.id.crear_cliente_tipo_persona)).getAdapter(), cli.getTipoPersona()));
 		((Spinner)info.findViewById(R.id.cliente_tipo_cliente)).setSelection(getPosition(((Spinner)info.findViewById(R.id.cliente_tipo_cliente)).getAdapter(), cli.getIdTipoCliente()));
+        if(cli.getFechaNacimiento() != null && cli.getFechaNacimiento().getTime() != 0)
+            ((EditText) info.findViewById(R.id.cliente_fecha_nacimiento)).setText(format1.format(cli.getFechaNacimiento()));
 		DManager.fetchDrawableOnThread(PreferenceManager.getString("server") + 
 				rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + Utils.getImageDPISufix(getActivity(), cli.getURLFoto()), 
 				(ImageButton)info.findViewById(R.id.cliente_foto));
@@ -492,7 +495,8 @@ public class CrearClienteFragment extends BaseFragment {
 			((CheckBox)listViewDirecciones.get(i).findViewById(R.id.cliente_es_principal)).setChecked(cli.getClienteDirecciones().get(i).getEsPrincipal());
 			((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_telefono1)).setText(cli.getClienteDirecciones().get(i).getTelefono1());
 			((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_telefono2)).setText(cli.getClienteDirecciones().get(i).getTelefono2());
-			((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_referencia)).setText(cli.getClienteDirecciones().get(i).getReferencia());
+            if(cli.getClienteDirecciones().get(i).getReferencia() != null && !cli.getClienteDirecciones().get(i).getReferencia().equalsIgnoreCase("null"))
+			    ((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_referencia)).setText(cli.getClienteDirecciones().get(i).getReferencia());
 			((AutoCompleteTextView)listViewDirecciones.get(i).findViewById(R.id.cliente_ciudad)).setText(cli.getClienteDirecciones().get(i).getCiudadDescripcion());
 			if(cli.getClienteDirecciones().get(i).getLongitud() != 0)
 			{
@@ -533,10 +537,10 @@ public class CrearClienteFragment extends BaseFragment {
 	
 	protected void takePicture(final int idView) {
 		AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(this.getActivity());
-	    myAlertDialog.setTitle("Grabar Foto");
-	    myAlertDialog.setMessage("De donde desea obtener su foto?");
+	    myAlertDialog.setTitle("Fotografía");
+	    myAlertDialog.setMessage("Obtener de");
 
-	    myAlertDialog.setPositiveButton("Galer�a",
+	    myAlertDialog.setPositiveButton("Galería",
 	            new DialogInterface.OnClickListener() {
 	                public void onClick(DialogInterface arg0, int arg1) {
 	                	Intent galleryIntent = new Intent();
@@ -547,7 +551,7 @@ public class CrearClienteFragment extends BaseFragment {
 	                }
 	            });
 
-	    myAlertDialog.setNegativeButton("Camara",
+	    myAlertDialog.setNegativeButton("Cámara",
 	            new DialogInterface.OnClickListener() {
 	                public void onClick(DialogInterface arg0, int arg1) {
 	                	Intent captureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
@@ -570,6 +574,8 @@ public class CrearClienteFragment extends BaseFragment {
 				DireccionContainer.removeView(direccion);		
 			}});
 		final int pos = listViewDirecciones.size();
+        if(pos == 0)
+            ((CheckBox) direccion.findViewById(R.id.cliente_es_principal)).setChecked(true);
 		((ImageButton) direccion.findViewById(R.id.cliente_ubicacion)).setOnClickListener(new OnClickListener(){
 
 			@Override
@@ -758,7 +764,8 @@ public class CrearClienteFragment extends BaseFragment {
                 return false;
             }
 		}
-		
+
+        boolean existsPrincipal = false;
 		for(int i = 0; i < listViewDirecciones.size(); i++)
 		{
 			String dir =(((AutoCompleteTextView)listViewDirecciones.get(i).findViewById(R.id.cliente_ciudad)).getText().toString());
@@ -776,7 +783,17 @@ public class CrearClienteFragment extends BaseFragment {
 				Toast.makeText(getContext(), "Ingrese correctamente la ciudad en una de las direcciones ingresadas.", Toast.LENGTH_LONG).show();
 				return false;
 			}
+
+            if(((CheckBox)listViewDirecciones.get(i).findViewById(R.id.cliente_es_principal)).isChecked())
+                existsPrincipal = true;
 		}
+
+        if(!existsPrincipal)
+        {
+            Toast.makeText(getContext(), "Debe de ingresar una dirección como principal.", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
 		return true;
 	}
 	

@@ -12,6 +12,7 @@ import rp3.marketforce.ruta.RutasDetailFragment;
 public abstract class ActividadActivity extends BaseActivity {
 	
 	public static String ARG_THEME = "theme";
+    public static String ARG_SIN_GRUPO = "sin_grupo";
 	public static String ARG_PADRE_ID = "padre";
 	public static String ARG_TAREA = "tarea";
 	public static String ARG_NUMERO = "numero";
