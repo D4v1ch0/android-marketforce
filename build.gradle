@@ -2,9 +2,9 @@ apply plugin: 'android'
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
-    compile project(':Documents:GitHub:android-core')
-    compile project(':Desktop:AndroidGraphView')
-    compile project(':Downloads:Caldroid-master:Caldroid-master:caldroid:src:main')
+    compile 'com.roomorama:caldroid:1.1.8'
+    compile 'com.jjoe64:graphview:3.1.3'
+    compile project(':android-core')
 }
 
 android {
