@@ -38,6 +38,7 @@ public class GrupoActivity extends ActividadActivity {
 	LinearLayout Container;
 	int contador = 0;
     List<Spinner> combos;
+    List<TextView> multiples;
     boolean sinGrupos;
 
 	/** Called when the activity is first created. */
@@ -55,6 +56,7 @@ public class GrupoActivity extends ActividadActivity {
 	    
 	    Container = (LinearLayout) findViewById(R.id.actividad_agrupar);
         combos = new ArrayList<Spinner>();
+        multiples = new ArrayList<TextView>();
         sinGrupos = true;
 
         List<Actividad> list_atas = Actividad.getActividadesNoGrupalesByTarea(getDataBase(), id_actividad);
@@ -417,6 +419,7 @@ public class GrupoActivity extends ActividadActivity {
 		//textoResp.setEnabled(false);
 		textoResp.setMaxLines(1);
         textoResp.setHint("Seleccione las opciones...");
+        multiples.add(textoResp);
 		final int posicion = contador;
 		
 		AgendaTareaActividades act = AgendaTareaActividades.getActividadSimple(getDataBase(), id_ruta, id_agenda, id_actividad, actividad_hija.getIdTareaActividad());
@@ -487,6 +490,15 @@ public class GrupoActivity extends ActividadActivity {
             if(combo.getSelectedItemPosition() == 0)
             {
                 Toast.makeText(this, "Faltan preguntas de selección sin responder.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
+        for(TextView multiple : multiples)
+        {
+            if(multiple.getText().length() <= 0)
+            {
+                Toast.makeText(this, "Faltan preguntas de selección múltiple sin responder.", Toast.LENGTH_SHORT).show();
                 return;
             }
         }
@@ -587,6 +599,7 @@ public class GrupoActivity extends ActividadActivity {
 	protected void onResume() {
 		Container.removeAllViews();
         combos = new ArrayList<Spinner>();
+        multiples = new ArrayList<TextView>();
         contador = 0;
         sinGrupos = true;
         List<Actividad> list_atas = Actividad.getActividadesNoGrupalesByTarea(getDataBase(), id_actividad);

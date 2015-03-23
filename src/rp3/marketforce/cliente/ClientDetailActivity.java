@@ -241,13 +241,7 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
 	private void renderClienteNatural(View rootView)
 	{
 		hideDialogConfirmation();
-		(rootView.findViewById(R.id.imageView_edit_detail_client))
-				.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						onDetailItemEdit(clientId);
-					}
-				});
+
 
 		testArrayDetails = this.getResources()
 				.getStringArray(R.array.testArrayDetails);
@@ -521,13 +515,7 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
 	private void renderClienteJuridico(View rootView)
 	{
 		hideDialogConfirmation();
-		(rootView.findViewById(R.id.imageView_edit_detail_client))
-				.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						onDetailItemEdit(clientId);
-					}
-				});
+
 
 		testArrayDetails = this.getApplicationContext().getResources()
 				.getStringArray(R.array.testArrayDetailsJuridico);
@@ -810,7 +798,6 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
 	private void renderContacto(View rootView)
 	{
 		hideDialogConfirmation();
-		(rootView.findViewById(R.id.imageView_edit_detail_client)).setVisibility(View.GONE);
 
 		testArrayDetails = this.getApplicationContext().getResources()
 				.getStringArray(R.array.testArrayDetails);

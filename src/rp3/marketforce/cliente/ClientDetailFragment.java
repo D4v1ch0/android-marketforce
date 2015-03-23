@@ -318,13 +318,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	{
 		boolean telf = false, email = false;
 		hideDialogConfirmation();
-		(rootView.findViewById(R.id.imageView_edit_detail_client))
-				.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						onDetailItemEdit(clientId);
-					}
-				});
+
 
 		testArrayDetails = this.getActivity().getResources()
 				.getStringArray(R.array.testArrayDetails);
@@ -645,13 +639,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	{
 		boolean telf = false, email = false;
 		hideDialogConfirmation();
-		(rootView.findViewById(R.id.imageView_edit_detail_client))
-				.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						onDetailItemEdit(clientId);
-					}
-				});
+
 
 		testArrayDetails = this.getActivity().getResources()
 				.getStringArray(R.array.testArrayDetailsJuridico);
@@ -984,7 +972,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	{
 		boolean telf = false, email = false;
 		hideDialogConfirmation();
-		(rootView.findViewById(R.id.imageView_edit_detail_client)).setVisibility(View.GONE);
+
 
 		testArrayDetails = this.getActivity().getResources()
 				.getStringArray(R.array.testArrayDetails);

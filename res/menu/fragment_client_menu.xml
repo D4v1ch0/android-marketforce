@@ -36,5 +36,6 @@
           />
       <item android:id="@+id/action_contacts" android:title="@string/menu_toggle_contactos" android:checked="false" android:checkable="true"></item>
       <item android:id="@+id/action_crear_cliente" android:title="@string/action_crear_cliente" android:icon="@drawable/ic_add_client" android:showAsAction="ifRoom|collapseActionView"></item>
+      <item android:id="@+id/action_editar_cliente" android:title="@string/action_crear_cliente" android:icon="@drawable/ic_action_edit_dark" android:showAsAction="ifRoom|collapseActionView"></item>
       <item android:id="@+id/action_import_contacts" android:title="@string/label_menu_importar_contactos"></item>
 </menu>

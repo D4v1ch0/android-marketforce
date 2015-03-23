@@ -16,6 +16,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Configuration;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -76,7 +77,9 @@ import rp3.util.LocationUtils;
 import rp3.widget.ViewPager;
 
 public class CrearClienteFragment extends BaseFragment {
-	
+
+    boolean rotated = false;
+
 	public static CrearClienteFragment newInstance(long id_cliente)
 	{
 		CrearClienteFragment fragment = new CrearClienteFragment();
@@ -129,6 +132,8 @@ public class CrearClienteFragment extends BaseFragment {
 	@Override
 	public void onResume() {
 	    super.onResume();
+        if(PagerDetalles != null)
+            setPageConfig(PagerDetalles.getCurrentItem());
 	}
 	
 	@Override
@@ -382,13 +387,20 @@ public class CrearClienteFragment extends BaseFragment {
 			TabInfo = (ImageButton) getRootView().findViewById((R.id.detail_tab_info));
 			TabDirecciones = (ImageButton) getRootView().findViewById((R.id.detail_tab_direccion));
 			TabContactos = (ImageButton) getRootView().findViewById((R.id.detail_tab_contactos));
+            ArrowInfo = (ImageView) getRootView().findViewById((R.id.detail_tab_info_arrow));
+            ArrowDir = (ImageView) getRootView().findViewById((R.id.detail_tab_direccion_arrow));
+            ArrowCont = (ImageView) getRootView().findViewById((R.id.detail_tab_contactos_arrow));
 			PagerDetalles = (ViewPager) rootView.findViewById(R.id.crear_cliente_pager);
 			pagerAdapter = new DetailsPageAdapter();
 			pagerAdapter.addView(info);
 			pagerAdapter.addView(direccion);
 			pagerAdapter.addView(contacto);
 			PagerDetalles.setAdapter(pagerAdapter);
+            ArrowInfo.setVisibility(View.INVISIBLE);
+            ArrowDir.setVisibility(View.INVISIBLE);
+            ArrowCont.setVisibility(View.INVISIBLE);
 			setPageConfig(PagerDetalles.getCurrentItem());
+            rotated = true;
 		}
 		TabInfo.setOnClickListener(new OnClickListener(){
 
@@ -426,7 +438,7 @@ public class CrearClienteFragment extends BaseFragment {
 				setPageConfig(arg0);
 				
 			}});
-		if(getArguments().containsKey(ARG_CLIENTE) && getArguments().getLong(ARG_CLIENTE) != 0)
+		if(getArguments().containsKey(ARG_CLIENTE) && getArguments().getLong(ARG_CLIENTE) != 0 && !rotated)
 		{
 			idCliente = getArguments().getLong(ARG_CLIENTE);
 			setDatosClientes();
@@ -678,8 +690,14 @@ public class CrearClienteFragment extends BaseFragment {
 			}
 		}
 	}
-	
-	@Override
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        setPageConfig(PagerDetalles.getCurrentItem());
+    }
+
+    @Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {
 			String path = "";

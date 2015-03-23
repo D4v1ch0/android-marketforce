@@ -284,6 +284,7 @@ public final class Contract {
 		
 		public static final String QUERY_AGENDA = "AgendaByCliente";
         public static final String QUERY_AGENDA_UPLOAD = "AgendaUpload";
+        public static final String QUERY_AGENDA_DIAS = "AgendasDias";
         public static final String QUERY_AGENDA_PENDIENTES = "AgendaPendientes";
         public static final String QUERY_AGENDA_NO_CLIENTE = "AgendaByClienteNull";
         public static final String QUERY_AGENDA_DASHBOARD = "AgendaDashboard";

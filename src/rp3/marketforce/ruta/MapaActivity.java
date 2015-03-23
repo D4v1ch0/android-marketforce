@@ -71,6 +71,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MapaActivity extends BaseActivity {
 	
@@ -273,21 +274,22 @@ public class MapaActivity extends BaseActivity {
 		
 		for(int i = 0; i < list_agendas.size(); i ++)
 		{
-			LatLng pos = new LatLng(list_agendas.get(i).getClienteDireccion().getLatitud(), list_agendas.get(i).getClienteDireccion().getLongitud());
-			
-			Marker mark = map.addMarker(new MarkerOptions().position(pos)
-			        .title(list_agendas.get(i).getCliente().getNombreCompleto().trim())
-			        .icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.map_position, i + 1 + ""))));
-			mark.showInfoWindow();
-			markers.add(mark);
-			
-			map.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 12), 2000, null);
-			
-			if(i != 0)
-			{
-				LatLng org = new LatLng(list_agendas.get(i-1).getClienteDireccion().getLatitud(), list_agendas.get(i-1).getClienteDireccion().getLongitud());
-				showRuta(org, pos);
-			}
+            if(list_agendas.get(i).getClienteDireccion() != null) {
+                LatLng pos = new LatLng(list_agendas.get(i).getClienteDireccion().getLatitud(), list_agendas.get(i).getClienteDireccion().getLongitud());
+
+                Marker mark = map.addMarker(new MarkerOptions().position(pos)
+                        .title(list_agendas.get(i).getCliente().getNombreCompleto().trim())
+                        .icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.map_position, i + 1 + ""))));
+                mark.showInfoWindow();
+                markers.add(mark);
+
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 12), 2000, null);
+
+                if (markers.size() > 1) {
+                    LatLng org = markers.get(markers.size() - 2).getPosition();
+                    showRuta(org, pos);
+                }
+            }
 		}
 		super.onDailogDatePickerChange(id, c);
 	}
@@ -361,7 +363,7 @@ public class MapaActivity extends BaseActivity {
 		Uri mUri = Uri.parse("smsto:" + Utils.convertToSMSNumber(agenda.getClienteDireccion().getTelefono1()));
         Intent mIntent = new Intent(Intent.ACTION_SENDTO, mUri);
         mIntent.putExtra("chat",true);
-        Intent chooserIntent = Intent.createChooser(mIntent, "Seleccionar Acción");
+        Intent chooserIntent = Intent.createChooser(mIntent, "Seleccionar Acciï¿½n");
         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { intent });
         startActivity(chooserIntent);
 	}
@@ -443,7 +445,7 @@ public class MapaActivity extends BaseActivity {
 		else
 		{
 			if(loc == null)
-				showDialogMessage("Por favor, active su GPS de su dispositivo movil, y haga touch sobre el botón Como Llegar nuevamente.");
+				showDialogMessage("Por favor, active su GPS de su dispositivo movil, y haga touch sobre el botï¿½n Como Llegar nuevamente.");
 		}
 	}
 	
@@ -469,23 +471,31 @@ public class MapaActivity extends BaseActivity {
 		Posicion.setVisibility(View.GONE);
 		map.clear();
 		agenda = Agenda.getAgenda(getDataBase(), id);
-		ClienteDireccion cld = ClienteDireccion.getClienteDireccionIdDireccion(getDataBase(), agenda.getIdCliente(), agenda.getIdClienteDireccion());
-		
-		LatLng pos = new LatLng(cld.getLatitud(), cld.getLongitud());
-		
-		Marker mark = map.addMarker(new MarkerOptions().position(pos)
-		        .title(agenda.getNombreCompleto().trim()));
-		
-		map.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 15));
-	    map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+        if(agenda == null) {
+            agenda = Agenda.getAgendaClienteNull(getDataBase(), id);
+            Toast.makeText(this,"Este cliente ya no existe en su ruta, por ende no se puede obtener su posicion.", Toast.LENGTH_LONG).show();
+        }
+        else {
+            ClienteDireccion cld = ClienteDireccion.getClienteDireccionIdDireccion(getDataBase(), agenda.getIdCliente(), agenda.getIdClienteDireccion());
+
+            LatLng pos = new LatLng(cld.getLatitud(), cld.getLongitud());
+
+            Marker mark = map.addMarker(new MarkerOptions().position(pos)
+                    .title(agenda.getNombreCompleto().trim()));
+
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 15));
+            map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+
+            DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
+                            rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + agenda.getCliente().getURLFoto(),
+                    (ImageView) findViewById(R.id.map_image));
+        }
 	    
 	    setTextViewText(R.id.map_name, agenda.getNombreCompleto());
 	    setTextViewText(R.id.map_phone, agenda.getClienteDireccion().getTelefono1());
 	    setTextViewText(R.id.map_mail, agenda.getCliente().getCorreoElectronico());
 	    
-	    DManager.fetchDrawableOnThread(PreferenceManager.getString("server") + 
-				rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + agenda.getCliente().getURLFoto(),
-				(ImageView) findViewById(R.id.map_image));
+
 	    
 	    expand.setVisibility(View.VISIBLE);
 		persona.setVisibility(View.VISIBLE);

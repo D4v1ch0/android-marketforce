@@ -65,7 +65,7 @@ public class ServerActivity extends BaseActivity {
 	            if(code == SyncAdapter.SYNC_EVENT_SUCCESS)
 	            	return "";
 	            else
-	            	return "Código Incorrecto.";
+	            	return "CÃ³digo Incorrecto.";
 	        }
 
 	        @Override

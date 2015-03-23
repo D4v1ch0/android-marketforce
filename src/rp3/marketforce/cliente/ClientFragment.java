@@ -144,6 +144,7 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
 	 	 }
 	 	 else
 	 	 {
+             menu.removeItem(R.id.action_editar_cliente);
 	 		 searchView.setVisibility(View.VISIBLE);
 	 	 }
   	  }
@@ -179,6 +180,11 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId())
 		{
+        case R.id.action_editar_cliente:
+            Intent intent2 = new Intent(getActivity(), CrearClienteActivity.class);
+            intent2.putExtra(CrearClienteActivity.ARG_IDCLIENTE, selectedClientId);
+            startActivity(intent2);
+            break;
 		case R.id.action_crear_cliente:
 			Intent intent = new Intent(this.getActivity(), CrearClienteActivity.class);
 			startActivity(intent);

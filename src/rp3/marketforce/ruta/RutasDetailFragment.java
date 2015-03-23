@@ -132,7 +132,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
     
     @Override
     public void onAfterCreateOptionsMenu(Menu menu) {
-    	if(menu.findItem(R.id.action_search_ruta) != null && reDoMenu && !Screen.isLargeLayoutSize(getActivity()))
+    	if(menu.findItem(R.id.action_search_ruta) != null && reDoMenu)
     	{
 	    	 SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search_ruta));
 			 searchView.setVisibility(View.GONE);
@@ -150,7 +150,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 		  		 }
 	 		 }
     	}
-    	super.onAfterCreateOptionsMenu(menu);
+    	//super.onAfterCreateOptionsMenu(menu);
     }
     
     @Override

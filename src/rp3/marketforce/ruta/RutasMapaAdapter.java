@@ -74,13 +74,13 @@ public class RutasMapaAdapter extends BaseAdapter {
 		
 		((TextView) convertView.findViewById(R.id.textView_horas)).setText(str_range);
 		 
-		((TextView) convertView.findViewById(R.id.textView_nombre)).setText(""+agd.getCliente().getNombreCompleto());
+		((TextView) convertView.findViewById(R.id.textView_nombre)).setText(""+agd.getNombreCompleto());
 
 		((ImageView) convertView.findViewById(R.id.itemlist_rutas_estado)).setImageBitmap(writeTextOnDrawable(R.drawable.map_position, position + 1 + ""));
 		
 		
 		if(agd.getClienteDireccion() != null)
-			((TextView) convertView.findViewById(R.id.textView_address)).setText(""+agd.getClienteDireccion().getDireccion());
+			((TextView) convertView.findViewById(R.id.textView_address)).setText(""+agd.getDireccion());
 		
 		return convertView;
 	}

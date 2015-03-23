@@ -12,6 +12,7 @@ import rp3.marketforce.ruta.MotivoNoVisitaFragment;
 import rp3.marketforce.ruta.RutasDetailFragment;
 import rp3.marketforce.ruta.RutasListFragment;
 import rp3.sync.SyncAudit;
+import rp3.sync.TestConnection;
 import rp3.util.Convert;
 import android.accounts.Account;
 import android.content.ContentProviderClient;
@@ -56,271 +57,254 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 		
 		try{
             db = DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class);
-			
-			if(syncType == null || syncType.equals(SYNC_TYPE_GENERAL)){								
-				db.beginTransaction();
-				
-				if(result == SYNC_EVENT_SUCCESS){
-					result = rp3.sync.GeneralValue.executeSync(db);
-					addDefaultMessage(result);
-				}
-				
-				if(result == SYNC_EVENT_SUCCESS){
-					result = rp3.sync.IdentificationType.executeSync(db);
-					addDefaultMessage(result);
-				}
-				
-				if(result == SYNC_EVENT_SUCCESS){
-					result = rp3.marketforce.sync.Cliente.executeSync(db);				
-					addDefaultMessage(result);
-					if(result == SYNC_EVENT_SUCCESS){
-						SyncAudit.insert(SYNC_TYPE_CLIENTE_UPDATE, SYNC_EVENT_SUCCESS);
-					}
-				}
-				
-				if(result == SYNC_EVENT_SUCCESS){
-					result = rp3.marketforce.sync.Rutas.executeSync(db,null,null, false);				
-					addDefaultMessage(result);
-					if(result == SYNC_EVENT_SUCCESS){
-						SyncAudit.insert(SYNC_TYPE_ACT_AGENDA, SYNC_EVENT_SUCCESS);
-					}
-				}
-				
-				if(result == SYNC_EVENT_SUCCESS){
-					result = rp3.marketforce.sync.Agente.executeSync(db);				
-					addDefaultMessage(result);
-				}
-				
-				if(result == SYNC_EVENT_SUCCESS && PreferenceManager.getBoolean(Contants.KEY_ES_SUPERVISOR)){
-					result = rp3.marketforce.sync.Agente.executeSyncGetAgente(db);				
-					addDefaultMessage(result);
-				}
-				
-				if(result == SYNC_EVENT_SUCCESS){
-					result = rp3.marketforce.sync.Tareas.executeSync(db,null,null);				
-					addDefaultMessage(result);
-				}
-				
-				if(result == SYNC_EVENT_SUCCESS){
-					result = rp3.marketforce.sync.Canal.executeSync(db);				
-					addDefaultMessage(result);
-				}
+            if(TestConnection.executeSync()) {
 
-				if(result == SYNC_EVENT_SUCCESS){
-					result = rp3.marketforce.sync.TipoCliente.executeSync(db);				
-					addDefaultMessage(result);
-				}
-				
-				if(result == SYNC_EVENT_SUCCESS){
-					result = rp3.marketforce.sync.Agente.executeSyncParametros(db);				
-					addDefaultMessage(result);
-				}
+                if (syncType == null || syncType.equals(SYNC_TYPE_GENERAL)) {
+                    db.beginTransaction();
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.sync.GeneralValue.executeSync(db);
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.sync.IdentificationType.executeSync(db);
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Cliente.executeSync(db);
+                        addDefaultMessage(result);
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            SyncAudit.insert(SYNC_TYPE_CLIENTE_UPDATE, SYNC_EVENT_SUCCESS);
+                        }
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Rutas.executeSync(db, null, null, false);
+                        addDefaultMessage(result);
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            SyncAudit.insert(SYNC_TYPE_ACT_AGENDA, SYNC_EVENT_SUCCESS);
+                        }
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Agente.executeSync(db);
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS && PreferenceManager.getBoolean(Contants.KEY_ES_SUPERVISOR)) {
+                        result = rp3.marketforce.sync.Agente.executeSyncGetAgente(db);
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Tareas.executeSync(db, null, null);
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Canal.executeSync(db);
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.TipoCliente.executeSync(db);
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Agente.executeSyncParametros(db);
+                        addDefaultMessage(result);
+                    }
 				/*
 				 * Se comenta carga de fotos ya que se la hara mediante un lazy loader.
 				 * Para esto se cargara tambien en el modelo Cliente la url de la foto para poder cargarla
 				 * */
-				
-				//if(result == SYNC_EVENT_SUCCESS){
-				//	result = rp3.marketforce.sync.ClienteFoto.executeSync(db,null);				
-				//	addDefaultMessage(result);
-				//}
 
-                long time = 0;
-                Date pru = SyncAudit.getLastSyncDate(SYNC_TYPE_GEOPOLITICAL, SYNC_EVENT_SUCCESS);
-                if(Convert.getTicksFromDate(pru) != 0)
-                    result = rp3.sync.GeopoliticalStructure.executeSyncLastUpdate(db, Convert.getDotNetTicksFromDate(SyncAudit.getLastSyncDate(SYNC_TYPE_GEOPOLITICAL, SYNC_EVENT_SUCCESS)));
-                else
-                    result = rp3.sync.GeopoliticalStructure.executeSync(db);
-                if(result == SYNC_EVENT_SUCCESS){
-                    SyncAudit.insert(SYNC_TYPE_GEOPOLITICAL, SYNC_EVENT_SUCCESS);
-                }
-                addDefaultMessage(result);
-								
-				db.commitTransaction();
-				
-			}else if(syncType.equals(SYNC_TYPE_ENVIAR_UBICACION)){
-				try{
-					double latitud = extras.getDouble(EnviarUbicacion.ARG_LATITUD);
-					double longitud = extras.getDouble(EnviarUbicacion.ARG_LONGITUD);
-					
-					EnviarUbicacion.executeSync(longitud, latitud);				
-					
-					
-				}catch(Exception e){
-					Log.e("Sync Adapter", e.getMessage());
-				}
-			}
-			else if(syncType.equals(SYNC_TYPE_GEOPOLITICAL))
-			{
-				//long time = 0;
-				//Date pru = SyncAudit.getLastSyncDate(SYNC_TYPE_GEOPOLITICAL, SYNC_EVENT_SUCCESS);
-				//if(Convert.getTicksFromDate(pru) != 0)
-				//	result = rp3.sync.GeopoliticalStructure.executeSyncLastUpdate(db, Convert.getDotNetTicksFromDate(SyncAudit.getLastSyncDate(SYNC_TYPE_GEOPOLITICAL, SYNC_EVENT_SUCCESS)));
-				//else
-				//	result = rp3.sync.GeopoliticalStructure.executeSync(db);
-				//if(result == SYNC_EVENT_SUCCESS){
-				//	SyncAudit.insert(SYNC_TYPE_GEOPOLITICAL, SYNC_EVENT_SUCCESS);
-				//}
-				//addDefaultMessage(result);
-			}
-			else if(syncType.equals(SYNC_TYPE_SERVER_CODE)){
-				String code = extras.getString(ServerActivity.SERVER_CODE);
-				result = Server.executeSync(code);
-				addDefaultMessage(result);
-			}
-			else if(syncType.equals(SYNC_TYPE_CLIENTE_UPDATE)){
-				long id = extras.getLong(ClienteActualizacion.ARG_CLIENTE_ID);
-				result = ClienteActualizacion.executeSync(db, id);
-				addDefaultMessage(result);
-			}
-			
-			else if(syncType.equals(SYNC_TYPE_SOLO_RESUMEN)){
-				result = Agente.executeSyncGetAgente(db);
-				addDefaultMessage(result);
-			}
-			
-			else if(syncType.equals(SYNC_TYPE_CLIENTE_CREATE)){
-				long cliente = extras.getLong(CrearClienteFragment.ARG_CLIENTE);
-				result = Cliente.executeSyncCreate(db, cliente);
-				addDefaultMessage(result);
-			}
-			
-			else if(syncType.equals(SYNC_TYPE_CLIENTE_UPDATE_FULL)){
-				long cliente = extras.getLong(CrearClienteFragment.ARG_CLIENTE);
-				result = Cliente.executeSyncUpdateFull(db, cliente);
-				addDefaultMessage(result);
-			}
-			
-			else if(syncType.equals(SYNC_TYPE_ENVIAR_AGENDA)){
-				int id = extras.getInt(RutasDetailFragment.ARG_AGENDA_ID);
-				result = Agenda.executeSync(db, id);
-				addDefaultMessage(result);
-			}
-			
-			else if(syncType.equals(SYNC_TYPE_REPROGRAMAR_AGENDA)){
-				int id = extras.getInt(RutasDetailFragment.ARG_AGENDA_ID);
-				result = Agenda.executeSyncReschedule(db, id);
-				addDefaultMessage(result);
-			}
-			
-			else if(syncType.equals(SYNC_TYPE_INSERTAR_AGENDA)){
-				long agenda = extras.getLong(CrearVisitaFragment.ARG_AGENDA);
-				result = Agenda.executeSyncInsert(db, agenda);
-				addDefaultMessage(result);
-			}
-			
-			else if(syncType.equals(SYNC_TYPE_AGENDA_NO_VISITA)){
-				int id = extras.getInt(MotivoNoVisitaFragment.ARG_AGENDA);
-				result = Agenda.executeSyncNoVisita(db, id);
-				addDefaultMessage(result);
-			}
-			
-			else if(syncType.equals(SYNC_TYPE_ACTUALIZAR_AGENDA)){
-				long inicio = extras.getLong(RutasListFragment.ARG_INICIO);
-				long fin = extras.getLong(RutasListFragment.ARG_FIN);
-				result = rp3.marketforce.sync.Rutas.executeSync(db, inicio, fin, true);				
-				addDefaultMessage(result);
-			}
-			
-			else if(syncType.equals(SYNC_TYPE_BATCH)){
-				result = Cliente.executeSyncInserts(db);
-				addDefaultMessage(result);
-				
-				result = Cliente.executeSyncPendientes(db);
-				addDefaultMessage(result);
-				
-				result = Agenda.executeSyncInserts(db);
-				addDefaultMessage(result);
-				
-				result = Agenda.executeSyncPendientes(db);
-				addDefaultMessage(result);
-				
-				result = EnviarUbicacion.executeSyncPendientes(db);
-				addDefaultMessage(result);
+                    //if(result == SYNC_EVENT_SUCCESS){
+                    //	result = rp3.marketforce.sync.ClienteFoto.executeSync(db,null);
+                    //	addDefaultMessage(result);
+                    //}
 
-                if(result == SYNC_EVENT_SUCCESS){
-                    result = rp3.marketforce.sync.Rutas.executeSync(db,null,null, false);
+                    long time = 0;
+                    Date pru = SyncAudit.getLastSyncDate(SYNC_TYPE_GEOPOLITICAL, SYNC_EVENT_SUCCESS);
+                    if (Convert.getTicksFromDate(pru) != 0)
+                        result = rp3.sync.GeopoliticalStructure.executeSyncLastUpdate(db, Convert.getDotNetTicksFromDate(SyncAudit.getLastSyncDate(SYNC_TYPE_GEOPOLITICAL, SYNC_EVENT_SUCCESS)));
+                    else
+                        result = rp3.sync.GeopoliticalStructure.executeSync(db);
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        SyncAudit.insert(SYNC_TYPE_GEOPOLITICAL, SYNC_EVENT_SUCCESS);
+                    }
                     addDefaultMessage(result);
-                    if(result == SYNC_EVENT_SUCCESS){
-                        SyncAudit.insert(SYNC_TYPE_ACT_AGENDA, SYNC_EVENT_SUCCESS);
+
+                    db.commitTransaction();
+
+                } else if (syncType.equals(SYNC_TYPE_ENVIAR_UBICACION)) {
+                    try {
+                        double latitud = extras.getDouble(EnviarUbicacion.ARG_LATITUD);
+                        double longitud = extras.getDouble(EnviarUbicacion.ARG_LONGITUD);
+
+                        EnviarUbicacion.executeSync(longitud, latitud);
+
+
+                    } catch (Exception e) {
+                        Log.e("Sync Adapter", e.getMessage());
+                    }
+                } else if (syncType.equals(SYNC_TYPE_GEOPOLITICAL)) {
+                    //long time = 0;
+                    //Date pru = SyncAudit.getLastSyncDate(SYNC_TYPE_GEOPOLITICAL, SYNC_EVENT_SUCCESS);
+                    //if(Convert.getTicksFromDate(pru) != 0)
+                    //	result = rp3.sync.GeopoliticalStructure.executeSyncLastUpdate(db, Convert.getDotNetTicksFromDate(SyncAudit.getLastSyncDate(SYNC_TYPE_GEOPOLITICAL, SYNC_EVENT_SUCCESS)));
+                    //else
+                    //	result = rp3.sync.GeopoliticalStructure.executeSync(db);
+                    //if(result == SYNC_EVENT_SUCCESS){
+                    //	SyncAudit.insert(SYNC_TYPE_GEOPOLITICAL, SYNC_EVENT_SUCCESS);
+                    //}
+                    //addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_SERVER_CODE)) {
+                    String code = extras.getString(ServerActivity.SERVER_CODE);
+                    result = Server.executeSync(code);
+                    addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_CLIENTE_UPDATE)) {
+                    long id = extras.getLong(ClienteActualizacion.ARG_CLIENTE_ID);
+                    result = ClienteActualizacion.executeSync(db, id);
+                    addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_SOLO_RESUMEN)) {
+                    result = Agente.executeSyncGetAgente(db);
+                    addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_CLIENTE_CREATE)) {
+                    long cliente = extras.getLong(CrearClienteFragment.ARG_CLIENTE);
+                    result = Cliente.executeSyncCreate(db, cliente);
+                    addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_CLIENTE_UPDATE_FULL)) {
+                    long cliente = extras.getLong(CrearClienteFragment.ARG_CLIENTE);
+                    result = Cliente.executeSyncUpdateFull(db, cliente);
+                    addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_ENVIAR_AGENDA)) {
+                    int id = extras.getInt(RutasDetailFragment.ARG_AGENDA_ID);
+                    result = Agenda.executeSync(db, id);
+                    addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_REPROGRAMAR_AGENDA)) {
+                    int id = extras.getInt(RutasDetailFragment.ARG_AGENDA_ID);
+                    result = Agenda.executeSyncReschedule(db, id);
+                    addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_INSERTAR_AGENDA)) {
+                    long agenda = extras.getLong(CrearVisitaFragment.ARG_AGENDA);
+                    result = Agenda.executeSyncInsert(db, agenda);
+                    addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_AGENDA_NO_VISITA)) {
+                    int id = extras.getInt(MotivoNoVisitaFragment.ARG_AGENDA);
+                    result = Agenda.executeSyncNoVisita(db, id);
+                    addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_ACTUALIZAR_AGENDA)) {
+                    long inicio = extras.getLong(RutasListFragment.ARG_INICIO);
+                    long fin = extras.getLong(RutasListFragment.ARG_FIN);
+                    result = rp3.marketforce.sync.Rutas.executeSync(db, inicio, fin, true);
+                    addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_BATCH)) {
+                    result = Cliente.executeSyncInserts(db);
+                    addDefaultMessage(result);
+
+                    result = Cliente.executeSyncPendientes(db);
+                    addDefaultMessage(result);
+
+                    result = Agenda.executeSyncInserts(db);
+                    addDefaultMessage(result);
+
+                    result = Agenda.executeSyncPendientes(db);
+                    addDefaultMessage(result);
+
+                    result = EnviarUbicacion.executeSyncPendientes(db);
+                    addDefaultMessage(result);
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Rutas.executeSync(db, null, null, false);
+                        addDefaultMessage(result);
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            SyncAudit.insert(SYNC_TYPE_ACT_AGENDA, SYNC_EVENT_SUCCESS);
+                        }
+                    }
+                } else if (syncType.equals(SYNC_TYPE_TODO)) {
+                    result = Cliente.executeSyncInserts(db);
+                    addDefaultMessage(result);
+
+                    result = Cliente.executeSyncPendientes(db);
+                    addDefaultMessage(result);
+
+                    result = Agenda.executeSyncInserts(db);
+                    addDefaultMessage(result);
+
+                    result = Agenda.executeSyncPendientes(db);
+                    addDefaultMessage(result);
+
+                    result = EnviarUbicacion.executeSyncPendientes(db);
+                    addDefaultMessage(result);
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.sync.GeneralValue.executeSync(db);
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.sync.IdentificationType.executeSync(db);
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Cliente.executeSync(db);
+                        addDefaultMessage(result);
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            SyncAudit.insert(SYNC_TYPE_CLIENTE_UPDATE, SYNC_EVENT_SUCCESS);
+                        }
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Cliente.executeSyncDeletes(db);
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Rutas.executeSync(db, null, null, false);
+                        addDefaultMessage(result);
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            SyncAudit.insert(SYNC_TYPE_ACT_AGENDA, SYNC_EVENT_SUCCESS);
+                        }
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Agente.executeSync(db);
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS && PreferenceManager.getBoolean(Contants.KEY_ES_SUPERVISOR)) {
+                        result = rp3.marketforce.sync.Agente.executeSyncGetAgente(db);
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Tareas.executeSync(db, null, null);
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Canal.executeSync(db);
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.TipoCliente.executeSync(db);
+                        addDefaultMessage(result);
                     }
                 }
-			}
-			
-			else if(syncType.equals(SYNC_TYPE_TODO)){
-				result = Cliente.executeSyncInserts(db);
-				addDefaultMessage(result);
-				
-				result = Cliente.executeSyncPendientes(db);
-				addDefaultMessage(result);
-				
-				result = Agenda.executeSyncInserts(db);
-				addDefaultMessage(result);
-				
-				result = Agenda.executeSyncPendientes(db);
-				addDefaultMessage(result);
-				
-				result = EnviarUbicacion.executeSyncPendientes(db);
-				addDefaultMessage(result);
-				
-				if(result == SYNC_EVENT_SUCCESS){
-					result = rp3.sync.GeneralValue.executeSync(db);
-					addDefaultMessage(result);
-				}
-				
-				if(result == SYNC_EVENT_SUCCESS){
-					result = rp3.sync.IdentificationType.executeSync(db);
-					addDefaultMessage(result);
-				}
-				
-				if(result == SYNC_EVENT_SUCCESS){
-					result = rp3.marketforce.sync.Cliente.executeSync(db);				
-					addDefaultMessage(result);
-					if(result == SYNC_EVENT_SUCCESS){
-						SyncAudit.insert(SYNC_TYPE_CLIENTE_UPDATE, SYNC_EVENT_SUCCESS);
-					}
-				}
 
-                if(result == SYNC_EVENT_SUCCESS){
-                    result = rp3.marketforce.sync.Cliente.executeSyncDeletes(db);
-                    addDefaultMessage(result);
-                }
-				
-				if(result == SYNC_EVENT_SUCCESS){
-					result = rp3.marketforce.sync.Rutas.executeSync(db,null,null, false);				
-					addDefaultMessage(result);
-					if(result == SYNC_EVENT_SUCCESS){
-						SyncAudit.insert(SYNC_TYPE_ACT_AGENDA, SYNC_EVENT_SUCCESS);
-					}
-				}
-				
-				if(result == SYNC_EVENT_SUCCESS){
-					result = rp3.marketforce.sync.Agente.executeSync(db);				
-					addDefaultMessage(result);
-				}
-				
-				if(result == SYNC_EVENT_SUCCESS && PreferenceManager.getBoolean(Contants.KEY_ES_SUPERVISOR)){
-					result = rp3.marketforce.sync.Agente.executeSyncGetAgente(db);				
-					addDefaultMessage(result);
-				}
-				
-				if(result == SYNC_EVENT_SUCCESS){
-					result = rp3.marketforce.sync.Tareas.executeSync(db,null,null);				
-					addDefaultMessage(result);
-				}
-				
-				if(result == SYNC_EVENT_SUCCESS){
-					result = rp3.marketforce.sync.Canal.executeSync(db);				
-					addDefaultMessage(result);
-				}
-
-				if(result == SYNC_EVENT_SUCCESS){
-					result = rp3.marketforce.sync.TipoCliente.executeSync(db);				
-					addDefaultMessage(result);
-				}
-			}
-			
-			SyncAudit.insert(syncType, result);
+                SyncAudit.insert(syncType, result);
+            }
+            else
+            {
+                addDefaultMessage(SYNC_EVENT_CONNECTION_FAILED);
+                SyncAudit.insert(syncType, SYNC_EVENT_CONNECTION_FAILED);
+            }
 				
 		}catch (Exception e) {			
 			Log.e(TAG, "E: " + e.getMessage());

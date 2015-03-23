@@ -11,6 +11,7 @@ import rp3.widget.SlidingPaneLayout.PanelSlideListener;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -72,7 +73,8 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	@Override
 	public void onStart() {		
 		super.onStart();
-		
+		getActivity().invalidateOptionsMenu();
+        getActivity().supportInvalidateOptionsMenu();
 		if(selectedTransactionId != 0 && openPane){
 			if(!mTwoPane)			
 				slidingPane.closePane();			
@@ -133,7 +135,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 				rootView.findViewById(R.id.content_transaction_list).getLayoutParams().width != LayoutParams.MATCH_PARENT)		
 			mTwoPane = true;			
 		else
-			mTwoPane = false;					
+			mTwoPane = false;
 	}	
 
 	@Override
@@ -142,7 +144,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
         MenuItem prob = menu.findItem(R.id.action_search_ruta);
         if(prob != null)
 		    searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search_ruta));
-        if(slidingPane!=null && !Screen.isLargeLayoutSize(getActivity())){
+        if(slidingPane!=null){
 	  	 if(!slidingPane.isOpen())
 	  	 {
 	  		 searchView.setVisibility(View.GONE);
@@ -330,8 +332,8 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 			 rutasDetailfragment.obsFragment.onActivityResult(requestCode, resultCode, data);
 		 }
 	}
-		
-	@Override
+
+    @Override
 	public void onTransactionSelected(long id) {
 		if(!mTwoPane)
 			slidingPane.closePane();
@@ -356,6 +358,12 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 		rutasDetailfragment.onResume();
 		rutasListFragment.Refresh();
 		
-	}	
+	}
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        getActivity().invalidateOptionsMenu();
+    }
 	
 }
