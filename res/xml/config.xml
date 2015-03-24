@@ -100,6 +100,11 @@
                     <webMethod>POST</webMethod>
                 </method>
                 <method>
+                    <name>UpdateAgendaGeolocation</name>
+                    <action>agenda/updateGeolocation</action>
+                    <webMethod>POST</webMethod>
+                </method>
+                <method>
                     <name>UpdateAgendaFull</name>
                     <action>agenda/updatefull</action>
                     <webMethod>POST</webMethod>
@@ -146,7 +151,7 @@
                 </method>
                 <method>
                     <name>GetTareas</name>
-                    <action>tarea/get</action>
+                    <action>tarea/get?ultimaActualizacion=@ultimaActualizacion</action>
                     <webMethod>GET</webMethod>
                 </method>
                 <method>

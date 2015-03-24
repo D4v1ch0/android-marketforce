@@ -732,7 +732,7 @@ public class CrearClienteFragment extends BaseFragment {
 	{
 		if(listViewDirecciones.size() <= 0)
 		{
-			Toast.makeText(getContext(), "No se puede agregar clientes sin direcci�n.", Toast.LENGTH_LONG).show();
+			Toast.makeText(getContext(), "No se puede agregar clientes sin dirección.", Toast.LENGTH_LONG).show();
 			return false;
 		}
 		if(((Spinner) info.findViewById(R.id.crear_cliente_tipo_persona)).getSelectedItemPosition() == 1)

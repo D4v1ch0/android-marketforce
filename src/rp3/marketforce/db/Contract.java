@@ -373,13 +373,17 @@ public final class Contract {
 		public static final String COLUMN_TAREA_ID = "IdTarea";
 		public static final String COLUMN_NOMBRE_TAREA = "NombreTarea";
 		public static final String COLUMN_TIPO_TAREA = "TipoTarea";
-		public static final String COLUMN_ESTADO_TAREA = "EstadoTarea";		
-		
-		public static final String FIELD_NOMBRE_TAREA = COLUMN_NOMBRE_TAREA;
+		public static final String COLUMN_ESTADO_TAREA = "EstadoTarea";
+        public static final String COLUMN_FECHA_VIGENCIA_DESDE = "FechaVigenciaDesde";
+        public static final String COLUMN_FECHA_VIGENCIA_HASTA = "FechaVigenciaHasta";
+
+        public static final String FIELD_NOMBRE_TAREA = COLUMN_NOMBRE_TAREA;
 		public static final String FIELD_TIPO_TAREA = COLUMN_TIPO_TAREA;
 		public static final String FIELD_ESTADO_TAREA = COLUMN_ESTADO_TAREA;
 		public static final String FIELD_TAREA_ID = COLUMN_TAREA_ID;
 		public static final String FIELD_ESTADO_TAREA_DESCRIPCION = "tbEstadoTarea_Value_" + rp3.data.models.Contract.GeneralValue.COLUMN_VALUE;
+        public static final String FIELD_FECHA_VIGENCIA_DESDE = COLUMN_FECHA_VIGENCIA_DESDE;
+        public static final String FIELD_FECHA_VIGENCIA_HASTA = COLUMN_FECHA_VIGENCIA_HASTA;
 	}
    
    public static abstract class Actividades implements BaseColumns {

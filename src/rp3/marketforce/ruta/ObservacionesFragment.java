@@ -15,6 +15,8 @@ import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.utils.Utils;
 
+import static rp3.util.Screen.getOrientation;
+
 public class ObservacionesFragment extends BaseFragment {
 	
 	public static final int MEDIA_TYPE_IMAGE = 1;
@@ -97,11 +99,11 @@ public class ObservacionesFragment extends BaseFragment {
 		super.onFragmentCreateView(rootView, savedInstanceState);
 		parentView = rootView;
 		if(agenda.getFoto1Int() != null)
-			((ImageButton) rootView.findViewById(R.id.obs_foto1)).setImageBitmap(Utils.resizeBitMapImage(agenda.getFoto1Int(), MAX_WIDTH, MAX_HEIGHT));
+			((ImageButton) rootView.findViewById(R.id.obs_foto1)).setImageBitmap(Utils.resizeBitMapImage(agenda.getFoto1Int(), MAX_WIDTH, MAX_HEIGHT, 0));
 		if(agenda.getFoto2Int() != null)
-			((ImageButton) rootView.findViewById(R.id.obs_foto2)).setImageBitmap(Utils.resizeBitMapImage(agenda.getFoto2Int(), MAX_WIDTH, MAX_HEIGHT));
+			((ImageButton) rootView.findViewById(R.id.obs_foto2)).setImageBitmap(Utils.resizeBitMapImage(agenda.getFoto2Int(), MAX_WIDTH, MAX_HEIGHT, 0));
 		if(agenda.getFoto3Int() != null)
-			((ImageButton) rootView.findViewById(R.id.obs_foto3)).setImageBitmap(Utils.resizeBitMapImage(agenda.getFoto3Int(), MAX_WIDTH, MAX_HEIGHT));
+			((ImageButton) rootView.findViewById(R.id.obs_foto3)).setImageBitmap(Utils.resizeBitMapImage(agenda.getFoto3Int(), MAX_WIDTH, MAX_HEIGHT, 0));
 		if(agenda.getObservaciones() != null)
 			setTextViewText(R.id.obs_text, agenda.getObservaciones());
 		
@@ -162,15 +164,15 @@ public class ObservacionesFragment extends BaseFragment {
 	        switch(requestCode)
 	        {
 	        case PHOTO_1:
-	        	((ImageButton) getRootView().findViewById(R.id.obs_foto1)).setImageBitmap(Utils.resizeBitMapImage(path, 500, 500));
+	        	((ImageButton) getRootView().findViewById(R.id.obs_foto1)).setImageBitmap(Utils.resizeBitMapImage(path, 500, 500, getOrientation()));
 	        	agenda.setFoto1Int(path);
 	        	break;
 	        case PHOTO_2:
-	        	((ImageButton) getRootView().findViewById(R.id.obs_foto2)).setImageBitmap(Utils.resizeBitMapImage(path, 500, 500));
+	        	((ImageButton) getRootView().findViewById(R.id.obs_foto2)).setImageBitmap(Utils.resizeBitMapImage(path, 500, 500, getOrientation()));
 	        	agenda.setFoto2Int(path);
 	        	break;
 	        case PHOTO_3:
-	        	((ImageButton) getRootView().findViewById(R.id.obs_foto3)).setImageBitmap(Utils.resizeBitMapImage(path, 500, 500));
+	        	((ImageButton) getRootView().findViewById(R.id.obs_foto3)).setImageBitmap(Utils.resizeBitMapImage(path, 500, 500, getOrientation()));
 	        	agenda.setFoto3Int(path);
 	        	break;
 	        default:

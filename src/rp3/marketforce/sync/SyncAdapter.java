@@ -39,6 +39,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 	public static String SYNC_TYPE_BATCH = "batch";
 	public static String SYNC_TYPE_TODO = "todo";
 	public static String SYNC_TYPE_GEOPOLITICAL = "geopolitical";
+    public static String SYNC_TYPE_AGENDA_GEOLOCATION = "agenda_geolocation";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -99,7 +100,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     }
 
                     if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Tareas.executeSync(db, null, null);
+                        result = rp3.marketforce.sync.Tareas.executeSync(db);
                         addDefaultMessage(result);
                     }
 
@@ -202,6 +203,10 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     long fin = extras.getLong(RutasListFragment.ARG_FIN);
                     result = rp3.marketforce.sync.Rutas.executeSync(db, inicio, fin, true);
                     addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_AGENDA_GEOLOCATION)) {
+                    int id = extras.getInt(RutasDetailFragment.ARG_AGENDA_ID);
+                    result = Agenda.executeSyncGeolocation(db, id);
+                    addDefaultMessage(result);
                 } else if (syncType.equals(SYNC_TYPE_BATCH)) {
                     result = Cliente.executeSyncInserts(db);
                     addDefaultMessage(result);
@@ -283,7 +288,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     }
 
                     if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Tareas.executeSync(db, null, null);
+                        result = rp3.marketforce.sync.Tareas.executeSync(db);
                         addDefaultMessage(result);
                     }
 

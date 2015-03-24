@@ -170,6 +170,7 @@ public class ReprogramarActivity extends BaseActivity {
 
 	public void aceptarCambios(View v)
 	{
+        agenda = Agenda.getAgenda(getDataBase(), idAgenda);
 		Calendar cal = Calendar.getInstance();
 		Calendar calFin = Calendar.getInstance();
 
@@ -221,6 +222,11 @@ public class ReprogramarActivity extends BaseActivity {
         agenda.setFechaInicio(cal.getTime());
         agenda.setFechaFin(calFin.getTime());
 
+        if(((Spinner) findViewById(R.id.reprogramar_motivo)).getSelectedItemPosition() == 0)
+        {
+            Toast.makeText(this, "Debe de escoger un motivo de reprogramación.", Toast.LENGTH_LONG).show();
+            return;
+        }
         agenda.setIdMotivoReprogramacion(((GeneralValue) ((Spinner) findViewById(R.id.reprogramar_motivo)).getSelectedItem()).getCode());
         agenda.setFechaInicio(cal.getTime());
 		agenda.setFechaFin(calFin.getTime());

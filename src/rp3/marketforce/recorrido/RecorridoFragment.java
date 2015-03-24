@@ -133,7 +133,7 @@ public class RecorridoFragment  extends BaseFragment {
 			public void onClick(View v) {
 				irAnterior();
 			}});
-    	
+
     	List<Ubicacion> list_ubicaciones = Ubicacion.getRecorrido(getDataBase(), cal);
     	markers = new ArrayList<Marker>();
     	

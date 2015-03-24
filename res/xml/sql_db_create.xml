@@ -144,7 +144,9 @@
       IdTarea INTEGER,      
       NombreTarea TEXT,
       TipoTarea TEXT,
-      EstadoTarea TEXT
+      EstadoTarea TEXT,
+      FechaVigenciaDesde INTEGER,
+      FechaVigenciaHasta INTEGER
       )
 	</statement>
 	

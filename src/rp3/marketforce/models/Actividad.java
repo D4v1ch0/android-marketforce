@@ -267,5 +267,10 @@ public class Actividad extends EntityBase<Actividad>
 		
 		return actividades;
 	}
+
+    public static void deleteFromTareas(DataBase db, int idTarea)
+    {
+        db.delete(Contract.Actividades.TABLE_NAME, Contract.Actividades.COLUMN_TAREA_ID + " = ?", idTarea);
+    }
 	
 }

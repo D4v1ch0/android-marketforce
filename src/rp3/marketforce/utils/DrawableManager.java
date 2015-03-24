@@ -26,7 +26,7 @@ import android.widget.LinearLayout;
 
 public class DrawableManager {
 	private static LruCache<String, Bitmap> mMemoryCache;
-	private static final int DEFAULT_MEM_CACHE_SIZE = 1024 * 1024 * 10; // 10MB - Tamaño de cache
+	private static final int DEFAULT_MEM_CACHE_SIZE = 1024 * 1024 * 10; // 10MB - TamaÃ±o de cache
 	private Context ctx;
 	//private final Map<String, Drawable> drawableMap;
 

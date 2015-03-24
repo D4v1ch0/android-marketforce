@@ -99,7 +99,8 @@ public class Ubicacion extends rp3.data.entity.EntityBase<Ubicacion> {
 	{
 		Cursor c = db.query(Contract.Ubicacion.TABLE_NAME, new String[] { Contract.Ubicacion._ID, Contract.Ubicacion.COLUMN_LATITUD,
 										Contract.Ubicacion.COLUMN_LONGITUD, Contract.Ubicacion.COLUMN_FECHA},
-										Contract.Ubicacion.COLUMN_PENDIENTE + " = 1",0);
+										Contract.Ubicacion.COLUMN_PENDIENTE + " = 1",new String []{}, null, null, Contract.Ubicacion.COLUMN_FECHA + " ASC ");
+
 		List<Ubicacion> ubicaciones = new ArrayList<Ubicacion>();
 		
 		if(c.moveToFirst())
@@ -110,7 +111,7 @@ public class Ubicacion extends rp3.data.entity.EntityBase<Ubicacion> {
 				ub.setID(CursorUtils.getLong(c, Contract.Ubicacion._ID));
 				ub.setLatitud(CursorUtils.getDouble(c, Contract.Ubicacion.COLUMN_LATITUD));
 				ub.setLongitud(CursorUtils.getDouble(c, Contract.Ubicacion.COLUMN_LONGITUD));
-				ub.setFecha(CursorUtils.getLong(c, Contract.Ubicacion.COLUMN_LATITUD));
+				ub.setFecha(CursorUtils.getLong(c, Contract.Ubicacion.COLUMN_FECHA));
 				ubicaciones.add(ub);
 			}while(c.moveToNext());
 		}
@@ -132,7 +133,7 @@ public class Ubicacion extends rp3.data.entity.EntityBase<Ubicacion> {
 		Cursor c = db.query(Contract.Ubicacion.TABLE_NAME, new String[] { Contract.Ubicacion._ID, Contract.Ubicacion.COLUMN_LATITUD,
 										Contract.Ubicacion.COLUMN_LONGITUD, Contract.Ubicacion.COLUMN_FECHA},
 										Contract.Ubicacion.COLUMN_FECHA + " >= ? AND " +
-										Contract.Ubicacion.COLUMN_FECHA + " <= ? ", new String[] {inicio + "", fin + ""});
+										Contract.Ubicacion.COLUMN_FECHA + " <= ? ", new String[] {inicio + "", fin + ""}, null, null, Contract.Ubicacion.COLUMN_FECHA + " ASC ");
 		List<Ubicacion> ubicaciones = new ArrayList<Ubicacion>();
 		
 		if(c.moveToFirst())
@@ -143,7 +144,7 @@ public class Ubicacion extends rp3.data.entity.EntityBase<Ubicacion> {
 				ub.setID(CursorUtils.getLong(c, Contract.Ubicacion._ID));
 				ub.setLatitud(CursorUtils.getDouble(c, Contract.Ubicacion.COLUMN_LATITUD));
 				ub.setLongitud(CursorUtils.getDouble(c, Contract.Ubicacion.COLUMN_LONGITUD));
-				ub.setFecha(CursorUtils.getLong(c, Contract.Ubicacion.COLUMN_LATITUD));
+				ub.setFecha(CursorUtils.getLong(c, Contract.Ubicacion.COLUMN_FECHA));
 				ubicaciones.add(ub);
 			}while(c.moveToNext());
 		}

@@ -69,19 +69,12 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 							if(location!=null){			
 								if(ConnectionUtils.isNetAvailable(context))
 								{
-									Bundle settingsBundle = new Bundle() ;
-									settingsBundle.putDouble(EnviarUbicacion.ARG_LATITUD, location.getLatitude());
-									settingsBundle.putDouble(EnviarUbicacion.ARG_LONGITUD, location.getLongitude());			
-									settingsBundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ENVIAR_UBICACION);
-									
 									Ubicacion ub = new Ubicacion();
 									ub.setLatitud(location.getLatitude());
 									ub.setLongitud(location.getLongitude());
 									ub.setFecha(Calendar.getInstance().getTimeInMillis());
-									ub.setPendiente(false);
+									ub.setPendiente(true);
 									Ubicacion.insert(DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class), ub);
-									
-									rp3.sync.SyncUtils.requestSync(settingsBundle);
 									
 									Bundle bundle = new Bundle();
 									bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_BATCH);

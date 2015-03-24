@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import rp3.app.BaseActivity;
@@ -92,7 +93,7 @@ public class MainActivity extends rp3.app.NavActivity{
 		Session.Start(this);
 		rp3.configuration.Configuration.TryInitializeConfiguration(this, DbOpenHelper.class);
 
-		//extractDatabase();
+		extractDatabase();
 		
 		this.setNavHeaderTitle(Session.getUser().getFullName());
 		this.setNavHeaderSubtitle(PreferenceManager.getString(Contants.KEY_CARGO));
@@ -295,8 +296,8 @@ public class MainActivity extends rp3.app.NavActivity{
 			Actividad.deleteAll(getDataBase(), Contract.Actividades.TABLE_NAME);
 			AgendaTarea.deleteAll(getDataBase(), Contract.AgendaTarea.TABLE_NAME);
 			AgendaTareaActividades.deleteAll(getDataBase(), Contract.AgendaTareaActividades.TABLE_NAME);
-			GeopoliticalStructure.deleteAll(getDataBase(), rp3.data.models.Contract.GeopoliticalStructure.TABLE_NAME);
-			GeopoliticalStructureExt.deleteAll(getDataBase(), rp3.data.models.Contract.GeopoliticalStructureExt.TABLE_NAME);
+			//GeopoliticalStructure.deleteAll(getDataBase(), rp3.data.models.Contract.GeopoliticalStructure.TABLE_NAME);
+			//GeopoliticalStructureExt.deleteAll(getDataBase(), rp3.data.models.Contract.GeopoliticalStructureExt.TABLE_NAME);
 			PreferenceManager.setValue(Contants.KEY_IDAGENTE, 0);
 			PreferenceManager.setValue(Contants.KEY_IDRUTA, 0);
 			PreferenceManager.setValue(Contants.KEY_ES_SUPERVISOR, false);
@@ -304,6 +305,7 @@ public class MainActivity extends rp3.app.NavActivity{
 			PreferenceManager.setValue(Contants.KEY_ES_ADMINISTRADOR, false);
 			PreferenceManager.setValue(Contants.KEY_CARGO, "");
 			SyncAudit.clearAudit();
+            SyncAudit.insert(SyncAdapter.SYNC_TYPE_GEOPOLITICAL,SyncAdapter.SYNC_EVENT_SUCCESS);
 			AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
 		    Intent updateServiceIntent = new Intent(context, EnviarUbicacionReceiver.class);

@@ -890,19 +890,17 @@
         		ORDER BY rank DESC LIMIT 30 OFFSET 0
        		
        	 ) AS tbRutaSearch
-       	 ON tbAgendaExt.docid = tbRutaSearch.docid       
-       	JOIN tbGeneralValue tbEstadoAgenda
-        ON tbEstadoAgenda.GeneralTableId = 1013
-        AND tbAgenda.EstadoAgenda = tbEstadoAgenda.Code	
-        JOIN tbCliente        
-        ON tbAgenda.IdCliente = tbCliente._id
-        JOIN tbClienteExt
-        ON tbClienteExt.docid = tbCliente._id         
-        JOIN tbClienteDireccion        
-        ON tbAgenda.IdCliente = tbClienteDireccion.IdCliente
-        AND tbAgenda.IdClienteDireccion = tbClienteDireccion.IdClienteDireccion
-        ORDER BY tbRutaSearch.Rank DESC   	
-    </statement>   
+       	 ON tbAgendaExt.docid = tbRutaSearch.docid
+         JOIN tbGeneralValue tbEstadoAgenda
+         ON tbEstadoAgenda.GeneralTableId = 1013
+         AND tbAgenda.EstadoAgenda = tbEstadoAgenda.Code
+         JOIN tbCliente
+         ON tbAgenda.IdCliente = tbCliente.IdCliente OR tbAgenda._idCliente = tbCliente._id
+         JOIN tbClienteDireccion
+         ON tbAgenda.IdCliente = tbClienteDireccion.IdCliente
+         AND tbAgenda.IdClienteDireccion = tbClienteDireccion.IdClienteDireccion
+         ORDER BY tbRutaSearch.Rank DESC
+     </statement>
     
 	 <statement name="AgendaTarea">
        SELECT

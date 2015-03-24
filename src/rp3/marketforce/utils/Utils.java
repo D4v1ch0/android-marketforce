@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -11,10 +12,13 @@ import java.util.Date;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
+import android.graphics.Matrix;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore.MediaColumns;
@@ -56,7 +60,72 @@ public class Utils {
 	}
 	
 	public static Bitmap resizeBitMapImage(String filePath, int targetWidth,
-            int targetHeight) {
+            int targetHeight, int orientation) {
+        Bitmap bitMapImage = null;
+        // First, get the dimensions of the image
+        Options options = new Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(filePath, options);
+        double sampleSize = 0;
+        // Only scale if we need to
+        // (16384 buffer for img processing)
+        Boolean scaleByHeight = Math.abs(options.outHeight - targetHeight) >= Math
+                .abs(options.outWidth - targetWidth);
+
+        if (options.outHeight * options.outWidth * 2 >= 1638) {
+            // Load, scaling to smallest power of 2 that'll get it <= desired
+            // dimensions
+            sampleSize = scaleByHeight ? options.outHeight / targetHeight
+                    : options.outWidth / targetWidth;
+            sampleSize = (int) Math.pow(2d,
+                    Math.floor(Math.log(sampleSize) / Math.log(2d)));
+        }
+        options.inJustDecodeBounds = false;
+        options.inTempStorage = new byte[128];
+        while (true) {
+            try {
+                options.inSampleSize = (int) sampleSize;
+                bitMapImage = BitmapFactory.decodeFile(filePath, options);
+
+                break;
+            } catch (Exception ex) {
+                try {
+                    sampleSize = sampleSize * 2;
+                } catch (Exception ex1) {
+
+                }
+            }
+        }
+
+        if(orientation == Configuration.ORIENTATION_PORTRAIT)
+        {
+            Matrix matrix = new Matrix();
+            matrix.postRotate(90);
+            bitMapImage = Bitmap.createBitmap(bitMapImage, 0, 0, bitMapImage.getWidth(), bitMapImage.getHeight(), matrix, true);
+
+            FileOutputStream out = null;
+            try {
+                out = new FileOutputStream(filePath);
+                bitMapImage.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
+                // PNG is a lossless format, the compression factor (100) is ignored
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (out != null) {
+                        out.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return bitMapImage;
+    }
+
+    public static Bitmap resizeBitMapImage(String filePath, int targetWidth,
+                                           int targetHeight) {
         Bitmap bitMapImage = null;
         // First, get the dimensions of the image
         Options options = new Options();

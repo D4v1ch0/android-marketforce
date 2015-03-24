@@ -12,16 +12,25 @@ import rp3.content.SyncAdapter;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
 import rp3.marketforce.db.Contract;
+import rp3.sync.SyncAudit;
+import rp3.util.Convert;
+
 import android.util.Log;
+
+import java.util.Calendar;
 
 public class Tareas {
 
-	public static int executeSync(DataBase db, Long inicio, Long fin){
-		WebService webService = new WebService("MartketForce","GetTareas");		
-			
+	public static int executeSync(DataBase db){
+		WebService webService = new WebService("MartketForce","GetTareas");
+        Calendar fechaUlt = Calendar.getInstance();
+        fechaUlt.setTime(SyncAudit.getLastSyncDate(rp3.marketforce.sync.SyncAdapter.SYNC_TYPE_TODO, SyncAdapter.SYNC_EVENT_SUCCESS));
+        long fecha = rp3.util.Convert.getDotNetTicksFromDate(fechaUlt.getTime());
+
 		try
 		{			
 			webService.addCurrentAuthToken();
+            webService.addParameter("@ultimaActualizacion", fecha);
 			
 			try {
 				webService.invokeWebService();	
@@ -35,9 +44,9 @@ public class Tareas {
 			
 			JSONArray types = webService.getJSONArrayResponse();			
 			
-			rp3.marketforce.models.Tarea.deleteAll(db, Contract.Tareas.TABLE_NAME);
-			rp3.marketforce.models.Actividad.deleteAll(db, Contract.Actividades.TABLE_NAME);
-			rp3.marketforce.models.AgendaTareaOpciones.deleteAll(db, Contract.AgendaTareaOpciones.TABLE_NAME);
+			//rp3.marketforce.models.Tarea.deleteAll(db, Contract.Tareas.TABLE_NAME);
+			//rp3.marketforce.models.Actividad.deleteAll(db, Contract.Actividades.TABLE_NAME);
+			//rp3.marketforce.models.AgendaTareaOpciones.deleteAll(db, Contract.AgendaTareaOpciones.TABLE_NAME);
 			//rp3.marketforce.models.AgendaTareaActividades.deleteAll(db, Contract.AgendaTareaActividades.TABLE_NAME);
 			//rp3.marketforce.models.AgendaTareaOpciones.deleteAll(db, Contract.AgendaTareaOpciones.TABLE_NAME);
 			
@@ -46,6 +55,7 @@ public class Tareas {
 				try {					
 						JSONObject type = types.getJSONObject(i);
 						rp3.marketforce.models.Tarea tarea = new rp3.marketforce.models.Tarea();
+
                         if(type.getString("Estado").equalsIgnoreCase(Contants.ESTADO_ELIMINADO))
                         {
                             rp3.marketforce.models.Tarea toDelete = rp3.marketforce.models.Tarea.getTareaId(db,type.getInt("IdTarea"));
@@ -60,8 +70,18 @@ public class Tareas {
                             tarea.setNombreTarea(type.getString("Descripcion"));
                             tarea.setEstadoTarea(type.getString("Estado"));
                             tarea.setTipoTarea(type.getString("TipoTarea"));
+                            tarea.setFechaVigenciaDesde(Convert.getDateFromDotNetTicks(type.getLong("FechaVigenciaDesdeTicks")));
+                            if(!type.isNull("FechaVigenciaHastaTicks"))
+                                tarea.setFechaVigenciaHasta(Convert.getDateFromDotNetTicks(type.getLong("FechaVigenciaHastaTicks")));
 
-                            rp3.marketforce.models.Tarea.insert(db, tarea);
+                            rp3.marketforce.models.Tarea tareaUpdate = rp3.marketforce.models.Tarea.getTareaId(db, tarea.getIdTarea());
+
+                            if(tareaUpdate != null)
+                                rp3.marketforce.models.Tarea.update(db, tarea);
+                            else
+                                rp3.marketforce.models.Tarea.insert(db, tarea);
+
+                            rp3.marketforce.models.Actividad.deleteFromTareas(db, tarea.getIdTarea());
 
                             JSONArray strs = type.getJSONArray("TareaActividades");
 
@@ -79,6 +99,8 @@ public class Tareas {
                                 actividad.setIdTipoActividad(str.getInt("IdTipoActividad"));
 
                                 rp3.marketforce.models.Actividad.insert(db, actividad);
+
+                                rp3.marketforce.models.AgendaTareaOpciones.deleteOpciones(db, tarea.getIdTarea(), actividad.getIdTareaActividad());
 
                                 JSONArray opcs = str.getJSONArray("TareaOpciones");
 
@@ -105,7 +127,7 @@ public class Tareas {
 		}finally{
 			webService.close();
 		}
-		
-		return SyncAdapter.SYNC_EVENT_SUCCESS;		
-	}
+
+        return SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
 }

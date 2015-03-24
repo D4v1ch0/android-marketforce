@@ -117,7 +117,7 @@ public class Agenda {
             webService.close();
         }
 
-        if (agendaUpload.getFoto1Int() != null && agendaUpload.getFoto1Int().length() > 0) {
+        if ((agendaUpload.getFoto1Int() != null && agendaUpload.getFoto1Int().length() > 0) && agendaUpload.getFoto1Ext() == null) {
             webService = new WebService("MartketForce", "SetMediaAgenda");
 
             jObject = new JSONObject();
@@ -138,6 +138,8 @@ public class Agenda {
 
                 try {
                     webService.invokeWebService();
+                    agendaUpload.setFoto1Ext("1");
+                    rp3.marketforce.models.Agenda.update(db, agendaUpload);
                 } catch (HttpResponseException e) {
                     if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
                         return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
@@ -151,7 +153,7 @@ public class Agenda {
             }
         }
 
-        if (agendaUpload.getFoto2Int() != null && agendaUpload.getFoto2Int().length() > 0) {
+        if ((agendaUpload.getFoto2Int() != null && agendaUpload.getFoto2Int().length() > 0) && agendaUpload.getFoto2Ext() == null) {
             webService = new WebService("MartketForce", "SetMediaAgenda");
 
             jObject = new JSONObject();
@@ -169,9 +171,10 @@ public class Agenda {
 
             try {
                 webService.addCurrentAuthToken();
-
                 try {
                     webService.invokeWebService();
+                    agendaUpload.setFoto2Ext("1");
+                    rp3.marketforce.models.Agenda.update(db, agendaUpload);
                 } catch (HttpResponseException e) {
                     if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
                         return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
@@ -185,7 +188,7 @@ public class Agenda {
             }
         }
 
-        if (agendaUpload.getFoto3Int() != null && agendaUpload.getFoto3Int().length() > 0) {
+        if ((agendaUpload.getFoto3Int() != null && agendaUpload.getFoto3Int().length() > 0) && agendaUpload.getFoto3Ext() == null) {
             webService = new WebService("MartketForce", "SetMediaAgenda");
 
             jObject = new JSONObject();
@@ -206,6 +209,8 @@ public class Agenda {
 
                 try {
                     webService.invokeWebService();
+                    agendaUpload.setFoto3Ext("1");
+                    rp3.marketforce.models.Agenda.update(db, agendaUpload);
                 } catch (HttpResponseException e) {
                     if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
                         return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
@@ -217,6 +222,48 @@ public class Agenda {
             } finally {
                 webService.close();
             }
+        }
+
+        return SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
+    public static int executeSyncGeolocation(DataBase db, int idAgenda) {
+        WebService webService = new WebService("MartketForce", "UpdateAgendaGeolocation");
+        webService.setTimeOut(20000);
+
+        rp3.marketforce.models.Agenda agendaUpload = rp3.marketforce.models.Agenda.getAgendaUpload(db, idAgenda);
+
+        JSONArray jArray = new JSONArray();
+        JSONObject jObject = new JSONObject();
+        try {
+            jObject.put("IdAgenda", agendaUpload.getIdAgenda());
+            jObject.put("IdRuta", PreferenceManager.getInt(Contants.KEY_IDRUTA));
+            jObject.put("Latitud", agendaUpload.getLatitud());
+            jObject.put("Longitud", agendaUpload.getLongitud());
+            jObject.put("DistanciaUbicacion", agendaUpload.getDistancia());
+            jArray.put(jObject);
+        } catch (Exception ex) {
+
+        }
+
+        webService.addParameter("agendas", jArray);
+
+        try {
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+                String error = webService.getStringResponse();
+            } catch (HttpResponseException e) {
+                if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return SyncAdapter.SYNC_EVENT_ERROR;
+            }
+
+        } finally {
+            webService.close();
         }
 
         return SyncAdapter.SYNC_EVENT_SUCCESS;
@@ -731,7 +778,7 @@ public class Agenda {
         JSONObject jObject = new JSONObject();
         for (int i = 0; i < agendasConId.size(); i++) {
             rp3.marketforce.models.Agenda agendaUpload = agendasConId.get(i);
-            if (agendaUpload.getFoto1Int() != null && agendaUpload.getFoto1Int().length() > 0) {
+            if ((agendaUpload.getFoto1Int() != null && agendaUpload.getFoto1Int().length() > 0) && agendaUpload.getFoto1Ext() == null) {
                 webService = new WebService("MartketForce", "SetMediaAgenda");
 
                 jObject = new JSONObject();
@@ -750,8 +797,12 @@ public class Agenda {
                 try {
                     webService.addCurrentAuthToken();
 
+
                     try {
                         webService.invokeWebService();
+                        agendaUpload.setEnviado(true);
+                        agendaUpload.setFoto1Ext("1");
+                        rp3.marketforce.models.Agenda.update(db, agendaUpload);
                     } catch (HttpResponseException e) {
                         if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
                             return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
@@ -765,7 +816,7 @@ public class Agenda {
                 }
             }
 
-            if (agendaUpload.getFoto2Int() != null && agendaUpload.getFoto2Int().length() > 0) {
+            if ((agendaUpload.getFoto2Int() != null && agendaUpload.getFoto2Int().length() > 0) && agendaUpload.getFoto2Ext() == null) {
                 webService = new WebService("MartketForce", "SetMediaAgenda");
 
                 jObject = new JSONObject();
@@ -784,8 +835,12 @@ public class Agenda {
                 try {
                     webService.addCurrentAuthToken();
 
+
                     try {
                         webService.invokeWebService();
+                        agendaUpload.setEnviado(true);
+                        agendaUpload.setFoto2Ext("1");
+                        rp3.marketforce.models.Agenda.update(db, agendaUpload);
                     } catch (HttpResponseException e) {
                         if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
                             return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
@@ -799,7 +854,7 @@ public class Agenda {
                 }
             }
 
-            if (agendaUpload.getFoto3Int() != null && agendaUpload.getFoto3Int().length() > 0) {
+            if ((agendaUpload.getFoto3Int() != null && agendaUpload.getFoto3Int().length() > 0) && agendaUpload.getFoto3Ext() == null) {
                 webService = new WebService("MartketForce", "SetMediaAgenda");
 
                 jObject = new JSONObject();
@@ -818,8 +873,12 @@ public class Agenda {
                 try {
                     webService.addCurrentAuthToken();
 
+
                     try {
                         webService.invokeWebService();
+                        agendaUpload.setEnviado(true);
+                        agendaUpload.setFoto3Ext("1");
+                        rp3.marketforce.models.Agenda.update(db, agendaUpload);
                     } catch (HttpResponseException e) {
                         if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
                             return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
