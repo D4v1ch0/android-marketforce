@@ -318,7 +318,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	{
 		boolean telf = false, email = false;
 		hideDialogConfirmation();
-
+        String email_str = "";
 
 		testArrayDetails = this.getActivity().getResources()
 				.getStringArray(R.array.testArrayDetails);
@@ -348,6 +348,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 				if (client.getCorreoElectronico() != null)
 					if (!client.getCorreoElectronico().equals("null"))
 						str_titulo = "" + client.getCorreoElectronico();
+                email_str = str_titulo;
 				email = true;
 
 				flag = false;
@@ -411,13 +412,14 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 				{
 					((TextView) view_rowlist
 							.findViewById(R.id.textView_content)).setClickable(true);
-					((TextView) view_rowlist
+                    final String finalEmail_str = email_str;
+                    ((TextView) view_rowlist
 							.findViewById(R.id.textView_content)).setOnClickListener(new OnClickListener(){
 
 								@Override
 								public void onClick(View v) {
 									Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-								            "mailto",str_titulo, null));
+								            "mailto", finalEmail_str, null));
 									startActivity(Intent.createChooser(intent, "Send Email"));
 								}});
 					email = false;
@@ -639,7 +641,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	{
 		boolean telf = false, email = false;
 		hideDialogConfirmation();
-
+        String email_str = "";
 
 		testArrayDetails = this.getActivity().getResources()
 				.getStringArray(R.array.testArrayDetailsJuridico);
@@ -669,6 +671,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 				if (client.getCorreoElectronico() != null)
 					if (!client.getCorreoElectronico().equals("null"))
 						str_titulo = "" + client.getCorreoElectronico();
+                email_str = str_titulo;
 				email = true;
 				flag = false;
 				break;
@@ -732,13 +735,14 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 				{
 					((TextView) view_rowlist
 							.findViewById(R.id.textView_content)).setClickable(true);
-					((TextView) view_rowlist
+                    final String finalEmail_str = email_str;
+                    ((TextView) view_rowlist
 							.findViewById(R.id.textView_content)).setOnClickListener(new OnClickListener(){
 
 								@Override
 								public void onClick(View v) {
 									Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-								            "mailto",str_titulo, null));
+								            "mailto", finalEmail_str, null));
 									startActivity(Intent.createChooser(intent, "Send Email"));
 								}});
 					email = false;

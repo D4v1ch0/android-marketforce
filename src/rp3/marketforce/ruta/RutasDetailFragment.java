@@ -203,11 +203,16 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                 setViewVisibility(R.id.detail_agenda_button_fin, View.GONE);
                 setViewVisibility(R.id.detail_agenda_button_cancelar, View.GONE);
             }
-            if (agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_PENDIENTE))
+            if (agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_PENDIENTE)) {
                 ((ImageView) getRootView().findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_pending);
-            if (agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_REPROGRAMADO))
+                getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(false);
+            }
+            if (agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_REPROGRAMADO)) {
                 ((ImageView) getRootView().findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_reprogramed);
+                getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(false);
+            }
             if (agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_VISITADO)) {
+                getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(false);
                 ((ImageView) getRootView().findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_visited);
                 setViewVisibility(R.id.detail_agenda_button_iniciar, View.GONE);
                 setViewVisibility(R.id.detail_agenda_button_fin, View.GONE);
@@ -297,6 +302,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 					setViewVisibility(R.id.detail_agenda_button_iniciar, View.GONE);
 					setViewVisibility(R.id.detail_agenda_button_fin, View.VISIBLE);
 					setViewVisibility(R.id.detail_agenda_button_cancelar, View.VISIBLE);
+                    getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(true);
 					agenda.setEstadoAgenda(Contants.ESTADO_GESTIONANDO);
 					agenda.setEstadoAgendaDescripcion(Contants.DESC_GESTIONANDO);
 					agenda.setFechaInicioReal(Calendar.getInstance().getTime());
@@ -319,6 +325,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                         agenda = Agenda.getAgendaClienteNull(getDataBase(), idAgenda);
 					agenda.setEstadoAgenda(Contants.ESTADO_GESTIONANDO);
 					agenda.setEstadoAgendaDescripcion(Contants.DESC_GESTIONANDO);
+                    getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(true);
 					agenda.setFechaInicioReal(Calendar.getInstance().getTime());
 					Agenda.update(getDataBase(), agenda);
 					((ImageView) rootView.findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_in_process);
@@ -333,6 +340,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 					setViewVisibility(R.id.detail_agenda_button_iniciar, View.VISIBLE);
 					setViewVisibility(R.id.detail_agenda_button_fin, View.GONE);
 					setViewVisibility(R.id.detail_agenda_button_cancelar, View.GONE);
+                    getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(false);
 					if(agenda.getFechaFinReal() == null || agenda.getFechaFinReal().getTime() < 0)
 					{
 						agenda.setEstadoAgenda(Contants.ESTADO_PENDIENTE);
@@ -357,6 +365,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 					setViewVisibility(R.id.detail_agenda_button_fin, View.GONE);
 					setViewVisibility(R.id.detail_agenda_button_cancelar, View.GONE);
 					setViewVisibility(R.id.detail_agenda_button_modificar, View.VISIBLE);
+                    getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(false);
 					agenda = Agenda.getAgenda(getDataBase(), idAgenda);
                     if(agenda == null)
                         agenda = Agenda.getAgendaClienteNull(getDataBase(), idAgenda);

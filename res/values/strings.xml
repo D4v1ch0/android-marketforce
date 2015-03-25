@@ -111,7 +111,7 @@
     <string name="label_eliminar_contacto">Eliminar</string>
     <string name="label_grabar">Grabar</string>
     <string name="label_cancelar">Cancelar</string>
-    <string name="label_action_motivos_no_visita">Motivos de No Visita</string>
+    <string name="label_action_motivos_no_visita">Marcar Como No Visitado</string>
     <string name="label_motivo_no_visita">Motivo De No Visita</string>
     <string name="label_agente">Agentes</string>
     <string name="label_asignar_imagen">Asignar Imagen</string>

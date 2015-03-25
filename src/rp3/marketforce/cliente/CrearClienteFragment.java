@@ -454,8 +454,10 @@ public class CrearClienteFragment extends BaseFragment {
 		((EditText)info.findViewById(R.id.cliente_identificacion)).setText(cli.getIdentificacion());
 		((Spinner)info.findViewById(R.id.crear_cliente_tipo_persona)).setSelection(getPosition(((Spinner)info.findViewById(R.id.crear_cliente_tipo_persona)).getAdapter(), cli.getTipoPersona()));
 		((Spinner)info.findViewById(R.id.cliente_tipo_cliente)).setSelection(getPosition(((Spinner)info.findViewById(R.id.cliente_tipo_cliente)).getAdapter(), cli.getIdTipoCliente()));
-        if(cli.getFechaNacimiento() != null && cli.getFechaNacimiento().getTime() != 0)
+        if(cli.getFechaNacimiento() != null && cli.getFechaNacimiento().getTime() != 0) {
             ((EditText) info.findViewById(R.id.cliente_fecha_nacimiento)).setText(format1.format(cli.getFechaNacimiento()));
+            cliente.setFechaNacimiento(cli.getFechaNacimiento());
+        }
 		DManager.fetchDrawableOnThread(PreferenceManager.getString("server") + 
 				rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + Utils.getImageDPISufix(getActivity(), cli.getURLFoto()), 
 				(ImageButton)info.findViewById(R.id.cliente_foto));
@@ -747,6 +749,11 @@ public class CrearClienteFragment extends BaseFragment {
 				Toast.makeText(getContext(), "Falta primer apellido de cliente.", Toast.LENGTH_LONG).show();
 				return false;
 			}
+            if(cliente.getFechaNacimiento().getTime() >= Calendar.getInstance().getTime().getTime())
+            {
+                Toast.makeText(getContext(), "Fecha de nacimiento no puede ser mayor a hoy.", Toast.LENGTH_LONG).show();
+                return false;
+            }
             if(((EditText)info.findViewById(R.id.cliente_correo)).getText().toString().trim().length() > 0)
             {
                 if(!((EditText)info.findViewById(R.id.cliente_correo)).getText().toString().trim().contains("@") ||
@@ -805,6 +812,15 @@ public class CrearClienteFragment extends BaseFragment {
             if(((CheckBox)listViewDirecciones.get(i).findViewById(R.id.cliente_es_principal)).isChecked())
                 existsPrincipal = true;
 		}
+
+        for(int i = 0; i < listViewContactos.size(); i++)
+        {
+            if(((EditText)listViewContactos.get(i).findViewById(R.id.cliente_nombres)).getText().length() <= 0)
+            {
+                Toast.makeText(getContext(), "Debe de ingresar los nombres del contacto.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        }
 
         if(!existsPrincipal)
         {

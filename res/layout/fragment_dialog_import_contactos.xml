@@ -43,26 +43,30 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="@string/label_skype" />
+                android:text="@string/label_skype"
+                android:visibility="gone" />
 
             <RadioButton
                 android:id="@+id/import_linkedin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="@string/label_linkedin" />
+                android:text="@string/label_linkedin"
+                android:visibility="gone" />
 
             <RadioButton
                 android:id="@+id/import_gmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/label_gmail" />
+                android:text="@string/label_gmail"
+                android:visibility="gone" />
 
             <RadioButton
                 android:id="@+id/import_facebook"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/label_facebook" />
+                android:text="@string/label_facebook"
+                android:visibility="gone" />
         </RadioGroup>
 
     </LinearLayout>

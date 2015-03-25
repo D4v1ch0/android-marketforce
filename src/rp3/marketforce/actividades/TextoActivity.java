@@ -73,7 +73,10 @@ public class TextoActivity extends ActividadActivity {
 
 	@Override
 	public void aceptarCambios(View v) {
-		act.setResultado(getTextViewString(R.id.actividad_texto_respuesta));
+        if(getTextViewString(R.id.actividad_texto_respuesta).equalsIgnoreCase(""))
+            act.setResultado(" ");
+        else
+		    act.setResultado(getTextViewString(R.id.actividad_texto_respuesta));
         //act.setIdsResultado(getTextViewString(R.id.actividad_texto_respuesta));
 
 		if(id_padre == 0)

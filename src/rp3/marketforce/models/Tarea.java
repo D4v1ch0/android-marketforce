@@ -1,6 +1,7 @@
 package rp3.marketforce.models;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -53,6 +54,8 @@ public class Tarea extends EntityBase<Tarea>
 		setValue(Contract.Tareas.COLUMN_NOMBRE_TAREA, this.nombreTarea);
 		setValue(Contract.Tareas.COLUMN_ESTADO_TAREA, this.estadoTarea);
 		setValue(Contract.Tareas.COLUMN_TIPO_TAREA, this.tipoTarea);
+        setValue(Contract.Tareas.COLUMN_FECHA_VIGENCIA_DESDE, this.fechaVigenciaDesde);
+        setValue(Contract.Tareas.COLUMN_FECHA_VIGENCIA_HASTA, this.fechaVigenciaHasta);
 		
 	}
 
@@ -165,6 +168,34 @@ public class Tarea extends EntityBase<Tarea>
     return tareas;
 
 }
+
+    public static List<Tarea> getTareasVigentes(DataBase db)
+    {
+        long hoy = Calendar.getInstance().getTime().getTime();
+        Cursor c = db.query(Contract.Tareas.TABLE_NAME, new String[]{ Contract.Tareas.COLUMN_TAREA_ID, Contract.Tareas.COLUMN_NOMBRE_TAREA,
+                Contract.Tareas.COLUMN_ESTADO_TAREA, Contract.Tareas.COLUMN_TIPO_TAREA, Contract.Tareas.COLUMN_FECHA_VIGENCIA_DESDE,
+                Contract.Tareas.COLUMN_FECHA_VIGENCIA_HASTA}, Contract.Tareas.COLUMN_FECHA_VIGENCIA_DESDE + " <= ? AND (" +
+                Contract.Tareas.COLUMN_FECHA_VIGENCIA_HASTA + " IS NULL OR " + Contract.Tareas.COLUMN_FECHA_VIGENCIA_HASTA + " >= ? )", new String[]{hoy + "", hoy + ""});
+        List<Tarea> tareas = new ArrayList<Tarea>();
+
+        if(c.moveToFirst())
+        {
+            do
+            {
+                Tarea tarea = new Tarea();
+                tarea.setIdTarea(CursorUtils.getInt(c, Contract.Tareas.COLUMN_TAREA_ID));
+                tarea.setNombreTarea(CursorUtils.getString(c, Contract.Tareas.COLUMN_NOMBRE_TAREA));
+                tarea.setTipoTarea(CursorUtils.getString(c, Contract.Tareas.COLUMN_TIPO_TAREA));
+                tarea.setEstadoTarea(CursorUtils.getString(c, Contract.Tareas.COLUMN_ESTADO_TAREA));
+                tarea.setFechaVigenciaDesde(CursorUtils.getDate(c, Contract.Tareas.COLUMN_FECHA_VIGENCIA_DESDE));
+                tarea.setFechaVigenciaHasta(CursorUtils.getDate(c, Contract.Tareas.COLUMN_FECHA_VIGENCIA_HASTA));
+                tareas.add(tarea);
+            }while(c.moveToNext());
+        }
+
+        return tareas;
+
+    }
 
     public static Tarea getTareaId(DataBase db, int id)
     {

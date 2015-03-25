@@ -56,7 +56,7 @@ public class TareasFragment extends BaseFragment {
 	        
 	        getDialog().setTitle("Tareas");
 	        
-	        tareas = Tarea.getTareas(getDataBase());
+	        tareas = Tarea.getTareasVigentes(getDataBase());
 		    for(Tarea tarea: tareas)
 			{
 		    	CheckBox setter = new CheckBox(getActivity());

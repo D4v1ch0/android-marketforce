@@ -266,7 +266,7 @@ public class GrupoActivity extends ActividadActivity {
 		//se coloca validacion para que la actividad no sea modificable
 		if(soloVista)
 		{
-			layout.setEnabled(false);
+            textoResp.setEnabled(false);
 		}
 		
 		layout.addView(texto);
@@ -458,7 +458,7 @@ public class GrupoActivity extends ActividadActivity {
 		//se coloca validacion para que la actividad no sea modificable
 		if(soloVista)
 		{
-			layout.setEnabled(false);
+            textoResp.setEnabled(false);
 		}
 		
 		layout.addView(texto);

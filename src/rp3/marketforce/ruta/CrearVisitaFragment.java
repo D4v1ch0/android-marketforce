@@ -9,12 +9,9 @@ import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import com.roomorama.caldroid.CaldroidFragment;
-import com.roomorama.caldroid.CaldroidListener;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -37,6 +34,10 @@ import android.widget.AutoCompleteTextView.OnDismissListener;
 import android.widget.Spinner;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.roomorama.caldroid.CaldroidFragment;
+import com.roomorama.caldroid.CaldroidListener;
+
 import rp3.app.BaseFragment;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
@@ -93,121 +94,141 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 		fragment.setArguments(arguments);
 		return fragment;
     }
-	
 
-	@Override
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+    }
+
+    @Override
 	public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
 		super.onFragmentCreateView(rootView, savedInstanceState);
-		
-		list_nombres = new ArrayList<String>();
-		list_tareas = new ArrayList<Tarea>();
-        arrayDuracion = this.getActivity().getResources()
-                .getStringArray(R.array.arrayDuracion);
 
-		cliente_auto = (AutoCompleteTextView) rootView.findViewById(R.id.crear_visita_cliente);
-	    desdePicker = (TimePicker) rootView.findViewById(R.id.reprogramar_visita_desde);
-	    
-	    setTimePickerInterval(desdePicker);
-	    
-	    desdePicker.setCurrentMinute(Calendar.getInstance().get(Calendar.MINUTE) / 5);
-		
-	    Calendar cal = Calendar.getInstance();
-	    cal.set(Calendar.HOUR_OF_DAY, 0);
-	    
-		list_cliente = Cliente.getClientAndContacts(getDataBase());
-		for(Cliente cli : list_cliente)
-		{
-			list_nombres.add(cli.getNombreCompleto().trim());
-		}
-		final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(),R.layout.spinner_small_text,list_nombres);
+            String lastText = "";
+            list_nombres = new ArrayList<String>();
+            if(list_tareas == null)
+                list_tareas = new ArrayList<Tarea>();
+            arrayDuracion = this.getActivity().getResources()
+                    .getStringArray(R.array.arrayDuracion);
 
-        SpinnerAdapter adapterDuracion = new ArrayAdapter<String>(getContext(), R.layout.spinner_small_text, arrayDuracion);
-        Duracion = ((TextView) rootView.findViewById(R.id.crear_visita_duracion));
-        TiempoViaje = ((TextView) rootView.findViewById(R.id.crear_visita_tiempo_viaje));
-        DesdeText = ((TextView) rootView.findViewById(R.id.crear_visita_desde_text));
+            if(cliente_auto != null)
+                lastText = cliente_auto.getText().toString();
 
-		cliente_auto.setAdapter(adapter);
-		cliente_auto.setThreshold(1);
-		
-		if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.JELLY_BEAN){
-		cliente_auto.setOnItemClickListener(new OnItemClickListener(){
+            cliente_auto = (AutoCompleteTextView) rootView.findViewById(R.id.crear_visita_cliente);
+            desdePicker = (TimePicker) rootView.findViewById(R.id.reprogramar_visita_desde);
 
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int pos, long id) {
-				ArrayList<String> direcciones = new ArrayList<String>();
-				int position = list_nombres.indexOf(adapter.getItem(pos));
-				if(position != -1)
-				{
-					for(ClienteDireccion cliDir : list_cliente.get(position).getClienteDirecciones())
-					{
-						direcciones.add(cliDir.getDireccion());
-					}
-					ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_small_text, direcciones);
-					((Spinner) rootView.findViewById(R.id.crear_visita_direccion)).setAdapter(adapter);
-				}
-				
-			}});
-		} else{
-			cliente_auto.setOnDismissListener(new OnDismissListener() {
-				
-				@Override
-				public void onDismiss() {
-					ArrayList<String> direcciones = new ArrayList<String>();
-					int position = list_nombres.indexOf(cliente_auto.getText().toString());
-					if(position != -1)
-					{
-						for(ClienteDireccion cliDir : list_cliente.get(position).getClienteDirecciones())
-						{
-							direcciones.add(cliDir.getDireccion());
-						}
-						ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_small_text, direcciones);
-						((Spinner) rootView.findViewById(R.id.crear_visita_direccion)).setAdapter(adapter);
-					}
-					
-				}
-			});
-		}
-		
-		((Button) rootView.findViewById(R.id.crear_visita_conf_tarea)).setOnClickListener(new OnClickListener(){
+            setTimePickerInterval(desdePicker);
 
-			@Override
-			public void onClick(View v) {
-				showDialogFragment(TareasFragment.newInstance(list_tareas), "Tareas");
-			}});
-		
-		setCalendar();
-        DesdeText.setText(format1.format(fecha.getTime()));
-        Duracion.setText(arrayDuracion[0]);
-        TiempoViaje.setText(arrayDuracion[0]);
+            desdePicker.setCurrentMinute(Calendar.getInstance().get(Calendar.MINUTE) / 5);
 
-        Duracion.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDuracion(ID_DURACION);
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+
+            list_cliente = Cliente.getClientAndContacts(getDataBase());
+            for (Cliente cli : list_cliente) {
+                list_nombres.add(cli.getNombreCompleto().trim());
             }
-        });
-        TiempoViaje.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDuracion(ID_TIEMPO);
-            }
-        });
+            final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(), R.layout.spinner_small_text, list_nombres);
 
-        ((LinearLayout) rootView.findViewById(R.id.crear_visita_desde_clickable)).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (rootView.findViewById(R.id.crear_visita_desde).getVisibility() == View.VISIBLE)
-                    rootView.findViewById(R.id.crear_visita_desde).setVisibility(View.GONE);
-                else
-                    rootView.findViewById(R.id.crear_visita_desde).setVisibility(View.VISIBLE);
+            SpinnerAdapter adapterDuracion = new ArrayAdapter<String>(getContext(), R.layout.spinner_small_text, arrayDuracion);
+            Duracion = ((TextView) rootView.findViewById(R.id.crear_visita_duracion));
+            TiempoViaje = ((TextView) rootView.findViewById(R.id.crear_visita_tiempo_viaje));
+            DesdeText = ((TextView) rootView.findViewById(R.id.crear_visita_desde_text));
+
+            cliente_auto.setAdapter(adapter);
+            cliente_auto.setThreshold(1);
+
+            if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                cliente_auto.setOnItemClickListener(new OnItemClickListener() {
+
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view,
+                                            int pos, long id) {
+                        ArrayList<String> direcciones = new ArrayList<String>();
+                        int position = list_nombres.indexOf(adapter.getItem(pos));
+                        if (position != -1) {
+                            for (ClienteDireccion cliDir : list_cliente.get(position).getClienteDirecciones()) {
+                                direcciones.add(cliDir.getDireccion());
+                            }
+                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_small_text, direcciones);
+                            ((Spinner) rootView.findViewById(R.id.crear_visita_direccion)).setAdapter(adapter);
+                        }
+
+                    }
+                });
+
+
+            } else {
+                cliente_auto.setOnDismissListener(new OnDismissListener() {
+
+                    @Override
+                    public void onDismiss() {
+                        ArrayList<String> direcciones = new ArrayList<String>();
+                        int position = list_nombres.indexOf(cliente_auto.getText().toString());
+                        if (position != -1) {
+                            for (ClienteDireccion cliDir : list_cliente.get(position).getClienteDirecciones()) {
+                                direcciones.add(cliDir.getDireccion());
+                            }
+                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_small_text, direcciones);
+                            ((Spinner) rootView.findViewById(R.id.crear_visita_direccion)).setAdapter(adapter);
+                        }
+
+                    }
+                });
             }
-        });
-		
-		if(getArguments().getString(ARG_FROM).equalsIgnoreCase("Cliente"))
-			setDatosCliente(getArguments().getLong(ARG_IDAGENDA));
-		else
-			setDatos(getArguments().getLong(ARG_IDAGENDA));
+
+            if(!lastText.equalsIgnoreCase("")) {
+                ArrayList<String> direcciones = new ArrayList<String>();
+                int position = list_nombres.indexOf(lastText);
+                if (position != -1) {
+                    for (ClienteDireccion cliDir : list_cliente.get(position).getClienteDirecciones()) {
+                        direcciones.add(cliDir.getDireccion());
+                    }
+                    ArrayAdapter<String> adapterDir = new ArrayAdapter<String>(getContext(), R.layout.spinner_small_text, direcciones);
+                    ((Spinner) rootView.findViewById(R.id.crear_visita_direccion)).setAdapter(adapterDir);
+                }
+            }
+
+            ((Button) rootView.findViewById(R.id.crear_visita_conf_tarea)).setOnClickListener(new OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    showDialogFragment(TareasFragment.newInstance(list_tareas), "Tareas");
+                }
+            });
+
+            setCalendar();
+            DesdeText.setText(format1.format(fecha.getTime()));
+            Duracion.setText(arrayDuracion[0]);
+            TiempoViaje.setText(arrayDuracion[0]);
+
+            Duracion.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showDuracion(ID_DURACION);
+                }
+            });
+            TiempoViaje.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showDuracion(ID_TIEMPO);
+                }
+            });
+
+            ((LinearLayout) rootView.findViewById(R.id.crear_visita_desde_clickable)).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (rootView.findViewById(R.id.crear_visita_desde).getVisibility() == View.VISIBLE)
+                        rootView.findViewById(R.id.crear_visita_desde).setVisibility(View.GONE);
+                    else
+                        rootView.findViewById(R.id.crear_visita_desde).setVisibility(View.VISIBLE);
+                }
+            });
+
+            if (getArguments().getString(ARG_FROM).equalsIgnoreCase("Cliente"))
+                setDatosCliente(getArguments().getLong(ARG_IDAGENDA));
+            else
+                setDatos(getArguments().getLong(ARG_IDAGENDA));
 	}
 
 	private void setDatosCliente(long id) {
@@ -527,6 +548,7 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 
 	 		};
 	 	caldroidFragment.setCaldroidListener(listener);
+        caldroidFragment.setBackgroundResourceForDate(R.color.caldroid_white, Calendar.getInstance().getTime());
 	 	caldroidFragment.setBackgroundResourceForDate(R.drawable.blue_border_date, fecha.getTime());
 	}
 

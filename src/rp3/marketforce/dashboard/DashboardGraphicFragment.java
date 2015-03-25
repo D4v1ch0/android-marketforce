@@ -5,12 +5,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import com.jjoe64.graphview.BarGraphView;
-import com.jjoe64.graphview.GraphView.GraphViewData;
-import com.jjoe64.graphview.GraphViewDataInterface;
-import com.jjoe64.graphview.GraphViewSeries;
-import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
-import com.jjoe64.graphview.ValueDependentColor;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -19,12 +13,18 @@ import android.graphics.Paint.Align;
 import android.os.Bundle;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.jjoe64.graphview.BarGraphView;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GraphViewDataInterface;
+import com.jjoe64.graphview.GraphViewSeries;
+import com.jjoe64.graphview.ValueDependentColor;
+
 import rp3.app.BaseFragment;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
@@ -94,7 +94,7 @@ public class DashboardGraphicFragment extends BaseFragment {
 	 	long time_fin = 0;
 	 	FrameLayout parent = (FrameLayout) LayoutInflater.from(getContext()).inflate(R.layout.fragment_dashboard_graphic_page, null);
 	 	
-	 	GraphViewSeriesStyle seriesStyle = new GraphViewSeriesStyle();
+	 	GraphViewSeries.GraphViewSeriesStyle seriesStyle = new GraphViewSeries.GraphViewSeriesStyle();
 	 	seriesStyle.setValueDependentColor(new ValueDependentColor() {
 	 	  @Override
 	 	  public int get(GraphViewDataInterface data) {
@@ -139,10 +139,10 @@ public class DashboardGraphicFragment extends BaseFragment {
 	 	int reprogramados = Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_REPROGRAMADO, time_inicio, time_fin);
 	 	pendientes = gestionados + reprogramados + pendientes;
 	 	
-	 	GraphViewSeries seriesHoy = new GraphViewSeries("Today", seriesStyle, new GraphViewData[] {
-	 	    new GraphViewData(1, visitados)
-	 	    , new GraphViewData(2, no_visitado)
-	 	    , new GraphViewData(3, pendientes)
+	 	GraphViewSeries seriesHoy = new GraphViewSeries("Today", seriesStyle, new GraphView.GraphViewData[] {
+	 	    new GraphView.GraphViewData(1, visitados)
+	 	    , new GraphView.GraphViewData(2, no_visitado)
+	 	    , new GraphView.GraphViewData(3, pendientes)
 	 	});
 	 	((TextView) parent.findViewById(R.id.grupo_total_visitas)).setText((visitados + no_visitado + pendientes) + " Visitas");
 	 	

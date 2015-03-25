@@ -337,6 +337,9 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
             {
                 menuRutas.findItem(R.id.action_search_ruta).setVisible(false);
                 menuRutas.findItem(R.id.action_crear_visita).setVisible(false);
+                menuRutas.findItem(R.id.action_cambiar_contacto).setVisible(true);
+                menuRutas.findItem(R.id.action_no_visita).setVisible(true);
+                menuRutas.findItem(R.id.action_reprogramar).setVisible(true);
                 if(selectedTransactionId != 0)
                 {
                     String estado = Agenda.getAgendaEstado(getDataBase(), selectedTransactionId);
