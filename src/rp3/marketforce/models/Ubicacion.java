@@ -142,8 +142,8 @@ public class Ubicacion extends rp3.data.entity.EntityBase<Ubicacion> {
 			{
 				Ubicacion ub = new Ubicacion();
 				ub.setID(CursorUtils.getLong(c, Contract.Ubicacion._ID));
-				ub.setLatitud(CursorUtils.getDouble(c, Contract.Ubicacion.COLUMN_LATITUD));
-				ub.setLongitud(CursorUtils.getDouble(c, Contract.Ubicacion.COLUMN_LONGITUD));
+				ub.setLatitud(CursorUtils.getFloat(c, Contract.Ubicacion.COLUMN_LATITUD));
+				ub.setLongitud(CursorUtils.getFloat(c, Contract.Ubicacion.COLUMN_LONGITUD));
 				ub.setFecha(CursorUtils.getLong(c, Contract.Ubicacion.COLUMN_FECHA));
 				ubicaciones.add(ub);
 			}while(c.moveToNext());
