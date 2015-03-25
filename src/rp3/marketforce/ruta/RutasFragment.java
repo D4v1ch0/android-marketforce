@@ -45,6 +45,8 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	private SlidingPaneLayout slidingPane;
 	private boolean openPane = true;
     private Menu menuRutas;
+    private boolean isMainFragment = true;
+
 
     public static RutasFragment newInstance(int transactionTypeId) {
 		RutasFragment fragment = new RutasFragment();
@@ -104,6 +106,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 			@Override
 			public void onPanelOpened(View panel) {
                 try {
+                    isMainFragment = true;
                     RefreshMenu();
                     if(selectedTransactionId != 0)
                         rutasListFragment.Refresh();
@@ -115,7 +118,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 
 			@Override
 			public void onPanelClosed(View panel) {
-                RefreshMenu();
+                isMainFragment = false;
 			}});
 		
 		if(!hasFragment(R.id.content_transaction_list))
@@ -300,10 +303,12 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 
     @Override
 	public void onTransactionSelected(long id) {
-		if(!mTwoPane)
-			slidingPane.closePane();
-        else
-            RefreshMenu();
+		if(!mTwoPane) {
+            isMainFragment = false;
+            slidingPane.closePane();
+        }
+
+        RefreshMenu();
 		
 		selectedTransactionId = id;
     	rutasDetailfragment = RutasDetailFragment.newInstance(selectedTransactionId);     	
@@ -333,7 +338,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
         menuRutas.findItem(R.id.submenu_rutas).setVisible(true);
         if(!mTwoPane)
         {
-            if(!slidingPane.isOpen())
+            if(!isMainFragment)
             {
                 menuRutas.findItem(R.id.action_search_ruta).setVisible(false);
                 menuRutas.findItem(R.id.action_crear_visita).setVisible(false);

@@ -32,8 +32,10 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
 	private ClientListFragment transactionListFragment;
 	private ClientDetailFragment transactionDetailFragment;
 	private SlidingPaneLayout slidingPane;
-	
+
+    private Menu menu;
 	public boolean mTwoPane = false;
+    public boolean isActiveListFragment = true;
 	private long selectedClientId;	
     
 	public static ClientFragment newInstance(int transactionTypeId) {
@@ -97,18 +99,17 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
 
 			@Override
 			public void onPanelOpened(View panel) {
-				getActivity().invalidateOptionsMenu();
-				if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.JELLY_BEAN_MR2) {
-					getActivity().getActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
-				}
-				
+                isActiveListFragment = true;
+                //getActivity().getActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
+				RefreshMenu();
 			}
 
 			@Override
 			public void onPanelClosed(View panel) {
-				getActivity().invalidateOptionsMenu();
-				getActivity().getActionBar().setHomeButtonEnabled(false);
-				getActivity().getActionBar().setHomeButtonEnabled(true);
+                isActiveListFragment = false;
+               // if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                   // getActivity().getActionBar().setHomeButtonEnabled(true);
+                //}
 			}});
 		
 //		if(getChildFragmentManager().findFragmentById(R.id.transaction_detail) == null){			
@@ -131,23 +132,11 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
 	
 	@Override
 	public void onAfterCreateOptionsMenu(Menu menu) {	
-		
+	  this.menu = menu;
       SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
       //SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
   	  SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
-  	  if(slidingPane!=null){
-	  	  if(!slidingPane.isOpen())
-	 	 {
-	 		 searchView.setVisibility(View.GONE);
-	 		 menu.removeItem(R.id.action_search);
-	 		 menu.removeItem(R.id.action_crear_cliente);
-	 	 }
-	 	 else
-	 	 {
-             menu.removeItem(R.id.action_editar_cliente);
-	 		 searchView.setVisibility(View.VISIBLE);
-	 	 }
-  	  }
+
   	  
   	 int searchicon = searchView.getContext().getResources().getIdentifier("android:id/search_mag_icon", null, null);
   	 ImageView searchIcon = (ImageView)searchView.findViewById(searchicon);
@@ -162,16 +151,32 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
           searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
       }
       searchView.setIconifiedByDefault(false);
-
+      RefreshMenu();
 	}
+
+    private void RefreshMenu(){
+        if(!mTwoPane){
+            menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
+            menu.findItem(R.id.action_crear_cliente).setVisible(isActiveListFragment);
+            menu.findItem(R.id.action_editar_cliente).setVisible(!isActiveListFragment);
+        }
+        else{
+            menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
+            menu.findItem(R.id.action_crear_cliente).setVisible(isActiveListFragment);
+            menu.findItem(R.id.action_editar_cliente).setVisible(selectedClientId!=0);
+        }
+    }
 	 
 	@Override
 	public void onClienteSelected(Cliente cl) {
 		selectedClientId = cl.getID();
-		
-		if(!mTwoPane)
-			slidingPane.closePane();
-		
+
+		if(!mTwoPane) {
+            slidingPane.closePane();
+            isActiveListFragment = false;
+        }
+        RefreshMenu();
+
 		transactionDetailFragment = ClientDetailFragment.newInstance(cl);
 		setFragment(R.id.content_transaction_detail, transactionDetailFragment);
 	}

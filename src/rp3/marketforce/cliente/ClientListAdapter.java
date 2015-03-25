@@ -48,11 +48,13 @@ public class ClientListAdapter extends SectionAdapter{
 	public ClientListAdapter(Context c,ArrayList<ArrayList<rp3.marketforce.models.Cliente>> data, List<String> headersortList, 
 			int order,ClienteListFragmentListener clienteListFragmentCallback){
 		this.dataList = data;
-		this.inflater = LayoutInflater.from(c);
-		this.contex = c;
-		this.headersortList = headersortList;
-		this.order= order;
-		this.clienteListFragmentCallback = clienteListFragmentCallback;
+        if(c!=null) {
+            this.inflater = LayoutInflater.from(c);
+            this.contex = c;
+            this.headersortList = headersortList;
+            this.order = order;
+            this.clienteListFragmentCallback = clienteListFragmentCallback;
+        }
 	}
 	
 	@Override

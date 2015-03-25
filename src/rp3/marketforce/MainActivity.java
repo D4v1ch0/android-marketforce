@@ -88,12 +88,14 @@ public class MainActivity extends rp3.app.NavActivity{
 
 	@SuppressLint("NewApi")
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {		
+	protected void onCreate(Bundle savedInstanceState) {
+        setNavMode(NavActivity.NAV_MODE_SLIDING_PANE);
+
 		super.onCreate(savedInstanceState);		
 		Session.Start(this);
 		rp3.configuration.Configuration.TryInitializeConfiguration(this, DbOpenHelper.class);
 
-		extractDatabase();
+		//extractDatabase();
 		
 		this.setNavHeaderTitle(Session.getUser().getFullName());
 		this.setNavHeaderSubtitle(PreferenceManager.getString(Contants.KEY_CARGO));
@@ -134,51 +136,7 @@ public class MainActivity extends rp3.app.NavActivity{
     @Override
 	protected void onStart() {
 		super.onStart();
-        getActionBar().setTitle(lastTitle);
-		if(Screen.isMinLargeLayoutSize(getApplicationContext())){
-			SlidingPaneLayout sp = (SlidingPaneLayout) findViewById(rp3.core.R.id.drawer_layout);
-			sp.setPanelSlideListener(new PanelSlideListener(){
 
-				@Override
-				public void onPanelSlide(View panel, float slideOffset) {
-				}
-
-				@Override
-				public void onPanelOpened(View panel) {
-					lastTitle = getTitle().toString();
-					setTitle("RP3 Market Force");
-				}
-
-				@Override
-				public void onPanelClosed(View panel) {
-					setTitle(lastTitle);	
-				}});
-		}
-		else
-		{
-			DrawerLayout drawerLayout = (DrawerLayout) findViewById(rp3.core.R.id.drawer_layout);
-			ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
-					rp3.core.R.drawable.ic_drawer, // nav menu toggle icon
-					R.string.app_name, // nav drawer open - description for
-										// accessibility
-					R.string.app_name // nav drawer close - description for
-										// accessibility
-			) {
-				public void onDrawerClosed(View view) {
-					getActionBar().setTitle(lastTitle);
-					// calling onPrepareOptionsMenu() to show action bar icons
-					invalidateOptionsMenu();
-				}
-	
-				public void onDrawerOpened(View drawerView) {
-					lastTitle = getActionBar().getTitle().toString();
-					getActionBar().setTitle("RP3 Market Force");
-					// calling onPrepareOptionsMenu() to hide action bar icons
-					invalidateOptionsMenu();
-				}
-			};
-			drawerLayout.setDrawerListener(actionBarDrawerToggle);
-		}
 	}
 	
 	@Override
@@ -424,7 +382,7 @@ public class MainActivity extends rp3.app.NavActivity{
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
     	super.onConfigurationChanged(newConfig);
-    	getActionBar().setTitle(lastTitle);
+
         invalidateOptionsMenu();
     }
     
