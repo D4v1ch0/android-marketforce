@@ -43,6 +43,7 @@ public class DashboardGrupoFragment extends BaseFragment {
 	private ViewPager PagerDetalles;
 	private DetailsPageAdapter pagerAdapter;
 	private PagerTabStrip tabStrip;
+    private boolean asc_pending = true, asc_unvisited = true, asc_visited = true;
 	
 	public static DashboardGrupoFragment newInstance(int i) {
 		DashboardGrupoFragment fragment = new DashboardGrupoFragment();
@@ -96,33 +97,41 @@ public class DashboardGrupoFragment extends BaseFragment {
 	 	fin.set(Calendar.HOUR_OF_DAY, 23);
 	 	fin.set(Calendar.MINUTE, 59);
 	 	fin.set(Calendar.SECOND, 59);
+
+        String prueba = inicio.getTime().toString();
+        String prueba2 = fin.getTime().toString();
 	 	
 	 	pagerAdapter.addView(createGraphics("Hoy", inicio.getTimeInMillis(), fin.getTimeInMillis()));
 	 	
 	 	inicio = Calendar.getInstance();
-	 	
-	 	inicio.set(Calendar.HOUR_OF_DAY, 0);
-	 	inicio.set(Calendar.MINUTE, 0);
-	 	inicio.set(Calendar.SECOND, 0);
+
+        inicio.set(Calendar.HOUR_OF_DAY, 23);
+        inicio.set(Calendar.MINUTE, 59);
+        inicio.set(Calendar.SECOND, 59);
 	 	inicio.add(Calendar.DATE, - 7);
 	 	
 	 	pagerAdapter.addView(createGraphics("Esta semana", inicio.getTimeInMillis(), fin.getTimeInMillis()));
 	 	
 	 	inicio = Calendar.getInstance();
-	 	
-	 	inicio.set(Calendar.HOUR_OF_DAY, 0);
-	 	inicio.set(Calendar.MINUTE, 0);
-	 	inicio.set(Calendar.SECOND, 0);
+
+        inicio.set(Calendar.HOUR_OF_DAY, 23);
+        inicio.set(Calendar.MINUTE, 59);
+        inicio.set(Calendar.SECOND, 59);
 	 	inicio.set(Calendar.DATE, 1);
+        inicio.add(Calendar.DATE, -1);
+
+        prueba = inicio.getTime().toString();
+        prueba2 = fin.getTime().toString();
 	 	
-	 	pagerAdapter.addView(createGraphics("Esta mes", inicio.getTimeInMillis(), fin.getTimeInMillis()));
+	 	pagerAdapter.addView(createGraphics("Este mes", inicio.getTimeInMillis(), fin.getTimeInMillis()));
 	 	
 	 	inicio = Calendar.getInstance();
-	 	
-	 	inicio.set(Calendar.HOUR_OF_DAY, 0);
-	 	inicio.set(Calendar.MINUTE, 0);
-	 	inicio.set(Calendar.SECOND, 0);	 	
-	 	inicio.set(Calendar.DATE, 1);
+
+        inicio.set(Calendar.HOUR_OF_DAY, 23);
+        inicio.set(Calendar.MINUTE, 59);
+        inicio.set(Calendar.SECOND, 59);
+        inicio.set(Calendar.DATE, 1);
+        inicio.add(Calendar.DATE, -1);
 	 	inicio.add(Calendar.MONTH, -1);
 	 	
 	 	fin = Calendar.getInstance();
@@ -130,18 +139,20 @@ public class DashboardGrupoFragment extends BaseFragment {
 	 	fin.set(Calendar.HOUR_OF_DAY, 23);
 	 	fin.set(Calendar.MINUTE, 59);
 	 	fin.set(Calendar.SECOND, 59);
-	 	fin.set(Calendar.DATE, 30);
-	 	fin.add(Calendar.MONTH, -1);
+        fin.add(Calendar.MONTH, -1);
+	 	fin.set(Calendar.DAY_OF_MONTH, fin.getActualMaximum(Calendar.DAY_OF_MONTH));
+
 	 	
-	 	String mes = format1.format(inicio.getTime());
+	 	String mes = format1.format(fin.getTime());
 	 	pagerAdapter.addView(createGraphics(mes.substring(0, 1).toUpperCase() + mes.substring(1), inicio.getTimeInMillis(), fin.getTimeInMillis()));
 	 	
 	 	inicio = Calendar.getInstance();
-	 	
-	 	inicio.set(Calendar.HOUR_OF_DAY, 0);
-	 	inicio.set(Calendar.MINUTE, 0);
-	 	inicio.set(Calendar.SECOND, 0);	 	
-	 	inicio.set(Calendar.DATE, 1);
+
+        inicio.set(Calendar.HOUR_OF_DAY, 23);
+        inicio.set(Calendar.MINUTE, 59);
+        inicio.set(Calendar.SECOND, 59);
+        inicio.set(Calendar.DATE, 1);
+        inicio.add(Calendar.DATE, -1);
 	 	inicio.add(Calendar.MONTH, -2);
 	 	
 	 	fin = Calendar.getInstance();
@@ -149,10 +160,11 @@ public class DashboardGrupoFragment extends BaseFragment {
 	 	fin.set(Calendar.HOUR_OF_DAY, 23);
 	 	fin.set(Calendar.MINUTE, 59);
 	 	fin.set(Calendar.SECOND, 59);
-	 	fin.set(Calendar.DATE, 30);
-	 	fin.add(Calendar.MONTH, -2);
+        fin.add(Calendar.MONTH, -2);
+        fin.set(Calendar.DAY_OF_MONTH, fin.getActualMaximum(Calendar.DAY_OF_MONTH));
+
 	 	
-	 	mes = format1.format(inicio.getTime());
+	 	mes = format1.format(fin.getTime());
 	 	pagerAdapter.addView(createGraphics(mes.substring(0, 1).toUpperCase() + mes.substring(1), inicio.getTimeInMillis(), fin.getTimeInMillis()));
 	 	
     	pagerAdapter.setTitles(titles.toArray(new String[]{}));
@@ -232,8 +244,29 @@ public class DashboardGrupoFragment extends BaseFragment {
 	 	interim.setValuesOnTopColor(getContext().getResources().getColor(R.color.color_text_sky_blue));
 	 	((LinearLayout)parent.findViewById(R.id.dashboard_grupo_grafico)).addView(interim);
 	 	
-	 	ResumenAdapter adapter = new ResumenAdapter(getContext(), list_resumen);
+	 	final ResumenAdapter adapter = new ResumenAdapter(getContext(), list_resumen);
 	 	((ListView)parent.findViewById(R.id.grupo_list_view)).setAdapter(adapter);
+        parent.findViewById(R.id.header_pending).setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View view) {
+                 adapter.Sort(Contants.ESTADO_PENDIENTE, asc_pending);
+                 asc_pending = !asc_pending;
+             }
+         });
+         parent.findViewById(R.id.header_unvisited).setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View view) {
+                 adapter.Sort(Contants.ESTADO_NO_VISITADO, asc_unvisited);
+                 asc_unvisited = !asc_unvisited;
+             }
+         });
+         parent.findViewById(R.id.header_visited).setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View view) {
+                 adapter.Sort(Contants.ESTADO_VISITADO, asc_visited);
+                 asc_visited = !asc_visited;
+             }
+         });
 	 	return parent;
 	 }
 

@@ -155,6 +155,7 @@ public final class Contract {
 		public static final String COLUMN_REFERENCIA = "Referencia";
 		public static final String COLUMN_LATITUD = "Latitud";
 		public static final String COLUMN_LONGITUD = "Longitud";
+        public static final String COLUMN_CIUDAD_DESCRIPCION = "CiudadDescripcion";
 		
 		public static final String FIELD_CLIENTE_ID = COLUMN_CLIENTE_ID;
 		public static final String FIELD_CLIENTE_DIRECCION_ID = COLUMN_CLIENTE_DIRECCION_ID;
@@ -333,6 +334,7 @@ public final class Contract {
 		public static final String TABLE_NAME = "tbAgendaTareaActividades";
 		
 		public static final String COLUMN_AGENDA_ID = "IdAgenda";
+        public static final String COLUMN_AGENDA_ID_EXT = "_IdAgenda";
 		public static final String COLUMN_RUTA_ID = "IdRuta";
 		public static final String COLUMN_TAREA_ID = "IdTarea";
 		public static final String COLUMN_TAREA_ACTIVIDAD_ID = "IdTareaActividad";
@@ -340,6 +342,7 @@ public final class Contract {
         public static final String COLUMN_IDS_RESULTADO = "IdsResultados";
 		
 		public static final String FIELD_AGENDA_ID = COLUMN_AGENDA_ID;
+        public static final String FIELD_AGENDA_ID_EXT = COLUMN_AGENDA_ID_EXT;
 		public static final String FIELD_RUTA_ID = COLUMN_RUTA_ID;
 		public static final String FIELD_TAREA_ID = COLUMN_TAREA_ID;
 		public static final String FIELD_TAREA_ACTIVIDAD_ID = COLUMN_TAREA_ACTIVIDAD_ID;
@@ -451,4 +454,40 @@ public final class Contract {
 		public static final String FIELD_FECHA = COLUMN_FECHA;
 
 	}
+
+    public static abstract class AgentesUbicacion implements BaseColumns {
+
+        public static final String TABLE_NAME = "tbAgentesUbicacion";
+
+        public static final String COLUMN_ID_AGENTE = "IdAgente";
+        public static final String COLUMN_NOMBRES= "Nombres";
+        public static final String COLUMN_APELLIDOS= "Apellidos";
+        public static final String COLUMN_FECHA = "Fecha";
+        public static final String COLUMN_LATITUD = "Latitud";
+        public static final String COLUMN_LONGITUD= "Longitud";
+
+        public static final String FIELD_ID_AGENTE = COLUMN_ID_AGENTE;
+        public static final String FIELD_NOMBRES = COLUMN_NOMBRES;
+        public static final String FIELD_APELLIDOS = COLUMN_APELLIDOS;
+        public static final String FIELD_FECHA = COLUMN_FECHA;
+        public static final String FIELD_LATITUD = COLUMN_LATITUD;
+        public static final String FIELD_LONGITUD = COLUMN_LONGITUD;
+
+    }
+
+    public static abstract class Campos implements BaseColumns {
+
+        public static final String TABLE_NAME = "tbCampos";
+
+        public static final String COLUMN_ID_CAMPO = "IdCampo";
+        public static final String COLUMN_CREACION = "Creacion";
+        public static final String COLUMN_MODIFICACION = "Modificacion";
+        public static final String COLUMN_GESTION = "Gestion";
+
+        public static final String FIELD_ID_CAMPO = COLUMN_ID_CAMPO;
+        public static final String FIELD_CREACION = COLUMN_CREACION;
+        public static final String FIELD_MODIFICACION = COLUMN_MODIFICACION;
+        public static final String FIELD_GESTION = COLUMN_GESTION;
+
+    }
 }

@@ -321,8 +321,10 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 			{
 				if(!lista.get(x).getTipoPersona().equalsIgnoreCase("J"))
 				{
-					if(!headersortList.contains(""+lista.get(x).getApellido1().toUpperCase().charAt(0)))
-						headersortList.add(""+lista.get(x).getApellido1().toUpperCase().charAt(0));
+                    if(lista.get(x).getApellido1().length() > 0) {
+                        if (!headersortList.contains("" + lista.get(x).getApellido1().toUpperCase().charAt(0)))
+                            headersortList.add("" + lista.get(x).getApellido1().toUpperCase().charAt(0));
+                    }
 				}
 				else
 				{
@@ -340,7 +342,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 				for(int y = 0 ; y < lista.size() ; y++)
 				{
 					if(lista.get(y).getTipoPersona().equalsIgnoreCase("N") || lista.get(y).getTipoPersona().equalsIgnoreCase("C"))
-					if(headersortList.get(x).equals(""+lista.get(y).getApellido1().toUpperCase().charAt(0)))
+					if(lista.get(y).getApellido1().length() > 0 && headersortList.get(x).equals(""+lista.get(y).getApellido1().toUpperCase().charAt(0)))
 					{
 						rp3.marketforce.models.Cliente cliente = new rp3.marketforce.models.Cliente();
 						

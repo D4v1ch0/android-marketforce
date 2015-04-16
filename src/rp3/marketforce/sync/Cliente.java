@@ -115,6 +115,8 @@ public class Cliente {
                                     clienteDir.setTelefono1("" + str.getString("Telefono1"));
                                     clienteDir.setTelefono2("" + str.getString("Telefono2"));
                                     clienteDir.setTipoDireccion("" + str.getString("TipoDireccion"));
+                                    if(!str.isNull("CiudadDescripcion") && !str.getString("CiudadDescripcion").equalsIgnoreCase("null"))
+                                        clienteDir.setCiudadDescripcion("" + str.getString("CiudadDescripcion"));
 
                                     if (str.getBoolean("EsPrincipal")) {
                                         clienteDir.setEsPrincipal(true);
@@ -123,6 +125,7 @@ public class Cliente {
                                     } else
                                         clienteDir.setEsPrincipal(false);
 
+                                    clienteDir.set_idCliente(0);
                                     rp3.marketforce.models.ClienteDireccion.insert(db, clienteDir);
                                 }
                             }
@@ -261,7 +264,14 @@ public class Cliente {
 					jObjectDir.put("Latitud", cl.getClienteDirecciones().get(i).getLatitud());
 					jObjectDir.put("Longitud", cl.getClienteDirecciones().get(i).getLongitud());
 					jObjectDir.put("Referencia", cl.getClienteDirecciones().get(i).getReferencia());
-					jObjectDir.put("IdCiudad", cl.getClienteDirecciones().get(i).getIdCiudad());
+                    if(cl.getClienteDirecciones().get(i).getIdCiudad() == 0) {
+                        jObjectDir.put("IdCiudad", "null");
+                        jObjectDir.put("CiudadDescripcion", cl.getClienteDirecciones().get(i).getCiudadDescripcion());
+                    }
+                    else
+                        jObjectDir.put("IdCiudad", cl.getClienteDirecciones().get(i).getIdCiudad());
+                    //if(cl.getClienteDirecciones().get(i).getCiudadDescripcion() != null && !cl.getClienteDirecciones().get(i).getCiudadDescripcion().equalsIgnoreCase("null"))
+
 					jObjectDir.put("Telefono1", cl.getClienteDirecciones().get(i).getTelefono1());
 					jObjectDir.put("Telefono2", cl.getClienteDirecciones().get(i).getTelefono2());
 					jObjectDir.put("TipoDireccion", cl.getClienteDirecciones().get(i).getTipoDireccion());
@@ -442,7 +452,12 @@ public class Cliente {
 					jObjectDir.put("Latitud", cl.getClienteDirecciones().get(i).getLatitud());
 					jObjectDir.put("Longitud", cl.getClienteDirecciones().get(i).getLongitud());
 					jObjectDir.put("Referencia", cl.getClienteDirecciones().get(i).getReferencia());
-                    jObjectDir.put("IdCiudad", cl.getClienteDirecciones().get(i).getIdCiudad());
+                    if(cl.getClienteDirecciones().get(i).getIdCiudad() == 0) {
+                        jObjectDir.put("IdCiudad", "null");
+                        jObjectDir.put("CiudadDescripcion", cl.getClienteDirecciones().get(i).getCiudadDescripcion());
+                    }
+                    else
+                        jObjectDir.put("IdCiudad", cl.getClienteDirecciones().get(i).getIdCiudad());
 					jObjectDir.put("Telefono1", cl.getClienteDirecciones().get(i).getTelefono1());
 					jObjectDir.put("Telefono2", cl.getClienteDirecciones().get(i).getTelefono2());
 					jObjectDir.put("TipoDireccion", cl.getClienteDirecciones().get(i).getTipoDireccion());
@@ -631,7 +646,12 @@ public class Cliente {
 						jObjectDir.put("Latitud", cl.getClienteDirecciones().get(i).getLatitud());
 						jObjectDir.put("Longitud", cl.getClienteDirecciones().get(i).getLongitud());
 						jObjectDir.put("Referencia", cl.getClienteDirecciones().get(i).getReferencia());
-						jObjectDir.put("IdCiudad", cl.getClienteDirecciones().get(i).getIdCiudad());
+                        if(cl.getClienteDirecciones().get(i).getIdCiudad() == 0) {
+                            jObjectDir.put("IdCiudad", "null");
+                            jObjectDir.put("CiudadDescripcion", cl.getClienteDirecciones().get(i).getCiudadDescripcion());
+                        }
+                        else
+                            jObjectDir.put("IdCiudad", cl.getClienteDirecciones().get(i).getIdCiudad());
 						jObjectDir.put("Telefono1", cl.getClienteDirecciones().get(i).getTelefono1());
 						jObjectDir.put("Telefono2", cl.getClienteDirecciones().get(i).getTelefono2());
 						jObjectDir.put("TipoDireccion", cl.getClienteDirecciones().get(i).getTipoDireccion());
@@ -776,7 +796,13 @@ public class Cliente {
 						jObjectDir.put("Latitud", cl.getClienteDirecciones().get(i).getLatitud());
 						jObjectDir.put("Longitud", cl.getClienteDirecciones().get(i).getLongitud());
 						jObjectDir.put("Referencia", cl.getClienteDirecciones().get(i).getReferencia());
-						jObjectDir.put("IdCiudad", cl.getClienteDirecciones().get(i).getIdCiudad());
+                        if(cl.getClienteDirecciones().get(i).getIdCiudad() == 0) {
+                            jObjectDir.put("IdCiudad", "null");
+                            jObjectDir.put("CiudadDescripcion", cl.getClienteDirecciones().get(i).getCiudadDescripcion());
+                        }
+                        else
+                            jObjectDir.put("IdCiudad", cl.getClienteDirecciones().get(i).getIdCiudad());
+
 						jObjectDir.put("Telefono1", cl.getClienteDirecciones().get(i).getTelefono1());
 						jObjectDir.put("Telefono2", cl.getClienteDirecciones().get(i).getTelefono2());
 						jObjectDir.put("TipoDireccion", cl.getClienteDirecciones().get(i).getTipoDireccion());

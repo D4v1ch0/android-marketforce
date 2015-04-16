@@ -64,6 +64,7 @@ public class ClienteDireccion extends rp3.data.entity.EntityBase<ClienteDireccio
 		setValue(Contract.ClienteDireccion.COLUMN_CLIENTE_ID_EXT, this._idCliente);
 		setValue(Contract.ClienteDireccion.COLUMN_ES_PRINCIPAL, this.esPrincipal);	
 		setValue(Contract.ClienteDireccion.COLUMN_CIUDAD_ID, this.idCiudad);
+        setValue(Contract.ClienteDireccion.COLUMN_CIUDAD_DESCRIPCION, this.ciudadDescripcion);
 		
 	}
 
@@ -207,7 +208,7 @@ public class ClienteDireccion extends rp3.data.entity.EntityBase<ClienteDireccio
 			tpd.setReferencia(CursorUtils.getString(c, Contract.ClienteDireccion.FIELD_REFERENCIA));
 			tpd.setLatitud(CursorUtils.getDouble(c, Contract.ClienteDireccion.FIELD_LATITUD));
 			tpd.setLongitud(CursorUtils.getDouble(c, Contract.ClienteDireccion.FIELD_LONGITUD));
-			tpd.setCiudadDescripcion(CursorUtils.getString(c, Contract.ClienteDireccion.FIELD_CIUDAD));
+			tpd.setCiudadDescripcion(CursorUtils.getString(c, Contract.ClienteDireccion.COLUMN_CIUDAD_DESCRIPCION));
 			
 			list.add(tpd);
 		}
@@ -254,6 +255,7 @@ public class ClienteDireccion extends rp3.data.entity.EntityBase<ClienteDireccio
 		while(c.moveToNext()){
 			tpd = new ClienteDireccion();
 			tpd.setID(CursorUtils.getInt(c,Contract.ClienteDireccion._ID));
+            tpd.setIdClienteDireccion(CursorUtils.getInt(c,Contract.ClienteDireccion.COLUMN_CLIENTE_DIRECCION_ID));
 			tpd.setIdCliente(CursorUtils.getLong(c, Contract.ClienteDireccion.FIELD_CLIENTE_ID));
 			tpd.setDireccion(CursorUtils.getString(c, Contract.ClienteDireccion.FIELD_DIRECCION));
 			tpd.setEsPrincipal(CursorUtils.getBoolean(c, Contract.ClienteDireccion.FIELD_ES_PRINCIPAL));
@@ -262,6 +264,7 @@ public class ClienteDireccion extends rp3.data.entity.EntityBase<ClienteDireccio
 			tpd.setTelefono2(CursorUtils.getString(c, Contract.ClienteDireccion.FIELD_TELEFONO2));
 			tpd.setLatitud(CursorUtils.getDouble(c, Contract.ClienteDireccion.FIELD_LATITUD));
 			tpd.setLongitud(CursorUtils.getDouble(c, Contract.ClienteDireccion.FIELD_LONGITUD));
+            tpd.setReferencia(CursorUtils.getString(c, Contract.ClienteDireccion.FIELD_REFERENCIA));
 			
 		}
 		return tpd;
@@ -277,6 +280,7 @@ public class ClienteDireccion extends rp3.data.entity.EntityBase<ClienteDireccio
 		while(c.moveToNext()){
 			tpd = new ClienteDireccion();
 			tpd.setID(CursorUtils.getInt(c,Contract.ClienteDireccion._ID));
+            tpd.setIdClienteDireccion(CursorUtils.getInt(c,Contract.ClienteDireccion.COLUMN_CLIENTE_DIRECCION_ID));
 			tpd.setIdCliente(CursorUtils.getLong(c, Contract.ClienteDireccion.FIELD_CLIENTE_ID));
 			tpd.setDireccion(CursorUtils.getString(c, Contract.ClienteDireccion.FIELD_DIRECCION));
 			tpd.setEsPrincipal(CursorUtils.getBoolean(c, Contract.ClienteDireccion.FIELD_ES_PRINCIPAL));
@@ -285,6 +289,7 @@ public class ClienteDireccion extends rp3.data.entity.EntityBase<ClienteDireccio
 			tpd.setTelefono2(CursorUtils.getString(c, Contract.ClienteDireccion.FIELD_TELEFONO2));
 			tpd.setLatitud(CursorUtils.getDouble(c, Contract.ClienteDireccion.FIELD_LATITUD));
 			tpd.setLongitud(CursorUtils.getDouble(c, Contract.ClienteDireccion.FIELD_LONGITUD));
+            tpd.setReferencia(CursorUtils.getString(c, Contract.ClienteDireccion.FIELD_REFERENCIA));
 			
 		}
 		return tpd;

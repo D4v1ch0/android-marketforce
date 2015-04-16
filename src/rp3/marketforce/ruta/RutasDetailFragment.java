@@ -12,6 +12,7 @@ import rp3.maps.utils.SphericalUtil;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.actividades.ActividadActivity;
+import rp3.marketforce.actividades.ActualizacionActivity;
 import rp3.marketforce.actividades.CheckboxActivity;
 import rp3.marketforce.actividades.GrupoActivity;
 import rp3.marketforce.actividades.MultipleActivity;
@@ -34,9 +35,11 @@ import rp3.util.LocationUtils.OnLocationResultListener;
 import rp3.util.Screen;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.graphics.BitmapFactory;
@@ -51,6 +54,7 @@ import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.Intents;
 import android.provider.ContactsContract.RawContacts;
+import android.provider.MediaStore;
 import android.support.v4.view.MenuItemCompat;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -59,6 +63,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -88,6 +93,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 	private SimpleDateFormat format2;
 	protected ObservacionesFragment obsFragment;
     public boolean reDoMenu = true;
+    Uri photo = Utils.getOutputMediaFileUri(Utils.MEDIA_TYPE_IMAGE);
     private Menu menuRutas;
     public interface TransactionDetailListener{
     	public void onDeleteSuccess(Cliente transaction);
@@ -226,10 +232,34 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                 setViewVisibility(R.id.detail_agenda_button_modificar, View.GONE);
             }
 
+            ((ImageView) this.getRootView().findViewById(R.id.map_image)).setClickable(true);
+            ((ImageView) this.getRootView().findViewById(R.id.map_image)).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), FotoActivity.class);
+                    intent.putExtra(ARG_ITEM_ID, agenda.getID());
+                    startActivity(intent);
+                }
+            });
             adapter = new ListaTareasAdapter(getActivity(), agenda.getAgendaTareas());
             lista_tarea.setAdapter(adapter);
             adapter.notifyDataSetChanged();
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            String path = "";
+            if (data == null)
+                path = photo.getPath();
+            else
+                path = Utils.getPath(data.getData(), getActivity());
+            ((ImageView) this.getRootView().findViewById(R.id.map_image)).setImageBitmap(Utils.resizeBitMapImage(path, 500, 500));
+            Cliente cli = Cliente.getClienteID(getDataBase(), agenda.getCliente().getID(), false);
+            cli.setURLFoto(path);
+            Cliente.update(getDataBase(), cli);
+        }
     }
       
     
@@ -267,7 +297,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 				intent.putExtra(ARG_ITEM_ID, agenda.getID());
 				startActivity(intent);
 			}
-		   });
+            		   });
 			
 			
 		   setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());
@@ -443,8 +473,10 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 						}
 					}
 					if(setter.getTipoTarea().equalsIgnoreCase("E"))
-						showTareaGrupo(setter);	
-				}});
+						showTareaGrupo(setter);
+                    if(setter.getTipoTarea().equalsIgnoreCase("ADC") && !soloVista)
+                        showTareaActualizacion(setter);
+                }});
 			   
 			   if(agenda.getAgendaTareas().size() == 0)
 			   {
@@ -495,6 +527,34 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
+    protected void takePicture(final int idView) {
+        AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(this.getActivity());
+        myAlertDialog.setTitle("Fotografía");
+        myAlertDialog.setMessage("Obtener de");
+
+        myAlertDialog.setPositiveButton("Galería",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        Intent galleryIntent = new Intent();
+                        galleryIntent.setType("image/*");
+                        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                        galleryIntent.putExtra("return-data", true);
+                        getActivity().startActivityForResult(galleryIntent, idView);
+                    }
+                });
+
+        myAlertDialog.setNegativeButton("Cámara",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        Intent captureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                        captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photo);
+                        getActivity().startActivityForResult(captureIntent, idView);
+
+                    }
+                });
+        myAlertDialog.show();
+    }
 	
 	public void showTareaTexto(Actividad ata, AgendaTarea setter)
 	{
@@ -502,6 +562,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 		intent.putExtra(ARG_ITEM_ID, ata.getIdTarea());
 		intent.putExtra(ARG_AGENDA_ID, setter.getIdAgenda());
 		intent.putExtra(ARG_RUTA_ID, setter.getIdRuta());
+        intent.putExtra(ActividadActivity.ARG_AGENDA_INT, setter.get_idAgenda());
         intent.putExtra(ActividadActivity.ARG_TAREA, setter.getIdTarea());
 		intent.putExtra(ActividadActivity.ARG_VISTA, soloVista);
 		intent.putExtra(ActividadActivity.ARG_TITULO, setter.getNombreTarea());
@@ -551,6 +612,17 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 		startActivity(intent);
 	}
 
+    public void showTareaActualizacion(AgendaTarea agt)
+    {
+        Intent intent = new Intent(getContext(), ActualizacionActivity.class);
+        intent.putExtra(ARG_ITEM_ID, agt.getIdTarea());
+        intent.putExtra(ARG_AGENDA_ID, agt.getIdAgenda());
+        intent.putExtra(ARG_RUTA_ID, agt.getIdRuta());
+        intent.putExtra(ActividadActivity.ARG_AGENDA_INT, agenda.getID());
+        intent.putExtra(ActividadActivity.ARG_VISTA, soloVista);
+        intent.putExtra(ActividadActivity.ARG_TITULO, agt.getNombreTarea());
+        startActivity(intent);
+    }
 
 	@Override
 	public void onResumir() {

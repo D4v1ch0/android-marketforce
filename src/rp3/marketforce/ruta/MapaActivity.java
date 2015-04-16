@@ -22,6 +22,8 @@ import org.json.JSONObject;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -56,6 +58,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -95,7 +99,9 @@ public class MapaActivity extends BaseActivity {
 	View lastItem;
 
 	private SimpleDateFormat format1;
-	/** Called when the activity is first created. */
+    private SupportMapFragment mapFragment;
+
+    /** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
@@ -106,43 +112,61 @@ public class MapaActivity extends BaseActivity {
 	    DManager = new DrawableManager();
 	    setContentView(R.layout.layout_map_rutas);
 	    setHomeAsUpEnabled(true, true);
-	    map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
-	        .getMap();
-	    map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Contants.LATITUD, Contants.LONGITUD), Contants.ZOOM), 1, null);
-	    map.getUiSettings().setZoomControlsEnabled(false);
-	    
-	    expand = (ImageButton) findViewById(R.id.map_expand);
-	    collapse = (ImageButton) findViewById(R.id.map_collapse);
-	    listview = (ListView) findViewById(R.id.map_list);
-	    persona = (LinearLayout) findViewById(R.id.map_contact);
-	    ComoLlegar = (Button) findViewById(R.id.map_como_llegar);
-	    Posicion = (Button) findViewById(R.id.map_posicion);
-	    RutasFechas = (Button) findViewById(R.id.map_ruta_por_fecha);
+        showDialogProgress("Cargando", "Mostrando Mapa");
+        final String action = getIntent().getExtras().getString(ACTION_TYPE);
+        new Handler().postDelayed(new Runnable() {
 
-	    persona.setVisibility(View.GONE);
-	    expand.setVisibility(View.GONE);
-	    listview.setVisibility(View.INVISIBLE);
-	    
-	    String action = getIntent().getExtras().getString(ACTION_TYPE);
-	    
-	    if(action.equalsIgnoreCase(ACTION_POSICION))
-	    	setPosicion(getIntent().getExtras().getLong(ARG_AGENDA));
-	    if(action.equalsIgnoreCase(ACTION_LLEGAR))
-	    	setRuta(getIntent().getExtras().getLong(ARG_AGENDA));
-	    if(action.equalsIgnoreCase(ACTION_RUTAS))
-	    {
-	    	ComoLlegar.setVisibility(View.GONE);
-			Posicion.setVisibility(View.GONE);
-	    	if(getIntent().getExtras().containsKey(ARG_AGENDA))
-	    	{
-	    		agenda = Agenda.getAgenda(getDataBase(), getIntent().getExtras().getLong(ARG_AGENDA));
-	    		Calendar c =  Calendar.getInstance();
-	    		c.setTime(agenda.getFechaInicio());
-	    		onDailogDatePickerChange(0, c);
-	    	}
-	    	else
-	    		onDailogDatePickerChange(0, Calendar.getInstance());
-	    }
+            @Override
+            public void run() {
+                    FragmentManager fm = getCurrentFragmentManager();
+                    mapFragment = SupportMapFragment
+                            .newInstance();
+                    fm.beginTransaction()
+                            .replace(R.id.recorrido_dummy, mapFragment).commit();
+                    mapFragment.getMapAsync(new OnMapReadyCallback() {
+                        @Override
+                        public void onMapReady(GoogleMap googleMap) {
+                            map = googleMap;
+                            closeDialogProgress();
+                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Contants.LATITUD, Contants.LONGITUD), Contants.ZOOM), 1, null);
+                            map.getUiSettings().setZoomControlsEnabled(false);
+                            if(action.equalsIgnoreCase(ACTION_POSICION))
+                                setPosicion(getIntent().getExtras().getLong(ARG_AGENDA));
+                            if(action.equalsIgnoreCase(ACTION_LLEGAR))
+                                setRuta(getIntent().getExtras().getLong(ARG_AGENDA));
+                            if(action.equalsIgnoreCase(ACTION_RUTAS))
+                            {
+                                ComoLlegar.setVisibility(View.GONE);
+                                Posicion.setVisibility(View.GONE);
+                                if(getIntent().getExtras().containsKey(ARG_AGENDA))
+                                {
+                                    agenda = Agenda.getAgenda(getDataBase(), getIntent().getExtras().getLong(ARG_AGENDA));
+                                    Calendar c =  Calendar.getInstance();
+                                    c.setTime(agenda.getFechaInicio());
+                                    onDailogDatePickerChange(0, c);
+                                }
+                                else
+                                    onDailogDatePickerChange(0, Calendar.getInstance());
+                            }
+
+                        }
+                    });
+
+            }
+        }, 1000);
+        expand = (ImageButton) findViewById(R.id.map_expand);
+        collapse = (ImageButton) findViewById(R.id.map_collapse);
+        listview = (ListView) findViewById(R.id.map_list);
+        persona = (LinearLayout) findViewById(R.id.map_contact);
+        ComoLlegar = (Button) findViewById(R.id.map_como_llegar);
+        Posicion = (Button) findViewById(R.id.map_posicion);
+        RutasFechas = (Button) findViewById(R.id.map_ruta_por_fecha);
+
+        persona.setVisibility(View.GONE);
+        expand.setVisibility(View.GONE);
+        listview.setVisibility(View.INVISIBLE);
+        ComoLlegar.setVisibility(View.GONE);
+        Posicion.setVisibility(View.GONE);
 	}
 	
 	public void ClickPosicion(View v)
@@ -267,7 +291,10 @@ public class MapaActivity extends BaseActivity {
 				if(lastItem != null)
 					lastItem.setBackgroundResource(R.drawable.list_bckgrnd);
 				lastItem = view;
-				map.animateCamera(CameraUpdateFactory.newLatLngZoom(markers.get(position).getPosition(), 12), 1000, null);
+                if(markers.get(position).getPosition().latitude == 0 && markers.get(position).getPosition().longitude == 0)
+                    Toast.makeText(getApplicationContext(), "Este cliente no tiene ingresada una geolocalización.", Toast.LENGTH_LONG).show();
+                else
+				    map.animateCamera(CameraUpdateFactory.newLatLngZoom(markers.get(position).getPosition(), 12), 1000, null);
 			}
 		});
 		markers = new ArrayList<Marker>();
@@ -277,13 +304,24 @@ public class MapaActivity extends BaseActivity {
             if(list_agendas.get(i).getClienteDireccion() != null) {
                 LatLng pos = new LatLng(list_agendas.get(i).getClienteDireccion().getLatitud(), list_agendas.get(i).getClienteDireccion().getLongitud());
 
-                Marker mark = map.addMarker(new MarkerOptions().position(pos)
-                        .title(list_agendas.get(i).getCliente().getNombreCompleto().trim())
-                        .icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.map_position, i + 1 + ""))));
-                mark.showInfoWindow();
-                markers.add(mark);
+                if(pos.longitude == 0 && pos.latitude == 0)
+                {
+                    Marker mark = map.addMarker(new MarkerOptions().position(pos)
+                            .title(list_agendas.get(i).getCliente().getNombreCompleto().trim())
+                            .icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.map_position, i + 1 + ""))));
+                    mark.setAlpha(100);
+                    //mark.showInfoWindow();
+                    markers.add(mark);
+                }
+                else {
+                    Marker mark = map.addMarker(new MarkerOptions().position(pos)
+                            .title(list_agendas.get(i).getCliente().getNombreCompleto().trim())
+                            .icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.map_position, i + 1 + ""))));
+                    mark.showInfoWindow();
+                    markers.add(mark);
 
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 12), 2000, null);
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 12), 2000, null);
+                }
 
                 if (markers.size() > 1) {
                     LatLng org = markers.get(markers.size() - 2).getPosition();
@@ -446,6 +484,8 @@ public class MapaActivity extends BaseActivity {
 		{
 			if(loc == null)
 				showDialogMessage("Por favor, active su GPS de su dispositivo movil, y haga touch sobre el bot�n Como Llegar nuevamente.");
+            else
+                Toast.makeText(this,"Este cliente no tiene ingresada una geolocalización.", Toast.LENGTH_LONG).show();
 		}
 	}
 	
@@ -478,13 +518,20 @@ public class MapaActivity extends BaseActivity {
         else {
             ClienteDireccion cld = ClienteDireccion.getClienteDireccionIdDireccion(getDataBase(), agenda.getIdCliente(), agenda.getIdClienteDireccion());
 
-            LatLng pos = new LatLng(cld.getLatitud(), cld.getLongitud());
+            if(cld.getLatitud() == 0 && cld.getLongitud() == 0)
+            {
+                Toast.makeText(this,"Este cliente no tiene ingresada una geolocalización.", Toast.LENGTH_LONG).show();
+            }
+            else {
 
-            Marker mark = map.addMarker(new MarkerOptions().position(pos)
-                    .title(agenda.getNombreCompleto().trim()));
+                LatLng pos = new LatLng(cld.getLatitud(), cld.getLongitud());
 
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 15));
-            map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+                Marker mark = map.addMarker(new MarkerOptions().position(pos)
+                        .title(agenda.getNombreCompleto().trim()));
+
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 15));
+                map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+            }
 
             DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
                             rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + agenda.getCliente().getURLFoto(),

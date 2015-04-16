@@ -7,6 +7,7 @@ import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
 import rp3.marketforce.ServerActivity;
 import rp3.marketforce.cliente.CrearClienteFragment;
+import rp3.marketforce.models.Tarea;
 import rp3.marketforce.ruta.CrearVisitaFragment;
 import rp3.marketforce.ruta.MotivoNoVisitaFragment;
 import rp3.marketforce.ruta.RutasDetailFragment;
@@ -39,6 +40,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 	public static String SYNC_TYPE_BATCH = "batch";
 	public static String SYNC_TYPE_TODO = "todo";
 	public static String SYNC_TYPE_GEOPOLITICAL = "geopolitical";
+    public static String SYNC_TYPE_AGENTES_UBICACION= "agentes_ubicacion";
     public static String SYNC_TYPE_AGENDA_GEOLOCATION = "agenda_geolocation";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
@@ -97,11 +99,23 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     if (result == SYNC_EVENT_SUCCESS && PreferenceManager.getBoolean(Contants.KEY_ES_SUPERVISOR)) {
                         result = rp3.marketforce.sync.Agente.executeSyncGetAgente(db);
                         addDefaultMessage(result);
+
+                        result = rp3.marketforce.sync.Agente.executeSyncGetUbicaciones(db);
+                        addDefaultMessage(result);
                     }
 
                     if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.marketforce.sync.Tareas.executeSync(db);
                         addDefaultMessage(result);
+                    }
+
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Tarea tar = Tarea.getTareaActualizacion(db);
+                        if(tar != null)
+                        {
+                            result = rp3.marketforce.sync.Tareas.executeSyncTareaActualizacion(db, tar.getIdTarea());
+                            addDefaultMessage(result);
+                        }
                     }
 
                     if (result == SYNC_EVENT_SUCCESS) {
@@ -128,16 +142,16 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     //	addDefaultMessage(result);
                     //}
 
-                    long time = 0;
-                    Date pru = SyncAudit.getLastSyncDate(SYNC_TYPE_GEOPOLITICAL, SYNC_EVENT_SUCCESS);
-                    if (Convert.getTicksFromDate(pru) != 0)
-                        result = rp3.sync.GeopoliticalStructure.executeSyncLastUpdate(db, Convert.getDotNetTicksFromDate(SyncAudit.getLastSyncDate(SYNC_TYPE_GEOPOLITICAL, SYNC_EVENT_SUCCESS)));
-                    else
-                        result = rp3.sync.GeopoliticalStructure.executeSync(db);
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        SyncAudit.insert(SYNC_TYPE_GEOPOLITICAL, SYNC_EVENT_SUCCESS);
-                    }
-                    addDefaultMessage(result);
+                   // long time = 0;
+                    //Date pru = SyncAudit.getLastSyncDate(SYNC_TYPE_GEOPOLITICAL, SYNC_EVENT_SUCCESS);
+                    //if (Convert.getTicksFromDate(pru) != 0)
+                    //    result = rp3.sync.GeopoliticalStructure.executeSyncLastUpdate(db, Convert.getDotNetTicksFromDate(SyncAudit.getLastSyncDate(SYNC_TYPE_GEOPOLITICAL, SYNC_EVENT_SUCCESS)));
+                    //else
+                    //    result = rp3.sync.GeopoliticalStructure.executeSync(db);
+                    //if (result == SYNC_EVENT_SUCCESS) {
+                    //    SyncAudit.insert(SYNC_TYPE_GEOPOLITICAL, SYNC_EVENT_SUCCESS);
+                    //}
+                    //addDefaultMessage(result);
 
                     db.commitTransaction();
 
@@ -166,6 +180,9 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                 } else if (syncType.equals(SYNC_TYPE_SERVER_CODE)) {
                     String code = extras.getString(ServerActivity.SERVER_CODE);
                     result = Server.executeSync(code);
+                    addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_AGENTES_UBICACION)) {
+                    result = rp3.marketforce.sync.Agente.executeSyncGetUbicaciones(db);
                     addDefaultMessage(result);
                 } else if (syncType.equals(SYNC_TYPE_CLIENTE_UPDATE)) {
                     long id = extras.getLong(ClienteActualizacion.ARG_CLIENTE_ID);
@@ -290,6 +307,15 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.marketforce.sync.Tareas.executeSync(db);
                         addDefaultMessage(result);
+                    }
+
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Tarea tar = Tarea.getTareaActualizacion(db);
+                        if(tar != null)
+                        {
+                            result = rp3.marketforce.sync.Tareas.executeSyncTareaActualizacion(db, tar.getIdTarea());
+                            addDefaultMessage(result);
+                        }
                     }
 
                     if (result == SYNC_EVENT_SUCCESS) {

@@ -15,8 +15,9 @@
     <webServiceConfiguration>                
         <webServiceData>
             <name>Core</name>
-            <url>[@server:http://54.94.162.88/marketforce]/api</url>
-            <type>REST</type>            
+            <!--url>[@server:http://54.94.162.88/marketforce]/api</url-->
+            <url>http://10.10.0.128/AgendaComercial/api</url>
+            <type>REST</type>
             <oAuthClientId>android-app-marketforce</oAuthClientId>
             <oAuthClientSecret>rp3-marketforce2014</oAuthClientSecret>
             <methods>
@@ -24,33 +25,45 @@
                     <name>SignIn</name>
                     <action>account/signin</action>
                     <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
                     <name>GetGeopoliticalStructures</name>
                     <action>General/GetGeopoliticalStructuresView?lastUpdate=@lastUpdate&amp;page=@page&amp;pageSize=@size</action>
                     <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetGeopoliticalStructuresSearch</name>
+                    <action>General/GetGeopoliticalStructuresSearch?text=@text</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
                     <name>GetGeneralValues</name>
                     <action>General/GetGeneralValues</action>
                     <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
                     <name>GetIdentificationTypes</name>
                     <action>General/GetIdentificationTypes</action>
                     <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
                     <name>GetConnection</name>
                     <action>General/Test</action>
                     <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
                 </method>
             </methods>     
         </webServiceData>
            <webServiceData>
             <name>MartketForce</name>
-            <url>[@server:http://54.94.162.88/marketforce]/api</url>
-            <type>REST</type>            
+            <!--url>[@server:http://54.94.162.88/marketforce]/api</url-->
+            <url>http://10.10.0.128/AgendaComercial/api</url>
+            <type>REST</type>
             <oAuthClientId>android-app-marketforce</oAuthClientId>
             <oAuthClientSecret>rp3-marketforce2014</oAuthClientSecret>
             <methods>
@@ -58,26 +71,31 @@
                     <name>GetClientes</name>
                     <action>cliente/getclientes?ultimaactualizacion=@ultimaactualizacion</action>
                     <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
                     <name>GetIdClientes</name>
                     <action>cliente/getidclientes</action>
                     <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
                     <name>GetServer</name>
                     <action>application/getclient?applicationid=@applicationid&amp;validationCode=@validationCode</action>
                     <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
                     <name>CreateCliente</name>
                     <action>cliente/create</action>
                     <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
                     <name>GetParametros</name>
                     <action>parametro/getall</action>
                     <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
                     <name>SetFotos</name>
@@ -93,98 +111,128 @@
                     <name>Agenda</name>
                     <action>agenda/get?fechainicio=@fechainicio&amp;fechafin=@fechafin&amp;ultimaactualizacion=@ultimaactualizacion</action>
                     <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
                     <name>UpdateAgenda</name>
                     <action>agenda/update</action>
                     <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
                     <name>UpdateAgendaGeolocation</name>
                     <action>agenda/updateGeolocation</action>
                     <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
                     <name>UpdateAgendaFull</name>
                     <action>agenda/updatefull</action>
                     <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
                     <name>ReprogramarAgenda</name>
                     <action>agenda/reprogramar</action>
                     <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
                     <name>MotivoNoVisitaAgenda</name>
                     <action>agenda/SetMotivoNoGestion</action>
                     <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
                     <name>InsertarAgenda</name>
                     <action>agenda/insert</action>
                     <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
                     <name>GetTipoClientes</name>
                     <action>tipocliente/get</action>
                     <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
                     <name>GetCanales</name>
                     <action>canal/get</action>
                     <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
                     <name>GetAgente</name>
                     <action>agente/getAgente</action>
                     <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
                     <name>GetResumenGestionAgentes</name>
                     <action>gestion/getresumengestionagentes?idagentesupervisor=@idagentesupervisor</action>
                     <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetResumenUbicacionAgentes</name>
+                    <action>gestion/GetResumenUbicacionAgentes?idagentesupervisor=@idagentesupervisor&amp;ultActualizacion=@ultactualizacion</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
                     <name>GetFoto</name>
                     <action>cliente/getfoto?idcliente=@idcliente</action>
                     <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
                     <name>GetTareas</name>
                     <action>tarea/get?ultimaActualizacion=@ultimaActualizacion</action>
                     <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetTareasActualizacion</name>
+                    <action>tarea/GetTareaActualizacionCliente?idTarea=@idTarea</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
                     <name>SetUbicaciones</name>
                     <action>agente/setubicaciones</action>
                     <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
                 </method> 
                 <method>
                     <name>SetUbicacion</name>
                     <action>agente/setubicacion?latitud=@latitud&amp;longitud=@longitud</action>
                     <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
                     <name>UpdateCliente</name>
                     <action>cliente/update</action>
                     <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
                 </method> 
                 <method>
                     <name>UpdateClienteFull</name>
                     <action>cliente/updatefull</action>
                     <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
                 </method>               
             </methods>     
         </webServiceData>
            <webServiceData>
             <name>ServerVerification</name>
             <url>http://54.94.162.88/rp3deploy/api</url>
-            <type>REST</type>            
+            <type>REST</type>
             <methods>
                 <method>
                     <name>GetServer</name>
                     <action>application/getclient?applicationid=@applicationid&amp;validationCode=@validationCode</action>
                     <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
                 </method>              
             </methods>     
         </webServiceData>

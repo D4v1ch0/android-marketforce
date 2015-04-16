@@ -34,6 +34,7 @@ import rp3.marketforce.models.Contacto;
 import rp3.marketforce.models.Contacto.ContactoExt;
 import rp3.marketforce.models.Tarea;
 import rp3.marketforce.models.Ubicacion;
+import rp3.marketforce.radar.RadarFragment;
 import rp3.marketforce.recorrido.RecorridoFragment;
 import rp3.marketforce.resumen.DashboardGrupoFragment;
 import rp3.marketforce.ruta.RutasFragment;
@@ -78,6 +79,7 @@ public class MainActivity extends rp3.app.NavActivity{
 	public static final int NAV_CERRAR_SESION 	= 9;
 	public static final int NAV_RESUMEN		 	= 10;
 	public static final int NAV_RECORRIDO	 	= 11;
+    public static final int NAV_RADAR	 	    = 12;
 	public String lastTitle;
 	private int selectedItem;
 	
@@ -95,7 +97,7 @@ public class MainActivity extends rp3.app.NavActivity{
 		Session.Start(this);
 		rp3.configuration.Configuration.TryInitializeConfiguration(this, DbOpenHelper.class);
 
-		//extractDatabase();
+		extractDatabase();
 		
 		this.setNavHeaderTitle(Session.getUser().getFullName());
 		this.setNavHeaderSubtitle(PreferenceManager.getString(Contants.KEY_CARGO));
@@ -146,11 +148,13 @@ public class MainActivity extends rp3.app.NavActivity{
 		NavItem dashboard = new NavItem(NAV_DASHBOARD, R.string.title_option_setinicio ,R.drawable.ic_action_select_all);
 		NavItem rutas = new NavItem(NAV_RUTAS, R.string.title_option_setrutas ,R.drawable.ic_rutas);
 		NavItem clientes = new NavItem(NAV_CLIENTES, R.string.title_option_setclientes, R.drawable.ic_clientes);
-		NavItem grupo = new NavItem(NAV_RESUMEN, R.string.title_option_resumen, R.drawable.ic_action_sort_by_size);
+		NavItem grupo = new NavItem(NAV_RESUMEN, R.string.title_option_resumen, R.
+                drawable.ic_action_sort_by_size);
 		NavItem pedido = new NavItem(NAV_PEDIDO, R.string.title_option_setpedido, R.drawable.ic_pedido);
 		NavItem reuniones = new NavItem(NAV_REUNIONES, R.string.title_option_setreuniones, R.drawable.ic_reuniones);
 		NavItem recordatorios = new NavItem(NAV_RECORDATORIOS, R.string.title_option_setrecordatorios, R.drawable.ic_recordatorios);
 		NavItem recorrido = new NavItem(NAV_RECORRIDO, R.string.title_option_recorrido, R.drawable.ic_action_place_dark);
+        NavItem radar = new NavItem(NAV_RADAR, R.string.title_option_radar, R.drawable.ic_action_data_usage);
 		
 		NavItem settingsGroup  = new NavItem(0, R.string.title_option_setconfiguracion, 0,NavItem.TYPE_CATEGORY);
 		
@@ -170,8 +174,10 @@ public class MainActivity extends rp3.app.NavActivity{
 			navItems.add(clientes);
 		}
 		navItems.add(recorrido);
-		if(PreferenceManager.getBoolean(Contants.KEY_ES_SUPERVISOR))
-			navItems.add(grupo);
+		if(PreferenceManager.getBoolean(Contants.KEY_ES_SUPERVISOR)) {
+            navItems.add(grupo);
+            navItems.add(radar);
+        }
 		//navItems.add(pedido);
 		//navItems.add(reuniones);
 		//navItems.add(recordatorios);
@@ -202,6 +208,11 @@ public class MainActivity extends rp3.app.NavActivity{
 		    item.getTitle());
 			lastTitle = item.getTitle();
 			break;
+        case NAV_RADAR:
+            setNavFragment(RadarFragment.newInstance(),
+                item.getTitle());
+            lastTitle = item.getTitle();
+            break;
 		case NAV_RECORRIDO:
             if(!ConnectionUtils.isNetAvailable(this))
             {
@@ -254,6 +265,7 @@ public class MainActivity extends rp3.app.NavActivity{
 			Actividad.deleteAll(getDataBase(), Contract.Actividades.TABLE_NAME);
 			AgendaTarea.deleteAll(getDataBase(), Contract.AgendaTarea.TABLE_NAME);
 			AgendaTareaActividades.deleteAll(getDataBase(), Contract.AgendaTareaActividades.TABLE_NAME);
+            Ubicacion.deleteAll(getDataBase(), Contract.Ubicacion.TABLE_NAME);
 			//GeopoliticalStructure.deleteAll(getDataBase(), rp3.data.models.Contract.GeopoliticalStructure.TABLE_NAME);
 			//GeopoliticalStructureExt.deleteAll(getDataBase(), rp3.data.models.Contract.GeopoliticalStructureExt.TABLE_NAME);
 			PreferenceManager.setValue(Contants.KEY_IDAGENTE, 0);
@@ -394,7 +406,7 @@ public class MainActivity extends rp3.app.NavActivity{
     	        .setContentTitle(agd.getCliente().getNombreCompleto())
     	        .setContentText(message);
     	// Creates an explicit intent for an Activity in your app
-    	Intent resultIntent = new Intent(ctx, MainActivity.class);
+    	Intent resultIntent = new Intent(ctx, StartActivity.class);
 
     	TaskStackBuilder stackBuilder = TaskStackBuilder.create(ctx);
 

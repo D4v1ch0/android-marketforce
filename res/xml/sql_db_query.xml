@@ -255,6 +255,7 @@
         tbClienteDireccion.Referencia,
         tbClienteDireccion.Latitud,
         tbClienteDireccion.Longitud,
+        tbClienteDireccion.CiudadDescripcion,
         tbGeopoliticalStructureExt.Name AS tbGeopoliticalStructure_Name
         FROM tbClienteDireccion
     	LEFT JOIN tbGeopoliticalStructureExt
@@ -277,6 +278,7 @@
         tbClienteDireccion.Referencia,
         tbClienteDireccion.Latitud,
         tbClienteDireccion.Longitud,
+        tbClienteDireccion.CiudadDescripcion,
         tbGeopoliticalStructureExt.Name AS tbGeopoliticalStructure_Name
         FROM tbClienteDireccion
     	LEFT JOIN tbGeopoliticalStructureExt
@@ -298,6 +300,7 @@
         tbClienteDireccion.Referencia,
         tbClienteDireccion.Latitud,
         tbClienteDireccion.Longitud,
+        tbClienteDireccion.CiudadDescripcion,
         tbGeopoliticalStructureExt.Name AS tbGeopoliticalStructure_Name
         FROM tbClienteDireccion
     	LEFT JOIN tbGeopoliticalStructureExt
@@ -321,6 +324,7 @@
         tbClienteDireccion.Referencia,
         tbClienteDireccion.Latitud,
         tbClienteDireccion.Longitud,
+        tbClienteDireccion.CiudadDescripcion,
         tbGeopoliticalStructureExt.Name AS tbGeopoliticalStructure_Name
         FROM tbClienteDireccion
     	LEFT JOIN tbGeopoliticalStructureExt
@@ -743,7 +747,7 @@
         JOIN tbAgendaExt
         ON tbAgenda._id = tbAgendaExt.docid
         WHERE tbAgenda.FechaInicio >= ? AND tbAgenda.FechaInicio  &lt;= ?
-        AND (tbAgenda.EstadoAgenda = 'P' OR tbAgenda.EstadoAgenda = 'R')
+        AND (tbAgenda.EstadoAgenda = 'P' OR tbAgenda.EstadoAgenda = 'R' OR tbAgenda.EstadoAgenda = 'G')
         ORDER BY tbAgenda.FechaInicio, tbAgendaExt.NombreCompleto
     </statement>
      
@@ -1022,8 +1026,8 @@
 		SUM(NoGestionados) as NoGestionados, 
 		SUM(Pendientes) as Pendientes 
 		FROM tbAgentesResumen
-		WHERE Fecha >= ?
-		AND Fecha &lt;= ?
+		WHERE Fecha &gt;= ?
+		AND Fecha &lt; ?
 		GROUP BY IdAgente
      </statement>
 </sql>

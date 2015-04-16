@@ -6,12 +6,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.ksoap2.transport.HttpResponseException;
 
+import rp3.configuration.PreferenceManager;
 import rp3.connection.HttpConnection;
 import rp3.connection.WebService;
 import rp3.content.SyncAdapter;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
 import rp3.marketforce.db.Contract;
+import rp3.marketforce.models.Campo;
+import rp3.marketforce.models.Tarea;
 import rp3.sync.SyncAudit;
 import rp3.util.Convert;
 
@@ -127,6 +130,60 @@ public class Tareas {
 		}finally{
 			webService.close();
 		}
+
+        return SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
+    public static int executeSyncTareaActualizacion(DataBase db, int id){
+        WebService webService = new WebService("MartketForce","GetTareasActualizacion");
+
+        try
+        {
+            webService.addCurrentAuthToken();
+            webService.addParameter("@idTarea", id);
+
+            try {
+                webService.invokeWebService();
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return SyncAdapter.SYNC_EVENT_ERROR;
+            }
+
+            JSONObject type = webService.getJSONObjectResponse();
+
+            Campo.deleteAll(db, Contract.Campos.TABLE_NAME);
+            try {
+                PreferenceManager.setValue(Contants.KEY_PERMITIR_CREACION, type.getBoolean(Contants.KEY_PERMITIR_CREACION));
+                PreferenceManager.setValue(Contants.KEY_PERMITIR_MODIFICACION, type.getBoolean(Contants.KEY_PERMITIR_MODIFICACION));
+                PreferenceManager.setValue(Contants.KEY_SIEMPRE_EDITAR, type.getBoolean(Contants.KEY_SIEMPRE_EDITAR));
+                PreferenceManager.setValue(Contants.KEY_SOLO_FALTANTES, type.getBoolean(Contants.KEY_SOLO_FALTANTES));
+
+                JSONArray strs = type.getJSONArray("Campos");
+
+                for (int j = 0; j < strs.length(); j++) {
+                    JSONObject str = strs.getJSONObject(j);
+                    Campo campo = new rp3.marketforce.models.Campo();
+
+                    campo.setIdCampo(str.getString("IdCampo"));
+                    campo.setCreacion(str.getBoolean("C"));
+                    campo.setModificacion(str.getBoolean("M"));
+                    campo.setGestion(str.getBoolean("G"));
+
+                    rp3.marketforce.models.Campo.insert(db, campo);
+
+                }
+            }
+
+            catch (JSONException e) {
+                Log.e("Error", e.toString());
+                return SyncAdapter.SYNC_EVENT_ERROR;
+            }
+        }finally{
+            webService.close();
+        }
 
         return SyncAdapter.SYNC_EVENT_SUCCESS;
     }

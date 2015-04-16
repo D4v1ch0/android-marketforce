@@ -12,6 +12,7 @@ import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
 import rp3.marketforce.db.Contract;
 import rp3.marketforce.models.AgenteResumen;
+import rp3.marketforce.models.AgenteUbicacion;
 import rp3.util.Convert;
 
 public class Agente {
@@ -88,6 +89,46 @@ public class Agente {
 		
 		return SyncAdapter.SYNC_EVENT_SUCCESS;		
 	}
+
+    public static int executeSyncGetUbicaciones(DataBase db){
+        WebService webService = new WebService("MartketForce","GetResumenUbicacionAgentes");
+
+        try
+        {
+            webService.addCurrentAuthToken();
+            webService.addLongParameter("@idagentesupervisor", PreferenceManager.getInt(Contants.KEY_IDAGENTE));
+
+
+            try {
+                webService.invokeWebService();
+                JSONArray jArray = webService.getJSONArrayResponse();
+                AgenteUbicacion.deleteAll(db, Contract.AgentesUbicacion.TABLE_NAME);
+                for(int i = 0 ; i < jArray.length(); i ++)
+                {
+                    JSONObject jObject = jArray.getJSONObject(i);
+                    AgenteUbicacion ubicacion = new AgenteUbicacion();
+                    ubicacion.setIdAgente(jObject.getInt("IdAgente"));
+                    ubicacion.setNombres(jObject.getString("Nombres"));
+                    ubicacion.setApellidos(jObject.getString("Apellidos"));
+                    ubicacion.setFecha(Convert.getDateFromDotNetTicks(jObject.getLong("UltimaActualizacionTicks")));
+                    ubicacion.setLatitud(jObject.getDouble("Latitud"));
+                    ubicacion.setLongitud(jObject.getDouble("Longitud"));
+                    AgenteUbicacion.insert(db, ubicacion);
+                }
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return SyncAdapter.SYNC_EVENT_ERROR;
+            }
+
+        }finally{
+            webService.close();
+        }
+
+        return SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
 	
 	public static int executeSyncParametros(DataBase db){
 		WebService webService = new WebService("MartketForce","GetParametros");			

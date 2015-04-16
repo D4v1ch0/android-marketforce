@@ -14,6 +14,7 @@ public abstract class ActividadActivity extends BaseActivity {
 	public static String ARG_THEME = "theme";
     public static String ARG_SIN_GRUPO = "sin_grupo";
 	public static String ARG_PADRE_ID = "padre";
+    public static String ARG_AGENDA_INT = "agenda_int";
 	public static String ARG_TAREA = "tarea";
 	public static String ARG_NUMERO = "numero";
 	public static String ARG_VISTA = "vista";
@@ -21,6 +22,7 @@ public abstract class ActividadActivity extends BaseActivity {
 	
 	protected int id_actividad;
 	protected long id_agenda;
+    protected long id_agenda_int;
 	protected int id_ruta;
 	protected int id_padre;
 	protected int id_tarea;
@@ -39,6 +41,7 @@ public abstract class ActividadActivity extends BaseActivity {
 		id_actividad = getIntent().getExtras().getInt(RutasDetailFragment.ARG_ITEM_ID, 0);
 		id_agenda = getIntent().getExtras().getLong(RutasDetailFragment.ARG_AGENDA_ID, 0);
 		id_ruta = getIntent().getExtras().getInt(RutasDetailFragment.ARG_RUTA_ID, 0);
+        id_agenda_int = getIntent().getExtras().getLong(ARG_AGENDA_INT, 0);
 		id_padre = getIntent().getExtras().getInt(ARG_PADRE_ID, 0);
 		id_tarea = getIntent().getExtras().getInt(ARG_TAREA, 0);
 		soloVista = getIntent().getExtras().getBoolean(ARG_VISTA, false);
@@ -58,6 +61,7 @@ public abstract class ActividadActivity extends BaseActivity {
         act.setIdTarea(id_actividad);
         act.setIdRuta(id_ruta);
         act.setIdTareaActividad(idActividad);
+        act.set_idAgenda(id_agenda_int);
         //AgendaTareaActividades.insert(getDataBase(), act);
         return act;
     }
@@ -69,6 +73,7 @@ public abstract class ActividadActivity extends BaseActivity {
         act.setIdTarea(id_actividad);
         act.setIdRuta(id_ruta);
         act.setIdTareaActividad(idActividad);
+        act.set_idAgenda(id_agenda_int);
         AgendaTareaActividades.insert(getDataBase(), act);
         return act;
     }

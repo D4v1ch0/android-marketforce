@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="rp3.marketforce"
-    android:versionCode="22"
-    android:versionName="1.2.5a">
+    android:versionCode="24"
+    android:versionName="1.3.1">
 
     <uses-sdk
         android:minSdkVersion="13"
@@ -137,6 +137,7 @@
             android:syncable="true" />
         
         <activity android:name=".actividades.CheckboxActivity"></activity>
+        <activity android:name=".actividades.ActualizacionActivity"></activity>
         <activity android:name=".actividades.MultipleActivity" android:theme="@style/ActivityPopupTheme"></activity>
         <activity android:name=".actividades.SeleccionActivity"></activity>
         <activity android:name=".actividades.GrupoActivity"></activity>
@@ -150,6 +151,7 @@
         <activity android:name=".cliente.CrearClienteActivity"></activity>
         <activity android:name="ServerActivity" android:theme="@style/AppTheme.NoTitleBar"></activity>
         <activity android:name=".ruta.ObservacionesActivity" android:theme="@style/MyAppPopupTheme"></activity>
+        <activity android:name=".ruta.FotoActivity" android:theme="@style/MyAppPopupTheme"></activity>
         <activity android:name=".cliente.ImportContactsActivity"></activity>
         
     </application>

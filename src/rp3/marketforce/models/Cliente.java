@@ -741,7 +741,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			
 			if(result){	
 				for(ClienteDireccion d : this.getClienteDirecciones()){
-					d.setIdCliente(this.id);
+					d.setIdCliente(this.idCliente);
 					if(d.getID() == 0)
 						result = ClienteDireccion.insert(db, d);
 					else

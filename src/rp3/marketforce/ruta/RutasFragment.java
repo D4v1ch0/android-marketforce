@@ -27,6 +27,7 @@ import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Toast;
 
 import java.lang.reflect.Field;
+import java.sql.Ref;
 
 public class RutasFragment extends BaseFragment implements RutasListFragment.TransactionListFragmentListener, ContactsAgendaFragment.SaveContactsListener{
 
@@ -76,6 +77,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	public void onStart() {		
 		super.onStart();
 		if(selectedTransactionId != 0 && openPane){
+            isMainFragment = false;
 			if(!mTwoPane)			
 				slidingPane.closePane();			
 		}
@@ -119,6 +121,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 			@Override
 			public void onPanelClosed(View panel) {
                 isMainFragment = false;
+                RefreshMenu();
 			}});
 		
 		if(!hasFragment(R.id.content_transaction_list))
@@ -299,6 +302,10 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 		 {
 			 rutasDetailfragment.obsFragment.onActivityResult(requestCode, resultCode, data);
 		 }
+         else
+         {
+             rutasDetailfragment.onActivityResult(requestCode, resultCode, data);
+         }
 	}
 
     @Override

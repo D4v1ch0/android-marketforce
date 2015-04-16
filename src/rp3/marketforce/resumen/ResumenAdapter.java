@@ -1,7 +1,10 @@
 package rp3.marketforce.resumen;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
+import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.AgenteResumen;
@@ -41,6 +44,63 @@ public class ResumenAdapter extends BaseAdapter {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+    public void Sort(String estado, final boolean asc)
+    {
+        if(estado.equalsIgnoreCase(Contants.ESTADO_PENDIENTE))
+        {
+            Collections.sort(list_resumen, new Comparator<AgenteResumen>() {
+                @Override
+                public int compare(AgenteResumen agenteResumen, AgenteResumen agenteResumen2) {
+                    if(agenteResumen.getPendientes() == agenteResumen2.getPendientes())
+                        return 0;
+                    else
+                    {
+                        if(asc)
+                            return agenteResumen.getPendientes() < agenteResumen2.getPendientes() ? -1 : 1;
+                        else
+                            return agenteResumen.getPendientes() > agenteResumen2.getPendientes() ? -1 : 1;
+                    }
+                }
+            });
+        }
+        if(estado.equalsIgnoreCase(Contants.ESTADO_VISITADO))
+        {
+            Collections.sort(list_resumen, new Comparator<AgenteResumen>() {
+                @Override
+                public int compare(AgenteResumen agenteResumen, AgenteResumen agenteResumen2) {
+                    if(agenteResumen.getGestionados() == agenteResumen2.getGestionados())
+                        return 0;
+                    else
+                    {
+                        if(asc)
+                            return agenteResumen.getGestionados() < agenteResumen2.getGestionados() ? -1 : 1;
+                        else
+                            return agenteResumen.getGestionados() > agenteResumen2.getGestionados() ? -1 : 1;
+                    }
+                }
+            });
+        }
+        if(estado.equalsIgnoreCase(Contants.ESTADO_NO_VISITADO))
+        {
+            Collections.sort(list_resumen, new Comparator<AgenteResumen>() {
+                @Override
+                public int compare(AgenteResumen agenteResumen, AgenteResumen agenteResumen2) {
+                    if(agenteResumen.getNoGestionados() == agenteResumen2.getNoGestionados())
+                        return 0;
+                    else
+                    {
+                        if(asc)
+                            return agenteResumen.getNoGestionados() < agenteResumen2.getNoGestionados() ? -1 : 1;
+                        else
+                            return agenteResumen.getNoGestionados() > agenteResumen2.getNoGestionados() ? -1 : 1;
+                    }
+                }
+            });
+        }
+        notifyDataSetChanged();
+
+    }
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {

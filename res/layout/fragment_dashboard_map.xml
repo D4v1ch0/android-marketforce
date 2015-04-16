@@ -2,14 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-    <fragment
-            android:id="@+id/dashboard_map"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:clickable="true"
-            class="com.google.android.gms.maps.MapFragment" />
-    
+    android:orientation="vertical"
+    android:id="@+id/layout_jig">
 
+
+    <FrameLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:gravity="center"
+        android:id="@+id/recorrido_dummy"
+        android:layout_alignParentTop="true"
+        android:background="@color/caldroid_white" >
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progress_map"
+            android:layout_gravity="center" />
+    </FrameLayout>
 </LinearLayout>

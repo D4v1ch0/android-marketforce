@@ -1,5 +1,6 @@
 package rp3.marketforce.utils;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -7,6 +8,7 @@ import java.net.MalformedURLException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.kobjects.util.Util;
 
 import rp3.marketforce.R;
 import rp3.util.BitmapUtils;
@@ -109,26 +111,31 @@ public class DrawableManager {
         if (mMemoryCache.get(urlString) != null) {
             imageView.setImageDrawable(new BitmapDrawable(mMemoryCache.get(urlString)));
         }
-        else
-        {
+        else {
+            Drawable d = Drawable.createFromPath(getFilename(urlString));
+            if (d != null) {
+                imageView.setImageDrawable(d);
+            } else {
 
-        	final Handler handler = new Handler() {
-            	@Override
-            	public void handleMessage(Message message) {
-                	imageView.setImageDrawable((Drawable) message.obj);
-            	}
-        	};
+                final Handler handler = new Handler() {
+                    @Override
+                    public void handleMessage(Message message) {
+                        SaveBitmap(((BitmapDrawable) message.obj).getBitmap(), getFilename(urlString));
+                        imageView.setImageDrawable((Drawable) message.obj);
+                    }
+                };
 
-        	Thread thread = new Thread() {
-            	@Override
-            	public void run() {
-            		//	TODO : set imageView to a "pending" image
-                	Drawable drawable = fetchDrawable(urlString);
-                	Message message = handler.obtainMessage(1, drawable);
-                	handler.sendMessage(message);
-            	}
-        	};
-        	thread.start();
+                Thread thread = new Thread() {
+                    @Override
+                    public void run() {
+                        //	TODO : set imageView to a "pending" image
+                        Drawable drawable = fetchDrawable(urlString);
+                        Message message = handler.obtainMessage(1, drawable);
+                        handler.sendMessage(message);
+                    }
+                };
+                thread.start();
+            }
         }
     }
     
@@ -138,32 +145,40 @@ public class DrawableManager {
         	Bitmap bitmap = mMemoryCache.get(urlString);
             bitmap = BitmapUtils.getRoundedRectBitmap(mMemoryCache.get(urlString), bitmap.getHeight() );
             imageView.setImageBitmap(bitmap);
-        }
-        else
-        {
+            return;
+        } else {
+            Bitmap bitmap = BitmapFactory.decodeFile(getFilename(urlString));
+            if(bitmap != null)
+            {
+                bitmap = BitmapUtils.getRoundedRectBitmap(bitmap, bitmap.getHeight());
+                imageView.setImageBitmap(bitmap);
+            }
+            else
+            {
 
-        	final Handler handler = new Handler() {
-            	@Override
-            	public void handleMessage(Message message) {
-                	Bitmap bitmap = (Bitmap) message.obj;
-                	if(bitmap != null)
-                	{
-                		bitmap = BitmapUtils.getRoundedRectBitmap(mMemoryCache.get(urlString), bitmap.getHeight());
-                		imageView.setImageBitmap(bitmap);
-                	}
-            	}
-        	};
+                final Handler handler = new Handler() {
+                    @Override
+                    public void handleMessage(Message message) {
+                        Bitmap bitmap = (Bitmap) message.obj;
+                        if (bitmap != null) {
+                            SaveBitmap(bitmap, getFilename(urlString));
+                            bitmap = BitmapUtils.getRoundedRectBitmap(mMemoryCache.get(urlString), bitmap.getHeight());
+                            imageView.setImageBitmap(bitmap);
+                        }
+                    }
+                };
 
-        	Thread thread = new Thread() {
-            	@Override
-            	public void run() {
-            		//	TODO : set imageView to a "pending" image
-                	Bitmap drawable = fetchBitmap(urlString);
-                	Message message = handler.obtainMessage(1, drawable);
-                	handler.sendMessage(message);
-            	}
-        	};
-        	thread.start();
+                Thread thread = new Thread() {
+                    @Override
+                    public void run() {
+                        //	TODO : set imageView to a "pending" image
+                        Bitmap drawable = fetchBitmap(urlString);
+                        Message message = handler.obtainMessage(1, drawable);
+                        handler.sendMessage(message);
+                    }
+                };
+                thread.start();
+            }
         }
     }
     
@@ -172,26 +187,31 @@ public class DrawableManager {
         if (mMemoryCache.get(urlString) != null) {
             imageView.setBackgroundDrawable(new BitmapDrawable(mMemoryCache.get(urlString)));
         }
-        else
-        {
+        else {
+            Drawable d = Drawable.createFromPath(getFilename(urlString));
+            if (d != null) {
+                imageView.setBackgroundDrawable(d);
+            } else {
 
-        	final Handler handler = new Handler() {
-        		@Override
-        		public void handleMessage(Message message) {
-        			imageView.setBackgroundDrawable((Drawable) message.obj);
-        		}
-        	};
+                final Handler handler = new Handler() {
+                    @Override
+                    public void handleMessage(Message message) {
+                        SaveBitmap(((BitmapDrawable) message.obj).getBitmap(), getFilename(urlString));
+                        imageView.setBackgroundDrawable((Drawable) message.obj);
+                    }
+                };
 
-        	Thread thread = new Thread() {
-        		@Override
-        		public void run() {
-        			//TODO : set imageView to a "pending" image
-        			Drawable drawable = fetchDrawable(urlString);
-        			Message message = handler.obtainMessage(1, drawable);
-        			handler.sendMessage(message);
-        		}
-        	};
-        	thread.start();
+                Thread thread = new Thread() {
+                    @Override
+                    public void run() {
+                        //TODO : set imageView to a "pending" image
+                        Drawable drawable = fetchDrawable(urlString);
+                        Message message = handler.obtainMessage(1, drawable);
+                        handler.sendMessage(message);
+                    }
+                };
+                thread.start();
+            }
         }
     }
 
@@ -207,5 +227,36 @@ public class DrawableManager {
     	{
     		return null;
     	}
+    }
+
+    private void SaveBitmap(Bitmap bitmap, String filename)
+    {
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream(filename);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out); // bmp is your Bitmap instance
+            // PNG is a lossless format, the compression factor (100) is ignored
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private String getFilename(String url)
+    {
+        if(url.contains("/"))
+        {
+            int lastPosition = url.lastIndexOf("/");
+            url = url.substring(lastPosition+1, url.length());
+        }
+        url = Utils.getImagesPath() + url;
+        return url;
     }
 }

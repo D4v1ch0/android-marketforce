@@ -21,6 +21,8 @@ import org.json.JSONObject;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -39,7 +41,9 @@ import android.graphics.Rect;
 import android.graphics.Paint.Align;
 import android.graphics.Paint.Style;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.InflateException;
@@ -59,8 +63,9 @@ public class DashboardMapFragment extends BaseFragment{
 	List<Marker> markers;
 	boolean instantiated = false;
 	private static View view;
-	
-	public static DashboardMapFragment newInstance() {
+    private SupportMapFragment mapFragment;
+
+    public static DashboardMapFragment newInstance() {
 		DashboardMapFragment fragment = new DashboardMapFragment();
 		return fragment;
 	}
@@ -74,6 +79,29 @@ public class DashboardMapFragment extends BaseFragment{
 	    }
 	    try {
 	        view = inflater.inflate(R.layout.fragment_dashboard_map, container, false);
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    if (isAdded()) {
+                        FragmentManager fm = getFragmentManager();
+                        mapFragment = SupportMapFragment
+                                .newInstance();
+                        fm.beginTransaction()
+                                .replace(R.id.recorrido_dummy, mapFragment).commit();
+                        mapFragment.getMapAsync(new OnMapReadyCallback() {
+                            @Override
+                            public void onMapReady(GoogleMap googleMap) {
+                                map = googleMap;
+                                view.findViewById(R.id.progress_map).setVisibility(View.GONE);
+                                closeDialogProgress();
+                                setMapa();
+
+                            }
+                        });
+                    }
+                }
+            }, 1000);
 	    } catch (InflateException e) {
 	        /* map is already there, just return view as it is */
 	    }
@@ -102,7 +130,7 @@ public class DashboardMapFragment extends BaseFragment{
 	
 	public void setMapa()
 	{
-		map = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.dashboard_map)).getMap();
+		//map = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.dashboard_map)).getMap();
         try {
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Contants.LATITUD, Contants.LONGITUD), Contants.ZOOM), 1, null);
 
@@ -205,7 +233,7 @@ public class DashboardMapFragment extends BaseFragment{
                 }
 
         } 
-        catch (JSONException e) {
+        catch (Exception e) {
 
         }
     } 

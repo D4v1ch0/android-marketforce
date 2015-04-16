@@ -61,6 +61,7 @@ import rp3.maps.utils.SphericalUtil;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
+import rp3.marketforce.models.Campo;
 import rp3.marketforce.models.Canal;
 import rp3.marketforce.models.Cliente;
 import rp3.marketforce.models.ClienteDireccion;
@@ -80,16 +81,18 @@ public class CrearClienteFragment extends BaseFragment {
 
     boolean rotated = false;
 
-	public static CrearClienteFragment newInstance(long id_cliente)
+	public static CrearClienteFragment newInstance(long id_cliente, int tipo)
 	{
 		CrearClienteFragment fragment = new CrearClienteFragment();
 		Bundle args = new Bundle();
 		args.putLong(ARG_CLIENTE, id_cliente);
+        args.putInt(ARG_TIPO, tipo);
 		fragment.setArguments(args);
 		return fragment;
 	}
 
 	public static String ARG_CLIENTE = "cliente";
+    public static String ARG_TIPO = "tipo";
 	private ViewPager PagerDetalles;
 	private DetailsPageAdapter pagerAdapter;
 	private LayoutInflater inflater;
@@ -98,8 +101,10 @@ public class CrearClienteFragment extends BaseFragment {
 	private ImageButton TabContactos;
 	private LinearLayout ContactosContainer, DireccionContainer;
 	private List<LinearLayout> listViewDirecciones, listViewContactos;
+    private List<GeopoliticalStructure> listCiudades;
 	private int curentPage;
 	private long idCliente = 0;
+    private int tipo;
 	Uri photo = Utils.getOutputMediaFileUri(Utils.MEDIA_TYPE_IMAGE);
 	boolean isClient;
 	int posContact = -1;
@@ -155,6 +160,94 @@ public class CrearClienteFragment extends BaseFragment {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
+    private void SetCamposDireccion(){
+        List<Campo> campos = Campo.getCampos(getDataBase(), tipo);
+        for(Campo campo : campos) {
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_DIRECCION_DESCRIPCION))
+                listViewDirecciones.get(listViewDirecciones.size() -1).findViewById(R.id.cliente_direccion).setEnabled(false);
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_REFERENCIA))
+                listViewDirecciones.get(listViewDirecciones.size() -1).findViewById(R.id.cliente_referencia).setEnabled(false);
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_CIUDAD))
+                listViewDirecciones.get(listViewDirecciones.size() -1).findViewById(R.id.cliente_ciudad).setEnabled(false);
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_DIRECCION_MOVIL))
+                listViewDirecciones.get(listViewDirecciones.size() -1).findViewById(R.id.cliente_telefono1).setEnabled(false);
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_DIRECCION_FIJO))
+                listViewDirecciones.get(listViewDirecciones.size() -1).findViewById(R.id.cliente_telefono2).setEnabled(false);
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_POSICION_GEO))
+                listViewDirecciones.get(listViewDirecciones.size() -1).findViewById(R.id.cliente_ubicacion).setEnabled(false);
+        }
+    }
+    private void SetCamposContactos() {
+        List<Campo> campos = Campo.getCampos(getDataBase(), tipo);
+        for(Campo campo : campos) {
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_NOMBRE_CONTACTO))
+                listViewContactos.get(listViewContactos.size()-1).findViewById(R.id.cliente_nombres).setEnabled(false);
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_APELLIDO_CONTACTO))
+                listViewContactos.get(listViewContactos.size()-1).findViewById(R.id.cliente_apellidos).setEnabled(false);
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_DIRECCION_CONTACTO))
+                listViewContactos.get(listViewContactos.size()-1).findViewById(R.id.cliente_direccion_contacto).setEnabled(false);
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_MOVIL_CONTACTO))
+                listViewContactos.get(listViewContactos.size()-1).findViewById(R.id.cliente_telefono1_contacto).setEnabled(false);
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_FIJO_CONTACTO))
+                listViewContactos.get(listViewContactos.size()-1).findViewById(R.id.cliente_telefono2_contacto).setEnabled(false);
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_CARGO_CONTACTO))
+                listViewContactos.get(listViewContactos.size()-1).findViewById(R.id.cliente_cargo).setEnabled(false);
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_CORREO_CONTACTO))
+                listViewContactos.get(listViewContactos.size()-1).findViewById(R.id.cliente_correo_contacto).setEnabled(false);
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_FOTO_CONTACTO))
+                listViewContactos.get(listViewContactos.size()-1).findViewById(R.id.cliente_contacto_foto).setEnabled(false);
+        }
+    }
+
+    private void SetCampos() {
+        List<Campo> campos = Campo.getCampos(getDataBase(), tipo);
+        //direccion.findViewById(R.id.agregar_direccion).setVisibility(View.GONE);
+        //contacto.findViewById(R.id.agregar_contacto).setVisibility(View.GONE);
+        if(tipo == Contants.IS_MODIFICACION)
+            info.findViewById(R.id.crear_cliente_tipo_persona).setEnabled(false);
+        for(Campo campo : campos) {
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_TIPO_IDENTIFICACION))
+                info.findViewById(R.id.cliente_tipo_identificacion).setEnabled(false);
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_IDENTIFICACION))
+                info.findViewById(R.id.cliente_identificacion).setEnabled(false);
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_TIPO_CLI))
+                info.findViewById(R.id.cliente_tipo_cliente).setEnabled(false);
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_CANAL))
+                info.findViewById(R.id.cliente_canal).setEnabled(false);
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_FOTO))
+                info.findViewById(R.id.cliente_foto).setEnabled(false);
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_FECHA_NACIMIENTO))
+                info.findViewById(R.id.cliente_fecha_nacimiento).setEnabled(false);
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_GENERO))
+                info.findViewById(R.id.cliente_genero).setEnabled(false);
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_ESTADO_CIVIL))
+                info.findViewById(R.id.cliente_estado_civil).setEnabled(false);
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_PRIMER_NOMBRE_NATURAL))
+                info.findViewById(R.id.cliente_primer_nombre).setEnabled(false);
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_SEGUNDO_NOMBRE_NATURAL))
+                info.findViewById(R.id.cliente_segundo_nombre).setEnabled(false);
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_PRIMER_APELLIDO_NATURAL))
+                info.findViewById(R.id.cliente_primer_apellido).setEnabled(false);
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_SEGUNDO_APELLIDO_NATURAL))
+                info.findViewById(R.id.cliente_segundo_apellido).setEnabled(false);
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_CORREO))
+                info.findViewById(R.id.cliente_correo).setEnabled(false);
+
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_NOMBRE_JURIDICO))
+                info.findViewById(R.id.cliente_nombre).setEnabled(false);
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_RAZON_SOCIAL))
+                info.findViewById(R.id.cliente_razon_social).setEnabled(false);
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_PAGINA_WEB))
+                info.findViewById(R.id.cliente_pagina_web).setEnabled(false);
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_ACTIVIDAD_ECONOMICA))
+                info.findViewById(R.id.cliente_actividad_economica).setEnabled(false);
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_CORREO))
+                info.findViewById(R.id.cliente_correo_juridico).setEnabled(false);
+
+        }
+
+    }
 	
 	private void Grabar() {
 		Cliente cli = new Cliente();
@@ -224,7 +317,8 @@ public class CrearClienteFragment extends BaseFragment {
 				cliDir.setTelefono2(((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_telefono2)).getText().toString());
 				cliDir.setReferencia(((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_referencia)).getText().toString());
 				cliDir.setCiudadDescripcion(((AutoCompleteTextView)listViewDirecciones.get(i).findViewById(R.id.cliente_ciudad)).getText().toString());
-				cliDir.setIdCiudad((int) GeopoliticalStructure.getGeopoliticalStructureName(getDataBase(),(((AutoCompleteTextView)listViewDirecciones.get(i).findViewById(R.id.cliente_ciudad)).getText().toString())).getID());
+                if(listCiudades.size() > i && listCiudades.get(i) != null)
+				    cliDir.setIdCiudad((int) listCiudades.get(i).getID());
 
 				if(!((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_longitud)).getText().toString().equals(""))
 				{
@@ -293,6 +387,7 @@ public class CrearClienteFragment extends BaseFragment {
 		{
 		listViewDirecciones = new ArrayList<LinearLayout>();
 		listViewContactos = new ArrayList<LinearLayout>();
+        listCiudades = new ArrayList<GeopoliticalStructure>();
 		//ciudades = GeopoliticalStructure.getGeopoliticalStructureCities(getDataBase());
 		
 		adapter = new GeopoliticalStructureAdapter(getContext(), getDataBase());
@@ -438,14 +533,20 @@ public class CrearClienteFragment extends BaseFragment {
 				setPageConfig(arg0);
 				
 			}});
+        if(getArguments().containsKey(ARG_TIPO) && getArguments().getInt(ARG_TIPO) != 0 && !rotated)
+        {
+            tipo = getArguments().getInt(ARG_TIPO);
+            SetCampos();
+        }
 		if(getArguments().containsKey(ARG_CLIENTE) && getArguments().getLong(ARG_CLIENTE) != 0 && !rotated)
 		{
 			idCliente = getArguments().getLong(ARG_CLIENTE);
 			setDatosClientes();
 		}
 	}
-	
-	private void setDatosClientes() {
+
+
+    private void setDatosClientes() {
 		DrawableManager DManager = new DrawableManager();
         SimpleDateFormat format1 = new SimpleDateFormat("dd MMMM yyyy");
 		Cliente cli = Cliente.getClienteID(getDataBase(), idCliente, true);
@@ -469,7 +570,7 @@ public class CrearClienteFragment extends BaseFragment {
 			((EditText)info.findViewById(R.id.cliente_segundo_apellido)).setText(cli.getApellido2());
 			((EditText)info.findViewById(R.id.cliente_correo)).setText(cli.getCorreoElectronico());
 			((Spinner)info.findViewById(R.id.cliente_genero)).setSelection(getPosition(((Spinner)info.findViewById(R.id.cliente_genero)).getAdapter(), cli.getGenero()));
-			((Spinner)info.findViewById(R.id.cliente_estado_civil)).setSelection(getPosition(((Spinner)info.findViewById(R.id.cliente_estado_civil)).getAdapter(), cli.getGenero()));
+			((Spinner)info.findViewById(R.id.cliente_estado_civil)).setSelection(getPosition(((Spinner)info.findViewById(R.id.cliente_estado_civil)).getAdapter(), cli.getEstadoCivil()));
 		}
 		else
 		{
@@ -478,25 +579,6 @@ public class CrearClienteFragment extends BaseFragment {
 			((EditText)info.findViewById(R.id.cliente_correo_juridico)).setText(cli.getCorreoElectronico());
 			((EditText)info.findViewById(R.id.cliente_razon_social)).setText(cli.getRazonSocial());
 			((EditText)info.findViewById(R.id.cliente_pagina_web)).setText(cli.getPaginaWeb());
-		}
-		
-		if(!cli.isNuevo())
-		{
-			((Spinner)info.findViewById(R.id.cliente_canal)).setEnabled(false);
-			((Spinner)info.findViewById(R.id.cliente_tipo_identificacion)).setEnabled(false);
-			((EditText)info.findViewById(R.id.cliente_identificacion)).setEnabled(false);
-			((Spinner)info.findViewById(R.id.crear_cliente_tipo_persona)).setEnabled(false);
-			((Spinner)info.findViewById(R.id.cliente_tipo_cliente)).setEnabled(false);
-			((EditText)info.findViewById(R.id.cliente_primer_nombre)).setEnabled(false);
-			((EditText)info.findViewById(R.id.cliente_segundo_nombre)).setEnabled(false);
-			((EditText)info.findViewById(R.id.cliente_primer_apellido)).setEnabled(false);
-			((EditText)info.findViewById(R.id.cliente_segundo_apellido)).setEnabled(false);
-			((Spinner)info.findViewById(R.id.cliente_genero)).setEnabled(false);
-			((EditText)info.findViewById(R.id.cliente_nombre)).setEnabled(false);
-			((EditText)info.findViewById(R.id.cliente_actividad_economica)).setEnabled(false);
-			((EditText)info.findViewById(R.id.cliente_razon_social)).setEnabled(false);
-			((EditText)info.findViewById(R.id.cliente_pagina_web)).setEnabled(false);
-			//((ImageButton)info.findViewById(R.id.cliente_foto)).setEnabled(false);
 		}
 		
 		for(int i = 0; i < cli.getClienteDirecciones().size(); i ++)
@@ -509,9 +591,9 @@ public class CrearClienteFragment extends BaseFragment {
 			((CheckBox)listViewDirecciones.get(i).findViewById(R.id.cliente_es_principal)).setChecked(cli.getClienteDirecciones().get(i).getEsPrincipal());
 			((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_telefono1)).setText(cli.getClienteDirecciones().get(i).getTelefono1());
 			((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_telefono2)).setText(cli.getClienteDirecciones().get(i).getTelefono2());
-            if(cli.getClienteDirecciones().get(i).getReferencia() != null && !cli.getClienteDirecciones().get(i).getReferencia().equalsIgnoreCase("null"))
-			    ((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_referencia)).setText(cli.getClienteDirecciones().get(i).getReferencia());
+			((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_referencia)).setText(cli.getClienteDirecciones().get(i).getReferencia());
 			((AutoCompleteTextView)listViewDirecciones.get(i).findViewById(R.id.cliente_ciudad)).setText(cli.getClienteDirecciones().get(i).getCiudadDescripcion());
+            listCiudades.add(null);
 			if(cli.getClienteDirecciones().get(i).getLongitud() != 0)
 			{
 				((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_longitud)).setText("" + cli.getClienteDirecciones().get(i).getLongitud());
@@ -580,14 +662,16 @@ public class CrearClienteFragment extends BaseFragment {
 	private void addDireccion()
 	{
 		final LinearLayout direccion = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.layout_cliente_direccion_detail, null);
+        final int pos = listViewDirecciones.size();
 		((Button) direccion.findViewById(R.id.eliminar_direccion)).setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
 				listViewDirecciones.remove(direccion);
-				DireccionContainer.removeView(direccion);		
+				DireccionContainer.removeView(direccion);
+                listCiudades.remove(pos);
 			}});
-		final int pos = listViewDirecciones.size();
+
         if(pos == 0)
             ((CheckBox) direccion.findViewById(R.id.cliente_es_principal)).setChecked(true);
 		((ImageButton) direccion.findViewById(R.id.cliente_ubicacion)).setOnClickListener(new OnClickListener(){
@@ -626,9 +710,37 @@ public class CrearClienteFragment extends BaseFragment {
 		
 		((AutoCompleteTextView)direccion.findViewById(R.id.cliente_ciudad)).setAdapter(adapter);
 		((AutoCompleteTextView)direccion.findViewById(R.id.cliente_ciudad)).setThreshold(3);
-		
+        if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            ((AutoCompleteTextView)direccion.findViewById(R.id.cliente_ciudad)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    listCiudades.set(pos, adapter.getItem(i));
+                }
+            });
+
+
+        } else {
+            ((AutoCompleteTextView)direccion.findViewById(R.id.cliente_ciudad)).setOnDismissListener(new AutoCompleteTextView.OnDismissListener() {
+
+                @Override
+                public void onDismiss() {
+                    GeopoliticalStructure setter = adapter.getSelected(((AutoCompleteTextView)direccion.findViewById(R.id.cliente_ciudad)).getText().toString());
+                    if(setter != null)
+                        listCiudades.set(pos, setter);
+                }
+            });
+        }
+        ((AutoCompleteTextView)direccion.findViewById(R.id.cliente_ciudad)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                listCiudades.set(pos, adapter.getItem(i));
+            }
+        });
+        listCiudades.add(null);
 		DireccionContainer.addView(direccion);
 		listViewDirecciones.add(direccion);
+
+        SetCamposDireccion();
 	}
 	
 	private void addContacto()
@@ -655,6 +767,7 @@ public class CrearClienteFragment extends BaseFragment {
 			}});
 		ContactosContainer.addView(contacto);
 		listViewContactos.add(contacto);
+        SetCamposContactos();
 	}
 	
 	private void setPageConfig(int page){
@@ -739,22 +852,22 @@ public class CrearClienteFragment extends BaseFragment {
 		}
 		if(((Spinner) info.findViewById(R.id.crear_cliente_tipo_persona)).getSelectedItemPosition() == 1)
 		{
-			if(((EditText)info.findViewById(R.id.cliente_primer_nombre)).getText().toString().trim().length() <= 0)
+			if(((EditText)info.findViewById(R.id.cliente_primer_nombre)).getText().toString().trim().length() <= 0 && info.findViewById(R.id.cliente_primer_nombre).isEnabled())
 			{
 				Toast.makeText(getContext(), "Falta primer nombre de cliente.", Toast.LENGTH_LONG).show();
 				return false;
 			}
-			if(((EditText)info.findViewById(R.id.cliente_primer_apellido)).getText().toString().trim().length() <= 0)
+			if(((EditText)info.findViewById(R.id.cliente_primer_apellido)).getText().toString().trim().length() <= 0 && info.findViewById(R.id.cliente_primer_apellido).isEnabled())
 			{
 				Toast.makeText(getContext(), "Falta primer apellido de cliente.", Toast.LENGTH_LONG).show();
 				return false;
 			}
-            if(cliente.getFechaNacimiento().getTime() >= Calendar.getInstance().getTime().getTime())
+            if((cliente.getFechaNacimiento() == null || cliente.getFechaNacimiento().getTime() >= Calendar.getInstance().getTime().getTime()) && info.findViewById(R.id.cliente_fecha_nacimiento).isEnabled())
             {
                 Toast.makeText(getContext(), "Fecha de nacimiento no puede ser mayor a hoy.", Toast.LENGTH_LONG).show();
                 return false;
             }
-            if(((EditText)info.findViewById(R.id.cliente_correo)).getText().toString().trim().length() > 0)
+            if(((EditText)info.findViewById(R.id.cliente_correo)).getText().toString().trim().length() > 0 && info.findViewById(R.id.cliente_correo).isEnabled())
             {
                 if(!((EditText)info.findViewById(R.id.cliente_correo)).getText().toString().trim().contains("@") ||
                         !((EditText)info.findViewById(R.id.cliente_correo)).getText().toString().trim().contains(".")) {
@@ -770,7 +883,7 @@ public class CrearClienteFragment extends BaseFragment {
 				Toast.makeText(getContext(), "Falta nombre de cliente.", Toast.LENGTH_LONG).show();
 				return false;
 			}
-            if(((EditText)info.findViewById(R.id.cliente_correo_juridico)).getText().toString().trim().length() > 0)
+            if(((EditText)info.findViewById(R.id.cliente_correo_juridico)).getText().toString().trim().length() > 0 && info.findViewById(R.id.cliente_correo_juridico).isEnabled())
             {
                 if(!((EditText)info.findViewById(R.id.cliente_correo_juridico)).getText().toString().trim().contains("@") ||
                         !((EditText)info.findViewById(R.id.cliente_correo_juridico)).getText().toString().trim().contains(".")) {
@@ -780,7 +893,7 @@ public class CrearClienteFragment extends BaseFragment {
             }
 		}
 
-		if(((EditText)info.findViewById(R.id.cliente_identificacion)).getText().toString().trim().length() > 0 && idCliente == 0)
+		if(((EditText)info.findViewById(R.id.cliente_identificacion)).getText().toString().trim().length() > 0 && info.findViewById(R.id.cliente_identificacion).isEnabled())
 		{
             if(!IdentificationValidator.ValidateIdentification(((EditText)info.findViewById(R.id.cliente_identificacion)).getText().toString(),
                     (int) ((Spinner)info.findViewById(R.id.cliente_tipo_identificacion)).getAdapter().getItemId(((Spinner)info.findViewById(R.id.cliente_tipo_identificacion)).getSelectedItemPosition())))
@@ -793,19 +906,14 @@ public class CrearClienteFragment extends BaseFragment {
         boolean existsPrincipal = false;
 		for(int i = 0; i < listViewDirecciones.size(); i++)
 		{
-			String dir =(((AutoCompleteTextView)listViewDirecciones.get(i).findViewById(R.id.cliente_ciudad)).getText().toString());
-			try
-			{
-				int id = ((int) GeopoliticalStructure.getGeopoliticalStructureName(getDataBase(),(((AutoCompleteTextView)listViewDirecciones.get(i).findViewById(R.id.cliente_ciudad)).getText().toString())).getID());
-				if(id == 0)
-				{
-					Toast.makeText(getContext(), "Ingrese correctamente la ciudad en una de las direcciones ingresadas.", Toast.LENGTH_LONG).show();
-					return false;
-				}
-			}
-			catch(Exception ex)
-			{
-				Toast.makeText(getContext(), "Ingrese correctamente la ciudad en una de las direcciones ingresadas.", Toast.LENGTH_LONG).show();
+            if(((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_direccion)).getText().toString().length() <= 0 && listViewDirecciones.get(i).findViewById(R.id.cliente_direccion).isEnabled())
+            {
+                Toast.makeText(getContext(), "Debe de ingresar una dirección del cliente.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+			if(((AutoCompleteTextView)listViewDirecciones.get(i).findViewById(R.id.cliente_ciudad)).getText().toString().length() <= 0 && listViewDirecciones.get(i).findViewById(R.id.cliente_ciudad).isEnabled())
+            {
+				Toast.makeText(getContext(), "Ingrese una ciudad en la dirección del cliente.", Toast.LENGTH_LONG).show();
 				return false;
 			}
 
@@ -815,10 +923,18 @@ public class CrearClienteFragment extends BaseFragment {
 
         for(int i = 0; i < listViewContactos.size(); i++)
         {
-            if(((EditText)listViewContactos.get(i).findViewById(R.id.cliente_nombres)).getText().length() <= 0)
+            if(((EditText)listViewContactos.get(i).findViewById(R.id.cliente_nombres)).getText().length() <= 0 && listViewContactos.get(i).findViewById(R.id.cliente_nombres).isEnabled())
             {
                 Toast.makeText(getContext(), "Debe de ingresar los nombres del contacto.", Toast.LENGTH_LONG).show();
                 return false;
+            }
+            if(((EditText)listViewContactos.get(i).findViewById(R.id.cliente_correo_contacto)).getText().length() > 0 && listViewContactos.get(i).findViewById(R.id.cliente_correo_contacto).isEnabled())
+            {
+                if(!((EditText)listViewContactos.get(i).findViewById(R.id.cliente_correo_contacto)).getText().toString().trim().contains("@") ||
+                        !((EditText)listViewContactos.get(i).findViewById(R.id.cliente_correo_contacto)).getText().toString().trim().contains(".")) {
+                    Toast.makeText(getContext(), "Mail incorrecto.", Toast.LENGTH_LONG).show();
+                    return false;
+                }
             }
         }
 

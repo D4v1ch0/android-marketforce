@@ -1,6 +1,8 @@
 package rp3.marketforce.cliente;
 
 import rp3.app.BaseFragment;
+import rp3.configuration.PreferenceManager;
+import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.cliente.ClientDetailFragment.ClienteDetailFragmentListener;
 import rp3.marketforce.cliente.ClientListFragment.ClienteListFragmentListener;
@@ -157,13 +159,28 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
     private void RefreshMenu(){
         if(!mTwoPane){
             menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
-            menu.findItem(R.id.action_crear_cliente).setVisible(isActiveListFragment);
-            menu.findItem(R.id.action_editar_cliente).setVisible(!isActiveListFragment);
+            if(PreferenceManager.getBoolean(Contants.KEY_PERMITIR_CREACION))
+                menu.findItem(R.id.action_crear_cliente).setVisible(isActiveListFragment);
+            else
+                menu.findItem(R.id.action_crear_cliente).setVisible(false);
+
+            if(PreferenceManager.getBoolean(Contants.KEY_PERMITIR_MODIFICACION))
+                menu.findItem(R.id.action_editar_cliente).setVisible(!isActiveListFragment);
+            else
+                menu.findItem(R.id.action_editar_cliente).setVisible(false);
         }
         else{
             menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
-            menu.findItem(R.id.action_crear_cliente).setVisible(isActiveListFragment);
-            menu.findItem(R.id.action_editar_cliente).setVisible(selectedClientId!=0);
+            if(PreferenceManager.getBoolean(Contants.KEY_PERMITIR_CREACION))
+                menu.findItem(R.id.action_crear_cliente).setVisible(isActiveListFragment);
+            else
+                menu.findItem(R.id.action_crear_cliente).setVisible(false);
+
+            if(PreferenceManager.getBoolean(Contants.KEY_PERMITIR_MODIFICACION))
+                menu.findItem(R.id.action_editar_cliente).setVisible(selectedClientId!=0);
+            else
+                menu.findItem(R.id.action_editar_cliente).setVisible(false);
+
         }
     }
 	 

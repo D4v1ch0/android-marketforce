@@ -14,6 +14,7 @@ public class AgendaTareaActividades extends rp3.data.entity.EntityBase<AgendaTar
 	private long id;
 	private String descripcion;
 	private int idAgenda;
+    private long _idAgenda;
 	private int idRuta;
 	private int idTarea;
 	private int idTareaActividad;
@@ -54,6 +55,7 @@ public class AgendaTareaActividades extends rp3.data.entity.EntityBase<AgendaTar
 		setValue(Contract.AgendaTareaActividades.COLUMN_TAREA_ACTIVIDAD_ID, this.idTareaActividad);
 		setValue(Contract.AgendaTareaActividades.COLUMN_RESULTADO, this.resultado);
         setValue(Contract.AgendaTareaActividades.COLUMN_IDS_RESULTADO, this.idsResultado);
+        setValue(Contract.AgendaTareaActividades.COLUMN_AGENDA_ID_EXT, this._idAgenda);
 	}
 
 	@Override
@@ -138,7 +140,17 @@ public class AgendaTareaActividades extends rp3.data.entity.EntityBase<AgendaTar
 		this.orden = orden;
 	}
 
-	public String getResultado() {
+
+    public long get_idAgenda() {
+        return _idAgenda;
+    }
+
+    public void set_idAgenda(long _idAgenda) {
+        this._idAgenda = _idAgenda;
+    }
+
+
+    public String getResultado() {
 		return resultado;
 	}
 
@@ -285,23 +297,23 @@ public class AgendaTareaActividades extends rp3.data.entity.EntityBase<AgendaTar
 		return lista_actividades;
 	}
 	
-	public static AgendaTareaActividades getActividadSimple(DataBase db, long id_ruta, long id_agenda, long id_tarea, long idActividad)
+	public static AgendaTareaActividades getActividadSimpleIdIntern(DataBase db, long id_agenda, long id_tarea, long idActividad)
 	{
 		AgendaTareaActividades actividad = null;
 		
 		Cursor c = db.query(Contract.AgendaTareaActividades.TABLE_NAME,
-				new String[] {Contract.AgendaTareaActividades._ID,Contract.AgendaTareaActividades.COLUMN_AGENDA_ID, Contract.AgendaTareaActividades.COLUMN_RESULTADO,Contract.AgendaTareaActividades.COLUMN_IDS_RESULTADO,
-				Contract.AgendaTareaActividades.COLUMN_RUTA_ID, Contract.AgendaTareaActividades.COLUMN_TAREA_ACTIVIDAD_ID, Contract.AgendaTareaActividades.COLUMN_TAREA_ID},
-				Contract.AgendaTareaActividades.COLUMN_RUTA_ID + " = ? AND " +
-				Contract.AgendaTareaActividades.COLUMN_AGENDA_ID + " = ? AND " +
+				new String[] {Contract.AgendaTareaActividades._ID,Contract.AgendaTareaActividades.COLUMN_AGENDA_ID, Contract.AgendaTareaActividades.COLUMN_RESULTADO, Contract.AgendaTareaActividades.COLUMN_IDS_RESULTADO,
+				Contract.AgendaTareaActividades.COLUMN_RUTA_ID, Contract.AgendaTareaActividades.COLUMN_TAREA_ACTIVIDAD_ID, Contract.AgendaTareaActividades.COLUMN_TAREA_ID, Contract.AgendaTareaActividades.COLUMN_AGENDA_ID_EXT},
+				Contract.AgendaTareaActividades.COLUMN_AGENDA_ID_EXT + " = ? AND " +
 				Contract.AgendaTareaActividades.COLUMN_TAREA_ID + " = ? AND " +
-				Contract.AgendaTareaActividades.COLUMN_TAREA_ACTIVIDAD_ID + " = ?", new String[] {id_ruta + "", id_agenda + "", id_tarea + "", idActividad + ""} );
+				Contract.AgendaTareaActividades.COLUMN_TAREA_ACTIVIDAD_ID + " = ?", new String[] {id_agenda + "", id_tarea + "", idActividad + ""} );
 		
 		if(c.moveToFirst())
 		{
 			actividad = new AgendaTareaActividades();
 			actividad.setID(CursorUtils.getLong(c, Contract.AgendaTareaActividades._ID));
 			actividad.setIdAgenda(CursorUtils.getInt(c, Contract.AgendaTareaActividades.COLUMN_AGENDA_ID));
+            actividad.set_idAgenda(CursorUtils.getInt(c, Contract.AgendaTareaActividades.COLUMN_AGENDA_ID_EXT));
 			//actividad.setDescripcion(CursorUtils.getString(c, Contract.Actividades.COLUMN_DESCRIPCION));
 			//actividad.setOrden(CursorUtils.getInt(c, Contract.Actividades.COLUMN_ORDEN));
             actividad.setIdsResultado(CursorUtils.getString(c, Contract.AgendaTareaActividades.COLUMN_IDS_RESULTADO));
@@ -317,6 +329,40 @@ public class AgendaTareaActividades extends rp3.data.entity.EntityBase<AgendaTar
 		
 		return actividad;
 	}
+
+    public static AgendaTareaActividades getActividadSimple(DataBase db, int id_ruta, long id_agenda, long id_tarea, long idActividad)
+    {
+        AgendaTareaActividades actividad = null;
+
+        Cursor c = db.query(Contract.AgendaTareaActividades.TABLE_NAME,
+                new String[] {Contract.AgendaTareaActividades._ID,Contract.AgendaTareaActividades.COLUMN_AGENDA_ID, Contract.AgendaTareaActividades.COLUMN_RESULTADO, Contract.AgendaTareaActividades.COLUMN_IDS_RESULTADO,
+                        Contract.AgendaTareaActividades.COLUMN_RUTA_ID, Contract.AgendaTareaActividades.COLUMN_TAREA_ACTIVIDAD_ID, Contract.AgendaTareaActividades.COLUMN_TAREA_ID, Contract.AgendaTareaActividades.COLUMN_AGENDA_ID_EXT},
+                Contract.AgendaTareaActividades.COLUMN_RUTA_ID + " = ? AND " +
+                        Contract.AgendaTareaActividades.COLUMN_AGENDA_ID + " = ? AND " +
+                        Contract.AgendaTareaActividades.COLUMN_TAREA_ID + " = ? AND " +
+                        Contract.AgendaTareaActividades.COLUMN_TAREA_ACTIVIDAD_ID + " = ?", new String[] {id_ruta + "", id_agenda + "", id_tarea + "", idActividad + ""} );
+
+        if(c.moveToFirst())
+        {
+            actividad = new AgendaTareaActividades();
+            actividad.setID(CursorUtils.getLong(c, Contract.AgendaTareaActividades._ID));
+            actividad.setIdAgenda(CursorUtils.getInt(c, Contract.AgendaTareaActividades.COLUMN_AGENDA_ID));
+            actividad.set_idAgenda(CursorUtils.getInt(c, Contract.AgendaTareaActividades.COLUMN_AGENDA_ID_EXT));
+            //actividad.setDescripcion(CursorUtils.getString(c, Contract.Actividades.COLUMN_DESCRIPCION));
+            //actividad.setOrden(CursorUtils.getInt(c, Contract.Actividades.COLUMN_ORDEN));
+            actividad.setIdsResultado(CursorUtils.getString(c, Contract.AgendaTareaActividades.COLUMN_IDS_RESULTADO));
+            actividad.setResultado(CursorUtils.getString(c, Contract.AgendaTareaActividades.COLUMN_RESULTADO));
+            actividad.setIdRuta(CursorUtils.getInt(c, Contract.AgendaTareaActividades.COLUMN_RUTA_ID));
+            actividad.setIdTareaActividad(CursorUtils.getInt(c, Contract.AgendaTareaActividades.COLUMN_TAREA_ACTIVIDAD_ID));
+            //actividad.setIdTareaActividadPadre(CursorUtils.getInt(c, Contract.Actividades.COLUMN_TAREA_ACTIVIDAD_PADRE_ID));
+            actividad.setIdTarea(CursorUtils.getInt(c, Contract.AgendaTareaActividades.COLUMN_TAREA_ID));
+            //actividad.setIdTareaOpcion(CursorUtils.getInt(c, Contract.AgendaTareaActividades.COLUMN_TAREA_OPCION_ID));
+            //actividad.setTipo(CursorUtils.getString(c, Contract.Actividades.COLUMN_TIPO));
+            //actividad.setIdTipoActividad(CursorUtils.getInt(c, Contract.Actividades.COLUMN_TIPO_ACTIVIDAD_ID));
+        }
+
+        return actividad;
+    }
 	
 	public static AgendaTareaActividades getActividadSimpleFromParent(DataBase db, long id_ruta, long id_agenda, long id_tarea, long id_actividad, long id_padre)
 	{

@@ -297,4 +297,39 @@ public class Utils {
 		ps.append(ex);
 		ps.close();
 	}
+
+    public static String getImagesPath()
+    {
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), "MarketForce");
+        if (! mediaStorageDir.exists()){
+            if (! mediaStorageDir.mkdirs()){
+                Log.d("MyCameraApp", "failed to create directory");
+                return null;
+            }
+        }
+        return mediaStorageDir.getPath() + "/";
+    }
+
+    public static String SaveBitmap(Bitmap bitmap, String filename)
+    {
+        filename = Utils.getImagesPath() + filename;
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream(filename);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out); // bmp is your Bitmap instance
+            // PNG is a lossless format, the compression factor (100) is ignored
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return filename;
+    }
 }

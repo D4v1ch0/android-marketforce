@@ -31,6 +31,7 @@
      <color name="color_text_sky_blue">#2582b4</color>
      <color name="bg_layout_dates">#c4c6c8</color>
      <color name="color_visited">#6FBF56</color>
+     <color name="color_orange">#FF8838</color>
      <color name="color_pending">#335AA8</color>
      <color name="color_unvisited">#BE2026</color>
      <color name="color_grey_lines">#cccccc</color>

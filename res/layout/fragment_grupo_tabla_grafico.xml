@@ -41,25 +41,28 @@
                     android:textStyle="bold" />
 
                 <ImageView
-                    android:id="@+id/detail_tab_info_arrow"
+                    android:id="@+id/header_visited"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.15"
-                    android:src="@drawable/circle_visited" />
+                    android:src="@drawable/circle_visited"
+                    android:clickable="true" />
 
                 <ImageView
-                    android:id="@+id/recorrido_anterior"
+                    android:id="@+id/header_unvisited"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.15"
-                    android:src="@drawable/circle_unvisited" />
+                    android:src="@drawable/circle_unvisited"
+                    android:clickable="true" />
 
                 <ImageView
-                    android:id="@+id/imageView3"
+                    android:id="@+id/header_pending"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.15"
-                    android:src="@drawable/circle_pending" />
+                    android:src="@drawable/circle_pending"
+                    android:clickable="true" />
             </LinearLayout>
 
             <ListView

@@ -164,29 +164,56 @@ public class AgendaTarea extends rp3.data.entity.EntityBase<AgendaTarea> {
 	}
 	
 	public static AgendaTarea getTarea(DataBase db, long idAgenda, int idRuta, int idTarea){
-				
+
 		Cursor c = db.query(Contract.AgendaTarea.TABLE_NAME, new String[] {Contract.AgendaTarea._ID, Contract.AgendaTarea.COLUMN_AGENDA_ID,
-				Contract.AgendaTarea.COLUMN_ESTADO_TAREA, Contract.AgendaTarea.COLUMN_RUTA_ID,
-				Contract.AgendaTarea.COLUMN_TAREA_ID}, 
-				Contract.AgendaTarea.COLUMN_AGENDA_ID + " = ? AND " + 
+				Contract.AgendaTarea.COLUMN_ESTADO_TAREA, Contract.AgendaTarea.COLUMN_RUTA_ID, Contract.AgendaTarea.COLUMN_AGENDA_ID_EXT,
+				Contract.AgendaTarea.COLUMN_TAREA_ID},
+				Contract.AgendaTarea.COLUMN_AGENDA_ID + " = ? AND " +
 				Contract.AgendaTarea.COLUMN_RUTA_ID + " = ? AND " +
 				Contract.AgendaTarea.COLUMN_TAREA_ID + " = ? ", new String[] { idAgenda + "", idRuta + "", idTarea + ""});
-		
-		
+
+
 		AgendaTarea tarea = new AgendaTarea();
 		if(c.moveToFirst()){
 
 			tarea.setID(CursorUtils.getInt(c, Contract.AgendaTarea._ID));
-			tarea.setIdRuta(CursorUtils.getInt(c, Contract.AgendaTarea.FIELD_RUTA_ID));	
+			tarea.setIdRuta(CursorUtils.getInt(c, Contract.AgendaTarea.FIELD_RUTA_ID));
 			tarea.setIdTarea(CursorUtils.getInt(c, Contract.AgendaTarea.FIELD_TAREA_ID));
 			tarea.setIdAgenda(CursorUtils.getLong(c, Contract.AgendaTarea.FIELD_AGENDA_ID));
+            tarea.set_idAgenda(CursorUtils.getInt(c, Contract.AgendaTarea.COLUMN_AGENDA_ID_EXT));
 			//tarea.setNombreTarea(CursorUtils.getString(c, Contract.Tareas.FIELD_NOMBRE_TAREA));
 			//tarea.setTipoTarea(CursorUtils.getString(c, Contract.Tareas.FIELD_TIPO_TAREA));
 			tarea.setEstadoTarea(CursorUtils.getString(c, Contract.AgendaTarea.FIELD_ESTADO_TAREA));
-			
+
 		}
 		return tarea;
 	}
+
+    public static AgendaTarea getTareaIntern(DataBase db, long idAgenda, int idRuta, int idTarea){
+
+        Cursor c = db.query(Contract.AgendaTarea.TABLE_NAME, new String[] {Contract.AgendaTarea._ID, Contract.AgendaTarea.COLUMN_AGENDA_ID,
+                        Contract.AgendaTarea.COLUMN_ESTADO_TAREA, Contract.AgendaTarea.COLUMN_RUTA_ID, Contract.AgendaTarea.COLUMN_AGENDA_ID_EXT,
+                        Contract.AgendaTarea.COLUMN_TAREA_ID},
+                        Contract.AgendaTarea.COLUMN_AGENDA_ID_EXT + " = ? AND " +
+                        Contract.AgendaTarea.COLUMN_RUTA_ID + " = ? AND " +
+                        Contract.AgendaTarea.COLUMN_TAREA_ID + " = ? ", new String[] { idAgenda + "", idRuta + "", idTarea + ""});
+
+
+        AgendaTarea tarea = new AgendaTarea();
+        if(c.moveToFirst()){
+
+            tarea.setID(CursorUtils.getInt(c, Contract.AgendaTarea._ID));
+            tarea.setIdRuta(CursorUtils.getInt(c, Contract.AgendaTarea.FIELD_RUTA_ID));
+            tarea.setIdTarea(CursorUtils.getInt(c, Contract.AgendaTarea.FIELD_TAREA_ID));
+            tarea.setIdAgenda(CursorUtils.getLong(c, Contract.AgendaTarea.FIELD_AGENDA_ID));
+            tarea.set_idAgenda(CursorUtils.getInt(c, Contract.AgendaTarea.COLUMN_AGENDA_ID_EXT));
+            //tarea.setNombreTarea(CursorUtils.getString(c, Contract.Tareas.FIELD_NOMBRE_TAREA));
+            //tarea.setTipoTarea(CursorUtils.getString(c, Contract.Tareas.FIELD_TIPO_TAREA));
+            tarea.setEstadoTarea(CursorUtils.getString(c, Contract.AgendaTarea.FIELD_ESTADO_TAREA));
+
+        }
+        return tarea;
+    }
 	
 	public static void deleteTareas(DataBase db, long idRuta, long idAgenda)
 	{

@@ -46,7 +46,10 @@ public class TextoActivity extends ActividadActivity {
 	    
 	    setTextViewText(R.id.label_pregunta_actividad, ata.getDescripcion());
 	    setTextViewText(R.id.detail_activity_number, numero + "");
-	    act = AgendaTareaActividades.getActividadSimple(getDataBase(), id_ruta, id_agenda, id_tarea, ata.getIdTareaActividad());
+        if(id_agenda != 0)
+	        act = AgendaTareaActividades.getActividadSimple(getDataBase(), id_ruta, id_agenda, id_tarea, ata.getIdTareaActividad());
+        else
+            act = AgendaTareaActividades.getActividadSimpleIdIntern(getDataBase(), id_agenda_int, id_tarea, ata.getIdTareaActividad());
 		if(act != null)
 		{
 			if(act.getResultado() != null && !act.getResultado().equalsIgnoreCase("null"))
@@ -86,7 +89,11 @@ public class TextoActivity extends ActividadActivity {
             else
                 AgendaTareaActividades.update(getDataBase(), act);
             if(!actSinGrupo) {
-                AgendaTarea agt = AgendaTarea.getTarea(getDataBase(), act.getIdAgenda(), act.getIdRuta(), ata.getIdTarea());
+                AgendaTarea agt = null;
+                if(act.getIdAgenda() != 0)
+                    agt = AgendaTarea.getTarea(getDataBase(), act.getIdAgenda(), act.getIdRuta(), ata.getIdTarea());
+                else
+                    agt = AgendaTarea.getTareaIntern(getDataBase(), act.get_idAgenda(), act.getIdRuta(), ata.getIdTarea());
                 agt.setEstadoTarea("R");
                 AgendaTarea.update(getDataBase(), agt);
             }

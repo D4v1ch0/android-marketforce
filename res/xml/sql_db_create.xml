@@ -59,7 +59,8 @@
 	  Telefono2 TEXT,
 	  Referencia TEXT,
 	  Latitud REAL,
-	  Longitud REAL
+	  Longitud REAL,
+      CiudadDescripcion TEXT
       )
 	</statement>
 	<statement>
@@ -154,6 +155,7 @@
 	  CREATE TABLE tbAgendaTareaActividades(
       _id INTEGER PRIMARY KEY AUTOINCREMENT,
       IdAgenda INTEGER,
+      _IdAgenda INTEGER,
       IdRuta INTEGER,
       IdTarea INTEGER,
       IdTareaActividad INTEGER,
@@ -209,4 +211,26 @@
       Pendiente BOOLEAN
       )
 	</statement>
+
+    <statement>
+        CREATE TABLE tbAgentesUbicacion(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdAgente INTEGER,
+        Nombres TEXT,
+        Apellidos TEXT,
+        Fecha INTEGER,
+        Latitud REAL,
+        Longitud REAL
+        )
+    </statement>
+
+    <statement>
+        CREATE TABLE tbCampos(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdCampo TEXT,
+        Creacion BOOLEAN,
+        Modificacion BOOLEAN,
+        Gestion BOOLEAN
+        )
+    </statement>
 </sql>
