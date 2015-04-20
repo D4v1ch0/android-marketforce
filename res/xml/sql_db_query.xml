@@ -923,7 +923,11 @@
        AND tbAgendaTarea.EstadoTarea = tbEstadoTarea.Code
        JOIN tbTarea
 	   ON tbTarea.IdTarea = tbAgendaTarea.IdTarea
+       JOIN tbGeneralValue tbTipoTarea
+       ON tbTipoTarea.GeneralTableId = 1010
+       AND tbTarea.TipoTarea = tbTipoTarea.Code
        WHERE IdAgenda = ? AND IdRuta = ?
+       ORDER BY tbTipoTarea.Reference1
      </statement>
      
 	 <statement name="AgendaTareaIdInterno">
@@ -941,9 +945,13 @@
 	   JOIN tbGeneralValue tbEstadoTarea
 	   ON tbEstadoTarea.GeneralTableId = 1014
        AND tbAgendaTarea.EstadoTarea = tbEstadoTarea.Code
+       JOIN tbGeneralValue tbTipoTarea
+       ON tbTipoTarea.GeneralTableId = 1010
+       AND tbTarea.TipoTarea = tbTipoTarea.Code
        JOIN tbTarea
 	   ON tbTarea.IdTarea = tbAgendaTarea.IdTarea
        WHERE _IdAgenda = ? AND IdRuta = ?
+       ORDER BY tbTipoTarea.Reference1
      </statement>
      
 	 <statement name="ActividadesGrupales">

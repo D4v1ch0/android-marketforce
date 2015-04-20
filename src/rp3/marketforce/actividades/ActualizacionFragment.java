@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -371,6 +373,9 @@ public class ActualizacionFragment extends BaseFragment {
             ArrowCont.setVisibility(View.INVISIBLE);
             setPageConfig(PagerDetalles.getCurrentItem());
             rotated = true;
+            if(agd.getIdContacto() == 0)
+                getRootView().findViewById(R.id.detail_tab_contactos_layout).setVisibility(View.GONE);
+
         }
         TabInfo.setOnClickListener(new View.OnClickListener(){
 
@@ -579,6 +584,10 @@ public class ActualizacionFragment extends BaseFragment {
                             rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + Utils.getImageDPISufix(getActivity(), contacto.getURLFoto()),
                     (ImageButton)listViewContactos.get(0).findViewById(R.id.cliente_contacto_foto));
         }
+        else
+        {
+            getRootView().findViewById(R.id.detail_tab_contactos_layout).setVisibility(View.GONE);
+        }
 
 
     }
@@ -603,6 +612,9 @@ public class ActualizacionFragment extends BaseFragment {
                         galleryIntent.setType("image/*");
                         galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
                         galleryIntent.putExtra("return-data", true);
+                        galleryIntent.putExtra("crop", "true");
+                        galleryIntent.putExtra("aspectX", 1);
+                        galleryIntent.putExtra("aspectY", 1);
                         getActivity().startActivityForResult(galleryIntent, idView);
                     }
                 });
@@ -612,6 +624,9 @@ public class ActualizacionFragment extends BaseFragment {
                     public void onClick(DialogInterface arg0, int arg1) {
                         Intent captureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                         captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photo);
+                        captureIntent.putExtra("crop", "true");
+                        captureIntent.putExtra("aspectX", 1);
+                        captureIntent.putExtra("aspectY", 1);
                         getActivity().startActivityForResult(captureIntent, idView);
 
                     }
@@ -770,20 +785,33 @@ public class ActualizacionFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            String path = "";
-            if(data == null)
-                path = photo.getPath();
+            Bitmap pree = null;
+            if(data.getData() != null) {
+                try {
+                    pree = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             else
-                path = Utils.getPath(data.getData(), getActivity());
+            if(data.getExtras().containsKey("data"))
+                pree = (Bitmap)data.getExtras().get("data");
+            else
+                try {
+                    photo = Uri.parse(data.getAction());
+                    pree = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), photo);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             if(isClient)
             {
-                ((ImageButton) info.findViewById(R.id.cliente_foto)).setImageBitmap(Utils.resizeBitMapImage(path, 500, 500));
-                cliente.setURLFoto(path);
+                ((ImageButton) info.findViewById(R.id.cliente_foto)).setImageBitmap(pree);
+                cliente.setURLFoto(Utils.SaveBitmap(pree, "new_client"));
             }
             else
             {
-                ((ImageButton) listViewContactos.get(posContact).findViewById(R.id.cliente_contacto_foto)).setImageBitmap(Utils.resizeBitMapImage(path, 500, 500));
-                contactPhotos.set(posContact, path);
+                ((ImageButton) listViewContactos.get(posContact).findViewById(R.id.cliente_contacto_foto)).setImageBitmap(pree);
+                contactPhotos.set(posContact, Utils.SaveBitmap(pree, "new_contact"));
             }
         }
     }

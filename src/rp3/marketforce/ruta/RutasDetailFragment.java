@@ -1,13 +1,10 @@
 package rp3.marketforce.ruta;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 
 import rp3.app.BaseActivity;
 import rp3.configuration.PreferenceManager;
-import rp3.data.models.GeneralValue;
-import rp3.db.sqlite.DataBase;
 import rp3.maps.utils.SphericalUtil;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
@@ -21,52 +18,34 @@ import rp3.marketforce.actividades.TextoActivity;
 import rp3.marketforce.models.Actividad;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.AgendaTarea;
-import rp3.marketforce.models.AgendaTareaActividades;
 import rp3.marketforce.models.Cliente;
 import rp3.marketforce.ruta.ObservacionesFragment.ObservacionesFragmentListener;
 import rp3.marketforce.sync.AsyncUpdater;
-import rp3.marketforce.sync.EnviarUbicacion;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.DrawableManager;
 import rp3.marketforce.utils.Utils;
 import rp3.util.BitmapUtils;
 import rp3.util.LocationUtils;
 import rp3.util.LocationUtils.OnLocationResultListener;
-import rp3.util.Screen;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentProviderOperation;
-import android.content.ContentProviderResult;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.OperationApplicationException;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.RemoteException;
-import android.provider.ContactsContract;
-import android.provider.ContactsContract.CommonDataKinds.Phone;
-import android.provider.ContactsContract.CommonDataKinds.StructuredName;
-import android.provider.ContactsContract.Contacts;
-import android.provider.ContactsContract.Data;
-import android.provider.ContactsContract.Intents;
-import android.provider.ContactsContract.RawContacts;
 import android.provider.MediaStore;
-import android.support.v4.view.MenuItemCompat;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -78,6 +57,9 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
     public static final String ARG_AGENDA_ID = "agenda";
     public static final String ARG_RUTA_ID = "ruta";
 
+    public static final String ARG_LONGITUD = "longitud";
+    public static final String ARG_LATITUD = "latitud";
+
     public static final String PARENT_SOURCE_LIST = "LIST";
     public static final String PARENT_SOURCE_SEARCH = "SEARCH";
     
@@ -88,7 +70,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
     private ListaTareasAdapter adapter;
     private ListView lista_tarea;
     private DrawableManager DManager;
-    private boolean soloVista = true;
+    private boolean soloVista = true, clienteNull = false;
 	private SimpleDateFormat format1;
 	private SimpleDateFormat format2;
 	protected ObservacionesFragment obsFragment;
@@ -153,8 +135,10 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
     public void onResume() {
     	super.onResume();
     	agenda = Agenda.getAgenda(getDataBase(), idAgenda);
-        if(agenda == null)
+        if(agenda == null) {
             agenda = Agenda.getAgendaClienteNull(getDataBase(), idAgenda);
+            clienteNull = true;
+        }
         if (agenda.getIdContacto() != 0) {
                 String apellido = "";
                 if (agenda.getContacto().getApellido() != null)
@@ -429,6 +413,8 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 								Bundle bundle = new Bundle();
 								bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_AGENDA_GEOLOCATION);
 								bundle.putInt(ARG_AGENDA_ID, (int) idAgenda);
+                                bundle.putDouble(ARG_LONGITUD, location.getLongitude());
+                                bundle.putDouble(ARG_LATITUD, location.getLatitude());
 								act.requestSync(bundle);
 	
 						}
@@ -614,14 +600,18 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 
     public void showTareaActualizacion(AgendaTarea agt)
     {
-        Intent intent = new Intent(getContext(), ActualizacionActivity.class);
-        intent.putExtra(ARG_ITEM_ID, agt.getIdTarea());
-        intent.putExtra(ARG_AGENDA_ID, agt.getIdAgenda());
-        intent.putExtra(ARG_RUTA_ID, agt.getIdRuta());
-        intent.putExtra(ActividadActivity.ARG_AGENDA_INT, agenda.getID());
-        intent.putExtra(ActividadActivity.ARG_VISTA, soloVista);
-        intent.putExtra(ActividadActivity.ARG_TITULO, agt.getNombreTarea());
-        startActivity(intent);
+        if(!clienteNull) {
+            Intent intent = new Intent(getContext(), ActualizacionActivity.class);
+            intent.putExtra(ARG_ITEM_ID, agt.getIdTarea());
+            intent.putExtra(ARG_AGENDA_ID, agt.getIdAgenda());
+            intent.putExtra(ARG_RUTA_ID, agt.getIdRuta());
+            intent.putExtra(ActividadActivity.ARG_AGENDA_INT, agenda.getID());
+            intent.putExtra(ActividadActivity.ARG_VISTA, soloVista);
+            intent.putExtra(ActividadActivity.ARG_TITULO, agt.getNombreTarea());
+            startActivity(intent);
+        }
+        else
+            Toast.makeText(this.getContext(), "Cliente esta eliminado de la ruta. No se puede actualizar.", Toast.LENGTH_LONG).show();
     }
 
 	@Override
