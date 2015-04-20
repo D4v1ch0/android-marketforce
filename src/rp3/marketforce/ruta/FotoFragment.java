@@ -61,11 +61,13 @@ public class FotoFragment extends BaseFragment {
         DManager = new DrawableManager();
         if(idAgenda != 0){
             agenda = Agenda.getAgenda(getDataBase(), idAgenda);
-            cli = Cliente.getClienteID(getDataBase(), agenda.getCliente().getID(), false);
-            if(agenda == null)
-            {
+            if (agenda == null) {
                 Toast.makeText(this.getContext(), "Cliente esta eliminado de la ruta", Toast.LENGTH_LONG).show();
                 finish();
+            }
+            else
+            {
+                cli = Cliente.getClienteID(getDataBase(), agenda.getCliente().getID(), false);
             }
         }
         super.setContentView(R.layout.fragment_foto_agenda);
@@ -74,10 +76,13 @@ public class FotoFragment extends BaseFragment {
     @Override
     public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
-        ((ImageView) this.getRootView().findViewById(R.id.foto_agenda)).setImageDrawable(getResources().getDrawable(R.drawable.user));
-        DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
-                        rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + agenda.getCliente().getURLFoto(),
-                (ImageView) this.getRootView().findViewById(R.id.foto_agenda));
+        if(cli != null)
+        {
+            ((ImageView) this.getRootView().findViewById(R.id.foto_agenda)).setImageDrawable(getResources().getDrawable(R.drawable.user));
+            DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
+                            rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + agenda.getCliente().getURLFoto(),
+                    (ImageView) this.getRootView().findViewById(R.id.foto_agenda));
+        }
     }
 
     protected void takePicture(final int idView) {
@@ -93,6 +98,8 @@ public class FotoFragment extends BaseFragment {
                         galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
                         galleryIntent.putExtra("return-data", true);
                         galleryIntent.putExtra("crop", "true");
+                        galleryIntent.putExtra("aspectX", 1);
+                        galleryIntent.putExtra("aspectY", 1);
                         getActivity().startActivityForResult(galleryIntent, idView);
                     }
                 });
@@ -103,6 +110,8 @@ public class FotoFragment extends BaseFragment {
                         Intent captureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                         captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photo);
                         captureIntent.putExtra("crop", "true");
+                        captureIntent.putExtra("aspectX", 1);
+                        captureIntent.putExtra("aspectY", 1);
                         getActivity().startActivityForResult(captureIntent, idView);
 
                     }

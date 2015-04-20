@@ -222,7 +222,9 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     addDefaultMessage(result);
                 } else if (syncType.equals(SYNC_TYPE_AGENDA_GEOLOCATION)) {
                     int id = extras.getInt(RutasDetailFragment.ARG_AGENDA_ID);
-                    result = Agenda.executeSyncGeolocation(db, id);
+                    double latitud = extras.getInt(RutasDetailFragment.ARG_LATITUD);
+                    double longitud = extras.getInt(RutasDetailFragment.ARG_LONGITUD);
+                    result = Agenda.executeSyncGeolocation(db, id, latitud, longitud);
                     addDefaultMessage(result);
                 } else if (syncType.equals(SYNC_TYPE_BATCH)) {
                     result = Cliente.executeSyncInserts(db);

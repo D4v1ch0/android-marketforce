@@ -227,19 +227,19 @@ public class Agenda {
         return SyncAdapter.SYNC_EVENT_SUCCESS;
     }
 
-    public static int executeSyncGeolocation(DataBase db, int idAgenda) {
+    public static int executeSyncGeolocation(DataBase db, int idAgenda, double latitud, double longitud) {
         WebService webService = new WebService("MartketForce", "UpdateAgendaGeolocation");
         webService.setTimeOut(20000);
 
-        rp3.marketforce.models.Agenda agendaUpload = rp3.marketforce.models.Agenda.getAgendaUpload(db, idAgenda);
+        rp3.marketforce.models.Agenda agendaUpload = rp3.marketforce.models.Agenda.getAgenda(db, idAgenda);
 
         JSONArray jArray = new JSONArray();
         JSONObject jObject = new JSONObject();
         try {
             jObject.put("IdAgenda", agendaUpload.getIdAgenda());
             jObject.put("IdRuta", PreferenceManager.getInt(Contants.KEY_IDRUTA));
-            jObject.put("Latitud", agendaUpload.getLatitud());
-            jObject.put("Longitud", agendaUpload.getLongitud());
+            jObject.put("Latitud", latitud);
+            jObject.put("Longitud", longitud);
             jObject.put("DistanciaUbicacion", agendaUpload.getDistancia());
             jArray.put(jObject);
         } catch (Exception ex) {
