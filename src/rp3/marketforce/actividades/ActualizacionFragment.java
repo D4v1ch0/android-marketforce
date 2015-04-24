@@ -124,7 +124,7 @@ public class ActualizacionFragment extends BaseFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        tryEnableGooglePlayServices(true);
+        //tryEnableGooglePlayServices(true);
         setContentView(R.layout.fragment_crear_cliente, R.menu.fragment_crear_cliente);
         setRetainInstance(true);
     }

@@ -733,8 +733,60 @@ public class Cliente {
 							}
 						}
 					}
-										
-				} catch (HttpResponseException e) {
+
+                    webService = new WebService("MartketForce","SetFotos");
+
+                    for(int s = 0; s < clientes.size(); s ++) {
+                        rp3.marketforce.models.Cliente cl = clientes.get(s);
+                        JSONObject jFotos = new JSONObject();
+                        try {
+                            jFotos.put("IdCliente", cl.getIdCliente());
+                            jFotos.put("IdContacto", "");
+                            jFotos.put("Nombre", cl.getNombre1() + "_" + cl.getApellido1() + "_" + cl.getIdCliente() + ".jpg");
+                            String foto = Utils.CroppedBitmapToBase64(jObject.getString("Foto"));
+                            if (foto != null) {
+                                jFotos.put("Contenido", foto);
+
+                                webService.addParameter("clientefoto", jFotos);
+                                webService.addCurrentAuthToken();
+                                webService.invokeWebService();
+                                String nom_foto = webService.getStringResponse();
+                                nom_foto = nom_foto.replaceAll("\"", "");
+                                cl.setURLFoto(nom_foto);
+                                rp3.marketforce.models.Cliente.update(db, cl);
+                            }
+
+                            for (int r = 0; r < cl.getContactos().size(); r++) {
+                                jFotos = new JSONObject();
+                                webService = new WebService("MartketForce", "SetFotos");
+                                jFotos.put("IdCliente", cl.getIdCliente());
+                                jFotos.put("IdContacto", cl.getContactos().get(r).getIdContacto());
+                                jFotos.put("Nombre", cl.getContactos().get(r).getNombre() + "_" + cl.getContactos().get(r).getApellido() + "_" + cl.getIdCliente() + "_" + cl.getContactos().get(r).getIdContacto() + ".jpg");
+                                foto = Utils.CroppedBitmapToBase64(cl.getContactos().get(r).getURLFoto());
+                                if (foto != null) {
+                                    jFotos.put("Contenido", foto);
+                                    webService.addParameter("clientefoto", jFotos);
+                                    webService.addCurrentAuthToken();
+                                    webService.invokeWebService();
+                                    String nom_foto = webService.getStringResponse();
+                                    rp3.marketforce.models.Contacto ct = cl.getContactos().get(r);
+                                    nom_foto = nom_foto.replaceAll("\"", "");
+                                    ct.setURLFoto(nom_foto);
+                                    rp3.marketforce.models.Contacto.update(db, ct);
+                                }
+                            }
+                        } catch (HttpResponseException e) {
+                            if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                                return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                            return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+                        } catch (Exception e) {
+                            return SyncAdapter.SYNC_EVENT_ERROR;
+                        } finally {
+                            webService.close();
+                        }
+                    }
+
+                } catch (HttpResponseException e) {
 					if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
 						return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
 					return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
