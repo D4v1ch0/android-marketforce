@@ -490,4 +490,42 @@ public final class Contract {
         public static final String FIELD_GESTION = COLUMN_GESTION;
 
     }
+
+    public static abstract class Caja implements BaseColumns {
+
+        public static final String TABLE_NAME = "tbCaja";
+
+        public static final String COLUMN_ID_CAJA_CONTROL = "IdCajaControl";
+        public static final String COLUMN_NOMBRE = "Nombre";
+        public static final String COLUMN_SECUENCIA_RECIBO = "SecuenciaRecibo";
+        public static final String COLUMN_MAXIMO_DIAS_APERTURA = "MaximoDiasApertura";
+        public static final String COLUMN_FECHA_APERTURA = "FechaApertura";
+        public static final String COLUMN_FECHA_CIERRE = "FechaCierre";
+        public static final String COLUMN_MONTO_APERTURA = "MontoApertura";
+        public static final String COLUMN_MONTO_CIERRE = "MontoCierre";
+        public static final String COLUMN_ACTIVO = "Activo";
+
+        public static final String FIELD_ID_CAJA_CONTROL = COLUMN_ID_CAJA_CONTROL;
+        public static final String FIELD_NOMBRE = COLUMN_NOMBRE;
+        public static final String FIELD_SECUENCIA_RECIBO = COLUMN_SECUENCIA_RECIBO;
+        public static final String FIELD_MAXIMO_DIAS_APERTURA = COLUMN_MAXIMO_DIAS_APERTURA;
+        public static final String FIELD_FECHA_APERTURA = COLUMN_FECHA_APERTURA;
+        public static final String FIELD_FECHA_CIERRE = COLUMN_FECHA_CIERRE;
+        public static final String FIELD_MONTO_APERTURA = COLUMN_MONTO_APERTURA;
+        public static final String FIELD_MONTO_CIERRE = COLUMN_MONTO_CIERRE;
+        public static final String FIELD_ACTIVO = COLUMN_ACTIVO;
+
+    }
+
+    public static abstract class FormaPago implements BaseColumns {
+
+        public static final String TABLE_NAME = "tbFormaPago";
+
+        public static final String COLUMN_ID_FORMA_PAGO = "IdFormaPago";
+        public static final String COLUMN_NOMBRE = "Nombre";
+
+        public static final String FIELD_ID_FORMA_PAGO = COLUMN_ID_FORMA_PAGO;
+        public static final String FIELD_NOMBRE = COLUMN_NOMBRE;
+
+    }
 }

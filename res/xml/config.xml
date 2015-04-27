@@ -221,6 +221,14 @@
                     <webMethod>POST</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>
+
+                <!-- Metodos Modulo Cobranzas -->
+                <method>
+                    <name>GetCaja</name>
+                    <action>caja/getcaja</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
             </methods>     
         </webServiceData>
            <webServiceData>

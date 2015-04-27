@@ -17,6 +17,7 @@ import rp3.configuration.PreferenceManager;
 import rp3.data.MessageCollection;
 import rp3.data.models.GeopoliticalStructure;
 import rp3.data.models.GeopoliticalStructure.GeopoliticalStructureExt;
+import rp3.marketforce.caja.CajaFragment;
 import rp3.marketforce.cliente.ClientFragment;
 import rp3.marketforce.content.EnviarUbicacionReceiver;
 import rp3.marketforce.dashboard.DashboardFragment;
@@ -80,6 +81,7 @@ public class MainActivity extends rp3.app.NavActivity{
 	public static final int NAV_RESUMEN		 	= 10;
 	public static final int NAV_RECORRIDO	 	= 11;
     public static final int NAV_RADAR	 	    = 12;
+    public static final int NAV_CAJA	 	    = 13;
 	public String lastTitle;
 	private int selectedItem;
 	
@@ -155,6 +157,7 @@ public class MainActivity extends rp3.app.NavActivity{
 		NavItem recordatorios = new NavItem(NAV_RECORDATORIOS, R.string.title_option_setrecordatorios, R.drawable.ic_recordatorios);
 		NavItem recorrido = new NavItem(NAV_RECORRIDO, R.string.title_option_recorrido, R.drawable.ic_action_place_dark);
         NavItem radar = new NavItem(NAV_RADAR, R.string.title_option_radar, R.drawable.ic_action_data_usage);
+        NavItem caja = new NavItem(NAV_CAJA, R.string.title_option_caja, R.drawable.ic_action_labels);
 		
 		NavItem settingsGroup  = new NavItem(0, R.string.title_option_setconfiguracion, 0,NavItem.TYPE_CATEGORY);
 		
@@ -177,6 +180,9 @@ public class MainActivity extends rp3.app.NavActivity{
 		if(PreferenceManager.getBoolean(Contants.KEY_ES_SUPERVISOR)) {
             navItems.add(grupo);
             navItems.add(radar);
+        }
+        if(PreferenceManager.getBoolean(Contants.KEY_MODULO_CXC) && PreferenceManager.getInt(Contants.KEY_ID_CAJA, 0) != 0) {
+            navItems.add(caja);
         }
 		//navItems.add(pedido);
 		//navItems.add(reuniones);
@@ -213,6 +219,11 @@ public class MainActivity extends rp3.app.NavActivity{
                 item.getTitle());
             lastTitle = item.getTitle();
             break;
+        case NAV_CAJA:
+             setNavFragment(CajaFragment.newInstance(),
+                item.getTitle());
+             lastTitle = item.getTitle();
+             break;
 		case NAV_RECORRIDO:
             if(!ConnectionUtils.isNetAvailable(this))
             {

@@ -10,6 +10,7 @@
     <string name="title_option_recorrido">Mi Recorrido</string>
     <string name="title_option_setsincronizar">Sincronizar</string>
     <string name="title_option_radar">Radar</string>
+    <string name="title_option_caja">Caja</string>
     <string name="title_option_setajustes">Ajustes</string>
     <string name="title_option_setcerrar_sesion">Cerrar Sesión</string>
     <string name="title_option_setconfiguracion">CONFIGURACIÓN</string>
@@ -150,5 +151,24 @@
     <string name="label_duracion">Duración:</string>
     <string name="label_tiempo_viaje">Tiempo de Viaje:</string>
     <string name="label_motivo">Motivo:</string>
+    <string name="action_abrir_caja">Abrir Caja</string>
+    <string name="action_cerrar_caja">Cerrar Caja</string>
+    <string name="label_estado">Estado:</string>
+    <string name="label_cerrada">CERRADA</string>
+    <string name="label_abierta">ABIERTA</string>
+    <string name="label_arqueo_caja">Arqueo de Caja</string>
+    <string name="label_ingresos">Ingresos</string>
+    <string name="label_gastos">Gastos</string>
+    <string name="label_depositos">Depósitos</string>
+    <string name="label_faltante">Faltante</string>
+    <string name="label_apertura">Apertura</string>
+    <string name="label_efectivo">Efectivo</string>
+    <string name="label_cheque">Cheque</string>
+    <string name="label_refrigerio">Refrigerio</string>
+    <string name="label_transporte">Transporte</string>
+    <string name="label_billete_falso">Billete Falso</string>
+    <string name="label_otros">Otros</string>
+    <string name="message_apertura_caja_monto">Ingrese el monto de apertura de caja</string>
+    <string name="message_confirmacion_cierre_caja">Está seguro de cerrar caja?</string>
 
 </resources>

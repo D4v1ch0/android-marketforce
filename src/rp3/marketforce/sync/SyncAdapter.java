@@ -92,6 +92,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     }
 
                     if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Agente.executeSyncParametros(db);
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.marketforce.sync.Agente.executeSync(db);
                         addDefaultMessage(result);
                     }
@@ -128,9 +133,12 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         addDefaultMessage(result);
                     }
 
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Agente.executeSyncParametros(db);
-                        addDefaultMessage(result);
+                    //Sincronizaciones de Modulo de Cobranzas
+                    if (PreferenceManager.getBoolean(Contants.KEY_MODULO_CXC) && PreferenceManager.getInt(Contants.KEY_ID_CAJA, 0) != 0) {
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Caja.executeSync(db);
+                            addDefaultMessage(result);
+                        }
                     }
 				/*
 				 * Se comenta carga de fotos ya que se la hara mediante un lazy loader.
@@ -328,6 +336,14 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.marketforce.sync.TipoCliente.executeSync(db);
                         addDefaultMessage(result);
+                    }
+
+                    //Sincronizaciones de Modulo de Cobranzas
+                    if (PreferenceManager.getBoolean(Contants.KEY_MODULO_CXC) && PreferenceManager.getInt(Contants.KEY_ID_CAJA, 0) != 0) {
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Caja.executeSync(db);
+                            addDefaultMessage(result);
+                        }
                     }
                 }
 

@@ -233,4 +233,25 @@
         Gestion BOOLEAN
         )
     </statement>
+    <statement>
+        CREATE TABLE tbCaja(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdCajaControl INTEGER,
+        Nombre TEXT,
+        SecuenciaRecibo INTEGER,
+        MaximoDiasApertura INTEGER,
+        FechaApertura INTEGER,
+        FechaCierre INTEGER,
+        MontoApertura REAL,
+        MontoCierre REAL,
+        Activo BOOLEAN
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbFormaPago(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdFormaPago INTEGER,
+        Nombre TEXT
+        )
+    </statement>
 </sql>

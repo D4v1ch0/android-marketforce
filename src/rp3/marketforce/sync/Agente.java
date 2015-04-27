@@ -34,6 +34,8 @@ public class Agente {
 				PreferenceManager.setValue(Contants.KEY_ES_AGENTE, jObject.getBoolean(Contants.KEY_ES_AGENTE));
 				PreferenceManager.setValue(Contants.KEY_ES_ADMINISTRADOR, jObject.getBoolean(Contants.KEY_ES_ADMINISTRADOR));
 				PreferenceManager.setValue(Contants.KEY_CARGO, jObject.getString(Contants.KEY_CARGO));
+                if(PreferenceManager.getBoolean(Contants.KEY_MODULO_CXC) && !jObject.isNull(Contants.KEY_ID_CAJA))
+                    PreferenceManager.setValue(Contants.KEY_ID_CAJA, jObject.getInt(Contants.KEY_ID_CAJA));
 			} catch (HttpResponseException e) {
 				if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
 					return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
@@ -144,6 +146,7 @@ public class Agente {
 				PreferenceManager.setValue(Contants.KEY_ALARMA_FIN, Convert.getDateFromDotNetTicks(jObject.getLong(Contants.KEY_ALARMA_FIN)));
 				PreferenceManager.setValue(Contants.KEY_ALARMA_INTERVALO, jObject.getInt(Contants.KEY_ALARMA_INTERVALO));
 				PreferenceManager.setValue(Contants.KEY_PREFIJO_TELEFONICO, jObject.getString(Contants.KEY_PREFIJO_TELEFONICO));
+                PreferenceManager.setValue(Contants.KEY_MODULO_CXC, jObject.getBoolean(Contants.KEY_MODULO_CXC));
 			} catch (HttpResponseException e) {
 				if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
 					return SyncAdapter.SYNC_EVENT_AUTH_ERROR;

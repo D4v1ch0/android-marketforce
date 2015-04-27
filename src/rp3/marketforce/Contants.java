@@ -39,6 +39,8 @@ public class Contants {
     public final static String KEY_SIEMPRE_EDITAR = "SiempreEditarEnGestion";
 	public final static String KEY_SERVER = "server";
 	public final static String KEY_CLIENT = "ClientName";
+    public final static String KEY_MODULO_CXC = "ModuloCxC";
+    public final static String KEY_ID_CAJA = "IdCaja";
 
     public final static String CAMPO_FECHA_NACIMIENTO = "FecNac";
     public final static String CAMPO_GENERO = "Gen";
