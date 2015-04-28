@@ -8,4 +8,5 @@
     android:ellipsize="marquee"
     android:textSize="18sp"
     android:textColor="#808080"
-    android:text="Seleccione una opción" />
+    android:text="Seleccione una opción"
+    android:padding="12dp" />

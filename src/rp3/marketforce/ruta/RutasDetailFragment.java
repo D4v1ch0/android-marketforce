@@ -59,6 +59,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 
     public static final String ARG_LONGITUD = "longitud";
     public static final String ARG_LATITUD = "latitud";
+    public static final String ARG_SOLO_VISTA = "solovista";
 
     public static final String PARENT_SOURCE_LIST = "LIST";
     public static final String PARENT_SOURCE_SEARCH = "SEARCH";
@@ -163,7 +164,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                                 rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + agenda.getCliente().getURLFoto(),
                         (ImageView) this.getRootView().findViewById(R.id.map_image));
 
-                setTextViewText(R.id.textView_name, agenda.getNombreCompleto());
+                setTextViewText(R.id.textView_name, agenda.getCliente().getNombreCompleto());
                 if(agenda.getCliente() != null)
                 {
                     setTextViewText(R.id.textView_tipo_canal, agenda.getCliente().getCanalDescripcion());
@@ -180,6 +181,12 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                 setTextViewText(R.id.detail_agenda_observacion, agenda.getObservaciones());
                 ((TextView) getRootView().findViewById(R.id.detail_agenda_observacion)).setTextColor(getResources().getColor(R.color.default_text));
             }
+            else
+            {
+                if (!agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO))
+                    setTextViewText(R.id.detail_agenda_observacion, getString(R.string.label_sin_observaciones));
+            }
+
 
             if (agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO)) {
                 ((ImageView) getRootView().findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_in_process);
@@ -195,14 +202,14 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
             }
             if (agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_PENDIENTE)) {
                 ((ImageView) getRootView().findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_pending);
-                getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(false);
+                //getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(false);
             }
             if (agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_REPROGRAMADO)) {
                 ((ImageView) getRootView().findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_reprogramed);
-                getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(false);
+                //getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(false);
             }
             if (agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_VISITADO)) {
-                getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(false);
+                //getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(false);
                 ((ImageView) getRootView().findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_visited);
                 setViewVisibility(R.id.detail_agenda_button_iniciar, View.GONE);
                 setViewVisibility(R.id.detail_agenda_button_fin, View.GONE);
@@ -258,8 +265,44 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 		if(agenda != null){
            if(agenda.getCliente() != null)
            {
-               setTextViewText(R.id.textView_mail, agenda.getCliente().getCorreoElectronico());
-               setTextViewText(R.id.textView_movil, agenda.getClienteDireccion().getTelefono1());
+               if(agenda.getCliente().getCorreoElectronico() != null && agenda.getCliente().getCorreoElectronico().length() > 0) {
+                   setTextViewText(R.id.textView_mail, agenda.getCliente().getCorreoElectronico());
+                   ((TextView) rootView.findViewById(R.id.textView_mail)).setClickable(true);
+                   ((TextView) rootView.findViewById(R.id.textView_mail)).setOnClickListener(new OnClickListener(){
+
+                       @Override
+                       public void onClick(View v) {
+                           Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                                   "mailto",agenda.getCliente().getCorreoElectronico(), null));
+                           startActivity(Intent.createChooser(intent, "Send Email"));
+                       }});
+               }
+               else {
+                   setTextViewText(R.id.textView_mail, getResources().getString(R.string.label_sin_especificar));
+                   ((TextView) rootView.findViewById(R.id.textView_mail)).setClickable(false);
+               }
+
+               if(agenda.getClienteDireccion().getTelefono1() != null && agenda.getClienteDireccion().getTelefono1().length() > 0) {
+                   setTextViewText(R.id.textView_movil, agenda.getClienteDireccion().getTelefono1());
+                   ((TextView) rootView.findViewById(R.id.textView_movil)).setClickable(true);
+                   ((TextView) rootView.findViewById(R.id.textView_movil)).setOnClickListener(new OnClickListener(){
+                       @Override
+                       public void onClick(View v) {
+                           String uri = "tel:" + agenda.getClienteDireccion().getTelefono1();
+                           Intent intent = new Intent(Intent.ACTION_DIAL);
+                           intent.setData(Uri.parse(uri));
+                           Uri mUri = Uri.parse("smsto:" + Utils.convertToSMSNumber(agenda.getClienteDireccion().getTelefono1()));
+                           Intent mIntent = new Intent(Intent.ACTION_SENDTO, mUri);
+                           mIntent.putExtra("chat",true);
+                           Intent chooserIntent = Intent.createChooser(mIntent, "Seleccionar Acción");
+                           chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { intent });
+                           startActivity(chooserIntent);
+                       }});
+               }
+               else {
+                   setTextViewText(R.id.textView_movil, getResources().getString(R.string.label_sin_especificar));
+                   ((TextView) rootView.findViewById(R.id.textView_movil)).setClickable(false);
+               }
                setTextViewText(R.id.textView_address, agenda.getClienteDireccion().getDireccion());
            }
            else
@@ -279,6 +322,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 			public void onClick(View v) {
 				Intent intent = new Intent(getContext(), ObservacionesActivity.class);
 				intent.putExtra(ARG_ITEM_ID, agenda.getID());
+                intent.putExtra(ARG_SOLO_VISTA, !agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO));
 				startActivity(intent);
 			}
             		   });
@@ -286,29 +330,6 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 			
 		   setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());
 
-				((TextView) rootView.findViewById(R.id.textView_mail)).setClickable(true);
-				((TextView) rootView.findViewById(R.id.textView_mail)).setOnClickListener(new OnClickListener(){
-
-							@Override
-							public void onClick(View v) {
-								Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-							            "mailto",agenda.getCliente().getCorreoElectronico(), null));
-								startActivity(Intent.createChooser(intent, "Send Email"));
-							}});
-				((TextView) rootView.findViewById(R.id.textView_movil)).setClickable(true);
-				((TextView) rootView.findViewById(R.id.textView_movil)).setOnClickListener(new OnClickListener(){
-							@Override
-							public void onClick(View v) {
-								String uri = "tel:" + agenda.getClienteDireccion().getTelefono1();
-								Intent intent = new Intent(Intent.ACTION_DIAL);
-								intent.setData(Uri.parse(uri));
-								Uri mUri = Uri.parse("smsto:" + Utils.convertToSMSNumber(agenda.getClienteDireccion().getTelefono1()));
-					            Intent mIntent = new Intent(Intent.ACTION_SENDTO, mUri);
-					            mIntent.putExtra("chat",true);
-					            Intent chooserIntent = Intent.createChooser(mIntent, "Seleccionar Acci�n");
-					            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { intent });
-					            startActivity(chooserIntent);
-							}});
 		   setButtonClickListener(R.id.detail_agenda_button_iniciar, new OnClickListener(){
 
 			@Override
@@ -323,6 +344,8 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 					Agenda.update(getDataBase(), agenda);
 					((ImageView) rootView.findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_in_process);
 					 setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());
+                    if (agenda.getObservaciones() == null || agenda.getObservaciones().length() <= 0)
+                        setTextViewText(R.id.detail_agenda_observacion, getString(R.string.label_agregue_observacion));
 				
 			}});
 		   
@@ -344,6 +367,8 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 					Agenda.update(getDataBase(), agenda);
 					((ImageView) rootView.findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_in_process);
 					 setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());
+                    if (agenda.getObservaciones() == null || agenda.getObservaciones().length() <= 0)
+                        setTextViewText(R.id.detail_agenda_observacion, getString(R.string.label_agregue_observacion));
 					
 				}});
 		   
@@ -354,7 +379,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 					setViewVisibility(R.id.detail_agenda_button_iniciar, View.VISIBLE);
 					setViewVisibility(R.id.detail_agenda_button_fin, View.GONE);
 					setViewVisibility(R.id.detail_agenda_button_cancelar, View.GONE);
-                    getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(false);
+                    //getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(false);
 					if(agenda.getFechaFinReal() == null || agenda.getFechaFinReal().getTime() < 0)
 					{
 						agenda.setEstadoAgenda(Contants.ESTADO_PENDIENTE);
@@ -368,7 +393,9 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 						((ImageView) rootView.findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_visited);
 					}
 					Agenda.update(getDataBase(), agenda);
-					 setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());
+					setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());
+                    if (agenda.getObservaciones() == null || agenda.getObservaciones().length() <= 0)
+                        setTextViewText(R.id.detail_agenda_observacion, getString(R.string.label_sin_observaciones));
 				}});
 		   
 		   setButtonClickListener(R.id.detail_agenda_button_fin, new OnClickListener(){
@@ -379,7 +406,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 					setViewVisibility(R.id.detail_agenda_button_fin, View.GONE);
 					setViewVisibility(R.id.detail_agenda_button_cancelar, View.GONE);
 					setViewVisibility(R.id.detail_agenda_button_modificar, View.VISIBLE);
-                    getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(false);
+                    //getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(false);
 					agenda = Agenda.getAgenda(getDataBase(), idAgenda);
                     if(agenda == null)
                         agenda = Agenda.getAgendaClienteNull(getDataBase(), idAgenda);
@@ -388,6 +415,8 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 					agenda.setFechaFinReal(Calendar.getInstance().getTime());
 					agenda.setEnviado(false);
                     Agenda.update(getDataBase(), agenda);
+                    if (agenda.getObservaciones() == null || agenda.getObservaciones().length() <= 0)
+                        setTextViewText(R.id.detail_agenda_observacion, getString(R.string.label_sin_observaciones));
                     new AsyncUpdater.UpdateAgenda().execute((int) idAgenda);
                     //Bundle bundle = new Bundle();
                     //bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ENVIAR_AGENDA);
@@ -441,7 +470,10 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 						soloVista = false;
 					else
 						soloVista = true;
-					
+
+                    if(soloVista)
+                        Toast.makeText(getContext(), R.string.message_solo_vista_tarea, Toast.LENGTH_LONG).show();
+
 					AgendaTarea setter = adapter.getItem(position);
 					if(setter.getTipoTarea().equalsIgnoreCase("A") || setter.getTipoTarea().equalsIgnoreCase("R"))
 					{

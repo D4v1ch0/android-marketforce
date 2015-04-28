@@ -209,7 +209,8 @@
             android:layout_height="0dp"
             android:layout_weight="0.7"
             android:divider="@color/bg_button_bg_main_pressed"
-            android:dividerHeight="1dp" >
+            android:dividerHeight="1dp"
+            android:fadeScrollbars="false">
         </ListView>
 
         <LinearLayout
@@ -240,20 +241,27 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/detail_agenda_observacion"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:layout_margin="5dp"
             android:layout_weight="0.3"
-            android:background="@color/apptheme_color"
-            android:clickable="true"
-            android:drawableRight="@drawable/ic_registrarse"
-            android:gravity="center_vertical"
-            android:padding="5dp"
-            android:text="@string/label_agregue_observacion"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/color_text_sky_blue" />
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/detail_agenda_observacion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@color/apptheme_color"
+                android:clickable="true"
+                android:drawableRight="@drawable/ic_registrarse"
+                android:gravity="center_vertical"
+                android:padding="5dp"
+                android:text="@string/label_agregue_observacion"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/color_text_hint" />
+        </LinearLayout>
 
     </LinearLayout>
 

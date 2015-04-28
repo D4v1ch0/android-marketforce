@@ -27,6 +27,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -75,19 +76,10 @@ public class ReprogramarActivity extends BaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
-	    this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+	    //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setTitle("Reprogramar Agenda");
 	    
-	    setContentView(R.layout.dialog_reprogramar_agenda);
-	    if(Screen.getOrientation() == Screen.ORIENTATION_LANDSCAPE && Screen.isMinLargeLayoutSize(this))
-	    {
-	    	DisplayMetrics metrics = new DisplayMetrics();
-	    	getWindowManager().getDefaultDisplay().getMetrics(metrics);
-	    	WindowManager.LayoutParams params = getWindow().getAttributes();    
-	    	params.height = metrics.heightPixels - 100;  
-	    	params.width = metrics.widthPixels - 100;   
-
-	    	this.getWindow().setAttributes(params); 
-	    }
+	    setContentView(R.layout.dialog_reprogramar_agenda, R.menu.fragment_crear_cliente);
 	    
 	    idAgenda = getIntent().getExtras().getLong(ARG_AGENDA);
         arrayDuracion = this.getResources()
@@ -131,10 +123,7 @@ public class ReprogramarActivity extends BaseActivity {
         ((LinearLayout) findViewById(R.id.reprogramar_desde_clickable)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (findViewById(R.id.reprogramar_visita_desde).getVisibility() == View.VISIBLE)
-                    findViewById(R.id.reprogramar_visita_desde).setVisibility(View.GONE);
-                else
-                    findViewById(R.id.reprogramar_visita_desde).setVisibility(View.VISIBLE);
+                showDialogTimePicker(1, fecha.get(Calendar.HOUR_OF_DAY), fecha.get(Calendar.MINUTE), TIME_PICKER_INTERVAL);
             }
         });
         Bundle args = new Bundle();
@@ -168,7 +157,15 @@ public class ReprogramarActivity extends BaseActivity {
         DesdeText.setText(format1.format(fecha.getTime()));
 	}
 
-	public void aceptarCambios(View v)
+    @Override
+    public void onDailogTimePickerChange(int id, int hours, int minutes) {
+        fecha.set(Calendar.HOUR_OF_DAY, hours);
+        fecha.set(Calendar.MINUTE, minutes);
+        DesdeText.setText(format1.format(fecha.getTime()));
+        super.onDailogTimePickerChange(id, hours, minutes);
+    }
+
+	public void aceptarCambios()
 	{
         agenda = Agenda.getAgenda(getDataBase(), idAgenda);
 		Calendar cal = Calendar.getInstance();
@@ -212,11 +209,11 @@ public class ReprogramarActivity extends BaseActivity {
         calFin.set(Calendar.MONTH, fecha.get(Calendar.MONTH));
         calFin.set(Calendar.YEAR, fecha.get(Calendar.YEAR));
 
-        cal.set(Calendar.HOUR_OF_DAY, desdePicker.getCurrentHour());
-        cal.set(Calendar.MINUTE, desdePicker.getCurrentMinute() * TIME_PICKER_INTERVAL);
+        cal.set(Calendar.HOUR_OF_DAY, fecha.get(Calendar.HOUR_OF_DAY));
+        cal.set(Calendar.MINUTE, fecha.get(Calendar.MINUTE));
 
-        calFin.set(Calendar.HOUR_OF_DAY, desdePicker.getCurrentHour());
-        calFin.set(Calendar.MINUTE, desdePicker.getCurrentMinute() * TIME_PICKER_INTERVAL);
+        calFin.set(Calendar.HOUR_OF_DAY, fecha.get(Calendar.HOUR_OF_DAY));
+        calFin.set(Calendar.MINUTE, fecha.get(Calendar.MINUTE));
         calFin.add(Calendar.MINUTE, (int) agenda.getDuracion());
 
         agenda.setFechaInicio(cal.getTime());
@@ -244,7 +241,7 @@ public class ReprogramarActivity extends BaseActivity {
 		finish();
 	}
 	
-	public void cancelarCambios(View v)
+	public void cancelarCambios()
 	{
 		finish();
 	}
@@ -317,9 +314,11 @@ public class ReprogramarActivity extends BaseActivity {
                 caldroidFragment.setCalendarDate(date);
                 caldroidFragment.setBackgroundResourceForDate(R.color.caldroid_white, fecha.getTime());
                 caldroidFragment.setBackgroundResourceForDate(R.drawable.blue_border_date, date);
+                int horas = fecha.get(Calendar.HOUR_OF_DAY);
+                int minutos = fecha.get(Calendar.MINUTE);
                 fecha.setTime(date);
-                fecha.set(Calendar.HOUR_OF_DAY, desdePicker.getCurrentHour());
-                fecha.set(Calendar.MINUTE, desdePicker.getCurrentMinute() * TIME_PICKER_INTERVAL);
+                fecha.set(Calendar.HOUR_OF_DAY, horas);
+                fecha.set(Calendar.MINUTE, minutos);
                 DesdeText.setText(format1.format(fecha.getTime()));
             }
 
@@ -339,6 +338,21 @@ public class ReprogramarActivity extends BaseActivity {
         caldroidFragment.setCaldroidListener(listener);
         caldroidFragment.setBackgroundResourceForDate(R.color.caldroid_white, Calendar.getInstance().getTime());
         caldroidFragment.setBackgroundResourceForDate(R.drawable.blue_border_date, fecha.getTime());
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId())
+        {
+            case R.id.action_save:
+                aceptarCambios();
+                break;
+            case R.id.action_cancel:
+                cancelarCambios();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void showDuracion(final int type)

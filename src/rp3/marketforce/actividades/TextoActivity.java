@@ -30,14 +30,20 @@ public class TextoActivity extends ActividadActivity {
 			this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		}
 	    super.onCreate(savedInstanceState);
-	    setContentView(R.layout.layout_texto_activitidad);
+        if(soloVista)
+            setContentView(R.layout.layout_texto_activitidad);
+        else
+	        setContentView(R.layout.layout_texto_activitidad, R.menu.fragment_crear_cliente);
 	    
 	    if(id_padre == 0)
 	    {
             if(actSinGrupo)
                 ata = Actividad.getActividadSimple(getDataBase(), id_tarea, id_actividad);
-            else
-	    	    ata = Actividad.getActividadSimple(getDataBase(), id_actividad);
+            else {
+                ata = Actividad.getActividadSimple(getDataBase(), id_actividad);
+                findViewById(R.id.actividad_aceptar).setVisibility(View.GONE);
+                findViewById(R.id.actividad_cancelar).setVisibility(View.GONE);
+            }
 	    }
 	    else
 	    {
@@ -68,9 +74,13 @@ public class TextoActivity extends ActividadActivity {
 		if(soloVista)
 		{
 			((TextView) findViewById(R.id.actividad_texto_respuesta)).setEnabled(false);
+            ((TextView) findViewById(R.id.actividad_texto_respuesta)).setFocusable(false);
+            ((TextView) findViewById(R.id.actividad_texto_respuesta)).setFocusableInTouchMode(false);
             findViewById(R.id.actividad_aceptar).setVisibility(View.GONE);
             findViewById(R.id.actividad_cancelar).setVisibility(View.GONE);
 		}
+
+
 	    
 	}
 

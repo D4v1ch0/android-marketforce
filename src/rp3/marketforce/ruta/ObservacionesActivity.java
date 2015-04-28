@@ -29,14 +29,18 @@ public class ObservacionesActivity extends BaseActivity {
         params.dimAmount = 0.5f;
         getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
 		super.onCreate(savedInstanceState);
-	    setContentView(rp3.core.R.layout.layout_simple_content, R.menu.fragment_crear_cliente);
-	    setTitle("Crear Agenda");
+        boolean soloVista = !getIntent().getBooleanExtra(RutasDetailFragment.ARG_SOLO_VISTA, false);
+        if(!getIntent().getBooleanExtra(RutasDetailFragment.ARG_SOLO_VISTA, false))
+	        setContentView(rp3.core.R.layout.layout_simple_content, R.menu.fragment_crear_cliente);
+        else
+            setContentView(rp3.core.R.layout.layout_simple_content);
+
 	    long id = 0;
 	    id = getIntent().getLongExtra(RutasDetailFragment.ARG_ITEM_ID, 0);
 	    setTitle("Observaciones");
 
 	    if (!hasFragment(rp3.core.R.id.content)) {
-            newFragment = ObservacionesFragment.newInstance(id);
+            newFragment = ObservacionesFragment.newInstance(id, soloVista);
             setFragment(rp3.core.R.id.content, newFragment);    
         }
 	}

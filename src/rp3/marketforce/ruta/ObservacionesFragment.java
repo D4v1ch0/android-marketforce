@@ -30,13 +30,14 @@ public class ObservacionesFragment extends BaseFragment {
 	private Uri fileUri;
 	private long idAgenda;
 	private Agenda agenda;
-	public boolean closed = false;
+	public boolean closed = false, soloVista;
 	public View parentView;
 
-	public static ObservacionesFragment newInstance(long idAgenda)
+	public static ObservacionesFragment newInstance(long idAgenda, boolean soloVista)
 	{
 		Bundle arguments = new Bundle();
         arguments.putLong(RutasDetailFragment.ARG_ITEM_ID, idAgenda);
+        arguments.putBoolean(RutasDetailFragment.ARG_SOLO_VISTA, soloVista);
 		ObservacionesFragment fragment = new ObservacionesFragment();
 		fragment.setArguments(arguments);
 		return fragment;
@@ -60,6 +61,7 @@ public class ObservacionesFragment extends BaseFragment {
             if(agenda == null)
                 agenda = Agenda.getAgendaClienteNull(getDataBase(), idAgenda);
         }
+        soloVista = getArguments().getBoolean(RutasDetailFragment.ARG_SOLO_VISTA);
         super.setContentView(R.layout.fragment_observaciones);
 	}
 	
@@ -106,43 +108,50 @@ public class ObservacionesFragment extends BaseFragment {
 			((ImageButton) rootView.findViewById(R.id.obs_foto3)).setImageBitmap(Utils.resizeBitMapImage(agenda.getFoto3Int(), MAX_WIDTH, MAX_HEIGHT, 0));
 		if(agenda.getObservaciones() != null)
 			setTextViewText(R.id.obs_text, agenda.getObservaciones());
-		
-		((ImageButton) rootView.findViewById(R.id.obs_foto1)).setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-			    fileUri = Utils.getOutputMediaFileUri(MEDIA_TYPE_IMAGE); 
-			    intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-                intent.putExtra("proof", fileUri.getPath());
-			    getActivity().startActivityForResult(intent, PHOTO_1);
-			}
-		});
-		
-		((ImageButton) rootView.findViewById(R.id.obs_foto2)).setOnClickListener(new OnClickListener() {
+        if(soloVista) {
+            ((ImageButton) rootView.findViewById(R.id.obs_foto1)).setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-			    fileUri = Utils.getOutputMediaFileUri(MEDIA_TYPE_IMAGE); 
-			    intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); 
-			    getActivity().startActivityForResult(intent, PHOTO_2);
-				
-			}
-		});
-		
-		((ImageButton) rootView.findViewById(R.id.obs_foto3)).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    fileUri = Utils.getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+                    intent.putExtra("proof", fileUri.getPath());
+                    getActivity().startActivityForResult(intent, PHOTO_1);
+                }
+            });
 
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            ((ImageButton) rootView.findViewById(R.id.obs_foto2)).setOnClickListener(new OnClickListener() {
 
-			    fileUri = Utils.getOutputMediaFileUri(MEDIA_TYPE_IMAGE); 
-			    intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-			    getActivity().startActivityForResult(intent, PHOTO_3);
-				
-			}
-		});
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    fileUri = Utils.getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+                    getActivity().startActivityForResult(intent, PHOTO_2);
+
+                }
+            });
+
+            ((ImageButton) rootView.findViewById(R.id.obs_foto3)).setOnClickListener(new OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                    fileUri = Utils.getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+                    getActivity().startActivityForResult(intent, PHOTO_3);
+
+                }
+            });
+        }
+        else
+        {
+            rootView.findViewById(R.id.obs_text).setFocusable(false);
+            rootView.findViewById(R.id.obs_text).setFocusableInTouchMode(false);
+        }
 	}
 
     @Override

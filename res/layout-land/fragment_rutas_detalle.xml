@@ -208,7 +208,8 @@
             android:id="@+id/listView_tareas"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" >
+            android:layout_weight="1"
+            android:fadeScrollbars="false">
         </ListView>
 
         <LinearLayout
@@ -237,21 +238,28 @@
             </LinearLayout>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/detail_agenda_observacion"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
+            android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:background="@color/apptheme_color"
-            android:clickable="true"
-            android:drawableRight="@drawable/ic_registrarse"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:padding="5dp"
-            android:text="@string/label_agregue_observacion"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/color_text_sky_blue" />
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/detail_agenda_observacion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@color/apptheme_color"
+                android:clickable="true"
+                android:drawableRight="@drawable/ic_registrarse"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:padding="5dp"
+                android:text="@string/label_agregue_observacion"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/color_text_hint" />
+        </LinearLayout>
 
     </LinearLayout>
 

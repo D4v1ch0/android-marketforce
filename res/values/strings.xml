@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">RP3 Market Force</string>
-    <string name="title_option_setinicio">Inicio</string>
+    <string name="title_option_setinicio">Dashboard</string>
     <string name="title_option_setrutas">Agenda</string>
     <string name="title_option_setclientes">Clientes</string>
     <string name="title_option_setpedido">Pedido</string>
@@ -67,7 +67,7 @@
     <string name="label_hasta">Hasta:</string>
     <string name="label_cliente">Cliente</string>
     <string name="label_crear_visita">Crear Visita</string>
-    <string name="label_conf_tareas">Tareas</string>
+    <string name="label_conf_tareas">Agregar Tareas</string>
     <string name="label_menu_ver_rutas">Ver Rutas</string>
     <string name="label_menu_ver_posicion">Mostrar Ubicación</string>
     <string name="label_menu_como_llegar">Como Llegar</string>
@@ -113,6 +113,7 @@
     <string name="label_grabar">Grabar</string>
     <string name="label_cancelar">Cancelar</string>
     <string name="label_action_motivos_no_visita">Marcar Como No Visitado</string>
+    <string name="label_sin_observaciones">(Sin Observaciones)</string>
     <string name="label_motivo_no_visita">Motivo De No Visita</string>
     <string name="label_agente">Agentes</string>
     <string name="label_asignar_imagen">Asignar Imagen</string>
@@ -150,5 +151,7 @@
     <string name="label_duracion">Duración:</string>
     <string name="label_tiempo_viaje">Tiempo de Viaje:</string>
     <string name="label_motivo">Motivo:</string>
+    <string name="message_solo_vista_tarea">Para realizar esta tarea, primero inicie la gestión.</string>
+    <string name="label_sin_especificar">(Sin especificar)</string>
 
 </resources>

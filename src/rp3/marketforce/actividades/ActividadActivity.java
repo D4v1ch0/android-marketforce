@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import rp3.app.BaseActivity;
 import rp3.marketforce.R;
+import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.AgendaTareaActividades;
 import rp3.marketforce.ruta.RutasDetailFragment;
 
@@ -84,6 +85,18 @@ public abstract class ActividadActivity extends BaseActivity {
         {
             finish();
         }
+        switch(item.getItemId())
+        {
+            case R.id.action_save:
+                aceptarCambios(new View(this));
+                break;
+            case R.id.action_cancel:
+                cancelarCambios(new View(this));
+                break;
+            default:
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
+
 }

@@ -141,7 +141,7 @@
         <activity android:name=".actividades.MultipleActivity" android:theme="@style/ActivityPopupTheme"></activity>
         <activity android:name=".actividades.SeleccionActivity"></activity>
         <activity android:name=".actividades.GrupoActivity"></activity>
-        <activity android:name=".ruta.ReprogramarActivity" android:theme="@style/AppDialogTheme"></activity>
+        <activity android:name=".ruta.ReprogramarActivity"></activity>
         <activity android:name=".ruta.CrearVisitaActivity"></activity>
         
         <meta-data

@@ -75,7 +75,7 @@ public class RutasListAdapter extends BaseAdapter{
 			((TextView) convertView.findViewById(R.id.textView_horas)).setText(str_range);
 			if(agd.getIdContacto() == 0)
 			{
-				((TextView) convertView.findViewById(R.id.textView_nombre)).setText(""+agd.getNombreCompleto());
+				((TextView) convertView.findViewById(R.id.textView_nombre)).setText(""+agd.getNombreCompleto().trim());
 				try
 				{
 					((TextView) convertView.findViewById(R.id.textView_cargo_canal)).setText(""+agd.getCliente().getCanalDescripcion());

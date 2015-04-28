@@ -74,7 +74,7 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 	private List<Cliente> list_cliente;
 	private List<Tarea> list_tareas;
 	private TimePicker desdePicker;
-	private Calendar fecha;
+	private Calendar fecha, fecha_hora;
     private TextView Duracion, TiempoViaje, DesdeText;
     private int TIME_PICKER_INTERVAL = 5;
      NumberPicker minutePicker;
@@ -115,11 +115,7 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
                 lastText = cliente_auto.getText().toString();
 
             cliente_auto = (AutoCompleteTextView) rootView.findViewById(R.id.crear_visita_cliente);
-            desdePicker = (TimePicker) rootView.findViewById(R.id.reprogramar_visita_desde);
-
-            setTimePickerInterval(desdePicker);
-
-            desdePicker.setCurrentMinute(Calendar.getInstance().get(Calendar.MINUTE) / 5);
+            fecha_hora = Calendar.getInstance();
 
             Calendar cal = Calendar.getInstance();
             cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -218,10 +214,7 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
             ((LinearLayout) rootView.findViewById(R.id.crear_visita_desde_clickable)).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (rootView.findViewById(R.id.crear_visita_desde).getVisibility() == View.VISIBLE)
-                        rootView.findViewById(R.id.crear_visita_desde).setVisibility(View.GONE);
-                    else
-                        rootView.findViewById(R.id.crear_visita_desde).setVisibility(View.VISIBLE);
+                    showDialogTimePicker(1, fecha_hora.get(Calendar.HOUR_OF_DAY), fecha_hora.get(Calendar.MINUTE), TIME_PICKER_INTERVAL);
                 }
             });
 
@@ -231,7 +224,15 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
                 setDatos(getArguments().getLong(ARG_IDAGENDA));
 	}
 
-	private void setDatosCliente(long id) {
+    @Override
+    public void onDailogTimePickerChange(int id, int hours, int minutes) {
+        fecha.set(Calendar.HOUR_OF_DAY, hours);
+        fecha.set(Calendar.MINUTE, minutes);
+        DesdeText.setText(format1.format(fecha.getTime()));
+        super.onDailogTimePickerChange(id, hours, minutes);
+    }
+
+    private void setDatosCliente(long id) {
 		if(id != 0)
 		{
 			Cliente cli = Cliente.getClienteID(getDataBase(), id, false);
@@ -304,6 +305,18 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 	@Override
 	public void onFinishTareasDialog(List<Tarea> tareas) {
 		this.list_tareas = tareas;
+        String tarea_string = "";
+        if(tareas.size() > 0)
+        {
+            for(Tarea tarea : tareas)
+                tarea_string = tarea_string + tarea.getNombreTarea() + ", ";
+
+            tarea_string = tarea_string.substring(0, tarea_string.length()-2);
+        }
+        else
+            tarea_string = getResources().getString(R.string.label_conf_tareas);
+
+        ((Button) getRootView().findViewById(R.id.crear_visita_conf_tarea)).setText(tarea_string);
 	}
 	
 	@SuppressLint("NewApi")
@@ -398,11 +411,11 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 			calFin.set(Calendar.MONTH, fecha.get(Calendar.MONTH));
 			calFin.set(Calendar.YEAR, fecha.get(Calendar.YEAR));
 			
-			cal.set(Calendar.HOUR_OF_DAY, desdePicker.getCurrentHour());
-			cal.set(Calendar.MINUTE, desdePicker.getCurrentMinute() * TIME_PICKER_INTERVAL);
+			cal.set(Calendar.HOUR_OF_DAY, fecha.get(Calendar.HOUR_OF_DAY));
+			cal.set(Calendar.MINUTE, fecha.get(Calendar.MINUTE));
 
-			calFin.set(Calendar.HOUR_OF_DAY, desdePicker.getCurrentHour());
-			calFin.set(Calendar.MINUTE, desdePicker.getCurrentMinute() * TIME_PICKER_INTERVAL);
+			calFin.set(Calendar.HOUR_OF_DAY, fecha.get(Calendar.HOUR_OF_DAY));
+			calFin.set(Calendar.MINUTE, fecha.get(Calendar.MINUTE));
             calFin.add(Calendar.MINUTE, (int) agenda.getDuracion());
 			
 			agenda.setFechaInicio(cal.getTime());
@@ -528,9 +541,11 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 	 				caldroidFragment.setCalendarDate(date);
 	 				caldroidFragment.setBackgroundResourceForDate(R.color.caldroid_white, fecha.getTime());
 	 				caldroidFragment.setBackgroundResourceForDate(R.drawable.blue_border_date, date);
+                    int horas = fecha.get(Calendar.HOUR_OF_DAY);
+                    int minutos = fecha.get(Calendar.MINUTE);
 	 				fecha.setTime(date);
-                    fecha.set(Calendar.HOUR_OF_DAY, desdePicker.getCurrentHour());
-                    fecha.set(Calendar.MINUTE, desdePicker.getCurrentMinute() * TIME_PICKER_INTERVAL);
+                    fecha.set(Calendar.HOUR_OF_DAY, horas);
+                    fecha.set(Calendar.MINUTE, minutos);
                     DesdeText.setText(format1.format(fecha.getTime()));
 	 			}
 

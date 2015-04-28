@@ -47,11 +47,17 @@ public class GrupoActivity extends ActividadActivity {
 	    super.onCreate(savedInstanceState);
 	    if(getResources().getString(R.string.is_tablet).equalsIgnoreCase("true"))
 		{
-	    	setContentView(R.layout.layout_grupo_actividad_land);
+            if(soloVista)
+	    	    setContentView(R.layout.layout_grupo_actividad_land);
+            else
+                setContentView(R.layout.layout_grupo_actividad_land, R.menu.fragment_crear_cliente);
 		}
 		else
 		{
-			setContentView(R.layout.layout_grupo_actividad);
+            if(soloVista)
+			    setContentView(R.layout.layout_grupo_actividad);
+            else
+                setContentView(R.layout.layout_grupo_actividad, R.menu.fragment_crear_cliente);
 		}
 	    
 	    Container = (LinearLayout) findViewById(R.id.actividad_agrupar);
@@ -633,11 +639,8 @@ public class GrupoActivity extends ActividadActivity {
 					agregarTexto(actividad_hija);
 	    	}
 	    }
-	    if(soloVista)
-		{
-	    	((Button) findViewById(R.id.actividad_aceptar)).setVisibility(View.GONE);
-	    	((Button) findViewById(R.id.actividad_cancelar)).setVisibility(View.GONE);
-		}
+        ((Button) findViewById(R.id.actividad_aceptar)).setVisibility(View.GONE);
+        ((Button) findViewById(R.id.actividad_cancelar)).setVisibility(View.GONE);
 		super.onResume();
 	}
 	
