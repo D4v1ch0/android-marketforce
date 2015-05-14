@@ -39,6 +39,9 @@ public final class Contract {
 		public static final String COLUMN_TIPO_PERSONA = "TipoPersona";
 		public static final String COLUMN_NUEVO = "Nuevo";
 		public static final String COLUMN_PENDIENTE = "Pendiente";
+        public static final String COLUMN_FECHA_ULTIMA_VISITA = "FechaUltimaVisita";
+        public static final String COLUMN_AGENTE_ULTIMA_VISITA = "AgenteUltimaVisita";
+        public static final String COLUMN_FECHA_PROXIMA_VISITA = "FechaProximaVisita";
 				
 		public static final String FIELD_ID_TIPO_IDENTIFICACION = COLUMN_ID_TIPO_IDENTIFICACION;	
 		public static final String FIELD_ID_CLIENTE = COLUMN_ID_CLIENTE;	
@@ -52,7 +55,10 @@ public final class Contract {
 		public static final String FIELD_TIPO_PERSONA = COLUMN_TIPO_PERSONA;
 		public static final String FIELD_NUEVO = COLUMN_NUEVO;
 		public static final String FIELD_PENDIENTE = COLUMN_PENDIENTE;
-		
+        public static final String FIELD_FECHA_ULTIMA_VISITA = COLUMN_FECHA_ULTIMA_VISITA;
+        public static final String FIELD_AGENTE_ULTIMA_VISITA = COLUMN_AGENTE_ULTIMA_VISITA;
+        public static final String FIELD_FECHA_PROXIMA_VISITA = COLUMN_FECHA_PROXIMA_VISITA;
+
 		public static final String FIELD_IDENTIFICACION = Contract.ClientExt.TABLE_NAME + "_" + Contract.ClientExt.COLUMN_IDENTIFICACION;
 		public static final String FIELD_NOMBRE1 = Contract.ClientExt.TABLE_NAME + "_" + Contract.ClientExt.COLUMN_NOMBRE1;
 		public static final String FIELD_NOMBRE2 = Contract.ClientExt.TABLE_NAME + "_" + Contract.ClientExt.COLUMN_NOMBRE2;
@@ -483,11 +489,13 @@ public final class Contract {
         public static final String COLUMN_CREACION = "Creacion";
         public static final String COLUMN_MODIFICACION = "Modificacion";
         public static final String COLUMN_GESTION = "Gestion";
+        public static final String COLUMN_OBLIGATORIO = "Obligatorio";
 
         public static final String FIELD_ID_CAMPO = COLUMN_ID_CAMPO;
         public static final String FIELD_CREACION = COLUMN_CREACION;
         public static final String FIELD_MODIFICACION = COLUMN_MODIFICACION;
         public static final String FIELD_GESTION = COLUMN_GESTION;
+        public static final String FIELD_OBLIGATORIO = COLUMN_OBLIGATORIO;
 
     }
 }

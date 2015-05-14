@@ -890,51 +890,39 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 			par.setMargins(0, 10, 0, 15);
 
 			for (int x = 0; x < client.getContactos().size(); x++) {
-				if (x > 0) {
-					View view = new View(getActivity());
-					view.setLayoutParams(par);
-					view.setBackgroundResource(R.color.color_background_header);
-					linearLayoutContact.addView(view);
-				}			
 
-					View view_rowlist = inflater.inflate(
-							R.layout.rowlist_client_detail, null);
-					((TextView) view_rowlist
-							.findViewById(R.id.textView_title)).setText(client.getContactos().get(x).getCargo());
+                View view_rowlist = inflater.inflate(
+                        R.layout.rowlist_client_detail, null);
+                ((TextView) view_rowlist
+                        .findViewById(R.id.textView_title)).setText(client.getContactos().get(x).getCargo());
 
-					((TextView) view_rowlist
-							.findViewById(R.id.textView_content))
-							.setText(client.getContactos().get(x).getNombre() + " " +
-									client.getContactos().get(x).getApellido());
-					linearLayoutContact.addView(view_rowlist);
-					
-					float prueba = ((TextView) view_rowlist
-							.findViewById(R.id.textView_content)).getTextSize();
-					float prueba2 = getResources().getDimensionPixelSize(R.dimen.text_medium_size);
-					
-					view_rowlist.setClickable(true);
-					
-					final int position = x;
-					view_rowlist.setOnClickListener(new OnClickListener(){
+                ((TextView) view_rowlist
+                        .findViewById(R.id.textView_content))
+                        .setText(client.getContactos().get(x).getNombre() + " " +
+                                client.getContactos().get(x).getApellido());
+                linearLayoutContact.addView(view_rowlist);
 
-						@Override
-						public void onClick(View v) {
-							if((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE)
-							{
-								ClientDetailFragment transactionDetailFragment = ClientDetailFragment.newInstance(client);
-								showDialogFragment(transactionDetailFragment, "Contacto");
-							}
-							else
-							{
-								Intent intent = new Intent(getActivity(), ClientDetailActivity.class);
-								intent.putExtra(ARG_ITEM_ID, client.getContactos().get(position).getId());
-								intent.putExtra(ARG_ITEM_TIPO_PERSONA, "C");
-								startActivity(intent);
-							}
-							
-						}});
-				
-			}
+                view_rowlist.setClickable(true);
+
+                final int position = x;
+                view_rowlist.setOnClickListener(new OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE) {
+                            ClientDetailFragment transactionDetailFragment = ClientDetailFragment.newInstance(client);
+                            showDialogFragment(transactionDetailFragment, "Contacto");
+                        } else {
+                            Intent intent = new Intent(getActivity(), ClientDetailActivity.class);
+                            intent.putExtra(ARG_ITEM_ID, client.getContactos().get(position).getId());
+                            intent.putExtra(ARG_ITEM_TIPO_PERSONA, "C");
+                            startActivity(intent);
+                        }
+
+                    }
+                });
+
+            }
 			fl = new ScrollView(getActivity());
 			((ViewGroup)linearLayoutContact.getParent()).removeView(linearLayoutContact);
 			fl.addView(linearLayoutContact);

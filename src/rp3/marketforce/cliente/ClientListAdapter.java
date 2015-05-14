@@ -148,6 +148,8 @@ public class ClientListAdapter extends SectionAdapter{
 		
 		Cliente current =  dataList.get(section).get(row);
 		convertView.setId((int) current.getID());
+        if(!current.isPendiente())
+            convertView.findViewById(R.id.clientlist_sincronizar).setVisibility(View.GONE);
 				
 		switch (order) {
 		case ORDER_BY_NAME:

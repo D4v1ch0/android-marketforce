@@ -5,17 +5,27 @@ import rp3.marketforce.R;
 import rp3.marketforce.models.Actividad;
 import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.AgendaTareaActividades;
+
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.view.View;
 import android.view.Window;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Locale;
 
 public class TextoActivity extends ActividadActivity {
 
 	Actividad ata;
 	private AgendaTareaActividades act;
     boolean actSinGrupo;
+    private final int REQ_CODE_SPEECH_INPUT = 100;
 
 	
 	/** Called when the activity is first created. */
@@ -78,18 +88,63 @@ public class TextoActivity extends ActividadActivity {
             ((TextView) findViewById(R.id.actividad_texto_respuesta)).setFocusableInTouchMode(false);
             findViewById(R.id.actividad_aceptar).setVisibility(View.GONE);
             findViewById(R.id.actividad_cancelar).setVisibility(View.GONE);
+            findViewById(R.id.actividad_voice_to_text).setVisibility(View.GONE);
 		}
+
+        ((ImageView) findViewById(R.id.actividad_voice_to_text)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                promptSpeechInput();
+            }
+        });
 
 
 	    
 	}
+
+    private void promptSpeechInput() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+                "Hable Ahora");
+        try {
+            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+        } catch (ActivityNotFoundException a) {
+            Toast.makeText(getApplicationContext(),
+                    "Dispositivo no soporta voz a texto.",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Receiving speech input
+     * */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case REQ_CODE_SPEECH_INPUT: {
+                if (resultCode == RESULT_OK && null != data) {
+
+                    ArrayList<String> result = data
+                            .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    setTextViewText(R.id.actividad_texto_respuesta, result.get(0));
+                }
+                break;
+            }
+
+        }
+    }
 
 	@Override
 	public void aceptarCambios(View v) {
         if(getTextViewString(R.id.actividad_texto_respuesta).equalsIgnoreCase(""))
             act.setResultado(" ");
         else
-		    act.setResultado(getTextViewString(R.id.actividad_texto_respuesta));
+		    act.setResultado(getTextViewString(R.id.actividad_texto_respuesta).trim());
         //act.setIdsResultado(getTextViewString(R.id.actividad_texto_respuesta));
 
 		if(id_padre == 0)

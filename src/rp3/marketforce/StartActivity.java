@@ -11,6 +11,7 @@ import rp3.marketforce.content.EnviarUbicacionReceiver;
 import rp3.marketforce.db.DbOpenHelper;
 import rp3.marketforce.sync.Server;
 import rp3.marketforce.sync.SyncAdapter;
+import rp3.runtime.Session;
 import rp3.sync.SyncAudit;
 import rp3.util.ConnectionUtils;
 import android.app.AlarmManager;
@@ -21,6 +22,9 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 public class StartActivity extends rp3.app.StartActivity{
+
+    public final static int REINTENTAR_MESSAGE = 100;
+    public final static int OFFLINE_MESSAGE = 200;
 	
 	public StartActivity() {
 	}
@@ -66,7 +70,8 @@ public class StartActivity extends rp3.app.StartActivity{
 
 	}
 
-	@Override
+
+    @Override
 	public void onContinue() {	
 		
 		super.onContinue();		
@@ -81,28 +86,44 @@ public class StartActivity extends rp3.app.StartActivity{
 	}
 	
 	public void onSyncComplete(Bundle data, final MessageCollection messages) {
-		if(!data.containsKey(SyncAdapter.ARG_SYNC_TYPE) && !ConnectionUtils.isNetAvailable(this))
-		{
-			callNextActivity();
-		}
-		else if(data.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_GENERAL) ||
-				data.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_SOLO_RESUMEN)){
-			if(messages.hasErrorMessage())
-				showDialogMessage(messages, new SimpleCallback() {				
-					@Override
-					public void onExecute(Object... params) {
-						if(!messages.hasErrorMessage())
-							callNextActivity();
-						else
-							finish();
-					}
-				});
-			else
-				callNextActivity();
-		}
-	}
-	
-//	@Override
+        if (!data.containsKey(SyncAdapter.ARG_SYNC_TYPE) && !ConnectionUtils.isNetAvailable(this)) {
+            callNextActivity();
+        } else if (data.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_GENERAL) ||
+                data.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_SOLO_RESUMEN)) {
+            if (messages.hasErrorMessage())
+                if (Session.IsLogged()) {
+                    showDialogConfirmation(REINTENTAR_MESSAGE, R.string.message_server_connection, R.string.title_option_setsincronizar);
+                } else {
+                    showDialogMessage(messages, new SimpleCallback() {
+                        @Override
+                        public void onExecute(Object... params) {
+                            if (!messages.hasErrorMessage())
+                                callNextActivity();
+                            else
+                                finish();
+                        }
+                    });
+                }
+            else
+                callNextActivity();
+        }
+    }
+
+    @Override
+    public void onPositiveConfirmation(int id) {
+        super.onPositiveConfirmation(id);
+        Bundle bundle = new Bundle();
+        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_GENERAL);
+        requestSync(bundle);
+    }
+
+    @Override
+    public void onNegativeConfirmation(int id) {
+        super.onNegativeConfirmation(id);
+        finish();
+    }
+
+    //	@Override
 //	public void onVerifyRequestSignIn() {
 //		callNextActivity();
 //	}

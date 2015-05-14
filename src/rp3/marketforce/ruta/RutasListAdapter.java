@@ -95,7 +95,9 @@ public class RutasListAdapter extends BaseAdapter{
 				((TextView) convertView.findViewById(R.id.textView_nombre)).setText(""+agd.getContacto().getNombre() + " " + apellido);
 				((TextView) convertView.findViewById(R.id.textView_cargo_canal)).setText(""+cargo + agd.getNombreCompleto());
 			}
-			
+
+            if(agd.isEnviado())
+                convertView.findViewById(R.id.itemlist_sincronizar).setVisibility(View.INVISIBLE);
 			if(agd.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO))
 				((ImageView) convertView.findViewById(R.id.itemlist_rutas_estado)).setImageResource(R.drawable.circle_in_process);
 			if(agd.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_NO_VISITADO))

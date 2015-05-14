@@ -19,6 +19,8 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -69,6 +71,8 @@ import rp3.marketforce.models.Cliente;
 import rp3.marketforce.models.ClienteDireccion;
 import rp3.marketforce.models.Contacto;
 import rp3.marketforce.models.TipoCliente;
+import rp3.marketforce.ruta.CrearVisitaActivity;
+import rp3.marketforce.ruta.CrearVisitaFragment;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.DetailsPageAdapter;
 import rp3.marketforce.utils.DrawableManager;
@@ -95,6 +99,10 @@ public class CrearClienteFragment extends BaseFragment {
 
 	public static String ARG_CLIENTE = "cliente";
     public static String ARG_TIPO = "tipo";
+
+    public final static int DIALOG_VISITA = 1;
+    public final static int DIALOG_GPS = 2;
+
 	private ViewPager PagerDetalles;
 	private DetailsPageAdapter pagerAdapter;
 	private LayoutInflater inflater;
@@ -104,7 +112,8 @@ public class CrearClienteFragment extends BaseFragment {
 	private LinearLayout ContactosContainer, DireccionContainer;
 	private List<LinearLayout> listViewDirecciones, listViewContactos;
     private List<GeopoliticalStructure> listCiudades;
-	private int curentPage;
+	private int curentPage, posDir;
+    private Location currentLoc;
 	private long idCliente = 0;
     private int tipo;
 	Uri photo = Utils.getOutputMediaFileUri(Utils.MEDIA_TYPE_IMAGE);
@@ -148,10 +157,11 @@ public class CrearClienteFragment extends BaseFragment {
 		switch(item.getItemId())
 		{
 		case R.id.action_save:
-			if(Validaciones())
+			if(Validaciones() && CamposObligatorios())
 			{
 				Grabar();
-				finish();
+                if(tipo == Contants.IS_MODIFICACION)
+				    finish();
 			}
 			break;
 		case R.id.action_cancel:
@@ -162,6 +172,70 @@ public class CrearClienteFragment extends BaseFragment {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
+    private boolean CamposObligatorios() {
+        List<Campo> campos = Campo.getCamposObligatorios(getDataBase(), tipo);
+        for(Campo campo : campos) {
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_IDENTIFICACION) && ((TextView)info.findViewById(R.id.cliente_identificacion)).length() <= 0) {
+                Toast.makeText(this.getContext(), "Falta Identificación.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_FOTO) && cliente.getURLFoto().length() <= 0){
+                Toast.makeText(this.getContext(), "Falta Foto.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+            if(((Spinner) info.findViewById(R.id.crear_cliente_tipo_persona)).getSelectedItemPosition() == 1) {
+                if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_FECHA_NACIMIENTO) && ((TextView) info.findViewById(R.id.cliente_fecha_nacimiento)).length() <= 0) {
+                    Toast.makeText(this.getContext(), "Falta Fecha de Nacimiento.", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+                if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_PRIMER_NOMBRE_NATURAL) && ((TextView) info.findViewById(R.id.cliente_primer_nombre)).length() <= 0) {
+                    Toast.makeText(this.getContext(), "Falta Primer Nombre.", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+                if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_SEGUNDO_NOMBRE_NATURAL) && ((TextView) info.findViewById(R.id.cliente_segundo_nombre)).length() <= 0) {
+                    Toast.makeText(this.getContext(), "Falta Segundo Nombre.", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+                if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_PRIMER_APELLIDO_NATURAL) && ((TextView) info.findViewById(R.id.cliente_primer_apellido)).length() <= 0) {
+                    Toast.makeText(this.getContext(), "Falta Primer Apellido.", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+                if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_SEGUNDO_APELLIDO_NATURAL) && ((TextView) info.findViewById(R.id.cliente_segundo_apellido)).length() <= 0) {
+                    Toast.makeText(this.getContext(), "Falta Segundo Apellido.", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+                if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_CORREO) && ((TextView) info.findViewById(R.id.cliente_correo)).length() <= 0) {
+                    Toast.makeText(this.getContext(), "Falta Correo.", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+            }
+            else {
+
+                if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_NOMBRE_JURIDICO) && ((TextView) info.findViewById(R.id.cliente_nombre)).length() <= 0) {
+                    Toast.makeText(this.getContext(), "Falta Nombre.", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+                if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_RAZON_SOCIAL) && ((TextView) info.findViewById(R.id.cliente_razon_social)).length() <= 0) {
+                    Toast.makeText(this.getContext(), "Falta Razón Social.", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+                if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_PAGINA_WEB) && ((TextView) info.findViewById(R.id.cliente_pagina_web)).length() <= 0) {
+                    Toast.makeText(this.getContext(), "Falta Página Web.", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+                if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_ACTIVIDAD_ECONOMICA) && ((TextView) info.findViewById(R.id.cliente_actividad_economica)).length() <= 0) {
+                    Toast.makeText(this.getContext(), "Falta Actividad Económica.", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+                if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_CORREO) && ((TextView) info.findViewById(R.id.cliente_correo_juridico)).length() <= 0) {
+                    Toast.makeText(this.getContext(), "Falta Correo.", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
     private void SetCamposDireccion(){
         List<Campo> campos = Campo.getCampos(getDataBase(), tipo);
@@ -204,17 +278,26 @@ public class CrearClienteFragment extends BaseFragment {
 
     private void SetCampos() {
         List<Campo> campos = Campo.getCampos(getDataBase(), tipo);
-        //direccion.findViewById(R.id.agregar_direccion).setVisibility(View.GONE);
         //contacto.findViewById(R.id.agregar_contacto).setVisibility(View.GONE);
         if(tipo == Contants.IS_MODIFICACION)
             info.findViewById(R.id.crear_cliente_tipo_persona).setEnabled(false);
+        else {
+            direccion.findViewById(R.id.agregar_direccion).setVisibility(View.GONE);
+            addDireccion();
+        }
         for(Campo campo : campos) {
-            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_TIPO_IDENTIFICACION))
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_TIPO_IDENTIFICACION)) {
                 info.findViewById(R.id.cliente_tipo_identificacion).setEnabled(false);
-            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_IDENTIFICACION))
+                if(campo.isObligatorio()) ((TextView)info.findViewById(R.id.tipo_identificacion_label)).append(" *");
+            }
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_IDENTIFICACION)) {
                 info.findViewById(R.id.cliente_identificacion).setEnabled(false);
-            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_TIPO_CLI))
+                if(campo.isObligatorio()) ((TextView)info.findViewById(R.id.identificacion_label)).append(" *");
+            }
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_TIPO_CLI)) {
                 info.findViewById(R.id.cliente_tipo_cliente).setEnabled(false);
+                if(campo.isObligatorio()) ((TextView)info.findViewById(R.id.tipo_cliente_label)).append(" *");
+            }
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_CANAL))
                 info.findViewById(R.id.cliente_canal).setEnabled(false);
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_FOTO))
@@ -246,7 +329,46 @@ public class CrearClienteFragment extends BaseFragment {
                 info.findViewById(R.id.cliente_actividad_economica).setEnabled(false);
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_CORREO))
                 info.findViewById(R.id.cliente_correo_juridico).setEnabled(false);
+        }
+        campos = Campo.getCamposObligatorios(getDataBase(), tipo);
+        for(Campo campo : campos) {
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_TIPO_IDENTIFICACION))
+                ((TextView)info.findViewById(R.id.tipo_identificacion_label)).append(" *");
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_IDENTIFICACION))
+                ((TextView)info.findViewById(R.id.identificacion_label)).append(" *");
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_TIPO_CLI))
+                ((TextView)info.findViewById(R.id.tipo_cliente_label)).append(" *");
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_CANAL))
+                ((TextView)info.findViewById(R.id.canal_label)).append(" *");
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_FOTO))
+                ((TextView)info.findViewById(R.id.foto_label)).append(" *");
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_FECHA_NACIMIENTO))
+                ((TextView)info.findViewById(R.id.fecha_nacimiento_label)).append(" *");
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_GENERO))
+                ((TextView)info.findViewById(R.id.genero_label)).append(" *");
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_ESTADO_CIVIL))
+                ((TextView)info.findViewById(R.id.estado_civil_label)).append(" *");
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_PRIMER_NOMBRE_NATURAL))
+                ((TextView)info.findViewById(R.id.primer_nombre_label)).append(" *");
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_SEGUNDO_NOMBRE_NATURAL))
+                ((TextView)info.findViewById(R.id.segundo_nombre_label)).append(" *");
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_PRIMER_APELLIDO_NATURAL))
+                ((TextView)info.findViewById(R.id.primer_apellido_label)).append(" *");
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_SEGUNDO_APELLIDO_NATURAL))
+                ((TextView)info.findViewById(R.id.segundo_nombre_label)).append(" *");
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_CORREO))
+                ((TextView)info.findViewById(R.id.correo_natural_label)).append(" *");
 
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_NOMBRE_JURIDICO))
+                ((TextView)info.findViewById(R.id.nombre_label)).append(" *");
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_RAZON_SOCIAL))
+                ((TextView)info.findViewById(R.id.razon_social_label)).append(" *");
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_PAGINA_WEB))
+                ((TextView)info.findViewById(R.id.pagina_web_label)).append(" *");
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_ACTIVIDAD_ECONOMICA))
+                ((TextView)info.findViewById(R.id.actividad_economica_label)).append(" *");
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_CORREO))
+                ((TextView)info.findViewById(R.id.correo_juridico_label)).append(" *");
         }
 
     }
@@ -374,14 +496,60 @@ public class CrearClienteFragment extends BaseFragment {
 				Bundle bundle = new Bundle();
 				if(idCliente != 0)
 					bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_CLIENTE_UPDATE_FULL);
-				else
-					bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_CLIENTE_CREATE);
+				else {
+                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_CLIENTE_CREATE);
+                    showDialogConfirmation(DIALOG_VISITA, R.string.message_crear_visita, R.string.label_crear_visita);
+                    cliente = cli;
+                }
 				bundle.putLong(ARG_CLIENTE, cli.getID());
 				requestSync(bundle);
 			}
 	}
 
-	@Override
+    @Override
+    public void onPositiveConfirmation(int id){
+        super.onPositiveConfirmation(id);
+        switch (id)
+        {
+            case DIALOG_VISITA:
+                Intent intent2 = new Intent(getActivity(), CrearVisitaActivity.class);
+                intent2.putExtra(CrearVisitaFragment.ARG_IDAGENDA,(int) cliente.getID());
+                intent2.putExtra(CrearVisitaFragment.ARG_FROM, "Cliente");
+                startActivity(intent2);
+                finish();
+                break;
+            case DIALOG_GPS:
+                SaveAddress();
+                break;
+        }
+
+
+    }
+
+    public void SaveAddress()
+    {
+        Geocoder geo = new Geocoder(this.getContext());
+        try {
+            List<Address> addr = geo.getFromLocation(currentLoc.getLatitude(), currentLoc.getLongitude(), 2);
+            ((EditText)listViewDirecciones.get(posDir).findViewById(R.id.cliente_direccion)).setText(addr.get(0).getFeatureName());
+            ((EditText)listViewDirecciones.get(posDir).findViewById(R.id.cliente_referencia)).setText(addr.get(1).getFeatureName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onNegativeConfirmation(int id) {
+        super.onNegativeConfirmation(id);
+        switch (id)
+        {
+            case DIALOG_VISITA:
+                finish();
+        }
+
+    }
+
+    @Override
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
 		super.onFragmentCreateView(rootView, savedInstanceState);
 		
@@ -600,6 +768,7 @@ public class CrearClienteFragment extends BaseFragment {
 			{
 				((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_longitud)).setText("" + cli.getClienteDirecciones().get(i).getLongitud());
 				((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_latitud)).setText("" + cli.getClienteDirecciones().get(i).getLatitud());
+                ((ImageView)listViewDirecciones.get(i).findViewById(R.id.cliente_ubicacion_check)).setImageResource(R.drawable.ic_yes);
 			}
 			if(!cli.isNuevo())
 				((Spinner)listViewDirecciones.get(i).findViewById(R.id.cliente_tipo_direccion_spinner)).setEnabled(false);
@@ -671,6 +840,8 @@ public class CrearClienteFragment extends BaseFragment {
 	{
 		final LinearLayout direccion = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.layout_cliente_direccion_detail, null);
         final int pos = listViewDirecciones.size();
+        if(tipo == Contants.IS_CREACION)
+            direccion.findViewById(R.id.eliminar_direccion).setVisibility(View.GONE);
 		((Button) direccion.findViewById(R.id.eliminar_direccion)).setOnClickListener(new OnClickListener(){
 
 			@Override
@@ -698,6 +869,17 @@ public class CrearClienteFragment extends BaseFragment {
                                 if (location != null) {
                                     ((EditText) listViewDirecciones.get(pos).findViewById(R.id.cliente_longitud)).setText("" + location.getLongitude());
                                     ((EditText) listViewDirecciones.get(pos).findViewById(R.id.cliente_latitud)).setText("" + location.getLatitude());
+                                    ((ImageView) listViewDirecciones.get(pos).findViewById(R.id.cliente_ubicacion_check)).setImageResource(R.drawable.ic_yes);
+                                    currentLoc = location;
+                                    posDir = pos;
+                                    if(((EditText) listViewDirecciones.get(pos).findViewById(R.id.cliente_longitud)).getText().length() > 0)
+                                    {
+                                        showDialogConfirmation(DIALOG_GPS, R.string.message_direccion_google, R.string.title_direccion);
+                                    }
+                                    else
+                                    {
+                                        SaveAddress();
+                                    }
                                 }
                                 else
                                 {
@@ -932,11 +1114,6 @@ public class CrearClienteFragment extends BaseFragment {
                 Toast.makeText(getContext(), "Debe de ingresar una dirección del cliente.", Toast.LENGTH_LONG).show();
                 return false;
             }
-			if(((AutoCompleteTextView)listViewDirecciones.get(i).findViewById(R.id.cliente_ciudad)).getText().toString().length() <= 0 && listViewDirecciones.get(i).findViewById(R.id.cliente_ciudad).isEnabled())
-            {
-				Toast.makeText(getContext(), "Ingrese una ciudad en la dirección del cliente.", Toast.LENGTH_LONG).show();
-				return false;
-			}
 
             if(((CheckBox)listViewDirecciones.get(i).findViewById(R.id.cliente_es_principal)).isChecked())
                 existsPrincipal = true;

@@ -31,7 +31,7 @@ public class FotoActivity extends BaseActivity {
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
-        params.height = size.y - 100;
+        params.height = WindowManager.LayoutParams.WRAP_CONTENT;
         params.width = WindowManager.LayoutParams.MATCH_PARENT;
         params.alpha = 1.0f;
         params.dimAmount = 0.5f;

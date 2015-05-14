@@ -1,12 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
 
     <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
         android:id="@+id/foto_agenda"
         android:layout_gravity="center_horizontal"
-        android:clickable="true" />
-</LinearLayout>
+        android:clickable="true"
+        android:adjustViewBounds="false"
+        android:src="@drawable/user"
+        android:scaleType="fitCenter" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/foto_agenda_button"
+        android:layout_alignBottom="@+id/foto_agenda"
+        android:layout_alignRight="@+id/foto_agenda"
+        android:layout_alignEnd="@+id/foto_agenda"
+        style="@style/Widget.Button.Theme"
+        android:src="@drawable/ic_action_edit_dark" />
+
+</RelativeLayout>

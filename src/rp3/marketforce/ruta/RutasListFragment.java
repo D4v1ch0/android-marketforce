@@ -13,16 +13,19 @@ import rp3.marketforce.R;
 import rp3.marketforce.loader.RutasLoader;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.sync.SyncAdapter;
+import rp3.util.ConnectionUtils;
 import rp3.util.Convert;
 import rp3.util.DateTime;
 import rp3.util.Screen;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
@@ -45,6 +48,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class RutasListFragment extends rp3.app.BaseFragment{
 		    
@@ -79,6 +83,7 @@ public class RutasListFragment extends rp3.app.BaseFragment{
     private int scrollV = 0;
     private View lastItem = null;
     private DataBase db;
+    private String fromCarga;
     
     public static RutasListFragment newInstance() {
     	RutasListFragment fragment = new RutasListFragment();
@@ -145,58 +150,16 @@ public class RutasListFragment extends rp3.app.BaseFragment{
 
 			@Override
 			public void onRefresh() {
-				if(list_agenda_in_adapter == null || list_agenda_in_adapter.size() == 0)
-				{
-					if(list_agenda.size() == 0)
-					{
-						long fin = Agenda.getFirstAgenda(getDataBase());
-						Bundle bundle = new Bundle();
-						bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ACTUALIZAR_AGENDA);
-						bundle.putLong(ARG_FIN, fin);
-						requestSync(bundle);
-					}
-					else
-					{
-						pullRefresher.setRefreshing(false);
-						try
-						{
-							headerlist.removeFooterView(LoadingFooter);
-						}
-						catch(Exception ex)
-						{
-							
-						}
-						orderDate();
-						adapter.changeList(list_agenda_in_adapter);
-					}
-				}
-				else
-				{
-					if(Convert.getTicksFromDate(list_agenda_in_adapter.get(0).getFechaInicio()) > Agenda.getFirstAgenda(getDataBase()))
-					{
-						pullRefresher.setRefreshing(false);
-						try
-						{
-							headerlist.removeFooterView(LoadingFooter);
-						}
-						catch(Exception ex)
-						{
-							
-						}
-						list_agenda = Agenda.getAgenda(getDataBase());
-						orderDate();
-						adapter.changeList(list_agenda_in_adapter);
-					}
-					else
-					{
-						long fin = Agenda.getFirstAgenda(getDataBase());
-						Bundle bundle = new Bundle();
-						bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ACTUALIZAR_AGENDA);
-						bundle.putLong(ARG_FIN, fin);
-						requestSync(bundle);
-					}
-				}
-				paintDates();
+                if(ConnectionUtils.isNetAvailable(getContext())) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_AGENDAS);
+                    requestSync(bundle);
+                }
+                else
+                {
+                    Toast.makeText(getContext(), R.string.message_error_sync_no_net_available, Toast.LENGTH_LONG).show();
+                    pullRefresher.setRefreshing(false);
+                }
 			}});
     	
     	linearLayout_horizontal = (LinearLayout) rootView.findViewById(R.id.linearLayout_horizontal);
@@ -264,36 +227,38 @@ public class RutasListFragment extends rp3.app.BaseFragment{
 		
 		closeDialogProgress();		
 		pullRefresher.setRefreshing(false);
-		try
-		{
-		if(headerlist.getFooterViewsCount() != 0)
-			headerlist.removeFooterView(LoadingFooter);
-		}
-		catch(Exception ex)
-		{
-			
-		}
-		if(list_agenda_in_adapter == null || list_agenda_in_adapter.size() == 0)
-    		list_agenda = Agenda.getAgenda(getDataBase());
-		else
-		{
-			if(Convert.getTicksFromDate(list_agenda_in_adapter.get(0).getFechaInicio()) > Agenda.getFirstAgenda(getDataBase()))
-				list_agenda = Agenda.getAgendaSemanal(getDataBase());
-			else
-				list_agenda = Agenda.getAgenda(getDataBase());
-		}
-		orderDate();
-		
-		if(list_agenda_in_adapter != null)
-		{
-			if(adapter == null)
-			{
-				adapter = new RutasListAdapter(getActivity(),list_agenda_in_adapter,transactionListFragmentCallback);
-				headerlist.setAdapter(adapter);
-			}
-			adapter.changeList(list_agenda_in_adapter);
-		}
-		paintDates();
+        String prueba = data.getString(SyncAdapter.ARG_SYNC_TYPE);
+        if(data.containsKey(SyncAdapter.ARG_SYNC_TYPE) && (data.getString(SyncAdapter.ARG_SYNC_TYPE).equalsIgnoreCase(SyncAdapter.SYNC_TYPE_UPLOAD_AGENDAS)
+                || data.getString(SyncAdapter.ARG_SYNC_TYPE).equalsIgnoreCase(SyncAdapter.SYNC_TYPE_ACTUALIZAR_AGENDA))) {
+            if (data.getString(SyncAdapter.ARG_SYNC_TYPE).equalsIgnoreCase(SyncAdapter.SYNC_TYPE_UPLOAD_AGENDAS)) {
+                list_agenda = Agenda.getAgendaSemanal(getDataBase());
+            } else {
+                try {
+                    if (headerlist.getFooterViewsCount() != 0)
+                        headerlist.removeFooterView(LoadingFooter);
+                } catch (Exception ex) {
+
+                }
+                if(fromCarga.equalsIgnoreCase(ARG_INICIO))
+                    list_agenda = Agenda.getAgenda(getDataBase());
+                else if(fromCarga.equalsIgnoreCase(ARG_FIN))
+                    list_agenda = Agenda.getAgendaSemanal(getDataBase());
+                else
+                    list_agenda = Agenda.getAgendaSemanal(getDataBase());
+
+                fromCarga = "";
+            }
+            orderDate();
+
+            if (list_agenda_in_adapter != null) {
+                if (adapter == null) {
+                    adapter = new RutasListAdapter(getActivity(), list_agenda_in_adapter, transactionListFragmentCallback);
+                    headerlist.setAdapter(adapter);
+                }
+                adapter.changeList(list_agenda_in_adapter);
+            }
+            paintDates();
+        }
 	}
 	
 	private void setListenersList()
@@ -322,15 +287,6 @@ public class RutasListFragment extends rp3.app.BaseFragment{
 					   else
 					   {
 						   pullRefresher.setEnabled(false);
-						   if(totalItemCount <= (firstVisibleItem+visibleItemCount) && headerlist.getFooterViewsCount() == 0)
-						   {
-							   headerlist.addFooterView(LoadingFooter);
-							   long inicio = Agenda.getLastAgenda(getDataBase());
-							   Bundle bundle = new Bundle();
-							   bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ACTUALIZAR_AGENDA);
-							   bundle.putLong(ARG_INICIO, inicio);
-							   requestSync(bundle);
-						   }
 					   }
 				
 			}
@@ -460,70 +416,183 @@ public class RutasListFragment extends rp3.app.BaseFragment{
 			}
 		}
 	 
-	 void paintDates(){
-		 	
+	 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+     void paintDates(){
+		 	Calendar anterior = null;
 	    	LinearLayout.LayoutParams params;
-	    	if(width > 480)
-	    		params = new LinearLayout.LayoutParams((int) (width*.14f) + 2, LinearLayout.LayoutParams.WRAP_CONTENT);
-	    	else
-	    		params = new LinearLayout.LayoutParams((int) (width*.18f) , LinearLayout.LayoutParams.WRAP_CONTENT);
+            int scrollTo;
+	    	if(width > 480) {
+                params = new LinearLayout.LayoutParams((int) (width * .14f) + 2, LinearLayout.LayoutParams.MATCH_PARENT);
+                scrollTo = (int) (width*.14f);
+            }
+	    	else {
+                params = new LinearLayout.LayoutParams((int) (width * .18f), LinearLayout.LayoutParams.MATCH_PARENT);
+                scrollTo = (int) (width*.18f);
+            }
 	    	
-			if(list_agenda_in_adapter != null)
-			{
-				linearLayout_horizontal.removeAllViews();
-				
-				int x = 0;
-		    	for(Agenda fec : list_agenda_in_adapter)
-				{
-		    		if(fec.getNombreCompleto() == null)
-		    		{
-			    	       try {
-			    	       calendar.setTime(fec.getFechaInicio());
-			    	       
-							final View view_ = inflater.inflate(R.layout.rowlist_date, null);
-						    view_.setLayoutParams(params);
-						    
-						    ((TextView) view_.findViewById(R.id.textView_week)).setText(format2.format(calendar.getTime()).substring(0, 3));
-						    ((TextView) view_.findViewById(R.id.textView_day)).setText(format3.format(calendar.getTime()));
-						    ((TextView) view_.findViewById(R.id.textView_month)).setText(format4.format(calendar.getTime()).substring(0, 3));
-						    
-						    view_.setId(56+x);
-						    x++;
-						    linearLayout_horizontal.addView(view_);
-						    
-						    view_.setOnClickListener(new View.OnClickListener() {
-								
-								@Override
-								public void onClick(View v) {
-									
-									cont = 0 ;
-									SECTION = v.getId()-56;
-									
-									if(adapter != null)
-										adapter.notifyDataSetChanged();
-									
-									int x = 0;
-									for(int m = 0; m< list_agenda_in_adapter.size();m++)
-										if(x <= SECTION && list_agenda_in_adapter.get(m).getNombreCompleto() == null)
-										{
-										   cont = m;
-										   x++;
-										}
-									
-									scrollV = cont;
-									headerlist.setSelection(cont);
-									
-									mPaintRiel();
-								}
-							});
-							  
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-			    	        mPaintRiel();
-					}
-				}
-			}
+			if(list_agenda_in_adapter != null) {
+                linearLayout_horizontal.removeAllViews();
+
+                try {
+
+                    View view_ = inflater.inflate(R.layout.rowlist_date, null);
+                    view_.setLayoutParams(params);
+
+                    ((TextView) view_.findViewById(R.id.textView_week)).setText("");
+                    ((TextView) view_.findViewById(R.id.textView_day)).setText("+");
+                    ((TextView) view_.findViewById(R.id.textView_month)).setText("");
+
+                    linearLayout_horizontal.addView(view_);
+
+                    final View finalView_ = view_;
+                    view_.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            fromCarga = ARG_INICIO;
+                            finalView_.findViewById(R.id.textView_week).setVisibility(View.GONE);
+                            finalView_.findViewById(R.id.textView_day).setVisibility(View.GONE);
+                            finalView_.findViewById(R.id.textView_month).setVisibility(View.GONE);
+                            finalView_.findViewById(R.id.date_progress).setVisibility(View.VISIBLE);
+
+                            if (list_agenda_in_adapter == null || list_agenda_in_adapter.size() == 0) {
+                                if (list_agenda.size() == 0) {
+                                    long fin = Agenda.getFirstAgenda(getDataBase());
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ACTUALIZAR_AGENDA);
+                                    bundle.putLong(ARG_FIN, fin);
+                                    requestSync(bundle);
+                                } else {
+                                    pullRefresher.setRefreshing(false);
+                                    try {
+                                        headerlist.removeFooterView(LoadingFooter);
+                                    } catch (Exception ex) {
+
+                                    }
+                                    orderDate();
+                                    adapter.changeList(list_agenda_in_adapter);
+                                    paintDates();
+                                }
+                            } else {
+                                if (Convert.getTicksFromDate(list_agenda_in_adapter.get(0).getFechaInicio()) > Agenda.getFirstAgenda(getDataBase())) {
+                                    pullRefresher.setRefreshing(false);
+                                    try {
+                                        headerlist.removeFooterView(LoadingFooter);
+                                    } catch (Exception ex) {
+
+                                    }
+                                    list_agenda = Agenda.getAgenda(getDataBase());
+                                    orderDate();
+                                    adapter.changeList(list_agenda_in_adapter);
+                                    paintDates();
+                                } else {
+                                    long fin = Agenda.getFirstAgenda(getDataBase());
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ACTUALIZAR_AGENDA);
+                                    bundle.putLong(ARG_FIN, fin);
+                                    requestSync(bundle);
+                                }
+                            }
+                        }
+                    });
+                    //linearLayout_horizontal.setScrollX(scrollTo);
+                    int x = 0;
+                    for (Agenda fec : list_agenda_in_adapter) {
+                        if (fec.getNombreCompleto() == null) {
+                            try {
+                                calendar.setTime(fec.getFechaInicio());
+                                if(anterior != null)
+                                {
+                                    int dias = calendar.get(Calendar.DAY_OF_YEAR) - anterior.get(Calendar.DAY_OF_YEAR);
+                                    for(int i = 0; i < dias - 1; i++)
+                                    {
+                                        anterior.add(Calendar.DAY_OF_YEAR, 1);
+                                        view_ = inflater.inflate(R.layout.rowlist_date, null);
+                                        view_.setLayoutParams(params);
+
+                                        ((TextView) view_.findViewById(R.id.textView_week)).setText(format2.format(anterior.getTime()).substring(0, 3));
+                                        ((TextView) view_.findViewById(R.id.textView_day)).setText(format3.format(anterior.getTime()));
+                                        ((TextView) view_.findViewById(R.id.textView_month)).setText(format4.format(anterior.getTime()).substring(0, 3));
+                                        linearLayout_horizontal.addView(view_);
+                                    }
+                                }
+                                anterior = (Calendar)calendar.clone();
+
+                                view_ = inflater.inflate(R.layout.rowlist_date, null);
+                                view_.setLayoutParams(params);
+
+                                ((TextView) view_.findViewById(R.id.textView_week)).setText(format2.format(calendar.getTime()).substring(0, 3));
+                                ((TextView) view_.findViewById(R.id.textView_day)).setText(format3.format(calendar.getTime()));
+                                ((TextView) view_.findViewById(R.id.textView_month)).setText(format4.format(calendar.getTime()).substring(0, 3));
+
+                                view_.setId(56 + x);
+                                x++;
+                                linearLayout_horizontal.addView(view_);
+
+                                view_.setOnClickListener(new View.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(View v) {
+
+                                        cont = 0;
+                                        SECTION = v.getId() - 56;
+
+                                        if (adapter != null)
+                                            adapter.notifyDataSetChanged();
+
+                                        int x = 0;
+                                        for (int m = 0; m < list_agenda_in_adapter.size(); m++)
+                                            if (x <= SECTION && list_agenda_in_adapter.get(m).getNombreCompleto() == null) {
+                                                cont = m;
+                                                x++;
+                                            }
+
+                                        scrollV = cont;
+                                        headerlist.setSelection(cont);
+
+                                        mPaintRiel();
+                                    }
+                                });
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            mPaintRiel();
+                        }
+                    }
+
+                    view_ = inflater.inflate(R.layout.rowlist_date, null);
+                    view_.setLayoutParams(params);
+
+                    ((TextView) view_.findViewById(R.id.textView_week)).setText("");
+                    ((TextView) view_.findViewById(R.id.textView_day)).setText("+");
+                    ((TextView) view_.findViewById(R.id.textView_month)).setText("");
+
+                    linearLayout_horizontal.addView(view_);
+
+                    view_.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            fromCarga = ARG_FIN;
+                            v.findViewById(R.id.textView_week).setVisibility(View.GONE);
+                            v.findViewById(R.id.textView_day).setVisibility(View.GONE);
+                            v.findViewById(R.id.textView_month).setVisibility(View.GONE);
+                            v.findViewById(R.id.date_progress).setVisibility(View.VISIBLE);
+                            long inicio = Agenda.getLastAgenda(getDataBase());
+                            Bundle bundle = new Bundle();
+                            bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ACTUALIZAR_AGENDA);
+                            bundle.putLong(ARG_INICIO, inicio);
+                            requestSync(bundle);
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                mPaintRiel();
+
+
+            }
 	 }
 	 
     @SuppressLint("SimpleDateFormat")

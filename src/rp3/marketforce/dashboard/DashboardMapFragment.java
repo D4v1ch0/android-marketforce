@@ -8,6 +8,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -55,6 +56,7 @@ import rp3.app.BaseFragment;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
+import rp3.util.Screen;
 
 public class DashboardMapFragment extends BaseFragment{
 
@@ -87,18 +89,20 @@ public class DashboardMapFragment extends BaseFragment{
                         FragmentManager fm = getFragmentManager();
                         mapFragment = SupportMapFragment
                                 .newInstance();
-                        fm.beginTransaction()
-                                .replace(R.id.recorrido_dummy, mapFragment).commit();
-                        mapFragment.getMapAsync(new OnMapReadyCallback() {
-                            @Override
-                            public void onMapReady(GoogleMap googleMap) {
-                                map = googleMap;
-                                view.findViewById(R.id.progress_map).setVisibility(View.GONE);
-                                closeDialogProgress();
-                                setMapa();
+                        if(Screen.getOrientation() == Screen.ORIENTATION_LANDSCAPE) {
+                            fm.beginTransaction()
+                                    .replace(R.id.recorrido_dummy, mapFragment).commit();
+                            mapFragment.getMapAsync(new OnMapReadyCallback() {
+                                @Override
+                                public void onMapReady(GoogleMap googleMap) {
+                                    map = googleMap;
+                                    view.findViewById(R.id.progress_map).setVisibility(View.GONE);
+                                    closeDialogProgress();
+                                    setMapa();
 
-                            }
-                        });
+                                }
+                            });
+                        }
                     }
                 }
             }, 1000);
@@ -179,17 +183,20 @@ public class DashboardMapFragment extends BaseFragment{
 		Runnable runnable = new Runnable() {
 		      @Override
 		      public void run() {
-		    	  final String resp = getJSONFromUrl(url);
-		    	  Activity actv = (Activity)getActivity();
-		    	  actv.runOnUiThread(new Runnable()
-			    	{
+                  try {
+                      final String resp = getJSONFromUrl(url);
+                      Activity actv = (Activity) getActivity();
+                      actv.runOnUiThread(new Runnable() {
 
-						@Override
-						public void run() {
-							drawPath(resp);
-						}
-			    		
-			    	});
+                          @Override
+                          public void run() {
+                              drawPath(resp);
+                          }
+
+                      });
+                  }
+                  catch (Exception e)
+                  {}
 		        }
 		      };
 		new Thread(runnable).start();

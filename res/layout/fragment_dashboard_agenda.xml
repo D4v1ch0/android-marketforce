@@ -4,12 +4,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <ListView
-        android:id="@+id/dashboard_agenda_list"
+    <android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swipe_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbarAlwaysDrawVerticalTrack="true" >
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+        <ListView
+            android:id="@+id/dashboard_agenda_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbarAlwaysDrawVerticalTrack="true" >
 
-    </ListView>
+        </ListView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

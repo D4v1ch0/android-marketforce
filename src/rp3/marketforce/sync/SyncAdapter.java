@@ -42,6 +42,8 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 	public static String SYNC_TYPE_GEOPOLITICAL = "geopolitical";
     public static String SYNC_TYPE_AGENTES_UBICACION= "agentes_ubicacion";
     public static String SYNC_TYPE_AGENDA_GEOLOCATION = "agenda_geolocation";
+    public static String SYNC_TYPE_UPLOAD_AGENDAS = "agenda_upload";
+    public static String SYNC_TYPE_UPLOAD_CLIENTES = "cliente_upload";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -247,6 +249,35 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         addDefaultMessage(result);
                         if (result == SYNC_EVENT_SUCCESS) {
                             SyncAudit.insert(SYNC_TYPE_ACT_AGENDA, SYNC_EVENT_SUCCESS);
+                        }
+                    }
+                } else if (syncType.equals(SYNC_TYPE_UPLOAD_AGENDAS)) {
+
+                    result = Agenda.executeSyncInserts(db);
+                    addDefaultMessage(result);
+
+                    result = Agenda.executeSyncPendientes(db);
+                    addDefaultMessage(result);
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Rutas.executeSync(db, null, null, false);
+                        addDefaultMessage(result);
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            SyncAudit.insert(SYNC_TYPE_ACT_AGENDA, SYNC_EVENT_SUCCESS);
+                        }
+                    }
+                } else if (syncType.equals(SYNC_TYPE_UPLOAD_CLIENTES)) {
+                    result = Cliente.executeSyncInserts(db);
+                    addDefaultMessage(result);
+
+                    result = Cliente.executeSyncPendientes(db);
+                    addDefaultMessage(result);
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Cliente.executeSync(db);
+                        addDefaultMessage(result);
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            SyncAudit.insert(SYNC_TYPE_CLIENTE_UPDATE, SYNC_EVENT_SUCCESS);
                         }
                     }
                 } else if (syncType.equals(SYNC_TYPE_TODO)) {

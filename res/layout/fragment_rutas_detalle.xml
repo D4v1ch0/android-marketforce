@@ -239,9 +239,8 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.3"
-            android:gravity="center">
+            android:layout_height="wrap_content"
+            android:gravity="center|bottom">
 
             <TextView
                 android:id="@+id/detail_agenda_observacion"
@@ -255,7 +254,8 @@
                 android:padding="5dp"
                 android:text="@string/label_agregue_observacion"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/color_text_hint" />
+                android:textColor="@color/color_text_hint"
+                android:lines="1" />
         </LinearLayout>
 
     </LinearLayout>

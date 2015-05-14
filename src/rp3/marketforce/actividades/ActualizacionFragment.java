@@ -845,7 +845,7 @@ public class ActualizacionFragment extends BaseFragment {
                 Toast.makeText(getContext(), "Falta primer apellido de cliente.", Toast.LENGTH_LONG).show();
                 return false;
             }
-            if(cliente.getFechaNacimiento().getTime() >= Calendar.getInstance().getTime().getTime())
+            if(info.findViewById(R.id.cliente_fecha_nacimiento).isEnabled() && cliente.getFechaNacimiento().getTime() >= Calendar.getInstance().getTime().getTime())
             {
                 Toast.makeText(getContext(), "Fecha de nacimiento no puede ser mayor a hoy.", Toast.LENGTH_LONG).show();
                 return false;

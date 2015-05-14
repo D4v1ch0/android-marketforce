@@ -119,11 +119,11 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
 		}
 		
 		if (clientId != 0) {
-			setContentView(R.layout.fragment_cliente_detalle);
+			setContentView(R.layout.fragment_cliente_detalle, R.menu.fragment_cliente_detail);
 		} else {
 			setContentView(R.layout.base_content_no_selected_item);
 		}
-    }    
+    }
     
     @Override
 	public void onResume() {		
@@ -136,7 +136,7 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
 			}
 			else
 			{
-				client = Cliente.getClienteID(getDataBase(), clientId, true);
+				client = Cliente.getClienteIDServer(getDataBase(), clientId, true);
 			}
 		}
 		
@@ -154,7 +154,7 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
 				.findViewById(R.id.linearLayout_content_contactos);
 		linearLayoutRigth.removeAllViews();
 		linearLayoutAdress.removeAllViews();
-		linearLayoutContact.removeAllViews();
+		//linearLayoutContact.removeAllViews();
 		
 		TabInfo.setOnClickListener(new OnClickListener(){
 
@@ -722,47 +722,7 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
 			pagerAdapter.addView(fl);
 		}
 		
-		if(client.getContactos() != null && client.getContactos().size() > 0)
-		{
-			setViewVisibility(R.id.linearLayout_content_contactos,
-					View.VISIBLE);
-			setViewVisibility(R.id.detail_tab_contactos, View.VISIBLE);
-			testArrayDetails = this.getApplicationContext().getResources()
-					.getStringArray(R.array.testArrayDetails);
 
-			LinearLayout.LayoutParams par = new LinearLayout.LayoutParams(
-					LinearLayout.LayoutParams.MATCH_PARENT, 4);
-			par.setMargins(0, 10, 0, 15);
-
-			for (int x = 0; x < client.getContactos().size(); x++) {
-				if (x > 0) {
-					View view = new View(getApplicationContext());
-					view.setLayoutParams(par);
-					view.setBackgroundResource(R.color.color_background_header);
-					linearLayoutContact.addView(view);
-				}			
-
-					View view_rowlist = inflater.inflate(
-							R.layout.rowlist_client_detail, null);
-					((TextView) view_rowlist
-							.findViewById(R.id.textView_title)).setText(client.getContactos().get(x).getCargo());
-
-					((TextView) view_rowlist
-							.findViewById(R.id.textView_content))
-							.setText(client.getContactos().get(x).getNombre() + " " +
-									client.getContactos().get(x).getApellido());
-					linearLayoutContact.addView(view_rowlist);
-					
-					((TextView) view_rowlist
-							.findViewById(R.id.textView_content)).setClickable(true);
-					
-				
-			}
-			fl = new ScrollView(getApplicationContext());
-			((ViewGroup)linearLayoutContact.getParent()).removeView(linearLayoutContact);
-			fl.addView(linearLayoutContact);
-			pagerAdapter.addView(fl);
-		}
 		/*
 		 * Se cambia la carga de foto por un lazy load
 		 */
@@ -782,16 +742,6 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
 		setTextViewText(R.id.textView_client, client.getNombreCompleto());
 		
 		PagerDetalles.setAdapter(pagerAdapter);
-		
-		if(client.getContactos() != null && client.getContactos().size() > 0)
-		{
-			TabContactos.setBackgroundColor(getResources().getColor(R.color.tab_activated));
-			PagerDetalles.setCurrentItem(2);
-		}
-		else
-		{
-			TabInfo.setBackgroundColor(getResources().getColor(R.color.tab_activated));
-		}
 		
 	}
 	
@@ -995,10 +945,16 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
-		}
+            case android.R.id.home:
+                finish();
+                return true;
+            case R.id.action_edit:
+                Intent intent2 = new Intent(this, CrearClienteActivity.class);
+                intent2.putExtra(CrearClienteActivity.ARG_IDCLIENTE, client.getID());
+                startActivity(intent2);
+                break;
+
+        }
 		return super.onOptionsItemSelected(item);
 	}
     

@@ -25,7 +25,10 @@
 	  URLFoto TEXT,
 	  TipoPersona TEXT,
 	  Nuevo BOOLEAN,
-	  Pendiente BOOLEAN
+	  Pendiente BOOLEAN,
+      FechaUltimaVisita INTEGER,
+      AgenteUltimaVisita TEXT,
+      FechaProximaVisita INTEGER
       )
 	</statement>
 	<statement>
@@ -230,7 +233,8 @@
         IdCampo TEXT,
         Creacion BOOLEAN,
         Modificacion BOOLEAN,
-        Gestion BOOLEAN
+        Gestion BOOLEAN,
+        Obligatorio BOOLEAN
         )
     </statement>
 </sql>

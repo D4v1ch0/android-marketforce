@@ -4,7 +4,7 @@
 	<item
         android:id="@+id/action_edit"
         android:orderInCategory="100"
-        android:icon="@drawable/ic_action_edit"
+        android:icon="@drawable/ic_action_edit_dark"
         android:title="@string/action_edit"             
         android:showAsAction="always"/>
 </menu>

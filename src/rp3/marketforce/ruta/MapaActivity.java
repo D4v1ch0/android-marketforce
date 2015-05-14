@@ -37,6 +37,7 @@ import rp3.configuration.PreferenceManager;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
+import rp3.marketforce.models.Cliente;
 import rp3.marketforce.models.ClienteDireccion;
 import rp3.marketforce.utils.DrawableManager;
 import rp3.marketforce.utils.Utils;
@@ -82,7 +83,9 @@ public class MapaActivity extends BaseActivity {
 	public static String ACTION_TYPE = "type";
 	
 	public static String ACTION_POSICION = "posicion";
+    public static String ACTION_POSICION_CLIENTE = "posicion_cliente";
 	public static String ACTION_LLEGAR = "llegar";
+    public static String ACTION_LLEGAR_CLIENTE = "llegar_cliente";
 	public static String ACTION_RUTAS = "rutas";
 	
 	public static String ARG_AGENDA = "agenda";
@@ -134,6 +137,10 @@ public class MapaActivity extends BaseActivity {
                                 setPosicion(getIntent().getExtras().getLong(ARG_AGENDA));
                             if(action.equalsIgnoreCase(ACTION_LLEGAR))
                                 setRuta(getIntent().getExtras().getLong(ARG_AGENDA));
+                            if(action.equalsIgnoreCase(ACTION_POSICION_CLIENTE))
+                                setPosicionCliente(getIntent().getExtras().getLong(ARG_AGENDA));
+                            if(action.equalsIgnoreCase(ACTION_LLEGAR_CLIENTE))
+                                setRutaCliente(getIntent().getExtras().getLong(ARG_AGENDA));
                             if(action.equalsIgnoreCase(ACTION_RUTAS))
                             {
                                 ComoLlegar.setVisibility(View.GONE);
@@ -483,11 +490,101 @@ public class MapaActivity extends BaseActivity {
 		else
 		{
 			if(loc == null)
-				showDialogMessage("Por favor, active su GPS de su dispositivo movil, y haga touch sobre el bot�n Como Llegar nuevamente.");
+				showDialogMessage("Por favor, active su GPS de su dispositivo movil, y haga touch sobre el botón Como Llegar nuevamente.");
             else
                 Toast.makeText(this,"Este cliente no tiene ingresada una geolocalización.", Toast.LENGTH_LONG).show();
 		}
 	}
+
+    private void setRutaCliente(final long id) {
+        ComoLlegar.setVisibility(View.GONE);
+        Posicion.setVisibility(View.VISIBLE);
+        RutasFechas.setVisibility(View.GONE);
+        Posicion.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setPosicionCliente(id);
+            }
+        });
+        map.clear();
+        Location loc = LocationUtils.getLocation(this);
+        Cliente cli = Cliente.getClienteID(getDataBase(), id, true);
+        ClienteDireccion cld = cli.getClienteDireccionPrincipal();
+        if(cld.getLongitud() != 0 && cld.getLatitud() != 0 && loc != null)
+        {
+            final String url = makeURL(loc.getLatitude(), loc.getLongitude(), cld.getLatitud(), cld.getLongitud());
+
+            final LatLng pos = new LatLng(loc.getLatitude(), loc.getLongitude());
+
+            Marker mark = map.addMarker(new MarkerOptions().position(pos)
+                    .title("Origen"));
+
+            final LatLng pos2 = new LatLng(cld.getLatitud(), cld.getLongitud());
+
+            Marker mark2 = map.addMarker(new MarkerOptions().position(pos2)
+                    .title(cli.getNombreCompleto().trim()));
+            mark2.showInfoWindow();
+
+            final ProgressDialog dialog = new ProgressDialog(this);
+            dialog.setMessage("Fijando Ruta");
+            dialog.show();
+
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(pos2, 12), 2000, null);
+
+            setTextViewText(R.id.map_name, cli.getNombreCompleto());
+            setTextViewText(R.id.map_phone, cld.getTelefono1());
+            setTextViewText(R.id.map_mail, cli.getCorreoElectronico());
+
+            DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
+                            rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + cli.getURLFoto(),
+                    (ImageView) findViewById(R.id.map_image));
+
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    final String resp = getJSONFromUrl(url);
+                    Activity actv = (Activity)ctx;
+                    actv.runOnUiThread(new Runnable()
+                    {
+
+                        @Override
+                        public void run() {
+                            dialog.dismiss();
+                            drawPath(resp);
+                            expand.setVisibility(View.VISIBLE);
+                            persona.setVisibility(View.VISIBLE);
+                            expand.setOnClickListener(new OnClickListener() {
+
+                                @Override
+                                public void onClick(View v) {
+                                    slideToBottom(persona, false);
+                                    slideToBottom(expand, true);
+                                }
+                            });
+
+                            collapse.setOnClickListener(new OnClickListener() {
+
+                                @Override
+                                public void onClick(View v) {
+                                    slideToTop(persona, false);
+                                    slideToTop(expand, true);
+                                }
+                            });
+                        }
+
+                    });
+                }
+            };
+            new Thread(runnable).start();
+        }
+        else
+        {
+            if(loc == null)
+                showDialogMessage("Por favor, active su GPS de su dispositivo movil, y haga touch sobre el botón Como Llegar nuevamente.");
+            else
+                Toast.makeText(this,"Este cliente no tiene ingresada una geolocalización.", Toast.LENGTH_LONG).show();
+        }
+    }
 	
 	public String makeURL (double sourcelat, double sourcelog, double destlat, double destlog ){
         StringBuilder urlString = new StringBuilder();
@@ -505,6 +602,64 @@ public class MapaActivity extends BaseActivity {
         urlString.append("&sensor=false&mode=driving&alternatives=true");
         return urlString.toString();
  }
+
+    private void setPosicionCliente(final long id) {
+        ComoLlegar.setVisibility(View.VISIBLE);
+        Posicion.setVisibility(View.GONE);
+        RutasFechas.setVisibility(View.GONE);
+        ComoLlegar.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setRutaCliente(id);
+            }
+        });
+        map.clear();
+        Cliente cli = Cliente.getClienteID(getDataBase(), id, true);
+        ClienteDireccion cld = cli.getClienteDireccionPrincipal();
+
+        if (cld.getLatitud() == 0 && cld.getLongitud() == 0) {
+            Toast.makeText(this, "Este cliente no tiene ingresada una geolocalización.", Toast.LENGTH_LONG).show();
+        } else {
+
+            LatLng pos = new LatLng(cld.getLatitud(), cld.getLongitud());
+
+            Marker mark = map.addMarker(new MarkerOptions().position(pos)
+                    .title(cli.getNombreCompleto().trim()));
+
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 15));
+            map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+        }
+
+        DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
+                        rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + cli.getURLFoto(),
+                (ImageView) findViewById(R.id.map_image));
+
+
+        setTextViewText(R.id.map_name, cli.getNombreCompleto());
+        setTextViewText(R.id.map_phone, cld.getTelefono1());
+        setTextViewText(R.id.map_mail, cli.getCorreoElectronico());
+
+
+        expand.setVisibility(View.VISIBLE);
+        persona.setVisibility(View.VISIBLE);
+        expand.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                slideToBottom(persona, false);
+                slideToBottom(expand, true);
+            }
+        });
+
+        collapse.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                slideToTop(persona, false);
+                slideToTop(expand, true);
+            }
+        });
+    }
 
 	private void setPosicion(long id) {
 		ComoLlegar.setVisibility(View.VISIBLE);

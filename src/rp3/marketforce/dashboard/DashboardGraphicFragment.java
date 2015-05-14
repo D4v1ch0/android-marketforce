@@ -69,6 +69,7 @@ public class DashboardGraphicFragment extends BaseFragment {
     	pagerAdapter = new DetailsPageAdapter();
     	pagerAdapter.addView(createGraphics(false));
     	pagerAdapter.addView(createGraphics(true));
+        pagerAdapter.addView(createResume());
     	pagerAdapter.setTitles(titles.toArray(new String[]{}));
     	PagerDetalles.setAdapter(pagerAdapter);	    	   	
     	PagerDetalles.setCurrentItem(0);
@@ -87,101 +88,187 @@ public class DashboardGraphicFragment extends BaseFragment {
 	 
 	 @SuppressLint("SimpleDateFormat")
 	private FrameLayout createGraphics(boolean resumen)
-	 {
-		int mayor = 0;
-	 	int tope = 0;
-	 	long time_inicio = 0;
-	 	long time_fin = 0;
-	 	FrameLayout parent = (FrameLayout) LayoutInflater.from(getContext()).inflate(R.layout.fragment_dashboard_graphic_page, null);
-	 	
-	 	GraphViewSeries.GraphViewSeriesStyle seriesStyle = new GraphViewSeries.GraphViewSeriesStyle();
-	 	seriesStyle.setValueDependentColor(new ValueDependentColor() {
-	 	  @Override
-	 	  public int get(GraphViewDataInterface data) {
-	 		  switch((int)data.getX())
-	 		  {
-		    		  case 1:  return getResources().getColor(R.color.color_visited);
-		    		  case 2:  return getResources().getColor(R.color.color_unvisited);
-		    		  case 3:  return getResources().getColor(R.color.color_pending);
-	 		  }
-	 		  return getResources().getColor(R.color.bg_button_bg_main);
-	 	  }
-	 	  
-	 	});
-	 	
-	 	if(resumen)
-	 	{
-	 		time_inicio = Agenda.getFirstAgenda(getDataBase());
-	 		time_fin = Agenda.getLastAgenda(getDataBase());
-	 	}
-	 	else
-	 	{
-		 	Calendar inicio = Calendar.getInstance();
-		 	Calendar fin = Calendar.getInstance();
-		 	
-		 	inicio.set(Calendar.HOUR_OF_DAY, 0);
-		 	inicio.set(Calendar.MINUTE, 0);
-		 	inicio.set(Calendar.SECOND, 0);
-		 	
-		 	fin.set(Calendar.HOUR_OF_DAY, 23);
-		 	fin.set(Calendar.MINUTE, 59);
-		 	fin.set(Calendar.SECOND, 59);
-		 	
-		 	time_inicio = inicio.getTimeInMillis();
-		 	time_fin = fin.getTimeInMillis();
-	 	}
-	 	
-	 	
-	 	int visitados = Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_VISITADO, time_inicio, time_fin);
-	 	int no_visitado = Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_NO_VISITADO, time_inicio, time_fin);
-	 	int pendientes = Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_PENDIENTE, time_inicio, time_fin);
-	 	int gestionados = Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_GESTIONANDO, time_inicio, time_fin);
-	 	int reprogramados = Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_REPROGRAMADO, time_inicio, time_fin);
-	 	pendientes = gestionados + reprogramados + pendientes;
-	 	
-	 	GraphViewSeries seriesHoy = new GraphViewSeries("Today", seriesStyle, new GraphView.GraphViewData[] {
-	 	    new GraphView.GraphViewData(1, visitados)
-	 	    , new GraphView.GraphViewData(2, no_visitado)
-	 	    , new GraphView.GraphViewData(3, pendientes)
-	 	});
-	 	((TextView) parent.findViewById(R.id.grupo_total_visitas)).setText((visitados + no_visitado + pendientes) + " Visitas");
-	 	
-			mayor = Math.max(visitados, no_visitado);
-			mayor = Math.max(pendientes, mayor);
-			tope = getTope(mayor);
-			int efectividad = 0;
-			
-			if(visitados != 0)
-			{
-				double total = (visitados + pendientes + no_visitado);
-				double coef = visitados / total;
-				efectividad = (int) (coef * 100);
-			}
-			((TextView) parent.findViewById(R.id.dashboard_porcentaje_hoy)).setText("" + (efectividad) + "%");
-			SimpleDateFormat format2 = new SimpleDateFormat("HH:mm");
-			((TextView) parent.findViewById(R.id.dashboard_hora_hoy)).setText(format2.format(Calendar.getInstance().getTime()));
-			
-	 	BarGraphView interim = new BarGraphView(getActivity(), "");
-	 	if(resumen)
-	 	{
-	 		SimpleDateFormat format1 = new SimpleDateFormat("dd/MM");
-	 		((TextView) parent.findViewById(R.id.title_pager)).setText((String.format(getString(R.string.label_desde_graph), format1.format(Convert.getDateFromTicks(time_inicio)))));
-	 	}
-	 	else
-	 	{
-	 		((TextView) parent.findViewById(R.id.title_pager)).setText(R.string.label_hoy);
-	 	}
-	 	interim.setHorizontalLabels(new String[]{ getString(R.string.abreviatura_visitado), getString(R.string.abreviatura_no_visitado), getString(R.string.abreviatura_pendiente)});
-	 	interim.setManualYAxisBounds(tope, 0);
-	 	interim.setVerticalLabels(getVerticalLabels(tope));
-	 	interim.getGraphViewStyle().setVerticalLabelsAlign(Align.RIGHT);
-	 	interim.getGraphViewStyle().setTextSize(getResources().getDimension(R.dimen.text_small_size));
-	 	interim.addSeries(seriesHoy);
-	 	interim.setDrawValuesOnTop(true);
-	 	interim.setValuesOnTopColor(getContext().getResources().getColor(R.color.color_text_sky_blue));
-	 	((LinearLayout)parent.findViewById(R.id.dashboard_graphic_hoy)).addView(interim);
-	 	return parent;
-	 }
+    {
+        int mayor = 0;
+        int tope = 0;
+        long time_inicio = 0;
+        long time_fin = 0;
+        FrameLayout parent = (FrameLayout) LayoutInflater.from(getContext()).inflate(R.layout.fragment_dashboard_graphic_page, null);
+
+        GraphViewSeries.GraphViewSeriesStyle seriesStyle = new GraphViewSeries.GraphViewSeriesStyle();
+        seriesStyle.setValueDependentColor(new ValueDependentColor() {
+            @Override
+            public int get(GraphViewDataInterface data) {
+                switch((int)data.getX())
+                {
+                    case 1:  return getResources().getColor(R.color.color_visited);
+                    case 2:  return getResources().getColor(R.color.color_unvisited);
+                    case 3:  return getResources().getColor(R.color.color_pending);
+                }
+                return getResources().getColor(R.color.bg_button_bg_main);
+            }
+
+        });
+
+        if(resumen)
+        {
+            time_inicio = Agenda.getFirstAgenda(getDataBase());
+            time_fin = Agenda.getLastAgenda(getDataBase());
+        }
+        else
+        {
+            Calendar inicio = Calendar.getInstance();
+            Calendar fin = Calendar.getInstance();
+
+            inicio.set(Calendar.HOUR_OF_DAY, 0);
+            inicio.set(Calendar.MINUTE, 0);
+            inicio.set(Calendar.SECOND, 0);
+
+            fin.set(Calendar.HOUR_OF_DAY, 23);
+            fin.set(Calendar.MINUTE, 59);
+            fin.set(Calendar.SECOND, 59);
+
+            time_inicio = inicio.getTimeInMillis();
+            time_fin = fin.getTimeInMillis();
+        }
+
+
+        int visitados = Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_VISITADO, time_inicio, time_fin);
+        int no_visitado = Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_NO_VISITADO, time_inicio, time_fin);
+        int pendientes = Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_PENDIENTE, time_inicio, time_fin);
+        int gestionados = Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_GESTIONANDO, time_inicio, time_fin);
+        int reprogramados = Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_REPROGRAMADO, time_inicio, time_fin);
+        pendientes = gestionados + reprogramados + pendientes;
+
+        GraphViewSeries seriesHoy = new GraphViewSeries("Today", seriesStyle, new GraphView.GraphViewData[] {
+                new GraphView.GraphViewData(1, visitados)
+                , new GraphView.GraphViewData(2, no_visitado)
+                , new GraphView.GraphViewData(3, pendientes)
+        });
+        ((TextView) parent.findViewById(R.id.grupo_total_visitas)).setText((visitados + no_visitado + pendientes) + " Visitas");
+
+        mayor = Math.max(visitados, no_visitado);
+        mayor = Math.max(pendientes, mayor);
+        tope = getTope(mayor);
+        int efectividad = 0;
+
+        if(visitados != 0)
+        {
+            double total = (visitados + pendientes + no_visitado);
+            double coef = visitados / total;
+            efectividad = (int) (coef * 100);
+        }
+        ((TextView) parent.findViewById(R.id.dashboard_porcentaje_hoy)).setText("" + (efectividad) + "%");
+        SimpleDateFormat format2 = new SimpleDateFormat("HH:mm");
+        ((TextView) parent.findViewById(R.id.dashboard_hora_hoy)).setText(format2.format(Calendar.getInstance().getTime()));
+
+        BarGraphView interim = new BarGraphView(getActivity(), "");
+        if(resumen)
+        {
+            SimpleDateFormat format1 = new SimpleDateFormat("dd/MM");
+            ((TextView) parent.findViewById(R.id.title_pager)).setText((String.format(getString(R.string.label_desde_graph), format1.format(Convert.getDateFromTicks(time_inicio)))));
+        }
+        else
+        {
+            ((TextView) parent.findViewById(R.id.title_pager)).setText(R.string.label_hoy);
+        }
+        interim.setHorizontalLabels(new String[]{ getString(R.string.abreviatura_visitado), getString(R.string.abreviatura_no_visitado), getString(R.string.abreviatura_pendiente)});
+        interim.setManualYAxisBounds(tope, 0);
+        interim.setVerticalLabels(getVerticalLabels(tope));
+        interim.getGraphViewStyle().setVerticalLabelsAlign(Align.RIGHT);
+        interim.getGraphViewStyle().setTextSize(getResources().getDimension(R.dimen.text_small_size));
+        interim.addSeries(seriesHoy);
+        interim.setDrawValuesOnTop(true);
+        interim.setValuesOnTopColor(getContext().getResources().getColor(R.color.color_text_sky_blue));
+        ((LinearLayout)parent.findViewById(R.id.dashboard_graphic_hoy)).addView(interim);
+        return parent;
+    }
+
+    private FrameLayout createResume() {
+        long time_inicio_semana = 0, time_fin_semana = 0, time_inicio_semana_anterior = 0, time_fin_semana_anterior = 0;
+        FrameLayout parent = (FrameLayout) LayoutInflater.from(getContext()).inflate(R.layout.fragment_dashboard_resume, null);
+
+        Calendar inicio = Calendar.getInstance();
+        Calendar fin = Calendar.getInstance();
+
+        inicio.set(Calendar.HOUR_OF_DAY, 0);
+        inicio.set(Calendar.MINUTE, 0);
+        inicio.set(Calendar.SECOND, 0);
+
+        switch(inicio.get(Calendar.DAY_OF_WEEK))
+        {
+            case Calendar.MONDAY:
+                break;
+            case Calendar.THURSDAY:
+                inicio.add(Calendar.DATE, -1);
+                break;
+            case Calendar.WEDNESDAY:
+                inicio.add(Calendar.DATE, -2);
+                break;
+            case Calendar.TUESDAY:
+                inicio.add(Calendar.DATE, -3);
+                break;
+            case Calendar.FRIDAY:
+                inicio.add(Calendar.DATE, -4);
+                break;
+            case Calendar.SATURDAY:
+                inicio.add(Calendar.DATE, -5);
+                break;
+            case Calendar.SUNDAY:
+                inicio.add(Calendar.DATE, -6);
+                break;
+        }
+
+        fin.set(Calendar.HOUR_OF_DAY, 23);
+        fin.set(Calendar.MINUTE, 59);
+        fin.set(Calendar.SECOND, 59);
+
+        time_inicio_semana = inicio.getTimeInMillis();
+        inicio.add(Calendar.DATE, -7);
+        time_inicio_semana_anterior = inicio.getTimeInMillis();
+        time_fin_semana = fin.getTimeInMillis();
+        fin.add(Calendar.DATE, -7);
+        time_fin_semana_anterior = fin.getTimeInMillis();
+
+        int visitados = Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_VISITADO, time_inicio_semana, time_fin_semana);
+        int visitados_ant = Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_VISITADO, time_inicio_semana_anterior, time_fin_semana_anterior);
+        int no_visitado = Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_NO_VISITADO, time_inicio_semana, time_fin_semana);
+        int no_visitado_ant = Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_NO_VISITADO, time_inicio_semana_anterior, time_fin_semana_anterior);
+        int gestionados = Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_GESTIONANDO, time_inicio_semana, time_fin_semana);
+        int gestionados_ant = Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_GESTIONANDO, time_inicio_semana_anterior, time_fin_semana_anterior);
+        int reprogramados = Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_REPROGRAMADO, time_inicio_semana, time_fin_semana);
+        int reprogramados_ant = Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_REPROGRAMADO, time_inicio_semana_anterior, time_fin_semana_anterior);
+        int pendientes = Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_PENDIENTE, time_inicio_semana, time_fin_semana);
+        int pendientes_ant = Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_PENDIENTE, time_inicio_semana_anterior, time_fin_semana_anterior);
+        pendientes = gestionados + reprogramados + pendientes;
+        pendientes_ant = gestionados_ant + reprogramados_ant + pendientes_ant;
+
+        int efectividad = 0;
+        int efectividad_ant = 0;
+        int total = 0;
+        int total_ant = 0;
+
+        if (visitados != 0) {
+            total = (visitados + pendientes + no_visitado);
+            double coef = (double) visitados / (double) total;
+            efectividad = (int) (coef * 100);
+        }
+
+        if (visitados_ant != 0) {
+            total_ant = (visitados_ant + pendientes_ant + no_visitado_ant);
+            double coef = (double) visitados_ant / (double) total_ant;
+            efectividad_ant = (int) (coef * 100);
+        }
+        ((TextView) parent.findViewById(R.id.dashboard_semana_efectividad)).setText("" + (efectividad) + "%");
+        ((TextView) parent.findViewById(R.id.dashboard_semana_ant_efectividad)).setText("" + (efectividad_ant) + "%");
+        ((TextView) parent.findViewById(R.id.dashboard_semana_total_visitas)).setText("" + (visitados));
+        ((TextView) parent.findViewById(R.id.dashboard_semana_ant_total_visitas)).setText("" + (visitados_ant));
+        ((TextView) parent.findViewById(R.id.dashboard_semana_visitas_norealizadas)).setText("" + (no_visitado));
+        ((TextView) parent.findViewById(R.id.dashboard_semana_ant_visitas_norealizadas)).setText("" + (no_visitado_ant));
+
+        ((TextView) parent.findViewById(R.id.title_pager)).setText(R.string.label_comparativo);
+        return parent;
+    }
 
 	 private int getTope(int mayor) {
 		if(mayor < NUM_VERTICAL_LABELS)

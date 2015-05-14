@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -22,6 +23,7 @@ import rp3.marketforce.content.EnviarUbicacionReceiver;
 import rp3.marketforce.dashboard.DashboardFragment;
 import rp3.marketforce.db.Contract;
 import rp3.marketforce.db.DbOpenHelper;
+import rp3.marketforce.information.InformationFragment;
 import rp3.marketforce.models.Actividad;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.Agenda.AgendaExt;
@@ -80,8 +82,14 @@ public class MainActivity extends rp3.app.NavActivity{
 	public static final int NAV_RESUMEN		 	= 10;
 	public static final int NAV_RECORRIDO	 	= 11;
     public static final int NAV_RADAR	 	    = 12;
+    public static final int NAV_INFORMATION	    = 13;
+
+    public static final int CERRAR_SESION_DIALOG = 12;
+
+    public static final String TO_AGENDAS	 	= "toAgendas";
 	public String lastTitle;
 	private int selectedItem;
+    SimpleDateFormat format4= new SimpleDateFormat("dd/MM/yyy HH:mm");
 	
 	public static Intent newIntent(Context c){
 		Intent i = new Intent(c, MainActivity.class);
@@ -97,23 +105,30 @@ public class MainActivity extends rp3.app.NavActivity{
 		Session.Start(this);
 		rp3.configuration.Configuration.TryInitializeConfiguration(this, DbOpenHelper.class);
 
-		extractDatabase();
+		//extractDatabase();
 		
 		this.setNavHeaderTitle(Session.getUser().getFullName());
 		this.setNavHeaderSubtitle(PreferenceManager.getString(Contants.KEY_CARGO));
 		showNavHeader(true);
 		
 		setNavHeaderIcon(getResources().getDrawable(R.drawable.ic_user_new));
-		if(savedInstanceState == null){
-			int startNav = NAV_DASHBOARD;			
-			setNavigationSelection(startNav);
-            selectedItem = startNav;
-            lastTitle = "Inicio";
-		}
-        else
+        if(getIntent().getExtras() != null && getIntent().getExtras().containsKey(TO_AGENDAS))
         {
-            selectedItem = savedInstanceState.getInt("Selected");
-            lastTitle = savedInstanceState.getString("Title");
+            int startNav = NAV_RUTAS;
+            setNavigationSelection(startNav);
+            selectedItem = startNav;
+            lastTitle = getText(R.string.title_option_setrutas).toString();
+        }
+        else {
+            if (savedInstanceState == null) {
+                int startNav = NAV_DASHBOARD;
+                setNavigationSelection(startNav);
+                selectedItem = startNav;
+                lastTitle = getText(R.string.title_option_setinicio).toString();
+            } else {
+                selectedItem = savedInstanceState.getInt("Selected");
+                lastTitle = savedInstanceState.getString("Title");
+            }
         }
 		setAlarm();
 		Bundle bundle = new Bundle();
@@ -125,7 +140,7 @@ public class MainActivity extends rp3.app.NavActivity{
 			bundle2.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SOLO_RESUMEN);
 			requestSync(bundle2);
 		}
-			
+
 	}
 
     @Override
@@ -155,15 +170,17 @@ public class MainActivity extends rp3.app.NavActivity{
 		NavItem recordatorios = new NavItem(NAV_RECORDATORIOS, R.string.title_option_setrecordatorios, R.drawable.ic_recordatorios);
 		NavItem recorrido = new NavItem(NAV_RECORRIDO, R.string.title_option_recorrido, R.drawable.ic_action_place_dark);
         NavItem radar = new NavItem(NAV_RADAR, R.string.title_option_radar, R.drawable.ic_action_data_usage);
+        NavItem information = new NavItem(NAV_INFORMATION, R.string.title_option_informacion, R.drawable.ic_action_about);
 		
 		NavItem settingsGroup  = new NavItem(0, R.string.title_option_setconfiguracion, 0,NavItem.TYPE_CATEGORY);
-		
-		NavItem sincronizar = new NavItem(NAV_SINCRONIZAR, R.string.title_option_setsincronizar , R.drawable.ic_sincronizar, NavItem.TYPE_ACTION);
+
+        Date ultimo = SyncAudit.getLastSyncDate();
+		NavItem sincronizar = new NavItem(NAV_SINCRONIZAR, R.string.title_option_setsincronizar , R.drawable.ic_sincronizar, NavItem.TYPE_ACTION, "Ult. Conexión: " + format4.format(ultimo));
 		NavItem ajustes = new NavItem(NAV_AJUSTES, R.string.title_option_setajustes, R.drawable.ic_ajustes);
 		NavItem cerrarsesion = new NavItem(NAV_CERRAR_SESION, R.string.title_option_setcerrar_sesion, R.drawable.ic_cerrar_sesion);
 		
 		settingsGroup.addChildItem(sincronizar);
-		//settingsGroup.addChildItem(ajustes);
+		settingsGroup.addChildItem(information);
 		settingsGroup.addChildItem(cerrarsesion);
 		
 		navItems.add(dashboard);
@@ -239,13 +256,18 @@ public class MainActivity extends rp3.app.NavActivity{
 				    item.getTitle());
 			lastTitle = item.getTitle();
 			break;
-		case NAV_SINCRONIZAR:	
-			
-			showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait);
-			
-			Bundle bundle = new Bundle();
-			bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_TODO);
-			requestSync(bundle);
+		case NAV_SINCRONIZAR:
+            if(!ConnectionUtils.isNetAvailable(this))
+            {
+                Toast.makeText(this, "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
+            }
+            else {
+                showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait);
+
+                Bundle bundle = new Bundle();
+                bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_TODO);
+                requestSync(bundle);
+            }
 			
 			break;
 		case NAV_AJUSTES:	
@@ -253,44 +275,65 @@ public class MainActivity extends rp3.app.NavActivity{
 				    item.getTitle());
 			lastTitle = item.getTitle();
 			break;
-		case NAV_CERRAR_SESION:	
-			Agenda.deleteAll(getDataBase(), Contract.Agenda.TABLE_NAME);
-			AgendaExt.deleteAll(getDataBase(), Contract.AgendaExt.TABLE_NAME);
-			Tarea.deleteAll(getDataBase(), Contract.Tareas.TABLE_NAME);
-			Cliente.deleteAll(getDataBase(), Contract.Cliente.TABLE_NAME);
-			ClientExt.deleteAll(getDataBase(), Contract.ClientExt.TABLE_NAME);
-			ClienteDireccion.deleteAll(getDataBase(), Contract.ClienteDireccion.TABLE_NAME);
-			Contacto.deleteAll(getDataBase(), Contract.Contacto.TABLE_NAME);
-			ContactoExt.deleteAll(getDataBase(), Contract.ContactoExt.TABLE_NAME);
-			Actividad.deleteAll(getDataBase(), Contract.Actividades.TABLE_NAME);
-			AgendaTarea.deleteAll(getDataBase(), Contract.AgendaTarea.TABLE_NAME);
-			AgendaTareaActividades.deleteAll(getDataBase(), Contract.AgendaTareaActividades.TABLE_NAME);
-            Ubicacion.deleteAll(getDataBase(), Contract.Ubicacion.TABLE_NAME);
-			//GeopoliticalStructure.deleteAll(getDataBase(), rp3.data.models.Contract.GeopoliticalStructure.TABLE_NAME);
-			//GeopoliticalStructureExt.deleteAll(getDataBase(), rp3.data.models.Contract.GeopoliticalStructureExt.TABLE_NAME);
-			PreferenceManager.setValue(Contants.KEY_IDAGENTE, 0);
-			PreferenceManager.setValue(Contants.KEY_IDRUTA, 0);
-			PreferenceManager.setValue(Contants.KEY_ES_SUPERVISOR, false);
-			PreferenceManager.setValue(Contants.KEY_ES_AGENTE, false);
-			PreferenceManager.setValue(Contants.KEY_ES_ADMINISTRADOR, false);
-			PreferenceManager.setValue(Contants.KEY_CARGO, "");
-			SyncAudit.clearAudit();
-            SyncAudit.insert(SyncAdapter.SYNC_TYPE_GEOPOLITICAL,SyncAdapter.SYNC_EVENT_SUCCESS);
-			AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-		    Intent updateServiceIntent = new Intent(context, EnviarUbicacionReceiver.class);
-		    PendingIntent pendingUpdateIntent = PendingIntent.getService(context, 0, updateServiceIntent, 0);
-		    alarmManager.cancel(pendingUpdateIntent);
-		    startActivity(new Intent(this, StartActivity.class));
-		    finish();
-		    Session.logOut();
+        case NAV_INFORMATION:
+            setNavFragment(InformationFragment.newInstance(),
+                    item.getTitle());
+            lastTitle = item.getTitle();
+            break;
+		case NAV_CERRAR_SESION:
+            showDialogConfirmation(CERRAR_SESION_DIALOG, R.string.message_cerrar_sesion, R.string.title_option_setcerrar_sesion);
 			break;
 		default:
 			break;
 		}
 	}
-	
-	@Override
+
+    @Override
+    public void onPositiveConfirmation(int id) {
+        super.onPositiveConfirmation(id);
+        switch (id)
+        {
+            case CERRAR_SESION_DIALOG:
+                Agenda.deleteAll(getDataBase(), Contract.Agenda.TABLE_NAME);
+                AgendaExt.deleteAll(getDataBase(), Contract.AgendaExt.TABLE_NAME);
+                Tarea.deleteAll(getDataBase(), Contract.Tareas.TABLE_NAME);
+                Cliente.deleteAll(getDataBase(), Contract.Cliente.TABLE_NAME);
+                ClientExt.deleteAll(getDataBase(), Contract.ClientExt.TABLE_NAME);
+                ClienteDireccion.deleteAll(getDataBase(), Contract.ClienteDireccion.TABLE_NAME);
+                Contacto.deleteAll(getDataBase(), Contract.Contacto.TABLE_NAME);
+                ContactoExt.deleteAll(getDataBase(), Contract.ContactoExt.TABLE_NAME);
+                Actividad.deleteAll(getDataBase(), Contract.Actividades.TABLE_NAME);
+                AgendaTarea.deleteAll(getDataBase(), Contract.AgendaTarea.TABLE_NAME);
+                AgendaTareaActividades.deleteAll(getDataBase(), Contract.AgendaTareaActividades.TABLE_NAME);
+                Ubicacion.deleteAll(getDataBase(), Contract.Ubicacion.TABLE_NAME);
+                //GeopoliticalStructure.deleteAll(getDataBase(), rp3.data.models.Contract.GeopoliticalStructure.TABLE_NAME);
+                //GeopoliticalStructureExt.deleteAll(getDataBase(), rp3.data.models.Contract.GeopoliticalStructureExt.TABLE_NAME);
+                PreferenceManager.setValue(Contants.KEY_IDAGENTE, 0);
+                PreferenceManager.setValue(Contants.KEY_IDRUTA, 0);
+                PreferenceManager.setValue(Contants.KEY_ES_SUPERVISOR, false);
+                PreferenceManager.setValue(Contants.KEY_ES_AGENTE, false);
+                PreferenceManager.setValue(Contants.KEY_ES_ADMINISTRADOR, false);
+                PreferenceManager.setValue(Contants.KEY_CARGO, "");
+                SyncAudit.clearAudit();
+                SyncAudit.insert(SyncAdapter.SYNC_TYPE_GEOPOLITICAL,SyncAdapter.SYNC_EVENT_SUCCESS);
+                AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+                Intent updateServiceIntent = new Intent(context, EnviarUbicacionReceiver.class);
+                PendingIntent pendingUpdateIntent = PendingIntent.getService(context, 0, updateServiceIntent, 0);
+                alarmManager.cancel(pendingUpdateIntent);
+                startActivity(new Intent(this, StartActivity.class));
+                finish();
+                Session.logOut();
+                break;
+        }
+    }
+
+    @Override
+    public void onNegativeConfirmation(int id) {
+        super.onNegativeConfirmation(id);
+    }
+
+    @Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		if(this.findViewById(R.id.sliding_pane_clientes) != null)
 		{

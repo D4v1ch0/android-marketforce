@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/action_editar_cliente" android:title="@string/action_crear_cliente" android:icon="@drawable/ic_action_edit_dark" android:showAsAction="ifRoom|collapseActionView"></item>
+    <item android:id="@+id/action_editar_cliente" android:title="@string/action_crear_cliente" android:icon="@drawable/ic_user_new" android:showAsAction="ifRoom|collapseActionView"></item>
+    <item android:id="@+id/action_cancel" android:title="@string/action_cancel" android:icon="@drawable/ic_action_cancel_dark" android:showAsAction="ifRoom|collapseActionView"></item>
 </menu>

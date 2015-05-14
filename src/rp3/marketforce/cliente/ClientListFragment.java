@@ -4,25 +4,35 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import rp3.data.MessageCollection;
 import rp3.marketforce.R;
 import rp3.marketforce.headerlistview.HeaderListView;
 import rp3.marketforce.loader.ClientLoader;
+import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.Cliente;
 import rp3.marketforce.ruta.CrearVisitaActivity;
 import rp3.marketforce.ruta.CrearVisitaFragment;
+import rp3.marketforce.ruta.RutasListAdapter;
+import rp3.marketforce.sync.SyncAdapter;
+import rp3.util.ConnectionUtils;
+import rp3.util.Convert;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.PopupMenu;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 public class ClientListFragment extends rp3.app.BaseFragment {
 		        
@@ -45,6 +55,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
     public static int itemList_click_row = -1;
     public static int itemClientID = -1;
     public LinearLayout linearLayout_rootParent;
+    public SwipeRefreshLayout refreshLayout;
     
     private LoaderCliente loaderCliente;
     private boolean isContacts = false;
@@ -88,17 +99,18 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 	
 	@Override
 	public void onResume() {
-		super.onResume();
-		if(currentTransactionBoolean){		    	 
-	    	 ejecutarConsulta();
-	     }
-	     else{
-		     Bundle args = new Bundle();
-			 args.putString(LoaderCliente.STRING_SEARCH, currentTransactionSearch);
-			 args.putBoolean(LoaderCliente.STRING_BOOLEAN, false);
-		     getLoaderManager().initLoader(0, args, loaderCliente);
-	     }
-	}
+        super.onResume();
+        if (currentTransactionBoolean) {
+            ejecutarConsulta();
+        } else {
+            Bundle args = new Bundle();
+            args.putString(LoaderCliente.STRING_SEARCH, currentTransactionSearch);
+            args.putBoolean(LoaderCliente.STRING_BOOLEAN, false);
+            if(loaderCliente == null)
+                loaderCliente = new LoaderCliente();
+            getLoaderManager().initLoader(0, args, loaderCliente);
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -155,8 +167,47 @@ public class ClientListFragment extends rp3.app.BaseFragment {
     @Override
     public void onStart() {    	
     	super.onStart();
-    	if(headerList!=null && headerList.getParent() == null){    		
-    		linearLayout_rootParent.addView(headerList);
+    	if(headerList!=null && headerList.getParent() == null){
+            if(refreshLayout == null)
+                refreshLayout = new SwipeRefreshLayout(this.getContext());
+            refreshLayout.setRefreshing(false);
+            refreshLayout.addView(headerList);
+            linearLayout_rootParent.removeView(refreshLayout);
+    		linearLayout_rootParent.addView(refreshLayout);
+            refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    if (ConnectionUtils.isNetAvailable(getContext())) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_CLIENTES);
+                        requestSync(bundle);
+                    } else {
+                        Toast.makeText(getContext(), R.string.message_error_sync_no_net_available, Toast.LENGTH_LONG).show();
+                        refreshLayout.setRefreshing(false);
+                    }
+                }
+            });
+            headerList.getListView().setSelector(getActivity().getResources().getDrawable(R.drawable.bkg));
+            headerList.setId(HEADERLIST_ID);
+            headerList.getListView().setOnScrollListener(new AbsListView.OnScrollListener() {
+
+                @Override
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+                }
+
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem,
+                                     int visibleItemCount, int totalItemCount) {
+
+                    if (firstVisibleItem == 0 && visibleItemCount != 0) {
+                        refreshLayout.setEnabled(true);
+                    } else {
+                        refreshLayout.setEnabled(false);
+                    }
+
+                }
+            });
     		headerList.setAdapter(adapter);
     	}
     }
@@ -165,7 +216,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
     public void onSaveInstanceState(Bundle arg0) {    	
     	super.onSaveInstanceState(arg0);
     	
-    	linearLayout_rootParent.removeView(headerList);
+    	linearLayout_rootParent.removeView(refreshLayout);
     }
     
     @Override
@@ -251,141 +302,167 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 	 }
 	
 	@SuppressLint("SimpleDateFormat")
-	private void OrderBy(int option)
-	{
-		
-		if(lista == null)
-			return;
-		
-		if(lista.size() == 0)
-			return;
-		
-		if(headerList == null)
-		{
-			headerList = new HeaderListView(getActivity());
-			linearLayout_rootParent.addView(headerList);
-	    	headerList.getListView().setSelector(getActivity().getResources().getDrawable(R.drawable.bkg));
-	    	headerList.setId(HEADERLIST_ID);
-    	}
-		
-		headersortList = new ArrayList<String>(); 
-		
-		list_order = new ArrayList<ArrayList<rp3.marketforce.models.Cliente>>();  
-		
-		
-		switch (option) {
-		case ORDER_BY_NAME:
-			
-			for(int x = 0 ; x < lista.size() ; x++)
-				if(!headersortList.contains(""+lista.get(x).getNombre1().toUpperCase().charAt(0)))
-					headersortList.add(""+lista.get(x).getNombre1().toUpperCase().charAt(0));
-			
-			Collections.sort(headersortList);
-			
-			for(int x = 0 ; x < headersortList.size() ; x++)
-			{
-				ArrayList<rp3.marketforce.models.Cliente> list_aux = new ArrayList<rp3.marketforce.models.Cliente>();
-				
-				for(int y = 0 ; y < lista.size() ; y++)
-				{
-					if(headersortList.get(x).equals(""+lista.get(y).getNombre1().toUpperCase().charAt(0)))
-					{
-						rp3.marketforce.models.Cliente cliente = new rp3.marketforce.models.Cliente();
-						
-						cliente.setID(lista.get(y).getID());						
-						cliente.setNombre1(lista.get(y).getNombre1());
-						cliente.setNombre2(lista.get(y).getNombre2());
-						cliente.setApellido1(lista.get(y).getApellido1());
-						cliente.setApellido2(lista.get(y).getApellido2());
-						cliente.setTelefono(lista.get(y).getTelefono());
-						cliente.setDireccion(lista.get(y).getDireccion());
-						cliente.setCorreoElectronico(lista.get(y).getCorreoElectronico());
-						cliente.setTipoPersona(lista.get(y).getTipoPersona());
-						
-						list_aux.add(cliente);
-					}
-				}
-				
-				list_order.add(list_aux);
-			}
-				adapter = new ClientListAdapter(this.getActivity(), list_order, headersortList, ORDER_BY_NAME, clienteListFragmentCallback);
-				headerList.setAdapter(adapter);
-				adapter.notifyDataSetChanged();
-			
-//			ORDER_IDENTIFICATOR	= ORDER_BY_NAME;
-			
-		break;
-		case ORDER_BY_LAST_NAME:
-			
-			for(int x = 0 ; x < lista.size() ; x++)
-			{
-				if(!lista.get(x).getTipoPersona().equalsIgnoreCase("J"))
-				{
-                    if(lista.get(x).getApellido1().length() > 0) {
-                        if (!headersortList.contains("" + lista.get(x).getApellido1().toUpperCase().charAt(0)))
-                            headersortList.add("" + lista.get(x).getApellido1().toUpperCase().charAt(0));
+	private void OrderBy(int option) {
+
+        if (lista == null)
+            return;
+
+        if (lista.size() == 0)
+            return;
+
+        headerList = new HeaderListView(getActivity());
+        if(refreshLayout == null)
+            refreshLayout = new SwipeRefreshLayout(this.getContext());
+        refreshLayout.addView(headerList);
+        linearLayout_rootParent.removeView(refreshLayout);
+        linearLayout_rootParent.addView(refreshLayout);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (ConnectionUtils.isNetAvailable(getContext())) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_CLIENTES);
+                    requestSync(bundle);
+                } else {
+                    Toast.makeText(getContext(), R.string.message_error_sync_no_net_available, Toast.LENGTH_LONG).show();
+                    refreshLayout.setRefreshing(false);
+                }
+            }
+        });
+        headerList.getListView().setSelector(getActivity().getResources().getDrawable(R.drawable.bkg));
+        headerList.setId(HEADERLIST_ID);
+        headerList.getListView().setOnScrollListener(new AbsListView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem,
+                                 int visibleItemCount, int totalItemCount) {
+
+                if (firstVisibleItem == 0 && visibleItemCount != 0) {
+                    refreshLayout.setEnabled(true);
+                } else {
+                    refreshLayout.setEnabled(false);
+                }
+
+            }
+        });
+
+
+        headersortList = new ArrayList<String>();
+
+        list_order = new ArrayList<ArrayList<rp3.marketforce.models.Cliente>>();
+
+
+        switch (option) {
+            case ORDER_BY_NAME:
+
+                for (int x = 0; x < lista.size(); x++)
+                    if (!headersortList.contains("" + lista.get(x).getNombre1().toUpperCase().charAt(0)))
+                        headersortList.add("" + lista.get(x).getNombre1().toUpperCase().charAt(0));
+
+                Collections.sort(headersortList);
+
+                for (int x = 0; x < headersortList.size(); x++) {
+                    ArrayList<rp3.marketforce.models.Cliente> list_aux = new ArrayList<rp3.marketforce.models.Cliente>();
+
+                    for (int y = 0; y < lista.size(); y++) {
+                        if (headersortList.get(x).equals("" + lista.get(y).getNombre1().toUpperCase().charAt(0))) {
+                            rp3.marketforce.models.Cliente cliente = new rp3.marketforce.models.Cliente();
+
+                            cliente.setID(lista.get(y).getID());
+                            cliente.setNombre1(lista.get(y).getNombre1());
+                            cliente.setNombre2(lista.get(y).getNombre2());
+                            cliente.setApellido1(lista.get(y).getApellido1());
+                            cliente.setApellido2(lista.get(y).getApellido2());
+                            cliente.setTelefono(lista.get(y).getTelefono());
+                            cliente.setDireccion(lista.get(y).getDireccion());
+                            cliente.setCorreoElectronico(lista.get(y).getCorreoElectronico());
+                            cliente.setTipoPersona(lista.get(y).getTipoPersona());
+
+                            list_aux.add(cliente);
+                        }
                     }
-				}
-				else
-				{
-					if(!headersortList.contains(""+lista.get(x).getNombre1().toUpperCase().charAt(0)))
-						headersortList.add(""+lista.get(x).getNombre1().toUpperCase().charAt(0));
-				}
-			}
-			
-			Collections.sort(headersortList);
-			
-			for(int x = 0 ; x < headersortList.size() ; x++)
-			{
-				ArrayList<rp3.marketforce.models.Cliente> list_aux = new ArrayList<rp3.marketforce.models.Cliente>();
-				
-				for(int y = 0 ; y < lista.size() ; y++)
-				{
-					if(lista.get(y).getTipoPersona().equalsIgnoreCase("N") || lista.get(y).getTipoPersona().equalsIgnoreCase("C"))
-					if(lista.get(y).getApellido1().length() > 0 && headersortList.get(x).equals(""+lista.get(y).getApellido1().toUpperCase().charAt(0)))
-					{
-						rp3.marketforce.models.Cliente cliente = new rp3.marketforce.models.Cliente();
-						
-						cliente.setID(lista.get(y).getID());						
-						cliente.setNombre1(lista.get(y).getNombre1());
-						cliente.setNombre2(lista.get(y).getNombre2());
-						cliente.setApellido1(lista.get(y).getApellido1());
-						cliente.setApellido2(lista.get(y).getApellido2());	
-						cliente.setTelefono(lista.get(y).getTelefono());
-						cliente.setDireccion(lista.get(y).getDireccion());
-						cliente.setCorreoElectronico(lista.get(y).getCorreoElectronico());	
-						cliente.setTipoPersona(lista.get(y).getTipoPersona());
-						
-						list_aux.add(cliente);
-					}
-					if(lista.get(y).getTipoPersona().equalsIgnoreCase("J") && headersortList.get(x).equals(""+lista.get(y).getNombre1().toUpperCase().charAt(0)))
-					{
-						rp3.marketforce.models.Cliente cliente = new rp3.marketforce.models.Cliente();
-						
-						cliente.setID(lista.get(y).getID());						
-						cliente.setNombre1(lista.get(y).getNombre1());
-						cliente.setNombre2(lista.get(y).getNombre2());
-						cliente.setApellido1(lista.get(y).getApellido1());
-						cliente.setApellido2(lista.get(y).getApellido2());	
-						cliente.setTelefono(lista.get(y).getTelefono());
-						cliente.setDireccion(lista.get(y).getDireccion());
-						cliente.setCorreoElectronico(lista.get(y).getCorreoElectronico());	
-						cliente.setTipoPersona(lista.get(y).getTipoPersona());
-						
-						list_aux.add(cliente);
-					}
-				}
-				
-				list_order.add(list_aux);
-			}
-				adapter = new ClientListAdapter(this.getActivity(), list_order, headersortList, ORDER_BY_LAST_NAME, clienteListFragmentCallback);
-				headerList.setAdapter(adapter);
-				adapter.notifyDataSetChanged();
+
+                    list_order.add(list_aux);
+                }
+                adapter = new ClientListAdapter(this.getActivity(), list_order, headersortList, ORDER_BY_NAME, clienteListFragmentCallback);
+                headerList.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+                if (clienteListFragmentCallback.allowSelectedItem())
+                    clienteListFragmentCallback.onClienteSelected(list_order.get(0).get(0));
+
+//			ORDER_IDENTIFICATOR	= ORDER_BY_NAME;
+
+                break;
+            case ORDER_BY_LAST_NAME:
+
+                for (int x = 0; x < lista.size(); x++) {
+                    if (!lista.get(x).getTipoPersona().equalsIgnoreCase("J")) {
+                        if (lista.get(x).getApellido1().length() > 0) {
+                            if (!headersortList.contains("" + lista.get(x).getApellido1().toUpperCase().charAt(0)))
+                                headersortList.add("" + lista.get(x).getApellido1().toUpperCase().charAt(0));
+                        }
+                    } else {
+                        if (!headersortList.contains("" + lista.get(x).getNombre1().toUpperCase().charAt(0)))
+                            headersortList.add("" + lista.get(x).getNombre1().toUpperCase().charAt(0));
+                    }
+                }
+
+                Collections.sort(headersortList);
+
+                for (int x = 0; x < headersortList.size(); x++) {
+                    ArrayList<rp3.marketforce.models.Cliente> list_aux = new ArrayList<rp3.marketforce.models.Cliente>();
+
+                    for (int y = 0; y < lista.size(); y++) {
+                        if (lista.get(y).getTipoPersona().equalsIgnoreCase("N") || lista.get(y).getTipoPersona().equalsIgnoreCase("C"))
+                            if (lista.get(y).getApellido1().length() > 0 && headersortList.get(x).equals("" + lista.get(y).getApellido1().toUpperCase().charAt(0))) {
+                                rp3.marketforce.models.Cliente cliente = new rp3.marketforce.models.Cliente();
+
+                                cliente.setID(lista.get(y).getID());
+                                cliente.setNombre1(lista.get(y).getNombre1());
+                                cliente.setNombre2(lista.get(y).getNombre2());
+                                cliente.setApellido1(lista.get(y).getApellido1());
+                                cliente.setApellido2(lista.get(y).getApellido2());
+                                cliente.setTelefono(lista.get(y).getTelefono());
+                                cliente.setDireccion(lista.get(y).getDireccion());
+                                cliente.setCorreoElectronico(lista.get(y).getCorreoElectronico());
+                                cliente.setTipoPersona(lista.get(y).getTipoPersona());
+
+                                list_aux.add(cliente);
+                            }
+                        if (lista.get(y).getTipoPersona().equalsIgnoreCase("J") && headersortList.get(x).equals("" + lista.get(y).getNombre1().toUpperCase().charAt(0))) {
+                            rp3.marketforce.models.Cliente cliente = new rp3.marketforce.models.Cliente();
+
+                            cliente.setID(lista.get(y).getID());
+                            cliente.setNombre1(lista.get(y).getNombre1());
+                            cliente.setNombre2(lista.get(y).getNombre2());
+                            cliente.setApellido1(lista.get(y).getApellido1());
+                            cliente.setApellido2(lista.get(y).getApellido2());
+                            cliente.setTelefono(lista.get(y).getTelefono());
+                            cliente.setDireccion(lista.get(y).getDireccion());
+                            cliente.setCorreoElectronico(lista.get(y).getCorreoElectronico());
+                            cliente.setTipoPersona(lista.get(y).getTipoPersona());
+
+                            list_aux.add(cliente);
+                        }
+                    }
+
+                    list_order.add(list_aux);
+                }
+                adapter = new ClientListAdapter(this.getActivity(), list_order, headersortList, ORDER_BY_LAST_NAME, clienteListFragmentCallback);
+                headerList.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+                if (clienteListFragmentCallback.allowSelectedItem())
+                    clienteListFragmentCallback.onClienteSelected(list_order.get(0).get(0));
 //			ORDER_IDENTIFICATOR	= ORDER_BY_LAST_NAME;
-			
-			break;
-		}
-	}
+
+                break;
+        }
+    }
 
 
     public class LoaderCliente implements LoaderCallbacks<List<Cliente>>{
@@ -453,6 +530,27 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 			
 		}
 	}
+
+    public void onSyncComplete(Bundle data, MessageCollection messages) {
+        super.onSyncComplete(data, messages);
+
+        closeDialogProgress();
+        refreshLayout.setRefreshing(false);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (ConnectionUtils.isNetAvailable(getContext())) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_CLIENTES);
+                    requestSync(bundle);
+                } else {
+                    Toast.makeText(getContext(), R.string.message_error_sync_no_net_available, Toast.LENGTH_LONG).show();
+                    refreshLayout.setRefreshing(false);
+                }
+            }
+        });
+        onResume();
+    }
 
 	
 }

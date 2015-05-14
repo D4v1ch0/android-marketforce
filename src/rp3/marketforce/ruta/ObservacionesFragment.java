@@ -2,14 +2,22 @@ package rp3.marketforce.ruta;
 
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.speech.RecognizerIntent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Locale;
+
 import rp3.app.BaseFragment;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
@@ -26,6 +34,7 @@ public class ObservacionesFragment extends BaseFragment {
 	
 	public static final int MAX_WIDTH = 500;
 	public static final int MAX_HEIGHT = 500;
+    private final int REQ_CODE_SPEECH_INPUT = 100;
 	
 	private Uri fileUri;
 	private long idAgenda;
@@ -76,7 +85,7 @@ public class ObservacionesFragment extends BaseFragment {
 		switch(item.getItemId())
 		{
 		case R.id.action_save:
-			agenda.setObservaciones(getTextViewString(R.id.obs_text));
+			agenda.setObservaciones(getTextViewString(R.id.obs_text).trim());
 			Agenda.update(getDataBase(), agenda);
 			closed = true;
 			finish();
@@ -146,13 +155,36 @@ public class ObservacionesFragment extends BaseFragment {
 
                 }
             });
+            ((ImageView) rootView.findViewById(R.id.observaciones_voice_to_text)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    promptSpeechInput();
+                }
+            });
         }
         else
         {
             rootView.findViewById(R.id.obs_text).setFocusable(false);
             rootView.findViewById(R.id.obs_text).setFocusableInTouchMode(false);
+            rootView.findViewById(R.id.observaciones_voice_to_text).setVisibility(View.GONE);
         }
 	}
+
+    private void promptSpeechInput() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+                "Hable Ahora");
+        try {
+            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+        } catch (ActivityNotFoundException a) {
+            Toast.makeText(getContext(),
+                    "Dispositivo no soporta voz a texto.",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
 
     @Override
     public void onStop() {
@@ -169,24 +201,37 @@ public class ObservacionesFragment extends BaseFragment {
     @Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {
-			String path = fileUri.getPath();
-	        switch(requestCode)
-	        {
-	        case PHOTO_1:
-	        	((ImageButton) getRootView().findViewById(R.id.obs_foto1)).setImageBitmap(Utils.resizeBitMapImage(path, 500, 500, getOrientation()));
-	        	agenda.setFoto1Int(path);
-	        	break;
-	        case PHOTO_2:
-	        	((ImageButton) getRootView().findViewById(R.id.obs_foto2)).setImageBitmap(Utils.resizeBitMapImage(path, 500, 500, getOrientation()));
-	        	agenda.setFoto2Int(path);
-	        	break;
-	        case PHOTO_3:
-	        	((ImageButton) getRootView().findViewById(R.id.obs_foto3)).setImageBitmap(Utils.resizeBitMapImage(path, 500, 500, getOrientation()));
-	        	agenda.setFoto3Int(path);
-	        	break;
-	        default:
-	        	break;
-	        }	        
+            switch (requestCode) {
+                case REQ_CODE_SPEECH_INPUT:
+                    if (resultCode == RESULT_OK && null != data) {
+
+                        ArrayList<String> result = data
+                                .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                        setTextViewText(R.id.obs_text, result.get(0));
+                    }
+                    break;
+                default:
+                    if(fileUri != null) {
+                        String path = fileUri.getPath();
+                        switch (requestCode) {
+                            case PHOTO_1:
+                                ((ImageButton) getRootView().findViewById(R.id.obs_foto1)).setImageBitmap(Utils.resizeBitMapImage(path, 500, 500, getOrientation()));
+                                agenda.setFoto1Int(path);
+                                break;
+                            case PHOTO_2:
+                                ((ImageButton) getRootView().findViewById(R.id.obs_foto2)).setImageBitmap(Utils.resizeBitMapImage(path, 500, 500, getOrientation()));
+                                agenda.setFoto2Int(path);
+                                break;
+                            case PHOTO_3:
+                                ((ImageButton) getRootView().findViewById(R.id.obs_foto3)).setImageBitmap(Utils.resizeBitMapImage(path, 500, 500, getOrientation()));
+                                agenda.setFoto3Int(path);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    break;
+            }
 	    }
 	}
 }

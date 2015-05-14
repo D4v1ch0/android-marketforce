@@ -36,6 +36,9 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 	private int Calificacion;
 	private boolean nuevo;
 	private boolean pendiente;
+    private Date fechaUltimaVisita;
+    private Date fechaProximaVisita;
+    private String agenteUltimaVisita;
 	
 	private String direccion;
 	private String telefono;
@@ -49,9 +52,33 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 
 	private List<Contacto> contactos;
 	private List<ClienteDireccion> clienteDirecciones;
-	private ClienteDireccion clienteDireccionPrincipal;	
-	
-	public static String getFotoFileNameFormat(Long id){
+	private ClienteDireccion clienteDireccionPrincipal;
+
+    public Date getFechaUltimaVisita() {
+        return fechaUltimaVisita;
+    }
+
+    public void setFechaUltimaVisita(Date fechaUltimaVisita) {
+        this.fechaUltimaVisita = fechaUltimaVisita;
+    }
+
+    public Date getFechaProximaVisita() {
+        return fechaProximaVisita;
+    }
+
+    public void setFechaProximaVisita(Date fechaProximaVisita) {
+        this.fechaProximaVisita = fechaProximaVisita;
+    }
+
+    public String getAgenteUltimaVisita() {
+        return agenteUltimaVisita;
+    }
+
+    public void setAgenteUltimaVisita(String agenteUltimaVisita) {
+        this.agenteUltimaVisita = agenteUltimaVisita;
+    }
+
+    public static String getFotoFileNameFormat(Long id){
 		return "PCL" + String.valueOf(id);
 	}
 	
@@ -91,6 +118,9 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 		setValue(Contract.Cliente.COLUMN_NUEVO, this.nuevo);
 		setValue(Contract.Cliente.COLUMN_ID_CLIENTE, this.idCliente);
 		setValue(Contract.Cliente.COLUMN_PENDIENTE, this.pendiente);
+        setValue(Contract.Cliente.COLUMN_FECHA_ULTIMA_VISITA, this.fechaUltimaVisita);
+        setValue(Contract.Cliente.COLUMN_FECHA_PROXIMA_VISITA, this.fechaProximaVisita);
+        setValue(Contract.Cliente.COLUMN_AGENTE_ULTIMA_VISITA, this.agenteUltimaVisita);
 	}
 
 	@Override

@@ -254,11 +254,12 @@
                 android:clickable="true"
                 android:drawableRight="@drawable/ic_registrarse"
                 android:gravity="center_vertical"
-                android:maxLines="1"
+                android:maxLines="2"
                 android:padding="5dp"
                 android:text="@string/label_agregue_observacion"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/color_text_hint" />
+                android:textColor="@color/color_text_hint"
+                android:lines="2" />
         </LinearLayout>
 
     </LinearLayout>

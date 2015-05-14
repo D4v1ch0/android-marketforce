@@ -1,6 +1,7 @@
 package rp3.marketforce.ruta;
 
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -20,6 +21,8 @@ import rp3.app.BaseFragment;
 import rp3.configuration.PreferenceManager;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
+import rp3.marketforce.cliente.ClientDetailActivity;
+import rp3.marketforce.cliente.CrearClienteActivity;
 import rp3.marketforce.cliente.CrearClienteFragment;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.Cliente;
@@ -82,6 +85,12 @@ public class FotoFragment extends BaseFragment {
             DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
                             rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + agenda.getCliente().getURLFoto(),
                     (ImageView) this.getRootView().findViewById(R.id.foto_agenda));
+            setButtonClickListener(R.id.foto_agenda_button, new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    takePicture(1);
+                }
+            });
         }
     }
 
@@ -135,16 +144,15 @@ public class FotoFragment extends BaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             Bitmap pree = null;
-            if(data.getData() != null) {
-                try {
-                    pree = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            else
-                if(data.getExtras().containsKey("data"))
-                    pree = (Bitmap)data.getExtras().get("data");
+            if(data != null) {
+                if (data.getData() != null) {
+                    try {
+                        pree = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else if (data.getExtras().containsKey("data"))
+                    pree = (Bitmap) data.getExtras().get("data");
                 else
                     try {
                         photo = Uri.parse(data.getAction());
@@ -152,8 +160,13 @@ public class FotoFragment extends BaseFragment {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
-            cli.setURLFoto(Utils.SaveBitmap(pree, cli.getNombre1().trim()));
+                cli.setURLFoto(Utils.SaveBitmap(pree, cli.getNombre1().trim()));
+            }
+            else
+            {
+                performCrop();
+                return;
+            }
             Cliente.update(getDataBase(), cli);
             Bundle bundle = new Bundle();
             bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_CLIENTE_UPDATE_FULL);
@@ -162,12 +175,31 @@ public class FotoFragment extends BaseFragment {
             finish();
         }
     }
+
+    private void performCrop() {
+        try {
+            Intent cropIntent = new Intent("com.android.camera.action.CROP");
+            cropIntent.setDataAndType(photo, "image/*");
+            cropIntent.putExtra("crop", "true");
+            cropIntent.putExtra("aspectX", 1);
+            cropIntent.putExtra("aspectY", 1);
+            cropIntent.putExtra("return-data", true);
+            startActivityForResult(cropIntent, 3);
+        }
+        catch (ActivityNotFoundException anfe) {
+            Toast toast = Toast
+                    .makeText(this.getContext(), "This device doesn't support the crop action!", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId())
         {
             case R.id.action_editar_cliente:
-                takePicture(1);
+                Intent intent2 = new Intent(getActivity(), ClientDetailActivity.class);
+                intent2.putExtra(ClientDetailActivity.ARG_ITEM_ID, cli.getIdCliente());
+                startActivity(intent2);
                 break;
             case R.id.action_cancel:
                 finish();

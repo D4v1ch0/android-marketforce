@@ -171,6 +171,8 @@ public class Tareas {
                     campo.setCreacion(str.getBoolean("C"));
                     campo.setModificacion(str.getBoolean("M"));
                     campo.setGestion(str.getBoolean("G"));
+                    if(!str.isNull("O"))
+                        campo.setObligatorio(str.getBoolean("O"));
 
                     rp3.marketforce.models.Campo.insert(db, campo);
 

@@ -442,6 +442,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
             agd.setDistancia(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DISTANCIA));
             agd.setTiempoViaje(CursorUtils.getInt(c, Contract.Agenda.COLUMN_TIEMPO_VIAJE));
             agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
+            agd.setEnviado(CursorUtils.getBoolean(c, Contract.Agenda.COLUMN_ENVIADO));
 			
 			ClienteDireccion cld = new ClienteDireccion();
 			cld.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));			
@@ -487,6 +488,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
             agd.setDistancia(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DISTANCIA));
             agd.setTiempoViaje(CursorUtils.getInt(c, Contract.Agenda.COLUMN_TIEMPO_VIAJE));
             agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
+            agd.setEnviado(CursorUtils.getBoolean(c, Contract.Agenda.COLUMN_ENVIADO));
 			
 			ClienteDireccion cld = new ClienteDireccion();
 			cld.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));			
@@ -928,6 +930,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setEstadoAgenda(CursorUtils.getString(c, Contract.AgendaExt.COLUMN_ESTADO_AGENDA));
 			agd.setNombreCompleto(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_NOMBRE));
 			agd.setEstadoAgendaDescripcion(CursorUtils.getString(c, Contract.Agenda.FIELD_ESTADO_AGENDA_DESCRIPCION));
+            agd.setEnviado(CursorUtils.getBoolean(c, Contract.Agenda.COLUMN_ENVIADO));
 			
 			ClienteDireccion cld = new ClienteDireccion();
 			cld.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));

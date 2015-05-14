@@ -21,6 +21,7 @@ public class Campo extends rp3.data.entity.EntityBase<Campo> {
     private boolean creacion;
     private boolean modificacion;
     private boolean gestion;
+    private boolean obligatorio;
 
     @Override
     public long getID() {
@@ -52,6 +53,7 @@ public class Campo extends rp3.data.entity.EntityBase<Campo> {
         setValue(Contract.Campos.COLUMN_CREACION, this.creacion);
         setValue(Contract.Campos.COLUMN_MODIFICACION, this.modificacion);
         setValue(Contract.Campos.COLUMN_GESTION, this.gestion);
+        setValue(Contract.Campos.COLUMN_OBLIGATORIO, this.obligatorio);
 
     }
 
@@ -73,6 +75,14 @@ public class Campo extends rp3.data.entity.EntityBase<Campo> {
 
     public void setIdCampo(String idCampo) {
         this.idCampo = idCampo;
+    }
+
+    public boolean isObligatorio() {
+        return obligatorio;
+    }
+
+    public void setObligatorio(boolean obligatorio) {
+        this.obligatorio = obligatorio;
     }
 
     public boolean isCreacion() {
@@ -109,7 +119,8 @@ public class Campo extends rp3.data.entity.EntityBase<Campo> {
             case Contants.IS_GESTION: condition = Contract.Campos.COLUMN_GESTION + " = 0"; break;
             default: condition = Contract.Campos.COLUMN_CREACION + " = 1"; break;
         }
-        Cursor c = db.query(Contract.Campos.TABLE_NAME, new String[] { Contract.Campos._ID, Contract.Campos.COLUMN_ID_CAMPO},condition, new String[] {});
+        Cursor c = db.query(Contract.Campos.TABLE_NAME, new String[] { Contract.Campos._ID, Contract.Campos.COLUMN_ID_CAMPO, Contract.Campos.COLUMN_OBLIGATORIO}
+                ,condition, new String[] {});
 
         List<Campo> campos = new ArrayList<Campo>();
 
@@ -120,6 +131,37 @@ public class Campo extends rp3.data.entity.EntityBase<Campo> {
                 Campo cp = new Campo();
                 cp.setID(CursorUtils.getLong(c, Contract.Campos._ID));
                 cp.setIdCampo(CursorUtils.getString(c, Contract.Campos.COLUMN_ID_CAMPO));
+                cp.setObligatorio(CursorUtils.getBoolean(c, Contract.Campos.COLUMN_OBLIGATORIO));
+                campos.add(cp);
+            }while(c.moveToNext());
+        }
+
+        return campos;
+    }
+
+    public static List<Campo> getCamposObligatorios(DataBase db, int tipo)
+    {
+        String condition = null;
+        switch (tipo)
+        {
+            case Contants.IS_CREACION: condition = Contract.Campos.COLUMN_CREACION + " = 1"; break;
+            case Contants.IS_MODIFICACION: condition = Contract.Campos.COLUMN_MODIFICACION + " = 1"; break;
+            case Contants.IS_GESTION: condition = Contract.Campos.COLUMN_GESTION + " = 1"; break;
+            default: condition = Contract.Campos.COLUMN_CREACION + " = 1"; break;
+        }
+        Cursor c = db.query(Contract.Campos.TABLE_NAME, new String[] { Contract.Campos._ID, Contract.Campos.COLUMN_ID_CAMPO, Contract.Campos.COLUMN_OBLIGATORIO}
+                ,condition + " AND " + Contract.Campos.COLUMN_OBLIGATORIO + " = 1", new String[] {});
+
+        List<Campo> campos = new ArrayList<Campo>();
+
+        if(c.moveToFirst())
+        {
+            do
+            {
+                Campo cp = new Campo();
+                cp.setID(CursorUtils.getLong(c, Contract.Campos._ID));
+                cp.setIdCampo(CursorUtils.getString(c, Contract.Campos.COLUMN_ID_CAMPO));
+                cp.setObligatorio(CursorUtils.getBoolean(c, Contract.Campos.COLUMN_OBLIGATORIO));
                 campos.add(cp);
             }while(c.moveToNext());
         }

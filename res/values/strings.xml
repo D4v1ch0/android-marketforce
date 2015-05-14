@@ -10,6 +10,7 @@
     <string name="title_option_recorrido">Mi Recorrido</string>
     <string name="title_option_setsincronizar">Sincronizar</string>
     <string name="title_option_radar">Radar</string>
+    <string name="title_option_informacion">Información</string>
     <string name="title_option_setajustes">Ajustes</string>
     <string name="title_option_setcerrar_sesion">Cerrar Sesión</string>
     <string name="title_option_setconfiguracion">CONFIGURACIÓN</string>
@@ -79,6 +80,7 @@
     <string name="abreviatura_pendiente">Próximo</string>
     <string name="label_efectividad">Efectividad:</string>
     <string name="label_hoy">Hoy</string>
+    <string name="label_comparativo">Comparativo Semanal</string>
     <string name="label_desde_graph">Desde %s</string>
     <string name="label_empty_agenda">No hay visitas programadas para hoy</string>
     <string name="action_cambiar_contacto">Cambiar Contacto</string>
@@ -127,6 +129,7 @@
     <string name="label_ingreso_server">Tengo un código de licencia</string>
     <string name="warning_modificar_contacto_no_visitada">No puede modificar o asignar un contacto, a una agenda no visitada.</string>
     <string name="warning_seleccionar_agenda">Debe seleccionar una agenda</string>
+    <string name="warning_seleccionar_cliente">Debe seleccionar un cliente</string>
     <string name="warning_gestionar_agenda">La agenda debe de tener el estado Gestionando para poder modificarla.</string>
     <string name="warning_gestionar_otra_agenda">No puede gestionar otra agenda mientras tenga otra agenda como Gestionando.</string>
     <string name="warning_gestion_agenda_otro_dia">No puede gestionar una agenda que no sea del día de hoy.</string>
@@ -152,6 +155,25 @@
     <string name="label_tiempo_viaje">Tiempo de Viaje:</string>
     <string name="label_motivo">Motivo:</string>
     <string name="message_solo_vista_tarea">Para realizar esta tarea, primero inicie la gestión.</string>
+    <string name="message_crear_visita">Desea crear una próxima visita a este cliente?</string>
+    <string name="message_direccion_google">Desea obtener la dirección desde Google?</string>
+    <string name="message_server_connection">Hubo un error de conexión al servidor. Desea reintentar?</string>
+    <string name="message_cerrar_sesion">Esta seguro de cerrar sesión en este dispositivo?</string>
+    <string name="message_info">MARKET FORCE® Android </string>
+    <string name="message_server_connection_reintentar">Hubo un error de conexión al servidor. Desea reintentar? Si escoje no, se ingresará en modo offline.</string>
     <string name="label_sin_especificar">(Sin especificar)</string>
+    <string name="hint_escriba_aqui">Escriba aquí</string>
+    <string name="label_ir_agenda">Ver Todas Las Agendas</string>
+    <string name="label_total_visitas">Total de Visitas</string>
+    <string name="label_visitas_no_realizadas">Visitas No Realizadas</string>
+    <string name="label_efectividad_semana">Efectividad</string>
+    <string name="title_direccion">Dirección</string>
+    <string name="label_esta_semana">Esta Semana</string>
+    <string name="label_ult_semana">Ult. Semana</string>
+    <string name="message_information1"><![CDATA[Market Force® es un producto de RP3® Retail Software. Su registro o uso del Software implica la íntegra aceptación de los <u><font color="#2582b4">Términos y Condiciones</font></u> de la presente Licencia, así como de las políticas de privacidad de Market Force®.]]></string>
+    <string name="message_information2">Las Condiciones Legales de Uso de la presente aplicación quedan supeditadas al acuerdo de Licencia y Contrato General de suscripción vigente entre el usuario final y RP3® Retail Software.</string>
+    <string name="message_information3">En ningún caso RP3® Retail Software será responsable de ningún daño  ocasionado por causa de algún error u omisión, en los contenidos presentados en la aplicación  (incluyendo cualquier daño especial, indirecto o consecuencial, pérdida de datos, pérdida de información, pérdida de beneficios, interrupción de negocios o cualquier otra perdida pecuniaria) por el uso o la imposibilidad de utilizar esta aplicación.</string>
+    <string name="label_copyright">Copyright © 2015</string>
+    <string name="message_information_end">RP3® Retail Software - Todos los Derechos Reservados</string>
 
 </resources>

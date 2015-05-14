@@ -30,7 +30,7 @@ public class DashboardFragment extends BaseFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
-		getActivity().setTitle("Inicio");
+		getActivity().setTitle(R.string.title_option_setinicio);
 		
 		//setRetainInstance(true);
 		setContentView(R.layout.fragment_dashboard);

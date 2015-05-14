@@ -49,6 +49,68 @@
                     android:orientation="vertical" >
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="5dp" >
+
+                    <TextView
+                        android:id="@+id/TextView07"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/label_obtener_ubicacion"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textSize="@dimen/text_small_size" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center">
+
+                        <ImageButton
+                            android:id="@+id/cliente_ubicacion"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_action_location_found"
+                            android:layout_weight="1" />
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/cliente_ubicacion_check"
+                            android:src="@drawable/ic_ex"
+                            android:layout_weight="1"
+                            android:padding="8dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/color_grey_lines"
+                android:orientation="vertical" >
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <LinearLayout
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="7dp"
+                    android:layout_marginTop="7dp"
+                    android:background="@color/color_grey_lines"
+                    android:orientation="vertical" >
+                </LinearLayout>
+
                 <EditText
                     android:id="@+id/cliente_direccion"
                     android:layout_width="wrap_content"
@@ -184,59 +246,8 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-
-                <LinearLayout
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="7dp"
-                    android:layout_marginTop="7dp"
-                    android:background="@color/color_grey_lines"
-                    android:orientation="vertical" >
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:padding="5dp" >
-
-                    <TextView
-                        android:id="@+id/TextView07"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/label_obtener_ubicacion"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textSize="@dimen/text_small_size" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" >
-
-                        <ImageButton
-                            android:id="@+id/cliente_ubicacion"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_action_location_found" />
-                    </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/color_grey_lines"
-                android:orientation="vertical" >
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="1dp"
@@ -269,12 +280,14 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
                 android:background="@color/color_grey_lines"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:visibility="gone">
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="1dp"
@@ -304,7 +317,8 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
                 android:background="@color/color_grey_lines"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:visibility="gone">
             </LinearLayout>
 
             <LinearLayout

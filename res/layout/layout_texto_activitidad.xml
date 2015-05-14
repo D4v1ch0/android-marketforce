@@ -42,23 +42,44 @@
                 android:text="TextView"
                 android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/actividad_texto_respuesta"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textMultiLine"
-                android:minLines="2"
-                android:minWidth="@dimen/nav_drawer_width"
-                android:textAppearance="@style/EditTextAppTheme"
-                android:textSize="@dimen/text_input_size"
-                android:background="@drawable/observaciones_fondo">
-
-                <requestFocus />
-            </EditText>
         </LinearLayout>
 
     </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <EditText
+            android:id="@+id/actividad_texto_respuesta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textMultiLine"
+            android:minWidth="@dimen/nav_drawer_width"
+            android:textAppearance="@style/EditTextAppTheme"
+            android:textSize="@dimen/text_input_size"
+            android:background="@drawable/observaciones_fondo"
+            android:gravity="top"
+            android:layout_margin="5dp"
+            android:scrollbars="vertical"
+            android:fadeScrollbars="false"
+            android:hint="@string/hint_escriba_aqui"
+            android:lines="8">
+
+            <requestFocus />
+        </EditText>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/actividad_voice_to_text"
+            android:src="@drawable/ic_action_mic"
+            android:layout_alignTop="@+id/actividad_texto_respuesta"
+            android:layout_alignRight="@+id/actividad_texto_respuesta"
+            android:layout_alignEnd="@+id/actividad_texto_respuesta"
+            android:clickable="true" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -19,8 +19,9 @@ public class ListaTareasAdapter extends BaseAdapter{
 	private LayoutInflater inflater;
 	private List<AgendaTarea> agendaTarea;
 	private int id_icon;
-	
-	public ListaTareasAdapter(Context context, List<AgendaTarea> agendaTarea)
+    private int id_color;
+
+    public ListaTareasAdapter(Context context, List<AgendaTarea> agendaTarea)
 	{
 		this.context = context;
 		this.inflater = LayoutInflater.from(context);
@@ -45,22 +46,26 @@ public class ListaTareasAdapter extends BaseAdapter{
 	@SuppressLint("ViewHolder")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		
-		  convertView = (View) inflater.inflate(this.context.getApplicationContext().getResources().getLayout(R.layout.rowlist_tarea), null);
-		
-		  
-		  if(agendaTarea.get(position).getEstadoTareaDescripcion().equals("Pendiente"))
-			  id_icon = R.drawable.ic_pendiente;
-		  else
-			  id_icon = R.drawable.ic_realizado;
-		  
-			((TextView) convertView.findViewById(R.id.map_phone)).setCompoundDrawablesWithIntrinsicBounds(0, 0, id_icon, 0);
-			((TextView) convertView.findViewById(R.id.map_phone)).setText(agendaTarea.get(position).getEstadoTareaDescripcion());
-			
-			((TextView) convertView.findViewById(R.id.detail_agenda_estado)).setText(agendaTarea.get(position).getNombreTarea());
-			((TextView) convertView.findViewById(R.id.detail_tarea_num)).setText(position + 1 + "");
-		
-		return convertView;
-	}
+
+        convertView = (View) inflater.inflate(this.context.getApplicationContext().getResources().getLayout(R.layout.rowlist_tarea), null);
+
+
+        if (agendaTarea.get(position).getEstadoTareaDescripcion().equals("Pendiente")) {
+            id_icon = R.drawable.ic_action_cancel_dark;
+            id_color = R.color.color_unvisited;
+        } else {
+            id_icon = R.drawable.ic_action_accept_dark;
+            id_color = R.color.color_visited;
+        }
+
+        ((TextView) convertView.findViewById(R.id.map_phone)).setCompoundDrawablesWithIntrinsicBounds(0, 0, id_icon, 0);
+        ((TextView) convertView.findViewById(R.id.map_phone)).setBackgroundColor(context.getResources().getColor(id_color));
+        //((TextView) convertView.findViewById(R.id.map_phone)).setText(agendaTarea.get(position).getEstadoTareaDescripcion());
+
+        ((TextView) convertView.findViewById(R.id.detail_agenda_estado)).setText(agendaTarea.get(position).getNombreTarea());
+        ((TextView) convertView.findViewById(R.id.detail_tarea_num)).setText(position + 1 + "");
+
+        return convertView;
+    }
 
 }

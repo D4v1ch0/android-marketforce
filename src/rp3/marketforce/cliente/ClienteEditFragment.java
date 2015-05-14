@@ -64,7 +64,7 @@ public class ClienteEditFragment extends BaseFragment {
 		}
 
 		if (clientId != 0) {
-			client = Cliente.getClienteID(getDataBase(), clientId, true);
+			client = Cliente.getClienteIDServer(getDataBase(), clientId, true);
 		} else {
 			client = new Cliente();
 		}

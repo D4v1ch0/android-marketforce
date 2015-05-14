@@ -265,7 +265,7 @@ public class ClienteDireccion extends rp3.data.entity.EntityBase<ClienteDireccio
 			tpd.setLatitud(CursorUtils.getDouble(c, Contract.ClienteDireccion.FIELD_LATITUD));
 			tpd.setLongitud(CursorUtils.getDouble(c, Contract.ClienteDireccion.FIELD_LONGITUD));
             tpd.setReferencia(CursorUtils.getString(c, Contract.ClienteDireccion.FIELD_REFERENCIA));
-			
+            tpd.setCiudadDescripcion(CursorUtils.getString(c, Contract.ClienteDireccion.COLUMN_CIUDAD_DESCRIPCION));
 		}
 		return tpd;
 	}
@@ -290,6 +290,7 @@ public class ClienteDireccion extends rp3.data.entity.EntityBase<ClienteDireccio
 			tpd.setLatitud(CursorUtils.getDouble(c, Contract.ClienteDireccion.FIELD_LATITUD));
 			tpd.setLongitud(CursorUtils.getDouble(c, Contract.ClienteDireccion.FIELD_LONGITUD));
             tpd.setReferencia(CursorUtils.getString(c, Contract.ClienteDireccion.FIELD_REFERENCIA));
+            tpd.setCiudadDescripcion(CursorUtils.getString(c, Contract.ClienteDireccion.COLUMN_CIUDAD_DESCRIPCION));
 			
 		}
 		return tpd;

@@ -43,7 +43,7 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -59,13 +59,24 @@
             android:maxLines="3"
             android:background="@drawable/observaciones_fondo"
             android:padding="3dp"
+            android:scrollbars="vertical"
             android:fadeScrollbars="false"
-            android:scrollbarAlwaysDrawVerticalTrack="true">
+            android:gravity="top">
 
             <requestFocus />
         </EditText>
 
-    </LinearLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/observaciones_voice_to_text"
+            android:src="@drawable/ic_action_mic"
+            android:clickable="true"
+            android:layout_alignTop="@+id/obs_text"
+            android:layout_alignRight="@+id/obs_text"
+            android:layout_alignEnd="@+id/obs_text" />
+
+    </RelativeLayout>
 
 </LinearLayout>
 </ScrollView>

@@ -185,7 +185,7 @@ public class RecorridoFragment  extends BaseFragment {
     	
     	for(int i = 0; i < list_ubicaciones.size(); i ++)
 		{
-    		double distance = 21;
+    		double distance = 31;
 			LatLng pos = new LatLng(list_ubicaciones.get(i).getLatitud(), list_ubicaciones.get(i).getLongitud());
 			
 			if(ult != null)
@@ -193,7 +193,7 @@ public class RecorridoFragment  extends BaseFragment {
 			else
 				ult = pos;
 			
-			if(distance > 20 || i == list_ubicaciones.size() -1)
+			if(distance > 30 || i == list_ubicaciones.size() -1)
 			{
                 if(i == 0)
                 {
