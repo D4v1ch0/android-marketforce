@@ -1,0 +1,476 @@
+package rp3.marketforce.models.oportunidad;
+
+import android.database.Cursor;
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import rp3.data.entity.EntityBase;
+import rp3.db.QueryDir;
+import rp3.db.sqlite.DataBase;
+import rp3.marketforce.db.Contract;
+import rp3.marketforce.models.AgendaTarea;
+import rp3.marketforce.models.Cliente;
+import rp3.marketforce.models.ClienteDireccion;
+import rp3.marketforce.models.Contacto;
+import rp3.util.CursorUtils;
+
+/**
+ * Created by magno_000 on 14/05/2015.
+ */
+public class Oportunidad extends EntityBase<Oportunidad> {
+
+    private long id;
+    private int idOportunidad;
+    private int probabilidad;
+    private double importe;
+    private int idAgente;
+    private Date fechaUltimaGestion;
+    private int calificacion;
+    private String observacion;
+    private double latitud;
+    private double longitud;
+    private int idEtapa;
+    private String estado;
+    private Date fechaCreacion;
+    private boolean pendiente;
+    private String direccion;
+    private String referencia;
+    private String descripcion;
+    private List<OportunidadContacto> oportunidadContactos;
+    private List<OportunidadResponsable> oportunidadResponsables;
+    private List<OportunidadTarea> oportunidadTareas;
+    private List<OportunidadFoto> oportunidadFotos;
+
+
+    @Override
+    public long getID() {
+        return id;
+    }
+
+    @Override
+    public void setID(long id) {
+        this.id = id;
+    }
+
+    public int getIdOportunidad() {
+        return idOportunidad;
+    }
+
+    public void setIdOportunidad(int idOportunidad) {
+        this.idOportunidad = idOportunidad;
+    }
+
+    public int getProbabilidad() {
+        return probabilidad;
+    }
+
+    public void setProbabilidad(int probabilidad) {
+        this.probabilidad = probabilidad;
+    }
+
+    public double getImporte() {
+        return importe;
+    }
+
+    public void setImporte(double importe) {
+        this.importe = importe;
+    }
+
+    public int getIdAgente() {
+        return idAgente;
+    }
+
+    public void setIdAgente(int idAgente) {
+        this.idAgente = idAgente;
+    }
+
+    public Date getFechaUltimaGestion() {
+        return fechaUltimaGestion;
+    }
+
+    public void setFechaUltimaGestion(Date fechaUltimaGestion) {
+        this.fechaUltimaGestion = fechaUltimaGestion;
+    }
+
+    public int getCalificacion() {
+        return calificacion;
+    }
+
+    public void setCalificacion(int calificacion) {
+        this.calificacion = calificacion;
+    }
+
+    public String getObservacion() {
+        return observacion;
+    }
+
+    public void setObservacion(String observacion) {
+        this.observacion = observacion;
+    }
+
+    public double getLatitud() {
+        return latitud;
+    }
+
+    public void setLatitud(double latitud) {
+        this.latitud = latitud;
+    }
+
+    public double getLongitud() {
+        return longitud;
+    }
+
+    public void setLongitud(double longitud) {
+        this.longitud = longitud;
+    }
+
+    public int getIdEtapa() {
+        return idEtapa;
+    }
+
+    public void setIdEtapa(int idEtapa) {
+        this.idEtapa = idEtapa;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public boolean isPendiente() {
+        return pendiente;
+    }
+
+    public void setPendiente(boolean pendiente) {
+        this.pendiente = pendiente;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public String getReferencia() {
+        return referencia;
+    }
+
+    public void setReferencia(String referencia) {
+        this.referencia = referencia;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public List<OportunidadContacto> getOportunidadContactos() {
+        return oportunidadContactos;
+    }
+
+    public void setOportunidadContactos(List<OportunidadContacto> oportunidadContactos) {
+        this.oportunidadContactos = oportunidadContactos;
+    }
+
+    public List<OportunidadResponsable> getOportunidadResponsables() {
+        return oportunidadResponsables;
+    }
+
+    public void setOportunidadResponsables(List<OportunidadResponsable> oportunidadResponsables) {
+        this.oportunidadResponsables = oportunidadResponsables;
+    }
+
+    public List<OportunidadTarea> getOportunidadTareas() {
+        return oportunidadTareas;
+    }
+
+    public void setOportunidadTareas(List<OportunidadTarea> oportunidadTareas) {
+        this.oportunidadTareas = oportunidadTareas;
+    }
+
+    public List<OportunidadFoto> getOportunidadFotos() {
+        return oportunidadFotos;
+    }
+
+    public void setOportunidadFotos(List<OportunidadFoto> oportunidadFotos) {
+        this.oportunidadFotos = oportunidadFotos;
+    }
+
+    @Override
+    public boolean isAutoGeneratedId() {
+        return true;
+    }
+
+    @Override
+    public String getTableName() {
+        return Contract.Oportunidad.TABLE_NAME;
+    }
+
+    @Override
+    public void setValues() {
+        setValue(Contract.Oportunidad.COLUMN_ID_OPORTUNIDAD, this.idOportunidad);
+        setValue(Contract.Oportunidad.COLUMN_CALIFICACION, this.calificacion);
+        setValue(Contract.Oportunidad.COLUMN_ESTADO, this.estado);
+        setValue(Contract.Oportunidad.COLUMN_FECHA_CREACION, this.fechaCreacion);
+        setValue(Contract.Oportunidad.COLUMN_FECHA_ULTIMA_GESTION, this.fechaUltimaGestion);
+        setValue(Contract.Oportunidad.COLUMN_ID_AGENTE, this.idAgente);
+        setValue(Contract.Oportunidad.COLUMN_ID_ETAPA, this.idEtapa);
+        setValue(Contract.Oportunidad.COLUMN_IMPORTE, this.importe);
+        setValue(Contract.Oportunidad.COLUMN_LATITUD, this.latitud);
+        setValue(Contract.Oportunidad.COLUMN_LONGITUD, this.longitud);
+        setValue(Contract.Oportunidad.COLUMN_PROBABILIDAD, this.probabilidad);
+        setValue(Contract.Oportunidad.COLUMN_OBSERVACION, this.observacion);
+        setValue(Contract.Oportunidad.COLUMN_PENDIENTE, this.pendiente);
+    }
+
+    @Override
+    public Object getValue(String key) {
+        return null;
+    }
+
+    @Override
+    public String getDescription() {
+        return null;
+    }
+
+    public static List<Oportunidad> getAgenda(DataBase db){
+        String query = QueryDir.getQuery(Contract.Oportunidad.QUERY_LIST_NO_FILTER);
+
+        Cursor c = db.rawQuery(query);
+
+        List<Oportunidad> list = new ArrayList<Oportunidad>();
+        while(c.moveToNext()){
+
+            Oportunidad opt = new Oportunidad();
+            opt.setID(CursorUtils.getLong(c, Contract.Oportunidad._ID));
+            opt.setIdOportunidad(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_ID_OPORTUNIDAD));
+            opt.setIdEtapa(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_ID_ETAPA));
+            opt.setCalificacion(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_CALIFICACION));
+            opt.setEstado(CursorUtils.getString(c, Contract.Oportunidad.FIELD_ESTADO));
+            opt.setDescripcion(CursorUtils.getString(c, Contract.Oportunidad.FIELD_DESCRIPCION));
+            opt.setDireccion(CursorUtils.getString(c, Contract.Oportunidad.FIELD_DIRECCION));
+            opt.setFechaCreacion(CursorUtils.getDate(c, Contract.Oportunidad.FIELD_FECHA_CREACION));
+            opt.setFechaUltimaGestion(CursorUtils.getDate(c, Contract.Oportunidad.FIELD_FECHA_ULTIMA_GESTION));
+            opt.setIdAgente(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_ID_AGENTE));
+            opt.setImporte(CursorUtils.getDouble(c, Contract.Oportunidad.FIELD_IMPORTE));
+            opt.setLatitud(CursorUtils.getDouble(c, Contract.Oportunidad.FIELD_LATITUD));
+            opt.setLongitud(CursorUtils.getDouble(c, Contract.Oportunidad.FIELD_LONGITUD));
+            opt.setObservacion(CursorUtils.getString(c, Contract.Oportunidad.FIELD_OBSERVACION));
+            opt.setPendiente(CursorUtils.getBoolean(c, Contract.Oportunidad.FIELD_PENDIENTE));
+            opt.setProbabilidad(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_PROBABILIDAD));
+            opt.setReferencia(CursorUtils.getString(c, Contract.Oportunidad.FIELD_REFERENCIA));
+            list.add(opt);
+        }
+        return list;
+    }
+
+    protected boolean insertDb(DataBase db) {
+        boolean result = false;
+
+        try
+        {
+            result = super.insertDb(db);
+
+            if(result){
+                if(result)
+                {
+                    OportunidadExt cl_ex = new OportunidadExt();
+                    result = OportunidadExt.insert(db, cl_ex);
+                }
+            }
+
+        }catch(Exception ex){
+            result = false;
+            Log.e("Oportunidad Insert", ex.getMessage());
+        }finally{
+        }
+        return result;
+    }
+
+    protected boolean updateDb(DataBase db) {
+        boolean result = super.updateDb(db);
+
+        if(result)
+        {
+            OportunidadExt cl_ex = new OportunidadExt();
+            result = OportunidadExt.update(db, cl_ex);
+        }
+        return result;
+    }
+
+    public static Oportunidad getOportunidadId(DataBase db, long opId) {
+        String query = QueryDir.getQuery( Contract.Oportunidad.QUERY_OPORTUNIDAD_BY_ID );
+        Cursor c = db.rawQuery(query,""+opId);
+
+        Oportunidad opt = new Oportunidad();
+        while(c.moveToNext()){
+
+            opt.setID(CursorUtils.getLong(c, Contract.Oportunidad._ID));
+            opt.setIdOportunidad(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_ID_OPORTUNIDAD));
+            opt.setIdEtapa(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_ID_ETAPA));
+            opt.setCalificacion(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_CALIFICACION));
+            opt.setEstado(CursorUtils.getString(c, Contract.Oportunidad.FIELD_ESTADO));
+            opt.setDescripcion(CursorUtils.getString(c, Contract.Oportunidad.FIELD_DESCRIPCION));
+            opt.setDireccion(CursorUtils.getString(c, Contract.Oportunidad.FIELD_DIRECCION));
+            opt.setFechaCreacion(CursorUtils.getDate(c, Contract.Oportunidad.FIELD_FECHA_CREACION));
+            opt.setFechaUltimaGestion(CursorUtils.getDate(c, Contract.Oportunidad.FIELD_FECHA_ULTIMA_GESTION));
+            opt.setIdAgente(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_ID_AGENTE));
+            opt.setImporte(CursorUtils.getDouble(c, Contract.Oportunidad.FIELD_IMPORTE));
+            opt.setLatitud(CursorUtils.getDouble(c, Contract.Oportunidad.FIELD_LATITUD));
+            opt.setLongitud(CursorUtils.getDouble(c, Contract.Oportunidad.FIELD_LONGITUD));
+            opt.setObservacion(CursorUtils.getString(c, Contract.Oportunidad.FIELD_OBSERVACION));
+            opt.setPendiente(CursorUtils.getBoolean(c, Contract.Oportunidad.FIELD_PENDIENTE));
+            opt.setProbabilidad(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_PROBABILIDAD));
+            opt.setReferencia(CursorUtils.getString(c, Contract.Oportunidad.FIELD_REFERENCIA));
+
+            if(opt.getIdOportunidad() != 0) {
+                opt.setOportunidadContactos(OportunidadContacto.getContactosOportunidad(db, opt.getIdOportunidad()));
+                opt.setOportunidadResponsables(OportunidadResponsable.getResponsablesOportunidad(db, opt.getIdOportunidad()));
+                opt.setOportunidadTareas(OportunidadTarea.getTareasOportunidad(db, opt.getIdOportunidad()));
+            }
+            else
+            {
+                opt.setOportunidadContactos(OportunidadContacto.getContactosOportunidadInt(db, opt.getID()));
+                opt.setOportunidadResponsables(OportunidadResponsable.getResponsablesOportunidadInt(db, opt.getID()));
+                opt.setOportunidadTareas(OportunidadTarea.getTareasOportunidadInt(db, opt.getID()));
+            }
+
+        }
+        return opt;
+    }
+
+    public static List<Oportunidad> getOportunidadesPendientes(DataBase db) {
+        String query = QueryDir.getQuery( Contract.Oportunidad.QUERY_OPORTUNIDADES_PENDIENTES );
+        Cursor c = db.rawQuery(query);
+
+        List<Oportunidad> oportunidades = new ArrayList<Oportunidad>();
+        while(c.moveToNext()){
+            Oportunidad opt = new Oportunidad();
+            opt.setID(CursorUtils.getLong(c, Contract.Oportunidad._ID));
+            opt.setIdOportunidad(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_ID_OPORTUNIDAD));
+            opt.setIdEtapa(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_ID_ETAPA));
+            opt.setCalificacion(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_CALIFICACION));
+            opt.setEstado(CursorUtils.getString(c, Contract.Oportunidad.FIELD_ESTADO));
+            opt.setDescripcion(CursorUtils.getString(c, Contract.Oportunidad.FIELD_DESCRIPCION));
+            opt.setDireccion(CursorUtils.getString(c, Contract.Oportunidad.FIELD_DIRECCION));
+            opt.setFechaCreacion(CursorUtils.getDate(c, Contract.Oportunidad.FIELD_FECHA_CREACION));
+            opt.setFechaUltimaGestion(CursorUtils.getDate(c, Contract.Oportunidad.FIELD_FECHA_ULTIMA_GESTION));
+            opt.setIdAgente(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_ID_AGENTE));
+            opt.setImporte(CursorUtils.getDouble(c, Contract.Oportunidad.FIELD_IMPORTE));
+            opt.setLatitud(CursorUtils.getDouble(c, Contract.Oportunidad.FIELD_LATITUD));
+            opt.setLongitud(CursorUtils.getDouble(c, Contract.Oportunidad.FIELD_LONGITUD));
+            opt.setObservacion(CursorUtils.getString(c, Contract.Oportunidad.FIELD_OBSERVACION));
+            opt.setPendiente(CursorUtils.getBoolean(c, Contract.Oportunidad.FIELD_PENDIENTE));
+            opt.setProbabilidad(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_PROBABILIDAD));
+            opt.setReferencia(CursorUtils.getString(c, Contract.Oportunidad.FIELD_REFERENCIA));
+
+            opt.setOportunidadContactos(OportunidadContacto.getContactosOportunidad(db, opt.getIdOportunidad()));
+            opt.setOportunidadResponsables(OportunidadResponsable.getResponsablesOportunidad(db, opt.getIdOportunidad()));
+            opt.setOportunidadTareas(OportunidadTarea.getTareasOportunidad(db, opt.getIdOportunidad()));
+            oportunidades.add(opt);
+        }
+        return oportunidades;
+    }
+
+    public static List<Oportunidad> getOportunidadesInserts(DataBase db) {
+        String query = QueryDir.getQuery( Contract.Oportunidad.QUERY_OPORTUNIDADES_INSERTS );
+        Cursor c = db.rawQuery(query);
+
+        List<Oportunidad> oportunidades = new ArrayList<Oportunidad>();
+        while(c.moveToNext()){
+            Oportunidad opt = new Oportunidad();
+
+            opt.setID(CursorUtils.getLong(c, Contract.Oportunidad._ID));
+            opt.setIdOportunidad(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_ID_OPORTUNIDAD));
+            opt.setIdEtapa(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_ID_ETAPA));
+            opt.setCalificacion(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_CALIFICACION));
+            opt.setEstado(CursorUtils.getString(c, Contract.Oportunidad.FIELD_ESTADO));
+            opt.setDescripcion(CursorUtils.getString(c, Contract.Oportunidad.FIELD_DESCRIPCION));
+            opt.setDireccion(CursorUtils.getString(c, Contract.Oportunidad.FIELD_DIRECCION));
+            opt.setFechaCreacion(CursorUtils.getDate(c, Contract.Oportunidad.FIELD_FECHA_CREACION));
+            opt.setFechaUltimaGestion(CursorUtils.getDate(c, Contract.Oportunidad.FIELD_FECHA_ULTIMA_GESTION));
+            opt.setIdAgente(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_ID_AGENTE));
+            opt.setImporte(CursorUtils.getDouble(c, Contract.Oportunidad.FIELD_IMPORTE));
+            opt.setLatitud(CursorUtils.getDouble(c, Contract.Oportunidad.FIELD_LATITUD));
+            opt.setLongitud(CursorUtils.getDouble(c, Contract.Oportunidad.FIELD_LONGITUD));
+            opt.setObservacion(CursorUtils.getString(c, Contract.Oportunidad.FIELD_OBSERVACION));
+            opt.setPendiente(CursorUtils.getBoolean(c, Contract.Oportunidad.FIELD_PENDIENTE));
+            opt.setProbabilidad(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_PROBABILIDAD));
+            opt.setReferencia(CursorUtils.getString(c, Contract.Oportunidad.FIELD_REFERENCIA));
+
+            opt.setOportunidadContactos(OportunidadContacto.getContactosOportunidadInt(db, opt.getID()));
+            opt.setOportunidadResponsables(OportunidadResponsable.getResponsablesOportunidadInt(db, opt.getID()));
+            opt.setOportunidadTareas(OportunidadTarea.getTareasOportunidadInt(db, opt.getID()));
+
+            oportunidades.add(opt);
+        }
+        return oportunidades;
+    }
+
+    public class OportunidadExt extends EntityBase<OportunidadExt>{
+
+        @Override
+        public long getID() {
+            return id;
+        }
+
+        @Override
+        public void setID(long idext) {
+            id = idext;
+        }
+
+        @Override
+        public boolean isAutoGeneratedId() {
+            return false;
+        }
+
+        @Override
+        public String getTableName() {
+            return Contract.OportunidadExt.TABLE_NAME;
+        }
+
+        @Override
+        public void setValues() {
+            if(getAction() == ACTION_INSERT){
+                setValue(Contract.OportunidadExt.COLUMN_ID , id);
+            }
+            setValue(Contract.OportunidadExt.COLUMN_DESCRIPCION, descripcion  );
+            setValue(Contract.OportunidadExt.COLUMN_DIRECCION, direccion);
+            setValue(Contract.OportunidadExt.COLUMN_REFERENCIA, referencia);
+        }
+
+        @Override
+        public Object getValue(String key) {
+            return null;
+        }
+
+        @Override
+        public String getDescription() {
+            return null;
+        }
+
+        @Override
+        public String getWhere() {
+            return Contract.OportunidadExt.COLUMN_ID + " = ?";
+        }
+    }
+}

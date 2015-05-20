@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.55"
+        android:gravity="center|left|top">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingTop="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="1"
+                android:id="@+id/rowlist_oportunidad_number"
+                android:textColor="@color/color_text_sky_blue"
+                android:textStyle="bold"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:background="@color/bg_button_bg_main_pressed"></LinearLayout>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Medium Text"
+                android:id="@+id/rowlist_oportunidad_nombre"
+                android:layout_weight="1"
+                android:paddingLeft="5dp"
+                android:textStyle="bold"
+                android:lines="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/rowlist_oportunidad_prioridad"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/flag_on"
+                android:layout_margin="5dp" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Medium Text"
+                    android:id="@+id/rowlist_oportunidad_contactado"
+                    android:textSize="@dimen/text_medium_small_size" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Medium Text"
+                    android:id="@+id/rowlist_oportunidad_dias"
+                    android:textSize="@dimen/text_medium_small_size" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.45"
+        android:gravity="center|right|top">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/rowlist_oportunidad_importe"
+            android:gravity="right"
+            android:padding="5dp" />
+
+        <RatingBar
+            android:id="@+id/rowlist_oportunidad_calificacion"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:isIndicator="true"
+            android:numStars="5"
+            android:progressDrawable="@drawable/rating_style"
+            android:rating="3"
+            android:layout_marginRight="5dp" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="1"
+                android:id="@+id/rowlist_oportunidad_etapa1"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:background="@color/bg_button_bg_main_pressed"
+                android:textColor="@color/caldroid_white"
+                android:layout_marginRight="2dp"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="2"
+                android:id="@+id/rowlist_oportunidad_etapa2"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:background="@color/bg_button_bg_main_pressed"
+                android:textColor="@color/caldroid_white"
+                android:layout_marginRight="2dp"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="3"
+                android:id="@+id/rowlist_oportunidad_etapa3"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:background="@color/bg_button_bg_main_pressed"
+                android:textColor="@color/caldroid_white"
+                android:layout_marginRight="2dp"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="4"
+                android:id="@+id/rowlist_oportunidad_etapa4"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:background="@color/bg_button_bg_main_pressed"
+                android:textColor="@color/caldroid_white"
+                android:layout_marginRight="2dp"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="5"
+                android:id="@+id/rowlist_oportunidad_etapa5"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:background="@color/bg_button_bg_main_pressed"
+                android:textColor="@color/caldroid_white"
+                android:layout_marginRight="2dp"
+                android:layout_weight="1"
+                android:gravity="center" />
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

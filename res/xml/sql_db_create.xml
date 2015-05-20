@@ -237,4 +237,109 @@
         Obligatorio BOOLEAN
         )
     </statement>
+    <!-- Tablas Modulo Oportunidades -->
+    <statement>
+        CREATE TABLE tbOportunidad(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdOportunidad INTEGER,
+        Probabilidad INTEGER,
+        Importe REAL,
+        IdAgente INTEGER,
+        FechaUltimaGestion INTEGER,
+        Calificacion INTEGER,
+        Observacion TEXT,
+        Latitud REAL,
+        Longitud REAL,
+        IdEtapa INTEGER,
+        Estado TEXT,
+        FechaCreacion INTEGER,
+        Pendiente BOOLEAN
+        )
+    </statement>
+    <statement>
+        CREATE VIRTUAL TABLE tbOportunidadExt USING fts4 (
+        Descripcion,
+        Direccion,
+        Referencia,
+        tokenize=porter
+        );
+    </statement>
+    <statement>
+        CREATE TABLE tbOportunidadFoto(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdOportunidadFoto INTEGER,
+        IdOportunidad INTEGER,
+        _IdOportunidad INTEGER,
+        URLFoto TEXT
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbOportunidadContacto(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdOportunidadContacto INTEGER,
+        IdOportunidad INTEGER,
+        _IdOportunidad INTEGER,
+        Nombre TEXT,
+        EsPrincipal BOOLEAN,
+        Movil TEXT,
+        Fijo TEXT,
+        Email TEXT,
+        Cargo TEXT,
+        URLFoto TEXT
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbEtapa(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdEtapa INTEGER,
+        Descripcion TEXT
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbEtapaTarea(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdEtapa INTEGER,
+        IdTarea INTEGER,
+        Orden INTEGER
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbOportunidadTarea(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdOportunidad INTEGER,
+        _IdOportunidad INTEGER,
+        IdEtapa INTEGER,
+        IdTarea INTEGER,
+        Orden INTEGER,
+        Observacion TEXT,
+        Estado TEXT
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbOportunidadTareaActividad(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdOportunidad INTEGER,
+        _IdOportunidad INTEGER,
+        IdEtapa INTEGER,
+        IdTarea INTEGER,
+        IdTareaActividad INTEGER,
+        Resultado TEXT,
+        IdsResultados TEXT
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbAgente(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdAgente INTEGER,
+        Nombre TEXT
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbOportunidadResponsable(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdOportunidad INTEGER,
+        _IdOportunidad INTEGER,
+        IdAgente INTEGER
+        )
+    </statement>
 </sql>

@@ -498,4 +498,202 @@ public final class Contract {
         public static final String FIELD_OBLIGATORIO = COLUMN_OBLIGATORIO;
 
     }
+
+    /*
+    Aqui empieza modulo de oportunidades
+     */
+
+    public static abstract class Oportunidad implements BaseColumns {
+
+        public static final String TABLE_NAME = "tbOportunidad";
+
+        public static final String COLUMN_ID_OPORTUNIDAD = "IdOportunidad";
+        public static final String COLUMN_PROBABILIDAD = "Probabilidad";
+        public static final String COLUMN_IMPORTE = "Importe";
+        public static final String COLUMN_ID_AGENTE = "IdAgente";
+        public static final String COLUMN_FECHA_ULTIMA_GESTION = "FechaUltimaGestion";
+        public static final String COLUMN_CALIFICACION = "Calificacion";
+        public static final String COLUMN_OBSERVACION = "Observacion";
+        public static final String COLUMN_LATITUD = "Latitud";
+        public static final String COLUMN_LONGITUD = "Longitud";
+        public static final String COLUMN_ID_ETAPA = "IdEtapa";
+        public static final String COLUMN_ESTADO = "Estado";
+        public static final String COLUMN_PENDIENTE = "Pendiente";
+        public static final String COLUMN_FECHA_CREACION = "FechaCreacion";
+
+        public static final String FIELD_ID_OPORTUNIDAD = COLUMN_ID_OPORTUNIDAD;
+        public static final String FIELD_PROBABILIDAD = COLUMN_PROBABILIDAD;
+        public static final String FIELD_IMPORTE = COLUMN_IMPORTE;
+        public static final String FIELD_ID_AGENTE = COLUMN_ID_AGENTE;
+        public static final String FIELD_FECHA_ULTIMA_GESTION = COLUMN_FECHA_ULTIMA_GESTION;
+        public static final String FIELD_OBSERVACION = COLUMN_OBSERVACION;
+        public static final String FIELD_LATITUD = COLUMN_LATITUD;
+        public static final String FIELD_CALIFICACION = COLUMN_CALIFICACION;
+        public static final String FIELD_LONGITUD = COLUMN_LONGITUD;
+        public static final String FIELD_ID_ETAPA = COLUMN_ID_ETAPA;
+        public static final String FIELD_ESTADO = COLUMN_ESTADO;
+        public static final String FIELD_PENDIENTE = COLUMN_PENDIENTE;
+        public static final String FIELD_FECHA_CREACION = COLUMN_FECHA_CREACION;
+
+        public static final String FIELD_DESCRIPCION = Contract.OportunidadExt.TABLE_NAME + "_" + Contract.OportunidadExt.COLUMN_DESCRIPCION;
+        public static final String FIELD_DIRECCION = Contract.OportunidadExt.TABLE_NAME + "_" + Contract.OportunidadExt.COLUMN_DIRECCION;
+        public static final String FIELD_REFERENCIA = Contract.OportunidadExt.TABLE_NAME + "_" + Contract.OportunidadExt.COLUMN_REFERENCIA;
+
+        public static final String QUERY_LIST_NO_FILTER= "OportunidadesNoFilter";
+        public static final String QUERY_OPORTUNIDAD_BY_ID= "OportunidadById";
+        public static final String QUERY_OPORTUNIDADES_PENDIENTES= "OportunidadPendientes";
+        public static final String QUERY_OPORTUNIDADES_INSERTS= "OportunidadInserts";
+
+    }
+
+    public static abstract class OportunidadExt implements BaseColumns {
+        public static final String TABLE_NAME = "tbOportunidadExt";
+        public static final String COLUMN_ID = "docid";
+        public static final String COLUMN_DESCRIPCION = "Descripcion";
+        public static final String COLUMN_DIRECCION = "Direccion";
+        public static final String COLUMN_REFERENCIA = "Referencia";
+    }
+
+    public static abstract class OportunidadFoto implements BaseColumns {
+
+        public static final String TABLE_NAME = "tbOportunidadFoto";
+
+        public static final String COLUMN_ID_OPORTUNIDAD_FOTO = "IdOportunidadFoto";
+        public static final String COLUMN_ID_OPORTUNIDAD = "IdOportunidad";
+        public static final String COLUMN_ID_OPORTUNIDAD_INT = "_IdOportunidad";
+        public static final String COLUMN_URL_FOTO = "URLFoto";
+
+        public static final String FIELD_ID_OPORTUNIDAD_FOTO = COLUMN_ID_OPORTUNIDAD_FOTO;
+        public static final String FIELD_ID_OPORTUNIDAD = COLUMN_ID_OPORTUNIDAD;
+        public static final String FIELD_ID_OPORTUNIDAD_INT = COLUMN_ID_OPORTUNIDAD_INT;
+        public static final String FIELD_URL_FOTO = COLUMN_URL_FOTO;
+
+    }
+
+    public static abstract class OportunidadContacto implements BaseColumns {
+
+        public static final String TABLE_NAME = "tbOportunidadContacto";
+
+        public static final String COLUMN_ID_OPORTUNIDAD_CONTACTO = "IdOportunidadContacto";
+        public static final String COLUMN_ID_OPORTUNIDAD = "IdOportunidad";
+        public static final String COLUMN_ID_OPORTUNIDAD_INT = "_IdOportunidad";
+        public static final String COLUMN_NOMBRE = "Nombre";
+        public static final String COLUMN_ES_PRINCIPAL = "EsPrincipal";
+        public static final String COLUMN_MOVIL = "Movil";
+        public static final String COLUMN_FIJO = "Fijo";
+        public static final String COLUMN_EMAIL = "Email";
+        public static final String COLUMN_CARGO = "Cargo";
+        public static final String COLUMN_URL_FOTO = "URLFoto";
+
+        public static final String FIELD_ID_OPORTUNIDAD_CONTACTO = COLUMN_ID_OPORTUNIDAD_CONTACTO;
+        public static final String FIELD_ID_OPORTUNIDAD = COLUMN_ID_OPORTUNIDAD;
+        public static final String FIELD_ID_OPORTUNIDAD_INT = COLUMN_ID_OPORTUNIDAD_INT;
+        public static final String FIELD_URL_FOTO = COLUMN_URL_FOTO;
+        public static final String FIELD_NOMBRE = COLUMN_NOMBRE;
+        public static final String FIELD_ES_PRINCIPAL = COLUMN_ES_PRINCIPAL;
+        public static final String FIELD_MOVIL = COLUMN_MOVIL;
+        public static final String FIELD_FIJO = COLUMN_FIJO;
+        public static final String FIELD_EMAIL = COLUMN_EMAIL;
+        public static final String FIELD_CARGO = COLUMN_CARGO;
+
+    }
+
+    public static abstract class Etapa implements BaseColumns {
+
+        public static final String TABLE_NAME = "tbEtapa";
+
+        public static final String COLUMN_ID_ETAPA = "IdEtapa";
+        public static final String COLUMN_DESCRIPCION = "Descripcion";
+
+        public static final String FIELD_ID_ETAPA = COLUMN_ID_ETAPA;
+        public static final String FIELD_DESCRIPCION = COLUMN_DESCRIPCION;
+
+    }
+
+    public static abstract class EtapaTarea implements BaseColumns {
+
+        public static final String TABLE_NAME = "tbEtapaTarea";
+
+        public static final String COLUMN_ID_ETAPA = "IdEtapa";
+        public static final String COLUMN_ID_TAREA = "IdTarea";
+        public static final String COLUMN_ORDEN = "Orden";
+
+        public static final String FIELD_ID_ETAPA = COLUMN_ID_ETAPA;
+        public static final String FIELD_ID_TAREA = COLUMN_ID_TAREA;
+        public static final String FIELD_ORDEN = COLUMN_ORDEN;
+
+        public static final String QUERY_ETAPAS= "EtapaTareasQuery";
+
+    }
+
+    public static abstract class OportunidadTarea implements BaseColumns {
+
+        public static final String TABLE_NAME = "tbOportunidadTarea";
+
+        public static final String COLUMN_ID_OPORTUNIDAD = "IdOportunidad";
+        public static final String COLUMN_ID_OPORTUNIDAD_INT = "_IdOportunidad";
+        public static final String COLUMN_ID_ETAPA = "IdEtapa";
+        public static final String COLUMN_ID_TAREA = "IdTarea";
+        public static final String COLUMN_ORDEN = "Orden";
+        public static final String COLUMN_OBSERVACION = "Observacion";
+        public static final String COLUMN_ESTADO = "Estado";
+
+        public static final String FIELD_ID_OPORTUNIDAD = COLUMN_ID_OPORTUNIDAD;
+        public static final String FIELD_ID_OPORTUNIDAD_INT = COLUMN_ID_OPORTUNIDAD_INT;
+        public static final String FIELD_ID_ETAPA = COLUMN_ID_ETAPA;
+        public static final String FIELD_ID_TAREA = COLUMN_ID_TAREA;
+        public static final String FIELD_ORDEN = COLUMN_ORDEN;
+        public static final String FIELD_OBSERVACION = COLUMN_OBSERVACION;
+        public static final String FIELD_ESTADO = COLUMN_ESTADO;
+
+    }
+
+    public static abstract class OportunidadTareaActividad implements BaseColumns {
+
+        public static final String TABLE_NAME = "tbOportunidadTareaActividad";
+
+        public static final String COLUMN_ID_OPORTUNIDAD = "IdOportunidad";
+        public static final String COLUMN_ID_OPORTUNIDAD_INT = "_IdOportunidad";
+        public static final String COLUMN_ID_ETAPA = "IdEtapa";
+        public static final String COLUMN_ID_TAREA = "IdTarea";
+        public static final String COLUMN_TAREA_ACTIVIDAD_ID = "IdTareaActividad";
+        public static final String COLUMN_RESULTADO = "Resultado";
+        public static final String COLUMN_IDS_RESULTADO = "IdsResultados";
+
+        public static final String FIELD_ID_OPORTUNIDAD = COLUMN_ID_OPORTUNIDAD;
+        public static final String FIELD_ID_OPORTUNIDAD_INT = COLUMN_ID_OPORTUNIDAD_INT;
+        public static final String FIELD_ID_ETAPA = COLUMN_ID_ETAPA;
+        public static final String FIELD_ID_TAREA = COLUMN_ID_TAREA;
+        public static final String FIELD_TAREA_ACTIVIDAD_ID = COLUMN_TAREA_ACTIVIDAD_ID;
+        public static final String FIELD_RESULTADO = COLUMN_RESULTADO;
+        public static final String FIELD_IDS_RESULTADO = COLUMN_IDS_RESULTADO;
+
+    }
+
+    public static abstract class OportunidadResponsable implements BaseColumns {
+
+        public static final String TABLE_NAME = "tbOportunidadResponsable";
+
+        public static final String COLUMN_ID_OPORTUNIDAD = "IdOportunidad";
+        public static final String COLUMN_ID_OPORTUNIDAD_INT = "_IdOportunidad";
+        public static final String COLUMN_ID_AGENTE = "IdAgente";
+
+        public static final String FIELD_ID_OPORTUNIDAD = COLUMN_ID_OPORTUNIDAD;
+        public static final String FIELD_ID_OPORTUNIDAD_INT = COLUMN_ID_OPORTUNIDAD_INT;
+        public static final String FIELD_ID_AGENTE = COLUMN_ID_AGENTE;
+
+    }
+
+    public static abstract class Agente implements BaseColumns {
+
+        public static final String TABLE_NAME = "tbAgente";
+
+        public static final String COLUMN_ID_AGENTE = "IdAgente";
+        public static final String COLUMN_NOMBRE = "Nombre";
+
+        public static final String FIELD_NOMBRE = COLUMN_NOMBRE;
+        public static final String FIELD_ID_AGENTE = COLUMN_ID_AGENTE;
+
+    }
+
 }

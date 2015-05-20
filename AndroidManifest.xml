@@ -153,6 +153,16 @@
         <activity android:name=".ruta.ObservacionesActivity" android:theme="@style/MyAppPopupTheme"></activity>
         <activity android:name=".ruta.FotoActivity" android:theme="@style/MyAppPopupTheme"></activity>
         <activity android:name=".cliente.ImportContactsActivity"></activity>
+
+        <!-- Modulo Oportunidades -->
+        <activity android:name=".oportunidad.FiltroOportunidadActivity"></activity>
+        <activity android:name=".oportunidad.EtapaTareasActivity"></activity>
+        <activity android:name=".oportunidad.actividades.CheckboxActivity"></activity>
+        <activity android:name=".oportunidad.actividades.MultipleActivity" android:theme="@style/ActivityPopupTheme"></activity>
+        <activity android:name=".oportunidad.actividades.SeleccionActivity"></activity>
+        <activity android:name=".oportunidad.actividades.GrupoActivity"></activity>
+        <activity android:name=".oportunidad.actividades.TextoActivity" android:theme="@style/ActivityPopupTheme"></activity>
+        <activity android:name=".oportunidad.CrearOportunidadActivity"></activity>
         
     </application>
 

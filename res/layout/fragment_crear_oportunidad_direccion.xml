@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/color_grey_lines"
+            android:orientation="vertical" >
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingRight="5dp" >
+
+            <TextView
+                android:id="@+id/identificacion_label"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.4"
+                android:background="@color/color_grey"
+                android:gravity="center_vertical"
+                android:paddingLeft="5dp"
+                android:text="@string/label_obtener_ubicacion"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/color_text_sky_blue"
+                android:textSize="@dimen/text_small_size" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.6"
+                android:gravity="center" >
+
+                <ImageButton
+                    android:id="@+id/oportunidad_ubicacion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_action_location_found" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/oportunidad_ubicacion_check"
+                    android:src="@drawable/checkbox_off"
+                    android:padding="8dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/color_grey_lines"
+            android:orientation="vertical" >
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/crear_cliente_content_natural"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingRight="5dp" >
+
+                <TextView
+                    android:id="@+id/primer_nombre_label"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.4"
+                    android:background="@color/color_grey"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="5dp"
+                    android:text="@string/label_direccion"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/color_text_sky_blue"
+                    android:textSize="@dimen/text_small_size" />
+
+                <EditText
+                    android:id="@+id/oportunidad_direccion"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.6"
+                    android:ems="10"
+                    android:textSize="@dimen/text_small_size"
+                    android:inputType="textPersonName" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/color_grey_lines"
+                android:orientation="vertical" >
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingRight="5dp" >
+
+                <TextView
+                    android:id="@+id/segundo_nombre_label"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.4"
+                    android:background="@color/color_grey"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="5dp"
+                    android:text="@string/label_referencia"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/color_text_sky_blue"
+                    android:textSize="@dimen/text_small_size" />
+
+                <EditText
+                    android:id="@+id/oportunidad_referencia_direccion"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.6"
+                    android:ems="10"
+                    android:textSize="@dimen/text_small_size"
+                    android:inputType="textPersonName" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/color_grey_lines"
+                android:orientation="vertical" >
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp">
+
+            <TextView
+                android:id="@+id/oportunidad_agregar_foto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:drawableLeft="@drawable/ic_new_item"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                android:text="@string/label_agregar_foto"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/color_text_sky_blue" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/bg_button_bg_main_pressed"
+            android:orientation="vertical" />
+
+        <GridView
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:id="@+id/gridview_fotos"
+            android:layout_weight="1"
+            android:numColumns="auto_fit" />
+
+    </LinearLayout>
+

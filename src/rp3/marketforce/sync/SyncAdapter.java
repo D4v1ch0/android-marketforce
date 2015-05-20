@@ -44,6 +44,8 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
     public static String SYNC_TYPE_AGENDA_GEOLOCATION = "agenda_geolocation";
     public static String SYNC_TYPE_UPLOAD_AGENDAS = "agenda_upload";
     public static String SYNC_TYPE_UPLOAD_CLIENTES = "cliente_upload";
+
+    public static String SYNC_TYPE_UPLOAD_OPORTUNIDADES = "oportunidades_upload";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -134,6 +136,20 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         result = rp3.marketforce.sync.Agente.executeSyncParametros(db);
                         addDefaultMessage(result);
                     }
+
+                    //Modulo Oportunidades
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Etapa.executeSync(db);
+                        addDefaultMessage(result);
+                    }
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Agente.executeSyncAgentes(db);
+                        addDefaultMessage(result);
+                    }
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Oportunidad.executeSync(db);
+                        addDefaultMessage(result);
+                    }
 				/*
 				 * Se comenta carga de fotos ya que se la hara mediante un lazy loader.
 				 * Para esto se cargara tambien en el modelo Cliente la url de la foto para poder cargarla
@@ -183,6 +199,14 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     String code = extras.getString(ServerActivity.SERVER_CODE);
                     result = Server.executeSync(code);
                     addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_UPLOAD_OPORTUNIDADES)) {
+
+                    result = rp3.marketforce.sync.Oportunidad.executeSyncInserts(db);
+                    addDefaultMessage(result);
+
+                    result = rp3.marketforce.sync.Oportunidad.executeSyncPendientes(db);
+                    addDefaultMessage(result);
+
                 } else if (syncType.equals(SYNC_TYPE_AGENTES_UBICACION)) {
                     result = rp3.marketforce.sync.Agente.executeSyncGetUbicaciones(db);
                     addDefaultMessage(result);
@@ -332,6 +356,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         addDefaultMessage(result);
                     }
 
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Agente.executeSyncAgentes(db);
+                        addDefaultMessage(result);
+                    }
+
                     if (result == SYNC_EVENT_SUCCESS && PreferenceManager.getBoolean(Contants.KEY_ES_SUPERVISOR)) {
                         result = rp3.marketforce.sync.Agente.executeSyncGetAgente(db);
                         addDefaultMessage(result);
@@ -358,6 +387,22 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 
                     if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.marketforce.sync.TipoCliente.executeSync(db);
+                        addDefaultMessage(result);
+                    }
+
+                    //Modulo Oportunidades
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Etapa.executeSync(db);
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Oportunidad.executeSyncInserts(db);
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Oportunidad.executeSyncPendientes(db);
                         addDefaultMessage(result);
                     }
                 }

@@ -1059,4 +1059,116 @@
 		AND Fecha &lt; ?
 		GROUP BY IdAgente
      </statement>
+
+    <!-- Modulo Oportunidades -->
+    <statement name="OportunidadesNoFilter">
+        SELECT
+        tbOportunidad._id,
+        tbOportunidad.IdOportunidad,
+        tbOportunidad.Probabilidad,
+        tbOportunidad.Importe,
+        tbOportunidad.IdAgente,
+        tbOportunidad.FechaUltimaGestion,
+        tbOportunidad.Calificacion,
+        tbOportunidad.Observacion,
+        tbOportunidad.Latitud,
+        tbOportunidad.Longitud,
+        tbOportunidad.IdEtapa,
+        tbOportunidad.Estado,
+        tbOportunidad.FechaCreacion,
+        tbOportunidad.Pendiente,
+        tbOportunidadExt.Descripcion AS tbOportunidadExt_Descripcion,
+        tbOportunidadExt.Direccion AS tbOportunidadExt_Direccion,
+        tbOportunidadExt.Referencia AS tbOportunidadExt_Referencia
+        FROM tbOportunidad
+        JOIN tbOportunidadExt
+        ON tbOportunidad._id = tbOportunidadExt.docid
+        ORDER BY tbOportunidad.Calificacion, tbOportunidad.Importe
+    </statement>
+
+    <statement name="OportunidadById">
+        SELECT
+        tbOportunidad._id,
+        tbOportunidad.IdOportunidad,
+        tbOportunidad.Probabilidad,
+        tbOportunidad.Importe,
+        tbOportunidad.IdAgente,
+        tbOportunidad.FechaUltimaGestion,
+        tbOportunidad.Calificacion,
+        tbOportunidad.Observacion,
+        tbOportunidad.Latitud,
+        tbOportunidad.Longitud,
+        tbOportunidad.IdEtapa,
+        tbOportunidad.Estado,
+        tbOportunidad.FechaCreacion,
+        tbOportunidad.Pendiente,
+        tbOportunidadExt.Descripcion AS tbOportunidadExt_Descripcion,
+        tbOportunidadExt.Direccion AS tbOportunidadExt_Direccion,
+        tbOportunidadExt.Referencia AS tbOportunidadExt_Referencia
+        FROM tbOportunidad
+        JOIN tbOportunidadExt
+        ON tbOportunidad._id = tbOportunidadExt.docid
+        WHERE tbOportunidad._id = ?
+        ORDER BY tbOportunidad.Calificacion, tbOportunidad.Importe
+    </statement>
+    <statement name="OportunidadPendientes">
+        SELECT
+        tbOportunidad._id,
+        tbOportunidad.IdOportunidad,
+        tbOportunidad.Probabilidad,
+        tbOportunidad.Importe,
+        tbOportunidad.IdAgente,
+        tbOportunidad.FechaUltimaGestion,
+        tbOportunidad.Calificacion,
+        tbOportunidad.Observacion,
+        tbOportunidad.Latitud,
+        tbOportunidad.Longitud,
+        tbOportunidad.IdEtapa,
+        tbOportunidad.Estado,
+        tbOportunidad.FechaCreacion,
+        tbOportunidad.Pendiente,
+        tbOportunidadExt.Descripcion AS tbOportunidadExt_Descripcion,
+        tbOportunidadExt.Direccion AS tbOportunidadExt_Direccion,
+        tbOportunidadExt.Referencia AS tbOportunidadExt_Referencia
+        FROM tbOportunidad
+        JOIN tbOportunidadExt
+        ON tbOportunidad._id = tbOportunidadExt.docid
+        WHERE tbOportunidad.Pendiente = 1
+        ORDER BY tbOportunidad.Calificacion, tbOportunidad.Importe
+    </statement>
+    <statement name="OportunidadInserts">
+        SELECT
+        tbOportunidad._id,
+        tbOportunidad.IdOportunidad,
+        tbOportunidad.Probabilidad,
+        tbOportunidad.Importe,
+        tbOportunidad.IdAgente,
+        tbOportunidad.FechaUltimaGestion,
+        tbOportunidad.Calificacion,
+        tbOportunidad.Observacion,
+        tbOportunidad.Latitud,
+        tbOportunidad.Longitud,
+        tbOportunidad.IdEtapa,
+        tbOportunidad.Estado,
+        tbOportunidad.FechaCreacion,
+        tbOportunidad.Pendiente,
+        tbOportunidadExt.Descripcion AS tbOportunidadExt_Descripcion,
+        tbOportunidadExt.Direccion AS tbOportunidadExt_Direccion,
+        tbOportunidadExt.Referencia AS tbOportunidadExt_Referencia
+        FROM tbOportunidad
+        JOIN tbOportunidadExt
+        ON tbOportunidad._id = tbOportunidadExt.docid
+        WHERE tbOportunidad.IdOportunidad = 0
+        ORDER BY tbOportunidad.Calificacion, tbOportunidad.Importe
+    </statement>
+    <statement name="EtapaTareasQuery">
+        SELECT
+        tbEtapaTarea._id,
+        tbEtapaTarea.IdEtapa,
+        tbEtapaTarea.IdTarea,
+        tbEtapaTarea.Orden
+        FROM tbEtapaTarea
+        ORDER BY tbEtapaTarea.IdEtapa, tbEtapaTarea.Orden
+    </statement>
+
 </sql>

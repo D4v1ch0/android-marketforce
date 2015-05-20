@@ -7,6 +7,7 @@
     For more on layout aliases, see:
     http://developer.android.com/training/multiscreen/screensizes.html#TaskUseAliasFilters
     -->
+    <item name="fragment_oportunidad" type="layout">@layout/activity_transaction_twopane</item>
     <item name="fragment_client" type="layout">@layout/activity_transaction_twopane</item>
     <item name="fragment_rutas" type="layout">@layout/activity_transaction_twopane</item>
     <string name="is_tablet">true</string>

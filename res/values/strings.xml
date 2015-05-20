@@ -175,5 +175,43 @@
     <string name="message_information3">En ningún caso RP3® Retail Software será responsable de ningún daño  ocasionado por causa de algún error u omisión, en los contenidos presentados en la aplicación  (incluyendo cualquier daño especial, indirecto o consecuencial, pérdida de datos, pérdida de información, pérdida de beneficios, interrupción de negocios o cualquier otra perdida pecuniaria) por el uso o la imposibilidad de utilizar esta aplicación.</string>
     <string name="label_copyright">Copyright © 2015</string>
     <string name="message_information_end">RP3® Retail Software - Todos los Derechos Reservados</string>
+    <!-- Modulo Oportunidad -->
+    <string name="title_option_oportunidad">Oportunidades</string>
+    <string name="label_crear_oportunidad">Crear</string>
+    <string name="label_filtro">Filtro</string>
+    <string name="label_oportunidades">Oportunidades:</string>
+    <string name="label_meta">Meta:</string>
+    <string name="label_probabilidad">PROBABILIDAD DE VENTAS</string>
+    <string name="label_etapas">ETAPAS</string>
+    <string name="label_oportunidad_venta">Oportunidad de venta</string>
+    <string name="label_primer_contacto">Primer contacto</string>
+    <string name="label_solucion_propuesta">Solución propuesta</string>
+    <string name="label_negociacion">Negociación</string>
+    <string name="label_cierre_operacion">Cierre de Negociación</string>
+    <string name="label_cantidad">CANTIDAD</string>
+    <string name="label_inserte_valor">Inserte Valor</string>
+    <string name="label_solo_activos">Mostrar solo activos</string>
+    <string name="label_probabilidad_venta">Probabilidad de venta</string>
+    <string name="label_cantidad_min">Cantidad</string>
+    <string name="label_contactos_max">CONTACTOS</string>
+    <string name="label_no_contacto">No hay contactos</string>
+    <string name="label_responsables_max">RESPONSABLES</string>
+    <string name="label_no_responsables">No hay responsbles</string>
+    <string name="label_datos_generales_max">DATOS GENERALES</string>
+    <string name="label_comentarios_max">COMENTARIOS</string>
+    <string name="label_no_etapas">No hay etapas</string>
+    <string name="label_no_fotos">No hay fotos</string>
+    <string name="label_no_comentarios">No hay comentarios</string>
+    <string name="label_cambiar_etapa">Cambiar Etapa</string>
+    <string name="hint_escriba_observacion">Escriba aqui su observación</string>
+    <string name="label_descripcion">Descripción</string>
+    <string name="label_importe">Importe</string>
+    <string name="label_calificacion">Calificación</string>
+    <string name="label_comentarios">Comentarios</string>
+    <string name="label_agregar_responsable">Agregar Responsable</string>
+    <string name="label_responsable">Responsable</string>
+    <string name="label_agregar_foto">Agregar Foto</string>
+    <string name="label_agregar_contacto_oportunidad">Agregar contacto</string>
+    <string name="label_finalizar_etapa">Finalizar Etapa</string>
 
 </resources>
