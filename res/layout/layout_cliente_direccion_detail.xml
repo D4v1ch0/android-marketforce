@@ -82,7 +82,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:id="@+id/cliente_ubicacion_check"
-                            android:src="@drawable/ic_ex"
+                            android:src="@drawable/checkbox_off"
                             android:layout_weight="1"
                             android:padding="8dp" />
                     </LinearLayout>

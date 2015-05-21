@@ -55,7 +55,7 @@ public class Rutas {
 				if(inicio == null || inicio == 0){
 					Calendar dateIni = DateTime.getCurrentCalendar();
 					dateIni.add(Calendar.DATE, -7);
-					inicio = Convert.getDotNetTicksFromDate(dateIni.getTime());											
+					inicio = Convert.getDotNetTicksFromDate(Convert.getDateFromTicks(rp3.marketforce.models.Agenda.getFirstAgenda(db)));
 				}
 				else
 				{
