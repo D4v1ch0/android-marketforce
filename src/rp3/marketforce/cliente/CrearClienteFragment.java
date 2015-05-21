@@ -768,7 +768,7 @@ public class CrearClienteFragment extends BaseFragment {
 			{
 				((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_longitud)).setText("" + cli.getClienteDirecciones().get(i).getLongitud());
 				((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_latitud)).setText("" + cli.getClienteDirecciones().get(i).getLatitud());
-                ((ImageView)listViewDirecciones.get(i).findViewById(R.id.cliente_ubicacion_check)).setImageResource(R.drawable.ic_yes);
+                ((ImageView)listViewDirecciones.get(i).findViewById(R.id.cliente_ubicacion_check)).setImageResource(R.drawable.checkbox_on);
 			}
 			if(!cli.isNuevo())
 				((Spinner)listViewDirecciones.get(i).findViewById(R.id.cliente_tipo_direccion_spinner)).setEnabled(false);
@@ -869,7 +869,7 @@ public class CrearClienteFragment extends BaseFragment {
                                 if (location != null) {
                                     ((EditText) listViewDirecciones.get(pos).findViewById(R.id.cliente_longitud)).setText("" + location.getLongitude());
                                     ((EditText) listViewDirecciones.get(pos).findViewById(R.id.cliente_latitud)).setText("" + location.getLatitude());
-                                    ((ImageView) listViewDirecciones.get(pos).findViewById(R.id.cliente_ubicacion_check)).setImageResource(R.drawable.ic_yes);
+                                    ((ImageView) listViewDirecciones.get(pos).findViewById(R.id.cliente_ubicacion_check)).setImageResource(R.drawable.checkbox_on);
                                     currentLoc = location;
                                     posDir = pos;
                                     if(((EditText) listViewDirecciones.get(pos).findViewById(R.id.cliente_longitud)).getText().length() > 0)
