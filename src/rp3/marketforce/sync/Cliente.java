@@ -95,8 +95,16 @@ public class Cliente {
 
                             cl.setIdCliente(type.getLong("IdCliente"));
                             cl.setIdTipoIdentificacion(type.getInt("IdTipoIdentificacion"));
-                            cl.setIdentificacion(type.getString("Identificacion"));
-                            cl.setIdTipoCliente(type.getInt("IdTipoCliente"));
+                            if(!type.isNull("Identificacion"))
+                                cl.setIdentificacion(type.getString("Identificacion"));
+                            else
+                                cl.setIdentificacion("");
+
+                            if(!type.isNull("IdTipoCliente"))
+                                cl.setIdTipoCliente(type.getInt("IdTipoCliente"));
+                            else
+                                cl.setIdTipoCliente(0);
+
                             cl.setNombre1(type.getString("Nombre1"));
                             if(!type.isNull("Nombre2"))
                                 cl.setNombre2(type.getString("Nombre2"));
@@ -147,9 +155,22 @@ public class Cliente {
                                         clienteDir.setLatitud(str.getDouble("Latitud"));
                                     if (!str.isNull("Longitud"))
                                         clienteDir.setLongitud(str.getDouble("Longitud"));
-                                    clienteDir.setReferencia("" + str.getString("Referencia"));
-                                    clienteDir.setTelefono1("" + str.getString("Telefono1"));
-                                    clienteDir.setTelefono2("" + str.getString("Telefono2"));
+
+                                    if(!str.isNull("Referencia"))
+                                        clienteDir.setReferencia(str.getString("Referencia"));
+                                    else
+                                        clienteDir.setReferencia("");
+
+                                    if(!str.isNull("Telefono1"))
+                                        clienteDir.setTelefono1(str.getString("Telefono1"));
+                                    else
+                                        clienteDir.setTelefono1("");
+
+                                    if(!str.isNull("Telefono2"))
+                                        clienteDir.setTelefono2(str.getString("Telefono2"));
+                                    else
+                                        clienteDir.setTelefono2("");
+
                                     clienteDir.setTipoDireccion("" + str.getString("TipoDireccion"));
                                     if(!str.isNull("CiudadDescripcion") && !str.getString("CiudadDescripcion").equalsIgnoreCase("null"))
                                         clienteDir.setCiudadDescripcion("" + str.getString("CiudadDescripcion"));
