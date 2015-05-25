@@ -63,26 +63,62 @@ public class Cliente {
                         }
                         else
                         {
-                            cl.setApellido1(type.getString("Apellido1"));
-                            cl.setApellido2(type.getString("Apellido2"));
+                            if(!type.isNull("Apellido1"))
+                                cl.setApellido1(type.getString("Apellido1"));
+                            else
+                                cl.setApellido1("");
+                            if(!type.isNull("Apellido2"))
+                                cl.setApellido2(type.getString("Apellido2"));
+                            else
+                                cl.setApellido2("");
+                            if(!type.isNull("EstadoCivil"))
+                                cl.setEstadoCivil(type.getString("EstadoCivil"));
+                            else
+                                cl.setEstadoCivil("");
+
                             cl.setCalificacion(type.getInt("Calificacion"));
-                            cl.setCorreoElectronico(type.getString("CorreoElectronico"));
-                            cl.setEstadoCivil(type.getString("EstadoCivil"));
-                            cl.setGenero(type.getString("Genero"));
-                            cl.setIdCanal(type.getInt("IdCanal"));
+
+                            if(!type.isNull("CorreoElectronico"))
+                                cl.setCorreoElectronico(type.getString("CorreoElectronico"));
+                            else
+                                cl.setCorreoElectronico("");
+
+                            if(!type.isNull("Genero"))
+                                cl.setGenero(type.getString("Genero"));
+                            else
+                                cl.setGenero("");
+
+                            if(!type.isNull("IdCanal"))
+                                cl.setIdCanal(type.getInt("IdCanal"));
+                            else
+                                cl.setIdCanal(0);
+
                             cl.setIdCliente(type.getLong("IdCliente"));
                             cl.setIdTipoIdentificacion(type.getInt("IdTipoIdentificacion"));
                             cl.setIdentificacion(type.getString("Identificacion"));
                             cl.setIdTipoCliente(type.getInt("IdTipoCliente"));
                             cl.setNombre1(type.getString("Nombre1"));
-                            cl.setNombre2(type.getString("Nombre2"));
+                            if(!type.isNull("Nombre2"))
+                                cl.setNombre2(type.getString("Nombre2"));
+                            else
+                                cl.setNombre2("");
+
                             cl.setFechaNacimiento(Convert.getDateFromDotNetTicks(type.getLong("FechaNacimientoTicks")));
-                            cl.setNombreCompleto(type.getString("NombresCompletos"));
+                            cl.setNombreCompleto(type.getString("NombresCompletos").trim());
                             cl.setURLFoto(type.getString("Foto"));
                             cl.setTipoPersona(type.getString("TipoPersona"));
-                            cl.setActividadEconomica(type.getString("ActividadEconomica"));
-                            cl.setPaginaWeb(type.getString("PaginaWeb"));
-                            cl.setRazonSocial(type.getString("RazonSocial"));
+                            if(!type.isNull("ActividadEconomica"))
+                                cl.setActividadEconomica(type.getString("ActividadEconomica"));
+                            else
+                                cl.setActividadEconomica("");
+                            if(!type.isNull("PaginaWeb"))
+                                cl.setPaginaWeb(type.getString("PaginaWeb"));
+                            else
+                                cl.setPaginaWeb("");
+                            if(!type.isNull("RazonSocial"))
+                                cl.setRazonSocial(type.getString("RazonSocial"));
+                            else
+                                cl.setRazonSocial("");
 
                             JSONArray strs = type.getJSONArray("ClienteDirecciones");
 
@@ -154,9 +190,19 @@ public class Cliente {
                                     clienteCont.setNombre("" + str.getString("Nombre"));
                                     clienteCont.setApellido("" + str.getString("Apellido"));
                                     clienteCont.setCargo("" + str.getString("Cargo"));
-                                    clienteCont.setTelefono1("" + str.getString("Telefono1"));
-                                    clienteCont.setTelefono2("" + str.getString("Telefono2"));
-                                    clienteCont.setCorreo("" + str.getString("CorreoElectronico"));
+                                    if(!str.isNull("Telefono1"))
+                                        clienteCont.setTelefono1(str.getString("Telefono1"));
+                                    else
+                                        clienteCont.setTelefono1("");
+                                    if(!str.isNull("Telefono2"))
+                                        clienteCont.setTelefono2(str.getString("Telefono2"));
+                                    else
+                                        clienteCont.setTelefono2("");
+                                    if(!str.isNull("CorreoElectronico"))
+                                        clienteCont.setCorreo(str.getString("CorreoElectronico"));
+                                    else
+                                        clienteCont.setCorreo("");
+
                                     if (!str.isNull("Foto"))
                                         clienteCont.setURLFoto("" + str.getString("Foto"));
 
