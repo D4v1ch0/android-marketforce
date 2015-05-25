@@ -228,7 +228,7 @@ public class OportunidadListFragment extends BaseFragment {
             public void onRefresh() {
                 if (ConnectionUtils.isNetAvailable(getContext())) {
                     Bundle bundle = new Bundle();
-                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_CLIENTES);
+                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_OPORTUNIDADES);
                     requestSync(bundle);
                 } else {
                     Toast.makeText(getContext(), R.string.message_error_sync_no_net_available, Toast.LENGTH_LONG).show();
@@ -330,7 +330,7 @@ public class OportunidadListFragment extends BaseFragment {
             public void onRefresh() {
                 if (ConnectionUtils.isNetAvailable(getContext())) {
                     Bundle bundle = new Bundle();
-                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_CLIENTES);
+                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_OPORTUNIDADES);
                     requestSync(bundle);
                 } else {
                     Toast.makeText(getContext(), R.string.message_error_sync_no_net_available, Toast.LENGTH_LONG).show();

@@ -17,6 +17,8 @@ import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 import rp3.app.BaseFragment;
@@ -304,15 +306,26 @@ public class OportunidadDetailFragment extends BaseFragment {
         if(etapas.size() > 0)
             view_timeline.findViewById(R.id.oportunidad_no_etapas).setVisibility(View.GONE);
 
+        int position = 0;
         for(Etapa etp : etapas)
         {
-            View row_etapa = inflater.inflate(R.layout.rowlist_tarea, null);
+            View row_etapa = inflater.inflate(R.layout.rowlist_oportunidad_etapa, null);
 
             int id_icon = R.drawable.checkbox_off;
 
             ((TextView) row_etapa.findViewById(R.id.map_phone)).setCompoundDrawablesWithIntrinsicBounds(0, 0, id_icon, 0);
             ((TextView) row_etapa.findViewById(R.id.detail_agenda_estado)).setText(etp.getDescripcion());
             ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setText(etp.getIdEtapa()+ "");
+            if(position == 0)
+                ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa1));
+            if(position == 1)
+                ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa2));
+            if(position == 2)
+                ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa3));
+            if(position == 3)
+                ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa4));
+            if(position == 4)
+                ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa5));
             row_etapa.setId(etp.getIdEtapa());
 
             row_etapa.setOnClickListener(new View.OnClickListener() {
@@ -326,6 +339,7 @@ public class OportunidadDetailFragment extends BaseFragment {
             });
 
             etapas_layout.addView(row_etapa);
+            position++;
         }
 
         linearLayoutAdress.setVisibility(View.VISIBLE);
@@ -342,6 +356,59 @@ public class OportunidadDetailFragment extends BaseFragment {
 
         View view_fotos = inflater.inflate(
                 R.layout.layout_oportunidad_fotos, null);
+
+        if(opt.getOportunidadFotos().size() > 0)
+        {
+            for(int i = 0; i < opt.getOportunidadFotos().size(); i++)
+            {
+                view_fotos.findViewById(R.id.oportunidad_no_fotos).setVisibility(View.GONE);
+                if(opt.getOportunidadFotos().get(i).getURLFoto().length() > 0)
+                {
+                    switch (i)
+                    {
+                        case 0:
+                            DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
+                                            rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + opt.getOportunidadFotos().get(i).getURLFoto(),
+                                    ((ImageView) view_fotos.findViewById(R.id.oportunidad_photo1)));
+                            ((ImageButton) view_fotos.findViewById(R.id.oportunidad_photo1_click)).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    //Mostrar Zoom
+                                }
+                            });
+                            ((TextView) view_fotos.findViewById(R.id.oportunidad_photo1_fecha)).setText("");
+                            view_fotos.findViewById(R.id.photo1_layout).setVisibility(View.VISIBLE);
+                            break;
+                        case 1:
+                            DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
+                                            rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + opt.getOportunidadFotos().get(i).getURLFoto(),
+                                    ((ImageView) view_fotos.findViewById(R.id.oportunidad_photo2)));
+                            ((ImageButton) view_fotos.findViewById(R.id.oportunidad_photo2_click)).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    //Mostrar Zoom
+                                }
+                            });
+                            ((TextView) view_fotos.findViewById(R.id.oportunidad_photo2_fecha)).setText("");
+                            view_fotos.findViewById(R.id.photo2_layout).setVisibility(View.VISIBLE);
+                            break;
+                        case 2:
+                            DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
+                                            rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + opt.getOportunidadFotos().get(i).getURLFoto(),
+                                    ((ImageView) view_fotos.findViewById(R.id.oportunidad_photo3)));
+                            ((ImageButton) view_fotos.findViewById(R.id.oportunidad_photo3_click)).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    //Mostrar Zoom
+                                }
+                            });
+                            ((TextView) view_fotos.findViewById(R.id.oportunidad_photo3_fecha)).setText("");
+                            view_fotos.findViewById(R.id.photo3_layout).setVisibility(View.VISIBLE);
+                            break;
+                    }
+                }
+            }
+        }
 
 
         linearLayoutContact.addView(view_fotos);

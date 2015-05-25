@@ -17,6 +17,7 @@ public class Etapa extends EntityBase<Etapa> {
 
     private long id;
     private int idEtapa;
+    private int idEtapaPadre;
     private String descripcion;
 
     @Override
@@ -35,6 +36,14 @@ public class Etapa extends EntityBase<Etapa> {
 
     public void setIdEtapa(int idEtapa) {
         this.idEtapa = idEtapa;
+    }
+
+    public int getIdEtapaPadre() {
+        return idEtapaPadre;
+    }
+
+    public void setIdEtapaPadre(int idEtapaPadre) {
+        this.idEtapaPadre = idEtapaPadre;
     }
 
     public String getDescripcion() {
@@ -58,6 +67,7 @@ public class Etapa extends EntityBase<Etapa> {
     @Override
     public void setValues() {
         setValue(Contract.Etapa.COLUMN_ID_ETAPA, this.idEtapa);
+        setValue(Contract.Etapa.COLUMN_ID_ETAPA_PADRE, this.idEtapaPadre);
         setValue(Contract.Etapa.COLUMN_DESCRIPCION, this.descripcion);
     }
 
@@ -73,14 +83,15 @@ public class Etapa extends EntityBase<Etapa> {
 
     public static List<Etapa> getEtapas(DataBase db){
 
-        Cursor c = db.query(Contract.Etapa.TABLE_NAME, new String[] {Contract.Etapa._ID, Contract.Etapa.COLUMN_ID_ETAPA,
-                        Contract.Etapa.COLUMN_DESCRIPCION});
+        Cursor c = db.query(Contract.Etapa.TABLE_NAME, new String[] {Contract.Etapa._ID, Contract.Etapa.COLUMN_ID_ETAPA, Contract.Etapa.COLUMN_ID_ETAPA_PADRE,
+                        Contract.Etapa.COLUMN_DESCRIPCION}, Contract.Etapa.COLUMN_ID_ETAPA_PADRE + " = ?", new String[]{"0"});
 
         List<Etapa> list = new ArrayList<Etapa>();
         while(c.moveToNext()){
             Etapa etp = new Etapa();
             etp.setID(CursorUtils.getInt(c, Contract.Etapa._ID));
             etp.setIdEtapa(CursorUtils.getInt(c, Contract.Etapa.COLUMN_ID_ETAPA));
+            etp.setIdEtapaPadre(CursorUtils.getInt(c, Contract.Etapa.COLUMN_ID_ETAPA_PADRE));
             etp.setDescripcion(CursorUtils.getString(c, Contract.Etapa.COLUMN_DESCRIPCION));
             list.add(etp);
         }
@@ -88,13 +99,14 @@ public class Etapa extends EntityBase<Etapa> {
     }
 
     public static Etapa getEtapaById(DataBase db, int idEtapa) {
-        Cursor c = db.query(Contract.Etapa.TABLE_NAME, new String[] {Contract.Etapa._ID, Contract.Etapa.COLUMN_ID_ETAPA,
+        Cursor c = db.query(Contract.Etapa.TABLE_NAME, new String[] {Contract.Etapa._ID, Contract.Etapa.COLUMN_ID_ETAPA, Contract.Etapa.COLUMN_ID_ETAPA_PADRE,
                 Contract.Etapa.COLUMN_DESCRIPCION}, Contract.Etapa.COLUMN_ID_ETAPA + " = ? ", new String[] {idEtapa + ""} );
 
         Etapa etp = new Etapa();
         while(c.moveToNext()){
             etp.setID(CursorUtils.getInt(c, Contract.Etapa._ID));
             etp.setIdEtapa(CursorUtils.getInt(c, Contract.Etapa.COLUMN_ID_ETAPA));
+            etp.setIdEtapaPadre(CursorUtils.getInt(c, Contract.Etapa.COLUMN_ID_ETAPA_PADRE));
             etp.setDescripcion(CursorUtils.getString(c, Contract.Etapa.COLUMN_DESCRIPCION));
         }
         return etp;

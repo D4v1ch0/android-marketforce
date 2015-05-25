@@ -562,12 +562,14 @@ public class Oportunidad extends EntityBase<Oportunidad> {
                 opt.setOportunidadContactos(OportunidadContacto.getContactosOportunidad(db, opt.getIdOportunidad()));
                 opt.setOportunidadResponsables(OportunidadResponsable.getResponsablesOportunidad(db, opt.getIdOportunidad()));
                 opt.setOportunidadTareas(OportunidadTarea.getTareasOportunidad(db, opt.getIdOportunidad()));
+                opt.setOportunidadFotos(OportunidadFoto.getFotos(db, opt.getIdOportunidad()));
             }
             else
             {
                 opt.setOportunidadContactos(OportunidadContacto.getContactosOportunidadInt(db, opt.getID()));
                 opt.setOportunidadResponsables(OportunidadResponsable.getResponsablesOportunidadInt(db, opt.getID()));
                 opt.setOportunidadTareas(OportunidadTarea.getTareasOportunidadInt(db, opt.getID()));
+                opt.setOportunidadFotos(OportunidadFoto.getFotosInt(db, opt.getID()));
             }
 
         }

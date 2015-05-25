@@ -163,6 +163,7 @@
         <activity android:name=".oportunidad.actividades.GrupoActivity"></activity>
         <activity android:name=".oportunidad.actividades.TextoActivity" android:theme="@style/ActivityPopupTheme"></activity>
         <activity android:name=".oportunidad.CrearOportunidadActivity"></activity>
+        <activity android:name=".oportunidad.FotoOportunidadActivity" android:theme="@style/MyAppPopupTheme"></activity>
         
     </application>
 
