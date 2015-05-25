@@ -18,6 +18,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -51,6 +52,8 @@ public class OportunidadListFragment extends BaseFragment {
     private OportunidadListAdapter adapter;
     private LoaderOportunidad loaderOportunidad;
     private SwipeRefreshLayout pullRefresher;
+    public boolean filtro = false;
+    private NumberFormat numberFormat;
 
     public static OportunidadListFragment newInstance(boolean flag , String transactionTypeId) {
         OportunidadListFragment fragment = new OportunidadListFragment();
@@ -78,19 +81,25 @@ public class OportunidadListFragment extends BaseFragment {
             setRetainInstance(true);
         }
 
+        numberFormat = NumberFormat.getInstance();
+        numberFormat.setMaximumFractionDigits(2);
+        numberFormat.setMinimumFractionDigits(2);
+
         super.setContentView(R.layout.fragment_oportunidad_list);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (currentTransactionBoolean) {
-            ejecutarConsulta();
-        } else {
-            Bundle args = new Bundle();
-            if(loaderOportunidad == null)
-                loaderOportunidad = new LoaderOportunidad();
-            getLoaderManager().initLoader(0, args, loaderOportunidad);
+        if(!filtro) {
+            if (currentTransactionBoolean) {
+                ejecutarConsulta();
+            } else {
+                Bundle args = new Bundle();
+                if (loaderOportunidad == null)
+                    loaderOportunidad = new LoaderOportunidad();
+                getLoaderManager().initLoader(0, args, loaderOportunidad);
+            }
         }
     }
 
@@ -134,7 +143,7 @@ public class OportunidadListFragment extends BaseFragment {
                 public void onRefresh() {
                     if (ConnectionUtils.isNetAvailable(getContext())) {
                         Bundle bundle = new Bundle();
-                        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_CLIENTES);
+                        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_OPORTUNIDADES);
                         requestSync(bundle);
                     } else {
                         Toast.makeText(getContext(), R.string.message_error_sync_no_net_available, Toast.LENGTH_LONG).show();
@@ -179,9 +188,9 @@ public class OportunidadListFragment extends BaseFragment {
 
     public void searchTransactions(String termSearch){
         Bundle args = new Bundle();
+        args.putString(LoaderOportunidad.STRING_SEARCH, termSearch);
         getLoaderManager().restartLoader(0, args, loaderOportunidad);
-
-//    	executeLoader(0, b, this);
+    	//executeLoader(0, args, this);
     }
 
 
@@ -199,11 +208,20 @@ public class OportunidadListFragment extends BaseFragment {
     @SuppressLint("SimpleDateFormat")
     private void OrderBy() {
 
-        if (lista == null)
+        if (lista == null) {
+            list.setVisibility(View.GONE);
+            getRootView().findViewById(R.id.oportunidad_empty).setVisibility(View.VISIBLE);
             return;
+        }
 
-        if (lista.size() == 0)
+        if (lista.size() == 0) {
+            list.setVisibility(View.GONE);
+            getRootView().findViewById(R.id.oportunidad_empty).setVisibility(View.VISIBLE);
             return;
+        }
+
+        list.setVisibility(View.VISIBLE);
+        getRootView().findViewById(R.id.oportunidad_empty).setVisibility(View.GONE);
 
         pullRefresher.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -224,7 +242,7 @@ public class OportunidadListFragment extends BaseFragment {
         {
             monto = monto + op.getImporte();
         }
-        ((TextView) getRootView().findViewById(R.id.oportunidad_meta)).setText("Meta: $ " + monto);
+        ((TextView) getRootView().findViewById(R.id.oportunidad_meta)).setText("Meta: $ " + numberFormat.format(monto));
         list.setSelector(getActivity().getResources().getDrawable(R.drawable.bkg));
         list.setOnScrollListener(new AbsListView.OnScrollListener() {
 
@@ -276,10 +294,10 @@ public class OportunidadListFragment extends BaseFragment {
         public Loader<List<Oportunidad>> onCreateLoader(int arg0,
                                                     Bundle bundle) {
 
-            //Search = bundle.getString(STRING_SEARCH);
+            Search = bundle.getString(STRING_SEARCH);
             //flag = bundle.getBoolean(STRING_BOOLEAN);
 
-            return new OportunidadLoader(getActivity(), getDataBase(), flag, Search, true);
+            return new OportunidadLoader(getActivity(), getDataBase(), flag, Search);
 
         }
 
@@ -321,5 +339,12 @@ public class OportunidadListFragment extends BaseFragment {
             }
         });
         onResume();
+    }
+
+    public void aplicarFiltro(Intent intent)
+    {
+        filtro = true;
+        lista = Oportunidad.getOportunidadesFiltro(getDataBase(), intent);
+        OrderBy();
     }
 }

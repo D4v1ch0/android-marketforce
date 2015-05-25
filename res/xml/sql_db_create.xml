@@ -261,6 +261,12 @@
         Descripcion,
         Direccion,
         Referencia,
+        DireccionReferencia,
+        Telefono1,
+        Telefono2,
+        PaginaWeb,
+        Correo,
+        TipoEmpresa,
         tokenize=porter
         );
     </statement>
@@ -280,10 +286,6 @@
         IdOportunidad INTEGER,
         _IdOportunidad INTEGER,
         Nombre TEXT,
-        EsPrincipal BOOLEAN,
-        Movil TEXT,
-        Fijo TEXT,
-        Email TEXT,
         Cargo TEXT,
         URLFoto TEXT
         )

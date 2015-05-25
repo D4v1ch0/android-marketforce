@@ -1,6 +1,8 @@
 package rp3.marketforce.models.oportunidad;
 
+import android.content.Intent;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -10,11 +12,14 @@ import java.util.List;
 import rp3.data.entity.EntityBase;
 import rp3.db.QueryDir;
 import rp3.db.sqlite.DataBase;
+import rp3.marketforce.Contants;
 import rp3.marketforce.db.Contract;
 import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.Cliente;
 import rp3.marketforce.models.ClienteDireccion;
 import rp3.marketforce.models.Contacto;
+import rp3.marketforce.oportunidad.FiltroOportunidadFragment;
+import rp3.util.Convert;
 import rp3.util.CursorUtils;
 
 /**
@@ -39,6 +44,13 @@ public class Oportunidad extends EntityBase<Oportunidad> {
     private String direccion;
     private String referencia;
     private String descripcion;
+    private String direccionReferencia;
+    private String tipoEmpresa;
+    private String telefono1;
+    private String telefono2;
+    private String correo;
+    private String paginaWeb;
+
     private List<OportunidadContacto> oportunidadContactos;
     private List<OportunidadResponsable> oportunidadResponsables;
     private List<OportunidadTarea> oportunidadTareas;
@@ -183,6 +195,54 @@ public class Oportunidad extends EntityBase<Oportunidad> {
         this.descripcion = descripcion;
     }
 
+    public String getDireccionReferencia() {
+        return direccionReferencia;
+    }
+
+    public void setDireccionReferencia(String direccionReferencia) {
+        this.direccionReferencia = direccionReferencia;
+    }
+
+    public String getTipoEmpresa() {
+        return tipoEmpresa;
+    }
+
+    public void setTipoEmpresa(String tipoEmpresa) {
+        this.tipoEmpresa = tipoEmpresa;
+    }
+
+    public String getTelefono1() {
+        return telefono1;
+    }
+
+    public void setTelefono1(String telefono1) {
+        this.telefono1 = telefono1;
+    }
+
+    public String getTelefono2() {
+        return telefono2;
+    }
+
+    public void setTelefono2(String telefono2) {
+        this.telefono2 = telefono2;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public String getPaginaWeb() {
+        return paginaWeb;
+    }
+
+    public void setPaginaWeb(String paginaWeb) {
+        this.paginaWeb = paginaWeb;
+    }
+
     public List<OportunidadContacto> getOportunidadContactos() {
         return oportunidadContactos;
     }
@@ -252,7 +312,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
         return null;
     }
 
-    public static List<Oportunidad> getAgenda(DataBase db){
+    public static List<Oportunidad> getOportunidades(DataBase db){
         String query = QueryDir.getQuery(Contract.Oportunidad.QUERY_LIST_NO_FILTER);
 
         Cursor c = db.rawQuery(query);
@@ -278,6 +338,156 @@ public class Oportunidad extends EntityBase<Oportunidad> {
             opt.setPendiente(CursorUtils.getBoolean(c, Contract.Oportunidad.FIELD_PENDIENTE));
             opt.setProbabilidad(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_PROBABILIDAD));
             opt.setReferencia(CursorUtils.getString(c, Contract.Oportunidad.FIELD_REFERENCIA));
+            opt.setDireccionReferencia(CursorUtils.getString(c, Contract.Oportunidad.FIELD_DIRECCION_REFERENCIA));
+            opt.setCorreo(CursorUtils.getString(c, Contract.Oportunidad.FIELD_CORREO));
+            opt.setTipoEmpresa(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TIPO_EMPRESA));
+            opt.setPaginaWeb(CursorUtils.getString(c, Contract.Oportunidad.FIELD_PAGINA_WEB));
+            opt.setTelefono1(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TELEFONO1));
+            opt.setTelefono2(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TELEFONO2));
+            list.add(opt);
+        }
+        return list;
+    }
+
+    public static List<Oportunidad> getOportunidadesSearch(DataBase db, String text){
+        String query = QueryDir.getQuery(Contract.Oportunidad.QUERY_SEARCH);
+        String version = db.getSQLiteVersion();
+        int compare = Convert.versionCompare(version, Contants.SQLITE_VERSION_SEARCH);
+        Cursor c = null;
+
+        if(compare > 0)
+            c = db.rawQuery(query, text + "*");
+        else
+            c = db.rawQuery(query, "'*" + text + "*'");
+
+        List<Oportunidad> list = new ArrayList<Oportunidad>();
+        while(c.moveToNext()){
+
+            Oportunidad opt = new Oportunidad();
+            opt.setID(CursorUtils.getLong(c, Contract.Oportunidad._ID));
+            opt.setIdOportunidad(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_ID_OPORTUNIDAD));
+            opt.setIdEtapa(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_ID_ETAPA));
+            opt.setCalificacion(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_CALIFICACION));
+            opt.setEstado(CursorUtils.getString(c, Contract.Oportunidad.FIELD_ESTADO));
+            opt.setDescripcion(CursorUtils.getString(c, Contract.Oportunidad.FIELD_DESCRIPCION));
+            opt.setDireccion(CursorUtils.getString(c, Contract.Oportunidad.FIELD_DIRECCION));
+            opt.setFechaCreacion(CursorUtils.getDate(c, Contract.Oportunidad.FIELD_FECHA_CREACION));
+            opt.setFechaUltimaGestion(CursorUtils.getDate(c, Contract.Oportunidad.FIELD_FECHA_ULTIMA_GESTION));
+            opt.setIdAgente(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_ID_AGENTE));
+            opt.setImporte(CursorUtils.getDouble(c, Contract.Oportunidad.FIELD_IMPORTE));
+            opt.setLatitud(CursorUtils.getDouble(c, Contract.Oportunidad.FIELD_LATITUD));
+            opt.setLongitud(CursorUtils.getDouble(c, Contract.Oportunidad.FIELD_LONGITUD));
+            opt.setObservacion(CursorUtils.getString(c, Contract.Oportunidad.FIELD_OBSERVACION));
+            opt.setPendiente(CursorUtils.getBoolean(c, Contract.Oportunidad.FIELD_PENDIENTE));
+            opt.setProbabilidad(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_PROBABILIDAD));
+            opt.setReferencia(CursorUtils.getString(c, Contract.Oportunidad.FIELD_REFERENCIA));
+            opt.setDireccionReferencia(CursorUtils.getString(c, Contract.Oportunidad.FIELD_DIRECCION_REFERENCIA));
+            opt.setCorreo(CursorUtils.getString(c, Contract.Oportunidad.FIELD_CORREO));
+            opt.setTipoEmpresa(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TIPO_EMPRESA));
+            opt.setPaginaWeb(CursorUtils.getString(c, Contract.Oportunidad.FIELD_PAGINA_WEB));
+            opt.setTelefono1(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TELEFONO1));
+            opt.setTelefono2(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TELEFONO2));
+            list.add(opt);
+        }
+        return list;
+    }
+
+    public static List<Oportunidad> getOportunidadesFiltro(DataBase db, Intent intent){
+        String condition = "", etapas_cond = "", estados_cond = "";
+
+        Bundle bundle = intent.getBundleExtra(FiltroOportunidadFragment.FILTRO);
+
+        ArrayList<Integer> etapas_raw = bundle.getIntegerArrayList(FiltroOportunidadFragment.ETAPAS);
+        ArrayList<String> estados_raw = bundle.getStringArrayList(FiltroOportunidadFragment.ESTADOS);
+
+        for(int i = 0; i < etapas_raw.size(); i ++) {
+            if (etapas_cond.length() == 0)
+                etapas_cond = " AND (";
+            else
+                etapas_cond = etapas_cond + " OR ";
+            etapas_cond = etapas_cond + Contract.Oportunidad.COLUMN_ID_ETAPA + " = " + etapas_raw.get(i);
+        }
+        if(etapas_cond.length() > 0)
+            etapas_cond = etapas_cond + ")";
+
+        for(int i = 0; i < estados_raw.size(); i ++) {
+
+            if (estados_cond.length() == 0)
+                estados_cond = " (";
+            else
+                estados_cond = estados_cond + " OR ";
+            estados_cond = estados_cond + Contract.Oportunidad.COLUMN_ESTADO + " = '" + estados_raw.get(i) + "'";
+
+        }
+        if(estados_cond.length() > 0)
+            estados_cond = estados_cond + ")";
+
+        condition = estados_cond + etapas_cond;
+
+        if(bundle.containsKey(FiltroOportunidadFragment.DESDE_CANTIDAD))
+            condition = condition + " AND " + Contract.Oportunidad.COLUMN_IMPORTE + " >= " + bundle.getDouble(FiltroOportunidadFragment.DESDE_CANTIDAD);
+        if(bundle.containsKey(FiltroOportunidadFragment.HASTA_CANTIDAD))
+            condition = condition + " AND " + Contract.Oportunidad.COLUMN_IMPORTE + " <= " + bundle.getDouble(FiltroOportunidadFragment.HASTA_CANTIDAD);
+        if(bundle.containsKey(FiltroOportunidadFragment.DESDE_CREACION))
+            condition = condition + " AND " + Contract.Oportunidad.COLUMN_FECHA_CREACION + " >= " + bundle.getDouble(FiltroOportunidadFragment.DESDE_CREACION);
+        if(bundle.containsKey(FiltroOportunidadFragment.HASTA_CREACION))
+            condition = condition + " AND " + Contract.Oportunidad.COLUMN_FECHA_CREACION + " <= " + bundle.getDouble(FiltroOportunidadFragment.HASTA_CREACION);
+        if(bundle.containsKey(FiltroOportunidadFragment.DESDE_GESTION))
+            condition = condition + " AND " + Contract.Oportunidad.COLUMN_FECHA_ULTIMA_GESTION + " >= " + bundle.getDouble(FiltroOportunidadFragment.DESDE_GESTION);
+        if(bundle.containsKey(FiltroOportunidadFragment.HASTA_GESTION))
+            condition = condition + " AND " + Contract.Oportunidad.COLUMN_FECHA_ULTIMA_GESTION + " <= " + bundle.getDouble(FiltroOportunidadFragment.HASTA_GESTION);
+
+
+        Cursor c = db.query(Contract.Oportunidad.TABLE_NAME, new String[] {Contract.Oportunidad._ID}, condition, new String[]{});
+
+        List<Long> list = new ArrayList<Long>();
+        while(c.moveToNext()){
+            list.add(CursorUtils.getLong(c, Contract.Oportunidad._ID));
+        }
+
+        return getOportunidadesByIds(db, list);
+    }
+
+    public static List<Oportunidad> getOportunidadesByIds(DataBase db, List<Long> ids){
+        String query = QueryDir.getQuery(Contract.Oportunidad.QUERY_LIST_BY_IDS);
+        String ids_cond = "";
+        for(int i = 0; i < ids.size(); i++)
+        {
+            if(i != ids.size() -1)
+                ids_cond = ids_cond + ids.get(i) + ", ";
+            else
+                ids_cond = ids_cond + ids.get(i);
+        }
+        query = query.replace("?", ids_cond);
+        Cursor c = db.rawQuery(query);
+
+        List<Oportunidad> list = new ArrayList<Oportunidad>();
+        while(c.moveToNext()){
+
+            Oportunidad opt = new Oportunidad();
+            opt.setID(CursorUtils.getLong(c, Contract.Oportunidad._ID));
+            opt.setIdOportunidad(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_ID_OPORTUNIDAD));
+            opt.setIdEtapa(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_ID_ETAPA));
+            opt.setCalificacion(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_CALIFICACION));
+            opt.setEstado(CursorUtils.getString(c, Contract.Oportunidad.FIELD_ESTADO));
+            opt.setDescripcion(CursorUtils.getString(c, Contract.Oportunidad.FIELD_DESCRIPCION));
+            opt.setDireccion(CursorUtils.getString(c, Contract.Oportunidad.FIELD_DIRECCION));
+            opt.setFechaCreacion(CursorUtils.getDate(c, Contract.Oportunidad.FIELD_FECHA_CREACION));
+            opt.setFechaUltimaGestion(CursorUtils.getDate(c, Contract.Oportunidad.FIELD_FECHA_ULTIMA_GESTION));
+            opt.setIdAgente(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_ID_AGENTE));
+            opt.setImporte(CursorUtils.getDouble(c, Contract.Oportunidad.FIELD_IMPORTE));
+            opt.setLatitud(CursorUtils.getDouble(c, Contract.Oportunidad.FIELD_LATITUD));
+            opt.setLongitud(CursorUtils.getDouble(c, Contract.Oportunidad.FIELD_LONGITUD));
+            opt.setObservacion(CursorUtils.getString(c, Contract.Oportunidad.FIELD_OBSERVACION));
+            opt.setPendiente(CursorUtils.getBoolean(c, Contract.Oportunidad.FIELD_PENDIENTE));
+            opt.setProbabilidad(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_PROBABILIDAD));
+            opt.setReferencia(CursorUtils.getString(c, Contract.Oportunidad.FIELD_REFERENCIA));
+            opt.setDireccionReferencia(CursorUtils.getString(c, Contract.Oportunidad.FIELD_DIRECCION_REFERENCIA));
+            opt.setCorreo(CursorUtils.getString(c, Contract.Oportunidad.FIELD_CORREO));
+            opt.setTipoEmpresa(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TIPO_EMPRESA));
+            opt.setPaginaWeb(CursorUtils.getString(c, Contract.Oportunidad.FIELD_PAGINA_WEB));
+            opt.setTelefono1(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TELEFONO1));
+            opt.setTelefono2(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TELEFONO2));
             list.add(opt);
         }
         return list;
@@ -341,6 +551,12 @@ public class Oportunidad extends EntityBase<Oportunidad> {
             opt.setPendiente(CursorUtils.getBoolean(c, Contract.Oportunidad.FIELD_PENDIENTE));
             opt.setProbabilidad(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_PROBABILIDAD));
             opt.setReferencia(CursorUtils.getString(c, Contract.Oportunidad.FIELD_REFERENCIA));
+            opt.setDireccionReferencia(CursorUtils.getString(c, Contract.Oportunidad.FIELD_DIRECCION_REFERENCIA));
+            opt.setCorreo(CursorUtils.getString(c, Contract.Oportunidad.FIELD_CORREO));
+            opt.setTipoEmpresa(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TIPO_EMPRESA));
+            opt.setPaginaWeb(CursorUtils.getString(c, Contract.Oportunidad.FIELD_PAGINA_WEB));
+            opt.setTelefono1(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TELEFONO1));
+            opt.setTelefono2(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TELEFONO2));
 
             if(opt.getIdOportunidad() != 0) {
                 opt.setOportunidadContactos(OportunidadContacto.getContactosOportunidad(db, opt.getIdOportunidad()));
@@ -382,6 +598,12 @@ public class Oportunidad extends EntityBase<Oportunidad> {
             opt.setPendiente(CursorUtils.getBoolean(c, Contract.Oportunidad.FIELD_PENDIENTE));
             opt.setProbabilidad(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_PROBABILIDAD));
             opt.setReferencia(CursorUtils.getString(c, Contract.Oportunidad.FIELD_REFERENCIA));
+            opt.setDireccionReferencia(CursorUtils.getString(c, Contract.Oportunidad.FIELD_DIRECCION_REFERENCIA));
+            opt.setCorreo(CursorUtils.getString(c, Contract.Oportunidad.FIELD_CORREO));
+            opt.setTipoEmpresa(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TIPO_EMPRESA));
+            opt.setPaginaWeb(CursorUtils.getString(c, Contract.Oportunidad.FIELD_PAGINA_WEB));
+            opt.setTelefono1(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TELEFONO1));
+            opt.setTelefono2(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TELEFONO2));
 
             opt.setOportunidadContactos(OportunidadContacto.getContactosOportunidad(db, opt.getIdOportunidad()));
             opt.setOportunidadResponsables(OportunidadResponsable.getResponsablesOportunidad(db, opt.getIdOportunidad()));
@@ -416,6 +638,12 @@ public class Oportunidad extends EntityBase<Oportunidad> {
             opt.setPendiente(CursorUtils.getBoolean(c, Contract.Oportunidad.FIELD_PENDIENTE));
             opt.setProbabilidad(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_PROBABILIDAD));
             opt.setReferencia(CursorUtils.getString(c, Contract.Oportunidad.FIELD_REFERENCIA));
+            opt.setDireccionReferencia(CursorUtils.getString(c, Contract.Oportunidad.FIELD_DIRECCION_REFERENCIA));
+            opt.setCorreo(CursorUtils.getString(c, Contract.Oportunidad.FIELD_CORREO));
+            opt.setTipoEmpresa(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TIPO_EMPRESA));
+            opt.setPaginaWeb(CursorUtils.getString(c, Contract.Oportunidad.FIELD_PAGINA_WEB));
+            opt.setTelefono1(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TELEFONO1));
+            opt.setTelefono2(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TELEFONO2));
 
             opt.setOportunidadContactos(OportunidadContacto.getContactosOportunidadInt(db, opt.getID()));
             opt.setOportunidadResponsables(OportunidadResponsable.getResponsablesOportunidadInt(db, opt.getID()));
@@ -456,6 +684,12 @@ public class Oportunidad extends EntityBase<Oportunidad> {
             setValue(Contract.OportunidadExt.COLUMN_DESCRIPCION, descripcion  );
             setValue(Contract.OportunidadExt.COLUMN_DIRECCION, direccion);
             setValue(Contract.OportunidadExt.COLUMN_REFERENCIA, referencia);
+            setValue(Contract.OportunidadExt.COLUMN_CORREO, correo  );
+            setValue(Contract.OportunidadExt.COLUMN_DIRECCION_REFERENCIA, direccionReferencia);
+            setValue(Contract.OportunidadExt.COLUMN_PAGINA_WEB, paginaWeb);
+            setValue(Contract.OportunidadExt.COLUMN_TELEFONO1, telefono1  );
+            setValue(Contract.OportunidadExt.COLUMN_TELEFONO2, telefono2);
+            setValue(Contract.OportunidadExt.COLUMN_TIPO_EMPRESA, tipoEmpresa);
         }
 
         @Override

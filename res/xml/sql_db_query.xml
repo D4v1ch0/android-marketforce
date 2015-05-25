@@ -1079,10 +1079,48 @@
         tbOportunidad.Pendiente,
         tbOportunidadExt.Descripcion AS tbOportunidadExt_Descripcion,
         tbOportunidadExt.Direccion AS tbOportunidadExt_Direccion,
-        tbOportunidadExt.Referencia AS tbOportunidadExt_Referencia
+        tbOportunidadExt.Referencia AS tbOportunidadExt_Referencia,
+        tbOportunidadExt.DireccionReferencia AS tbOportunidadExt_DireccionReferencia,
+        tbOportunidadExt.Telefono1 AS tbOportunidadExt_Telefono1,
+        tbOportunidadExt.Telefono2 AS tbOportunidadExt_Telefono2,
+        tbOportunidadExt.PaginaWeb AS tbOportunidadExt_PaginaWeb,
+        tbOportunidadExt.Correo AS tbOportunidadExt_Correo,
+        tbOportunidadExt.TipoEmpresa AS tbOportunidadExt_TipoEmpresa
         FROM tbOportunidad
         JOIN tbOportunidadExt
         ON tbOportunidad._id = tbOportunidadExt.docid
+        ORDER BY tbOportunidad.Calificacion, tbOportunidad.Importe
+    </statement>
+
+    <statement name="OportunidadesByIds">
+        SELECT
+        tbOportunidad._id,
+        tbOportunidad.IdOportunidad,
+        tbOportunidad.Probabilidad,
+        tbOportunidad.Importe,
+        tbOportunidad.IdAgente,
+        tbOportunidad.FechaUltimaGestion,
+        tbOportunidad.Calificacion,
+        tbOportunidad.Observacion,
+        tbOportunidad.Latitud,
+        tbOportunidad.Longitud,
+        tbOportunidad.IdEtapa,
+        tbOportunidad.Estado,
+        tbOportunidad.FechaCreacion,
+        tbOportunidad.Pendiente,
+        tbOportunidadExt.Descripcion AS tbOportunidadExt_Descripcion,
+        tbOportunidadExt.Direccion AS tbOportunidadExt_Direccion,
+        tbOportunidadExt.Referencia AS tbOportunidadExt_Referencia,
+        tbOportunidadExt.DireccionReferencia AS tbOportunidadExt_DireccionReferencia,
+        tbOportunidadExt.Telefono1 AS tbOportunidadExt_Telefono1,
+        tbOportunidadExt.Telefono2 AS tbOportunidadExt_Telefono2,
+        tbOportunidadExt.PaginaWeb AS tbOportunidadExt_PaginaWeb,
+        tbOportunidadExt.Correo AS tbOportunidadExt_Correo,
+        tbOportunidadExt.TipoEmpresa AS tbOportunidadExt_TipoEmpresa
+        FROM tbOportunidad
+        JOIN tbOportunidadExt
+        ON tbOportunidad._id = tbOportunidadExt.docid
+        WHERE tbOportunidad._id IN ( ? )
         ORDER BY tbOportunidad.Calificacion, tbOportunidad.Importe
     </statement>
 
@@ -1104,7 +1142,13 @@
         tbOportunidad.Pendiente,
         tbOportunidadExt.Descripcion AS tbOportunidadExt_Descripcion,
         tbOportunidadExt.Direccion AS tbOportunidadExt_Direccion,
-        tbOportunidadExt.Referencia AS tbOportunidadExt_Referencia
+        tbOportunidadExt.Referencia AS tbOportunidadExt_Referencia,
+        tbOportunidadExt.DireccionReferencia AS tbOportunidadExt_DireccionReferencia,
+        tbOportunidadExt.Telefono1 AS tbOportunidadExt_Telefono1,
+        tbOportunidadExt.Telefono2 AS tbOportunidadExt_Telefono2,
+        tbOportunidadExt.PaginaWeb AS tbOportunidadExt_PaginaWeb,
+        tbOportunidadExt.Correo AS tbOportunidadExt_Correo,
+        tbOportunidadExt.TipoEmpresa AS tbOportunidadExt_TipoEmpresa
         FROM tbOportunidad
         JOIN tbOportunidadExt
         ON tbOportunidad._id = tbOportunidadExt.docid
@@ -1129,7 +1173,13 @@
         tbOportunidad.Pendiente,
         tbOportunidadExt.Descripcion AS tbOportunidadExt_Descripcion,
         tbOportunidadExt.Direccion AS tbOportunidadExt_Direccion,
-        tbOportunidadExt.Referencia AS tbOportunidadExt_Referencia
+        tbOportunidadExt.Referencia AS tbOportunidadExt_Referencia,
+        tbOportunidadExt.DireccionReferencia AS tbOportunidadExt_DireccionReferencia,
+        tbOportunidadExt.Telefono1 AS tbOportunidadExt_Telefono1,
+        tbOportunidadExt.Telefono2 AS tbOportunidadExt_Telefono2,
+        tbOportunidadExt.PaginaWeb AS tbOportunidadExt_PaginaWeb,
+        tbOportunidadExt.Correo AS tbOportunidadExt_Correo,
+        tbOportunidadExt.TipoEmpresa AS tbOportunidadExt_TipoEmpresa
         FROM tbOportunidad
         JOIN tbOportunidadExt
         ON tbOportunidad._id = tbOportunidadExt.docid
@@ -1154,7 +1204,13 @@
         tbOportunidad.Pendiente,
         tbOportunidadExt.Descripcion AS tbOportunidadExt_Descripcion,
         tbOportunidadExt.Direccion AS tbOportunidadExt_Direccion,
-        tbOportunidadExt.Referencia AS tbOportunidadExt_Referencia
+        tbOportunidadExt.Referencia AS tbOportunidadExt_Referencia,
+        tbOportunidadExt.DireccionReferencia AS tbOportunidadExt_DireccionReferencia,
+        tbOportunidadExt.Telefono1 AS tbOportunidadExt_Telefono1,
+        tbOportunidadExt.Telefono2 AS tbOportunidadExt_Telefono2,
+        tbOportunidadExt.PaginaWeb AS tbOportunidadExt_PaginaWeb,
+        tbOportunidadExt.Correo AS tbOportunidadExt_Correo,
+        tbOportunidadExt.TipoEmpresa AS tbOportunidadExt_TipoEmpresa
         FROM tbOportunidad
         JOIN tbOportunidadExt
         ON tbOportunidad._id = tbOportunidadExt.docid
@@ -1169,6 +1225,47 @@
         tbEtapaTarea.Orden
         FROM tbEtapaTarea
         ORDER BY tbEtapaTarea.IdEtapa, tbEtapaTarea.Orden
+    </statement>
+    <statement name="OportunidadSearch">
+        SELECT
+        tbOportunidad._id,
+        tbOportunidad.IdOportunidad,
+        tbOportunidad.Probabilidad,
+        tbOportunidad.Importe,
+        tbOportunidad.IdAgente,
+        tbOportunidad.FechaUltimaGestion,
+        tbOportunidad.Calificacion,
+        tbOportunidad.Observacion,
+        tbOportunidad.Latitud,
+        tbOportunidad.Longitud,
+        tbOportunidad.IdEtapa,
+        tbOportunidad.Estado,
+        tbOportunidad.FechaCreacion,
+        tbOportunidad.Pendiente,
+        tbOportunidadExt.Descripcion AS tbOportunidadExt_Descripcion,
+        tbOportunidadExt.Direccion AS tbOportunidadExt_Direccion,
+        tbOportunidadExt.Referencia AS tbOportunidadExt_Referencia,
+        tbOportunidadExt.DireccionReferencia AS tbOportunidadExt_DireccionReferencia,
+        tbOportunidadExt.Telefono1 AS tbOportunidadExt_Telefono1,
+        tbOportunidadExt.Telefono2 AS tbOportunidadExt_Telefono2,
+        tbOportunidadExt.PaginaWeb AS tbOportunidadExt_PaginaWeb,
+        tbOportunidadExt.Correo AS tbOportunidadExt_Correo,
+        tbOportunidadExt.TipoEmpresa AS tbOportunidadExt_TipoEmpresa
+        FROM tbOportunidadExt
+        INNER JOIN tbOportunidad
+        ON tbOportunidad._id = tbOportunidadExt.docid
+        INNER JOIN (
+
+        SELECT
+        tbOportunidadExt.docid,
+        matchinfo( tbOportunidadExt ) AS Rank
+        FROM tbOportunidadExt
+        WHERE tbOportunidadExt MATCH ?
+        ORDER BY rank DESC LIMIT 30 OFFSET 0
+
+        ) AS tbOportunidadSearch
+        ON tbOportunidadExt.docid = tbOportunidadSearch.docid
+        ORDER BY tbOportunidadSearch.Rank DESC
     </statement>
 
 </sql>

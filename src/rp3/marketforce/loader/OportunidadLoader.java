@@ -17,20 +17,22 @@ public class OportunidadLoader extends
     private DataBase db;
     private boolean flag;
     private String search;
-    private boolean withFilter;
 
-    public OportunidadLoader(Context context, DataBase db, boolean flag, String search, boolean withFilter) {
+    public OportunidadLoader(Context context, DataBase db, boolean flag, String search) {
         super(context);
         this.db = db;
         this.flag = flag;
         this.search = search;
-        this.withFilter = withFilter;
     }
 
     @Override
     public List<Oportunidad> loadInBackground() {
         List<Oportunidad> result = null;
-            result = Oportunidad.getAgenda(db);
+
+        if(search == null || search.length() == 0)
+            result = Oportunidad.getOportunidades(db);
+        else
+            result = Oportunidad.getOportunidadesSearch(db, search);
 
 
         return result;

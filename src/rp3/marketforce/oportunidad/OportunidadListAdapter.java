@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,12 +34,16 @@ public class OportunidadListAdapter extends BaseAdapter {
     private List<Oportunidad> list_oportunidad;
     private OportunidadListFragment.OportunidadListFragmentListener transactionListFragmentCallback;
     private SimpleDateFormat format1;
+    private NumberFormat numberFormat;
 
     public OportunidadListAdapter(Context c, List<Oportunidad> list_oportunidad, OportunidadListFragment.OportunidadListFragmentListener transactionListFragmentCallback) {
         this.inflater = LayoutInflater.from(c);
         this.contex = c;
         this.list_oportunidad = list_oportunidad;
         this.transactionListFragmentCallback = transactionListFragmentCallback;
+        numberFormat = NumberFormat.getInstance();
+        numberFormat.setMaximumFractionDigits(2);
+        numberFormat.setMinimumFractionDigits(2);
         format1 = new SimpleDateFormat("dd/MM/yy");
     }
 
@@ -54,7 +59,7 @@ public class OportunidadListAdapter extends BaseAdapter {
 
         ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_nombre)).setText(opt.getDescripcion());
         ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_number)).setText((position + 1)+ "");
-        ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_importe)).setText("$" + opt.getImporte());
+        ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_importe)).setText("$ " + numberFormat.format(opt.getImporte()));
         ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_contactado)).setText("Contactado: " + format1.format(opt.getFechaCreacion()));
         Calendar cal = Calendar.getInstance();
         Calendar calFecha = Calendar.getInstance();

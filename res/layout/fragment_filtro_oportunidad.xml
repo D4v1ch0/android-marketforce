@@ -41,8 +41,108 @@
             android:button="@drawable/custom_checkbox"
             android:paddingLeft="10dp"
             android:paddingRight="15dp"
-            android:layout_weight="0.1" />
+            android:layout_weight="0.1"
+            android:checked="true" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_suspendidos"
+            android:id="@+id/textView58"
+            android:padding="12dp"
+            android:layout_weight="0.7"
+            android:drawableRight="@drawable/flag_on"
+            android:gravity="center_vertical" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.3" />
+
+        <CheckBox
+            android:id="@+id/filtro_suspendidos"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:button="@drawable/custom_checkbox"
+            android:paddingLeft="10dp"
+            android:paddingRight="15dp"
+            android:layout_weight="0.1"
+            android:checked="true" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_concretados"
+            android:id="@+id/textView59"
+            android:padding="12dp"
+            android:layout_weight="0.7"
+            android:drawableRight="@drawable/flag_on"
+            android:gravity="center_vertical" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.3" />
+
+        <CheckBox
+            android:id="@+id/filtro_concretados"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:button="@drawable/custom_checkbox"
+            android:paddingLeft="10dp"
+            android:paddingRight="15dp"
+            android:layout_weight="0.1"
+            android:checked="true" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_no_concretados"
+            android:id="@+id/textView60"
+            android:padding="12dp"
+            android:layout_weight="0.7"
+            android:drawableRight="@drawable/flag_on"
+            android:gravity="center_vertical" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.3" />
+
+        <CheckBox
+            android:id="@+id/filtro_no_concretados"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:button="@drawable/custom_checkbox"
+            android:paddingLeft="10dp"
+            android:paddingRight="15dp"
+            android:layout_weight="0.1"
+            android:checked="true" />
     </LinearLayout>
 
     <TextView
@@ -115,7 +215,8 @@
             android:button="@drawable/custom_checkbox"
             android:paddingLeft="10dp"
             android:paddingRight="15dp"
-            android:layout_weight="0.1" />
+            android:layout_weight="0.1"
+            android:checked="true" />
     </LinearLayout>
 
     <LinearLayout
@@ -143,7 +244,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="1"
+                android:text="2"
                 android:id="@+id/textView20"
                 android:textColor="@color/color_text_sky_blue"
                 android:textStyle="bold"
@@ -174,13 +275,14 @@
         </LinearLayout>
 
         <CheckBox
-            android:id="@+id/checkBox"
+            android:id="@+id/filtro_etapa2"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:button="@drawable/custom_checkbox"
             android:paddingLeft="10dp"
             android:paddingRight="15dp"
-            android:layout_weight="0.1" />
+            android:layout_weight="0.1"
+            android:checked="true" />
     </LinearLayout>
 
     <LinearLayout
@@ -208,7 +310,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="1"
+                android:text="3"
                 android:id="@+id/textView22"
                 android:textColor="@color/color_text_sky_blue"
                 android:textStyle="bold"
@@ -239,13 +341,14 @@
         </LinearLayout>
 
         <CheckBox
-            android:id="@+id/checkBox2"
+            android:id="@+id/filtro_etapa3"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:button="@drawable/custom_checkbox"
             android:paddingLeft="10dp"
             android:paddingRight="15dp"
-            android:layout_weight="0.1" />
+            android:layout_weight="0.1"
+            android:checked="true" />
     </LinearLayout>
 
     <LinearLayout
@@ -273,7 +376,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="1"
+                android:text="4"
                 android:id="@+id/textView24"
                 android:textColor="@color/color_text_sky_blue"
                 android:textStyle="bold"
@@ -304,13 +407,14 @@
         </LinearLayout>
 
         <CheckBox
-            android:id="@+id/checkBox3"
+            android:id="@+id/filtro_etapa4"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:button="@drawable/custom_checkbox"
             android:paddingLeft="10dp"
             android:paddingRight="15dp"
-            android:layout_weight="0.1" />
+            android:layout_weight="0.1"
+            android:checked="true" />
     </LinearLayout>
 
     <LinearLayout
@@ -338,7 +442,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="1"
+                android:text="5"
                 android:id="@+id/textView26"
                 android:textColor="@color/color_text_sky_blue"
                 android:textStyle="bold"
@@ -369,20 +473,21 @@
         </LinearLayout>
 
         <CheckBox
-            android:id="@+id/checkBox4"
+            android:id="@+id/filtro_etapa5"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:button="@drawable/custom_checkbox"
             android:paddingLeft="10dp"
             android:paddingRight="15dp"
-            android:layout_weight="0.1" />
+            android:layout_weight="0.1"
+            android:checked="true" />
     </LinearLayout>
 
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/label_probabilidad"
+        android:text="@string/label_importancia_max"
         android:id="@+id/textView12"
         android:textColor="@color/color_text_sky_blue"
         android:textStyle="bold"
@@ -396,7 +501,8 @@
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/filtro_probablidad"></LinearLayout>
+        android:id="@+id/filtro_importancia"
+        android:layout_margin="5dp"></LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -416,11 +522,173 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="100"
+            android:text="5"
             android:id="@+id/filtro_max"
             android:layout_weight="1"
             android:paddingRight="5dp"
             android:gravity="right" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="15dp"
+        android:background="@color/color_grey" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/label_fecha_creacion_max"
+        android:id="@+id/textView61"
+        android:textColor="@color/color_text_sky_blue"
+        android:textStyle="bold"
+        android:paddingLeft="12dp"
+        android:paddingTop="12dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="5dp" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="12dp" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_desde"
+            android:id="@+id/textView61"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_inserte_valor"
+            android:id="@+id/fecha_creacion_desde"
+            android:clickable="true"
+            android:textColor="@drawable/text_feedback"
+            android:layout_marginRight="5dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_grey" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="12dp" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_hasta"
+            android:id="@+id/textView61"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_inserte_valor"
+            android:id="@+id/fecha_creacion_hasta"
+            android:clickable="true"
+            android:textColor="@drawable/text_feedback"
+            android:layout_marginRight="5dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="15dp"
+        android:background="@color/color_grey" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/label_fecha_ultima_gestión"
+        android:id="@+id/textView61"
+        android:textColor="@color/color_text_sky_blue"
+        android:textStyle="bold"
+        android:paddingLeft="12dp"
+        android:paddingTop="12dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="5dp" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="12dp" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_desde"
+            android:id="@+id/textView63"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_inserte_valor"
+            android:id="@+id/fecha_ultima_desde"
+            android:clickable="true"
+            android:textColor="@drawable/text_feedback"
+            android:layout_marginRight="5dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_grey" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="12dp" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_hasta"
+            android:id="@+id/textView63"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_inserte_valor"
+            android:id="@+id/fecha_ultima_hasta"
+            android:clickable="true"
+            android:textColor="@drawable/text_feedback"
+            android:layout_marginRight="5dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -448,8 +716,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
         android:layout_marginTop="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="12dp">
+        android:layout_marginBottom="6dp">
 
         <TextView
             android:layout_width="0dp"
@@ -459,13 +726,20 @@
             android:id="@+id/textView29"
             android:layout_weight="1" />
 
-        <TextView
+        <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/label_inserte_valor"
             android:id="@+id/filtro_desde"
-            android:clickable="true" />
+            android:clickable="true"
+            android:textColor="@drawable/text_feedback"
+            android:editable="true"
+            android:inputType="numberDecimal"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:enabled="true"
+            android:textColorHint="@drawable/text_feedback"
+            android:hint="@string/label_inserte_valor" />
     </LinearLayout>
 
     <LinearLayout
@@ -480,8 +754,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
         android:layout_marginTop="10dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="12dp" >
+        android:layout_marginBottom="6dp" >
 
         <TextView
             android:layout_width="0dp"
@@ -491,13 +764,20 @@
             android:id="@+id/textView31"
             android:layout_weight="1" />
 
-        <TextView
+        <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/label_inserte_valor"
             android:id="@+id/filtro_hasta"
-            android:clickable="true" />
+            android:clickable="true"
+            android:textColor="@drawable/text_feedback"
+            android:editable="true"
+            android:inputType="numberDecimal"
+            android:textColorHint="@drawable/text_feedback"
+            android:hint="@string/label_inserte_valor"
+            android:enabled="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true" />
     </LinearLayout>
 
 </LinearLayout>

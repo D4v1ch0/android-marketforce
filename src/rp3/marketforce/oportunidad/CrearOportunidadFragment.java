@@ -2,6 +2,7 @@ package rp3.marketforce.oportunidad;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,10 +14,15 @@ import android.location.Location;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
+import android.speech.RecognizerIntent;
+import android.support.v4.app.FragmentManager;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -33,11 +39,21 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import rp3.app.BaseActivity;
 import rp3.app.BaseFragment;
@@ -61,6 +77,7 @@ import rp3.marketforce.models.oportunidad.Agente;
 import rp3.marketforce.models.oportunidad.EtapaTarea;
 import rp3.marketforce.models.oportunidad.Oportunidad;
 import rp3.marketforce.models.oportunidad.OportunidadContacto;
+import rp3.marketforce.models.oportunidad.OportunidadFoto;
 import rp3.marketforce.models.oportunidad.OportunidadResponsable;
 import rp3.marketforce.models.oportunidad.OportunidadTarea;
 import rp3.marketforce.ruta.CrearVisitaActivity;
@@ -80,6 +97,12 @@ import rp3.widget.ViewPager;
  */
 public class CrearOportunidadFragment extends BaseFragment {
 
+    private View view;
+    public final static int REQ_CODE_SPEECH_INPUT = 1200;
+    public final static int PHOTO_1 = 4;
+    public final static int PHOTO_2 = 5;
+    public final static int PHOTO_3 = 6;
+
     public static CrearOportunidadFragment newInstance() {
         return new CrearOportunidadFragment();
     }
@@ -90,53 +113,44 @@ public class CrearOportunidadFragment extends BaseFragment {
     public final static int DIALOG_VISITA = 1;
     public final static int DIALOG_GPS = 2;
 
-    private ViewPager PagerDetalles;
-    private DetailsPageAdapter pagerAdapter;
-    private LayoutInflater inflater;
-    private ImageButton TabInfo;
-    private ImageButton TabDirecciones;
-    private ImageButton TabContactos;
     private LinearLayout ContactosContainer, ResponsableContainer;
     private List<LinearLayout> listViewResponsables, listViewContactos;
     private List<Integer> listAgentesIds;
-    private int curentPage, posDir;
     private Location currentLoc;
     private long idCliente = 0;
     private int tipo;
     Uri photo = Utils.getOutputMediaFileUri(Utils.MEDIA_TYPE_IMAGE);
-    boolean isClient, rotated;
+    boolean isClient;
     int posContact = -1;
     public Oportunidad oportunidad;
-    public List<String> contactPhotos;
-    private FrameLayout info;
-    private LinearLayout direccion;
+    public List<String> contactPhotos, photos;
     private FrameLayout contacto;
-    private ImageView ArrowInfo;
-    private ImageView ArrowCont;
-    private ImageView ArrowDir;
-    private List<GeopoliticalStructure> ciudades;
-    private GeopoliticalStructureAdapter adapter;
+    private SupportMapFragment mapFragment;
+    private GoogleMap map;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         oportunidad = new Oportunidad();
         contactPhotos = new ArrayList<String>();
+        photos = new ArrayList<String>();
+        photos.add("");
+        photos.add("");
+        photos.add("");
+
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         tryEnableGooglePlayServices(true);
-        setContentView(R.layout.fragment_crear_cliente, R.menu.fragment_crear_cliente);
+        setContentView(R.layout.fragment_crear_oportunidad, R.menu.fragment_crear_cliente);
         setRetainInstance(true);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if(PagerDetalles != null)
-            setPageConfig(PagerDetalles.getCurrentItem());
     }
 
     @Override
@@ -163,25 +177,27 @@ public class CrearOportunidadFragment extends BaseFragment {
         Oportunidad opt = new Oportunidad();
         if(idCliente != 0)
             opt = Oportunidad.getOportunidadId(getDataBase(), idCliente);
-        opt.setDescripcion(((EditText) info.findViewById(R.id.oportunidad_descripcion)).getText().toString());
-        if(((EditText)info.findViewById(R.id.oportunidad_probabilidad)).length() > 0)
-            opt.setProbabilidad(Integer.parseInt(((EditText) info.findViewById(R.id.oportunidad_probabilidad)).getText().toString()));
-        else
-            opt.setProbabilidad(0);
+        opt.setDescripcion(((EditText) view.findViewById(R.id.oportunidad_nombre)).getText().toString());
 
-        if(((EditText)info.findViewById(R.id.oportunidad_importe)).length() > 0)
-            opt.setImporte(Double.parseDouble(((EditText) info.findViewById(R.id.oportunidad_importe)).getText().toString()));
+        if(((EditText)view.findViewById(R.id.oportunidad_monto)).length() > 0)
+            opt.setImporte(Double.parseDouble(((EditText) view.findViewById(R.id.oportunidad_monto)).getText().toString()));
         else
             opt.setImporte(0);
 
-        opt.setCalificacion(((RatingBar)info.findViewById(R.id.oportunidad_calificacion)).getNumStars());
+        opt.setCalificacion((int) ((RatingBar)view.findViewById(R.id.oportunidad_importancia)).getRating());
         opt.setEstado("A");
         opt.setIdEtapa(1);
         opt.setFechaCreacion(Calendar.getInstance().getTime());
         opt.setFechaUltimaGestion(Calendar.getInstance().getTime());
-        opt.setObservacion(((EditText) info.findViewById(R.id.oportunidades_comentarios)).getText().toString());
-        opt.setReferencia(((EditText) info.findViewById(R.id.oportunidad_referencia)).getText().toString());
-        opt.setDireccion(((EditText) direccion.findViewById(R.id.oportunidad_direccion)).getText().toString());
+        opt.setObservacion(((EditText) view.findViewById(R.id.oportunidad_comentario)).getText().toString());
+        opt.setReferencia(((EditText) view.findViewById(R.id.oportunidad_referencia)).getText().toString());
+        opt.setDireccion(((EditText) view.findViewById(R.id.oportunidad_direccion)).getText().toString());
+        opt.setTipoEmpresa(((EditText) view.findViewById(R.id.oportunidad_tipo)).getText().toString());
+        opt.setTelefono1(((EditText) view.findViewById(R.id.oportunidad_movil)).getText().toString());
+        opt.setTelefono2(((EditText) view.findViewById(R.id.oportunidad_fijo)).getText().toString());
+        opt.setDireccionReferencia(((EditText) view.findViewById(R.id.oportunidad_direccion_referencia)).getText().toString());
+        opt.setPaginaWeb(((EditText) view.findViewById(R.id.oportunidad_pagina_web)).getText().toString());
+        opt.setCorreo(((EditText) view.findViewById(R.id.oportunidad_email)).getText().toString());
         opt.setLongitud(oportunidad.getLongitud());
         opt.setLatitud(oportunidad.getLatitud());
 
@@ -209,11 +225,24 @@ public class CrearOportunidadFragment extends BaseFragment {
             cont.set_idOportunidad((int) opt.getID());
             cont.setNombre(((EditText) listViewContactos.get(i).findViewById(R.id.contacto_nombre)).getText().toString());
             cont.setCargo(((EditText)listViewContactos.get(i).findViewById(R.id.contacto_cargo)).getText().toString());
+            cont.setURLFoto(contactPhotos.get(i));
 
             if(cont.getID() == 0)
                 OportunidadContacto.insert(getDataBase(), cont);
             else
                 OportunidadContacto.update(getDataBase(), cont);
+        }
+
+        for(int i = 0; i < photos.size(); i ++)
+        {
+            OportunidadFoto foto = new OportunidadFoto();
+            foto.set_idOportunidad((int) opt.getID());
+            foto.setURLFoto(photos.get(i));
+
+            if(foto.getID() == 0)
+                OportunidadFoto.insert(getDataBase(), foto);
+            else
+                OportunidadFoto.update(getDataBase(), foto);
         }
 
         List<EtapaTarea> etapaTareas = EtapaTarea.getEtapaTareas(getDataBase());
@@ -231,7 +260,7 @@ public class CrearOportunidadFragment extends BaseFragment {
         if(ConnectionUtils.isNetAvailable(getActivity())) {
             Bundle bundle = new Bundle();
             bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_OPORTUNIDADES);
-            requestSync(bundle);
+            //requestSync(bundle);
         }
     }
 
@@ -253,8 +282,8 @@ public class CrearOportunidadFragment extends BaseFragment {
         Geocoder geo = new Geocoder(this.getContext());
         try {
             List<Address> addr = geo.getFromLocation(currentLoc.getLatitude(), currentLoc.getLongitude(), 2);
-            ((EditText)direccion.findViewById(R.id.oportunidad_direccion)).setText(addr.get(0).getFeatureName());
-            ((EditText)direccion.findViewById(R.id.oportunidad_referencia_direccion)).setText(addr.get(1).getFeatureName());
+            ((EditText)view.findViewById(R.id.oportunidad_direccion)).setText(addr.get(0).getFeatureName());
+            ((EditText)view.findViewById(R.id.oportunidad_direccion_referencia)).setText(addr.get(1).getFeatureName());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -272,143 +301,169 @@ public class CrearOportunidadFragment extends BaseFragment {
     }
 
     @Override
-    public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
-        super.onFragmentCreateView(rootView, savedInstanceState);
-
-        if(info == null)
-        {
-            listViewResponsables = new ArrayList<LinearLayout>();
-            listViewContactos = new ArrayList<LinearLayout>();
-            listAgentesIds = new ArrayList<Integer>();
-            //ciudades = GeopoliticalStructure.getGeopoliticalStructureCities(getDataBase());
-
-            adapter = new GeopoliticalStructureAdapter(getContext(), getDataBase());
-
-            TabInfo = (ImageButton) getRootView().findViewById((R.id.detail_tab_info));
-            TabDirecciones = (ImageButton) getRootView().findViewById((R.id.detail_tab_direccion));
-            TabContactos = (ImageButton) getRootView().findViewById((R.id.detail_tab_contactos));
-            ArrowInfo = (ImageView) getRootView().findViewById((R.id.detail_tab_info_arrow));
-            ArrowDir = (ImageView) getRootView().findViewById((R.id.detail_tab_direccion_arrow));
-            ArrowCont = (ImageView) getRootView().findViewById((R.id.detail_tab_contactos_arrow));
-            PagerDetalles = (ViewPager) rootView.findViewById(R.id.crear_cliente_pager);
-
-            pagerAdapter = new DetailsPageAdapter();
-            inflater = (LayoutInflater) this.getActivity().getSystemService(
-                    Context.LAYOUT_INFLATER_SERVICE);
-            info = (FrameLayout) LayoutInflater.from(getContext()).inflate(R.layout.fragment_crear_oportunidad_info, null);
-            ((TextView) info.findViewById(R.id.oportunidad_agregar_responsable)).setOnClickListener(new View.OnClickListener(){
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (view != null) {
+            ViewGroup parent = (ViewGroup) view.getParent();
+            if (parent != null)
+                parent.removeView(view);
+            FragmentManager fm = getFragmentManager();
+            mapFragment = SupportMapFragment
+                    .newInstance();
+            fm.beginTransaction()
+                    .replace(R.id.recorrido_dummy, mapFragment).commit();
+            mapFragment.getMapAsync(new OnMapReadyCallback() {
                 @Override
-                public void onClick(View v) {
-                    addResponsable();
+                public void onMapReady(GoogleMap googleMap) {
+                    map = googleMap;
+                    view.findViewById(R.id.progress_map).setVisibility(View.GONE);
+                    SetData();
+                }
+            });
+        }
+        else {
+            try {
+                view = inflater.inflate(R.layout.fragment_crear_oportunidad, container, false);
+                new Handler().postDelayed(new Runnable() {
 
-                }});
-            ResponsableContainer = (LinearLayout) info.findViewById(R.id.oportunidad_responsables);
-            direccion = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.fragment_crear_oportunidad_direccion, null);
-            ((ImageButton) direccion.findViewById(R.id.oportunidad_ubicacion)).setOnClickListener(new View.OnClickListener(){
-
-                @Override
-                public void onClick(View v) {
-                    if (GooglePlayServicesUtils.servicesConnected((BaseActivity) getActivity())) {
-
-                        try
-                        {
-                            ((BaseActivity)getActivity()).showDialogProgress("GPS","Obteniendo Posición");
-                            LocationUtils.getLocation(getContext(), new LocationUtils.OnLocationResultListener() {
-
+                    @Override
+                    public void run() {
+                        if (isAdded()) {
+                            FragmentManager fm = getFragmentManager();
+                            mapFragment = SupportMapFragment
+                                    .newInstance();
+                            fm.beginTransaction()
+                                    .replace(R.id.recorrido_dummy, mapFragment).commit();
+                            mapFragment.getMapAsync(new OnMapReadyCallback() {
                                 @Override
-                                public void getLocationResult(Location location) {
-                                    if (location != null) {
-                                        ((ImageView) direccion.findViewById(R.id.oportunidad_ubicacion_check)).setImageResource(R.drawable.checkbox_on);
-                                        oportunidad.setLatitud(location.getLatitude());
-                                        oportunidad.setLongitud(location.getLongitude());
-                                        currentLoc = location;
-                                         showDialogConfirmation(DIALOG_GPS, R.string.message_direccion_google, R.string.title_direccion);
-
-                                    } else {
-                                        Toast.makeText(getContext(), "Debe de activar su GPS.", Toast.LENGTH_SHORT).show();
-                                    }
-                                    ((BaseActivity) getActivity()).closeDialogProgress();
+                                public void onMapReady(GoogleMap googleMap) {
+                                    map = googleMap;
+                                    view.findViewById(R.id.progress_map).setVisibility(View.GONE);
+                                    SetData();
                                 }
                             });
                         }
-                        catch(Exception ex)
-                        {	}
+                    }
+                }, 1000);
 
+            } catch (InflateException e) {
+	        /* map is already there, just return view as it is */
+            }
+        }
+
+        setRootView(view);
+        return view;
+    }
+
+    public void SetData()
+    {
+        if(listAgentesIds == null) {
+            listViewResponsables = new ArrayList<LinearLayout>();
+            listViewContactos = new ArrayList<LinearLayout>();
+            listAgentesIds = new ArrayList<Integer>();
+        }
+
+        ResponsableContainer = (LinearLayout) view.findViewById(R.id.oportunidad_responsables);
+        view.findViewById(R.id.oportunidad_agregar_responsable).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addResponsable();
+            }
+        });
+        view.findViewById(R.id.oportunidad_ubicacion).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (GooglePlayServicesUtils.servicesConnected((BaseActivity) getActivity())) {
+
+                    try {
+                        ((BaseActivity) getActivity()).showDialogProgress("GPS", "Obteniendo Posición");
+                        LocationUtils.getLocation(getContext(), new LocationUtils.OnLocationResultListener() {
+
+                            @Override
+                            public void getLocationResult(Location location) {
+                                if (location != null) {
+                                    map.clear();
+                                    LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
+                                    Marker mark = map.addMarker(new MarkerOptions().position(pos)
+                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_position)));
+                                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 12), 1, null);
+                                    oportunidad.setLatitud(location.getLatitude());
+                                    oportunidad.setLongitud(location.getLongitude());
+                                    currentLoc = location;
+                                    showDialogConfirmation(DIALOG_GPS, R.string.message_direccion_google, R.string.title_direccion);
+
+                                } else {
+                                    Toast.makeText(getContext(), "Debe de activar su GPS.", Toast.LENGTH_SHORT).show();
+                                }
+                                ((BaseActivity) getActivity()).closeDialogProgress();
+                            }
+                        });
+                    } catch (Exception ex) {
                     }
 
-                }});
-            contacto = (FrameLayout) LayoutInflater.from(getContext()).inflate(R.layout.fragment_crear_oportunidad_contactos, null);
-            ((TextView) contacto.findViewById(R.id.agregar_contacto)).setOnClickListener(new View.OnClickListener(){
+                }
 
-                @Override
-                public void onClick(View v) {
-                    addContacto();
-
-                }});
-            ContactosContainer = (LinearLayout) contacto.findViewById(R.id.crear_cliente_container_contacto);
-            pagerAdapter.addView(info);
-            pagerAdapter.addView(direccion);
-            pagerAdapter.addView(contacto);
-            PagerDetalles.setAdapter(pagerAdapter);
-            setPageConfig(PagerDetalles.getCurrentItem());
-        }
-        else
-        {
-            TabInfo = (ImageButton) getRootView().findViewById((R.id.detail_tab_info));
-            TabDirecciones = (ImageButton) getRootView().findViewById((R.id.detail_tab_direccion));
-            TabContactos = (ImageButton) getRootView().findViewById((R.id.detail_tab_contactos));
-            ArrowInfo = (ImageView) getRootView().findViewById((R.id.detail_tab_info_arrow));
-            ArrowDir = (ImageView) getRootView().findViewById((R.id.detail_tab_direccion_arrow));
-            ArrowCont = (ImageView) getRootView().findViewById((R.id.detail_tab_contactos_arrow));
-            PagerDetalles = (ViewPager) rootView.findViewById(R.id.crear_cliente_pager);
-            pagerAdapter = new DetailsPageAdapter();
-            pagerAdapter.addView(info);
-            pagerAdapter.addView(direccion);
-            pagerAdapter.addView(contacto);
-            PagerDetalles.setAdapter(pagerAdapter);
-            ArrowInfo.setVisibility(View.INVISIBLE);
-            ArrowDir.setVisibility(View.INVISIBLE);
-            ArrowCont.setVisibility(View.INVISIBLE);
-            setPageConfig(PagerDetalles.getCurrentItem());
-            rotated = true;
-        }
-        TabInfo.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                PagerDetalles.setCurrentItem(0);
-            }});
-
-        TabDirecciones.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                PagerDetalles.setCurrentItem(1);
-            }});
-
-        TabContactos.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                PagerDetalles.setCurrentItem(2);
-            }});
-
-        PagerDetalles.setOnPageChangeListener(new android.support.v4.view.ViewPager.OnPageChangeListener(){
-
-            @Override
-            public void onPageScrollStateChanged(int arg0) {
             }
+        });
+
+        ((TextView) view.findViewById(R.id.agregar_contacto)).setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onPageScrolled(int arg0, float arg1, int arg2) {
+            public void onClick(View v) {
+                addContacto();
+
             }
+        });
+        ContactosContainer = (LinearLayout) view.findViewById(R.id.oportunidad_contacto);
+        if(listAgentesIds.size() <= 0)
+            addThisAgente();
 
+        view.findViewById(R.id.oportunidad_foto1).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onPageSelected(int arg0) {
-                setPageConfig(arg0);
+            public void onClick(View view) {
+                takePicture(PHOTO_1);
+            }
+        });
+        view.findViewById(R.id.oportunidad_foto2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                takePicture(PHOTO_2);
+            }
+        });
+        view.findViewById(R.id.oportunidad_foto3).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                takePicture(PHOTO_3);
+            }
+        });
+        ((ImageView) getRootView().findViewById(R.id.voice_to_text)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                promptSpeechInput();
+            }
+        });
+    }
 
-            }});
+    private void promptSpeechInput() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+                "Hable Ahora");
+        try {
+            getActivity().startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+        } catch (ActivityNotFoundException a) {
+            Toast.makeText(getContext(),
+                    "Dispositivo no soporta voz a texto.",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
+        super.onFragmentCreateView(rootView, savedInstanceState);
+
     }
 
 
@@ -419,37 +474,32 @@ public class CrearOportunidadFragment extends BaseFragment {
     }
 
     protected void takePicture(final int idView) {
-        AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(this.getActivity());
-        myAlertDialog.setTitle("Fotografía");
-        myAlertDialog.setMessage("Obtener de");
+        Intent captureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photo);
+        captureIntent.putExtra("crop", "true");
+        captureIntent.putExtra("aspectX", 2);
+        captureIntent.putExtra("aspectY", 1);
+        //captureIntent.putExtra("return-data", true);
+        getActivity().startActivityForResult(captureIntent, idView);
+    }
 
-        myAlertDialog.setPositiveButton("Galería",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        Intent galleryIntent = new Intent();
-                        galleryIntent.setType("image/*");
-                        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-                        galleryIntent.putExtra("return-data", true);
-                        galleryIntent.putExtra("crop", "true");
-                        galleryIntent.putExtra("aspectX", 1);
-                        galleryIntent.putExtra("aspectY", 1);
-                        getActivity().startActivityForResult(galleryIntent, idView);
-                    }
-                });
+    private void addThisAgente()
+    {
+        final LinearLayout responsable = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.rowlist_responsable, null);
+        final int pos = listViewResponsables.size();
+        ((ImageView) responsable.findViewById(R.id.eliminar_responsable)).setOnClickListener(new View.OnClickListener() {
 
-        myAlertDialog.setNegativeButton("Cámara",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        Intent captureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                        captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photo);
-                        captureIntent.putExtra("crop", "true");
-                        captureIntent.putExtra("aspectX", 1);
-                        captureIntent.putExtra("aspectY", 1);
-                        getActivity().startActivityForResult(captureIntent, idView);
-
-                    }
-                });
-        myAlertDialog.show();
+            @Override
+            public void onClick(View v) {
+                listViewResponsables.remove(responsable);
+                ResponsableContainer.removeView(responsable);
+            }
+        });
+        Agente agt = Agente.getAgente(getDataBase(), PreferenceManager.getInt(Contants.KEY_IDAGENTE));
+        ((TextView) responsable.findViewById(R.id.responsable_nombre)).setText(agt.getNombre());
+        listAgentesIds.add(agt.getIdAgente());
+        ResponsableContainer.addView(responsable);
+        listViewResponsables.add(responsable);
     }
 
     private void addResponsable()
@@ -511,92 +561,93 @@ public class CrearOportunidadFragment extends BaseFragment {
                 contactPhotos.remove(pos);
             }});
         contactPhotos.add("");
-        ((ImageView) contacto.findViewById(R.id.contacto_foto)).setOnClickListener(new View.OnClickListener(){
+        contacto.findViewById(R.id.contacto_foto).setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 posContact = pos;
                 isClient = false;
                 takePicture(1);
-            }});
+            }
+        });
         ContactosContainer.addView(contacto);
         listViewContactos.add(contacto);
-    }
-
-    private void setPageConfig(int page){
-        curentPage = page;
-        String title = pagerAdapter.getPageTitle(page).toString();
-        if(title.equalsIgnoreCase("Info"))
-        {
-            TabInfo.setBackgroundColor(getResources().getColor(R.color.tab_activated));
-            TabDirecciones.setBackgroundColor(getResources().getColor(R.color.tab_inactivated));
-            TabContactos.setBackgroundColor(getResources().getColor(R.color.tab_inactivated));
-            ArrowInfo.setVisibility(View.VISIBLE);
-            ArrowDir.setVisibility(View.INVISIBLE);
-            ArrowCont.setVisibility(View.INVISIBLE);
-        }
-        if(title.equalsIgnoreCase("Direcciones"))
-        {
-            TabInfo.setBackgroundColor(getResources().getColor(R.color.tab_inactivated));
-            TabDirecciones.setBackgroundColor(getResources().getColor(R.color.tab_activated));
-            TabContactos.setBackgroundColor(getResources().getColor(R.color.tab_inactivated));
-            ArrowInfo.setVisibility(View.INVISIBLE);
-            ArrowDir.setVisibility(View.VISIBLE);
-            ArrowCont.setVisibility(View.INVISIBLE);
-        }
-        if(title.equalsIgnoreCase("Contactos"))
-        {
-            TabInfo.setBackgroundColor(getResources().getColor(R.color.tab_inactivated));
-            TabDirecciones.setBackgroundColor(getResources().getColor(R.color.tab_inactivated));
-            TabContactos.setBackgroundColor(getResources().getColor(R.color.tab_activated));
-            ArrowInfo.setVisibility(View.INVISIBLE);
-            ArrowDir.setVisibility(View.INVISIBLE);
-            ArrowCont.setVisibility(View.VISIBLE);
-        }
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        setPageConfig(PagerDetalles.getCurrentItem());
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            Bitmap pree = null;
-            if(data.getData() != null) {
-                try {
-                    pree = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
-                } catch (IOException e) {
-                    e.printStackTrace();
+            if (requestCode == REQ_CODE_SPEECH_INPUT) {
+                if (resultCode == RESULT_OK && null != data) {
+                    ArrayList<String> result = data
+                            .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    ((TextView) view.findViewById(R.id.oportunidad_comentario)).setText(result.get(0));
                 }
-            }
-            else
-            if(data.getExtras().containsKey("data"))
-                pree = (Bitmap)data.getExtras().get("data");
-            else
-                try {
-                    photo = Uri.parse(data.getAction());
-                    pree = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), photo);
-                } catch (IOException e) {
-                    e.printStackTrace();
+            } else {
+                Bitmap pree = null;
+                if (data != null) {
+                    if (data.getData() != null) {
+                        try {
+                            pree = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (data.getExtras().containsKey("data"))
+                        pree = (Bitmap) data.getExtras().get("data");
+                    else
+                    {
+                        try {
+                            photo = Uri.parse(data.getAction());
+                            pree = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), photo);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } else
+                    try {
+                        photo = Uri.parse(data.getAction());
+                        pree = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), photo);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                if (requestCode == PHOTO_1 || requestCode == PHOTO_2 || requestCode == PHOTO_3) {
+
+                    if (requestCode == PHOTO_1) {
+                        ((ImageButton) getRootView().findViewById(R.id.oportunidad_foto1)).setImageBitmap(pree);
+                        ((ImageButton) getRootView().findViewById(R.id.oportunidad_foto3)).setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        photos.set(0, Utils.SaveBitmap(pree, "edit_client"));
+                    }
+                    if (requestCode == PHOTO_2) {
+                        ((ImageButton) getRootView().findViewById(R.id.oportunidad_foto2)).setImageBitmap(pree);
+                        ((ImageButton) getRootView().findViewById(R.id.oportunidad_foto3)).setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        photos.set(1, Utils.SaveBitmap(pree, "edit_client"));
+                    }
+                    if (requestCode == PHOTO_3) {
+                        ((ImageButton) getRootView().findViewById(R.id.oportunidad_foto3)).setImageBitmap(pree);
+                        ((ImageButton) getRootView().findViewById(R.id.oportunidad_foto3)).setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        photos.set(2, Utils.SaveBitmap(pree, "edit_client"));
+                    }
+                } else {
+                    ((ImageButton) listViewContactos.get(posContact).findViewById(R.id.contacto_foto)).setImageBitmap(pree);
+                    ((ImageButton) listViewContactos.get(posContact).findViewById(R.id.contacto_foto)).setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    contactPhotos.set(posContact, Utils.SaveBitmap(pree, "edit_contact"));
                 }
-            if(isClient)
-            {
-                ((ImageButton) info.findViewById(R.id.cliente_foto)).setImageBitmap(pree);
-                //cliente.setURLFoto(Utils.SaveBitmap(pree, "edit_client"));
-            }
-            else
-            {
-                ((ImageView) listViewContactos.get(posContact).findViewById(R.id.contacto_foto)).setImageBitmap(pree);
-                contactPhotos.set(posContact, Utils.SaveBitmap(pree, "edit_contact"));
             }
         }
     }
 
     public boolean Validaciones()
     {
+        if(((TextView) view.findViewById(R.id.oportunidad_nombre)).length() <= 0)
+        {
+            Toast.makeText(getContext(), R.string.message_sin_descripcion, Toast.LENGTH_LONG).show();
+            return false;
+        }
         return true;
     }
 

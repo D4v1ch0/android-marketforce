@@ -1,5 +1,7 @@
 package rp3.marketforce.oportunidad;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 
@@ -10,7 +12,7 @@ import rp3.widget.RangeSeekBar;
 /**
  * Created by magno_000 on 15/05/2015.
  */
-public class FiltroOportunidadActivity extends BaseActivity {
+public class FiltroOportunidadActivity extends BaseActivity implements FiltroOportunidadFragment.OportunidadFiltroListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,5 +23,11 @@ public class FiltroOportunidadActivity extends BaseActivity {
             FiltroOportunidadFragment newFragment = FiltroOportunidadFragment.newInstance();
             setFragment(rp3.core.R.id.content, newFragment);
         }
+    }
+
+    @Override
+    public void onFiltroSend(Intent intent) {
+        setResult(Activity.RESULT_OK, intent);
+        finish();
     }
 }

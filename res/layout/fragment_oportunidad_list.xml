@@ -35,17 +35,39 @@
             android:textColor="@color/caldroid_white"
             android:textStyle="bold"
             android:textSize="@dimen/text_medium_small_size" />
+
     </LinearLayout>
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swipe_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" >
+        android:layout_weight="1"
+        android:visibility="visible">
         <ListView
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:id="@+id/oportunidad_list"
             android:layout_weight="1" />
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:visibility="gone"
+        android:id="@+id/oportunidad_empty">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_no_oportunidades"
+            android:id="@+id/textView62"
+            android:textSize="@dimen/text_large_size"
+            android:textStyle="bold"
+            android:textColor="@color/color_text_sky_blue" />
+    </LinearLayout>
 </LinearLayout>

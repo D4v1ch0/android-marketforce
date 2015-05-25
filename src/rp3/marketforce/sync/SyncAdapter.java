@@ -207,6 +207,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     result = rp3.marketforce.sync.Oportunidad.executeSyncPendientes(db);
                     addDefaultMessage(result);
 
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Oportunidad.executeSync(db);
+                        addDefaultMessage(result);
+                    }
+
                 } else if (syncType.equals(SYNC_TYPE_AGENTES_UBICACION)) {
                     result = rp3.marketforce.sync.Agente.executeSyncGetUbicaciones(db);
                     addDefaultMessage(result);
@@ -403,6 +408,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 
                     if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.marketforce.sync.Oportunidad.executeSyncPendientes(db);
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Oportunidad.executeSync(db);
                         addDefaultMessage(result);
                     }
                 }

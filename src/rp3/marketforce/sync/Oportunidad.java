@@ -56,7 +56,8 @@ public class Oportunidad {
                 jObject.put("Latitud", oportunidadUpload.getLatitud());
                 jObject.put("Longitud", oportunidadUpload.getLongitud());
                 jObject.put("Observacion", oportunidadUpload.getObservacion());
-                jObject.put("Probabilidad", oportunidadUpload.getProbabilidad());
+                jObject.put("Probabilidad", 0);
+                //jObject.put("Probabilidad", oportunidadUpload.getProbabilidad());
                 jObject.put("Referencia", oportunidadUpload.getReferencia());
 
                 JSONArray jArrayTareas = new JSONArray();
@@ -235,15 +236,20 @@ public class Oportunidad {
                 jObject.put("OportunidadTareas", jArrayTareas);
 
                 JSONArray jArrayContactos = new JSONArray();
+                boolean principal = true;
                 for (OportunidadContacto agt : oportunidadUpload.getOportunidadContactos()) {
                     JSONObject jObjectContacto = new JSONObject();
                     jObjectContacto.put("IdInterno", agt.getID());
                     jObjectContacto.put("Cargo", agt.getCargo());
-                    jObjectContacto.put("CorreoElectronico", agt.getEmail());
-                    jObjectContacto.put("Telefono2", agt.getFijo());
-                    jObjectContacto.put("Telefono1", agt.getMovil());
+                    jObjectContacto.put("CorreoElectronico", "");
+                    jObjectContacto.put("Telefono2", "");
+                    jObjectContacto.put("Telefono1", "");
                     jObjectContacto.put("Nombre", agt.getNombre());
-                    jObjectContacto.put("EsPrincipal", agt.isEsPrincipal());
+                    if(principal)
+                        jObjectContacto.put("EsPrincipal", true);
+                    else
+                        jObjectContacto.put("EsPrincipal", false);
+                    principal = false;
 
                     jArrayContactos.put(jObjectContacto);
                 }

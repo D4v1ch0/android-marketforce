@@ -190,7 +190,7 @@
     <string name="label_cierre_operacion">Cierre de Negociación</string>
     <string name="label_cantidad">CANTIDAD</string>
     <string name="label_inserte_valor">Inserte Valor</string>
-    <string name="label_solo_activos">Mostrar solo activos</string>
+    <string name="label_solo_activos">Mostrar activos</string>
     <string name="label_probabilidad_venta">Probabilidad de venta</string>
     <string name="label_cantidad_min">Cantidad</string>
     <string name="label_contactos_max">CONTACTOS</string>
@@ -213,5 +213,29 @@
     <string name="label_agregar_foto">Agregar Foto</string>
     <string name="label_agregar_contacto_oportunidad">Agregar contacto</string>
     <string name="label_finalizar_etapa">Finalizar Etapa</string>
+    <string name="label_suspendidos">Mostrar suspendidos</string>
+    <string name="label_concretados">Mostrar concretados</string>
+    <string name="label_no_concretados">Mostrar no concretados</string>
+    <string name="label_fecha_creacion_max">FECHA CREACIÓN</string>
+    <string name="label_fecha_ultima_gestión">FECHA ULTIMA GESTIÓN</string>
+    <string name="label_importancia_max">IMPORTANCIA</string>
+    <string name="message_desde_hasta">Fecha desde no puede ser mayor a fecha hasta.</string>
+    <string name="message_un_estado">Mínimo debe de escoger un estado.</string>
+    <string name="message_sin_descripcion">Debe escribir el nombre de la oportunidad.</string>
+    <string name="message_una_etapa">Mínimo debe de escoger una etapa.</string>
+    <string name="label_no_oportunidades">No hay oportunidades</string>
+    <string name="label_informacion_max">INFORMACIÓN</string>
+    <string name="label_nombre_oportunidad">Nombre de oportunidad</string>
+    <string name="label_tipo_empresa">Tipo de empresa</string>
+    <string name="label_medio_referencia">Medio de referencia</string>
+    <string name="label_datos_venta">DATOS DE VENTA</string>
+    <string name="label_valor_proyecto">Valor del proyecto</string>
+    <string name="label_importancia_estrategica">Importancia Estratégica</string>
+    <string name="label_anadir_foto">Añadir Fotos</string>
+    <string name="label_tarjeta">Tarjeta</string>
+    <string name="label_workflow_max">WORKFLOW</string>
+    <string name="label_timeline_max">TIMELINE</string>
+    <string name="label_sin_iniciar">sin iniciar</string>
+    <string name="label_sin_dias">0 Días</string>
 
 </resources>

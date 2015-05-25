@@ -538,8 +538,16 @@ public final class Contract {
         public static final String FIELD_DESCRIPCION = Contract.OportunidadExt.TABLE_NAME + "_" + Contract.OportunidadExt.COLUMN_DESCRIPCION;
         public static final String FIELD_DIRECCION = Contract.OportunidadExt.TABLE_NAME + "_" + Contract.OportunidadExt.COLUMN_DIRECCION;
         public static final String FIELD_REFERENCIA = Contract.OportunidadExt.TABLE_NAME + "_" + Contract.OportunidadExt.COLUMN_REFERENCIA;
+        public static final String FIELD_DIRECCION_REFERENCIA = Contract.OportunidadExt.TABLE_NAME + "_" + Contract.OportunidadExt.COLUMN_DIRECCION_REFERENCIA;
+        public static final String FIELD_TELEFONO1 = Contract.OportunidadExt.TABLE_NAME + "_" + Contract.OportunidadExt.COLUMN_TELEFONO1;
+        public static final String FIELD_TELEFONO2 = Contract.OportunidadExt.TABLE_NAME + "_" + Contract.OportunidadExt.COLUMN_TELEFONO2;
+        public static final String FIELD_PAGINA_WEB = Contract.OportunidadExt.TABLE_NAME + "_" + Contract.OportunidadExt.COLUMN_PAGINA_WEB;
+        public static final String FIELD_CORREO = Contract.OportunidadExt.TABLE_NAME + "_" + Contract.OportunidadExt.COLUMN_CORREO;
+        public static final String FIELD_TIPO_EMPRESA = Contract.OportunidadExt.TABLE_NAME + "_" + Contract.OportunidadExt.COLUMN_TIPO_EMPRESA;
 
         public static final String QUERY_LIST_NO_FILTER= "OportunidadesNoFilter";
+        public static final String QUERY_LIST_BY_IDS= "OportunidadesByIds";
+        public static final String QUERY_SEARCH= "OportunidadSearch";
         public static final String QUERY_OPORTUNIDAD_BY_ID= "OportunidadById";
         public static final String QUERY_OPORTUNIDADES_PENDIENTES= "OportunidadPendientes";
         public static final String QUERY_OPORTUNIDADES_INSERTS= "OportunidadInserts";
@@ -552,6 +560,12 @@ public final class Contract {
         public static final String COLUMN_DESCRIPCION = "Descripcion";
         public static final String COLUMN_DIRECCION = "Direccion";
         public static final String COLUMN_REFERENCIA = "Referencia";
+        public static final String COLUMN_DIRECCION_REFERENCIA = "DireccionReferencia";
+        public static final String COLUMN_TELEFONO1 = "Telefono1";
+        public static final String COLUMN_TELEFONO2 = "Telefono2";
+        public static final String COLUMN_PAGINA_WEB = "PaginaWeb";
+        public static final String COLUMN_CORREO = "Correo";
+        public static final String COLUMN_TIPO_EMPRESA = "TipoEmpresa";
     }
 
     public static abstract class OportunidadFoto implements BaseColumns {
@@ -578,10 +592,6 @@ public final class Contract {
         public static final String COLUMN_ID_OPORTUNIDAD = "IdOportunidad";
         public static final String COLUMN_ID_OPORTUNIDAD_INT = "_IdOportunidad";
         public static final String COLUMN_NOMBRE = "Nombre";
-        public static final String COLUMN_ES_PRINCIPAL = "EsPrincipal";
-        public static final String COLUMN_MOVIL = "Movil";
-        public static final String COLUMN_FIJO = "Fijo";
-        public static final String COLUMN_EMAIL = "Email";
         public static final String COLUMN_CARGO = "Cargo";
         public static final String COLUMN_URL_FOTO = "URLFoto";
 
@@ -590,10 +600,6 @@ public final class Contract {
         public static final String FIELD_ID_OPORTUNIDAD_INT = COLUMN_ID_OPORTUNIDAD_INT;
         public static final String FIELD_URL_FOTO = COLUMN_URL_FOTO;
         public static final String FIELD_NOMBRE = COLUMN_NOMBRE;
-        public static final String FIELD_ES_PRINCIPAL = COLUMN_ES_PRINCIPAL;
-        public static final String FIELD_MOVIL = COLUMN_MOVIL;
-        public static final String FIELD_FIJO = COLUMN_FIJO;
-        public static final String FIELD_EMAIL = COLUMN_EMAIL;
         public static final String FIELD_CARGO = COLUMN_CARGO;
 
     }

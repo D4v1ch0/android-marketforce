@@ -134,10 +134,6 @@ public class OportunidadContacto extends EntityBase<OportunidadContacto> {
         setValue(Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD_CONTACTO, this.idOportunidadContacto);
         setValue(Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD_INT, this._idOportunidad);
         setValue(Contract.OportunidadContacto.COLUMN_CARGO, this.cargo);
-        setValue(Contract.OportunidadContacto.COLUMN_EMAIL, this.email);
-        setValue(Contract.OportunidadContacto.COLUMN_ES_PRINCIPAL, this.esPrincipal);
-        setValue(Contract.OportunidadContacto.COLUMN_MOVIL, this.movil);
-        setValue(Contract.OportunidadContacto.COLUMN_FIJO, this.fijo);
         setValue(Contract.OportunidadContacto.COLUMN_URL_FOTO, this.URLFoto);
     }
 
@@ -154,8 +150,7 @@ public class OportunidadContacto extends EntityBase<OportunidadContacto> {
     public static List<OportunidadContacto> getContactosOportunidad(DataBase db, int idOportunidad) {
         Cursor c = db.query(Contract.OportunidadContacto.TABLE_NAME, new String[] {Contract.OportunidadContacto._ID, Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD,
                 Contract.OportunidadContacto.COLUMN_NOMBRE, Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD_CONTACTO, Contract.OportunidadContacto.COLUMN_CARGO,
-                Contract.OportunidadContacto.COLUMN_EMAIL, Contract.OportunidadContacto.COLUMN_ES_PRINCIPAL, Contract.OportunidadContacto.COLUMN_MOVIL,
-                Contract.OportunidadContacto.COLUMN_FIJO, Contract.OportunidadContacto.COLUMN_URL_FOTO}, Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD + " = ?",
+                Contract.OportunidadContacto.COLUMN_URL_FOTO}, Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD + " = ?",
                 new String[] {idOportunidad + ""});
 
         List<OportunidadContacto> list = new ArrayList<OportunidadContacto>();
@@ -166,10 +161,6 @@ public class OportunidadContacto extends EntityBase<OportunidadContacto> {
             cont.setNombre(CursorUtils.getString(c, Contract.OportunidadContacto.COLUMN_NOMBRE));
             cont.setIdOportunidadContacto(CursorUtils.getInt(c, Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD_CONTACTO));
             cont.setCargo(CursorUtils.getString(c, Contract.OportunidadContacto.COLUMN_CARGO));
-            cont.setEmail(CursorUtils.getString(c, Contract.OportunidadContacto.COLUMN_EMAIL));
-            cont.setEsPrincipal(CursorUtils.getBoolean(c, Contract.OportunidadContacto.COLUMN_ES_PRINCIPAL));
-            cont.setMovil(CursorUtils.getString(c, Contract.OportunidadContacto.COLUMN_MOVIL));
-            cont.setFijo(CursorUtils.getString(c, Contract.OportunidadContacto.COLUMN_FIJO));
             cont.setURLFoto(CursorUtils.getString(c, Contract.OportunidadContacto.COLUMN_URL_FOTO));
             list.add(cont);
         }
@@ -179,8 +170,7 @@ public class OportunidadContacto extends EntityBase<OportunidadContacto> {
     public static List<OportunidadContacto> getContactosOportunidadInt(DataBase db, long id) {
         Cursor c = db.query(Contract.OportunidadContacto.TABLE_NAME, new String[] {Contract.OportunidadContacto._ID, Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD,
                         Contract.OportunidadContacto.COLUMN_NOMBRE, Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD_CONTACTO, Contract.OportunidadContacto.COLUMN_CARGO,
-                        Contract.OportunidadContacto.COLUMN_EMAIL, Contract.OportunidadContacto.COLUMN_ES_PRINCIPAL, Contract.OportunidadContacto.COLUMN_MOVIL,
-                        Contract.OportunidadContacto.COLUMN_FIJO, Contract.OportunidadContacto.COLUMN_URL_FOTO}, Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD_INT + " = ?",
+                        Contract.OportunidadContacto.COLUMN_URL_FOTO}, Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD_INT + " = ?",
                 new String[] {id + ""});
 
         List<OportunidadContacto> list = new ArrayList<OportunidadContacto>();
@@ -191,10 +181,6 @@ public class OportunidadContacto extends EntityBase<OportunidadContacto> {
             cont.setNombre(CursorUtils.getString(c, Contract.OportunidadContacto.COLUMN_NOMBRE));
             cont.setIdOportunidadContacto(CursorUtils.getInt(c, Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD_CONTACTO));
             cont.setCargo(CursorUtils.getString(c, Contract.OportunidadContacto.COLUMN_CARGO));
-            cont.setEmail(CursorUtils.getString(c, Contract.OportunidadContacto.COLUMN_EMAIL));
-            cont.setEsPrincipal(CursorUtils.getBoolean(c, Contract.OportunidadContacto.COLUMN_ES_PRINCIPAL));
-            cont.setMovil(CursorUtils.getString(c, Contract.OportunidadContacto.COLUMN_MOVIL));
-            cont.setFijo(CursorUtils.getString(c, Contract.OportunidadContacto.COLUMN_FIJO));
             cont.setURLFoto(CursorUtils.getString(c, Contract.OportunidadContacto.COLUMN_URL_FOTO));
             list.add(cont);
         }

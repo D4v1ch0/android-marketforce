@@ -85,4 +85,18 @@ public class Agente extends EntityBase<OportunidadTarea> {
         }
         return list;
     }
+
+    public static Agente getAgente(DataBase db, int idAgente) {
+        Cursor c = db.query(Contract.Agente.TABLE_NAME, new String[] {Contract.Agente._ID, Contract.Agente.COLUMN_ID_AGENTE,
+                Contract.Agente.COLUMN_NOMBRE}, Contract.Agente.COLUMN_ID_AGENTE + " = ?", new String[]{idAgente + ""});
+
+        Agente agente = new Agente();
+        while(c.moveToNext()){
+
+            agente.setID(CursorUtils.getInt(c, Contract.Agente._ID));
+            agente.setIdAgente(CursorUtils.getInt(c, Contract.Agente.COLUMN_ID_AGENTE));
+            agente.setNombre(CursorUtils.getString(c, Contract.Agente.COLUMN_NOMBRE));
+        }
+        return agente;
+    }
 }

@@ -20,12 +20,15 @@ import android.widget.TextView;
 import java.util.List;
 
 import rp3.app.BaseFragment;
+import rp3.configuration.PreferenceManager;
+import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.cliente.ClienteEditActivity;
 import rp3.marketforce.cliente.ClienteEditFragment;
 import rp3.marketforce.cliente.CrearClienteActivity;
 import rp3.marketforce.db.Contract;
 import rp3.marketforce.models.Cliente;
+import rp3.marketforce.models.oportunidad.Agente;
 import rp3.marketforce.models.oportunidad.Etapa;
 import rp3.marketforce.models.oportunidad.Oportunidad;
 import rp3.marketforce.utils.DetailsPageAdapter;
@@ -244,13 +247,43 @@ public class OportunidadDetailFragment extends BaseFragment {
         ((TextView) view_info.findViewById(R.id.oportunidad_probabilidad)).setText(opt.getProbabilidad() + " %");
         ((ProgressBar) view_info.findViewById(R.id.oportunidad_probabilidad_progress)).setProgress(opt.getProbabilidad());
         ((TextView) view_info.findViewById(R.id.oportunidad_importe)).setText("$ " + opt.getImporte());
-        ((TextView) view_info.findViewById(R.id.oportunidad_movil)).setText("");
-        ((TextView) view_info.findViewById(R.id.oportunidad_fijo)).setText("");
-        ((TextView) view_info.findViewById(R.id.oportunidad_correo)).setText("");
-        ((TextView) view_info.findViewById(R.id.oportunidad_pagina_web)).setText("");
+        ((TextView) view_info.findViewById(R.id.oportunidad_movil)).setText(opt.getTelefono1());
+        ((TextView) view_info.findViewById(R.id.oportunidad_fijo)).setText(opt.getTelefono2());
+        ((TextView) view_info.findViewById(R.id.oportunidad_correo)).setText(opt.getCorreo());
+        ((TextView) view_info.findViewById(R.id.oportunidad_pagina_web)).setText(opt.getPaginaWeb());
         ((TextView) view_info.findViewById(R.id.oportunidad_direccion)).setText(opt.getDireccion());
         ((TextView) view_info.findViewById(R.id.oportunidad_referencia)).setText(opt.getReferencia());
         ((TextView) view_info.findViewById(R.id.oportunidades_comentarios)).setText(opt.getObservacion());
+
+        if(opt.getOportunidadResponsables().size() > 0)
+        {
+            view_info.findViewById(R.id.oportunidad_sin_responsables).setVisibility(View.GONE);
+            for(int i = 0; i < opt.getOportunidadResponsables().size(); i++)
+            {
+                View view_responsable = inflater.inflate(
+                        R.layout.rowlist_responsable_detail, null);
+                ((TextView)view_responsable.findViewById(R.id.responsable_number)).setText(i+1 +"");
+                ((TextView)view_responsable.findViewById(R.id.responsable_nombre)).setText(Agente.getAgente(getDataBase(),opt.getOportunidadResponsables().get(i).getIdAgente()).getNombre());
+                ((LinearLayout)view_info.findViewById(R.id.oportunidad_responsables)).addView(view_responsable);
+            }
+        }
+
+        if(opt.getOportunidadContactos().size() > 0)
+        {
+            view_info.findViewById(R.id.oportunidad_sin_contactos).setVisibility(View.GONE);
+            for(int i = 0; i < opt.getOportunidadContactos().size(); i++)
+            {
+                View view_contacto = inflater.inflate(
+                        R.layout.rowlist_oportunidad_contacto, null);
+                ((TextView)view_contacto.findViewById(R.id.oportunidad_contacto_number)).setText(i+1 +"");
+                ((TextView)view_contacto.findViewById(R.id.oportunidad_contacto_nombre)).setText(opt.getOportunidadContactos().get(i).getNombre());
+                ((TextView)view_contacto.findViewById(R.id.oportunidad_contacto_cargo)).setText(opt.getOportunidadContactos().get(i).getCargo());
+                DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
+                                rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + opt.getOportunidadContactos().get(i).getURLFoto(),
+                        (ImageView) view_contacto.getRootView().findViewById(R.id.oportunidad_contacto_foto));
+                ((LinearLayout)view_info.findViewById(R.id.oportunidad_contactos)).addView(view_contacto);
+            }
+        }
 
 
         linearLayoutRigth.addView(view_info);

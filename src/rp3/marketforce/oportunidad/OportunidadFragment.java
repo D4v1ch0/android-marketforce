@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +23,8 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.net.URISyntaxException;
+import java.sql.Ref;
 import java.util.Calendar;
 import java.util.List;
 
@@ -51,15 +54,18 @@ import rp3.widget.SlidingPaneLayout;
 public class OportunidadFragment extends BaseFragment implements OportunidadListFragment.OportunidadListFragmentListener {
 
     private static final int PARALLAX_SIZE = 0;
+    public static final int FILTER_CODE = 1001;
 
     private OportunidadListFragment transactionListFragment;
     private OportunidadDetailFragment transactionDetailFragment;
     private SlidingPaneLayout slidingPane;
+    private String textSearch;
 
     private Menu menu;
     public boolean mTwoPane = false;
     public boolean isActiveListFragment = true;
     private long selectedOportunidadId;
+    private boolean filtro = false;
 
     public static OportunidadFragment newInstance() {
         OportunidadFragment fragment = new OportunidadFragment();
@@ -90,6 +96,16 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == FILTER_CODE  && resultCode == Activity.RESULT_OK)
+        {
+            RefreshMenu();
+            transactionListFragment.aplicarFiltro(data);
+        }
     }
 
     @SuppressLint("NewApi")
@@ -151,95 +167,6 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
         // TODO Auto-generated method stub
         super.onStart();
 
-        //PRUEBA
-        /*
-        Oportunidad op = new Oportunidad();
-        op.setProbabilidad(80);
-        op.setReferencia("Sauces");
-        op.setPendiente(false);
-        op.setObservacion("Prueba 2");
-        op.setCalificacion(5);
-        op.setDescripcion("GM Tecnologix");
-        op.setDireccion("Garzota 2 Mz 141 Villa 10");
-        op.setEstado("A");
-        op.setFechaCreacion(Calendar.getInstance().getTime());
-        op.setFechaUltimaGestion(Calendar.getInstance().getTime());
-        op.setIdAgente(1);
-        op.setIdEtapa(5);
-        op.setIdOportunidad(1);
-        op.setImporte(12000);
-        Oportunidad.insert(getDataBase(), op);
-
-        OportunidadContacto opc = new OportunidadContacto();
-        opc.setIdOportunidad(op.getIdOportunidad());
-        opc.setNombre("Gustavo Meregildo");
-        opc.setFijo("243010");
-        opc.setEsPrincipal(true);
-        opc.setEmail("gmeregildo@rp3.com.ec");
-        opc.setCargo("Agente");
-        opc.setMovil("0915937924");
-        OportunidadContacto.insert(getDataBase(), opc);
-
-        OportunidadResponsable resp = new OportunidadResponsable();
-        resp.setIdOportunidad(op.getIdOportunidad());
-        resp.setIdAgente(1);
-        OportunidadResponsable.insert(getDataBase(), resp);
-
-        OportunidadTarea tarea = new OportunidadTarea();
-        tarea.setIdEtapa(1);
-        tarea.setIdOportunidad(op.getIdOportunidad());
-        tarea.setIdTarea(121);
-        tarea.setEstado("P");
-        tarea.setObservacion("Prueba");
-        tarea.setOrden(1);
-        OportunidadTarea.insert(getDataBase(), tarea);
-
-        tarea = new OportunidadTarea();
-        tarea.setIdEtapa(1);
-        tarea.setIdOportunidad(op.getIdOportunidad());
-        tarea.setIdTarea(125);
-        tarea.setEstado("P");
-        tarea.setObservacion("Prueba");
-        tarea.setOrden(2);
-        OportunidadTarea.insert(getDataBase(), tarea);
-
-        tarea = new OportunidadTarea();
-        tarea.setIdEtapa(2);
-        tarea.setIdOportunidad(op.getIdOportunidad());
-        tarea.setIdTarea(124);
-        tarea.setEstado("P");
-        tarea.setObservacion("Prueba");
-        tarea.setOrden(1);
-        OportunidadTarea.insert(getDataBase(), tarea);
-
-        tarea = new OportunidadTarea();
-        tarea.setIdEtapa(3);
-        tarea.setIdOportunidad(op.getIdOportunidad());
-        tarea.setIdTarea(130);
-        tarea.setEstado("P");
-        tarea.setObservacion("Prueba");
-        tarea.setOrden(1);
-        OportunidadTarea.insert(getDataBase(), tarea);
-
-        tarea = new OportunidadTarea();
-        tarea.setIdEtapa(4);
-        tarea.setIdOportunidad(op.getIdOportunidad());
-        tarea.setIdTarea(131);
-        tarea.setEstado("P");
-        tarea.setObservacion("Prueba");
-        tarea.setOrden(1);
-        OportunidadTarea.insert(getDataBase(), tarea);
-
-        tarea = new OportunidadTarea();
-        tarea.setIdEtapa(5);
-        tarea.setIdOportunidad(op.getIdOportunidad());
-        tarea.setIdTarea(132);
-        tarea.setEstado("P");
-        tarea.setObservacion("Prueba");
-        tarea.setOrden(1);
-        OportunidadTarea.insert(getDataBase(), tarea);
-        */
-
         if(selectedOportunidadId != 0){
             if(!mTwoPane)
                 slidingPane.closePane();
@@ -267,6 +194,30 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
         }
         searchView.setIconifiedByDefault(false);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (transactionListFragment != null)
+                    transactionListFragment.searchTransactions(query);
+                return true;
+            }
+
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (TextUtils.isEmpty(newText) && !TextUtils.isEmpty(textSearch)) {
+                    try {
+                        transactionListFragment.searchTransactions(newText);
+                    } catch (Exception ex) {
+
+                    }
+                }
+                textSearch = newText;
+
+                return true;
+
+            }
+        });
         RefreshMenu();
     }
 
@@ -275,12 +226,14 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
             menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_edit).setVisible(!isActiveListFragment);
             menu.findItem(R.id.action_crear_oportunidad).setVisible(isActiveListFragment);
-            menu.findItem(R.id.action_filtro).setVisible(isActiveListFragment);
+            menu.findItem(R.id.action_filtro).setVisible(isActiveListFragment && !filtro);
+            menu.findItem(R.id.action_quitar_filtro).setVisible(isActiveListFragment && filtro);
             menu.findItem(R.id.action_cambiar_etapa).setVisible(!isActiveListFragment);
         } else {
             menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_crear_oportunidad).setVisible(isActiveListFragment);
-            menu.findItem(R.id.action_filtro).setVisible(isActiveListFragment);
+            menu.findItem(R.id.action_filtro).setVisible(isActiveListFragment && !filtro);
+            menu.findItem(R.id.action_quitar_filtro).setVisible(isActiveListFragment && filtro);
             menu.findItem(R.id.action_edit).setVisible(selectedOportunidadId != 0);
             menu.findItem(R.id.action_cambiar_etapa).setVisible(!isActiveListFragment);
         }
@@ -293,9 +246,16 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
                 Intent intent2 = new Intent(getContext(), CrearOportunidadActivity.class);
                 startActivity(intent2);
                 break;
+            case R.id.action_quitar_filtro:
+                filtro = false;
+                transactionListFragment.filtro = false;
+                transactionListFragment.onResume();
+                RefreshMenu();
+                break;
             case R.id.action_filtro:
                 Intent intent = new Intent(getContext(), FiltroOportunidadActivity.class);
-                startActivity(intent);
+                filtro = true;
+                startActivityForResult(intent, FILTER_CODE);
                 break;
             case R.id.action_cambiar_etapa:
                 AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
