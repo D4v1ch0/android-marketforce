@@ -13,14 +13,22 @@ import rp3.marketforce.R;
  * Created by magno_000 on 19/05/2015.
  */
 public class CrearOportunidadActivity extends BaseActivity  {
+    public static final String ARG_ID = "id";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHomeAsUpEnabled(true, true);
         setContentView(R.layout.layout_simple_content);
-        setTitle("Crear Oportunidad");
+        long id = 0;
+        if(getIntent().getExtras() != null && getIntent().getExtras().containsKey(ARG_ID))
+            id = getIntent().getExtras().getLong(ARG_ID);
+        if(id == 0)
+            setTitle("Crear Oportunidad");
+        else
+            setTitle("Editar Oportunidad");
         if (!hasFragment(rp3.core.R.id.content)) {
-            CrearOportunidadFragment newFragment = CrearOportunidadFragment.newInstance();
+            CrearOportunidadFragment newFragment = CrearOportunidadFragment.newInstance(id);
             setFragment(rp3.core.R.id.content, newFragment);
         }
     }

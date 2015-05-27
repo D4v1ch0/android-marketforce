@@ -27,7 +27,7 @@ import rp3.widget.RangeSeekBar;
  */
 public class FiltroOportunidadFragment extends BaseFragment {
 
-    private RangeSeekBar<Integer> seekBar;
+    private RangeSeekBar<Integer> seekBar, seekBarProb;
     private final static int DESDE_FECHA_CREACION = 1;
     private final static int HASTA_FECHA_CREACION = 2;
     private final static int DESDE_FECHA_GESTION = 3;
@@ -36,6 +36,10 @@ public class FiltroOportunidadFragment extends BaseFragment {
     public final static String FILTRO = "filtro";
     public final static String ETAPAS = "etapas";
     public final static String ESTADOS = "estados";
+    public final static String IMPORTANCIA_MIN = "importancia_min";
+    public final static String IMPORTANCIA_MAX = "importancia_max";
+    public final static String PROBABILIDAD_MIN = "probabilidad_min";
+    public final static String PROBABILIDAD_MAX = "probabilidad_max";
     public final static String DESDE_CREACION = "desde_creacion";
     public final static String HASTA_CREACION = "hasta_creacion";
     public final static String DESDE_GESTION = "desde_gestion";
@@ -89,6 +93,16 @@ public class FiltroOportunidadFragment extends BaseFragment {
 
         LinearLayout layout = (LinearLayout) rootView.findViewById(R.id.filtro_importancia);
         layout.addView(seekBar);
+
+        seekBarProb = new RangeSeekBar<Integer>(0, 100, this.getContext());
+        seekBarProb.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
+            @Override
+            public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
+                ((TextView)rootView.findViewById(R.id.filtro_min_prob)).setText(minValue + "%");
+                ((TextView)rootView.findViewById(R.id.filtro_max_prob)).setText(maxValue + "%");
+            }
+        });
+        ((LinearLayout) rootView.findViewById(R.id.filtro_probabilidad)).addView(seekBarProb);
 
         rootView.findViewById(R.id.fecha_creacion_desde).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,14 +164,36 @@ public class FiltroOportunidadFragment extends BaseFragment {
                     ArrayList<Integer> etapas = new ArrayList<Integer>();
                     ArrayList<String> estados = new ArrayList<String>();
 
-                    if (desde_creacion != null)
+                    if (desde_creacion != null) {
+                        desde_creacion.set(Calendar.HOUR_OF_DAY, 0);
+                        desde_creacion.set(Calendar.MINUTE, 0);
+                        desde_creacion.set(Calendar.SECOND, 0);
                         bundle.putLong(DESDE_CREACION, desde_creacion.getTimeInMillis());
-                    if (hasta_creacion != null)
+                    }
+                    if (hasta_creacion != null) {
+                        hasta_creacion.set(Calendar.HOUR_OF_DAY, 23);
+                        hasta_creacion.set(Calendar.MINUTE, 59);
+                        hasta_creacion.set(Calendar.SECOND, 59);
                         bundle.putLong(HASTA_CREACION, hasta_creacion.getTimeInMillis());
-                    if (desde_gestion != null)
+                    }
+                    /*
+                    if (desde_gestion != null) {
+                        desde_gestion.set(Calendar.HOUR_OF_DAY, 0);
+                        desde_gestion.set(Calendar.MINUTE, 0);
+                        desde_gestion.set(Calendar.SECOND, 0);
                         bundle.putLong(DESDE_GESTION, desde_gestion.getTimeInMillis());
-                    if (hasta_gestion != null)
+                    }
+                    if (hasta_gestion != null) {
+                        hasta_gestion.set(Calendar.HOUR_OF_DAY, 23);
+                        hasta_gestion.set(Calendar.MINUTE, 59);
+                        hasta_gestion.set(Calendar.SECOND, 59);
                         bundle.putLong(HASTA_GESTION, hasta_gestion.getTimeInMillis());
+                    }*/
+
+                    bundle.putInt(IMPORTANCIA_MIN, seekBar.getSelectedMinValue());
+                    bundle.putInt(IMPORTANCIA_MAX, seekBar.getSelectedMaxValue());
+                    bundle.putInt(PROBABILIDAD_MIN, seekBarProb.getSelectedMinValue());
+                    bundle.putInt(PROBABILIDAD_MAX, seekBarProb.getSelectedMaxValue());
 
                     if (((TextView) getRootView().findViewById(R.id.filtro_desde)).length() > 0)
                         bundle.putDouble(DESDE_CANTIDAD, Double.parseDouble(((TextView) getRootView().findViewById(R.id.filtro_desde)).getText().toString()));
@@ -212,7 +248,7 @@ public class FiltroOportunidadFragment extends BaseFragment {
         }
         if(desde_creacion != null && hasta_creacion != null)
         {
-            if(desde_creacion.getTimeInMillis() > hasta_creacion.getTimeInMillis())
+            if(desde_creacion.get(Calendar.DAY_OF_YEAR) > hasta_creacion.get(Calendar.DAY_OF_YEAR))
             {
                 Toast.makeText(getContext(), R.string.message_desde_hasta, Toast.LENGTH_LONG).show();
                 return false;
@@ -229,7 +265,7 @@ public class FiltroOportunidadFragment extends BaseFragment {
         {
             if(Double.parseDouble(((TextView) getRootView().findViewById(R.id.filtro_desde)).getText().toString()) > Double.parseDouble(((TextView) getRootView().findViewById(R.id.filtro_hasta)).getText().toString()))
             {
-                Toast.makeText(getContext(), R.string.message_desde_hasta, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), R.string.message_desde_hasta_cantidad, Toast.LENGTH_LONG).show();
                 return false;
             }
         }

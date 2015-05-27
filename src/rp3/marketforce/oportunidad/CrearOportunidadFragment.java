@@ -34,6 +34,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
@@ -49,6 +50,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -67,6 +69,7 @@ import rp3.data.models.GeopoliticalStructure;
 import rp3.data.models.IdentificationType;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
+import rp3.marketforce.db.Contract;
 import rp3.marketforce.models.Campo;
 import rp3.marketforce.models.Canal;
 import rp3.marketforce.models.Cliente;
@@ -74,9 +77,11 @@ import rp3.marketforce.models.ClienteDireccion;
 import rp3.marketforce.models.Contacto;
 import rp3.marketforce.models.TipoCliente;
 import rp3.marketforce.models.oportunidad.Agente;
+import rp3.marketforce.models.oportunidad.Etapa;
 import rp3.marketforce.models.oportunidad.EtapaTarea;
 import rp3.marketforce.models.oportunidad.Oportunidad;
 import rp3.marketforce.models.oportunidad.OportunidadContacto;
+import rp3.marketforce.models.oportunidad.OportunidadEtapa;
 import rp3.marketforce.models.oportunidad.OportunidadFoto;
 import rp3.marketforce.models.oportunidad.OportunidadResponsable;
 import rp3.marketforce.models.oportunidad.OportunidadTarea;
@@ -102,13 +107,15 @@ public class CrearOportunidadFragment extends BaseFragment {
     public final static int PHOTO_1 = 4;
     public final static int PHOTO_2 = 5;
     public final static int PHOTO_3 = 6;
+    public boolean setData = false;
 
-    public static CrearOportunidadFragment newInstance() {
-        return new CrearOportunidadFragment();
+    public static CrearOportunidadFragment newInstance(long id) {
+        Bundle arguments = new Bundle();
+        arguments.putLong(CrearOportunidadActivity.ARG_ID, id);
+        CrearOportunidadFragment fragment = new CrearOportunidadFragment();
+        fragment.setArguments(arguments);
+        return fragment;
     }
-
-    public static String ARG_CLIENTE = "cliente";
-    public static String ARG_TIPO = "tipo";
 
     public final static int DIALOG_VISITA = 1;
     public final static int DIALOG_GPS = 2;
@@ -117,7 +124,7 @@ public class CrearOportunidadFragment extends BaseFragment {
     private List<LinearLayout> listViewResponsables, listViewContactos;
     private List<Integer> listAgentesIds;
     private Location currentLoc;
-    private long idCliente = 0;
+    private long id = 0;
     private int tipo;
     Uri photo = Utils.getOutputMediaFileUri(Utils.MEDIA_TYPE_IMAGE);
     boolean isClient;
@@ -127,6 +134,7 @@ public class CrearOportunidadFragment extends BaseFragment {
     private FrameLayout contacto;
     private SupportMapFragment mapFragment;
     private GoogleMap map;
+    private DrawableManager DManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -137,7 +145,13 @@ public class CrearOportunidadFragment extends BaseFragment {
         photos.add("");
         photos.add("");
         photos.add("");
+        if (getArguments().containsKey(CrearOportunidadActivity.ARG_ID)) {
+            id = getArguments().getLong(CrearOportunidadActivity.ARG_ID);
+        }else if(savedInstanceState!=null){
+            id = savedInstanceState.getLong(CrearOportunidadActivity.ARG_ID);
+        }
 
+        DManager = new DrawableManager();
     }
 
     @Override
@@ -175,8 +189,8 @@ public class CrearOportunidadFragment extends BaseFragment {
 
     private void Grabar() {
         Oportunidad opt = new Oportunidad();
-        if(idCliente != 0)
-            opt = Oportunidad.getOportunidadId(getDataBase(), idCliente);
+        if(id != 0)
+            opt = Oportunidad.getOportunidadId(getDataBase(), id);
         opt.setDescripcion(((EditText) view.findViewById(R.id.oportunidad_nombre)).getText().toString());
 
         if(((EditText)view.findViewById(R.id.oportunidad_monto)).length() > 0)
@@ -200,6 +214,8 @@ public class CrearOportunidadFragment extends BaseFragment {
         opt.setCorreo(((EditText) view.findViewById(R.id.oportunidad_email)).getText().toString());
         opt.setLongitud(oportunidad.getLongitud());
         opt.setLatitud(oportunidad.getLatitud());
+        opt.setProbabilidad(((SeekBar) view.findViewById(R.id.oportunidad_probabilidad)).getProgress());
+        opt.setPendiente(true);
 
 
         if(opt.getID() == 0 )
@@ -210,7 +226,12 @@ public class CrearOportunidadFragment extends BaseFragment {
         for(int i = 0; i < listViewResponsables.size(); i ++)
         {
             OportunidadResponsable responsable = new OportunidadResponsable();
+            if(opt.getOportunidadResponsables()!= null && opt.getOportunidadResponsables().size() > i)
+            {
+                responsable = opt.getOportunidadResponsables().get(i);
+            }
             responsable.set_idOportunidad((int) opt.getID());
+            responsable.setIdOportunidad(opt.getIdOportunidad());
             responsable.setIdAgente(listAgentesIds.get(i));
 
             if(responsable.getID() == 0)
@@ -222,7 +243,12 @@ public class CrearOportunidadFragment extends BaseFragment {
         for(int i = 0; i < listViewContactos.size(); i ++)
         {
             OportunidadContacto cont = new OportunidadContacto();
+            if(opt.getOportunidadContactos() != null && opt.getOportunidadContactos().size() > i)
+            {
+                cont = opt.getOportunidadContactos().get(i);
+            }
             cont.set_idOportunidad((int) opt.getID());
+            cont.setIdOportunidad(opt.getIdOportunidad());
             cont.setNombre(((EditText) listViewContactos.get(i).findViewById(R.id.contacto_nombre)).getText().toString());
             cont.setCargo(((EditText)listViewContactos.get(i).findViewById(R.id.contacto_cargo)).getText().toString());
             cont.setURLFoto(contactPhotos.get(i));
@@ -236,7 +262,12 @@ public class CrearOportunidadFragment extends BaseFragment {
         for(int i = 0; i < photos.size(); i ++)
         {
             OportunidadFoto foto = new OportunidadFoto();
+            if(opt.getOportunidadFotos() != null && opt.getOportunidadFotos().size() > i)
+            {
+                foto = opt.getOportunidadFotos().get(i);
+            }
             foto.set_idOportunidad((int) opt.getID());
+            foto.setIdOportunidad(opt.getIdOportunidad());
             foto.setURLFoto(photos.get(i));
 
             if(foto.getID() == 0)
@@ -245,16 +276,28 @@ public class CrearOportunidadFragment extends BaseFragment {
                 OportunidadFoto.update(getDataBase(), foto);
         }
 
-        List<EtapaTarea> etapaTareas = EtapaTarea.getEtapaTareas(getDataBase());
-        for(EtapaTarea tarea : etapaTareas)
-        {
-            OportunidadTarea oportunidadTarea = new OportunidadTarea();
-            oportunidadTarea.setEstado("P");
-            oportunidadTarea.setIdTarea(tarea.getIdTarea());
-            oportunidadTarea.setIdEtapa(tarea.getIdEtapa());
-            oportunidadTarea.set_idOportunidad((int) opt.getID());
-            oportunidadTarea.setOrden(tarea.getOrden());
-            OportunidadTarea.insert(getDataBase(), oportunidadTarea);
+        if(id == 0) {
+            List<EtapaTarea> etapaTareas = EtapaTarea.getEtapaTareas(getDataBase());
+            for (EtapaTarea tarea : etapaTareas) {
+                OportunidadTarea oportunidadTarea = new OportunidadTarea();
+                oportunidadTarea.setEstado("P");
+                oportunidadTarea.setIdTarea(tarea.getIdTarea());
+                oportunidadTarea.setIdEtapa(tarea.getIdEtapa());
+                oportunidadTarea.set_idOportunidad((int) opt.getID());
+                oportunidadTarea.setOrden(tarea.getOrden());
+                OportunidadTarea.insert(getDataBase(), oportunidadTarea);
+            }
+
+            List<Etapa> etapas = Etapa.getEtapas(getDataBase());
+            for(Etapa etapa : etapas)
+            {
+                OportunidadEtapa oportunidadEtapa = new OportunidadEtapa();
+                oportunidadEtapa.setEstado("P");
+                oportunidadEtapa.setIdEtapa(etapa.getIdEtapa());
+                oportunidadEtapa.set_idOportunidad((int) opt.getID());
+                oportunidadEtapa.setObservacion("");
+                OportunidadEtapa.insert(getDataBase(), oportunidadEtapa);
+            }
         }
 
         if(ConnectionUtils.isNetAvailable(getActivity())) {
@@ -304,6 +347,7 @@ public class CrearOportunidadFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (view != null) {
             ViewGroup parent = (ViewGroup) view.getParent();
+            showDialogProgress("Cargando", "Mostrando Mapa");
             if (parent != null)
                 parent.removeView(view);
             FragmentManager fm = getFragmentManager();
@@ -316,6 +360,7 @@ public class CrearOportunidadFragment extends BaseFragment {
                 public void onMapReady(GoogleMap googleMap) {
                     map = googleMap;
                     view.findViewById(R.id.progress_map).setVisibility(View.GONE);
+                    closeDialogProgress();
                     SetData();
                 }
             });
@@ -323,6 +368,7 @@ public class CrearOportunidadFragment extends BaseFragment {
         else {
             try {
                 view = inflater.inflate(R.layout.fragment_crear_oportunidad, container, false);
+                showDialogProgress("Cargando", "Mostrando Mapa");
                 new Handler().postDelayed(new Runnable() {
 
                     @Override
@@ -338,6 +384,7 @@ public class CrearOportunidadFragment extends BaseFragment {
                                 public void onMapReady(GoogleMap googleMap) {
                                     map = googleMap;
                                     view.findViewById(R.id.progress_map).setVisibility(View.GONE);
+                                    closeDialogProgress();
                                     SetData();
                                 }
                             });
@@ -415,8 +462,8 @@ public class CrearOportunidadFragment extends BaseFragment {
             }
         });
         ContactosContainer = (LinearLayout) view.findViewById(R.id.oportunidad_contacto);
-        if(listAgentesIds.size() <= 0)
-            addThisAgente();
+        if(listAgentesIds.size() <= 0 && id == 0)
+            addThisAgente(PreferenceManager.getInt(Contants.KEY_IDAGENTE));
 
         view.findViewById(R.id.oportunidad_foto1).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -442,6 +489,25 @@ public class CrearOportunidadFragment extends BaseFragment {
                 promptSpeechInput();
             }
         });
+        ((SeekBar) view.findViewById(R.id.oportunidad_probabilidad)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                ((TextView) view.findViewById(R.id.oportunidad_prob_label)).setText(i+"%");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        if(id != 0)
+            setDatosOportunidad();
     }
 
     private void promptSpeechInput() {
@@ -468,8 +534,68 @@ public class CrearOportunidadFragment extends BaseFragment {
 
 
     private void setDatosOportunidad() {
+        Oportunidad opt = new Oportunidad();
+        if(!setData) {
+            if (id != 0)
+                opt = Oportunidad.getOportunidadId(getDataBase(), id);
 
+            NumberFormat format = NumberFormat.getInstance();
+            format.setMinimumFractionDigits(0);
+            format.setMaximumFractionDigits(0);
+            format.setGroupingUsed(false);
 
+            ((EditText) view.findViewById(R.id.oportunidad_nombre)).setText(opt.getDescripcion());
+            ((EditText) view.findViewById(R.id.oportunidad_monto)).setText(format.format(opt.getImporte()));
+
+            ((RatingBar) view.findViewById(R.id.oportunidad_importancia)).setRating(opt.getCalificacion());
+            ((EditText) view.findViewById(R.id.oportunidad_comentario)).setText(opt.getObservacion());
+            ((EditText) view.findViewById(R.id.oportunidad_referencia)).setText(opt.getReferencia());
+            ((EditText) view.findViewById(R.id.oportunidad_direccion)).setText(opt.getDireccion());
+            ((EditText) view.findViewById(R.id.oportunidad_tipo)).setText(opt.getTipoEmpresa());
+            ((EditText) view.findViewById(R.id.oportunidad_movil)).setText(opt.getTelefono1());
+            ((EditText) view.findViewById(R.id.oportunidad_fijo)).setText(opt.getTelefono2());
+            ((EditText) view.findViewById(R.id.oportunidad_direccion_referencia)).setText(opt.getDireccionReferencia());
+            ((EditText) view.findViewById(R.id.oportunidad_pagina_web)).setText(opt.getPaginaWeb());
+            ((EditText) view.findViewById(R.id.oportunidad_email)).setText(opt.getCorreo());
+            oportunidad.setLongitud(opt.getLongitud());
+            oportunidad.setLatitud(opt.getLatitud());
+            ((SeekBar) view.findViewById(R.id.oportunidad_probabilidad)).setProgress(opt.getProbabilidad());
+            LatLng pos = new LatLng(opt.getLatitud(), opt.getLongitud());
+            Marker mark = map.addMarker(new MarkerOptions().position(pos)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_position)));
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 12), 1, null);
+
+            for (OportunidadResponsable resp : opt.getOportunidadResponsables())
+                addThisAgente(resp.getIdAgente());
+            for (OportunidadContacto opCont : opt.getOportunidadContactos())
+                addContacto(opCont.getID());
+
+            for (int i = 0; i < opt.getOportunidadFotos().size(); i++) {
+                photos.set(i, opt.getOportunidadFotos().get(i).getURLFoto());
+                switch (i) {
+                    case 0:
+                        DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
+                                        rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + opt.getOportunidadFotos().get(i).getURLFoto(),
+                                ((ImageButton) view.findViewById(R.id.oportunidad_foto1)));
+                        ((ImageButton) view.findViewById(R.id.oportunidad_foto1)).setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        break;
+                    case 1:
+                        DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
+                                        rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + opt.getOportunidadFotos().get(i).getURLFoto(),
+                                ((ImageButton) view.findViewById(R.id.oportunidad_foto2)));
+                        ((ImageButton) view.findViewById(R.id.oportunidad_foto2)).setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        break;
+                    case 2:
+                        DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
+                                        rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + opt.getOportunidadFotos().get(i).getURLFoto(),
+                                ((ImageButton) view.findViewById(R.id.oportunidad_foto3)));
+                        ((ImageButton) view.findViewById(R.id.oportunidad_foto3)).setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        break;
+                }
+            }
+
+            setData = true;
+        }
 
     }
 
@@ -483,7 +609,7 @@ public class CrearOportunidadFragment extends BaseFragment {
         getActivity().startActivityForResult(captureIntent, idView);
     }
 
-    private void addThisAgente()
+    private void addThisAgente(int id)
     {
         final LinearLayout responsable = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.rowlist_responsable, null);
         final int pos = listViewResponsables.size();
@@ -495,7 +621,7 @@ public class CrearOportunidadFragment extends BaseFragment {
                 ResponsableContainer.removeView(responsable);
             }
         });
-        Agente agt = Agente.getAgente(getDataBase(), PreferenceManager.getInt(Contants.KEY_IDAGENTE));
+        Agente agt = Agente.getAgente(getDataBase(), id);
         ((TextView) responsable.findViewById(R.id.responsable_nombre)).setText(agt.getNombre());
         listAgentesIds.add(agt.getIdAgente());
         ResponsableContainer.addView(responsable);
@@ -574,6 +700,40 @@ public class CrearOportunidadFragment extends BaseFragment {
         listViewContactos.add(contacto);
     }
 
+    private void addContacto(long id)
+    {
+        OportunidadContacto opCont = OportunidadContacto.getContactoInt(getDataBase(), id);
+        final LinearLayout contacto = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.layout_crear_oportunidad_contacto, null);
+        final int pos = listViewContactos.size();
+        ((ImageView) contacto.findViewById(R.id.contacto_eliminar)).setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                listViewContactos.remove(contacto);
+                ContactosContainer.removeView(contacto);
+                contactPhotos.remove(pos);
+            }});
+        contactPhotos.add("");
+        contacto.findViewById(R.id.contacto_foto).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                posContact = pos;
+                isClient = false;
+                takePicture(1);
+            }
+        });
+        ((EditText) contacto.findViewById(R.id.contacto_nombre)).setText(opCont.getNombre());
+        ((EditText) contacto.findViewById(R.id.contacto_cargo)).setText(opCont.getCargo());
+        DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
+                        rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + opCont.getURLFoto(),
+                (ImageView) contacto.findViewById(R.id.contacto_foto));
+        ((ImageButton) contacto.findViewById(R.id.contacto_foto)).setScaleType(ImageView.ScaleType.CENTER_CROP);
+        contactPhotos.add(opCont.getURLFoto());
+        ContactosContainer.addView(contacto);
+        listViewContactos.add(contacto);
+    }
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -619,23 +779,23 @@ public class CrearOportunidadFragment extends BaseFragment {
 
                     if (requestCode == PHOTO_1) {
                         ((ImageButton) getRootView().findViewById(R.id.oportunidad_foto1)).setImageBitmap(pree);
-                        ((ImageButton) getRootView().findViewById(R.id.oportunidad_foto3)).setScaleType(ImageView.ScaleType.CENTER_CROP);
-                        photos.set(0, Utils.SaveBitmap(pree, "edit_client"));
+                        ((ImageButton) getRootView().findViewById(R.id.oportunidad_foto1)).setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        photos.set(0, Utils.SaveBitmap(pree, "edit_client1"));
                     }
                     if (requestCode == PHOTO_2) {
                         ((ImageButton) getRootView().findViewById(R.id.oportunidad_foto2)).setImageBitmap(pree);
-                        ((ImageButton) getRootView().findViewById(R.id.oportunidad_foto3)).setScaleType(ImageView.ScaleType.CENTER_CROP);
-                        photos.set(1, Utils.SaveBitmap(pree, "edit_client"));
+                        ((ImageButton) getRootView().findViewById(R.id.oportunidad_foto2)).setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        photos.set(1, Utils.SaveBitmap(pree, "edit_client2"));
                     }
                     if (requestCode == PHOTO_3) {
                         ((ImageButton) getRootView().findViewById(R.id.oportunidad_foto3)).setImageBitmap(pree);
                         ((ImageButton) getRootView().findViewById(R.id.oportunidad_foto3)).setScaleType(ImageView.ScaleType.CENTER_CROP);
-                        photos.set(2, Utils.SaveBitmap(pree, "edit_client"));
+                        photos.set(2, Utils.SaveBitmap(pree, "edit_client3"));
                     }
                 } else {
                     ((ImageButton) listViewContactos.get(posContact).findViewById(R.id.contacto_foto)).setImageBitmap(pree);
                     ((ImageButton) listViewContactos.get(posContact).findViewById(R.id.contacto_foto)).setScaleType(ImageView.ScaleType.CENTER_CROP);
-                    contactPhotos.set(posContact, Utils.SaveBitmap(pree, "edit_contact"));
+                    contactPhotos.set(posContact, Utils.SaveBitmap(pree, "edit_contact" + posContact));
                 }
             }
         }

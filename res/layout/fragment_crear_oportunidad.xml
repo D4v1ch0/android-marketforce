@@ -149,6 +149,42 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/label_probabilidad_venta"
+        android:id="@+id/textView75"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp"
+        android:textColor="@color/color_text_sky_blue" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center">
+
+        <SeekBar
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/oportunidad_probabilidad"
+            android:layout_marginLeft="15dp"
+            android:layout_weight="1"
+            android:max="100"
+            android:progress="100"
+            android:thumb="@drawable/pestana_prob" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="100%"
+            android:id="@+id/oportunidad_prob_label" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/label_importancia_estrategica"
         android:id="@+id/textView66"
         android:layout_marginLeft="15dp"

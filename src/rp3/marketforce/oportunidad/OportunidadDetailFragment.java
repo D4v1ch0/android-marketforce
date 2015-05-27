@@ -4,6 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -240,6 +245,19 @@ public class OportunidadDetailFragment extends BaseFragment {
         ((TextView) rootView.findViewById(R.id.oportunidad_descripcion)).setText(opt.getDescripcion());
         ((TextView) rootView.findViewById(R.id.oportunidad_referencia)).setText(opt.getReferencia());
         ((RatingBar) rootView.findViewById(R.id.oportunidad_calificacion)).setRating(opt.getCalificacion());
+        if(opt.getEstado().equalsIgnoreCase("S"))
+            ((ImageView) rootView.findViewById(R.id.oportunidad_estado)).setImageResource(R.drawable.blue_flag);
+        if(opt.getEstado().equalsIgnoreCase("C"))
+            ((ImageView) rootView.findViewById(R.id.oportunidad_estado)).setImageResource(R.drawable.green_flag);
+        if(opt.getEstado().equalsIgnoreCase("NC"))
+            ((ImageView) rootView.findViewById(R.id.oportunidad_estado)).setImageResource(R.drawable.gray_flag);
+
+        rootView.findViewById(R.id.oportunidad_estado).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //ir a menu de banderas
+            }
+        });
 
         inflater = (LayoutInflater) this.getActivity().getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
@@ -283,6 +301,25 @@ public class OportunidadDetailFragment extends BaseFragment {
                 DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
                                 rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + opt.getOportunidadContactos().get(i).getURLFoto(),
                         (ImageView) view_contacto.getRootView().findViewById(R.id.oportunidad_contacto_foto));
+                final int finalI = i;
+                view_contacto.findViewById(R.id.oportunidad_contacto_foto).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(getContext(), FotoOportunidadActivity.class);
+                        intent.putExtra(FotoOportunidadActivity.ARG_ID, opt.getOportunidadContactos().get(finalI).getID());
+                        intent.putExtra(FotoOportunidadActivity.ARG_TIPO, 1);
+                        startActivity(intent);
+                    }
+                });
+                view_contacto.findViewById(R.id.contacto_foto).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(getContext(), FotoOportunidadActivity.class);
+                        intent.putExtra(FotoOportunidadActivity.ARG_ID, opt.getOportunidadContactos().get(finalI).getID());
+                        intent.putExtra(FotoOportunidadActivity.ARG_TIPO, 1);
+                        startActivity(intent);
+                    }
+                });
                 ((LinearLayout)view_info.findViewById(R.id.oportunidad_contactos)).addView(view_contacto);
             }
         }
@@ -370,10 +407,14 @@ public class OportunidadDetailFragment extends BaseFragment {
                             DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
                                             rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + opt.getOportunidadFotos().get(i).getURLFoto(),
                                     ((ImageView) view_fotos.findViewById(R.id.oportunidad_photo1)));
+                            final int finalI = i;
                             ((ImageButton) view_fotos.findViewById(R.id.oportunidad_photo1_click)).setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    //Mostrar Zoom
+                                    Intent intent = new Intent(getContext(), FotoOportunidadActivity.class);
+                                    intent.putExtra(FotoOportunidadActivity.ARG_ID, opt.getOportunidadFotos().get(finalI).getID());
+                                    intent.putExtra(FotoOportunidadActivity.ARG_TIPO, 2);
+                                    startActivity(intent);
                                 }
                             });
                             ((TextView) view_fotos.findViewById(R.id.oportunidad_photo1_fecha)).setText("");
@@ -383,10 +424,14 @@ public class OportunidadDetailFragment extends BaseFragment {
                             DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
                                             rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + opt.getOportunidadFotos().get(i).getURLFoto(),
                                     ((ImageView) view_fotos.findViewById(R.id.oportunidad_photo2)));
+                            final int finalI2 = i;
                             ((ImageButton) view_fotos.findViewById(R.id.oportunidad_photo2_click)).setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    //Mostrar Zoom
+                                    Intent intent = new Intent(getContext(), FotoOportunidadActivity.class);
+                                    intent.putExtra(FotoOportunidadActivity.ARG_ID, opt.getOportunidadFotos().get(finalI2).getID());
+                                    intent.putExtra(FotoOportunidadActivity.ARG_TIPO, 2);
+                                    startActivity(intent);
                                 }
                             });
                             ((TextView) view_fotos.findViewById(R.id.oportunidad_photo2_fecha)).setText("");
@@ -396,10 +441,14 @@ public class OportunidadDetailFragment extends BaseFragment {
                             DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
                                             rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + opt.getOportunidadFotos().get(i).getURLFoto(),
                                     ((ImageView) view_fotos.findViewById(R.id.oportunidad_photo3)));
+                            final int finalI3 = i;
                             ((ImageButton) view_fotos.findViewById(R.id.oportunidad_photo3_click)).setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    //Mostrar Zoom
+                                    Intent intent = new Intent(getContext(), FotoOportunidadActivity.class);
+                                    intent.putExtra(FotoOportunidadActivity.ARG_ID, opt.getOportunidadFotos().get(finalI3).getID());
+                                    intent.putExtra(FotoOportunidadActivity.ARG_TIPO, 2);
+                                    startActivity(intent);
                                 }
                             });
                             ((TextView) view_fotos.findViewById(R.id.oportunidad_photo3_fecha)).setText("");

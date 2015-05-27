@@ -304,122 +304,76 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 	@SuppressLint("SimpleDateFormat")
 	private void OrderBy(int option) {
 
-        if (lista == null)
-            return;
+        try {
 
-        if (lista.size() == 0)
-            return;
 
-        headerList = new HeaderListView(getActivity());
-        if(refreshLayout == null)
-            refreshLayout = new SwipeRefreshLayout(this.getContext());
-        refreshLayout.addView(headerList);
-        linearLayout_rootParent.removeView(refreshLayout);
-        linearLayout_rootParent.addView(refreshLayout);
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (ConnectionUtils.isNetAvailable(getContext())) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_CLIENTES);
-                    requestSync(bundle);
-                } else {
-                    Toast.makeText(getContext(), R.string.message_error_sync_no_net_available, Toast.LENGTH_LONG).show();
-                    refreshLayout.setRefreshing(false);
+            if (lista == null)
+                return;
+
+            if (lista.size() == 0)
+                return;
+
+            headerList = new HeaderListView(getActivity());
+            if (refreshLayout == null)
+                refreshLayout = new SwipeRefreshLayout(this.getContext());
+            refreshLayout.addView(headerList);
+            linearLayout_rootParent.removeView(refreshLayout);
+            linearLayout_rootParent.addView(refreshLayout);
+            refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    if (ConnectionUtils.isNetAvailable(getContext())) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_CLIENTES);
+                        requestSync(bundle);
+                    } else {
+                        Toast.makeText(getContext(), R.string.message_error_sync_no_net_available, Toast.LENGTH_LONG).show();
+                        refreshLayout.setRefreshing(false);
+                    }
                 }
-            }
-        });
-        headerList.getListView().setSelector(getActivity().getResources().getDrawable(R.drawable.bkg));
-        headerList.setId(HEADERLIST_ID);
-        headerList.getListView().setOnScrollListener(new AbsListView.OnScrollListener() {
+            });
+            headerList.getListView().setSelector(getActivity().getResources().getDrawable(R.drawable.bkg));
+            headerList.setId(HEADERLIST_ID);
+            headerList.getListView().setOnScrollListener(new AbsListView.OnScrollListener() {
 
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                @Override
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
 
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem,
-                                 int visibleItemCount, int totalItemCount) {
-
-                if (firstVisibleItem == 0 && visibleItemCount != 0) {
-                    refreshLayout.setEnabled(true);
-                } else {
-                    refreshLayout.setEnabled(false);
                 }
 
-            }
-        });
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem,
+                                     int visibleItemCount, int totalItemCount) {
 
-
-        headersortList = new ArrayList<String>();
-
-        list_order = new ArrayList<ArrayList<rp3.marketforce.models.Cliente>>();
-
-
-        switch (option) {
-            case ORDER_BY_NAME:
-
-                for (int x = 0; x < lista.size(); x++)
-                    if (!headersortList.contains("" + lista.get(x).getNombre1().toUpperCase().charAt(0)))
-                        headersortList.add("" + lista.get(x).getNombre1().toUpperCase().charAt(0));
-
-                Collections.sort(headersortList);
-
-                for (int x = 0; x < headersortList.size(); x++) {
-                    ArrayList<rp3.marketforce.models.Cliente> list_aux = new ArrayList<rp3.marketforce.models.Cliente>();
-
-                    for (int y = 0; y < lista.size(); y++) {
-                        if (headersortList.get(x).equals("" + lista.get(y).getNombre1().toUpperCase().charAt(0))) {
-                            rp3.marketforce.models.Cliente cliente = new rp3.marketforce.models.Cliente();
-
-                            cliente.setID(lista.get(y).getID());
-                            cliente.setNombre1(lista.get(y).getNombre1());
-                            cliente.setNombre2(lista.get(y).getNombre2());
-                            cliente.setApellido1(lista.get(y).getApellido1());
-                            cliente.setApellido2(lista.get(y).getApellido2());
-                            cliente.setTelefono(lista.get(y).getTelefono());
-                            cliente.setDireccion(lista.get(y).getDireccion());
-                            cliente.setCorreoElectronico(lista.get(y).getCorreoElectronico());
-                            cliente.setTipoPersona(lista.get(y).getTipoPersona());
-
-                            list_aux.add(cliente);
-                        }
+                    if (firstVisibleItem == 0 && visibleItemCount != 0) {
+                        refreshLayout.setEnabled(true);
+                    } else {
+                        refreshLayout.setEnabled(false);
                     }
 
-                    list_order.add(list_aux);
                 }
-                adapter = new ClientListAdapter(this.getActivity(), list_order, headersortList, ORDER_BY_NAME, clienteListFragmentCallback);
-                headerList.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
-                if (clienteListFragmentCallback.allowSelectedItem())
-                    clienteListFragmentCallback.onClienteSelected(list_order.get(0).get(0));
+            });
 
-//			ORDER_IDENTIFICATOR	= ORDER_BY_NAME;
 
-                break;
-            case ORDER_BY_LAST_NAME:
+            headersortList = new ArrayList<String>();
 
-                for (int x = 0; x < lista.size(); x++) {
-                    if (!lista.get(x).getTipoPersona().equalsIgnoreCase("J")) {
-                        if (lista.get(x).getApellido1().length() > 0) {
-                            if (!headersortList.contains("" + lista.get(x).getApellido1().toUpperCase().charAt(0)))
-                                headersortList.add("" + lista.get(x).getApellido1().toUpperCase().charAt(0));
-                        }
-                    } else {
+            list_order = new ArrayList<ArrayList<rp3.marketforce.models.Cliente>>();
+
+
+            switch (option) {
+                case ORDER_BY_NAME:
+
+                    for (int x = 0; x < lista.size(); x++)
                         if (!headersortList.contains("" + lista.get(x).getNombre1().toUpperCase().charAt(0)))
                             headersortList.add("" + lista.get(x).getNombre1().toUpperCase().charAt(0));
-                    }
-                }
 
-                Collections.sort(headersortList);
+                    Collections.sort(headersortList);
 
-                for (int x = 0; x < headersortList.size(); x++) {
-                    ArrayList<rp3.marketforce.models.Cliente> list_aux = new ArrayList<rp3.marketforce.models.Cliente>();
+                    for (int x = 0; x < headersortList.size(); x++) {
+                        ArrayList<rp3.marketforce.models.Cliente> list_aux = new ArrayList<rp3.marketforce.models.Cliente>();
 
-                    for (int y = 0; y < lista.size(); y++) {
-                        if (lista.get(y).getTipoPersona().equalsIgnoreCase("N") || lista.get(y).getTipoPersona().equalsIgnoreCase("C"))
-                            if (lista.get(y).getApellido1().length() > 0 && headersortList.get(x).equals("" + lista.get(y).getApellido1().toUpperCase().charAt(0))) {
+                        for (int y = 0; y < lista.size(); y++) {
+                            if (headersortList.get(x).equals("" + lista.get(y).getNombre1().toUpperCase().charAt(0))) {
                                 rp3.marketforce.models.Cliente cliente = new rp3.marketforce.models.Cliente();
 
                                 cliente.setID(lista.get(y).getID());
@@ -434,34 +388,87 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 
                                 list_aux.add(cliente);
                             }
-                        if (lista.get(y).getTipoPersona().equalsIgnoreCase("J") && headersortList.get(x).equals("" + lista.get(y).getNombre1().toUpperCase().charAt(0))) {
-                            rp3.marketforce.models.Cliente cliente = new rp3.marketforce.models.Cliente();
+                        }
 
-                            cliente.setID(lista.get(y).getID());
-                            cliente.setNombre1(lista.get(y).getNombre1());
-                            cliente.setNombre2(lista.get(y).getNombre2());
-                            cliente.setApellido1(lista.get(y).getApellido1());
-                            cliente.setApellido2(lista.get(y).getApellido2());
-                            cliente.setTelefono(lista.get(y).getTelefono());
-                            cliente.setDireccion(lista.get(y).getDireccion());
-                            cliente.setCorreoElectronico(lista.get(y).getCorreoElectronico());
-                            cliente.setTipoPersona(lista.get(y).getTipoPersona());
+                        list_order.add(list_aux);
+                    }
+                    adapter = new ClientListAdapter(this.getActivity(), list_order, headersortList, ORDER_BY_NAME, clienteListFragmentCallback);
+                    headerList.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                    if (clienteListFragmentCallback.allowSelectedItem())
+                        clienteListFragmentCallback.onClienteSelected(list_order.get(0).get(0));
 
-                            list_aux.add(cliente);
+//			ORDER_IDENTIFICATOR	= ORDER_BY_NAME;
+
+                    break;
+                case ORDER_BY_LAST_NAME:
+
+                    for (int x = 0; x < lista.size(); x++) {
+                        if (!lista.get(x).getTipoPersona().equalsIgnoreCase("J")) {
+                            if (lista.get(x).getApellido1().length() > 0) {
+                                if (!headersortList.contains("" + lista.get(x).getApellido1().toUpperCase().charAt(0)))
+                                    headersortList.add("" + lista.get(x).getApellido1().toUpperCase().charAt(0));
+                            }
+                        } else {
+                            if (!headersortList.contains("" + lista.get(x).getNombre1().toUpperCase().charAt(0)))
+                                headersortList.add("" + lista.get(x).getNombre1().toUpperCase().charAt(0));
                         }
                     }
 
-                    list_order.add(list_aux);
-                }
-                adapter = new ClientListAdapter(this.getActivity(), list_order, headersortList, ORDER_BY_LAST_NAME, clienteListFragmentCallback);
-                headerList.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
-                if (clienteListFragmentCallback.allowSelectedItem())
-                    clienteListFragmentCallback.onClienteSelected(list_order.get(0).get(0));
+                    Collections.sort(headersortList);
+
+                    for (int x = 0; x < headersortList.size(); x++) {
+                        ArrayList<rp3.marketforce.models.Cliente> list_aux = new ArrayList<rp3.marketforce.models.Cliente>();
+
+                        for (int y = 0; y < lista.size(); y++) {
+                            if (lista.get(y).getTipoPersona().equalsIgnoreCase("N") || lista.get(y).getTipoPersona().equalsIgnoreCase("C"))
+                                if (lista.get(y).getApellido1().length() > 0 && headersortList.get(x).equals("" + lista.get(y).getApellido1().toUpperCase().charAt(0))) {
+                                    rp3.marketforce.models.Cliente cliente = new rp3.marketforce.models.Cliente();
+
+                                    cliente.setID(lista.get(y).getID());
+                                    cliente.setNombre1(lista.get(y).getNombre1());
+                                    cliente.setNombre2(lista.get(y).getNombre2());
+                                    cliente.setApellido1(lista.get(y).getApellido1());
+                                    cliente.setApellido2(lista.get(y).getApellido2());
+                                    cliente.setTelefono(lista.get(y).getTelefono());
+                                    cliente.setDireccion(lista.get(y).getDireccion());
+                                    cliente.setCorreoElectronico(lista.get(y).getCorreoElectronico());
+                                    cliente.setTipoPersona(lista.get(y).getTipoPersona());
+
+                                    list_aux.add(cliente);
+                                }
+                            if (lista.get(y).getTipoPersona().equalsIgnoreCase("J") && headersortList.get(x).equals("" + lista.get(y).getNombre1().toUpperCase().charAt(0))) {
+                                rp3.marketforce.models.Cliente cliente = new rp3.marketforce.models.Cliente();
+
+                                cliente.setID(lista.get(y).getID());
+                                cliente.setNombre1(lista.get(y).getNombre1());
+                                cliente.setNombre2(lista.get(y).getNombre2());
+                                cliente.setApellido1(lista.get(y).getApellido1());
+                                cliente.setApellido2(lista.get(y).getApellido2());
+                                cliente.setTelefono(lista.get(y).getTelefono());
+                                cliente.setDireccion(lista.get(y).getDireccion());
+                                cliente.setCorreoElectronico(lista.get(y).getCorreoElectronico());
+                                cliente.setTipoPersona(lista.get(y).getTipoPersona());
+
+                                list_aux.add(cliente);
+                            }
+                        }
+
+                        list_order.add(list_aux);
+                    }
+                    adapter = new ClientListAdapter(this.getActivity(), list_order, headersortList, ORDER_BY_LAST_NAME, clienteListFragmentCallback);
+                    headerList.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                    if (clienteListFragmentCallback.allowSelectedItem())
+                        clienteListFragmentCallback.onClienteSelected(list_order.get(0).get(0));
 //			ORDER_IDENTIFICATOR	= ORDER_BY_LAST_NAME;
 
-                break;
+                    break;
+            }
         }
+        catch(Exception ex)
+        {}
+
     }
 
 
@@ -535,21 +542,27 @@ public class ClientListFragment extends rp3.app.BaseFragment {
         super.onSyncComplete(data, messages);
 
         closeDialogProgress();
-        refreshLayout.setRefreshing(false);
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (ConnectionUtils.isNetAvailable(getContext())) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_CLIENTES);
-                    requestSync(bundle);
-                } else {
-                    Toast.makeText(getContext(), R.string.message_error_sync_no_net_available, Toast.LENGTH_LONG).show();
-                    refreshLayout.setRefreshing(false);
+        try {
+
+
+            refreshLayout.setRefreshing(false);
+            refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    if (ConnectionUtils.isNetAvailable(getContext())) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_CLIENTES);
+                        requestSync(bundle);
+                    } else {
+                        Toast.makeText(getContext(), R.string.message_error_sync_no_net_available, Toast.LENGTH_LONG).show();
+                        refreshLayout.setRefreshing(false);
+                    }
                 }
-            }
-        });
-        onResume();
+            });
+            onResume();
+        }
+        catch (Exception ex)
+        {}
     }
 
 	

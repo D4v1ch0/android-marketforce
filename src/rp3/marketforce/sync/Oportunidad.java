@@ -10,6 +10,7 @@ import org.ksoap2.transport.HttpResponseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import rp3.configuration.PreferenceManager;
 import rp3.connection.HttpConnection;
 import rp3.connection.WebService;
 import rp3.content.SyncAdapter;
@@ -20,10 +21,12 @@ import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.AgendaTareaActividades;
 import rp3.marketforce.models.oportunidad.EtapaTarea;
 import rp3.marketforce.models.oportunidad.OportunidadContacto;
+import rp3.marketforce.models.oportunidad.OportunidadEtapa;
 import rp3.marketforce.models.oportunidad.OportunidadFoto;
 import rp3.marketforce.models.oportunidad.OportunidadResponsable;
 import rp3.marketforce.models.oportunidad.OportunidadTarea;
 import rp3.marketforce.models.oportunidad.OportunidadTareaActividad;
+import rp3.marketforce.utils.Utils;
 import rp3.util.Convert;
 
 /**
@@ -50,14 +53,15 @@ public class Oportunidad {
                 jObject.put("Descripcion", oportunidadUpload.getDescripcion());
                 jObject.put("Calificacion", oportunidadUpload.getCalificacion());
                 jObject.put("FechaUltimaGestionTicks", Convert.getDotNetTicksFromDate(oportunidadUpload.getFechaUltimaGestion()));
+                jObject.put("FechaUltimaGestionTicks", Convert.getDotNetTicksFromDate(oportunidadUpload.getFechaUltimaGestion()));
                 jObject.put("Estado", oportunidadUpload.getEstado());
                 jObject.put("Direccion", oportunidadUpload.getDireccion());
                 jObject.put("Importe", oportunidadUpload.getImporte());
                 jObject.put("Latitud", oportunidadUpload.getLatitud());
                 jObject.put("Longitud", oportunidadUpload.getLongitud());
                 jObject.put("Observacion", oportunidadUpload.getObservacion());
-                jObject.put("Probabilidad", 0);
-                //jObject.put("Probabilidad", oportunidadUpload.getProbabilidad());
+                //jObject.put("Probabilidad", 0);
+                jObject.put("Probabilidad", oportunidadUpload.getProbabilidad());
                 jObject.put("Referencia", oportunidadUpload.getReferencia());
 
                 JSONArray jArrayTareas = new JSONArray();
@@ -121,6 +125,19 @@ public class Oportunidad {
                 }
                 jObject.put("OportunidadResponsables", jArrayResponsables);
 
+                JSONArray jArrayEtapas = new JSONArray();
+                for (OportunidadEtapa etapa : oportunidadUpload.getOportunidadEtapas()) {
+                    JSONObject jObjectEtapa = new JSONObject();
+                    jObjectEtapa.put("IdEtapa", etapa.getIdEtapa());
+                    jObjectEtapa.put("Estado", etapa.getEstado());
+                    jObjectEtapa.put("Observacion", etapa.getObservacion());
+                    jObjectEtapa.put("FechaFinTicks", Convert.getDotNetTicksFromDate(etapa.getFechaFin()));
+                    jObjectEtapa.put("FechaInicioTicks", Convert.getDotNetTicksFromDate(etapa.getFechaInicio()));
+
+                    jArrayResponsables.put(jObjectEtapa);
+                }
+                jObject.put("OportunidadEtapas", jArrayEtapas);
+
             } catch (Exception ex) {
 
             }
@@ -165,6 +182,42 @@ public class Oportunidad {
 
         webService.close();
 
+        for(rp3.marketforce.models.oportunidad.Oportunidad opt : oportunidades) {
+            for (int i = 0; i < opt.getOportunidadFotos().size(); i++) {
+                OportunidadFoto foto = opt.getOportunidadFotos().get(i);
+                webService = new WebService("MartketForce", "SetOportunidadFoto");
+
+                JSONObject jObject = new JSONObject();
+                try {
+                    jObject.put("IdOportunidad", opt.getIdOportunidad());
+                    jObject.put("IdMedia", i+1);
+                    jObject.put("Nombre", opt.getIdOportunidad() + "_Foto" + i +".jpg");
+                    jObject.put("Contenido", Utils.CroppedBitmapToBase64(foto.getURLFoto()));
+                } catch (Exception ex) {
+
+                }
+
+                webService.addParameter("media", jObject);
+
+                try {
+                    webService.addCurrentAuthToken();
+
+                    try {
+                        webService.invokeWebService();
+                    } catch (HttpResponseException e) {
+                        if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                            return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                        return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+                    } catch (Exception e) {
+                        return SyncAdapter.SYNC_EVENT_ERROR;
+                    }
+
+                } finally {
+                    webService.close();
+                }
+            }
+        }
+
         return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
     }
 
@@ -197,6 +250,12 @@ public class Oportunidad {
                 jObject.put("Observacion", oportunidadUpload.getObservacion());
                 jObject.put("Probabilidad", oportunidadUpload.getProbabilidad());
                 jObject.put("Referencia", oportunidadUpload.getReferencia());
+                jObject.put("CorreoElectronico", oportunidadUpload.getCorreo());
+                jObject.put("TipoEmpresa", oportunidadUpload.getTipoEmpresa());
+                jObject.put("ReferenciaDireccion", oportunidadUpload.getDireccionReferencia());
+                jObject.put("Telefono1", oportunidadUpload.getTelefono1());
+                jObject.put("Telefono2", oportunidadUpload.getTelefono2());
+                jObject.put("PaginaWeb", oportunidadUpload.getPaginaWeb());
 
                 JSONArray jArrayTareas = new JSONArray();
                 for (OportunidadTarea agt : oportunidadUpload.getOportunidadTareas()) {
@@ -263,6 +322,20 @@ public class Oportunidad {
                     jArrayResponsables.put(jObjectResponsable);
                 }
                 jObject.put("OportunidadResponsables", jArrayResponsables);
+
+                JSONArray jArrayEtapas = new JSONArray();
+                for (OportunidadEtapa etapa : oportunidadUpload.getOportunidadEtapas()) {
+                    JSONObject jObjectEtapa = new JSONObject();
+                    jObjectEtapa.put("IdEtapa", etapa.getIdEtapa());
+                    jObjectEtapa.put("Estado", etapa.getEstado());
+                    jObjectEtapa.put("Observacion", etapa.getObservacion());
+                    jObjectEtapa.put("FechaFinTicks", Convert.getDotNetTicksFromDate(etapa.getFechaFin()));
+                    jObjectEtapa.put("FechaInicioTicks", Convert.getDotNetTicksFromDate(etapa.getFechaInicio()));
+
+                    jArrayResponsables.put(jObjectEtapa);
+                }
+                jObject.put("OportunidadEtapas", jArrayEtapas);
+
                 jArray.put(jObject);
             } catch (Exception ex) {
 
@@ -292,6 +365,42 @@ public class Oportunidad {
         } finally {
             webService.close();
         }
+
+        for(rp3.marketforce.models.oportunidad.Oportunidad opt : oportunidades) {
+            for (int i = 0; i < opt.getOportunidadFotos().size(); i++) {
+                OportunidadFoto foto = opt.getOportunidadFotos().get(i);
+                webService = new WebService("MartketForce", "SetOportunidadFoto");
+
+                JSONObject jObject = new JSONObject();
+                try {
+                    jObject.put("IdOportunidad", opt.getIdOportunidad());
+                    jObject.put("IdMedia", i+1);
+                    jObject.put("Nombre", opt.getIdOportunidad() + "_Foto" + i +".jpg");
+                    jObject.put("Contenido", Utils.CroppedBitmapToBase64(foto.getURLFoto()));
+                } catch (Exception ex) {
+
+                }
+
+                webService.addParameter("media", jObject);
+
+                try {
+                    webService.addCurrentAuthToken();
+
+                    try {
+                        webService.invokeWebService();
+                    } catch (HttpResponseException e) {
+                        if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                            return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                        return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+                    } catch (Exception e) {
+                        return SyncAdapter.SYNC_EVENT_ERROR;
+                    }
+
+                } finally {
+                    webService.close();
+                }
+            }
+        }
         return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
     }
 
@@ -319,6 +428,7 @@ public class Oportunidad {
             OportunidadResponsable.deleteAll(db, Contract.OportunidadResponsable.TABLE_NAME);
             OportunidadContacto.deleteAll(db, Contract.OportunidadContacto.TABLE_NAME);
             OportunidadFoto.deleteAll(db, Contract.OportunidadFoto.TABLE_NAME);
+            OportunidadEtapa.deleteAll(db, Contract.OportunidadEtapa.TABLE_NAME);
 
             for(int i=0; i < types.length(); i++){
 
@@ -340,6 +450,30 @@ public class Oportunidad {
                     opt.setLatitud(type.getDouble("Latitud"));
                     opt.setLongitud(type.getDouble("Longitud"));
                     opt.setEstado(type.getString("Estado"));
+                    if(!type.isNull("CorreoElectronico"))
+                        opt.setCorreo(type.getString("CorreoElectronico"));
+                    else
+                        opt.setCorreo("");
+                    if(!type.isNull("Telefono1"))
+                        opt.setTelefono1(type.getString("Telefono1"));
+                    else
+                        opt.setTelefono1("");
+                    if(!type.isNull("Telefono2"))
+                        opt.setTelefono2(type.getString("Telefono2"));
+                    else
+                        opt.setTelefono2("");
+                    if(!type.isNull("ReferenciaDireccion"))
+                        opt.setDireccionReferencia(type.getString("ReferenciaDireccion"));
+                    else
+                        opt.setDireccionReferencia("");
+                    if(!type.isNull("PaginaWeb"))
+                        opt.setPaginaWeb(type.getString("PaginaWeb"));
+                    else
+                        opt.setPaginaWeb("");
+                    if(!type.isNull("TipoEmpresa"))
+                        opt.setTipoEmpresa(type.getString("TipoEmpresa"));
+                    else
+                        opt.setTipoEmpresa("");
 
                     rp3.marketforce.models.oportunidad.Oportunidad.insert(db, opt);
 
@@ -368,6 +502,22 @@ public class Oportunidad {
                         opResp.setIdAgente(str.getInt("IdAgente"));
 
                         OportunidadResponsable.insert(db, opResp);
+                    }
+
+                    strs = type.getJSONArray("OportunidadEtapas");
+
+                    for (int j = 0; j < strs.length(); j++) {
+                        JSONObject str = strs.getJSONObject(j);
+                        OportunidadEtapa opEtapa = new OportunidadEtapa();
+
+                        opEtapa.setIdOportunidad(opt.getIdOportunidad());
+                        opEtapa.setIdEtapa(str.getInt("IdEtapa"));
+                        opEtapa.setObservacion(str.getString("Observacion"));
+                        opEtapa.setEstado(str.getString("Estado"));
+                        opEtapa.setFechaInicio(Convert.getDateFromDotNetTicks(str.getLong("FechaInicioTicks")));
+                        opEtapa.setFechaFin(Convert.getDateFromDotNetTicks(str.getLong("FechaFinTicks")));
+
+                        OportunidadEtapa.insert(db, opEtapa);
                     }
 
                     strs = type.getJSONArray("OportunidadTareas");

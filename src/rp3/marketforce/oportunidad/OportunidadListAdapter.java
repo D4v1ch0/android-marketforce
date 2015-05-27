@@ -42,8 +42,8 @@ public class OportunidadListAdapter extends BaseAdapter {
         this.list_oportunidad = list_oportunidad;
         this.transactionListFragmentCallback = transactionListFragmentCallback;
         numberFormat = NumberFormat.getInstance();
-        numberFormat.setMaximumFractionDigits(2);
-        numberFormat.setMinimumFractionDigits(2);
+        numberFormat.setMaximumFractionDigits(0);
+        numberFormat.setMinimumFractionDigits(0);
         format1 = new SimpleDateFormat("dd/MM/yy");
     }
 
@@ -61,22 +61,31 @@ public class OportunidadListAdapter extends BaseAdapter {
         ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_number)).setText((position + 1)+ "");
         ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_importe)).setText("$ " + numberFormat.format(opt.getImporte()));
         ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_contactado)).setText("Contactado: " + format1.format(opt.getFechaCreacion()));
+        if(opt.getEstado().equalsIgnoreCase("S"))
+            ((ImageView) convertView.findViewById(R.id.rowlist_oportunidad_prioridad)).setImageResource(R.drawable.blue_flag);
+        if(opt.getEstado().equalsIgnoreCase("C"))
+            ((ImageView) convertView.findViewById(R.id.rowlist_oportunidad_prioridad)).setImageResource(R.drawable.green_flag);
+        if(opt.getEstado().equalsIgnoreCase("NC"))
+            ((ImageView) convertView.findViewById(R.id.rowlist_oportunidad_prioridad)).setImageResource(R.drawable.gray_flag);
         Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
         Calendar calFecha = Calendar.getInstance();
         calFecha.setTime(opt.getFechaCreacion());
         long time = cal.getTimeInMillis() - calFecha.getTimeInMillis();
         long dias = time /( 1000 * 60 * 60 * 24);
         ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_dias)).setText("Días transcurridos: " + dias);
         ((RatingBar) convertView.findViewById(R.id.rowlist_oportunidad_calificacion)).setRating(opt.getCalificacion());
-        if(opt.getIdEtapa() > 0)
-            convertView.findViewById(R.id.rowlist_oportunidad_etapa1).setBackgroundColor(contex.getResources().getColor(R.color.color_etapa1));
         if(opt.getIdEtapa() > 1)
-            convertView.findViewById(R.id.rowlist_oportunidad_etapa2).setBackgroundColor(contex.getResources().getColor(R.color.color_etapa2));
+            convertView.findViewById(R.id.rowlist_oportunidad_etapa1).setBackgroundColor(contex.getResources().getColor(R.color.color_etapa1));
         if(opt.getIdEtapa() > 2)
-            convertView.findViewById(R.id.rowlist_oportunidad_etapa3).setBackgroundColor(contex.getResources().getColor(R.color.color_etapa3));
+            convertView.findViewById(R.id.rowlist_oportunidad_etapa2).setBackgroundColor(contex.getResources().getColor(R.color.color_etapa2));
         if(opt.getIdEtapa() > 3)
-            convertView.findViewById(R.id.rowlist_oportunidad_etapa4).setBackgroundColor(contex.getResources().getColor(R.color.color_etapa4));
+            convertView.findViewById(R.id.rowlist_oportunidad_etapa3).setBackgroundColor(contex.getResources().getColor(R.color.color_etapa3));
         if(opt.getIdEtapa() > 4)
+            convertView.findViewById(R.id.rowlist_oportunidad_etapa4).setBackgroundColor(contex.getResources().getColor(R.color.color_etapa4));
+        if(opt.getIdEtapa() > 5)
             convertView.findViewById(R.id.rowlist_oportunidad_etapa5).setBackgroundColor(contex.getResources().getColor(R.color.color_etapa5));
 
         return convertView;

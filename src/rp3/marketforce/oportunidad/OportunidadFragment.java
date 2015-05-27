@@ -167,7 +167,7 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
         // TODO Auto-generated method stub
         super.onStart();
 
-        if(selectedOportunidadId != 0){
+        if(selectedOportunidadId != 0 && !isActiveListFragment){
             if(!mTwoPane)
                 slidingPane.closePane();
         }
@@ -245,6 +245,11 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
             case R.id.action_crear_oportunidad:
                 Intent intent2 = new Intent(getContext(), CrearOportunidadActivity.class);
                 startActivity(intent2);
+                break;
+            case R.id.action_edit:
+                Intent intent3 = new Intent(getContext(), CrearOportunidadActivity.class);
+                intent3.putExtra(CrearOportunidadActivity.ARG_ID, selectedOportunidadId);
+                startActivity(intent3);
                 break;
             case R.id.action_quitar_filtro:
                 filtro = false;

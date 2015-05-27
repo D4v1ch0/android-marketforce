@@ -1089,7 +1089,7 @@
         FROM tbOportunidad
         JOIN tbOportunidadExt
         ON tbOportunidad._id = tbOportunidadExt.docid
-        ORDER BY tbOportunidad.Calificacion, tbOportunidad.Importe
+        ORDER BY tbOportunidad.Calificacion DESC, tbOportunidad.Importe DESC
     </statement>
 
     <statement name="OportunidadesByIds">

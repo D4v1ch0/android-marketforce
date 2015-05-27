@@ -126,4 +126,22 @@ public class OportunidadFoto extends EntityBase<OportunidadFoto> {
         }
         return list;
     }
+
+    public static OportunidadFoto getFotoInt(DataBase db, long id) {
+        Cursor c = db.query(Contract.OportunidadFoto.TABLE_NAME, new String[] {Contract.OportunidadFoto._ID, Contract.OportunidadFoto.COLUMN_ID_OPORTUNIDAD,
+                        Contract.OportunidadFoto.COLUMN_ID_OPORTUNIDAD_INT, Contract.OportunidadFoto.COLUMN_ID_OPORTUNIDAD_FOTO, Contract.OportunidadFoto.COLUMN_URL_FOTO},
+                Contract.OportunidadFoto._ID + " = ?", new String[]{id + ""});
+
+        OportunidadFoto foto = new OportunidadFoto();
+        while(c.moveToNext()){
+
+            foto.setID(CursorUtils.getInt(c, Contract.OportunidadFoto._ID));
+            foto.setIdOportunidad(CursorUtils.getInt(c, Contract.OportunidadFoto.COLUMN_ID_OPORTUNIDAD));
+            foto.set_idOportunidad(CursorUtils.getInt(c, Contract.OportunidadFoto.COLUMN_ID_OPORTUNIDAD_INT));
+            foto.setIdOportunidadFoto(CursorUtils.getInt(c, Contract.OportunidadFoto.COLUMN_ID_OPORTUNIDAD_FOTO));
+            foto.setURLFoto(CursorUtils.getString(c, Contract.OportunidadFoto.COLUMN_URL_FOTO));
+
+        }
+        return foto;
+    }
 }

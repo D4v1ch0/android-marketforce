@@ -189,7 +189,7 @@
     <string name="label_negociacion">Negociación</string>
     <string name="label_cierre_operacion">Cierre de Negociación</string>
     <string name="label_cantidad">CANTIDAD</string>
-    <string name="label_inserte_valor">Inserte Valor</string>
+    <string name="label_inserte_valor">Ingrese un valor</string>
     <string name="label_solo_activos">Mostrar activos</string>
     <string name="label_probabilidad_venta">Probabilidad de venta</string>
     <string name="label_cantidad_min">Cantidad</string>
@@ -220,6 +220,7 @@
     <string name="label_fecha_ultima_gestión">FECHA ULTIMA GESTIÓN</string>
     <string name="label_importancia_max">IMPORTANCIA</string>
     <string name="message_desde_hasta">Fecha desde no puede ser mayor a fecha hasta.</string>
+    <string name="message_desde_hasta_cantidad">Valor desde no puede ser mayor a valor hasta.</string>
     <string name="message_un_estado">Mínimo debe de escoger un estado.</string>
     <string name="message_sin_descripcion">Debe escribir el nombre de la oportunidad.</string>
     <string name="message_una_etapa">Mínimo debe de escoger una etapa.</string>

@@ -82,8 +82,8 @@ public class OportunidadListFragment extends BaseFragment {
         }
 
         numberFormat = NumberFormat.getInstance();
-        numberFormat.setMaximumFractionDigits(2);
-        numberFormat.setMinimumFractionDigits(2);
+        numberFormat.setMaximumFractionDigits(0);
+        numberFormat.setMinimumFractionDigits(0);
 
         super.setContentView(R.layout.fragment_oportunidad_list);
     }
@@ -208,77 +208,84 @@ public class OportunidadListFragment extends BaseFragment {
     @SuppressLint("SimpleDateFormat")
     private void OrderBy() {
 
-        if (lista == null) {
-            list.setVisibility(View.GONE);
-            getRootView().findViewById(R.id.oportunidad_empty).setVisibility(View.VISIBLE);
-            return;
-        }
+        try {
 
-        if (lista.size() == 0) {
-            list.setVisibility(View.GONE);
-            getRootView().findViewById(R.id.oportunidad_empty).setVisibility(View.VISIBLE);
-            return;
-        }
 
-        list.setVisibility(View.VISIBLE);
-        getRootView().findViewById(R.id.oportunidad_empty).setVisibility(View.GONE);
-
-        pullRefresher.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (ConnectionUtils.isNetAvailable(getContext())) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_OPORTUNIDADES);
-                    requestSync(bundle);
-                } else {
-                    Toast.makeText(getContext(), R.string.message_error_sync_no_net_available, Toast.LENGTH_LONG).show();
-                    pullRefresher.setRefreshing(false);
-                }
+            if (lista == null) {
+                list.setVisibility(View.GONE);
+                getRootView().findViewById(R.id.oportunidad_empty).setVisibility(View.VISIBLE);
+                return;
             }
-        });
-        ((TextView) getRootView().findViewById(R.id.oportunidad_numero)).setText("Oportunidades: " + lista.size());
-        double monto = 0;
-        for(Oportunidad op : lista)
+
+            if (lista.size() == 0) {
+                list.setVisibility(View.GONE);
+                getRootView().findViewById(R.id.oportunidad_empty).setVisibility(View.VISIBLE);
+                return;
+            }
+
+            list.setVisibility(View.VISIBLE);
+            getRootView().findViewById(R.id.oportunidad_empty).setVisibility(View.GONE);
+
+            pullRefresher.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    if (ConnectionUtils.isNetAvailable(getContext())) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_OPORTUNIDADES);
+                        requestSync(bundle);
+                    } else {
+                        Toast.makeText(getContext(), R.string.message_error_sync_no_net_available, Toast.LENGTH_LONG).show();
+                        pullRefresher.setRefreshing(false);
+                    }
+                }
+            });
+            ((TextView) getRootView().findViewById(R.id.oportunidad_numero)).setText("Oportunidades: " + lista.size());
+            double monto = 0;
+            for (Oportunidad op : lista) {
+                monto = monto + op.getImporte();
+            }
+            ((TextView) getRootView().findViewById(R.id.oportunidad_meta)).setText("Meta: $ " + numberFormat.format(monto));
+            list.setSelector(getActivity().getResources().getDrawable(R.drawable.bkg));
+            list.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+                @Override
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+                }
+
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem,
+                                     int visibleItemCount, int totalItemCount) {
+
+                    if (firstVisibleItem == 0 && visibleItemCount != 0) {
+                        pullRefresher.setEnabled(true);
+                    } else {
+                        pullRefresher.setEnabled(false);
+                    }
+
+                }
+            });
+
+            adapter = new OportunidadListAdapter(this.getActivity(), lista, oportunidadListFragmentCallback);
+            list.setAdapter(adapter);
+            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                @SuppressLint("ResourceAsColor")
+                @Override
+                public void onItemClick(AdapterView<?> parent,
+                                        View view, int position, long id) {
+
+                    oportunidadListFragmentCallback.onOportunidadSelected(lista.get(position));
+                }
+            });
+            adapter.notifyDataSetChanged();
+            if (oportunidadListFragmentCallback.allowSelectedItem() && lista.size() != 0)
+                oportunidadListFragmentCallback.onOportunidadSelected(lista.get(0));
+        }
+        catch (Exception ex)
         {
-            monto = monto + op.getImporte();
+
         }
-        ((TextView) getRootView().findViewById(R.id.oportunidad_meta)).setText("Meta: $ " + numberFormat.format(monto));
-        list.setSelector(getActivity().getResources().getDrawable(R.drawable.bkg));
-        list.setOnScrollListener(new AbsListView.OnScrollListener() {
-
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem,
-                                 int visibleItemCount, int totalItemCount) {
-
-                if (firstVisibleItem == 0 && visibleItemCount != 0) {
-                    pullRefresher.setEnabled(true);
-                } else {
-                    pullRefresher.setEnabled(false);
-                }
-
-            }
-        });
-
-        adapter = new OportunidadListAdapter(this.getActivity(), lista, oportunidadListFragmentCallback);
-        list.setAdapter(adapter);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @SuppressLint("ResourceAsColor")
-            @Override
-            public void onItemClick(AdapterView<?> parent,
-                                    View view, int position, long id) {
-
-                oportunidadListFragmentCallback.onOportunidadSelected(lista.get(position));
-            }
-        });
-        adapter.notifyDataSetChanged();
-        if (oportunidadListFragmentCallback.allowSelectedItem() && lista.size() != 0)
-            oportunidadListFragmentCallback.onOportunidadSelected(lista.get(0));
 
     }
 

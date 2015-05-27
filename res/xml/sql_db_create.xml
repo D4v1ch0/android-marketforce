@@ -312,6 +312,7 @@
         IdOportunidad INTEGER,
         _IdOportunidad INTEGER,
         IdEtapa INTEGER,
+        FechaInicio INTEGER,
         FechaFin INTEGER,
         Observacion TEXT,
         Estado TEXT

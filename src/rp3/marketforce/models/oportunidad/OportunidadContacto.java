@@ -186,4 +186,22 @@ public class OportunidadContacto extends EntityBase<OportunidadContacto> {
         }
         return list;
     }
+
+    public static OportunidadContacto getContactoInt(DataBase db, long id) {
+        Cursor c = db.query(Contract.OportunidadContacto.TABLE_NAME, new String[] {Contract.OportunidadContacto._ID, Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD,
+                        Contract.OportunidadContacto.COLUMN_NOMBRE, Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD_CONTACTO, Contract.OportunidadContacto.COLUMN_CARGO,
+                        Contract.OportunidadContacto.COLUMN_URL_FOTO}, Contract.OportunidadContacto._ID + " = ?",
+                new String[] {id + ""});
+
+        OportunidadContacto cont = new OportunidadContacto();
+        while(c.moveToNext()){
+            cont.setID(CursorUtils.getInt(c, Contract.OportunidadContacto._ID));
+            cont.setIdOportunidad(CursorUtils.getInt(c, Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD));
+            cont.setNombre(CursorUtils.getString(c, Contract.OportunidadContacto.COLUMN_NOMBRE));
+            cont.setIdOportunidadContacto(CursorUtils.getInt(c, Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD_CONTACTO));
+            cont.setCargo(CursorUtils.getString(c, Contract.OportunidadContacto.COLUMN_CARGO));
+            cont.setURLFoto(CursorUtils.getString(c, Contract.OportunidadContacto.COLUMN_URL_FOTO));
+        }
+        return cont;
+    }
 }

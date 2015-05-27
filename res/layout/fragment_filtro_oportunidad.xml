@@ -25,7 +25,7 @@
             android:id="@+id/textView16"
             android:padding="12dp"
             android:layout_weight="0.7"
-            android:drawableRight="@drawable/flag_on"
+            android:drawableRight="@drawable/red_flag"
             android:gravity="center_vertical" />
 
         <LinearLayout
@@ -59,7 +59,7 @@
             android:id="@+id/textView58"
             android:padding="12dp"
             android:layout_weight="0.7"
-            android:drawableRight="@drawable/flag_on"
+            android:drawableRight="@drawable/blue_flag"
             android:gravity="center_vertical" />
 
         <LinearLayout
@@ -92,7 +92,7 @@
             android:id="@+id/textView59"
             android:padding="12dp"
             android:layout_weight="0.7"
-            android:drawableRight="@drawable/flag_on"
+            android:drawableRight="@drawable/green_flag"
             android:gravity="center_vertical" />
 
         <LinearLayout
@@ -125,7 +125,7 @@
             android:id="@+id/textView60"
             android:padding="12dp"
             android:layout_weight="0.7"
-            android:drawableRight="@drawable/flag_on"
+            android:drawableRight="@drawable/gray_flag"
             android:gravity="center_vertical" />
 
         <LinearLayout
@@ -529,6 +529,52 @@
             android:gravity="right" />
     </LinearLayout>
 
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/label_probabilidad"
+        android:id="@+id/textView74"
+        android:textColor="@color/color_text_sky_blue"
+        android:textStyle="bold"
+        android:paddingLeft="12dp"
+        android:paddingTop="12dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="5dp"
+        android:background="@color/color_grey" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/filtro_probabilidad"
+        android:layout_margin="5dp" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="0%"
+            android:id="@+id/filtro_min_prob"
+            android:layout_weight="1"
+            android:paddingLeft="5dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="100%"
+            android:id="@+id/filtro_max_prob"
+            android:layout_weight="1"
+            android:paddingRight="5dp"
+            android:gravity="right" />
+    </LinearLayout>
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
@@ -614,7 +660,8 @@
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="15dp"
-        android:background="@color/color_grey" />
+        android:background="@color/color_grey"
+        android:visibility="gone" />
 
     <TextView
         android:layout_width="fill_parent"
@@ -627,7 +674,8 @@
         android:paddingLeft="12dp"
         android:paddingTop="12dp"
         android:paddingRight="8dp"
-        android:paddingBottom="5dp" />
+        android:paddingBottom="5dp"
+        android:visibility="gone" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -636,7 +684,8 @@
         android:layout_marginLeft="12dp"
         android:layout_marginTop="5dp"
         android:layout_marginRight="5dp"
-        android:layout_marginBottom="12dp" >
+        android:layout_marginBottom="12dp"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="0dp"
@@ -661,7 +710,8 @@
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="@color/color_grey" />
+        android:background="@color/color_grey"
+        android:visibility="gone" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -670,7 +720,8 @@
         android:layout_marginLeft="12dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="5dp"
-        android:layout_marginBottom="12dp" >
+        android:layout_marginBottom="12dp"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="0dp"

@@ -253,6 +253,18 @@
                     <webMethod>GET</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>
+                <method>
+                    <name>SetOportunidadFoto</name>
+                    <action>oportunidad/setoportunidadfoto</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>SetOportunidadContactoFoto</name>
+                    <action>oportunidad/setoportunidadcontactofoto</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
             </methods>     
         </webServiceData>
            <webServiceData>

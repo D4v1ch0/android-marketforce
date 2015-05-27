@@ -663,6 +663,7 @@ public final class Contract {
         public static final String COLUMN_ID_OPORTUNIDAD = "IdOportunidad";
         public static final String COLUMN_ID_OPORTUNIDAD_INT = "_IdOportunidad";
         public static final String COLUMN_ID_ETAPA = "IdEtapa";
+        public static final String COLUMN_FECHA_INICIO= "FechaInicio";
         public static final String COLUMN_FECHA_FIN = "FechaFin";
         public static final String COLUMN_OBSERVACION = "Observacion";
         public static final String COLUMN_ESTADO = "Estado";
@@ -670,6 +671,7 @@ public final class Contract {
         public static final String FIELD_ID_OPORTUNIDAD = COLUMN_ID_OPORTUNIDAD;
         public static final String FIELD_ID_OPORTUNIDAD_INT = COLUMN_ID_OPORTUNIDAD_INT;
         public static final String FIELD_ID_ETAPA = COLUMN_ID_ETAPA;
+        public static final String FIELD_FECHA_INICIO = COLUMN_FECHA_INICIO;
         public static final String FIELD_FECHA_FIN = COLUMN_FECHA_FIN;
         public static final String FIELD_OBSERVACION = COLUMN_OBSERVACION;
         public static final String FIELD_ESTADO = COLUMN_ESTADO;
