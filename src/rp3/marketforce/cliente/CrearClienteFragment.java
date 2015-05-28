@@ -845,6 +845,7 @@ public class CrearClienteFragment extends BaseFragment {
 	{
 		final LinearLayout direccion = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.layout_cliente_direccion_detail, null);
         final int pos = listViewDirecciones.size();
+        direccion.findViewById(R.id.cliente_direccion).requestFocus();
         if(tipo == Contants.IS_CREACION)
             direccion.findViewById(R.id.eliminar_direccion).setVisibility(View.GONE);
 		((Button) direccion.findViewById(R.id.eliminar_direccion)).setOnClickListener(new OnClickListener(){
@@ -942,6 +943,7 @@ public class CrearClienteFragment extends BaseFragment {
 	{
 		final LinearLayout contacto = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.layout_cliente_contacto_detail, null);
 		final int pos = listViewContactos.size();
+        contacto.findViewById(R.id.cliente_nombres).requestFocus();
 		((Button) contacto.findViewById(R.id.eliminar_contacto)).setOnClickListener(new OnClickListener(){
 
 			@Override

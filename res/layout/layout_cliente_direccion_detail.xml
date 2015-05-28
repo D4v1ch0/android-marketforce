@@ -230,7 +230,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:padding="5dp" >
+                    android:padding="5dp"
+                    android:gravity="center">
 
                     <TextView
                         android:id="@+id/TextView04"
@@ -240,13 +241,16 @@
                         android:text="@string/label_es_principal"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textSize="@dimen/text_small_size"
-                        android:paddingLeft="10dp" />
+                        android:paddingLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp" />
 
                     <CheckBox
                         android:id="@+id/cliente_es_principal"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:button="@drawable/custom_checkbox" />
                 </LinearLayout>
             </LinearLayout>
 
