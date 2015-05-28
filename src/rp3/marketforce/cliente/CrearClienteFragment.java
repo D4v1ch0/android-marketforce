@@ -27,6 +27,9 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -279,6 +282,8 @@ public class CrearClienteFragment extends BaseFragment {
     private void SetCampos() {
         List<Campo> campos = Campo.getCampos(getDataBase(), tipo);
         //contacto.findViewById(R.id.agregar_contacto).setVisibility(View.GONE);
+        Spannable wordtoSpan = new SpannableString(" *");
+        wordtoSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.color_unvisited)), 0, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         if(tipo == Contants.IS_MODIFICACION)
             info.findViewById(R.id.crear_cliente_tipo_persona).setEnabled(false);
         else {
@@ -288,15 +293,15 @@ public class CrearClienteFragment extends BaseFragment {
         for(Campo campo : campos) {
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_TIPO_IDENTIFICACION)) {
                 info.findViewById(R.id.cliente_tipo_identificacion).setEnabled(false);
-                if(campo.isObligatorio()) ((TextView)info.findViewById(R.id.tipo_identificacion_label)).append(" *");
+                if(campo.isObligatorio()) ((TextView)info.findViewById(R.id.tipo_identificacion_label)).append(wordtoSpan);
             }
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_IDENTIFICACION)) {
                 info.findViewById(R.id.cliente_identificacion).setEnabled(false);
-                if(campo.isObligatorio()) ((TextView)info.findViewById(R.id.identificacion_label)).append(" *");
+                if(campo.isObligatorio()) ((TextView)info.findViewById(R.id.identificacion_label)).append(wordtoSpan);
             }
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_TIPO_CLI)) {
                 info.findViewById(R.id.cliente_tipo_cliente).setEnabled(false);
-                if(campo.isObligatorio()) ((TextView)info.findViewById(R.id.tipo_cliente_label)).append(" *");
+                if(campo.isObligatorio()) ((TextView)info.findViewById(R.id.tipo_cliente_label)).append(wordtoSpan);
             }
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_CANAL))
                 info.findViewById(R.id.cliente_canal).setEnabled(false);
@@ -333,42 +338,42 @@ public class CrearClienteFragment extends BaseFragment {
         campos = Campo.getCamposObligatorios(getDataBase(), tipo);
         for(Campo campo : campos) {
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_TIPO_IDENTIFICACION))
-                ((TextView)info.findViewById(R.id.tipo_identificacion_label)).append(" *");
+                ((TextView)info.findViewById(R.id.tipo_identificacion_label)).append(wordtoSpan);
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_IDENTIFICACION))
-                ((TextView)info.findViewById(R.id.identificacion_label)).append(" *");
+                ((TextView)info.findViewById(R.id.identificacion_label)).append(wordtoSpan);
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_TIPO_CLI))
-                ((TextView)info.findViewById(R.id.tipo_cliente_label)).append(" *");
+                ((TextView)info.findViewById(R.id.tipo_cliente_label)).append(wordtoSpan);
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_CANAL))
-                ((TextView)info.findViewById(R.id.canal_label)).append(" *");
+                ((TextView)info.findViewById(R.id.canal_label)).append(wordtoSpan);
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_FOTO))
-                ((TextView)info.findViewById(R.id.foto_label)).append(" *");
+                ((TextView)info.findViewById(R.id.foto_label)).append(wordtoSpan);
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_FECHA_NACIMIENTO))
-                ((TextView)info.findViewById(R.id.fecha_nacimiento_label)).append(" *");
+                ((TextView)info.findViewById(R.id.fecha_nacimiento_label)).append(wordtoSpan);
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_GENERO))
-                ((TextView)info.findViewById(R.id.genero_label)).append(" *");
+                ((TextView)info.findViewById(R.id.genero_label)).append(wordtoSpan);
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_ESTADO_CIVIL))
-                ((TextView)info.findViewById(R.id.estado_civil_label)).append(" *");
+                ((TextView)info.findViewById(R.id.estado_civil_label)).append(wordtoSpan);
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_PRIMER_NOMBRE_NATURAL))
-                ((TextView)info.findViewById(R.id.primer_nombre_label)).append(" *");
+                ((TextView)info.findViewById(R.id.primer_nombre_label)).append(wordtoSpan);
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_SEGUNDO_NOMBRE_NATURAL))
-                ((TextView)info.findViewById(R.id.segundo_nombre_label)).append(" *");
+                ((TextView)info.findViewById(R.id.segundo_nombre_label)).append(wordtoSpan);
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_PRIMER_APELLIDO_NATURAL))
-                ((TextView)info.findViewById(R.id.primer_apellido_label)).append(" *");
+                ((TextView)info.findViewById(R.id.primer_apellido_label)).append(wordtoSpan);
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_SEGUNDO_APELLIDO_NATURAL))
-                ((TextView)info.findViewById(R.id.segundo_nombre_label)).append(" *");
+                ((TextView)info.findViewById(R.id.segundo_nombre_label)).append(wordtoSpan);
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_CORREO))
-                ((TextView)info.findViewById(R.id.correo_natural_label)).append(" *");
+                ((TextView)info.findViewById(R.id.correo_natural_label)).append(wordtoSpan);
 
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_NOMBRE_JURIDICO))
-                ((TextView)info.findViewById(R.id.nombre_label)).append(" *");
+                ((TextView)info.findViewById(R.id.nombre_label)).append(wordtoSpan);
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_RAZON_SOCIAL))
-                ((TextView)info.findViewById(R.id.razon_social_label)).append(" *");
+                ((TextView)info.findViewById(R.id.razon_social_label)).append(wordtoSpan);
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_PAGINA_WEB))
-                ((TextView)info.findViewById(R.id.pagina_web_label)).append(" *");
+                ((TextView)info.findViewById(R.id.pagina_web_label)).append(wordtoSpan);
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_ACTIVIDAD_ECONOMICA))
-                ((TextView)info.findViewById(R.id.actividad_economica_label)).append(" *");
+                ((TextView)info.findViewById(R.id.actividad_economica_label)).append(wordtoSpan);
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_CORREO))
-                ((TextView)info.findViewById(R.id.correo_juridico_label)).append(" *");
+                ((TextView)info.findViewById(R.id.correo_juridico_label)).append(wordtoSpan);
         }
 
     }

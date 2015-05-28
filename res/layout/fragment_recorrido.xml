@@ -22,6 +22,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/progress_map"
             android:layout_gravity="center" />
+
     </FrameLayout>
 
     <LinearLayout
@@ -68,6 +69,54 @@
             android:padding="0dp"
             android:src="@drawable/ic_action_next_item_dark" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|bottom"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="8dp"
+        android:padding="8dp"
+        android:background="@color/color_white_maps_list">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_punto_inicio"
+            android:drawableLeft="@drawable/markerstart"
+            android:id="@+id/textView12"
+            android:gravity="center|right"
+            android:padding="3dp"
+            android:textSize="@dimen/text_small_size" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_ultimo_punto"
+            android:drawableLeft="@drawable/markerend"
+            android:id="@+id/textView17"
+            android:gravity="center|right"
+            android:padding="3dp"
+            android:textSize="@dimen/text_small_size" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_senso"
+            android:drawableLeft="@drawable/markerpoint"
+            android:drawablePadding="15dp"
+            android:id="@+id/textView16"
+            android:gravity="center|right"
+            android:padding="3dp"
+            android:textSize="@dimen/text_small_size"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp" />
     </LinearLayout>
 
 </RelativeLayout>

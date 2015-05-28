@@ -17,7 +17,7 @@
 
             <Spinner
                 android:id="@+id/cliente_tipo_direccion_spinner"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content" />
 
             <Button
@@ -63,7 +63,8 @@
                         android:layout_weight="1"
                         android:text="@string/label_obtener_ubicacion"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textSize="@dimen/text_small_size" />
+                        android:textSize="@dimen/text_small_size"
+                        android:paddingLeft="10dp" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -120,7 +121,12 @@
                     android:hint="@string/label_direccion"
                     android:inputType="textMultiLine"
                     android:textSize="@dimen/text_small_size"
-                    android:maxLines="3" />
+                    android:maxLines="3"
+                    android:background="@color/caldroid_transparent"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -153,7 +159,12 @@
                     android:ems="10"
                     android:hint="@string/label_referencia"
                     android:inputType="textPostalAddress"
-                    android:textSize="@dimen/text_small_size" />
+                    android:textSize="@dimen/text_small_size"
+                    android:background="@color/caldroid_transparent"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -184,9 +195,12 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="@string/label_ciudad"
-                    android:paddingBottom="15dp"
-                    android:paddingTop="15dp"
-                    android:textSize="@dimen/text_small_size" />
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:textSize="@dimen/text_small_size"
+                    android:background="@color/caldroid_transparent"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="10dp" />
 
             </LinearLayout>
 
@@ -225,7 +239,8 @@
                         android:layout_weight="1"
                         android:text="@string/label_es_principal"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textSize="@dimen/text_small_size" />
+                        android:textSize="@dimen/text_small_size"
+                        android:paddingLeft="10dp" />
 
                     <CheckBox
                         android:id="@+id/cliente_es_principal"
@@ -342,7 +357,12 @@
                     android:ems="10"
                     android:hint="@string/label_telefono_1"
                     android:inputType="phone"
-                    android:textSize="@dimen/text_small_size" />
+                    android:textSize="@dimen/text_small_size"
+                    android:background="@color/caldroid_transparent"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -375,7 +395,12 @@
                     android:ems="10"
                     android:hint="@string/label_telefono_2"
                     android:inputType="phone"
-                    android:textSize="@dimen/text_small_size" />
+                    android:textSize="@dimen/text_small_size"
+                    android:background="@color/caldroid_transparent"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp" />
             </LinearLayout>
 
             <LinearLayout

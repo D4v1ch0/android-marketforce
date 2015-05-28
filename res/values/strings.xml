@@ -175,5 +175,8 @@
     <string name="message_information3">En ningún caso RP3® Retail Software será responsable de ningún daño  ocasionado por causa de algún error u omisión, en los contenidos presentados en la aplicación  (incluyendo cualquier daño especial, indirecto o consecuencial, pérdida de datos, pérdida de información, pérdida de beneficios, interrupción de negocios o cualquier otra perdida pecuniaria) por el uso o la imposibilidad de utilizar esta aplicación.</string>
     <string name="label_copyright">Copyright © 2015</string>
     <string name="message_information_end">RP3® Retail Software - Todos los Derechos Reservados</string>
+    <string name="label_punto_inicio">Punto de Inicio</string>
+    <string name="label_ultimo_punto">Último Punto</string>
+    <string name="label_senso">Número de Ubicación</string>
 
 </resources>

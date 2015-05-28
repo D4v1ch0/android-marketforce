@@ -280,7 +280,22 @@ public class MapaActivity extends BaseActivity {
 		c.set(Calendar.MINUTE, 0);
 		c.set(Calendar.SECOND, 0);
 		agenda = null;
-		RutasFechas.setText(format1.format(c.getTime()).substring(0, 1).toUpperCase() + format1.format(c.getTime()).substring(1));
+        format1 = new SimpleDateFormat("EEEE");
+        SimpleDateFormat format2 = new SimpleDateFormat("dd");
+        SimpleDateFormat format3 = new SimpleDateFormat("MMMM");
+        SimpleDateFormat format5 = new SimpleDateFormat("yyyy");
+        String dia = "";
+        Calendar hoy = Calendar.getInstance();
+        if(hoy.get(Calendar.DAY_OF_YEAR) == c.get(Calendar.DAY_OF_YEAR))
+            dia = "Hoy";
+        else
+            dia = format1.format(c.getTime());
+        dia = dia.substring(0,1).toUpperCase() + dia.substring(1);
+        String num = format2.format(c.getTime());
+        String mes = format3.format(c.getTime());
+        mes = mes.substring(0,1).toUpperCase() + mes.substring(1);
+        String anio = format5.format(c.getTime());
+		RutasFechas.setText(dia + ", " + num + " de " +  mes + " del " + anio);
 		map.clear();
 		persona.setVisibility(View.GONE);
 		

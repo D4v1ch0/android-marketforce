@@ -16,6 +16,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -65,12 +66,48 @@ public class DashboardGraphicFragment extends BaseFragment {
 		super.onResume();
 		titles = new ArrayList<String>();
     	visitas = new ArrayList<Integer>();
+        ((ImageView) getRootView().findViewById(R.id.point_hoy)).setImageResource(R.drawable.circle_reprogramed);
+        ((ImageView) getRootView().findViewById(R.id.point_semana)).setImageResource(R.drawable.circle_shape);
+        ((ImageView) getRootView().findViewById(R.id.point_comparativo)).setImageResource(R.drawable.circle_shape);
     	PagerDetalles = (ViewPager) getRootView().findViewById(R.id.dashboard_graphics_pager);
     	pagerAdapter = new DetailsPageAdapter();
     	pagerAdapter.addView(createGraphics(false));
     	pagerAdapter.addView(createGraphics(true));
         pagerAdapter.addView(createResume());
     	pagerAdapter.setTitles(titles.toArray(new String[]{}));
+        PagerDetalles.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position)
+                {
+                    case 0:
+                        ((ImageView) getRootView().findViewById(R.id.point_hoy)).setImageResource(R.drawable.circle_reprogramed);
+                        ((ImageView) getRootView().findViewById(R.id.point_semana)).setImageResource(R.drawable.circle_shape);
+                        ((ImageView) getRootView().findViewById(R.id.point_comparativo)).setImageResource(R.drawable.circle_shape);
+                        break;
+                    case 1:
+                        ((ImageView) getRootView().findViewById(R.id.point_semana)).setImageResource(R.drawable.circle_reprogramed);
+                        ((ImageView) getRootView().findViewById(R.id.point_hoy)).setImageResource(R.drawable.circle_shape);
+                        ((ImageView) getRootView().findViewById(R.id.point_comparativo)).setImageResource(R.drawable.circle_shape);
+                        break;
+                    case 2:
+                        ((ImageView) getRootView().findViewById(R.id.point_hoy)).setImageResource(R.drawable.circle_shape);
+                        ((ImageView) getRootView().findViewById(R.id.point_comparativo)).setImageResource(R.drawable.circle_reprogramed);
+                        ((ImageView) getRootView().findViewById(R.id.point_semana)).setImageResource(R.drawable.circle_shape);
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     	PagerDetalles.setAdapter(pagerAdapter);	    	   	
     	PagerDetalles.setCurrentItem(0);
 	}

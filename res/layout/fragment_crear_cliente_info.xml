@@ -75,7 +75,8 @@
             android:id="@+id/cliente_tipo_identificacion"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.6" />
+            android:layout_weight="0.6"
+            android:background="@color/caldroid_transparent" />
     </LinearLayout>
 
     <LinearLayout
@@ -112,7 +113,14 @@
             android:ems="10"
             android:hint="@string/label_numero"
             android:inputType="number"
-            android:textSize="@dimen/text_small_size" />
+            android:textSize="@dimen/text_small_size"
+            android:background="@color/caldroid_transparent"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:paddingLeft="15dp"
+            android:paddingTop="10dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="10dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -227,7 +235,14 @@
                 android:layout_weight="0.6"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:textSize="@dimen/text_small_size" />
+                android:textSize="@dimen/text_small_size"
+                android:background="@color/caldroid_transparent"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:paddingLeft="15dp"
+                android:paddingTop="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -263,7 +278,14 @@
                 android:layout_weight="0.6"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:textSize="@dimen/text_small_size" />
+                android:textSize="@dimen/text_small_size"
+                android:background="@color/caldroid_transparent"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:paddingLeft="15dp"
+                android:paddingTop="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -299,7 +321,14 @@
                 android:layout_weight="0.6"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:textSize="@dimen/text_small_size" />
+                android:textSize="@dimen/text_small_size"
+                android:background="@color/caldroid_transparent"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:paddingLeft="15dp"
+                android:paddingTop="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -335,7 +364,14 @@
                 android:layout_weight="0.6"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:textSize="@dimen/text_small_size" />
+                android:textSize="@dimen/text_small_size"
+                android:background="@color/caldroid_transparent"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:paddingLeft="15dp"
+                android:paddingTop="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -372,7 +408,14 @@
                 android:layout_weight="0.6"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:textSize="@dimen/text_small_size" />
+                android:textSize="@dimen/text_small_size"
+                android:background="@color/caldroid_transparent"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:paddingLeft="15dp"
+                android:paddingTop="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -411,7 +454,14 @@
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:inputType="textPersonName"
-                android:textSize="@dimen/text_small_size" />
+                android:textSize="@dimen/text_small_size"
+                android:background="@color/caldroid_transparent"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:paddingLeft="15dp"
+                android:paddingTop="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -528,7 +578,14 @@
                 android:layout_weight="0.6"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:textSize="@dimen/text_small_size" />
+                android:textSize="@dimen/text_small_size"
+                android:background="@color/caldroid_transparent"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:paddingLeft="15dp"
+                android:paddingTop="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -565,7 +622,14 @@
                 android:layout_weight="0.6"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:textSize="@dimen/text_small_size" />
+                android:textSize="@dimen/text_small_size"
+                android:background="@color/caldroid_transparent"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:paddingLeft="15dp"
+                android:paddingTop="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -603,7 +667,14 @@
                 android:layout_weight="0.6"
                 android:ems="10"
                 android:inputType="textEmailAddress"
-                android:textSize="@dimen/text_small_size" />
+                android:textSize="@dimen/text_small_size"
+                android:background="@color/caldroid_transparent"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:paddingLeft="15dp"
+                android:paddingTop="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -642,7 +713,14 @@
                 android:layout_weight="0.6"
                 android:ems="10"
                 android:inputType="textWebEditText"
-                android:textSize="@dimen/text_small_size" />
+                android:textSize="@dimen/text_small_size"
+                android:background="@color/caldroid_transparent"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:paddingLeft="15dp"
+                android:paddingTop="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -680,7 +758,14 @@
                 android:layout_weight="0.6"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:textSize="@dimen/text_small_size" />
+                android:textSize="@dimen/text_small_size"
+                android:background="@color/caldroid_transparent"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:paddingLeft="15dp"
+                android:paddingTop="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp" />
         </LinearLayout>
 
         <LinearLayout

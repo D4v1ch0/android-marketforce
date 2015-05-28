@@ -2,6 +2,7 @@ package rp3.marketforce.ruta;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class RutasListAdapter extends BaseAdapter{
 	private String hour_inicio="";
 	private String hour_fin="";
 	private String str_range;
-	private SimpleDateFormat format1;
+	private SimpleDateFormat format1, format2, format3, format5;
 	private SimpleDateFormat format4;
 	private Date date;
 	private int row_ = -1;
@@ -43,7 +44,10 @@ public class RutasListAdapter extends BaseAdapter{
 		this.contex = c;
 		this.list_agenda = list_agenda;
 		this.transactionListFragmentCallback = transactionListFragmentCallback;
-		format1 = new SimpleDateFormat("EEEE dd MMMM yyyy");
+		format1 = new SimpleDateFormat("EEEE");
+        format2 = new SimpleDateFormat("dd");
+        format3 = new SimpleDateFormat("MMMM");
+        format5 = new SimpleDateFormat("yyyy");
 		format4= new SimpleDateFormat("HH:mm");
 	}
 	
@@ -58,8 +62,22 @@ public class RutasListAdapter extends BaseAdapter{
 		
 		if(agd.getNombreCompleto() == null)
 		{
-			convertView = (View) inflater.inflate(this.contex.getApplicationContext().getResources().getLayout(R.layout.headerlist_ruta_list), null);	
-			((TextView) convertView.findViewById(R.id.textView_headerlist_ruta_list)).setText(format1.format(agd.getFechaInicio()));
+			convertView = (View) inflater.inflate(this.contex.getApplicationContext().getResources().getLayout(R.layout.headerlist_ruta_list), null);
+            String dia = "";
+            Calendar hoy = Calendar.getInstance();
+            Calendar diaAgenda = Calendar.getInstance();
+            diaAgenda.setTime(agd.getFechaInicio());
+            if(hoy.get(Calendar.DAY_OF_YEAR) == diaAgenda.get(Calendar.DAY_OF_YEAR))
+                dia = "Hoy";
+            else
+                dia = format1.format(agd.getFechaInicio());
+            dia = dia.substring(0,1).toUpperCase() + dia.substring(1);
+            String num = format2.format(agd.getFechaInicio());
+            String mes = format3.format(agd.getFechaInicio());
+            mes = mes.substring(0,1).toUpperCase() + mes.substring(1);
+            String anio = format5.format(agd.getFechaInicio());
+			((TextView) convertView.findViewById(R.id.textView_headerlist_ruta_list)).setText(dia + ", " + num + " de " +
+                mes + " del " + anio);
 		}
 		else
 		{
