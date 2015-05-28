@@ -18,6 +18,7 @@
      <color name="apptheme_color">#ffffff</color>
      <color name="color_hint">#ABABAB</color>
      <color name="color_divider">#E5ECF1</color>
+     <color name="color_timeline_gray">#E4E4E4</color>
      
      <color name="color_background_header">#495A6B</color>
      <color name="color_rating_select">#0C6D98</color>

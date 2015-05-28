@@ -62,6 +62,7 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
     private String textSearch;
 
     private Menu menu;
+    private Intent filtroData;
     public boolean mTwoPane = false;
     public boolean isActiveListFragment = true;
     private long selectedOportunidadId;
@@ -101,10 +102,18 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == FILTER_CODE  && resultCode == Activity.RESULT_OK)
+        if(requestCode == FILTER_CODE)
         {
+
+            filtroData = data;
+            if(resultCode == Activity.RESULT_OK)
+                transactionListFragment.aplicarFiltro(data);
+            else
+            {
+                filtro = false;
+                transactionListFragment.filtro = false;
+            }
             RefreshMenu();
-            transactionListFragment.aplicarFiltro(data);
         }
     }
 
@@ -252,10 +261,9 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
                 startActivity(intent3);
                 break;
             case R.id.action_quitar_filtro:
-                filtro = false;
-                transactionListFragment.filtro = false;
-                transactionListFragment.onResume();
-                RefreshMenu();
+                filtroData.setClass(getContext(), FiltroOportunidadActivity.class);
+                filtro = true;
+                startActivityForResult(filtroData, FILTER_CODE);
                 break;
             case R.id.action_filtro:
                 Intent intent = new Intent(getContext(), FiltroOportunidadActivity.class);

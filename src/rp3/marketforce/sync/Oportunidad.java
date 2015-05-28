@@ -63,6 +63,12 @@ public class Oportunidad {
                 //jObject.put("Probabilidad", 0);
                 jObject.put("Probabilidad", oportunidadUpload.getProbabilidad());
                 jObject.put("Referencia", oportunidadUpload.getReferencia());
+                jObject.put("CorreoElectronico", oportunidadUpload.getCorreo());
+                jObject.put("TipoEmpresa", oportunidadUpload.getTipoEmpresa());
+                jObject.put("ReferenciaDireccion", oportunidadUpload.getDireccionReferencia());
+                jObject.put("Telefono1", oportunidadUpload.getTelefono1());
+                jObject.put("Telefono2", oportunidadUpload.getTelefono2());
+                jObject.put("PaginaWeb", oportunidadUpload.getPaginaWeb());
 
                 JSONArray jArrayTareas = new JSONArray();
                 for (OportunidadTarea agt : oportunidadUpload.getOportunidadTareas()) {
@@ -101,6 +107,7 @@ public class Oportunidad {
 
                 jObject.put("OportunidadTareas", jArrayTareas);
 
+                boolean principal = true;
                 JSONArray jArrayContactos = new JSONArray();
                 for (OportunidadContacto agt : oportunidadUpload.getOportunidadContactos()) {
                     JSONObject jObjectContacto = new JSONObject();
@@ -110,7 +117,11 @@ public class Oportunidad {
                     jObjectContacto.put("Telefono2", agt.getFijo());
                     jObjectContacto.put("Telefono1", agt.getMovil());
                     jObjectContacto.put("Nombre", agt.getNombre());
-                    jObjectContacto.put("EsPrincipal", agt.isEsPrincipal());
+                    if(principal)
+                        jObjectContacto.put("EsPrincipal", true);
+                    else
+                        jObjectContacto.put("EsPrincipal", false);
+                    principal = false;
 
                     jArrayContactos.put(jObjectContacto);
                 }
@@ -134,7 +145,7 @@ public class Oportunidad {
                     jObjectEtapa.put("FechaFinTicks", Convert.getDotNetTicksFromDate(etapa.getFechaFin()));
                     jObjectEtapa.put("FechaInicioTicks", Convert.getDotNetTicksFromDate(etapa.getFechaInicio()));
 
-                    jArrayResponsables.put(jObjectEtapa);
+                    jArrayEtapas.put(jObjectEtapa);
                 }
                 jObject.put("OportunidadEtapas", jArrayEtapas);
 
@@ -447,30 +458,33 @@ public class Oportunidad {
                     opt.setObservacion(type.getString("Observacion"));
                     opt.setFechaCreacion(Convert.getDateFromDotNetTicks(type.getLong("FechaCreacionTicks")));
                     opt.setFechaUltimaGestion(Convert.getDateFromDotNetTicks(type.getLong("FechaUltimaGestionTicks")));
-                    opt.setLatitud(type.getDouble("Latitud"));
-                    opt.setLongitud(type.getDouble("Longitud"));
+                    if (!type.isNull("Latitud"))
+                        opt.setLatitud(type.getDouble("Latitud"));
+                    if (!type.isNull("Longitud"))
+                        opt.setLongitud(type.getDouble("Longitud"));
+
                     opt.setEstado(type.getString("Estado"));
-                    if(!type.isNull("CorreoElectronico"))
+                    if (!type.isNull("CorreoElectronico"))
                         opt.setCorreo(type.getString("CorreoElectronico"));
                     else
                         opt.setCorreo("");
-                    if(!type.isNull("Telefono1"))
+                    if (!type.isNull("Telefono1"))
                         opt.setTelefono1(type.getString("Telefono1"));
                     else
                         opt.setTelefono1("");
-                    if(!type.isNull("Telefono2"))
+                    if (!type.isNull("Telefono2"))
                         opt.setTelefono2(type.getString("Telefono2"));
                     else
                         opt.setTelefono2("");
-                    if(!type.isNull("ReferenciaDireccion"))
+                    if (!type.isNull("ReferenciaDireccion"))
                         opt.setDireccionReferencia(type.getString("ReferenciaDireccion"));
                     else
                         opt.setDireccionReferencia("");
-                    if(!type.isNull("PaginaWeb"))
+                    if (!type.isNull("PaginaWeb"))
                         opt.setPaginaWeb(type.getString("PaginaWeb"));
                     else
                         opt.setPaginaWeb("");
-                    if(!type.isNull("TipoEmpresa"))
+                    if (!type.isNull("TipoEmpresa"))
                         opt.setTipoEmpresa(type.getString("TipoEmpresa"));
                     else
                         opt.setTipoEmpresa("");
@@ -504,20 +518,22 @@ public class Oportunidad {
                         OportunidadResponsable.insert(db, opResp);
                     }
 
-                    strs = type.getJSONArray("OportunidadEtapas");
+                    if (!type.isNull("OportunidadEtapas")) {
+                        strs = type.getJSONArray("OportunidadEtapas");
 
-                    for (int j = 0; j < strs.length(); j++) {
-                        JSONObject str = strs.getJSONObject(j);
-                        OportunidadEtapa opEtapa = new OportunidadEtapa();
+                        for (int j = 0; j < strs.length(); j++) {
+                            JSONObject str = strs.getJSONObject(j);
+                            OportunidadEtapa opEtapa = new OportunidadEtapa();
 
-                        opEtapa.setIdOportunidad(opt.getIdOportunidad());
-                        opEtapa.setIdEtapa(str.getInt("IdEtapa"));
-                        opEtapa.setObservacion(str.getString("Observacion"));
-                        opEtapa.setEstado(str.getString("Estado"));
-                        opEtapa.setFechaInicio(Convert.getDateFromDotNetTicks(str.getLong("FechaInicioTicks")));
-                        opEtapa.setFechaFin(Convert.getDateFromDotNetTicks(str.getLong("FechaFinTicks")));
+                            opEtapa.setIdOportunidad(opt.getIdOportunidad());
+                            opEtapa.setIdEtapa(str.getInt("IdEtapa"));
+                            opEtapa.setObservacion(str.getString("Observacion"));
+                            opEtapa.setEstado(str.getString("Estado"));
+                            opEtapa.setFechaInicio(Convert.getDateFromDotNetTicks(str.getLong("FechaInicioTicks")));
+                            opEtapa.setFechaFin(Convert.getDateFromDotNetTicks(str.getLong("FechaFinTicks")));
 
-                        OportunidadEtapa.insert(db, opEtapa);
+                            OportunidadEtapa.insert(db, opEtapa);
+                        }
                     }
 
                     strs = type.getJSONArray("OportunidadTareas");

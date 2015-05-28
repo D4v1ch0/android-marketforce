@@ -8,9 +8,9 @@
         />
     <item android:id="@+id/action_crear_oportunidad" android:icon="@drawable/ic_action_new" android:title="@string/label_crear_visita"
         android:showAsAction="always|collapseActionView"     ></item>
-    <item android:id="@+id/action_filtro" android:icon="@drawable/filtros" android:title="@string/label_crear_visita"
+    <item android:id="@+id/action_filtro" android:icon="@drawable/filter_off" android:title="@string/label_crear_visita"
         android:showAsAction="always|collapseActionView"     ></item>
-    <item android:id="@+id/action_quitar_filtro" android:icon="@drawable/ic_action_cancel_dark" android:title="@string/label_crear_visita"
+    <item android:id="@+id/action_quitar_filtro" android:icon="@drawable/filter_on" android:title="@string/label_crear_visita"
         android:showAsAction="always|collapseActionView"     ></item>
     <item android:id="@+id/action_edit" android:icon="@drawable/ic_action_edit_dark" android:title="@string/label_crear_visita"
         android:showAsAction="always|collapseActionView"     ></item>

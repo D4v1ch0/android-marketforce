@@ -24,6 +24,8 @@ public class EtapaTareasAdapter extends BaseAdapter {
     private List<OportunidadTarea> oportunidadTareas;
     private int id_icon;
     private int id_color;
+    private int subetapa;
+    private int subtarea;
 
     public EtapaTareasAdapter(Context context, List<OportunidadTarea> oportunidadTareas)
     {
@@ -51,21 +53,31 @@ public class EtapaTareasAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        convertView = (View) inflater.inflate(this.context.getApplicationContext().getResources().getLayout(R.layout.rowlist_tarea), null);
-
-
-        if (oportunidadTareas.get(position).getEstado().equals("P")) {
-            id_icon = R.drawable.checkbox_off;
-        } else {
-            id_icon = R.drawable.checkbox_on;
+        if(oportunidadTareas.get(position).getIdTarea() == 0)
+        {
+            subetapa++;
+            subtarea = 0;
+            convertView = (View) inflater.inflate(this.context.getApplicationContext().getResources().getLayout(R.layout.rowlist_subetapa), null);
+            ((TextView) convertView.findViewById(R.id.subetapa_text)).setText(oportunidadTareas.get(position).getIdEtapa() + "." + subetapa + " " + oportunidadTareas.get(position).getObservacion());
         }
+        else {
+            subtarea++;
+            convertView = (View) inflater.inflate(this.context.getApplicationContext().getResources().getLayout(R.layout.rowlist_tarea), null);
 
-        ((TextView) convertView.findViewById(R.id.map_phone)).setCompoundDrawablesWithIntrinsicBounds(0, 0, id_icon, 0);
-        //((TextView) convertView.findViewById(R.id.map_phone)).setBackgroundColor(context.getResources().getColor(id_color));
-        //((TextView) convertView.findViewById(R.id.map_phone)).setText(agendaTarea.get(position).getEstadoTareaDescripcion());
 
-        ((TextView) convertView.findViewById(R.id.detail_agenda_estado)).setText(oportunidadTareas.get(position).getTarea().getNombreTarea());
-        ((TextView) convertView.findViewById(R.id.detail_tarea_num)).setText(position + 1 + "");
+            if (oportunidadTareas.get(position).getEstado().equals("P")) {
+                id_icon = R.drawable.checkbox_off;
+            } else {
+                id_icon = R.drawable.checkbox_on;
+            }
+
+            ((TextView) convertView.findViewById(R.id.map_phone)).setCompoundDrawablesWithIntrinsicBounds(0, 0, id_icon, 0);
+            //((TextView) convertView.findViewById(R.id.map_phone)).setBackgroundColor(context.getResources().getColor(id_color));
+            //((TextView) convertView.findViewById(R.id.map_phone)).setText(agendaTarea.get(position).getEstadoTareaDescripcion());
+
+            ((TextView) convertView.findViewById(R.id.detail_agenda_estado)).setText(oportunidadTareas.get(position).getTarea().getNombreTarea());
+            ((TextView) convertView.findViewById(R.id.detail_tarea_num)).setText(subtarea + "");
+        }
 
         return convertView;
     }

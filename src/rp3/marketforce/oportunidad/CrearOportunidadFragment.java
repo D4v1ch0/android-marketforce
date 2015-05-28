@@ -303,7 +303,7 @@ public class CrearOportunidadFragment extends BaseFragment {
         if(ConnectionUtils.isNetAvailable(getActivity())) {
             Bundle bundle = new Bundle();
             bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_OPORTUNIDADES);
-            //requestSync(bundle);
+            requestSync(bundle);
         }
     }
 

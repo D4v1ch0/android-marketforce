@@ -19,6 +19,7 @@ public class Etapa extends EntityBase<Etapa> {
     private int idEtapa;
     private int idEtapaPadre;
     private String descripcion;
+    private List<Etapa> subEtapas;
 
     @Override
     public long getID() {
@@ -52,6 +53,14 @@ public class Etapa extends EntityBase<Etapa> {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public List<Etapa> getSubEtapas() {
+        return subEtapas;
+    }
+
+    public void setSubEtapas(List<Etapa> subEtapas) {
+        this.subEtapas = subEtapas;
     }
 
     @Override
@@ -98,6 +107,23 @@ public class Etapa extends EntityBase<Etapa> {
         return list;
     }
 
+    public static List<Etapa> getSubEtapasQuery(DataBase db, int idEtapa){
+
+        Cursor c = db.query(Contract.Etapa.TABLE_NAME, new String[] {Contract.Etapa._ID, Contract.Etapa.COLUMN_ID_ETAPA, Contract.Etapa.COLUMN_ID_ETAPA_PADRE,
+                Contract.Etapa.COLUMN_DESCRIPCION}, Contract.Etapa.COLUMN_ID_ETAPA_PADRE + " = ?", new String[]{idEtapa + ""});
+
+        List<Etapa> list = new ArrayList<Etapa>();
+        while(c.moveToNext()){
+            Etapa etp = new Etapa();
+            etp.setID(CursorUtils.getInt(c, Contract.Etapa._ID));
+            etp.setIdEtapa(CursorUtils.getInt(c, Contract.Etapa.COLUMN_ID_ETAPA));
+            etp.setIdEtapaPadre(CursorUtils.getInt(c, Contract.Etapa.COLUMN_ID_ETAPA_PADRE));
+            etp.setDescripcion(CursorUtils.getString(c, Contract.Etapa.COLUMN_DESCRIPCION));
+            list.add(etp);
+        }
+        return list;
+    }
+
     public static Etapa getEtapaById(DataBase db, int idEtapa) {
         Cursor c = db.query(Contract.Etapa.TABLE_NAME, new String[] {Contract.Etapa._ID, Contract.Etapa.COLUMN_ID_ETAPA, Contract.Etapa.COLUMN_ID_ETAPA_PADRE,
                 Contract.Etapa.COLUMN_DESCRIPCION}, Contract.Etapa.COLUMN_ID_ETAPA + " = ? ", new String[] {idEtapa + ""} );
@@ -108,6 +134,7 @@ public class Etapa extends EntityBase<Etapa> {
             etp.setIdEtapa(CursorUtils.getInt(c, Contract.Etapa.COLUMN_ID_ETAPA));
             etp.setIdEtapaPadre(CursorUtils.getInt(c, Contract.Etapa.COLUMN_ID_ETAPA_PADRE));
             etp.setDescripcion(CursorUtils.getString(c, Contract.Etapa.COLUMN_DESCRIPCION));
+            etp.setSubEtapas(getSubEtapasQuery(db, idEtapa));
         }
         return etp;
     }

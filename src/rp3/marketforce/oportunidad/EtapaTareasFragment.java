@@ -16,16 +16,19 @@ import android.widget.Toast;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
 import rp3.app.BaseFragment;
 import rp3.marketforce.R;
+import rp3.marketforce.db.Contract;
 import rp3.marketforce.models.Actividad;
 import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.oportunidad.Etapa;
 import rp3.marketforce.models.oportunidad.EtapaTarea;
 import rp3.marketforce.models.oportunidad.Oportunidad;
+import rp3.marketforce.models.oportunidad.OportunidadEtapa;
 import rp3.marketforce.models.oportunidad.OportunidadTarea;
 import rp3.marketforce.oportunidad.actividades.ActividadActivity;
 import rp3.marketforce.oportunidad.actividades.CheckboxActivity;
@@ -97,11 +100,15 @@ public class EtapaTareasFragment extends BaseFragment {
         Oportunidad.update(getDataBase(), opt);
 
         tareas = new ArrayList<OportunidadTarea>();
-        for(OportunidadTarea tarea : opt.getOportunidadTareas())
+        for(Etapa etp : etapa.getSubEtapas())
         {
-            if(tarea.getIdEtapa() == idEtapa) {
-                tareas.add(tarea);
-            }
+            List<OportunidadTarea> subTareas = OportunidadTarea.getTareasOportunidadByEtapa(getDataBase(), opt.getIdOportunidad(), etp.getIdEtapa());
+            OportunidadTarea subEtapa = new OportunidadTarea();
+            subEtapa.setObservacion(etp.getDescripcion());
+            subEtapa.setIdEtapa(etapa.getIdEtapa());
+            subEtapa.setIdTarea(0);
+            tareas.add(subEtapa);
+            tareas.addAll(subTareas);
         }
         adapter = new EtapaTareasAdapter(getContext(), tareas);
         ((ListView) getRootView().findViewById(R.id.list_tareas)).setAdapter(adapter);
@@ -126,6 +133,18 @@ public class EtapaTareasFragment extends BaseFragment {
             public void onClick(View view) {
                 opt.setIdEtapa(idEtapa+1);
                 Oportunidad.update(getDataBase(), opt);
+                OportunidadEtapa oportunidadEtapa = OportunidadEtapa.getEtapaOportunidad(getDataBase(), opt.getIdOportunidad(), idEtapa);
+                oportunidadEtapa.setObservacion(getTextViewString(R.id.obs_etapa));
+                oportunidadEtapa.setFechaFin(Calendar.getInstance().getTime());
+                oportunidadEtapa.setEstado("R");
+                OportunidadEtapa.update(getDataBase(), oportunidadEtapa);
+
+                if(idEtapa < 5)
+                {
+                    OportunidadEtapa oportunidadEtapaNext = OportunidadEtapa.getEtapaOportunidad(getDataBase(), opt.getIdOportunidad(), idEtapa+1);
+                    oportunidadEtapaNext.setFechaInicio(Calendar.getInstance().getTime());
+                    OportunidadEtapa.update(getDataBase(), oportunidadEtapaNext);
+                }
                 finish();
             }
         });

@@ -38,6 +38,7 @@ import rp3.marketforce.models.Cliente;
 import rp3.marketforce.models.oportunidad.Agente;
 import rp3.marketforce.models.oportunidad.Etapa;
 import rp3.marketforce.models.oportunidad.Oportunidad;
+import rp3.marketforce.models.oportunidad.OportunidadEtapa;
 import rp3.marketforce.utils.DetailsPageAdapter;
 import rp3.marketforce.utils.DrawableManager;
 import rp3.widget.ViewPager;
@@ -338,20 +339,26 @@ public class OportunidadDetailFragment extends BaseFragment {
                 R.layout.layout_oportunidad_timeline, null);
 
         LinearLayout etapas_layout = ((LinearLayout) view_timeline.findViewById(R.id.oportunidad_etapas));
-        List<Etapa> etapas = Etapa.getEtapas(getDataBase());
+        List<OportunidadEtapa> etapas = null;
+        if(opt.getIdOportunidad() == 0)
+            etapas = OportunidadEtapa.getEtapasOportunidadInt(getDataBase(), opt.getID());
+        else
+            etapas = OportunidadEtapa.getEtapasOportunidad(getDataBase(), opt.getIdOportunidad());
 
         if(etapas.size() > 0)
             view_timeline.findViewById(R.id.oportunidad_no_etapas).setVisibility(View.GONE);
 
         int position = 0;
-        for(Etapa etp : etapas)
+        for(OportunidadEtapa etp : etapas)
         {
             View row_etapa = inflater.inflate(R.layout.rowlist_oportunidad_etapa, null);
 
             int id_icon = R.drawable.checkbox_off;
+            if(etp.getEstado().equalsIgnoreCase("R"))
+                id_icon = R.drawable.checkbox_on;
 
             ((TextView) row_etapa.findViewById(R.id.map_phone)).setCompoundDrawablesWithIntrinsicBounds(0, 0, id_icon, 0);
-            ((TextView) row_etapa.findViewById(R.id.detail_agenda_estado)).setText(etp.getDescripcion());
+            ((TextView) row_etapa.findViewById(R.id.detail_agenda_estado)).setText(etp.getEtapa().getDescripcion());
             ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setText(etp.getIdEtapa()+ "");
             if(position == 0)
                 ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa1));

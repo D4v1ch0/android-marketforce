@@ -94,7 +94,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/etapa1_indicator"
-                        android:src="@drawable/off_timeline" />
+                        android:src="@drawable/off_timeline"
+                        android:layout_marginBottom="1dp"
+                        android:layout_marginTop="1dp" />
 
                     <LinearLayout
                         android:orientation="vertical"
@@ -105,11 +107,12 @@
 
                 <LinearLayout
                     android:orientation="vertical"
-                    android:layout_width="25dp"
+                    android:layout_width="10dp"
                     android:layout_height="fill_parent"
                     android:layout_marginLeft="5dp"
                     android:id="@+id/flecha1"
-                    android:layout_marginBottom="5dp"></LinearLayout>
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/flecha"></LinearLayout>
 
                 <TextView
                     android:layout_width="0dp"
@@ -119,8 +122,8 @@
                     android:id="@+id/etapa1_fecha"
                     android:layout_weight="1"
                     android:padding="5dp"
-                    android:background="@color/color_grey_lines"
-                    android:layout_marginBottom="5dp" />
+                    android:background="@color/color_timeline_gray"
+                    android:layout_marginBottom="10dp" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -165,7 +168,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/etapa2_indicator"
-                        android:src="@drawable/off_timeline" />
+                        android:src="@drawable/off_timeline"
+                        android:layout_marginBottom="1dp"
+                        android:layout_marginTop="1dp" />
 
                     <LinearLayout
                         android:orientation="vertical"
@@ -176,11 +181,12 @@
 
                 <LinearLayout
                     android:orientation="vertical"
-                    android:layout_width="25dp"
+                    android:layout_width="10dp"
                     android:layout_height="fill_parent"
                     android:layout_marginLeft="5dp"
                     android:id="@+id/flecha2"
-                    android:layout_marginBottom="5dp" />
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/flecha" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -190,8 +196,8 @@
                     android:id="@+id/textView48"
                     android:layout_weight="1"
                     android:padding="5dp"
-                    android:background="@color/color_grey_lines"
-                    android:layout_marginBottom="5dp" />
+                    android:background="@color/color_timeline_gray"
+                    android:layout_marginBottom="10dp" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -236,7 +242,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/etapa3_indicator"
-                        android:src="@drawable/off_timeline" />
+                        android:src="@drawable/off_timeline"
+                        android:layout_marginBottom="1dp"
+                        android:layout_marginTop="1dp" />
 
                     <LinearLayout
                         android:orientation="vertical"
@@ -247,11 +255,12 @@
 
                 <LinearLayout
                     android:orientation="vertical"
-                    android:layout_width="25dp"
+                    android:layout_width="10dp"
                     android:layout_height="fill_parent"
                     android:layout_marginLeft="5dp"
                     android:id="@+id/flecha3"
-                    android:layout_marginBottom="5dp" />
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/flecha" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -261,8 +270,8 @@
                     android:id="@+id/textView51"
                     android:layout_weight="1"
                     android:padding="5dp"
-                    android:background="@color/color_grey_lines"
-                    android:layout_marginBottom="5dp" />
+                    android:background="@color/color_timeline_gray"
+                    android:layout_marginBottom="10dp" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -307,7 +316,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/etapa4_indicator"
-                        android:src="@drawable/off_timeline" />
+                        android:src="@drawable/off_timeline"
+                        android:layout_marginBottom="1dp"
+                        android:layout_marginTop="1dp" />
 
                     <LinearLayout
                         android:orientation="vertical"
@@ -318,11 +329,12 @@
 
                 <LinearLayout
                     android:orientation="vertical"
-                    android:layout_width="25dp"
+                    android:layout_width="10dp"
                     android:layout_height="fill_parent"
                     android:layout_marginLeft="5dp"
                     android:id="@+id/flecha4"
-                    android:layout_marginBottom="5dp" />
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/flecha" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -332,8 +344,8 @@
                     android:id="@+id/textView55"
                     android:layout_weight="1"
                     android:padding="5dp"
-                    android:background="@color/color_grey_lines"
-                    android:layout_marginBottom="5dp" />
+                    android:background="@color/color_timeline_gray"
+                    android:layout_marginBottom="10dp" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -378,17 +390,20 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/etapa5_indicator"
-                        android:src="@drawable/off_timeline" />
+                        android:src="@drawable/off_timeline"
+                        android:layout_marginBottom="1dp"
+                        android:layout_marginTop="1dp" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:orientation="vertical"
-                    android:layout_width="25dp"
+                    android:layout_width="10dp"
                     android:layout_height="fill_parent"
                     android:layout_marginLeft="5dp"
                     android:id="@+id/flecha5"
-                    android:layout_marginBottom="5dp" />
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/flecha" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -398,8 +413,8 @@
                     android:id="@+id/textView72"
                     android:layout_weight="1"
                     android:padding="5dp"
-                    android:background="@color/color_grey_lines"
-                    android:layout_marginBottom="5dp" />
+                    android:background="@color/color_timeline_gray"
+                    android:layout_marginBottom="10dp" />
 
                 <TextView
                     android:layout_width="0dp"

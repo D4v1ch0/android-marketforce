@@ -21,6 +21,7 @@ public class FiltroOportunidadActivity extends BaseActivity implements FiltroOpo
         setTitle("Filtro");
         if (!hasFragment(rp3.core.R.id.content)) {
             FiltroOportunidadFragment newFragment = FiltroOportunidadFragment.newInstance();
+            newFragment.filtroData = getIntent();
             setFragment(rp3.core.R.id.content, newFragment);
         }
     }
@@ -28,6 +29,12 @@ public class FiltroOportunidadActivity extends BaseActivity implements FiltroOpo
     @Override
     public void onFiltroSend(Intent intent) {
         setResult(Activity.RESULT_OK, intent);
+        finish();
+    }
+
+    @Override
+    public void onFiltroClean() {
+        setResult(Activity.RESULT_CANCELED);
         finish();
     }
 }

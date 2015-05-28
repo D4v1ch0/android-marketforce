@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -48,7 +49,9 @@ public class FiltroOportunidadFragment extends BaseFragment {
     public final static String HASTA_CANTIDAD = "hasta_cantidad";
 
     SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy");
+    NumberFormat numberFormat;
     OportunidadFiltroListener filtroListener;
+    public Intent filtroData;
 
     private Calendar desde_creacion, hasta_creacion, desde_gestion, hasta_gestion;
 
@@ -58,6 +61,7 @@ public class FiltroOportunidadFragment extends BaseFragment {
 
     public interface OportunidadFiltroListener {
         public void onFiltroSend(Intent intent);
+        public void onFiltroClean();
     }
 
     public void onAttach(Activity activity) {
@@ -81,6 +85,10 @@ public class FiltroOportunidadFragment extends BaseFragment {
     @Override
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
+        numberFormat = NumberFormat.getInstance();
+        numberFormat.setGroupingUsed(false);
+        numberFormat.setMinimumFractionDigits(0);
+        numberFormat.setMaximumFractionDigits(0);
 
         seekBar = new RangeSeekBar<Integer>(0, 5, this.getContext());
         seekBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
@@ -128,6 +136,70 @@ public class FiltroOportunidadFragment extends BaseFragment {
                 showDialogDatePicker(HASTA_FECHA_GESTION);
             }
         });
+
+        if(filtroData != null && filtroData.getBundleExtra(FiltroOportunidadFragment.FILTRO) != null)
+        {
+            ((CheckBox) getRootView().findViewById(R.id.filtro_etapa1)).setChecked(false);
+            ((CheckBox) getRootView().findViewById(R.id.filtro_etapa2)).setChecked(false);
+            ((CheckBox) getRootView().findViewById(R.id.filtro_etapa3)).setChecked(false);
+            ((CheckBox) getRootView().findViewById(R.id.filtro_etapa4)).setChecked(false);
+            ((CheckBox) getRootView().findViewById(R.id.filtro_etapa5)).setChecked(false);
+
+            ((CheckBox) getRootView().findViewById(R.id.filtro_activos)).setChecked(false);
+            ((CheckBox) getRootView().findViewById(R.id.filtro_suspendidos)).setChecked(false);
+            ((CheckBox) getRootView().findViewById(R.id.filtro_no_concretados)).setChecked(false);
+            ((CheckBox) getRootView().findViewById(R.id.filtro_concretados)).setChecked(false);
+
+            Bundle bundle = filtroData.getBundleExtra(FiltroOportunidadFragment.FILTRO);
+
+            ArrayList<Integer> etapas_raw = bundle.getIntegerArrayList(FiltroOportunidadFragment.ETAPAS);
+            ArrayList<String> estados_raw = bundle.getStringArrayList(FiltroOportunidadFragment.ESTADOS);
+
+            for(int i = 0; i < etapas_raw.size(); i ++) {
+                switch (etapas_raw.get(i))
+                {
+                    case 1: ((CheckBox) getRootView().findViewById(R.id.filtro_etapa1)).setChecked(true); break;
+                    case 2: ((CheckBox) getRootView().findViewById(R.id.filtro_etapa2)).setChecked(true); break;
+                    case 3: ((CheckBox) getRootView().findViewById(R.id.filtro_etapa3)).setChecked(true); break;
+                    case 4: ((CheckBox) getRootView().findViewById(R.id.filtro_etapa4)).setChecked(true); break;
+                    case 5: ((CheckBox) getRootView().findViewById(R.id.filtro_etapa5)).setChecked(true); break;
+                }
+            }
+
+            for(int i = 0; i < estados_raw.size(); i ++) {
+                if(estados_raw.get(i).equalsIgnoreCase("A")) ((CheckBox) getRootView().findViewById(R.id.filtro_activos)).setChecked(true);
+                if(estados_raw.get(i).equalsIgnoreCase("S")) ((CheckBox) getRootView().findViewById(R.id.filtro_suspendidos)).setChecked(true);
+                if(estados_raw.get(i).equalsIgnoreCase("NC")) ((CheckBox) getRootView().findViewById(R.id.filtro_no_concretados)).setChecked(true);
+                if(estados_raw.get(i).equalsIgnoreCase("C")) ((CheckBox) getRootView().findViewById(R.id.filtro_concretados)).setChecked(true);
+            }
+
+            if(bundle.containsKey(FiltroOportunidadFragment.DESDE_CANTIDAD))
+                ((TextView) getRootView().findViewById(R.id.filtro_desde)).setText(numberFormat.format(bundle.getDouble(FiltroOportunidadFragment.DESDE_CANTIDAD)));
+            if(bundle.containsKey(FiltroOportunidadFragment.HASTA_CANTIDAD))
+                ((TextView) getRootView().findViewById(R.id.filtro_hasta)).setText(numberFormat.format(bundle.getDouble(FiltroOportunidadFragment.HASTA_CANTIDAD)));
+            if(bundle.containsKey(FiltroOportunidadFragment.DESDE_CREACION))
+            {
+                desde_creacion = Calendar.getInstance();
+                desde_creacion.setTimeInMillis(bundle.getLong(FiltroOportunidadFragment.DESDE_CREACION));
+                ((TextView) getRootView().findViewById(R.id.fecha_creacion_desde)).setText(format1.format(desde_creacion.getTime()));
+            }
+            if(bundle.containsKey(FiltroOportunidadFragment.HASTA_CREACION))
+            {
+                hasta_creacion = Calendar.getInstance();
+                hasta_creacion.setTimeInMillis(bundle.getLong(FiltroOportunidadFragment.HASTA_CREACION));
+                ((TextView) getRootView().findViewById(R.id.fecha_creacion_hasta)).setText(format1.format(hasta_creacion.getTime()));
+            }
+
+            seekBar.setSelectedMinValue(bundle.getInt(FiltroOportunidadFragment.IMPORTANCIA_MIN));
+            seekBar.setSelectedMaxValue(bundle.getInt(FiltroOportunidadFragment.IMPORTANCIA_MAX));
+            seekBarProb.setSelectedMinValue(bundle.getInt(FiltroOportunidadFragment.PROBABILIDAD_MIN));
+            seekBarProb.setSelectedMaxValue(bundle.getInt(FiltroOportunidadFragment.PROBABILIDAD_MAX));
+
+            ((TextView) getRootView().findViewById(R.id.filtro_min)).setText(bundle.getInt(FiltroOportunidadFragment.IMPORTANCIA_MIN) + "");
+            ((TextView) getRootView().findViewById(R.id.filtro_max)).setText(bundle.getInt(FiltroOportunidadFragment.IMPORTANCIA_MAX) + "");
+            ((TextView) getRootView().findViewById(R.id.filtro_min_prob)).setText(bundle.getInt(FiltroOportunidadFragment.PROBABILIDAD_MIN) + "%");
+            ((TextView) getRootView().findViewById(R.id.filtro_max_prob)).setText(bundle.getInt(FiltroOportunidadFragment.PROBABILIDAD_MAX) + "%");
+        }
 
     }
 
@@ -228,6 +300,9 @@ public class FiltroOportunidadFragment extends BaseFragment {
                     filtroListener.onFiltroSend(result);
 
                 }
+                break;
+            case R.id.action_clean:
+                filtroListener.onFiltroClean();
                 break;
             default:
                 break;
