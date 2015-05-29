@@ -237,14 +237,12 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
             menu.findItem(R.id.action_crear_oportunidad).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_filtro).setVisible(isActiveListFragment && !filtro);
             menu.findItem(R.id.action_quitar_filtro).setVisible(isActiveListFragment && filtro);
-            menu.findItem(R.id.action_cambiar_etapa).setVisible(!isActiveListFragment);
         } else {
             menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_crear_oportunidad).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_filtro).setVisible(isActiveListFragment && !filtro);
             menu.findItem(R.id.action_quitar_filtro).setVisible(isActiveListFragment && filtro);
             menu.findItem(R.id.action_edit).setVisible(selectedOportunidadId != 0);
-            menu.findItem(R.id.action_cambiar_etapa).setVisible(!isActiveListFragment);
         }
     }
 
@@ -269,41 +267,6 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
                 Intent intent = new Intent(getContext(), FiltroOportunidadActivity.class);
                 filtro = true;
                 startActivityForResult(intent, FILTER_CODE);
-                break;
-            case R.id.action_cambiar_etapa:
-                AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
-                builderSingle.setIcon(R.drawable.ic_launcher);
-                builderSingle.setTitle("Seleccione una etapa");
-                final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                        getContext(),
-                        android.R.layout.select_dialog_singlechoice);
-                final List<Etapa> etapas = Etapa.getEtapas(getDataBase());
-                for(Etapa etp : etapas)
-                    arrayAdapter.add(etp.getDescripcion());
-
-                builderSingle.setNegativeButton("Cancelar",
-                        new DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-
-                builderSingle.setAdapter(arrayAdapter,
-                        new DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Etapa choose = etapas.get(which);
-                                Oportunidad opt = Oportunidad.getOportunidadId(getDataBase(), selectedOportunidadId);
-                                opt.setIdEtapa(choose.getIdEtapa());
-                                opt.setPendiente(true);
-                                Oportunidad.update(getDataBase(), opt);
-
-                            }
-                        });
-                builderSingle.show();
                 break;
             default:
                 break;

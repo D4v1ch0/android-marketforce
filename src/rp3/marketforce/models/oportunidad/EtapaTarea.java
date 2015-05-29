@@ -93,6 +93,7 @@ public class EtapaTarea extends EntityBase<EtapaTarea> {
             etp.setID(CursorUtils.getInt(c, Contract.EtapaTarea._ID));
             etp.setIdEtapa(CursorUtils.getInt(c, Contract.EtapaTarea.COLUMN_ID_ETAPA));
             etp.setIdTarea(CursorUtils.getInt(c, Contract.EtapaTarea.COLUMN_ID_TAREA));
+            etp.setOrden(CursorUtils.getInt(c, Contract.EtapaTarea.COLUMN_ORDEN));
             list.add(etp);
         }
         return list;

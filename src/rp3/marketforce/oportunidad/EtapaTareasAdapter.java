@@ -59,6 +59,7 @@ public class EtapaTareasAdapter extends BaseAdapter {
             subtarea = 0;
             convertView = (View) inflater.inflate(this.context.getApplicationContext().getResources().getLayout(R.layout.rowlist_subetapa), null);
             ((TextView) convertView.findViewById(R.id.subetapa_text)).setText(oportunidadTareas.get(position).getIdEtapa() + "." + subetapa + " " + oportunidadTareas.get(position).getObservacion());
+            convertView.setOnClickListener(null);
         }
         else {
             subtarea++;
@@ -66,9 +67,9 @@ public class EtapaTareasAdapter extends BaseAdapter {
 
 
             if (oportunidadTareas.get(position).getEstado().equals("P")) {
-                id_icon = R.drawable.checkbox_off;
+                id_icon = R.drawable.x_red;
             } else {
-                id_icon = R.drawable.checkbox_on;
+                id_icon = R.drawable.check;
             }
 
             ((TextView) convertView.findViewById(R.id.map_phone)).setCompoundDrawablesWithIntrinsicBounds(0, 0, id_icon, 0);

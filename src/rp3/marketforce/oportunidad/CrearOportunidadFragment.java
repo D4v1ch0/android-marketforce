@@ -100,7 +100,7 @@ import rp3.widget.ViewPager;
 /**
  * Created by magno_000 on 19/05/2015.
  */
-public class CrearOportunidadFragment extends BaseFragment {
+public class CrearOportunidadFragment extends BaseFragment implements AgenteFragment.EditAgentesListener {
 
     private View view;
     public final static int REQ_CODE_SPEECH_INPUT = 1200;
@@ -288,12 +288,14 @@ public class CrearOportunidadFragment extends BaseFragment {
                 OportunidadTarea.insert(getDataBase(), oportunidadTarea);
             }
 
-            List<Etapa> etapas = Etapa.getEtapas(getDataBase());
+            List<Etapa> etapas = Etapa.getEtapasAll(getDataBase());
             for(Etapa etapa : etapas)
             {
                 OportunidadEtapa oportunidadEtapa = new OportunidadEtapa();
                 oportunidadEtapa.setEstado("P");
                 oportunidadEtapa.setIdEtapa(etapa.getIdEtapa());
+                if(etapa.getIdEtapa() == 1)
+                    oportunidadEtapa.setFechaInicio(Calendar.getInstance().getTime());
                 oportunidadEtapa.set_idOportunidad((int) opt.getID());
                 oportunidadEtapa.setObservacion("");
                 OportunidadEtapa.insert(getDataBase(), oportunidadEtapa);
@@ -413,7 +415,7 @@ public class CrearOportunidadFragment extends BaseFragment {
         view.findViewById(R.id.oportunidad_agregar_responsable).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addResponsable();
+                showDialogFragment(AgenteFragment.newInstance(listAgentesIds), "Agentes");
             }
         });
         view.findViewById(R.id.oportunidad_ubicacion).setOnClickListener(new View.OnClickListener() {
@@ -811,4 +813,21 @@ public class CrearOportunidadFragment extends BaseFragment {
         return true;
     }
 
+    @Override
+    public void onFinishAgentesDialog(Agente agente) {
+        final LinearLayout responsable = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.rowlist_responsable, null);
+        final int pos = listViewResponsables.size();
+        ((ImageView) responsable.findViewById(R.id.eliminar_responsable)).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                listViewResponsables.remove(responsable);
+                ResponsableContainer.removeView(responsable);
+            }
+        });
+        ((TextView) responsable.findViewById(R.id.responsable_nombre)).setText(agente.getNombre());
+        listAgentesIds.add(agente.getIdAgente());
+        ResponsableContainer.addView(responsable);
+        listViewResponsables.add(responsable);
+    }
 }

@@ -164,6 +164,7 @@
         <activity android:name=".oportunidad.actividades.TextoActivity" android:theme="@style/ActivityPopupTheme"></activity>
         <activity android:name=".oportunidad.CrearOportunidadActivity"></activity>
         <activity android:name=".oportunidad.FotoOportunidadActivity" android:theme="@style/MyAppPopupTheme"></activity>
+        <activity android:name=".oportunidad.CambiarEstadoActivity" android:theme="@style/MyAppPopupTheme"></activity>
         
     </application>
 

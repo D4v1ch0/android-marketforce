@@ -29,7 +29,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/label_cantidad_min"
+                android:text="@string/label_importe"
                 android:id="@+id/textView32"
                 android:layout_weight="1"
                 android:textColor="@color/color_text_sky_blue"
@@ -89,7 +89,7 @@
         android:textColor="@color/color_text_sky_blue"
         android:textStyle="bold"
         android:paddingLeft="12dp"
-        android:paddingTop="12dp"
+        android:paddingTop="5dp"
         android:paddingRight="8dp"
         android:paddingBottom="5dp"
         android:background="@color/color_grey" />
@@ -119,7 +119,7 @@
         android:textColor="@color/color_text_sky_blue"
         android:textStyle="bold"
         android:paddingLeft="12dp"
-        android:paddingTop="12dp"
+        android:paddingTop="5dp"
         android:paddingRight="8dp"
         android:paddingBottom="5dp"
         android:background="@color/color_grey" />
@@ -149,7 +149,7 @@
         android:textColor="@color/color_text_sky_blue"
         android:textStyle="bold"
         android:paddingLeft="12dp"
-        android:paddingTop="12dp"
+        android:paddingTop="5dp"
         android:paddingRight="8dp"
         android:paddingBottom="5dp"
         android:background="@color/color_grey" />
@@ -167,7 +167,8 @@
             android:text="@string/label_telefono_1"
             android:id="@+id/textView36"
             android:layout_weight="0.33"
-            android:textColor="@color/color_text_sky_blue" />
+            android:textColor="@color/color_text_sky_blue"
+            android:paddingLeft="6dp" />
 
         <LinearLayout
             android:orientation="vertical"
@@ -203,7 +204,8 @@
             android:text="@string/label_telefono_2"
             android:id="@+id/textView37"
             android:layout_weight="0.33"
-            android:textColor="@color/color_text_sky_blue" />
+            android:textColor="@color/color_text_sky_blue"
+            android:paddingLeft="6dp" />
 
         <LinearLayout
             android:orientation="vertical"
@@ -239,7 +241,8 @@
             android:text="@string/label_correo"
             android:id="@+id/textView39"
             android:layout_weight="0.33"
-            android:textColor="@color/color_text_sky_blue" />
+            android:textColor="@color/color_text_sky_blue"
+            android:paddingLeft="6dp" />
 
         <LinearLayout
             android:orientation="vertical"
@@ -275,7 +278,8 @@
             android:text="@string/label_pagina_web"
             android:id="@+id/textView41"
             android:layout_weight="0.33"
-            android:textColor="@color/color_text_sky_blue" />
+            android:textColor="@color/color_text_sky_blue"
+            android:paddingLeft="6dp" />
 
         <LinearLayout
             android:orientation="vertical"
@@ -311,7 +315,8 @@
             android:text="@string/title_direccion"
             android:id="@+id/textView43"
             android:layout_weight="0.33"
-            android:textColor="@color/color_text_sky_blue" />
+            android:textColor="@color/color_text_sky_blue"
+            android:paddingLeft="6dp" />
 
         <LinearLayout
             android:orientation="vertical"
@@ -356,7 +361,8 @@
             android:text="@string/label_referencia"
             android:id="@+id/textView45"
             android:layout_weight="0.33"
-            android:textColor="@color/color_text_sky_blue" />
+            android:textColor="@color/color_text_sky_blue"
+            android:paddingLeft="6dp" />
 
         <LinearLayout
             android:orientation="vertical"
@@ -383,12 +389,35 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/label_medio_referencia_max"
+        android:id="@+id/textView49"
+        android:textColor="@color/color_text_sky_blue"
+        android:textStyle="bold"
+        android:paddingLeft="12dp"
+        android:paddingTop="5dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="5dp"
+        android:background="@color/color_grey" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/label_no_referencias"
+        android:id="@+id/oportunidad_medio_referencia"
+        android:padding="10dp"
+        android:layout_marginLeft="1dp" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/label_comentarios_max"
         android:id="@+id/textView38"
         android:textColor="@color/color_text_sky_blue"
         android:textStyle="bold"
         android:paddingLeft="12dp"
-        android:paddingTop="12dp"
+        android:paddingTop="5dp"
         android:paddingRight="8dp"
         android:paddingBottom="5dp"
         android:background="@color/color_grey" />
@@ -399,6 +428,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/label_no_comentarios"
         android:id="@+id/oportunidades_comentarios"
-        android:padding="10dp" />
+        android:padding="10dp"
+        android:layout_marginLeft="1dp" />
 </LinearLayout>
 </ScrollView>

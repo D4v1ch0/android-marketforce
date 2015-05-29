@@ -52,7 +52,7 @@ public class Oportunidad {
                 jObject.put("IdAgente", oportunidadUpload.getIdAgente());
                 jObject.put("Descripcion", oportunidadUpload.getDescripcion());
                 jObject.put("Calificacion", oportunidadUpload.getCalificacion());
-                jObject.put("FechaUltimaGestionTicks", Convert.getDotNetTicksFromDate(oportunidadUpload.getFechaUltimaGestion()));
+                jObject.put("FechaCreacionTicks", Convert.getDotNetTicksFromDate(oportunidadUpload.getFechaCreacion()));
                 jObject.put("FechaUltimaGestionTicks", Convert.getDotNetTicksFromDate(oportunidadUpload.getFechaUltimaGestion()));
                 jObject.put("Estado", oportunidadUpload.getEstado());
                 jObject.put("Direccion", oportunidadUpload.getDireccion());
@@ -343,7 +343,7 @@ public class Oportunidad {
                     jObjectEtapa.put("FechaFinTicks", Convert.getDotNetTicksFromDate(etapa.getFechaFin()));
                     jObjectEtapa.put("FechaInicioTicks", Convert.getDotNetTicksFromDate(etapa.getFechaInicio()));
 
-                    jArrayResponsables.put(jObjectEtapa);
+                    jArrayEtapas.put(jObjectEtapa);
                 }
                 jObject.put("OportunidadEtapas", jArrayEtapas);
 

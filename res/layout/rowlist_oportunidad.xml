@@ -28,7 +28,8 @@
                 android:textColor="@color/color_text_sky_blue"
                 android:textStyle="bold"
                 android:paddingLeft="5dp"
-                android:paddingRight="5dp" />
+                android:paddingRight="5dp"
+                android:layout_marginLeft="5dp" />
 
             <LinearLayout
                 android:orientation="vertical"
@@ -45,7 +46,8 @@
                 android:layout_weight="1"
                 android:paddingLeft="5dp"
                 android:textStyle="bold"
-                android:lines="1" />
+                android:lines="1"
+                android:layout_marginLeft="3dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -54,11 +56,11 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="25dp"
                 android:layout_height="match_parent"
                 android:id="@+id/rowlist_oportunidad_prioridad"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/flag_on"
+                android:src="@drawable/red_flag"
                 android:layout_margin="5dp" />
 
             <LinearLayout
@@ -99,7 +101,10 @@
             android:text="Medium Text"
             android:id="@+id/rowlist_oportunidad_importe"
             android:gravity="right"
-            android:padding="5dp" />
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="2dp" />
 
         <RatingBar
             android:id="@+id/rowlist_oportunidad_calificacion"
@@ -113,7 +118,7 @@
 
         <LinearLayout
             android:orientation="horizontal"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <TextView
@@ -122,13 +127,16 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="1"
                 android:id="@+id/rowlist_oportunidad_etapa1"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
                 android:background="@color/bg_button_bg_main_pressed"
                 android:textColor="@color/caldroid_white"
                 android:layout_marginRight="2dp"
                 android:layout_weight="1"
-                android:gravity="center" />
+                android:gravity="center"
+                android:paddingTop="-3dp"
+                android:paddingBottom="-3dp"
+                android:textSize="@dimen/text_xsmall_size" />
 
             <TextView
                 android:layout_width="0dp"
@@ -136,13 +144,16 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="2"
                 android:id="@+id/rowlist_oportunidad_etapa2"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
                 android:background="@color/bg_button_bg_main_pressed"
                 android:textColor="@color/caldroid_white"
                 android:layout_marginRight="2dp"
                 android:layout_weight="1"
-                android:gravity="center" />
+                android:gravity="center"
+                android:paddingTop="-3dp"
+                android:paddingBottom="-3dp"
+                android:textSize="@dimen/text_xsmall_size" />
 
             <TextView
                 android:layout_width="0dp"
@@ -150,13 +161,16 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="3"
                 android:id="@+id/rowlist_oportunidad_etapa3"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
                 android:background="@color/bg_button_bg_main_pressed"
                 android:textColor="@color/caldroid_white"
                 android:layout_marginRight="2dp"
                 android:layout_weight="1"
-                android:gravity="center" />
+                android:gravity="center"
+                android:paddingTop="-3dp"
+                android:paddingBottom="-3dp"
+                android:textSize="@dimen/text_xsmall_size" />
 
             <TextView
                 android:layout_width="0dp"
@@ -164,13 +178,16 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="4"
                 android:id="@+id/rowlist_oportunidad_etapa4"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
                 android:background="@color/bg_button_bg_main_pressed"
                 android:textColor="@color/caldroid_white"
                 android:layout_marginRight="2dp"
                 android:layout_weight="1"
-                android:gravity="center" />
+                android:gravity="center"
+                android:paddingTop="-3dp"
+                android:paddingBottom="-3dp"
+                android:textSize="@dimen/text_xsmall_size" />
 
             <TextView
                 android:layout_width="0dp"
@@ -178,13 +195,16 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="5"
                 android:id="@+id/rowlist_oportunidad_etapa5"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
                 android:background="@color/bg_button_bg_main_pressed"
                 android:textColor="@color/caldroid_white"
                 android:layout_marginRight="2dp"
                 android:layout_weight="1"
-                android:gravity="center" />
+                android:gravity="center"
+                android:paddingTop="-3dp"
+                android:paddingBottom="-3dp"
+                android:textSize="@dimen/text_xsmall_size" />
         </LinearLayout>
 
     </LinearLayout>

@@ -30,6 +30,7 @@ import rp3.marketforce.models.Actividad;
 import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.AgendaTareaActividades;
 import rp3.marketforce.models.AgendaTareaOpciones;
+import rp3.marketforce.models.oportunidad.OportunidadEtapa;
 import rp3.marketforce.models.oportunidad.OportunidadTarea;
 import rp3.marketforce.models.oportunidad.OportunidadTareaActividad;
 import rp3.marketforce.oportunidad.EtapaTareasFragment;
@@ -513,6 +514,8 @@ public class GrupoActivity extends ActividadActivity {
         }
         OportunidadTarea agt = OportunidadTarea.getTarea(getDataBase(), id_oportunidad, id_etapa, id_actividad);
 		agt.setEstado("R");
+        OportunidadEtapa etp = OportunidadEtapa.getEtapaOportunidad(getDataBase(), id_oportunidad, id_etapa);
+
         OportunidadTarea.update(getDataBase(), agt);
 		finish();
 		

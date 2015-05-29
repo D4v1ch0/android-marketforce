@@ -214,12 +214,16 @@ public class OportunidadListFragment extends BaseFragment {
             if (lista == null) {
                 list.setVisibility(View.GONE);
                 getRootView().findViewById(R.id.oportunidad_empty).setVisibility(View.VISIBLE);
+                ((TextView) getRootView().findViewById(R.id.oportunidad_meta)).setText("Meta: $ 0");
+                ((TextView) getRootView().findViewById(R.id.oportunidad_numero)).setText("Oportunidades: 0");
                 return;
             }
 
             if (lista.size() == 0) {
                 list.setVisibility(View.GONE);
                 getRootView().findViewById(R.id.oportunidad_empty).setVisibility(View.VISIBLE);
+                ((TextView) getRootView().findViewById(R.id.oportunidad_meta)).setText("Meta: $ 0");
+                ((TextView) getRootView().findViewById(R.id.oportunidad_numero)).setText("Oportunidades: 0");
                 return;
             }
 

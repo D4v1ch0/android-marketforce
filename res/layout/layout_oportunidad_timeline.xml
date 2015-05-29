@@ -193,7 +193,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/label_sin_iniciar"
-                    android:id="@+id/textView48"
+                    android:id="@+id/etapa2_fecha"
                     android:layout_weight="1"
                     android:padding="5dp"
                     android:background="@color/color_timeline_gray"
@@ -204,7 +204,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/label_sin_dias"
-                    android:id="@+id/textView49"
+                    android:id="@+id/etapa2_dias"
                     android:layout_weight="0.5"
                     android:gravity="center"
                     android:padding="5dp"
@@ -267,7 +267,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/label_sin_iniciar"
-                    android:id="@+id/textView51"
+                    android:id="@+id/etapa3_fecha"
                     android:layout_weight="1"
                     android:padding="5dp"
                     android:background="@color/color_timeline_gray"
@@ -278,7 +278,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/label_sin_dias"
-                    android:id="@+id/textView52"
+                    android:id="@+id/etapa3_dias"
                     android:layout_weight="0.5"
                     android:gravity="center"
                     android:padding="5dp"
@@ -341,7 +341,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/label_sin_iniciar"
-                    android:id="@+id/textView55"
+                    android:id="@+id/etapa4_fecha"
                     android:layout_weight="1"
                     android:padding="5dp"
                     android:background="@color/color_timeline_gray"
@@ -352,7 +352,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/label_sin_dias"
-                    android:id="@+id/textView56"
+                    android:id="@+id/etapa4_dias"
                     android:layout_weight="0.5"
                     android:gravity="center"
                     android:padding="5dp"
@@ -410,7 +410,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/label_sin_iniciar"
-                    android:id="@+id/textView72"
+                    android:id="@+id/etapa5_fecha"
                     android:layout_weight="1"
                     android:padding="5dp"
                     android:background="@color/color_timeline_gray"
@@ -421,7 +421,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/label_sin_dias"
-                    android:id="@+id/textView73"
+                    android:id="@+id/etapa5_dias"
                     android:layout_weight="0.5"
                     android:gravity="center"
                     android:padding="5dp"
@@ -429,6 +429,26 @@
                     android:layout_marginBottom="5dp"
                     android:background="@color/caldroid_darker_gray"
                     android:textColor="@color/color_background_white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="right"
+                android:layout_marginRight="23dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/label_total_dias"
+                    android:id="@+id/timeline_total_dias"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:textColor="@color/color_text_sky_blue" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

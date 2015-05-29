@@ -38,11 +38,11 @@
      <color name="color_grey_lines">#cccccc</color>
      <color name="color_fondo">#EDEDED</color>
      <color name="color_grey">#dddddd</color>
-    <color name="color_etapa1">#FF2026</color>
-    <color name="color_etapa2">#FF5520</color>
-    <color name="color_etapa3">#FF8820</color>
-    <color name="color_etapa4">#FFDD20</color>
-    <color name="color_etapa5">#338811</color>
+    <color name="color_etapa1">#CE4451</color>
+    <color name="color_etapa2">#F36E2F</color>
+    <color name="color_etapa3">#F49630</color>
+    <color name="color_etapa4">#FDCF4E</color>
+    <color name="color_etapa5">#17B365</color>
      
      
      

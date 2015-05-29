@@ -99,6 +99,10 @@ public class EtapaTareasFragment extends BaseFragment {
         opt.setPendiente(true);
         Oportunidad.update(getDataBase(), opt);
 
+        if(idEtapa != opt.getIdEtapa())
+            getRootView().findViewById(R.id.finalizar_etapa).setVisibility(View.GONE);
+
+
         tareas = new ArrayList<OportunidadTarea>();
         for(Etapa etp : etapa.getSubEtapas())
         {
@@ -131,7 +135,7 @@ public class EtapaTareasFragment extends BaseFragment {
         ((Button) getRootView().findViewById(R.id.finalizar_etapa)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                opt.setIdEtapa(idEtapa+1);
+
                 Oportunidad.update(getDataBase(), opt);
                 OportunidadEtapa oportunidadEtapa = OportunidadEtapa.getEtapaOportunidad(getDataBase(), opt.getIdOportunidad(), idEtapa);
                 oportunidadEtapa.setObservacion(getTextViewString(R.id.obs_etapa));
@@ -141,10 +145,17 @@ public class EtapaTareasFragment extends BaseFragment {
 
                 if(idEtapa < 5)
                 {
+                    opt.setIdEtapa(idEtapa+1);
                     OportunidadEtapa oportunidadEtapaNext = OportunidadEtapa.getEtapaOportunidad(getDataBase(), opt.getIdOportunidad(), idEtapa+1);
                     oportunidadEtapaNext.setFechaInicio(Calendar.getInstance().getTime());
                     OportunidadEtapa.update(getDataBase(), oportunidadEtapaNext);
                 }
+                else
+                {
+                    opt.setEstado("C");
+                }
+                opt.setFechaUltimaGestion(Calendar.getInstance().getTime());
+                Oportunidad.update(getDataBase(), opt);
                 finish();
             }
         });

@@ -238,5 +238,9 @@
     <string name="label_timeline_max">TIMELINE</string>
     <string name="label_sin_iniciar">sin iniciar</string>
     <string name="label_sin_dias">0 Días</string>
+    <string name="label_estados">Estados</string>
+    <string name="label_total_dias">Total 0 Días</string>
+    <string name="label_no_referencias">No hay referencias</string>
+    <string name="label_medio_referencia_max">MEDIO DE REFERENCIA</string>
 
 </resources>

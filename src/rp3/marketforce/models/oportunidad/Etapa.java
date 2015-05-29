@@ -90,6 +90,23 @@ public class Etapa extends EntityBase<Etapa> {
         return null;
     }
 
+    public static List<Etapa> getEtapasAll(DataBase db){
+
+        Cursor c = db.query(Contract.Etapa.TABLE_NAME, new String[] {Contract.Etapa._ID, Contract.Etapa.COLUMN_ID_ETAPA, Contract.Etapa.COLUMN_ID_ETAPA_PADRE,
+                Contract.Etapa.COLUMN_DESCRIPCION});
+
+        List<Etapa> list = new ArrayList<Etapa>();
+        while(c.moveToNext()){
+            Etapa etp = new Etapa();
+            etp.setID(CursorUtils.getInt(c, Contract.Etapa._ID));
+            etp.setIdEtapa(CursorUtils.getInt(c, Contract.Etapa.COLUMN_ID_ETAPA));
+            etp.setIdEtapaPadre(CursorUtils.getInt(c, Contract.Etapa.COLUMN_ID_ETAPA_PADRE));
+            etp.setDescripcion(CursorUtils.getString(c, Contract.Etapa.COLUMN_DESCRIPCION));
+            list.add(etp);
+        }
+        return list;
+    }
+
     public static List<Etapa> getEtapas(DataBase db){
 
         Cursor c = db.query(Contract.Etapa.TABLE_NAME, new String[] {Contract.Etapa._ID, Contract.Etapa.COLUMN_ID_ETAPA, Contract.Etapa.COLUMN_ID_ETAPA_PADRE,
@@ -136,6 +153,7 @@ public class Etapa extends EntityBase<Etapa> {
             etp.setDescripcion(CursorUtils.getString(c, Contract.Etapa.COLUMN_DESCRIPCION));
             etp.setSubEtapas(getSubEtapasQuery(db, idEtapa));
         }
+        c.close();
         return etp;
     }
 

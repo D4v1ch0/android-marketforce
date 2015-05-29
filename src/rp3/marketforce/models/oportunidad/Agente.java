@@ -73,7 +73,7 @@ public class Agente extends EntityBase<OportunidadTarea> {
 
     public static List<Agente> getAgentes(DataBase db) {
         Cursor c = db.query(Contract.Agente.TABLE_NAME, new String[] {Contract.Agente._ID, Contract.Agente.COLUMN_ID_AGENTE,
-                Contract.Agente.COLUMN_NOMBRE});
+                Contract.Agente.COLUMN_NOMBRE},null, null, null,null, Contract.Agente.COLUMN_NOMBRE);
 
         List<Agente> list = new ArrayList<Agente>();
         while(c.moveToNext()){

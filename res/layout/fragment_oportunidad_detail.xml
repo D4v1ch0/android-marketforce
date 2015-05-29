@@ -6,8 +6,7 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.20"
+        android:layout_height="wrap_content"
         android:padding="10dp">
 
         <LinearLayout
@@ -46,14 +45,19 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Medium Text"
                 android:id="@+id/oportunidad_referencia"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:textSize="@dimen/text_small_size"
+                android:linksClickable="false"
+                android:lines="2" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/oportunidad_estado"
-                android:src="@drawable/flag_on"
-                android:clickable="true" />
+                android:src="@drawable/red_flag"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
         </LinearLayout>
     </LinearLayout>
 

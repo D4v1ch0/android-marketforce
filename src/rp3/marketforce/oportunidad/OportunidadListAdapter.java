@@ -22,6 +22,7 @@ import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.oportunidad.Oportunidad;
 import rp3.marketforce.ruta.RutasListFragment;
+import rp3.util.CalendarUtils;
 
 /**
  * Created by magno_000 on 15/05/2015.
@@ -41,7 +42,7 @@ public class OportunidadListAdapter extends BaseAdapter {
         this.contex = c;
         this.list_oportunidad = list_oportunidad;
         this.transactionListFragmentCallback = transactionListFragmentCallback;
-        numberFormat = NumberFormat.getInstance();
+        numberFormat = NumberFormat.getCurrencyInstance();
         numberFormat.setMaximumFractionDigits(0);
         numberFormat.setMinimumFractionDigits(0);
         format1 = new SimpleDateFormat("dd/MM/yy");
@@ -59,7 +60,7 @@ public class OportunidadListAdapter extends BaseAdapter {
 
         ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_nombre)).setText(opt.getDescripcion());
         ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_number)).setText((position + 1)+ "");
-        ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_importe)).setText("$ " + numberFormat.format(opt.getImporte()));
+        ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_importe)).setText(numberFormat.format(opt.getImporte()));
         ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_contactado)).setText("Contactado: " + format1.format(opt.getFechaCreacion()));
         if(opt.getEstado().equalsIgnoreCase("S"))
             ((ImageView) convertView.findViewById(R.id.rowlist_oportunidad_prioridad)).setImageResource(R.drawable.blue_flag);
@@ -68,13 +69,11 @@ public class OportunidadListAdapter extends BaseAdapter {
         if(opt.getEstado().equalsIgnoreCase("NC"))
             ((ImageView) convertView.findViewById(R.id.rowlist_oportunidad_prioridad)).setImageResource(R.drawable.gray_flag);
         Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
         Calendar calFecha = Calendar.getInstance();
         calFecha.setTime(opt.getFechaCreacion());
-        long time = cal.getTimeInMillis() - calFecha.getTimeInMillis();
-        long dias = time /( 1000 * 60 * 60 * 24);
+        long dias = CalendarUtils.DayDiff(cal, calFecha);
+        if(dias == 0 && cal.get(Calendar.DAY_OF_YEAR) != calFecha.get(Calendar.DAY_OF_YEAR))
+            dias = 1;
         ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_dias)).setText("Días transcurridos: " + dias);
         ((RatingBar) convertView.findViewById(R.id.rowlist_oportunidad_calificacion)).setRating(opt.getCalificacion());
         if(opt.getIdEtapa() > 1)
