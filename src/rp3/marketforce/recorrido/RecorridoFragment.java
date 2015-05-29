@@ -32,6 +32,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -47,16 +48,25 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 import rp3.app.BaseFragment;
 import rp3.maps.utils.SphericalUtil;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.Ubicacion;
+import rp3.marketforce.ruta.ContactsAgendaFragment;
+import rp3.marketforce.ruta.CrearVisitaActivity;
+import rp3.marketforce.ruta.MapaActivity;
+import rp3.marketforce.ruta.MotivoNoVisitaFragment;
+import rp3.marketforce.ruta.ReprogramarActivity;
+import rp3.util.ConnectionUtils;
 
 public class RecorridoFragment  extends BaseFragment {
 	
@@ -76,7 +86,7 @@ public class RecorridoFragment  extends BaseFragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		setContentView(R.layout.fragment_recorrido);
+		setContentView(R.layout.fragment_recorrido, R.menu.fragment_recorrido_menu);
 		
 	}
 	@Override
@@ -143,6 +153,25 @@ public class RecorridoFragment  extends BaseFragment {
 	    cal = Calendar.getInstance();
 	    return view;
 	}
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId())
+        {
+            case R.id.action_ver_ruta:
+                if(!ConnectionUtils.isNetAvailable(getContext()))
+                {
+                    Toast.makeText(getContext(), "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Intent intent3 = new Intent(getActivity(), MapaActivity.class);
+                    intent3.putExtra(MapaActivity.ACTION_TYPE, MapaActivity.ACTION_RUTAS);
+                    startActivity(intent3);
+                }
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 	
 	
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {

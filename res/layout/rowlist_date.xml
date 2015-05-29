@@ -14,7 +14,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:visibility="visible" />
+        android:visibility="visible"
+        android:textSize="@dimen/text_xsmall_size" />
 
     <TextView
         android:id="@+id/textView_day"
@@ -23,7 +24,8 @@
         style="@style/Widget.TextView.Large"
         android:layout_gravity="center_horizontal"
         android:textStyle="bold"
-        android:visibility="visible" />
+        android:visibility="visible"
+        android:textSize="@dimen/text_medium_small_size" />
 
     <TextView
         android:id="@+id/textView_month"
@@ -31,7 +33,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:visibility="visible" />
+        android:visibility="visible"
+        android:textSize="@dimen/text_xsmall_size" />
 
     <ProgressBar
         android:layout_width="wrap_content"

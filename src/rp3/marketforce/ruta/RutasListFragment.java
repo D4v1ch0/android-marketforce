@@ -511,8 +511,11 @@ public class RutasListFragment extends rp3.app.BaseFragment{
                                         view_.setLayoutParams(params);
 
                                         ((TextView) view_.findViewById(R.id.textView_week)).setText(format2.format(anterior.getTime()).substring(0, 3));
+                                        ((TextView) view_.findViewById(R.id.textView_week)).setTextColor(getResources().getColor(R.color.color_unvisited));
                                         ((TextView) view_.findViewById(R.id.textView_day)).setText(format3.format(anterior.getTime()));
+                                        ((TextView) view_.findViewById(R.id.textView_day)).setTextColor(getResources().getColor(R.color.color_unvisited));
                                         ((TextView) view_.findViewById(R.id.textView_month)).setText(format4.format(anterior.getTime()).substring(0, 3));
+                                        ((TextView) view_.findViewById(R.id.textView_month)).setTextColor(getResources().getColor(R.color.color_unvisited));
                                         linearLayout_horizontal.addView(view_);
                                     }
                                 }
