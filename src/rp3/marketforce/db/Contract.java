@@ -611,10 +611,14 @@ public final class Contract {
         public static final String COLUMN_ID_ETAPA = "IdEtapa";
         public static final String COLUMN_ID_ETAPA_PADRE = "IdEtapaPadre";
         public static final String COLUMN_DESCRIPCION = "Descripcion";
+        public static final String COLUMN_ORDEN = "Orden";
+        public static final String COLUMN_ESTADO = "Estado";
 
         public static final String FIELD_ID_ETAPA = COLUMN_ID_ETAPA;
         public static final String FIELD_ID_ETAPA_PADRE = COLUMN_ID_ETAPA_PADRE;
         public static final String FIELD_DESCRIPCION = COLUMN_DESCRIPCION;
+        public static final String FIELD_ORDEN = COLUMN_ORDEN;
+        public static final String FIELD_ESTADO = COLUMN_ESTADO;
 
     }
 
@@ -667,6 +671,7 @@ public final class Contract {
         public static final String COLUMN_FECHA_FIN = "FechaFin";
         public static final String COLUMN_OBSERVACION = "Observacion";
         public static final String COLUMN_ESTADO = "Estado";
+        public static final String COLUMN_ID_ETAPA_PADRE = "IdEtapaPadre";
 
         public static final String FIELD_ID_OPORTUNIDAD = COLUMN_ID_OPORTUNIDAD;
         public static final String FIELD_ID_OPORTUNIDAD_INT = COLUMN_ID_OPORTUNIDAD_INT;
@@ -675,6 +680,7 @@ public final class Contract {
         public static final String FIELD_FECHA_FIN = COLUMN_FECHA_FIN;
         public static final String FIELD_OBSERVACION = COLUMN_OBSERVACION;
         public static final String FIELD_ESTADO = COLUMN_ESTADO;
+        public static final String FIELD_ID_ETAPA_PADRE = COLUMN_ID_ETAPA_PADRE;
 
     }
 

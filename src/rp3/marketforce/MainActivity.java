@@ -188,6 +188,7 @@ public class MainActivity extends rp3.app.NavActivity{
 		settingsGroup.addChildItem(cerrarsesion);
 		
 		navItems.add(dashboard);
+        navItems.add(oportunidad);
 		int ruta = PreferenceManager.getInt(Contants.KEY_IDRUTA);
 		if(PreferenceManager.getInt(Contants.KEY_IDRUTA) != 0)
 		{
@@ -200,7 +201,7 @@ public class MainActivity extends rp3.app.NavActivity{
             navItems.add(radar);
         }
 
-        navItems.add(oportunidad);
+        //navItems.add(oportunidad);
 		//navItems.add(pedido);
 		//navItems.add(reuniones);
 		//navItems.add(recordatorios);

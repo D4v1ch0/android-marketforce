@@ -23,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -123,11 +124,12 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
     private LinearLayout ContactosContainer, ResponsableContainer;
     private List<LinearLayout> listViewResponsables, listViewContactos;
     private List<Integer> listAgentesIds;
+    private List<OportunidadContacto> listContactos;
     private Location currentLoc;
     private long id = 0;
     private int tipo;
     Uri photo = Utils.getOutputMediaFileUri(Utils.MEDIA_TYPE_IMAGE);
-    boolean isClient;
+    boolean isClient, photoFlag = false;
     int posContact = -1;
     public Oportunidad oportunidad;
     public List<String> contactPhotos, photos;
@@ -191,6 +193,11 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
         Oportunidad opt = new Oportunidad();
         if(id != 0)
             opt = Oportunidad.getOportunidadId(getDataBase(), id);
+        else {
+            opt.setEstado("A");
+            opt.setIdEtapa(1);
+            opt.setFechaCreacion(Calendar.getInstance().getTime());
+        }
         opt.setDescripcion(((EditText) view.findViewById(R.id.oportunidad_nombre)).getText().toString());
 
         if(((EditText)view.findViewById(R.id.oportunidad_monto)).length() > 0)
@@ -199,10 +206,11 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
             opt.setImporte(0);
 
         opt.setCalificacion((int) ((RatingBar)view.findViewById(R.id.oportunidad_importancia)).getRating());
-        opt.setEstado("A");
-        opt.setIdEtapa(1);
-        opt.setFechaCreacion(Calendar.getInstance().getTime());
         opt.setFechaUltimaGestion(Calendar.getInstance().getTime());
+        if(((EditText) view.findViewById(R.id.oportunidad_comentario)).length() == 0)
+            opt.setObservacion("");
+        else
+            opt.setObservacion(((EditText) view.findViewById(R.id.oportunidad_comentario)).getText().toString());
         opt.setObservacion(((EditText) view.findViewById(R.id.oportunidad_comentario)).getText().toString());
         opt.setReferencia(((EditText) view.findViewById(R.id.oportunidad_referencia)).getText().toString());
         opt.setDireccion(((EditText) view.findViewById(R.id.oportunidad_direccion)).getText().toString());
@@ -247,6 +255,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
             {
                 cont = opt.getOportunidadContactos().get(i);
             }
+            cont.setIdOportunidadContacto(i+1);
             cont.set_idOportunidad((int) opt.getID());
             cont.setIdOportunidad(opt.getIdOportunidad());
             cont.setNombre(((EditText) listViewContactos.get(i).findViewById(R.id.contacto_nombre)).getText().toString());
@@ -283,6 +292,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
                 oportunidadTarea.setEstado("P");
                 oportunidadTarea.setIdTarea(tarea.getIdTarea());
                 oportunidadTarea.setIdEtapa(tarea.getIdEtapa());
+                oportunidadTarea.setObservacion("");
                 oportunidadTarea.set_idOportunidad((int) opt.getID());
                 oportunidadTarea.setOrden(tarea.getOrden());
                 OportunidadTarea.insert(getDataBase(), oportunidadTarea);
@@ -294,8 +304,10 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
                 OportunidadEtapa oportunidadEtapa = new OportunidadEtapa();
                 oportunidadEtapa.setEstado("P");
                 oportunidadEtapa.setIdEtapa(etapa.getIdEtapa());
-                if(etapa.getIdEtapa() == 1)
+                if(etapa.getIdEtapa() == 1 || etapa.getIdEtapaPadre() == 1) {
                     oportunidadEtapa.setFechaInicio(Calendar.getInstance().getTime());
+                }
+                oportunidadEtapa.setIdEtapaPadre(etapa.getIdEtapaPadre());
                 oportunidadEtapa.set_idOportunidad((int) opt.getID());
                 oportunidadEtapa.setObservacion("");
                 OportunidadEtapa.insert(getDataBase(), oportunidadEtapa);
@@ -304,7 +316,10 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
 
         if(ConnectionUtils.isNetAvailable(getActivity())) {
             Bundle bundle = new Bundle();
-            bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_OPORTUNIDADES);
+            if(id == 0)
+                bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_OPORTUNIDAD);
+            else
+                bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_PENDIENTES_OPORTUNIDADES);
             requestSync(bundle);
         }
     }
@@ -405,6 +420,9 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
 
     public void SetData()
     {
+        getActivity().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+        );
         if(listAgentesIds == null) {
             listViewResponsables = new ArrayList<LinearLayout>();
             listViewContactos = new ArrayList<LinearLayout>();
@@ -510,6 +528,15 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
 
         if(id != 0)
             setDatosOportunidad();
+
+        if(listContactos != null && photoFlag) {
+            for (int i = 0; i < listViewContactos.size(); i++) {
+                if(listContactos.size() > i) {
+                    ((EditText) listViewContactos.get(i).findViewById(R.id.contacto_nombre)).setText(listContactos.get(i).getNombre());
+                    ((EditText) listViewContactos.get(i).findViewById(R.id.contacto_cargo)).setText(listContactos.get(i).getCargo());
+                }
+            }
+        }
     }
 
     private void promptSpeechInput() {
@@ -576,20 +603,20 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
                 photos.set(i, opt.getOportunidadFotos().get(i).getURLFoto());
                 switch (i) {
                     case 0:
-                        DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
-                                        rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + opt.getOportunidadFotos().get(i).getURLFoto(),
+                        DManager.fetchDrawableOnThreadOnline(PreferenceManager.getString("server") +
+                                        rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_OPORTUNIDADES) + opt.getOportunidadFotos().get(i).getURLFoto().replace("\"", ""),
                                 ((ImageButton) view.findViewById(R.id.oportunidad_foto1)));
                         ((ImageButton) view.findViewById(R.id.oportunidad_foto1)).setScaleType(ImageView.ScaleType.CENTER_CROP);
                         break;
                     case 1:
-                        DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
-                                        rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + opt.getOportunidadFotos().get(i).getURLFoto(),
+                        DManager.fetchDrawableOnThreadOnline(PreferenceManager.getString("server") +
+                                        rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_OPORTUNIDADES) + opt.getOportunidadFotos().get(i).getURLFoto().replace("\"", ""),
                                 ((ImageButton) view.findViewById(R.id.oportunidad_foto2)));
                         ((ImageButton) view.findViewById(R.id.oportunidad_foto2)).setScaleType(ImageView.ScaleType.CENTER_CROP);
                         break;
                     case 2:
-                        DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
-                                        rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + opt.getOportunidadFotos().get(i).getURLFoto(),
+                        DManager.fetchDrawableOnThreadOnline(PreferenceManager.getString("server") +
+                                        rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_OPORTUNIDADES) + opt.getOportunidadFotos().get(i).getURLFoto().replace("\"", ""),
                                 ((ImageButton) view.findViewById(R.id.oportunidad_foto3)));
                         ((ImageButton) view.findViewById(R.id.oportunidad_foto3)).setScaleType(ImageView.ScaleType.CENTER_CROP);
                         break;
@@ -602,12 +629,22 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
     }
 
     protected void takePicture(final int idView) {
+        photoFlag = true;
+        listContactos = new ArrayList<OportunidadContacto>();
+        for(int i = 0; i < listViewContactos.size(); i ++)
+        {
+            OportunidadContacto cont = new OportunidadContacto();
+            cont.setNombre(((EditText) listViewContactos.get(i).findViewById(R.id.contacto_nombre)).getText().toString());
+            cont.setCargo(((EditText)listViewContactos.get(i).findViewById(R.id.contacto_cargo)).getText().toString());
+            listContactos.add(cont);
+        }
+        photo = Utils.getOutputMediaFileUri(Utils.MEDIA_TYPE_IMAGE);
         Intent captureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photo);
-        captureIntent.putExtra("crop", "true");
-        captureIntent.putExtra("aspectX", 2);
-        captureIntent.putExtra("aspectY", 1);
-        //captureIntent.putExtra("return-data", true);
+        //captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photo);
+        //captureIntent.putExtra("crop", "true");
+        //captureIntent.putExtra("aspectX", 2);
+        //captureIntent.putExtra("aspectY", 1);
+        captureIntent.putExtra("return-data", true);
         getActivity().startActivityForResult(captureIntent, idView);
     }
 
@@ -727,8 +764,8 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
         });
         ((EditText) contacto.findViewById(R.id.contacto_nombre)).setText(opCont.getNombre());
         ((EditText) contacto.findViewById(R.id.contacto_cargo)).setText(opCont.getCargo());
-        DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
-                        rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + opCont.getURLFoto(),
+        DManager.fetchDrawableOnThreadOnline(PreferenceManager.getString("server") +
+                        rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_OPORTUNIDADES) + opCont.getURLFoto().replace("\"", ""),
                 (ImageView) contacto.findViewById(R.id.contacto_foto));
         ((ImageButton) contacto.findViewById(R.id.contacto_foto)).setScaleType(ImageView.ScaleType.CENTER_CROP);
         contactPhotos.add(opCont.getURLFoto());
@@ -774,30 +811,36 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
                     try {
                         photo = Uri.parse(data.getAction());
                         pree = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), photo);
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
+                        try {
+                            pree = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), photo);
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
                     }
                 if (requestCode == PHOTO_1 || requestCode == PHOTO_2 || requestCode == PHOTO_3) {
 
                     if (requestCode == PHOTO_1) {
                         ((ImageButton) getRootView().findViewById(R.id.oportunidad_foto1)).setImageBitmap(pree);
                         ((ImageButton) getRootView().findViewById(R.id.oportunidad_foto1)).setScaleType(ImageView.ScaleType.CENTER_CROP);
-                        photos.set(0, Utils.SaveBitmap(pree, "edit_client1"));
+                        photos.set(0, Utils.SaveBitmap(pree, String.format("%s.%s", java.util.UUID.randomUUID(), ".jpg")));
                     }
                     if (requestCode == PHOTO_2) {
                         ((ImageButton) getRootView().findViewById(R.id.oportunidad_foto2)).setImageBitmap(pree);
                         ((ImageButton) getRootView().findViewById(R.id.oportunidad_foto2)).setScaleType(ImageView.ScaleType.CENTER_CROP);
-                        photos.set(1, Utils.SaveBitmap(pree, "edit_client2"));
+                         photos.set(1, Utils.SaveBitmap(pree, String.format("%s.%s", java.util.UUID.randomUUID(), ".jpg")));
+
                     }
                     if (requestCode == PHOTO_3) {
                         ((ImageButton) getRootView().findViewById(R.id.oportunidad_foto3)).setImageBitmap(pree);
                         ((ImageButton) getRootView().findViewById(R.id.oportunidad_foto3)).setScaleType(ImageView.ScaleType.CENTER_CROP);
-                        photos.set(2, Utils.SaveBitmap(pree, "edit_client3"));
+                        photos.set(2, Utils.SaveBitmap(pree, String.format("%s.%s", java.util.UUID.randomUUID(), ".jpg")));
                     }
                 } else {
                     ((ImageButton) listViewContactos.get(posContact).findViewById(R.id.contacto_foto)).setImageBitmap(pree);
                     ((ImageButton) listViewContactos.get(posContact).findViewById(R.id.contacto_foto)).setScaleType(ImageView.ScaleType.CENTER_CROP);
-                    contactPhotos.set(posContact, Utils.SaveBitmap(pree, "edit_contact" + posContact));
+                    contactPhotos.set(posContact, Utils.SaveBitmap(pree, String.format("%s.%s", java.util.UUID.randomUUID(), ".jpg")));
                 }
             }
         }

@@ -294,6 +294,8 @@
         CREATE TABLE tbEtapa(
         _id INTEGER PRIMARY KEY AUTOINCREMENT,
         IdEtapa INTEGER,
+        Orden INTEGER,
+        Estado TEXT,
         IdEtapaPadre INTEGER,
         Descripcion TEXT
         )
@@ -312,6 +314,7 @@
         IdOportunidad INTEGER,
         _IdOportunidad INTEGER,
         IdEtapa INTEGER,
+        IdEtapaPadre INTEGER,
         FechaInicio INTEGER,
         FechaFin INTEGER,
         Observacion TEXT,

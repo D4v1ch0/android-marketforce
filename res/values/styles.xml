@@ -53,6 +53,9 @@
         <item name="android:minHeight">35dip</item>
         <item name="android:maxHeight">35dip</item>
     </style>
+    <declare-styleable name="DonutChart">
+        <attr name="radius" format="dimension"/>
+    </declare-styleable>
 
 
 </resources>

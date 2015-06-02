@@ -62,16 +62,14 @@ public class FotoOportunidadFragment extends BaseFragment {
             {
                 case 1:
                     OportunidadContacto opCont = OportunidadContacto.getContactoInt(getDataBase(), id);
-                    ((ImageView) this.getRootView().findViewById(R.id.image_set)).setImageDrawable(getResources().getDrawable(R.drawable.user));
-                    DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
-                                    rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + opCont.getURLFoto(),
+                    DManager.fetchDrawableOnThreadOnline(PreferenceManager.getString("server") +
+                                    rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_OPORTUNIDADES) + opCont.getURLFoto().replace("\"",""),
                             (ImageView) this.getRootView().findViewById(R.id.image_set));
                     break;
                 case 2:
                     OportunidadFoto opFoto = OportunidadFoto.getFotoInt(getDataBase(), id);
-                    ((ImageView) this.getRootView().findViewById(R.id.image_set)).setImageDrawable(getResources().getDrawable(R.drawable.user));
-                    DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
-                                    rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + opFoto.getURLFoto(),
+                    DManager.fetchDrawableOnThreadOnline(PreferenceManager.getString("server") +
+                                    rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_OPORTUNIDADES) + opFoto.getURLFoto().replace("\"",""),
                             (ImageView) this.getRootView().findViewById(R.id.image_set));
                     break;
             }

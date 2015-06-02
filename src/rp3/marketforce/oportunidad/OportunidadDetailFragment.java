@@ -4,6 +4,10 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -21,6 +25,7 @@ import org.w3c.dom.Text;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -38,6 +43,7 @@ import rp3.marketforce.models.oportunidad.Etapa;
 import rp3.marketforce.models.oportunidad.Oportunidad;
 import rp3.marketforce.models.oportunidad.OportunidadEtapa;
 import rp3.marketforce.utils.DetailsPageAdapter;
+import rp3.marketforce.utils.DonutChart;
 import rp3.marketforce.utils.DrawableManager;
 import rp3.util.CalendarUtils;
 import rp3.util.Convert;
@@ -256,6 +262,8 @@ public class OportunidadDetailFragment extends BaseFragment {
             ((TextView) rootView.findViewById(R.id.oportunidad_descripcion)).setText(opt.getDescripcion());
             ((TextView) rootView.findViewById(R.id.oportunidad_referencia)).setText(opt.getTipoEmpresa());
             ((RatingBar) rootView.findViewById(R.id.oportunidad_calificacion)).setRating(opt.getCalificacion());
+            if (opt.getEstado().equalsIgnoreCase("A"))
+                ((ImageView) rootView.findViewById(R.id.oportunidad_estado)).setImageResource(R.drawable.red_flag);
             if (opt.getEstado().equalsIgnoreCase("S"))
                 ((ImageView) rootView.findViewById(R.id.oportunidad_estado)).setImageResource(R.drawable.blue_flag);
             if (opt.getEstado().equalsIgnoreCase("C"))
@@ -277,8 +285,19 @@ public class OportunidadDetailFragment extends BaseFragment {
             View view_info = inflater.inflate(
                     R.layout.layout_oportunidad_info, null);
 
+            List<Integer> values = new ArrayList<Integer>();
+            values.add(100 - opt.getProbabilidad());
+            values.add(opt.getProbabilidad());
+
+            List<Integer> colors = new ArrayList<Integer>();
+            colors.add(getResources().getColor(R.color.tab_activated));
+            colors.add(getResources().getColor(R.color.tab_inactivated));
+
+            ((DonutChart) view_info.findViewById(R.id.donutChart)).setValues(values);
+            ((DonutChart) view_info.findViewById(R.id.donutChart)).setColors(colors);
+            ((DonutChart) view_info.findViewById(R.id.donutChart)).invalidate();
             ((TextView) view_info.findViewById(R.id.oportunidad_probabilidad)).setText(opt.getProbabilidad() + " %");
-            ((ProgressBar) view_info.findViewById(R.id.oportunidad_probabilidad_progress)).setProgress(opt.getProbabilidad());
+            //((ProgressBar) view_info.findViewById(R.id.oportunidad_probabilidad_progress)).setProgress(opt.getProbabilidad());
             ((TextView) view_info.findViewById(R.id.oportunidad_importe)).setText(numberFormat.format(opt.getImporte()));
             ((TextView) view_info.findViewById(R.id.oportunidad_movil)).setText(opt.getTelefono1());
             ((TextView) view_info.findViewById(R.id.oportunidad_fijo)).setText(opt.getTelefono2());
@@ -308,8 +327,8 @@ public class OportunidadDetailFragment extends BaseFragment {
                     ((TextView) view_contacto.findViewById(R.id.oportunidad_contacto_number)).setText(i + 1 + "");
                     ((TextView) view_contacto.findViewById(R.id.oportunidad_contacto_nombre)).setText(opt.getOportunidadContactos().get(i).getNombre());
                     ((TextView) view_contacto.findViewById(R.id.oportunidad_contacto_cargo)).setText(opt.getOportunidadContactos().get(i).getCargo());
-                    DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
-                                    rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + opt.getOportunidadContactos().get(i).getURLFoto(),
+                    DManager.fetchDrawableOnThreadOnline(PreferenceManager.getString("server") +
+                                    rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_OPORTUNIDADES) + opt.getOportunidadContactos().get(i).getURLFoto().replace("\"",""),
                             (ImageView) view_contacto.getRootView().findViewById(R.id.oportunidad_contacto_foto));
                     final int finalI = i;
                     view_contacto.findViewById(R.id.oportunidad_contacto_foto).setOnClickListener(new View.OnClickListener() {
@@ -370,7 +389,7 @@ public class OportunidadDetailFragment extends BaseFragment {
 
                     ((TextView) row_etapa.findViewById(R.id.map_phone)).setCompoundDrawablesWithIntrinsicBounds(0, 0, id_icon, 0);
                     ((TextView) row_etapa.findViewById(R.id.detail_agenda_estado)).setText(etp.getEtapa().getDescripcion());
-                    ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setText(etp.getIdEtapa() + "");
+                    ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setText(position + 1 + "");
                     if (position == 0) {
                         ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa1));
                         if (etp.getEstado().equalsIgnoreCase("R")) {
@@ -432,9 +451,9 @@ public class OportunidadDetailFragment extends BaseFragment {
                     row_etapa.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Intent intent = new Intent(getContext(), EtapaTareasActivity.class);
-                            intent.putExtra(EtapaTareasActivity.ARG_ETAPA, view.getId());
-                            intent.putExtra(EtapaTareasActivity.ARG_OPORTUNIDAD, clientId);
+                            Intent intent = new Intent(getContext(), EtapaActivity.class);
+                            intent.putExtra(EtapaActivity.ARG_ETAPA, view.getId());
+                            intent.putExtra(EtapaActivity.ARG_OPORTUNIDAD, clientId);
                             startActivity(intent);
                         }
                     });
@@ -468,8 +487,8 @@ public class OportunidadDetailFragment extends BaseFragment {
                     if (opt.getOportunidadFotos().get(i).getURLFoto().length() > 0) {
                         switch (i) {
                             case 0:
-                                DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
-                                                rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + opt.getOportunidadFotos().get(i).getURLFoto(),
+                                DManager.fetchDrawableOnThreadOnline(PreferenceManager.getString("server") +
+                                                rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_OPORTUNIDADES) + opt.getOportunidadFotos().get(i).getURLFoto().replace("\"",""),
                                         ((ImageView) view_fotos.findViewById(R.id.oportunidad_photo1)));
                                 final int finalI = i;
                                 ((ImageButton) view_fotos.findViewById(R.id.oportunidad_photo1_click)).setOnClickListener(new View.OnClickListener() {
@@ -485,8 +504,8 @@ public class OportunidadDetailFragment extends BaseFragment {
                                 view_fotos.findViewById(R.id.photo1_layout).setVisibility(View.VISIBLE);
                                 break;
                             case 1:
-                                DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
-                                                rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + opt.getOportunidadFotos().get(i).getURLFoto(),
+                                DManager.fetchDrawableOnThreadOnline(PreferenceManager.getString("server") +
+                                                rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_OPORTUNIDADES) + opt.getOportunidadFotos().get(i).getURLFoto().replace("\"",""),
                                         ((ImageView) view_fotos.findViewById(R.id.oportunidad_photo2)));
                                 final int finalI2 = i;
                                 ((ImageButton) view_fotos.findViewById(R.id.oportunidad_photo2_click)).setOnClickListener(new View.OnClickListener() {
@@ -502,8 +521,8 @@ public class OportunidadDetailFragment extends BaseFragment {
                                 view_fotos.findViewById(R.id.photo2_layout).setVisibility(View.VISIBLE);
                                 break;
                             case 2:
-                                DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
-                                                rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + opt.getOportunidadFotos().get(i).getURLFoto(),
+                                DManager.fetchDrawableOnThreadOnline(PreferenceManager.getString("server") +
+                                                rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_OPORTUNIDADES) + opt.getOportunidadFotos().get(i).getURLFoto().replace("\"",""),
                                         ((ImageView) view_fotos.findViewById(R.id.oportunidad_photo3)));
                                 final int finalI3 = i;
                                 ((ImageButton) view_fotos.findViewById(R.id.oportunidad_photo3_click)).setOnClickListener(new View.OnClickListener() {
@@ -574,6 +593,43 @@ public class OportunidadDetailFragment extends BaseFragment {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public class MyGraphview extends View
+    {
+        private Paint paint=new Paint(Paint.ANTI_ALIAS_FLAG);
+        private float[] value_degree;
+        private int[] COLORS={Color.BLUE,Color.GREEN,Color.GRAY,Color.CYAN,Color.RED};
+        RectF rectf = new RectF (10, 10, 200, 200);
+        int temp=0;
+        public MyGraphview(Context context, float[] values) {
+
+            super(context);
+            value_degree=new float[values.length];
+            for(int i=0;i<values.length;i++)
+            {
+                value_degree[i]=values[i];
+            }
+        }
+        @Override
+        protected void onDraw(Canvas canvas) {
+            // TODO Auto-generated method stub
+            super.onDraw(canvas);
+
+            for (int i = 0; i < value_degree.length; i++) {//values2.length; i++) {
+                if (i == 0) {
+                    paint.setColor(COLORS[i]);
+                    canvas.drawArc(rectf, 0, value_degree[i], true, paint);
+                }
+                else
+                {
+                    temp += (int) value_degree[i - 1];
+                    paint.setColor(COLORS[i]);
+                    canvas.drawArc(rectf, temp, value_degree[i], true, paint);
+                }
+            }
+        }
+
     }
 
 }

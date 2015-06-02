@@ -59,7 +59,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/label_finalizar_etapa"
+        android:text="@string/label_finalizar_subetapa"
         android:id="@+id/finalizar_etapa"
         android:layout_gravity="center_horizontal"
         style="@style/Widget.Button.Theme" />

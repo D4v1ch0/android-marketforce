@@ -20,6 +20,8 @@ import java.util.List;
 
 import rp3.app.BaseFragment;
 import rp3.marketforce.R;
+import rp3.marketforce.db.Contract;
+import rp3.marketforce.models.oportunidad.Etapa;
 import rp3.marketforce.models.oportunidad.Oportunidad;
 import rp3.widget.RangeSeekBar;
 
@@ -156,7 +158,7 @@ public class FiltroOportunidadFragment extends BaseFragment {
             ArrayList<String> estados_raw = bundle.getStringArrayList(FiltroOportunidadFragment.ESTADOS);
 
             for(int i = 0; i < etapas_raw.size(); i ++) {
-                switch (etapas_raw.get(i))
+                switch (Etapa.getEtapaById(getDataBase(), etapas_raw.get(i)).getOrden())
                 {
                     case 1: ((CheckBox) getRootView().findViewById(R.id.filtro_etapa1)).setChecked(true); break;
                     case 2: ((CheckBox) getRootView().findViewById(R.id.filtro_etapa2)).setChecked(true); break;
@@ -273,15 +275,15 @@ public class FiltroOportunidadFragment extends BaseFragment {
                         bundle.putDouble(HASTA_CANTIDAD, Double.parseDouble(((TextView) getRootView().findViewById(R.id.filtro_hasta)).getText().toString()));
 
                     if(((CheckBox) getRootView().findViewById(R.id.filtro_etapa1)).isChecked())
-                        etapas.add(1);
+                        etapas.add(Etapa.getEtapaNext(getDataBase(), 1).getIdEtapa());
                     if(((CheckBox) getRootView().findViewById(R.id.filtro_etapa2)).isChecked())
-                        etapas.add(2);
+                        etapas.add(Etapa.getEtapaNext(getDataBase(), 2).getIdEtapa());
                     if(((CheckBox) getRootView().findViewById(R.id.filtro_etapa3)).isChecked())
-                        etapas.add(3);
+                        etapas.add(Etapa.getEtapaNext(getDataBase(), 3).getIdEtapa());
                     if(((CheckBox) getRootView().findViewById(R.id.filtro_etapa4)).isChecked())
-                        etapas.add(4);
+                        etapas.add(Etapa.getEtapaNext(getDataBase(), 4).getIdEtapa());
                     if(((CheckBox) getRootView().findViewById(R.id.filtro_etapa5)).isChecked())
-                        etapas.add(5);
+                        etapas.add(Etapa.getEtapaNext(getDataBase(), 5).getIdEtapa());
 
                     if(((CheckBox) getRootView().findViewById(R.id.filtro_activos)).isChecked())
                         estados.add("A");

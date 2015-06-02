@@ -6,10 +6,9 @@ import rp3.app.BaseActivity;
 import rp3.marketforce.R;
 
 /**
- * Created by magno_000 on 18/05/2015.
+ * Created by magno_000 on 01/06/2015.
  */
-public class EtapaTareasActivity extends BaseActivity {
-
+public class EtapaActivity extends BaseActivity {
     public final static String ARG_ETAPA = "etapa";
     public final static String ARG_OPORTUNIDAD = "oportunidad";
 
@@ -27,7 +26,7 @@ public class EtapaTareasActivity extends BaseActivity {
         if(getIntent().getExtras().containsKey(ARG_OPORTUNIDAD))
             idOportunidad = getIntent().getExtras().getLong(ARG_OPORTUNIDAD);
         if (!hasFragment(rp3.core.R.id.content)) {
-            EtapaTareasFragment newFragment = EtapaTareasFragment.newInstance(idEtapa, idOportunidad);
+            EtapaFragment newFragment = EtapaFragment.newInstance(idEtapa, idOportunidad);
             setFragment(rp3.core.R.id.content, newFragment);
         }
     }

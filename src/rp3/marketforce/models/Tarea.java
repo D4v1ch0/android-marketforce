@@ -175,7 +175,8 @@ public class Tarea extends EntityBase<Tarea>
         Cursor c = db.query(Contract.Tareas.TABLE_NAME, new String[]{ Contract.Tareas.COLUMN_TAREA_ID, Contract.Tareas.COLUMN_NOMBRE_TAREA,
                 Contract.Tareas.COLUMN_ESTADO_TAREA, Contract.Tareas.COLUMN_TIPO_TAREA, Contract.Tareas.COLUMN_FECHA_VIGENCIA_DESDE,
                 Contract.Tareas.COLUMN_FECHA_VIGENCIA_HASTA}, Contract.Tareas.COLUMN_FECHA_VIGENCIA_DESDE + " <= ? AND (" +
-                Contract.Tareas.COLUMN_FECHA_VIGENCIA_HASTA + " IS NULL OR " + Contract.Tareas.COLUMN_FECHA_VIGENCIA_HASTA + " >= ? )", new String[]{hoy + "", hoy + ""});
+                Contract.Tareas.COLUMN_FECHA_VIGENCIA_HASTA + " IS NULL OR " + Contract.Tareas.COLUMN_FECHA_VIGENCIA_HASTA + " >= ? ) AND " +
+                Contract.Tareas.COLUMN_TIPO_TAREA + " <> 'CO' ", new String[]{hoy + "", hoy + ""});
         List<Tarea> tareas = new ArrayList<Tarea>();
 
         if(c.moveToFirst())

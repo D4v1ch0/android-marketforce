@@ -138,6 +138,41 @@ public class DrawableManager {
             }
         }
     }
+
+    public void fetchDrawableOnThreadOnline(final String urlString, final ImageView imageView) {
+        ctx = imageView.getContext();
+        if (mMemoryCache.get(urlString) != null) {
+            imageView.setImageDrawable(new BitmapDrawable(mMemoryCache.get(urlString)));
+        }
+        else {
+
+            Drawable d = Drawable.createFromPath(getFilename(urlString));
+            if (d != null) {
+                imageView.setImageDrawable(d);
+            } else {
+
+                final Handler handler = new Handler() {
+                    @Override
+                    public void handleMessage(Message message) {
+                        //SaveBitmap(((BitmapDrawable) message.obj).getBitmap(), getFilename(urlString));
+                        imageView.setImageDrawable((Drawable) message.obj);
+                    }
+                };
+
+                Thread thread = new Thread() {
+                    @Override
+                    public void run() {
+                        //	TODO : set imageView to a "pending" image
+                        Drawable drawable = fetchDrawable(urlString);
+                        Message message = handler.obtainMessage(1, drawable);
+                        handler.sendMessage(message);
+                    }
+                };
+                thread.start();
+            }
+
+        }
+    }
     
     public void fetchDrawableOnThreadRounded(final String urlString, final ImageView imageView) {
     	ctx = imageView.getContext();
@@ -183,7 +218,7 @@ public class DrawableManager {
     }
     
     public void fetchDrawableOnThread(final String urlString, final LinearLayout imageView) {
-    	ctx = imageView.getContext();
+        ctx = imageView.getContext();
         if (mMemoryCache.get(urlString) != null) {
             imageView.setBackgroundDrawable(new BitmapDrawable(mMemoryCache.get(urlString)));
         }

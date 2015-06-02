@@ -4,6 +4,7 @@
         <allowSettingsOnAut>TRUE</allowSettingsOnAut>
         <allowHelpOnAut>TRUE</allowHelpOnAut>
         <imagesFolder>/Content/AgendaComercial/img/clientes/</imagesFolder>
+        <imagesFolderOportunidad>/Content/AgendaComercial/img/oportunidades/</imagesFolderOportunidad>
         <cancelAlarmTime>22H00</cancelAlarmTime>
         <forgotPassword>http://54.94.162.88/MarketForce/Security/Account/RequestingPasswordRecovery</forgotPassword>
         <help>http://54.94.162.88/MarketForce/help/index.htm</help>

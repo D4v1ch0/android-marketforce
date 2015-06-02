@@ -52,6 +52,8 @@ public class Etapa {
                     rp3.marketforce.models.oportunidad.Etapa etapa = new rp3.marketforce.models.oportunidad.Etapa();
 
                     etapa.setIdEtapa(type.getInt("IdEtapa"));
+                    etapa.setOrden(type.getInt("Orden"));
+                    etapa.setEstado(type.getString("Estado"));
                     if(!type.isNull("IdEtapaPadre"))
                         etapa.setIdEtapaPadre(type.getInt("IdEtapaPadre"));
                     else

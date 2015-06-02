@@ -20,6 +20,7 @@ import java.util.List;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
+import rp3.marketforce.models.oportunidad.Etapa;
 import rp3.marketforce.models.oportunidad.Oportunidad;
 import rp3.marketforce.ruta.RutasListFragment;
 import rp3.util.CalendarUtils;
@@ -76,15 +77,15 @@ public class OportunidadListAdapter extends BaseAdapter {
             dias = 1;
         ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_dias)).setText("Días transcurridos: " + dias);
         ((RatingBar) convertView.findViewById(R.id.rowlist_oportunidad_calificacion)).setRating(opt.getCalificacion());
-        if(opt.getIdEtapa() > 1)
+        if(opt.getEtapa().getOrden() > 1)
             convertView.findViewById(R.id.rowlist_oportunidad_etapa1).setBackgroundColor(contex.getResources().getColor(R.color.color_etapa1));
-        if(opt.getIdEtapa() > 2)
+        if(opt.getEtapa().getOrden() > 2)
             convertView.findViewById(R.id.rowlist_oportunidad_etapa2).setBackgroundColor(contex.getResources().getColor(R.color.color_etapa2));
-        if(opt.getIdEtapa() > 3)
+        if(opt.getEtapa().getOrden() > 3)
             convertView.findViewById(R.id.rowlist_oportunidad_etapa3).setBackgroundColor(contex.getResources().getColor(R.color.color_etapa3));
-        if(opt.getIdEtapa() > 4)
+        if(opt.getEtapa().getOrden() > 4)
             convertView.findViewById(R.id.rowlist_oportunidad_etapa4).setBackgroundColor(contex.getResources().getColor(R.color.color_etapa4));
-        if(opt.getIdEtapa() > 5)
+        if(opt.getEstado().equalsIgnoreCase("C"))
             convertView.findViewById(R.id.rowlist_oportunidad_etapa5).setBackgroundColor(contex.getResources().getColor(R.color.color_etapa5));
 
         return convertView;

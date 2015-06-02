@@ -57,7 +57,8 @@
                 android:src="@drawable/red_flag"
                 android:clickable="true"
                 android:focusable="true"
-                android:focusableInTouchMode="true" />
+                android:focusableInTouchMode="true"
+                android:padding="4dp" />
         </LinearLayout>
     </LinearLayout>
 

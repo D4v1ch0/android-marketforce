@@ -193,6 +193,7 @@
     <string name="label_cierre_operacion">Cierre de Negociación</string>
     <string name="label_cantidad">CANTIDAD</string>
     <string name="label_inserte_valor">Ingrese un valor</string>
+    <string name="label_inserte_fecha">Ingrese fecha</string>
     <string name="label_solo_activos">Mostrar activos</string>
     <string name="label_probabilidad_venta">Probabilidad de venta</string>
     <string name="label_cantidad_min">Cantidad</string>
@@ -245,5 +246,6 @@
     <string name="label_total_dias">Total 0 Días</string>
     <string name="label_no_referencias">No hay referencias</string>
     <string name="label_medio_referencia_max">MEDIO DE REFERENCIA</string>
+    <string name="label_finalizar_subetapa">Finalizar Subetapa</string>
 
 </resources>

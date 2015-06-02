@@ -46,6 +46,8 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
     public static String SYNC_TYPE_UPLOAD_CLIENTES = "cliente_upload";
 
     public static String SYNC_TYPE_UPLOAD_OPORTUNIDADES = "oportunidades_upload";
+    public static String SYNC_TYPE_PENDIENTES_OPORTUNIDADES = "oportunidades_pendientes";
+    public static String SYNC_TYPE_UPLOAD_OPORTUNIDAD = "oportunidad_upload";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -199,6 +201,16 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     String code = extras.getString(ServerActivity.SERVER_CODE);
                     result = Server.executeSync(code);
                     addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_UPLOAD_OPORTUNIDAD)) {
+
+                    result = rp3.marketforce.sync.Oportunidad.executeSyncInserts(db);
+                    addDefaultMessage(result);
+
+                } else if (syncType.equals(SYNC_TYPE_PENDIENTES_OPORTUNIDADES)) {
+
+                    result = rp3.marketforce.sync.Oportunidad.executeSyncPendientes(db);
+                    addDefaultMessage(result);
+
                 } else if (syncType.equals(SYNC_TYPE_UPLOAD_OPORTUNIDADES)) {
 
                     result = rp3.marketforce.sync.Oportunidad.executeSyncInserts(db);

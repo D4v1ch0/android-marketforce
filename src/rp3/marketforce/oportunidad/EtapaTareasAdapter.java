@@ -23,15 +23,16 @@ public class EtapaTareasAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private List<OportunidadTarea> oportunidadTareas;
     private int id_icon;
-    private int id_color;
+    private int orden;
     private int subetapa;
     private int subtarea;
 
-    public EtapaTareasAdapter(Context context, List<OportunidadTarea> oportunidadTareas)
+    public EtapaTareasAdapter(Context context, List<OportunidadTarea> oportunidadTareas, int orden)
     {
         this.context = context;
         this.inflater = LayoutInflater.from(context);
         this.oportunidadTareas = oportunidadTareas;
+        this.orden = orden;
     }
 
     @Override
@@ -58,7 +59,7 @@ public class EtapaTareasAdapter extends BaseAdapter {
             subetapa++;
             subtarea = 0;
             convertView = (View) inflater.inflate(this.context.getApplicationContext().getResources().getLayout(R.layout.rowlist_subetapa), null);
-            ((TextView) convertView.findViewById(R.id.subetapa_text)).setText(oportunidadTareas.get(position).getIdEtapa() + "." + subetapa + " " + oportunidadTareas.get(position).getObservacion());
+            ((TextView) convertView.findViewById(R.id.subetapa_text)).setText(orden + "." + subetapa + " " + oportunidadTareas.get(position).getObservacion());
             convertView.setOnClickListener(null);
         }
         else {

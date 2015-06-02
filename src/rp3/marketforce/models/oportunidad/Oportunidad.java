@@ -56,6 +56,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
     private List<OportunidadTarea> oportunidadTareas;
     private List<OportunidadFoto> oportunidadFotos;
     private List<OportunidadEtapa> oportunidadEtapas;
+    private Etapa etapa;
 
 
     @Override
@@ -106,6 +107,14 @@ public class Oportunidad extends EntityBase<Oportunidad> {
 
     public void setFechaUltimaGestion(Date fechaUltimaGestion) {
         this.fechaUltimaGestion = fechaUltimaGestion;
+    }
+
+    public Etapa getEtapa() {
+        return etapa;
+    }
+
+    public void setEtapa(Etapa etapa) {
+        this.etapa = etapa;
     }
 
     public int getCalificacion() {
@@ -353,6 +362,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
             opt.setPaginaWeb(CursorUtils.getString(c, Contract.Oportunidad.FIELD_PAGINA_WEB));
             opt.setTelefono1(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TELEFONO1));
             opt.setTelefono2(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TELEFONO2));
+            opt.setEtapa(Etapa.getEtapaById(db, opt.getIdEtapa()));
             list.add(opt);
         }
         return list;
@@ -396,6 +406,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
             opt.setPaginaWeb(CursorUtils.getString(c, Contract.Oportunidad.FIELD_PAGINA_WEB));
             opt.setTelefono1(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TELEFONO1));
             opt.setTelefono2(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TELEFONO2));
+            opt.setEtapa(Etapa.getEtapaById(db, opt.getIdEtapa()));
             list.add(opt);
         }
         return list;
@@ -502,6 +513,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
             opt.setPaginaWeb(CursorUtils.getString(c, Contract.Oportunidad.FIELD_PAGINA_WEB));
             opt.setTelefono1(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TELEFONO1));
             opt.setTelefono2(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TELEFONO2));
+            opt.setEtapa(Etapa.getEtapaById(db, opt.getIdEtapa()));
             list.add(opt);
         }
         return list;
@@ -589,6 +601,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
             }
 
         }
+        c.close();
         return opt;
     }
 
@@ -630,6 +643,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
             opt.setOportunidadEtapas(OportunidadEtapa.getEtapasOportunidad(db, opt.getIdOportunidad()));
             oportunidades.add(opt);
         }
+        c.close();
         return oportunidades;
     }
 
@@ -673,6 +687,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
 
             oportunidades.add(opt);
         }
+        c.close();
         return oportunidades;
     }
 

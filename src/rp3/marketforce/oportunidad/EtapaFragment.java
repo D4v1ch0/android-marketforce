@@ -8,14 +8,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -23,11 +21,8 @@ import java.util.Locale;
 
 import rp3.app.BaseFragment;
 import rp3.marketforce.R;
-import rp3.marketforce.db.Contract;
 import rp3.marketforce.models.Actividad;
-import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.oportunidad.Etapa;
-import rp3.marketforce.models.oportunidad.EtapaTarea;
 import rp3.marketforce.models.oportunidad.Oportunidad;
 import rp3.marketforce.models.oportunidad.OportunidadEtapa;
 import rp3.marketforce.models.oportunidad.OportunidadTarea;
@@ -38,16 +33,13 @@ import rp3.marketforce.oportunidad.actividades.MultipleActivity;
 import rp3.marketforce.oportunidad.actividades.SeleccionActivity;
 import rp3.marketforce.oportunidad.actividades.TextoActivity;
 import rp3.marketforce.sync.SyncAdapter;
-import rp3.marketforce.utils.Utils;
+import rp3.util.CalendarUtils;
 import rp3.util.ConnectionUtils;
 
-import static rp3.util.Screen.getOrientation;
-
 /**
- * Created by magno_000 on 18/05/2015.
+ * Created by magno_000 on 01/06/2015.
  */
-public class EtapaTareasFragment extends BaseFragment {
-
+public class EtapaFragment extends BaseFragment {
     public final static String ARG_ETAPA = "etapa";
     public final static String ARG_OPORTUNIDAD = "oportunidad";
     public final static int REQ_CODE_SPEECH_INPUT = 1200;
@@ -57,14 +49,16 @@ public class EtapaTareasFragment extends BaseFragment {
     private int idEtapa;
     private long idOportunidad;
     private List<OportunidadTarea> tareas;
-    private EtapaTareasAdapter adapter;
+    private SubEtapaAdapter adapter;
     private Oportunidad opt;
+    SimpleDateFormat format1 = new SimpleDateFormat("dd");
+    SimpleDateFormat format2 = new SimpleDateFormat("MMMM yyyy");
 
-    public static EtapaTareasFragment newInstance(int idEtapa, long idOportunidad) {
+    public static EtapaFragment newInstance(int idEtapa, long idOportunidad) {
         Bundle arguments = new Bundle();
         arguments.putInt(ARG_ETAPA, idEtapa);
         arguments.putLong(ARG_OPORTUNIDAD, idOportunidad);
-        EtapaTareasFragment fragment = new EtapaTareasFragment();
+        EtapaFragment fragment = new EtapaFragment();
         fragment.setArguments(arguments);
         return fragment;
     }
@@ -84,7 +78,7 @@ public class EtapaTareasFragment extends BaseFragment {
         }
 
         if (idEtapa != 0) {
-            super.setContentView(R.layout.fragment_etapa_tareas);
+            super.setContentView(R.layout.fragment_etapa_subetapas);
         } else {
             super.setContentView(R.layout.base_content_no_selected_item);
         }
@@ -105,17 +99,126 @@ public class EtapaTareasFragment extends BaseFragment {
         opt.setPendiente(true);
         Oportunidad.update(getDataBase(), opt);
 
+        if(etapa.getIdEtapa() != opt.getIdEtapa())
+            getRootView().findViewById(R.id.finalizar_etapa).setVisibility(View.GONE);
+
+
         tareas = new ArrayList<OportunidadTarea>();
         List<OportunidadTarea> subTareas = OportunidadTarea.getTareasOportunidadByEtapa(getDataBase(), opt.getIdOportunidad(), idEtapa);
-        tareas.addAll(subTareas);
-        adapter = new EtapaTareasAdapter(getContext(), tareas, etapa.getOrden());
+        if(subTareas.size() > 0) {
+            OportunidadTarea titleTarea = new OportunidadTarea();
+            titleTarea.setObservacion("Tareas");
+            tareas.add(titleTarea);
+            tareas.addAll(subTareas);
+        }
+        List<OportunidadEtapa> oportunidadEtapas = OportunidadEtapa.getEtapaOportunidadHijas(getDataBase(), idOportunidad, idEtapa);
+        if(oportunidadEtapas.size() == 0)
+            oportunidadEtapas = OportunidadEtapa.getEtapaOportunidadHijasExt(getDataBase(), opt.getIdOportunidad(), idEtapa);
+
+        if(oportunidadEtapas.size() > 0)
+        {
+            OportunidadTarea titleSubEtapa = new OportunidadTarea();
+            titleSubEtapa.setObservacion("Sub Etapas");
+            tareas.add(titleSubEtapa);
+        }
+        else
+        {
+            getRootView().findViewById(R.id.scrollView2).setVisibility(View.GONE);
+        }
+        int position = 0;
+        long totalDias = 0;
+        Calendar ant = Calendar.getInstance();
+        ant.setTime(opt.getFechaCreacion());
+        for(OportunidadEtapa etp : oportunidadEtapas) {
+            OportunidadTarea subEtapa = new OportunidadTarea();
+            subEtapa.setObservacion(etp.getEtapa().getDescripcion());
+            subEtapa.setIdEtapa(etp.getIdEtapa());
+            subEtapa.setEstado(etp.getEstado());
+            subEtapa.setIdTarea(0);
+            tareas.add(subEtapa);
+            switch (position) {
+                case 0:
+                    getRootView().findViewById(R.id.etapa1_layout).setVisibility(View.VISIBLE);
+                    if (etp.getEstado().equalsIgnoreCase("R")) {
+                        ((TextView) getRootView().findViewById(R.id.etapa1_fecha)).setText(format1.format(etp.getFechaFin()) + " de " + format2.format(etp.getFechaFin()));
+                        Calendar thisDay = Calendar.getInstance();
+                        thisDay.setTime(etp.getFechaFin());
+                        ((TextView) getRootView().findViewById(R.id.etapa1_dias)).setText(CalendarUtils.DayDiff(thisDay, ant) + " Días");
+                        ((ImageView) getRootView().findViewById(R.id.etapa1_indicator)).setImageResource(R.drawable.timeline1);
+                        totalDias = totalDias + CalendarUtils.DayDiff(thisDay, ant);
+                    }
+                    break;
+                case 1:
+                    getRootView().findViewById(R.id.etapa2_layout).setVisibility(View.VISIBLE);
+                    if (etp.getEstado().equalsIgnoreCase("R")) {
+                        ((TextView) getRootView().findViewById(R.id.etapa2_fecha)).setText(format1.format(etp.getFechaFin()) + " de " + format2.format(etp.getFechaFin()));
+                        Calendar thisDay = Calendar.getInstance();
+                        thisDay.setTime(etp.getFechaFin());
+                        ((TextView) getRootView().findViewById(R.id.etapa2_dias)).setText(CalendarUtils.DayDiff(thisDay, ant) + " Días");
+                        ((ImageView) getRootView().findViewById(R.id.etapa2_indicator)).setImageResource(R.drawable.timeline2);
+                        totalDias = totalDias + CalendarUtils.DayDiff(thisDay, ant);
+                    }
+                    break;
+                case 2:
+                    getRootView().findViewById(R.id.etapa3_layout).setVisibility(View.VISIBLE);
+                    if (etp.getEstado().equalsIgnoreCase("R")) {
+                        ((TextView) getRootView().findViewById(R.id.etapa3_fecha)).setText(format1.format(etp.getFechaFin()) + " de " + format2.format(etp.getFechaFin()));
+                        Calendar thisDay = Calendar.getInstance();
+                        thisDay.setTime(etp.getFechaFin());
+                        ((TextView) getRootView().findViewById(R.id.etapa3_dias)).setText(CalendarUtils.DayDiff(thisDay, ant) + " Días");
+                        ((ImageView) getRootView().findViewById(R.id.etapa3_indicator)).setImageResource(R.drawable.timeline3);
+                        totalDias = totalDias + CalendarUtils.DayDiff(thisDay, ant);
+                    }
+                    break;
+                case 3:
+                    getRootView().findViewById(R.id.etapa4_layout).setVisibility(View.VISIBLE);
+                    if (etp.getEstado().equalsIgnoreCase("R")) {
+                        ((TextView) getRootView().findViewById(R.id.etapa4_fecha)).setText(format1.format(etp.getFechaFin()) + " de " + format2.format(etp.getFechaFin()));
+                        Calendar thisDay = Calendar.getInstance();
+                        thisDay.setTime(etp.getFechaFin());
+                        ((TextView) getRootView().findViewById(R.id.etapa4_dias)).setText(CalendarUtils.DayDiff(thisDay, ant) + " Días");
+                        ((ImageView) getRootView().findViewById(R.id.etapa4_indicator)).setImageResource(R.drawable.timeline4);
+                        totalDias = totalDias + CalendarUtils.DayDiff(thisDay, ant);
+                    }
+                    break;
+                case 4:
+                    getRootView().findViewById(R.id.etapa5_layout).setVisibility(View.VISIBLE);
+                    if (etp.getEstado().equalsIgnoreCase("R")) {
+                        ((TextView) getRootView().findViewById(R.id.etapa5_fecha)).setText(format1.format(etp.getFechaFin()) + " de " + format2.format(etp.getFechaFin()));
+                        Calendar thisDay = Calendar.getInstance();
+                        thisDay.setTime(etp.getFechaFin());
+                        ((TextView) getRootView().findViewById(R.id.etapa5_dias)).setText(CalendarUtils.DayDiff(thisDay, ant) + " Días");
+                        ((ImageView) getRootView().findViewById(R.id.etapa5_indicator)).setImageResource(R.drawable.timeline5);
+                        totalDias = totalDias + CalendarUtils.DayDiff(thisDay, ant);
+                    }
+                    break;
+            }
+            position++;
+        }
+        switch (position)
+        {
+            case 1: getRootView().findViewById(R.id.etapa1_conector).setVisibility(View.INVISIBLE); break;
+            case 2: getRootView().findViewById(R.id.etapa2_conector).setVisibility(View.INVISIBLE); break;
+            case 3: getRootView().findViewById(R.id.etapa3_conector).setVisibility(View.INVISIBLE); break;
+            case 4: getRootView().findViewById(R.id.etapa4_conector).setVisibility(View.INVISIBLE); break;
+        }
+        adapter = new SubEtapaAdapter(getContext(), tareas);
         ((ListView) getRootView().findViewById(R.id.list_tareas)).setAdapter(adapter);
         ((ListView) getRootView().findViewById(R.id.list_tareas)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 OportunidadTarea setter = adapter.getItem(i);
-                if(setter.getTarea().getTipoTarea().equalsIgnoreCase("CO"))
-                    showTareaGrupo(setter);
+                if(setter.getIdTarea() != 0) {
+                    if (setter.getTarea().getTipoTarea().equalsIgnoreCase("CO"))
+                        showTareaGrupo(setter);
+                }
+                else
+                {
+                    Intent intent = new Intent(getContext(), EtapaTareasActivity.class);
+                    intent.putExtra(EtapaTareasActivity.ARG_ETAPA, setter.getIdEtapa());
+                    intent.putExtra(EtapaTareasActivity.ARG_OPORTUNIDAD, idOportunidad);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -140,22 +243,26 @@ public class EtapaTareasFragment extends BaseFragment {
                 oportunidadEtapa.setFechaFin(Calendar.getInstance().getTime());
                 oportunidadEtapa.setEstado("R");
                 OportunidadEtapa.update(getDataBase(), oportunidadEtapa);
-                for(Etapa etp : oportunidadEtapa.getEtapa().getSubEtapas())
-                {
-                    OportunidadEtapa subEtapa = OportunidadEtapa.getEtapaOportunidad(getDataBase(), opt.getIdOportunidad(), etp.getIdEtapa());
-                    subEtapa.setFechaFin(Calendar.getInstance().getTime());
-                    subEtapa.setEstado("R");
-                    OportunidadEtapa.update(getDataBase(), subEtapa);
-                }
 
                 Etapa next = Etapa.getEtapaNext(getDataBase(), etapa.getOrden() + 1);
 
-                if(next != null) {
+                if(etapa.getOrden() < 5)
+                {
+                    opt.setIdEtapa(next.getIdEtapa());
                     OportunidadEtapa oportunidadEtapaNext = OportunidadEtapa.getEtapaOportunidad(getDataBase(), opt.getIdOportunidad(), next.getIdEtapa());
                     oportunidadEtapaNext.setFechaInicio(Calendar.getInstance().getTime());
                     OportunidadEtapa.update(getDataBase(), oportunidadEtapaNext);
+                    for(Etapa etp : oportunidadEtapaNext.getEtapa().getSubEtapas())
+                    {
+                        OportunidadEtapa subEtapa = OportunidadEtapa.getEtapaOportunidad(getDataBase(), opt.getIdOportunidad(), etp.getIdEtapa());
+                        subEtapa.setFechaInicio(Calendar.getInstance().getTime());
+                        OportunidadEtapa.update(getDataBase(), subEtapa);
+                    }
                 }
-
+                else
+                {
+                    opt.setEstado("C");
+                }
                 opt.setFechaUltimaGestion(Calendar.getInstance().getTime());
                 Oportunidad.update(getDataBase(), opt);
                 if(ConnectionUtils.isNetAvailable(getActivity())) {

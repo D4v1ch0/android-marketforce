@@ -162,6 +162,7 @@ public class OportunidadTarea extends EntityBase<OportunidadTarea> {
 
             list.add(cont);
         }
+        c.close();
         return list;
     }
 
@@ -187,6 +188,7 @@ public class OportunidadTarea extends EntityBase<OportunidadTarea> {
 
             list.add(cont);
         }
+        c.close();
         return list;
 
     }
@@ -214,6 +216,7 @@ public class OportunidadTarea extends EntityBase<OportunidadTarea> {
 
             list.add(cont);
         }
+        c.close();
         return list;
 
     }
@@ -241,6 +244,7 @@ public class OportunidadTarea extends EntityBase<OportunidadTarea> {
 
             list.add(cont);
         }
+        c.close();
         return list;
     }
 
@@ -268,6 +272,7 @@ public class OportunidadTarea extends EntityBase<OportunidadTarea> {
             cont.setOportunidadTareaActividades(OportunidadTareaActividad.getActividades(db, cont.getIdOportunidad(), cont.getIdTarea(), cont.getIdEtapa()));
 
         }
+        c.close();
         return cont;
     }
 }
