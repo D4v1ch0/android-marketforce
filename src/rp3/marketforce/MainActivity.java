@@ -113,7 +113,6 @@ public class MainActivity extends rp3.app.NavActivity{
 
         DManager = new DrawableManager();
 
-        http://54.94.162.88/MarketForce/Content/Base/img/users\a466d7f9-fd44-4ee9-a858-063fb85f5a09_med.jpg
         setNavHeaderIcon(getResources().getDrawable(R.drawable.ic_user_new));
         if(!PreferenceManager.getString(Contants.KEY_FOTO, "").equalsIgnoreCase("")) {
             DManager.fetchDrawableOnThreadRounded(PreferenceManager.getString("server") +
