@@ -29,6 +29,7 @@ public class Contants {
 	public final static String KEY_ES_AGENTE = "EsAgente";
 	public final static String KEY_ES_ADMINISTRADOR = "EsAdministrador";
 	public final static String KEY_CARGO = "Cargo";
+    public final static String KEY_FOTO = "Foto";
 	public final static String KEY_ALARMA_INICIO = "HoraInicioTrackingPositionTicks";
 	public final static String KEY_ALARMA_FIN = "HoraFinTrackingPositionTicks";
 	public final static String KEY_ALARMA_INTERVALO = "MinutosIntervaloTrackingPosition";

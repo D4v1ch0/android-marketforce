@@ -41,6 +41,8 @@ import rp3.marketforce.recorrido.RecorridoFragment;
 import rp3.marketforce.resumen.DashboardGrupoFragment;
 import rp3.marketforce.ruta.RutasFragment;
 import rp3.marketforce.sync.SyncAdapter;
+import rp3.marketforce.utils.DrawableManager;
+import rp3.marketforce.utils.Utils;
 import rp3.runtime.Session;
 import rp3.sync.SyncAudit;
 import rp3.util.ConnectionUtils;
@@ -66,6 +68,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 public class MainActivity extends rp3.app.NavActivity{
@@ -90,6 +93,7 @@ public class MainActivity extends rp3.app.NavActivity{
 	public String lastTitle;
 	private int selectedItem;
     SimpleDateFormat format4= new SimpleDateFormat("dd/MM/yyy HH:mm");
+    DrawableManager DManager;
 	
 	public static Intent newIntent(Context c){
 		Intent i = new Intent(c, MainActivity.class);
@@ -106,12 +110,20 @@ public class MainActivity extends rp3.app.NavActivity{
 		rp3.configuration.Configuration.TryInitializeConfiguration(this, DbOpenHelper.class);
 
 		//extractDatabase();
-		
+
+        DManager = new DrawableManager();
+
+        http://54.94.162.88/MarketForce/Content/Base/img/users\a466d7f9-fd44-4ee9-a858-063fb85f5a09_med.jpg
+        setNavHeaderIcon(getResources().getDrawable(R.drawable.ic_user_new));
+        if(!PreferenceManager.getString(Contants.KEY_FOTO, "").equalsIgnoreCase("")) {
+            DManager.fetchDrawableOnThreadRounded(PreferenceManager.getString("server") +
+                            Utils.getImageDPISufix(this, PreferenceManager.getString(Contants.KEY_FOTO)).replace("~","").replace("\\","/"),
+                    (ImageView) this.getRootView().findViewById(R.id.nav_header_icon));
+        }
 		this.setNavHeaderTitle(Session.getUser().getFullName());
 		this.setNavHeaderSubtitle(PreferenceManager.getString(Contants.KEY_CARGO));
 		showNavHeader(true);
-		
-		setNavHeaderIcon(getResources().getDrawable(R.drawable.ic_user_new));
+
         if(getIntent().getExtras() != null && getIntent().getExtras().containsKey(TO_AGENDAS))
         {
             int startNav = NAV_RUTAS;
