@@ -7,7 +7,9 @@ import java.util.List;
 import rp3.data.entity.EntityBase;
 import rp3.db.QueryDir;
 import rp3.db.sqlite.DataBase;
+import rp3.marketforce.Contants;
 import rp3.marketforce.db.Contract;
+import rp3.util.Convert;
 import rp3.util.CursorUtils;
 import android.database.Cursor;
 
@@ -849,8 +851,12 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 	public static List<Cliente> getClientSearch(DataBase db, String termSearch)
 	{		
 		String query = QueryDir.getQuery( Contract.Cliente.QUERY_CLIENT_SEARCH );
-		
-		Cursor c = db.rawQuery(query,new String[]{ "*" + termSearch + "*", "*" + termSearch + "*"} );
+        //String version = db.getSQLiteVersion();
+        //int compare = Convert.versionCompare(version, Contants.SQLITE_VERSION_SEARCH);
+        Cursor c = null;
+
+        c = db.rawQuery(query, new String[]{termSearch + "*", termSearch + "*"});
+
 		
 		List<Cliente> list = new ArrayList<Cliente>();
 		while(c.moveToNext()){

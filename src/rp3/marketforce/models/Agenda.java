@@ -917,8 +917,15 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 	public static List<Agenda> getAgendaSearch(DataBase db, String termSearch)
 	{		
 		String query = QueryDir.getQuery( Contract.Agenda.QUERY_AGENDA_SEARCH );
-		
-		Cursor c = db.rawQuery(query, "*" + termSearch + "*" );
+        String version = db.getSQLiteVersion();
+        int compare = Convert.versionCompare(version, Contants.SQLITE_VERSION_SEARCH);
+        Cursor c = null;
+
+        if(compare > 0)
+            c = db.rawQuery(query, termSearch + "*");
+        else
+            c = db.rawQuery(query, "'*" + termSearch + "*'");
+
 		
 		List<Agenda> list = new ArrayList<Agenda>();
 		while(c.moveToNext()){
