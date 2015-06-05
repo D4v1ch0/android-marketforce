@@ -10,6 +10,7 @@ public class Contants {
     public final static int GENERAL_TABLE_ESTADOS_OPORTUNIDAD = 1037;
     public final static int GENERAL_TABLE_ESTADOS_OPORTUNIDAD_ETAPA = 1038;
     public final static int GENERAL_TABLE_ESTADOS_OPORTUNIDAD_TAREA = 1014;
+    public final static int GENERAL_TABLE_TIPO_RESPONSABLES = 1040;
 	public final static String IMAGE_FOLDER = "imagesFolder";
     public final static String IMAGE_FOLDER_OPORTUNIDADES = "imagesFolderOportunidad";
 	public final static String KEY_FIRST_TIME = "firstTime";

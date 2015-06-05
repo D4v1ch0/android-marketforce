@@ -713,10 +713,12 @@ public final class Contract {
         public static final String COLUMN_ID_OPORTUNIDAD = "IdOportunidad";
         public static final String COLUMN_ID_OPORTUNIDAD_INT = "_IdOportunidad";
         public static final String COLUMN_ID_AGENTE = "IdAgente";
+        public static final String COLUMN_TIPO = "Tipo";
 
         public static final String FIELD_ID_OPORTUNIDAD = COLUMN_ID_OPORTUNIDAD;
         public static final String FIELD_ID_OPORTUNIDAD_INT = COLUMN_ID_OPORTUNIDAD_INT;
         public static final String FIELD_ID_AGENTE = COLUMN_ID_AGENTE;
+        public static final String FIELD_TIPO = COLUMN_TIPO;
 
     }
 

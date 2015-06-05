@@ -56,6 +56,16 @@
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
                 android:background="@color/color_grey_lines" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:id="@+id/contacto_principal"
+                android:hint="@string/label_es_principal"
+                android:paddingTop="10dp"
+                android:paddingLeft="10dp"
+                android:textSize="@dimen/text_small_size" />
         </LinearLayout>
 
         <LinearLayout

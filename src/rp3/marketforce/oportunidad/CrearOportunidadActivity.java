@@ -1,6 +1,7 @@
 package rp3.marketforce.oportunidad;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
@@ -15,6 +16,8 @@ import rp3.marketforce.R;
 public class CrearOportunidadActivity extends BaseActivity  {
     public static final String ARG_ID = "id";
 
+    CrearOportunidadFragment newFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,7 +31,7 @@ public class CrearOportunidadActivity extends BaseActivity  {
         else
             setTitle("Editar Oportunidad");
         if (!hasFragment(rp3.core.R.id.content)) {
-            CrearOportunidadFragment newFragment = CrearOportunidadFragment.newInstance(id);
+            newFragment = CrearOportunidadFragment.newInstance(id);
             setFragment(rp3.core.R.id.content, newFragment);
         }
     }
@@ -40,5 +43,11 @@ public class CrearOportunidadActivity extends BaseActivity  {
             fr.onActivityResult(requestCode, resultCode, data);
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        newFragment.SaveData();
+        super.onConfigurationChanged(newConfig);
     }
 }

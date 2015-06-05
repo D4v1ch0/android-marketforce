@@ -125,6 +125,8 @@ public class Oportunidad {
                 for (OportunidadResponsable agt : oportunidadUpload.getOportunidadResponsables()) {
                     JSONObject jObjectResponsable = new JSONObject();
                     jObjectResponsable.put("IdAgente", agt.getIdAgente());
+                    jObjectResponsable.put("Tipo", agt.getTipo());
+                    jObjectResponsable.put("TipoTabla", Contants.GENERAL_TABLE_TIPO_RESPONSABLES);
 
                     jArrayResponsables.put(jObjectResponsable);
                 }
@@ -384,6 +386,8 @@ public class Oportunidad {
                 for (OportunidadResponsable agt : oportunidadUpload.getOportunidadResponsables()) {
                     JSONObject jObjectResponsable = new JSONObject();
                     jObjectResponsable.put("IdAgente", agt.getIdAgente());
+                    jObjectResponsable.put("Tipo", agt.getTipo());
+                    jObjectResponsable.put("TipoTabla", Contants.GENERAL_TABLE_TIPO_RESPONSABLES);
 
                     jArrayResponsables.put(jObjectResponsable);
                 }
@@ -620,7 +624,14 @@ public class Oportunidad {
                         opCont.setIdOportunidad(opt.getIdOportunidad());
                         opCont.setIdOportunidadContacto(str.getInt("IdOportunidadContacto"));
                         opCont.setNombre(str.getString("Nombre"));
-                        opCont.setCargo(str.getString("Cargo"));
+                        if(!str.isNull("Nombre") || !str.getString("Nombre").equalsIgnoreCase("null"))
+                            opCont.setNombre(str.getString("Nombre"));
+                        else
+                            opCont.setNombre("");
+                        if(!str.isNull("Cargo") || !str.getString("Cargo").equalsIgnoreCase("null"))
+                            opCont.setCargo(str.getString("Cargo"));
+                        else
+                            opCont.setCargo("");
                         opCont.setURLFoto(str.getString("Path"));
 
                         OportunidadContacto.insert(db, opCont);
@@ -634,6 +645,8 @@ public class Oportunidad {
 
                         opResp.setIdOportunidad(opt.getIdOportunidad());
                         opResp.setIdAgente(str.getInt("IdAgente"));
+                        if(!str.isNull("Tipo"))
+                            opResp.setTipo(str.getString("Tipo"));
 
                         OportunidadResponsable.insert(db, opResp);
                     }

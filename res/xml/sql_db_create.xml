@@ -357,7 +357,8 @@
         _id INTEGER PRIMARY KEY AUTOINCREMENT,
         IdOportunidad INTEGER,
         _IdOportunidad INTEGER,
-        IdAgente INTEGER
+        IdAgente INTEGER,
+        Tipo TEXT
         )
     </statement>
 </sql>

@@ -15,6 +15,27 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Small Text"
+            android:id="@+id/responsable_tipo"
+            android:drawableLeft="@drawable/ic_phone"
+            android:drawablePadding="4dp"
+            android:layout_weight="0.4"
+            android:clickable="true"
+            android:textColor="@drawable/text_feedback"
+            android:textSize="@dimen/text_xsmall_size"
+            android:focusable="false"
+            android:focusableInTouchMode="false" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="1dp"
+            android:layout_height="20dp"
+            android:background="@color/color_grey_lines"></LinearLayout>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
             android:id="@+id/responsable_nombre"
             android:layout_weight="1"
             android:layout_marginLeft="5dp" />

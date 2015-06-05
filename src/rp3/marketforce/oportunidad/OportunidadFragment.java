@@ -238,10 +238,10 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
             menu.findItem(R.id.action_filtro).setVisible(isActiveListFragment && !filtro);
             menu.findItem(R.id.action_quitar_filtro).setVisible(isActiveListFragment && filtro);
         } else {
-            menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
-            menu.findItem(R.id.action_crear_oportunidad).setVisible(isActiveListFragment);
-            menu.findItem(R.id.action_filtro).setVisible(isActiveListFragment && !filtro);
-            menu.findItem(R.id.action_quitar_filtro).setVisible(isActiveListFragment && filtro);
+            menu.findItem(R.id.action_search).setVisible(true);
+            menu.findItem(R.id.action_crear_oportunidad).setVisible(true);
+            menu.findItem(R.id.action_filtro).setVisible(!filtro);
+            menu.findItem(R.id.action_quitar_filtro).setVisible(filtro);
             menu.findItem(R.id.action_edit).setVisible(selectedOportunidadId != 0);
         }
     }

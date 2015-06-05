@@ -327,28 +327,34 @@ public class OportunidadDetailFragment extends BaseFragment {
                     ((TextView) view_contacto.findViewById(R.id.oportunidad_contacto_number)).setText(i + 1 + "");
                     ((TextView) view_contacto.findViewById(R.id.oportunidad_contacto_nombre)).setText(opt.getOportunidadContactos().get(i).getNombre());
                     ((TextView) view_contacto.findViewById(R.id.oportunidad_contacto_cargo)).setText(opt.getOportunidadContactos().get(i).getCargo());
-                    DManager.fetchDrawableOnThreadOnline(PreferenceManager.getString("server") +
-                                    rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_OPORTUNIDADES) + opt.getOportunidadContactos().get(i).getURLFoto().replace("\"",""),
-                            (ImageView) view_contacto.getRootView().findViewById(R.id.oportunidad_contacto_foto));
-                    final int finalI = i;
-                    view_contacto.findViewById(R.id.oportunidad_contacto_foto).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent intent = new Intent(getContext(), FotoOportunidadActivity.class);
-                            intent.putExtra(FotoOportunidadActivity.ARG_ID, opt.getOportunidadContactos().get(finalI).getID());
-                            intent.putExtra(FotoOportunidadActivity.ARG_TIPO, 1);
-                            startActivity(intent);
-                        }
-                    });
-                    view_contacto.findViewById(R.id.contacto_foto).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent intent = new Intent(getContext(), FotoOportunidadActivity.class);
-                            intent.putExtra(FotoOportunidadActivity.ARG_ID, opt.getOportunidadContactos().get(finalI).getID());
-                            intent.putExtra(FotoOportunidadActivity.ARG_TIPO, 1);
-                            startActivity(intent);
-                        }
-                    });
+                    if(opt.getOportunidadContactos().get(i).getURLFoto().replace("\"","").length() > 0) {
+                        DManager.fetchDrawableOnThreadOnline(PreferenceManager.getString("server") +
+                                        rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_OPORTUNIDADES) + opt.getOportunidadContactos().get(i).getURLFoto().replace("\"", ""),
+                                (ImageView) view_contacto.getRootView().findViewById(R.id.oportunidad_contacto_foto));
+                        final int finalI = i;
+                        view_contacto.findViewById(R.id.oportunidad_contacto_foto).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent(getContext(), FotoOportunidadActivity.class);
+                                intent.putExtra(FotoOportunidadActivity.ARG_ID, opt.getOportunidadContactos().get(finalI).getID());
+                                intent.putExtra(FotoOportunidadActivity.ARG_TIPO, 1);
+                                startActivity(intent);
+                            }
+                        });
+                        view_contacto.findViewById(R.id.contacto_foto).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent(getContext(), FotoOportunidadActivity.class);
+                                intent.putExtra(FotoOportunidadActivity.ARG_ID, opt.getOportunidadContactos().get(finalI).getID());
+                                intent.putExtra(FotoOportunidadActivity.ARG_TIPO, 1);
+                                startActivity(intent);
+                            }
+                        });
+                    }
+                    else
+                    {
+
+                    }
                     ((LinearLayout) view_info.findViewById(R.id.oportunidad_contactos)).addView(view_contacto);
                 }
             }

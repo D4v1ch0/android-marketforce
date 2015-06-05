@@ -241,6 +241,13 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
             responsable.set_idOportunidad((int) opt.getID());
             responsable.setIdOportunidad(opt.getIdOportunidad());
             responsable.setIdAgente(listAgentesIds.get(i));
+            if(((TextView) listViewResponsables.get(i).findViewById(R.id.responsable_tipo)).getText().toString().equalsIgnoreCase("Gestor"))
+                responsable.setTipo("G");
+            if(((TextView) listViewResponsables.get(i).findViewById(R.id.responsable_tipo)).getText().toString().equalsIgnoreCase("Interesado"))
+                responsable.setTipo("I");
+            if(((TextView) listViewResponsables.get(i).findViewById(R.id.responsable_tipo)).getText().toString().equalsIgnoreCase("Creador"))
+                responsable.setTipo("C");
+
 
             if(responsable.getID() == 0)
                 OportunidadResponsable.insert(getDataBase(), responsable);
@@ -483,7 +490,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
         });
         ContactosContainer = (LinearLayout) view.findViewById(R.id.oportunidad_contacto);
         if(listAgentesIds.size() <= 0 && id == 0)
-            addThisAgente(PreferenceManager.getInt(Contants.KEY_IDAGENTE));
+            addThisAgente(PreferenceManager.getInt(Contants.KEY_IDAGENTE), "C");
 
         view.findViewById(R.id.oportunidad_foto1).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -529,7 +536,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
         if(id != 0)
             setDatosOportunidad();
 
-        if(listContactos != null && photoFlag) {
+        if(listContactos != null) {
             for (int i = 0; i < listViewContactos.size(); i++) {
                 if(listContactos.size() > i) {
                     ((EditText) listViewContactos.get(i).findViewById(R.id.contacto_nombre)).setText(listContactos.get(i).getNombre());
@@ -595,31 +602,33 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 12), 1, null);
 
             for (OportunidadResponsable resp : opt.getOportunidadResponsables())
-                addThisAgente(resp.getIdAgente());
+                addThisAgente(resp.getIdAgente(), resp.getTipo());
             for (OportunidadContacto opCont : opt.getOportunidadContactos())
                 addContacto(opCont.getID());
 
             for (int i = 0; i < opt.getOportunidadFotos().size(); i++) {
                 photos.set(i, opt.getOportunidadFotos().get(i).getURLFoto());
-                switch (i) {
-                    case 0:
-                        DManager.fetchDrawableOnThreadOnline(PreferenceManager.getString("server") +
-                                        rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_OPORTUNIDADES) + opt.getOportunidadFotos().get(i).getURLFoto().replace("\"", ""),
-                                ((ImageButton) view.findViewById(R.id.oportunidad_foto1)));
-                        ((ImageButton) view.findViewById(R.id.oportunidad_foto1)).setScaleType(ImageView.ScaleType.CENTER_CROP);
-                        break;
-                    case 1:
-                        DManager.fetchDrawableOnThreadOnline(PreferenceManager.getString("server") +
-                                        rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_OPORTUNIDADES) + opt.getOportunidadFotos().get(i).getURLFoto().replace("\"", ""),
-                                ((ImageButton) view.findViewById(R.id.oportunidad_foto2)));
-                        ((ImageButton) view.findViewById(R.id.oportunidad_foto2)).setScaleType(ImageView.ScaleType.CENTER_CROP);
-                        break;
-                    case 2:
-                        DManager.fetchDrawableOnThreadOnline(PreferenceManager.getString("server") +
-                                        rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_OPORTUNIDADES) + opt.getOportunidadFotos().get(i).getURLFoto().replace("\"", ""),
-                                ((ImageButton) view.findViewById(R.id.oportunidad_foto3)));
-                        ((ImageButton) view.findViewById(R.id.oportunidad_foto3)).setScaleType(ImageView.ScaleType.CENTER_CROP);
-                        break;
+                if(opt.getOportunidadFotos().get(i).getURLFoto().length() != 0) {
+                    switch (i) {
+                        case 0:
+                            DManager.fetchDrawableOnThreadOnline(PreferenceManager.getString("server") +
+                                            rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_OPORTUNIDADES) + opt.getOportunidadFotos().get(i).getURLFoto().replace("\"", ""),
+                                    ((ImageButton) view.findViewById(R.id.oportunidad_foto1)));
+                            ((ImageButton) view.findViewById(R.id.oportunidad_foto1)).setScaleType(ImageView.ScaleType.CENTER_CROP);
+                            break;
+                        case 1:
+                            DManager.fetchDrawableOnThreadOnline(PreferenceManager.getString("server") +
+                                            rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_OPORTUNIDADES) + opt.getOportunidadFotos().get(i).getURLFoto().replace("\"", ""),
+                                    ((ImageButton) view.findViewById(R.id.oportunidad_foto2)));
+                            ((ImageButton) view.findViewById(R.id.oportunidad_foto2)).setScaleType(ImageView.ScaleType.CENTER_CROP);
+                            break;
+                        case 2:
+                            DManager.fetchDrawableOnThreadOnline(PreferenceManager.getString("server") +
+                                            rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_OPORTUNIDADES) + opt.getOportunidadFotos().get(i).getURLFoto().replace("\"", ""),
+                                    ((ImageButton) view.findViewById(R.id.oportunidad_foto3)));
+                            ((ImageButton) view.findViewById(R.id.oportunidad_foto3)).setScaleType(ImageView.ScaleType.CENTER_CROP);
+                            break;
+                    }
                 }
             }
 
@@ -648,23 +657,53 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
         getActivity().startActivityForResult(captureIntent, idView);
     }
 
-    private void addThisAgente(int id)
-    {
+    private void addThisAgente(final int id, String tipo) {
         final LinearLayout responsable = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.rowlist_responsable, null);
         final int pos = listViewResponsables.size();
-        ((ImageView) responsable.findViewById(R.id.eliminar_responsable)).setOnClickListener(new View.OnClickListener() {
+        if(id != PreferenceManager.getInt(Contants.KEY_IDAGENTE)) {
+            ((ImageView) responsable.findViewById(R.id.eliminar_responsable)).setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                listViewResponsables.remove(responsable);
-                ResponsableContainer.removeView(responsable);
-            }
-        });
+                @Override
+                public void onClick(View v) {
+                    listViewResponsables.remove(responsable);
+                    ResponsableContainer.removeView(responsable);
+                    listAgentesIds.remove(listAgentesIds.indexOf(id));
+                }
+            });
+        }
+        else
+            responsable.findViewById(R.id.eliminar_responsable).setVisibility(View.INVISIBLE);
         Agente agt = Agente.getAgente(getDataBase(), id);
         ((TextView) responsable.findViewById(R.id.responsable_nombre)).setText(agt.getNombre());
+        ((TextView) responsable.findViewById(R.id.responsable_tipo)).setText(GeneralValue.getGeneralValue(getDataBase(), Contants.GENERAL_TABLE_TIPO_RESPONSABLES, tipo).getValue());
+        ((TextView) responsable.findViewById(R.id.responsable_tipo)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(id != PreferenceManager.getInt(Contants.KEY_IDAGENTE))
+                {
+                    if(((TextView) responsable.findViewById(R.id.responsable_tipo)).getText().toString().equalsIgnoreCase("Gestor"))
+                        ((TextView) responsable.findViewById(R.id.responsable_tipo)).setText(GeneralValue.getGeneralValue(getDataBase(), Contants.GENERAL_TABLE_TIPO_RESPONSABLES, "I").getValue());
+                    else
+                        ((TextView) responsable.findViewById(R.id.responsable_tipo)).setText(GeneralValue.getGeneralValue(getDataBase(), Contants.GENERAL_TABLE_TIPO_RESPONSABLES, "G").getValue());
+                }
+            }
+        });
         listAgentesIds.add(agt.getIdAgente());
         ResponsableContainer.addView(responsable);
         listViewResponsables.add(responsable);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        listContactos = new ArrayList<OportunidadContacto>();
+        for(int i = 0; i < listViewContactos.size(); i ++)
+        {
+            OportunidadContacto cont = new OportunidadContacto();
+            cont.setNombre(((EditText) listViewContactos.get(i).findViewById(R.id.contacto_nombre)).getText().toString());
+            cont.setCargo(((EditText)listViewContactos.get(i).findViewById(R.id.contacto_cargo)).getText().toString());
+            listContactos.add(cont);
+        }
     }
 
     private void addResponsable()
@@ -717,6 +756,8 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
     {
         final LinearLayout contacto = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.layout_crear_oportunidad_contacto, null);
         final int pos = listViewContactos.size();
+        if(pos != 0)
+            contacto.findViewById(R.id.contacto_principal).setVisibility(View.GONE);
         ((ImageView) contacto.findViewById(R.id.contacto_eliminar)).setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -744,6 +785,8 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
         OportunidadContacto opCont = OportunidadContacto.getContactoInt(getDataBase(), id);
         final LinearLayout contacto = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.layout_crear_oportunidad_contacto, null);
         final int pos = listViewContactos.size();
+        if(pos != 0)
+            contacto.findViewById(R.id.contacto_principal).setVisibility(View.GONE);
         ((ImageView) contacto.findViewById(R.id.contacto_eliminar)).setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -764,10 +807,12 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
         });
         ((EditText) contacto.findViewById(R.id.contacto_nombre)).setText(opCont.getNombre());
         ((EditText) contacto.findViewById(R.id.contacto_cargo)).setText(opCont.getCargo());
-        DManager.fetchDrawableOnThreadOnline(PreferenceManager.getString("server") +
-                        rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_OPORTUNIDADES) + opCont.getURLFoto().replace("\"", ""),
-                (ImageView) contacto.findViewById(R.id.contacto_foto));
-        ((ImageButton) contacto.findViewById(R.id.contacto_foto)).setScaleType(ImageView.ScaleType.CENTER_CROP);
+        if(opCont.getURLFoto().length() != 0) {
+            DManager.fetchDrawableOnThreadOnline(PreferenceManager.getString("server") +
+                            rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_OPORTUNIDADES) + opCont.getURLFoto().replace("\"", ""),
+                    (ImageView) contacto.findViewById(R.id.contacto_foto));
+            ((ImageButton) contacto.findViewById(R.id.contacto_foto)).setScaleType(ImageView.ScaleType.CENTER_CROP);
+        }
         contactPhotos.add(opCont.getURLFoto());
         ContactosContainer.addView(contacto);
         listViewContactos.add(contacto);
@@ -857,7 +902,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
     }
 
     @Override
-    public void onFinishAgentesDialog(Agente agente) {
+    public void onFinishAgentesDialog(final Agente agente) {
         final LinearLayout responsable = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.rowlist_responsable, null);
         final int pos = listViewResponsables.size();
         ((ImageView) responsable.findViewById(R.id.eliminar_responsable)).setOnClickListener(new View.OnClickListener() {
@@ -866,11 +911,32 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
             public void onClick(View v) {
                 listViewResponsables.remove(responsable);
                 ResponsableContainer.removeView(responsable);
+                listAgentesIds.remove(listAgentesIds.indexOf(agente.getIdAgente()));
             }
         });
         ((TextView) responsable.findViewById(R.id.responsable_nombre)).setText(agente.getNombre());
+        ((TextView) responsable.findViewById(R.id.responsable_tipo)).setText(GeneralValue.getGeneralValue(getDataBase(), Contants.GENERAL_TABLE_TIPO_RESPONSABLES, "G").getValue());
+        ((TextView) responsable.findViewById(R.id.responsable_tipo)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(id != PreferenceManager.getInt(Contants.KEY_IDAGENTE))
+                {
+                    if(((TextView) responsable.findViewById(R.id.responsable_tipo)).getText().toString().equalsIgnoreCase("Gestor"))
+                        ((TextView) responsable.findViewById(R.id.responsable_tipo)).setText(GeneralValue.getGeneralValue(getDataBase(), Contants.GENERAL_TABLE_TIPO_RESPONSABLES, "I").getValue());
+                    else
+                        ((TextView) responsable.findViewById(R.id.responsable_tipo)).setText(GeneralValue.getGeneralValue(getDataBase(), Contants.GENERAL_TABLE_TIPO_RESPONSABLES, "G").getValue());
+                }
+            }
+        });
+
         listAgentesIds.add(agente.getIdAgente());
         ResponsableContainer.addView(responsable);
         listViewResponsables.add(responsable);
     }
+
+    public void SaveData()
+    {
+
+    }
+
 }

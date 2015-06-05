@@ -12,6 +12,7 @@ public class EtapaTareasActivity extends BaseActivity {
 
     public final static String ARG_ETAPA = "etapa";
     public final static String ARG_OPORTUNIDAD = "oportunidad";
+    public final static String ARG_TEXT = "title";
 
     private int idEtapa;
     private long idOportunidad;
@@ -22,6 +23,8 @@ public class EtapaTareasActivity extends BaseActivity {
         setHomeAsUpEnabled(true, true);
         setContentView(R.layout.layout_simple_content);
         setTitle("Etapas");
+        if(getIntent().getExtras().containsKey(ARG_ETAPA))
+            setTitle(getIntent().getExtras().getString(ARG_TEXT));
         if(getIntent().getExtras().containsKey(ARG_ETAPA))
             idEtapa = getIntent().getExtras().getInt(ARG_ETAPA);
         if(getIntent().getExtras().containsKey(ARG_OPORTUNIDAD))

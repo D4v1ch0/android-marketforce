@@ -93,6 +93,7 @@ public class EtapaFragment extends BaseFragment {
         ((TextView)getRootView().findViewById(R.id.etapa_descripcion)).setText(etapa.getDescripcion());
 
         opt = Oportunidad.getOportunidadId(getDataBase(), idOportunidad);
+        getActivity().setTitle(opt.getDescripcion());
         OportunidadEtapa oportunidadEtapa = OportunidadEtapa.getEtapaOportunidad(getDataBase(), opt.getIdOportunidad(), idEtapa);
         if(oportunidadEtapa.getObservacion() != null && !oportunidadEtapa.getObservacion().equalsIgnoreCase("null"))
             ((EditText) getRootView().findViewById(R.id.obs_etapa)).setText(oportunidadEtapa.getObservacion());
@@ -217,6 +218,7 @@ public class EtapaFragment extends BaseFragment {
                     Intent intent = new Intent(getContext(), EtapaTareasActivity.class);
                     intent.putExtra(EtapaTareasActivity.ARG_ETAPA, setter.getIdEtapa());
                     intent.putExtra(EtapaTareasActivity.ARG_OPORTUNIDAD, idOportunidad);
+                    intent.putExtra(EtapaTareasActivity.ARG_TEXT, etapa.getDescripcion());
                     startActivity(intent);
                 }
             }
