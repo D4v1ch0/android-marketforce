@@ -129,7 +129,14 @@ public class RutasListAdapter extends BaseAdapter{
 			
 			
 			if(agd.getClienteDireccion() != null)
-				((TextView) convertView.findViewById(R.id.textView_address)).setText(""+agd.getClienteDireccion().getDireccion());				
+				((TextView) convertView.findViewById(R.id.textView_address)).setText(""+agd.getClienteDireccion().getDireccion());
+
+            Calendar hoy = Calendar.getInstance();
+            Calendar diaAgenda = Calendar.getInstance();
+            diaAgenda.setTime(agd.getFechaInicio());
+            if(hoy.get(Calendar.DAY_OF_YEAR) == diaAgenda.get(Calendar.DAY_OF_YEAR))
+                convertView.findViewById(R.id.view_vertical).setVisibility(View.VISIBLE);
+
 			
 			//convertView.setBackgroundResource(R.drawable.border_bottom);
 		}
