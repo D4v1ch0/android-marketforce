@@ -178,5 +178,12 @@
     <string name="label_punto_inicio">Punto de Inicio</string>
     <string name="label_ultimo_punto">Último Punto</string>
     <string name="label_senso">Número de Ubicación</string>
+    <!-- Modulo Marcaciones -->
+    <string name="action_marcaciones">Marcar</string>
+    <string name="label_justificar">Justificar</string>
+    <string name="label_iniciar_jornada">Iniciar Jornada</string>
+    <string name="label_break">Break</string>
+    <string name="label_fin_break">Fin de Break</string>
+    <string name="label_fin_jornada">Fin de Jornada</string>
 
 </resources>
