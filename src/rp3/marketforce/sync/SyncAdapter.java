@@ -134,6 +134,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         result = rp3.marketforce.sync.Agente.executeSyncParametros(db);
                         addDefaultMessage(result);
                     }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Calendario.executeSync(db);
+                        addDefaultMessage(result);
+                    }
 				/*
 				 * Se comenta carga de fotos ya que se la hara mediante un lazy loader.
 				 * Para esto se cargara tambien en el modelo Cliente la url de la foto para poder cargarla
