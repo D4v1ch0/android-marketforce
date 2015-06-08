@@ -43,11 +43,12 @@ public class CambiarEstadoFragment extends BaseFragment {
     public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
 
+        final Oportunidad opt = Oportunidad.getOportunidadId(getDataBase(), id);
         List<GeneralValue> values = GeneralValue.getGeneralValues(getDataBase(), Contants.GENERAL_TABLE_ESTADOS_OPORTUNIDAD);
         final List<GeneralValue> generalValues = new ArrayList<GeneralValue>();
         for(GeneralValue value : values)
         {
-            if(!value.getCode().equalsIgnoreCase("C"))
+            if(!value.getCode().equalsIgnoreCase("C") && !opt.getEstado().equalsIgnoreCase(value.getCode()))
                 generalValues.add(value);
         }
 
@@ -55,7 +56,7 @@ public class CambiarEstadoFragment extends BaseFragment {
         ((ListView)rootView.findViewById(R.id.estados_list)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Oportunidad opt = Oportunidad.getOportunidadId(getDataBase(), id);
+
                 opt.setEstado(generalValues.get(i).getCode());
                 Oportunidad.update(getDataBase(), opt);
                 finish();

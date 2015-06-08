@@ -267,7 +267,8 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
             cont.setIdOportunidad(opt.getIdOportunidad());
             cont.setNombre(((EditText) listViewContactos.get(i).findViewById(R.id.contacto_nombre)).getText().toString());
             cont.setCargo(((EditText)listViewContactos.get(i).findViewById(R.id.contacto_cargo)).getText().toString());
-            cont.setURLFoto(contactPhotos.get(i));
+            if(contactPhotos.get(i).length() > 0)
+                cont.setURLFoto(contactPhotos.get(i));
 
             if(cont.getID() == 0)
                 OportunidadContacto.insert(getDataBase(), cont);
@@ -658,6 +659,8 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
     }
 
     private void addThisAgente(final int id, String tipo) {
+        if(tipo.length() <= 0)
+            tipo = "G";
         final LinearLayout responsable = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.rowlist_responsable, null);
         final int pos = listViewResponsables.size();
         if(id != PreferenceManager.getInt(Contants.KEY_IDAGENTE)) {

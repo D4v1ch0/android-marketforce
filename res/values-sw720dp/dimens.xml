@@ -6,6 +6,6 @@
     -->
     <dimen name="activity_horizontal_margin">128dp</dimen>
     <dimen name="expand_map">40dp</dimen>
-    <dimen name="half_screen">640dp</dimen>
+    <dimen name="half_screen">600dp</dimen>
 
 </resources>
