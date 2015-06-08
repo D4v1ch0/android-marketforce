@@ -237,4 +237,34 @@
         Obligatorio BOOLEAN
         )
     </statement>
+    <!-- Modulo Marcaciones -->
+    <statement>
+        CREATE TABLE tbMarcacion(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        Tipo TEXT,
+        Fecha INTEGER,
+        HoraInicio INTEGER,
+        HoraFin INTEGER,
+        Latitud REAL,
+        Longitud REAL,
+        EnUbicacion BOOLEAN,
+        Pendiente BOOLEAN
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbIncidencia(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        Tipo TEXT,
+        Observacion INTEGER
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbPermiso(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdMarcacion INTEGER,
+        Fecha INTEGER,
+        Tipo TEXT,
+        Observacion INTEGER
+        )
+    </statement>
 </sql>
