@@ -237,4 +237,26 @@
         Obligatorio BOOLEAN
         )
     </statement>
+    <statement>
+        CREATE TABLE tbDiaLaboral(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdDia INTEGER,
+        Orden INTEGER,
+        EsLaboral BOOLEAN,
+        HoraInicio1 TEXT,
+        HoraFin1 TEXT,
+        HoraInicio2 TEXT,
+        HoraFin2 TEXT
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbDiaNoLaboral(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        Fecha INTEGER,
+        DiaParcial BOOLEAN,
+        EsteAno BOOLEAN,
+        HoraInicio TEXT,
+        HoraFin TEXT
+        )
+    </statement>
 </sql>

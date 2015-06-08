@@ -498,4 +498,30 @@ public final class Contract {
         public static final String FIELD_OBLIGATORIO = COLUMN_OBLIGATORIO;
 
     }
+
+    public static abstract class DiaLaboral implements BaseColumns {
+
+        public static final String TABLE_NAME = "tbDiaLaboral";
+
+        public static final String COLUMN_ID_DIA = "IdDia";
+        public static final String COLUMN_ORDEN = "Orden";
+        public static final String COLUMN_ES_LABORAL = "EsLaboral";
+        public static final String COLUMN_HORA_INICIO1 = "HoraInicio1";
+        public static final String COLUMN_HORA_FIN1 = "HoraFin1";
+        public static final String COLUMN_HORA_INICIO2 = "HoraInicio2";
+        public static final String COLUMN_HORA_FIN2 = "HoraFin2";
+
+    }
+
+    public static abstract class DiaNoLaboral implements BaseColumns {
+
+        public static final String TABLE_NAME = "tbDiaNoLaboral";
+
+        public static final String COLUMN_FECHA = "Fecha";
+        public static final String COLUMN_DIA_PARCIAL = "DiaParcial";
+        public static final String COLUMN_ESTE_ANIO = "EsteAno";
+        public static final String COLUMN_HORA_INICIO = "HoraInicio";
+        public static final String COLUMN_HORA_FIN = "HoraFin";
+
+    }
 }
