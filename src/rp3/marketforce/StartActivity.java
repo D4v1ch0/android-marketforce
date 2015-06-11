@@ -92,7 +92,7 @@ public class StartActivity extends rp3.app.StartActivity{
                 data.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_SOLO_RESUMEN)) {
             if (messages.hasErrorMessage())
                 if (Session.IsLogged()) {
-                    showDialogConfirmation(REINTENTAR_MESSAGE, R.string.message_server_connection, R.string.title_option_setsincronizar);
+                    callNextActivity();
                 } else {
                     showDialogMessage(messages, new SimpleCallback() {
                         @Override

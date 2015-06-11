@@ -371,7 +371,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
             }
             else
             {
-                addDefaultMessage(SYNC_EVENT_CONNECTION_FAILED);
+                //addDefaultMessage(SYNC_EVENT_CONNECTION_FAILED);
                 SyncAudit.insert(syncType, SYNC_EVENT_CONNECTION_FAILED);
             }
 				
