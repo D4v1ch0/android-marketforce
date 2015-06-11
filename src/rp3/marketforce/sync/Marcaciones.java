@@ -1,0 +1,192 @@
+package rp3.marketforce.sync;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.ksoap2.transport.HttpResponseException;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.List;
+
+import rp3.configuration.PreferenceManager;
+import rp3.connection.HttpConnection;
+import rp3.connection.WebService;
+import rp3.content.*;
+import rp3.content.SyncAdapter;
+import rp3.db.sqlite.DataBase;
+import rp3.marketforce.Contants;
+import rp3.marketforce.models.AgendaTarea;
+import rp3.marketforce.models.AgendaTareaActividades;
+import rp3.marketforce.models.DiaLaboral;
+import rp3.marketforce.models.marcacion.Marcacion;
+import rp3.marketforce.models.marcacion.Permiso;
+import rp3.util.Convert;
+
+/**
+ * Created by magno_000 on 08/06/2015.
+ */
+public class Marcaciones {
+    public static int executeSync(DataBase db) {
+        List<Marcacion> marcacionUploads = rp3.marketforce.models.marcacion.Marcacion.getMarcacionesPendientes(db);
+
+        for(Marcacion marc : marcacionUploads) {
+
+            WebService webService = new WebService("MartketForce", "InsertMarcacion");
+            webService.setTimeOut(20000);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(marc.getFecha());
+            DiaLaboral dia = DiaLaboral.getDia(db, cal.get(Calendar.DAY_OF_WEEK) - 1);
+            DateFormat format = new SimpleDateFormat("HH:mm");
+            JSONArray jArray = new JSONArray();
+            JSONObject jObject = new JSONObject();
+            try {
+                jObject.put("Tipo", marc.getTipo());
+                jObject.put("TipoTabla", Contants.GENERAL_TABLE_TIPO_MARCACION);
+                jObject.put("FechaTicks", Convert.getDotNetTicksFromDate(marc.getFecha()));
+                jObject.put("HoraInicioTicks", Convert.getDotNetTicksFromDate(marc.getHoraInicio()));
+                jObject.put("HoraFinTicks", Convert.getDotNetTicksFromDate(marc.getHoraFin()));
+                if(marc.getTipo().equalsIgnoreCase("J1") || marc.getTipo().equalsIgnoreCase("J2")) {
+                    jObject.put("HoraInicioPlanTicks", Convert.getDotNetTicksFromDate(format.parse(dia.getHoraInicio1().replace("h",":"))));
+                    jObject.put("HoraFinPlanTicks", Convert.getDotNetTicksFromDate(format.parse(dia.getHoraFin1().replace("h",":"))));
+                }
+                else
+                {
+                    jObject.put("HoraInicioPlanTicks", Convert.getDotNetTicksFromDate(format.parse(dia.getHoraInicio2().replace("h",":"))));
+                    jObject.put("HoraFinPlanTicks", Convert.getDotNetTicksFromDate(format.parse(dia.getHoraFin2().replace("h",":"))));
+                }
+                jObject.put("MinutosAtraso", marc.getMintutosAtraso());
+                jObject.put("EnUbicacion", marc.isEnUbicacion());
+                jObject.put("Latitud", marc.getLatitud());
+                jObject.put("Longitud", marc.getLongitud());
+                jObject.put("LatitudPlan", Double.parseDouble(PreferenceManager.getString(Contants.KEY_LATITUD_PARTIDA)));
+                jObject.put("LongitudPlan", Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA)));
+                if(marc.getPermiso() != null)
+                    jObject.put("IdPermiso", marc.getPermiso().getIdPermiso());
+                if(marc.getPermiso() != null && marc.getPermiso().getIdPermiso() == 0) {
+
+                    JSONObject jObjectPermiso = new JSONObject();
+                    jObjectPermiso.put("Motivo", marc.getPermiso().getTipo());
+                    jObjectPermiso.put("MotivoTabla", Contants.GENERAL_TABLE_MOTIVO_PERMISO);
+                    jObjectPermiso.put("Tipo", "A");
+                    jObjectPermiso.put("TipoTabla", Contants.GENERAL_TABLE_TIPOS_PERMISO);
+                    jObjectPermiso.put("FechaFinTicks", Convert.getDotNetTicksFromDate(marc.getPermiso().getFecha()));
+                    jObjectPermiso.put("HoraInicioTicks", Convert.getDotNetTicksFromDate(marc.getPermiso().getFecha()));
+                    jObjectPermiso.put("HoraFinTicks", Convert.getDotNetTicksFromDate(marc.getPermiso().getFecha()));
+                    jObjectPermiso.put("EsPrevio", false);
+                    jObjectPermiso.put("Estado", "P");
+                    jObjectPermiso.put("EstadoTabla", Contants.GENERAL_TABLE_ESTADO_PERMISO);
+                    jObjectPermiso.put("Observacion", marc.getPermiso().getObservacion());
+                    jObjectPermiso.put("FechaInicioTicks", Convert.getDotNetTicksFromDate(marc.getPermiso().getFecha()));
+                    jObject.put("Permiso", jObjectPermiso);
+                }
+
+
+
+            } catch (Exception ex) {
+
+            }
+
+            webService.addParameter("marcacion", jObject);
+
+            try {
+                webService.addCurrentAuthToken();
+
+                try {
+                    webService.invokeWebService();
+                    marc.setPendiente(false);
+                    rp3.marketforce.models.marcacion.Marcacion.update(db, marc);
+                } catch (HttpResponseException e) {
+                    if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                        return rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                    return rp3.content.SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+                } catch (Exception e) {
+                    return rp3.content.SyncAdapter.SYNC_EVENT_ERROR;
+                }
+
+            } finally {
+                webService.close();
+            }
+        }
+        return SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
+    public static int executeSyncGrupo(DataBase db){
+        WebService webService = new WebService("MartketForce","GetGrupo");
+
+        try
+        {
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+                JSONObject jObject = webService.getJSONObjectResponse();
+                PreferenceManager.setValue(Contants.KEY_APLICA_MARCACION, jObject.getBoolean(Contants.KEY_APLICA_MARCACION));
+                PreferenceManager.setValue(Contants.KEY_LONGITUD_PARTIDA, jObject.getDouble(Contants.KEY_LONGITUD_PARTIDA) + "");
+                PreferenceManager.setValue(Contants.KEY_LATITUD_PARTIDA, jObject.getDouble(Contants.KEY_LATITUD_PARTIDA) + "");
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return SyncAdapter.SYNC_EVENT_ERROR;
+            }
+
+        }finally{
+            webService.close();
+        }
+
+        return SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
+    public static int executeSyncPermiso(DataBase db, long id) {
+        Permiso permiso = Permiso.getPermisoById(db, id);
+
+
+        WebService webService = new WebService("MartketForce", "InsertPermiso");
+        webService.setTimeOut(20000);
+
+        JSONObject jObject = new JSONObject();
+        try {
+
+            jObject.put("Motivo", permiso.getTipo());
+            jObject.put("MotivoTabla", Contants.GENERAL_TABLE_MOTIVO_PERMISO);
+            jObject.put("Tipo", "A");
+            jObject.put("TipoTabla", Contants.GENERAL_TABLE_TIPOS_PERMISO);
+            jObject.put("FechaFinTicks", Convert.getDotNetTicksFromDate(permiso.getFecha()));
+            jObject.put("HoraInicioTicks", Convert.getDotNetTicksFromDate(permiso.getFecha()));
+            jObject.put("HoraFinTicks", Convert.getDotNetTicksFromDate(permiso.getFecha()));
+            jObject.put("EsPrevio", false);
+            jObject.put("Estado", "P");
+            jObject.put("EstadoTabla", Contants.GENERAL_TABLE_ESTADO_PERMISO);
+            jObject.put("Observacion", permiso.getObservacion());
+            jObject.put("FechaInicioTicks", Convert.getDotNetTicksFromDate(permiso.getFecha()));
+
+        } catch (Exception ex) {
+
+        }
+
+        webService.addParameter("permiso", jObject);
+
+        try {
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+                permiso.setIdPermiso(webService.getIntegerResponse());
+                Permiso.update(db, permiso);
+            } catch (HttpResponseException e) {
+                if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return rp3.content.SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return rp3.content.SyncAdapter.SYNC_EVENT_ERROR;
+            }
+
+        } finally {
+            webService.close();
+        }
+
+        return SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+}

@@ -157,4 +157,24 @@ public class DiaLaboral extends EntityBase<DiaLaboral>
 
     }
 
+    public static DiaLaboral getDia(DataBase db, int i) {
+        Cursor c = db.query(Contract.DiaLaboral.TABLE_NAME, new String[]{Contract.DiaLaboral.COLUMN_ES_LABORAL, Contract.DiaLaboral.COLUMN_ORDEN,
+                Contract.DiaLaboral.COLUMN_ID_DIA, Contract.DiaLaboral.COLUMN_HORA_INICIO1, Contract.DiaLaboral.COLUMN_HORA_INICIO2,
+                Contract.DiaLaboral.COLUMN_HORA_FIN1, Contract.DiaLaboral.COLUMN_HORA_FIN2}, Contract.DiaLaboral.COLUMN_ID_DIA + " = ? ",
+                new String[] {i + ""});
+        DiaLaboral dia = new DiaLaboral();
+
+        if (c.moveToFirst()) {
+            dia.setIdDia(CursorUtils.getInt(c, Contract.DiaLaboral.COLUMN_ID_DIA));
+            dia.setOrden(CursorUtils.getInt(c, Contract.DiaLaboral.COLUMN_ORDEN));
+            dia.setHoraInicio1(CursorUtils.getString(c, Contract.DiaLaboral.COLUMN_HORA_INICIO1));
+            dia.setHoraFin1(CursorUtils.getString(c, Contract.DiaLaboral.COLUMN_HORA_FIN1));
+            dia.setHoraInicio2(CursorUtils.getString(c, Contract.DiaLaboral.COLUMN_HORA_INICIO2));
+            dia.setHoraFin2(CursorUtils.getString(c, Contract.DiaLaboral.COLUMN_HORA_FIN2));
+            dia.setEsLaboral(CursorUtils.getBoolean(c, Contract.DiaLaboral.COLUMN_ES_LABORAL));
+
+        }
+
+        return dia;
+    }
 }

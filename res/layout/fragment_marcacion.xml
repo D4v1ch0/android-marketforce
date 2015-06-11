@@ -7,22 +7,66 @@
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.6">
+        android:layout_weight="0.6"
+        android:gravity="center">
 
-        <AnalogClock
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/analogClock"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1" />
+            android:background="@drawable/circle_time"
+            android:padding="30dp">
 
-        <DigitalClock
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/digitalClock"
-            android:layout_gravity="center_horizontal"
-            android:textStyle="bold"
-            android:textSize="@dimen/text_large_size" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Large Text"
+                android:id="@+id/marcacion_meridiano"
+                android:layout_gravity="center_horizontal"
+                android:textSize="16sp"
+                android:textColor="@color/caldroid_white" />
+
+            <rp3.widget.DigitalClock
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/digitalClock"
+                android:layout_gravity="center_horizontal"
+                android:textSize="44sp"
+                android:textColor="@color/caldroid_white" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center|bottom"
+                android:layout_gravity="bottom">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Large Text"
+                    android:id="@+id/marcacion_dia"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:textSize="18sp"
+                    android:textColor="@color/caldroid_white"
+                    android:gravity="bottom" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Large Text"
+                    android:id="@+id/marcacion_fecha"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:textSize="16sp"
+                    android:textColor="@color/caldroid_white"
+                    android:gravity="bottom" />
+            </LinearLayout>
+
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
@@ -83,13 +127,29 @@
             android:id="@+id/layout_break"
             android:visibility="gone">
 
-            <Button
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/button5"
-                android:minWidth="100dp"
-                android:minHeight="100dp"
-                android:background="@drawable/button_feedback_marcacion" />
+                android:layout_gravity="center_horizontal">
+
+                <com.github.lzyzsd.circleprogress.DonutProgress
+                    android:id="@+id/donut_break"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/button_break"
+                    android:minWidth="100dp"
+                    android:minHeight="100dp"
+                    android:background="@drawable/button_feedback_marcacion"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true" />
+
+            </RelativeLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -108,13 +168,29 @@
             android:id="@+id/layout_fin_break"
             android:visibility="gone">
 
-            <Button
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/button6"
-                android:minWidth="100dp"
-                android:minHeight="100dp"
-                android:background="@drawable/button_feedback_marcacion" />
+                android:layout_gravity="center_horizontal">
+
+                <com.github.lzyzsd.circleprogress.DonutProgress
+                    android:id="@+id/donut_fin_break"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/button_fin_break"
+                    android:minWidth="100dp"
+                    android:minHeight="100dp"
+                    android:background="@drawable/button_feedback_marcacion"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true" />
+
+            </RelativeLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -133,13 +209,29 @@
             android:id="@+id/layout_fin_jornada"
             android:visibility="gone">
 
-            <Button
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/button7"
-                android:minWidth="100dp"
-                android:minHeight="100dp"
-                android:background="@drawable/button_feedback_marcacion" />
+                android:layout_gravity="center_horizontal">
+
+                <com.github.lzyzsd.circleprogress.DonutProgress
+                    android:id="@+id/donut_fin_jornada"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/button_fin_jornada"
+                    android:minWidth="100dp"
+                    android:minHeight="100dp"
+                    android:background="@drawable/button_feedback_marcacion"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true" />
+
+            </RelativeLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -155,8 +247,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/label_justificar"
-        android:id="@+id/button"
+        android:id="@+id/marcacion_justificar"
         android:layout_gravity="center_horizontal"
+        android:drawableLeft="@drawable/ic_action_about"
         style="@style/Widget.Button.Theme"
         android:layout_marginBottom="12dp"
         android:textSize="@dimen/text_large_size" />

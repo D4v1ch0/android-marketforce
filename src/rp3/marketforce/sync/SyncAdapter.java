@@ -7,6 +7,7 @@ import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
 import rp3.marketforce.ServerActivity;
 import rp3.marketforce.cliente.CrearClienteFragment;
+import rp3.marketforce.marcaciones.JustificacionFragment;
 import rp3.marketforce.models.Tarea;
 import rp3.marketforce.ruta.CrearVisitaFragment;
 import rp3.marketforce.ruta.MotivoNoVisitaFragment;
@@ -44,6 +45,9 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
     public static String SYNC_TYPE_AGENDA_GEOLOCATION = "agenda_geolocation";
     public static String SYNC_TYPE_UPLOAD_AGENDAS = "agenda_upload";
     public static String SYNC_TYPE_UPLOAD_CLIENTES = "cliente_upload";
+
+    public static String SYNC_TYPE_UPLOAD_MARCACION = "marcacion";
+    public static String SYNC_TYPE_UPLOAD_PERMISO = "permiso";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -139,6 +143,14 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         result = rp3.marketforce.sync.Calendario.executeSync(db);
                         addDefaultMessage(result);
                     }
+
+                    // MODULO DE MARCACIONES
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Marcaciones.executeSyncGrupo(db);
+                        addDefaultMessage(result);
+                    }
+
 				/*
 				 * Se comenta carga de fotos ya que se la hara mediante un lazy loader.
 				 * Para esto se cargara tambien en el modelo Cliente la url de la foto para poder cargarla
@@ -221,6 +233,13 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                 } else if (syncType.equals(SYNC_TYPE_AGENDA_NO_VISITA)) {
                     int id = extras.getInt(MotivoNoVisitaFragment.ARG_AGENDA);
                     result = Agenda.executeSyncNoVisita(db, id);
+                    addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_UPLOAD_PERMISO)) {
+                    long id = extras.getLong(JustificacionFragment.ARG_PERMISO);
+                    result = Marcaciones.executeSyncPermiso(db, id);
+                    addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_UPLOAD_MARCACION)) {
+                    result = Marcaciones.executeSync(db);
                     addDefaultMessage(result);
                 } else if (syncType.equals(SYNC_TYPE_ACTUALIZAR_AGENDA)) {
                     long inicio = extras.getLong(RutasListFragment.ARG_INICIO);
@@ -363,6 +382,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 
                     if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.marketforce.sync.TipoCliente.executeSync(db);
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Marcaciones.executeSyncGrupo(db);
                         addDefaultMessage(result);
                     }
                 }

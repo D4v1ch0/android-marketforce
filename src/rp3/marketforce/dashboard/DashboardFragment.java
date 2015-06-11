@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView.FindListener;
 import rp3.app.BaseFragment;
+import rp3.configuration.PreferenceManager;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.marcaciones.MarcacionActivity;
@@ -37,7 +38,10 @@ public class DashboardFragment extends BaseFragment {
 		getActivity().setTitle(R.string.title_option_setinicio);
 		
 		//setRetainInstance(true);
-		setContentView(R.layout.fragment_dashboard, R.menu.fragment_dashboard_menu);
+        if(PreferenceManager.getBoolean(Contants.KEY_APLICA_MARCACION))
+		    setContentView(R.layout.fragment_dashboard, R.menu.fragment_dashboard_menu);
+        else
+            setContentView(R.layout.fragment_dashboard);
 		graphicFragment = DashboardGraphicFragment.newInstance();	
 		agendaFragment = DashboardAgendaFragment.newInstance();	
 		mapFragment = DashboardMapFragment.newInstance();	

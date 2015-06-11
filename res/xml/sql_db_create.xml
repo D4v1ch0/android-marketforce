@@ -267,6 +267,7 @@
         Fecha INTEGER,
         HoraInicio INTEGER,
         HoraFin INTEGER,
+        MinutosAtraso INTEGER,
         Latitud REAL,
         Longitud REAL,
         EnUbicacion BOOLEAN,
@@ -283,6 +284,7 @@
     <statement>
         CREATE TABLE tbPermiso(
         _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdPermiso INTEGER,
         IdMarcacion INTEGER,
         Fecha INTEGER,
         Tipo TEXT,

@@ -7,6 +7,10 @@ public class Contants {
 	public final static int GENERAL_TABLE_TIPO_PERSONA = 1022;
 	public final static int GENERAL_TABLE_MOTIVOS_NO_VISITA = 1030;
     public final static int GENERAL_TABLE_MOTIVOS_REPROGRAMACION = 1031;
+    public final static int GENERAL_TABLE_TIPOS_PERMISO = 1041;
+    public final static int GENERAL_TABLE_MOTIVO_PERMISO = 1042;
+    public final static int GENERAL_TABLE_ESTADO_PERMISO = 1043;
+    public final static int GENERAL_TABLE_TIPO_MARCACION = 1044;
 	public final static String IMAGE_FOLDER = "imagesFolder";
 	public final static String KEY_FIRST_TIME = "firstTime";
 	
@@ -25,6 +29,9 @@ public class Contants {
 	
 	public final static String KEY_IDAGENTE = "IdAgente";
 	public final static String KEY_IDRUTA = "IdRuta";
+    public final static String KEY_APLICA_MARCACION = "AplicaMarcacion";
+    public final static String KEY_LONGITUD_PARTIDA = "LongitudPuntoPartida";
+    public final static String KEY_LATITUD_PARTIDA = "LatitudPuntoPartida";
 	public final static String KEY_ES_SUPERVISOR = "EsSupervisor";
 	public final static String KEY_ES_AGENTE = "EsAgente";
 	public final static String KEY_ES_ADMINISTRADOR = "EsAdministrador";

@@ -537,6 +537,7 @@ public final class Contract {
         public static final String COLUMN_LATITUD = "Latitud";
         public static final String COLUMN_LONGITUD = "Longitud";
         public static final String COLUMN_EN_UBICACION = "EnUbicacion";
+        public static final String COLUMN_MINUTOS_ATRASO = "MinutosAtraso";
         public static final String COLUMN_PENDIENTE = "Pendiente";
 
         public static final String FIELD_TIPO = COLUMN_TIPO;
@@ -547,6 +548,7 @@ public final class Contract {
         public static final String FIELD_LONGITUD = COLUMN_LONGITUD;
         public static final String FIELD_EN_UBICACION = COLUMN_EN_UBICACION;
         public static final String FIELD_PENDIENTE = COLUMN_PENDIENTE;
+        public static final String FIELD_MINUTOS_ATRASO = COLUMN_MINUTOS_ATRASO;
 
     }
 
@@ -570,6 +572,7 @@ public final class Contract {
         public static final String COLUMN_FECHA = "Fecha";
         public static final String COLUMN_OBSERVACION = "Observacion";
         public static final String COLUMN_ID_MARCACION = "IdMarcacion";
+        public static final String COLUMN_ID_PERMISO = "IdPermiso";
 
         public static final String FIELD_TIPO = COLUMN_TIPO;
         public static final String FIELD_OBSERVACION = COLUMN_OBSERVACION;

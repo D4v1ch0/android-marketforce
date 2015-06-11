@@ -228,6 +228,25 @@
                     <webMethod>GET</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>
+                <!-- Modulo Marcacion -->
+                <method>
+                    <name>InsertMarcacion</name>
+                    <action>marcacion/create</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>InsertPermiso</name>
+                    <action>marcacion/insertpermiso</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetGrupo</name>
+                    <action>marcacion/getgrupo</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
             </methods>     
         </webServiceData>
            <webServiceData>
