@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="rp3.marketforce"
     android:versionCode="25"
-    android:versionName="1.4 - Oportunidades">
+    android:versionName="1.4.1 - Oportunidades">
 
     <uses-sdk
         android:minSdkVersion="13"
