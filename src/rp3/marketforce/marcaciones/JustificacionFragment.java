@@ -22,6 +22,7 @@ import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.marcacion.Marcacion;
 import rp3.marketforce.models.marcacion.Permiso;
+import rp3.marketforce.ruta.CrearVisitaFragment;
 import rp3.marketforce.sync.SyncAdapter;
 
 /**
@@ -80,6 +81,8 @@ public class JustificacionFragment extends BaseFragment {
                     bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
                     requestSync(bundle);
                 }
+
+                getParentFragment().onResume();
 
                 finish();
             }

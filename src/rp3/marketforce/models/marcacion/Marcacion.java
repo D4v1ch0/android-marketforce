@@ -195,7 +195,7 @@ public class Marcacion extends EntityBase<Marcacion>
     public static Marcacion getUltimaMarcacion(DataBase db) {
         Cursor c = db.query(Contract.Marcacion.TABLE_NAME, new String[]{Contract.Marcacion._ID, Contract.Marcacion.COLUMN_EN_UBICACION, Contract.Marcacion.COLUMN_FECHA,
                 Contract.Marcacion.COLUMN_TIPO, Contract.Marcacion.COLUMN_LATITUD, Contract.Marcacion.COLUMN_LONGITUD, Contract.Marcacion.COLUMN_HORA_INICIO,
-                Contract.Marcacion.COLUMN_HORA_FIN, Contract.Marcacion.COLUMN_PENDIENTE, Contract.Marcacion.COLUMN_MINUTOS_ATRASO}, Contract.Marcacion.COLUMN_EN_UBICACION + " = ? ", new String[]{"1"}, null, null, Contract.Marcacion._ID + " DESC");
+                Contract.Marcacion.COLUMN_HORA_FIN, Contract.Marcacion.COLUMN_PENDIENTE, Contract.Marcacion.COLUMN_MINUTOS_ATRASO}, null, null, null, null, Contract.Marcacion._ID + " DESC");
 
         Marcacion marcacion = null;
         if (c.moveToFirst()) {

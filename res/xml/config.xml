@@ -242,8 +242,20 @@
                     <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
+                    <name>SetGCMId</name>
+                    <action>agente/setgcmid</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
                     <name>GetGrupo</name>
                     <action>marcacion/getgrupo</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetPermisoHoy</name>
+                    <action>marcacion/getpermisohoy</action>
                     <webMethod>GET</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>

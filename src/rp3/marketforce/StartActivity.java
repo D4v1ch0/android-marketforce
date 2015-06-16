@@ -19,7 +19,11 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.Toast;
+
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.iid.InstanceID;
 
 public class StartActivity extends rp3.app.StartActivity{
 
@@ -76,8 +80,8 @@ public class StartActivity extends rp3.app.StartActivity{
 		
 		super.onContinue();		
 		Long days = SyncAudit.getDaysOfLastSync(SyncAdapter.SYNC_TYPE_GENERAL, SyncAdapter.SYNC_EVENT_SUCCESS);
-		
 		if(days == null || days > 0){
+
 			Bundle bundle = new Bundle();
 			bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_GENERAL);
 			requestSync(bundle);

@@ -21,6 +21,7 @@ import android.content.ContentProviderClient;
 import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 
 public class SyncAdapter extends rp3.content.SyncAdapter {
@@ -151,6 +152,16 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         addDefaultMessage(result);
                     }
 
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Agente.executeSyncGetDeviceId(getContext());
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS && !TextUtils.isEmpty(PreferenceManager.getString(Contants.KEY_APP_INSTANCE_ID))) {
+                        result = rp3.marketforce.sync.Agente.executeSyncDeviceId();
+                        addDefaultMessage(result);
+                    }
+
 				/*
 				 * Se comenta carga de fotos ya que se la hara mediante un lazy loader.
 				 * Para esto se cargara tambien en el modelo Cliente la url de la foto para poder cargarla
@@ -268,6 +279,9 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     result = EnviarUbicacion.executeSyncPendientes(db);
                     addDefaultMessage(result);
 
+                    result = Marcaciones.executeSync(db);
+                    addDefaultMessage(result);
+
                     if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.marketforce.sync.Rutas.executeSync(db, null, null, false);
                         addDefaultMessage(result);
@@ -318,6 +332,9 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     addDefaultMessage(result);
 
                     result = EnviarUbicacion.executeSyncPendientes(db);
+                    addDefaultMessage(result);
+
+                    result = Marcaciones.executeSync(db);
                     addDefaultMessage(result);
 
                     if (result == SYNC_EVENT_SUCCESS) {
@@ -389,6 +406,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         result = rp3.marketforce.sync.Marcaciones.executeSyncGrupo(db);
                         addDefaultMessage(result);
                     }
+
                 }
 
                 SyncAudit.insert(syncType, result);

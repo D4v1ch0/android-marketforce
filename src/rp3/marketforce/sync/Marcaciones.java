@@ -43,17 +43,31 @@ public class Marcaciones {
             try {
                 jObject.put("Tipo", marc.getTipo());
                 jObject.put("TipoTabla", Contants.GENERAL_TABLE_TIPO_MARCACION);
-                jObject.put("FechaTicks", Convert.getDotNetTicksFromDate(marc.getFecha()));
+                Calendar fecha = Calendar.getInstance();
+                fecha.setTime(marc.getFecha());
+                fecha.set(Calendar.HOUR_OF_DAY, 0);
+                fecha.set(Calendar.MINUTE, 0);
+                fecha.set(Calendar.SECOND, 0);
+                jObject.put("FechaTicks", Convert.getDotNetTicksFromDate(fecha.getTime()));
                 jObject.put("HoraInicioTicks", Convert.getDotNetTicksFromDate(marc.getHoraInicio()));
                 jObject.put("HoraFinTicks", Convert.getDotNetTicksFromDate(marc.getHoraFin()));
-                if(marc.getTipo().equalsIgnoreCase("J1") || marc.getTipo().equalsIgnoreCase("J2")) {
-                    jObject.put("HoraInicioPlanTicks", Convert.getDotNetTicksFromDate(format.parse(dia.getHoraInicio1().replace("h",":"))));
-                    jObject.put("HoraFinPlanTicks", Convert.getDotNetTicksFromDate(format.parse(dia.getHoraFin1().replace("h",":"))));
+                Calendar hoy = Calendar.getInstance();
+                if(marc.getTipo().equalsIgnoreCase("J1") || marc.getTipo().equalsIgnoreCase("J2") || dia.getHoraFin2() == null) {
+                    hoy.setTime(format.parse(dia.getHoraInicio1().replace("h",":")));
+                    hoy.set(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+                    jObject.put("HoraInicioPlanTicks", Convert.getDotNetTicksFromDate(hoy.getTime()));
+                    hoy.setTime(format.parse(dia.getHoraFin1().replace("h",":")));
+                    hoy.set(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+                    jObject.put("HoraFinPlanTicks", Convert.getDotNetTicksFromDate(hoy.getTime()));
                 }
                 else
                 {
-                    jObject.put("HoraInicioPlanTicks", Convert.getDotNetTicksFromDate(format.parse(dia.getHoraInicio2().replace("h",":"))));
-                    jObject.put("HoraFinPlanTicks", Convert.getDotNetTicksFromDate(format.parse(dia.getHoraFin2().replace("h",":"))));
+                    hoy.setTime(format.parse(dia.getHoraInicio2().replace("h",":")));
+                    hoy.set(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+                    jObject.put("HoraInicioPlanTicks", Convert.getDotNetTicksFromDate(hoy.getTime()));
+                    hoy.setTime(format.parse(dia.getHoraFin2().replace("h",":")));
+                    hoy.set(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+                    jObject.put("HoraFinPlanTicks", Convert.getDotNetTicksFromDate(hoy.getTime()));
                 }
                 jObject.put("MinutosAtraso", marc.getMintutosAtraso());
                 jObject.put("EnUbicacion", marc.isEnUbicacion());
@@ -175,6 +189,40 @@ public class Marcaciones {
                 webService.invokeWebService();
                 permiso.setIdPermiso(webService.getIntegerResponse());
                 Permiso.update(db, permiso);
+            } catch (HttpResponseException e) {
+                if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return rp3.content.SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return rp3.content.SyncAdapter.SYNC_EVENT_ERROR;
+            }
+
+        } finally {
+            webService.close();
+        }
+
+        return SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
+    public static int executeSyncPermisoHoy(DataBase db) {
+        WebService webService = new WebService("MartketForce", "GetPermisoHoy");
+        webService.setTimeOut(20000);
+        webService.addCurrentAuthToken();
+
+        try {
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+                JSONObject jsonObject = webService.getJSONObjectResponse();
+                if(!jsonObject.isNull("EsPrevio"))
+                {
+                    Permiso permiso = new Permiso();
+                    permiso.setFecha(Convert.getDateFromDotNetTicks(jsonObject.getInt("FechaInicioTicks")));
+                    permiso.setIdMarcacion(1);
+                    permiso.setTipo("FALTA");
+                    Permiso.insert(db, permiso);
+                }
             } catch (HttpResponseException e) {
                 if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
                     return rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR;
