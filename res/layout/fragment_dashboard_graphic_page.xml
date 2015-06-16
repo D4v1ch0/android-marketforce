@@ -15,30 +15,42 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:id="@+id/imageView2"
-                android:layout_gravity="right"
-                android:src="@drawable/blue_star"
-                android:layout_toStartOf="@+id/grupo_total_visitas"
-                android:layout_alignBottom="@+id/grupo_total_visitas"
-                android:layout_marginBottom="3dp" />
-
-            <TextView
-                android:id="@+id/grupo_total_visitas"
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:gravity="center_vertical"
-                android:padding="5dp"
-                android:text="Visitas"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/color_text_sky_blue"
-                android:textSize="@dimen/text_small_size"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentStart="false"
-                android:layout_alignBottom="@+id/header_pager" />
+                android:layout_alignParentEnd="false"
+                android:layout_alignParentBottom="false"
+                android:layout_alignBottom="@+id/header_pager"
+                android:layout_alignRight="@+id/header_pager">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:id="@+id/imageView2"
+                    android:layout_gravity="right"
+                    android:src="@drawable/blue_star"
+                    android:layout_toStartOf="@+id/grupo_total_visitas"
+                    android:layout_alignBottom="@+id/grupo_total_visitas"
+                    android:layout_marginBottom="3dp"
+                    android:layout_alignParentStart="false"
+                    android:layout_alignParentEnd="false" />
+
+                <TextView
+                    android:id="@+id/grupo_total_visitas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center_vertical"
+                    android:padding="5dp"
+                    android:text="Visitas"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/color_text_sky_blue"
+                    android:textSize="@dimen/text_small_size"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentStart="false"
+                    android:layout_alignBottom="@+id/header_pager" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
