@@ -51,9 +51,9 @@ public class ListaTareasAdapter extends BaseAdapter{
 
 
         if (agendaTarea.get(position).getEstadoTareaDescripcion().equals("Pendiente")) {
-            id_icon = R.drawable.check;
-        } else {
             id_icon = R.drawable.x_red;
+        } else {
+            id_icon = R.drawable.check;
         }
 
         ((TextView) convertView.findViewById(R.id.map_phone)).setCompoundDrawablesWithIntrinsicBounds(0, 0, id_icon, 0);
