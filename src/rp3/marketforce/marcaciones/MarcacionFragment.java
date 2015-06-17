@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -20,6 +21,7 @@ import java.util.Calendar;
 import rp3.app.BaseActivity;
 import rp3.app.BaseFragment;
 import rp3.configuration.PreferenceManager;
+import rp3.data.MessageCollection;
 import rp3.maps.utils.SphericalUtil;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
@@ -29,6 +31,7 @@ import rp3.marketforce.models.marcacion.Permiso;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.util.GooglePlayServicesUtils;
 import rp3.util.LocationUtils;
+import rp3.widget.DigitalClock;
 
 /**
  * Created by magno_000 on 05/06/2015.
@@ -36,6 +39,7 @@ import rp3.util.LocationUtils;
 public class MarcacionFragment extends BaseFragment {
 
     private static final int PRESS_TIME = 2000;
+    private double DISTANCE = 0;
 
     CountDownTimer count;
     JustificacionFragment fragment;
@@ -49,138 +53,151 @@ public class MarcacionFragment extends BaseFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        setContentView(R.layout.fragment_marcacion);
+        setContentView(R.layout.fragment_marcacion, R.menu.fragment_marcaciones_menu);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        ((DonutProgress) getRootView().findViewById(R.id.donut_inicio_jornada)).setMax(PRESS_TIME);
-        getRootView().findViewById(R.id.button_inicio_jornada).setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (MotionEvent.ACTION_DOWN == motionEvent.getAction()) {
-                    count = new CountDownTimer(PRESS_TIME, 100) {
+        ((DigitalClock) getRootView().findViewById(R.id.digitalClock)).setCalendar(Calendar.getInstance());
+        DISTANCE = Double.parseDouble(PreferenceManager.getString(Contants.KEY_MARACIONES_DISTANCIA));
+        Permiso ausencia = Permiso.getAusencia(getDataBase());
+        if(ausencia == null) {
+            ((DonutProgress) getRootView().findViewById(R.id.donut_inicio_jornada)).setMax(PRESS_TIME);
+            getRootView().findViewById(R.id.button_inicio_jornada).setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    if (MotionEvent.ACTION_DOWN == motionEvent.getAction()) {
+                        count = new CountDownTimer(PRESS_TIME, 100) {
 
-                        @Override
-                        public void onTick(long l) {
-                            ((DonutProgress) getRootView().findViewById(R.id.donut_inicio_jornada)).setProgress((int) (PRESS_TIME - l));
-                        }
+                            @Override
+                            public void onTick(long l) {
+                                ((DonutProgress) getRootView().findViewById(R.id.donut_inicio_jornada)).setProgress((int) (PRESS_TIME - l));
+                            }
 
-                        @Override
-                        public void onFinish() {
-                            ((DonutProgress) getRootView().findViewById(R.id.donut_inicio_jornada)).setProgress(PRESS_TIME);
-                            final Marcacion marc = new Marcacion();
-                            marc.setTipo("J1"); //falta tipo
-                            marc.setPendiente(true);
-                            if (GooglePlayServicesUtils.servicesConnected((BaseActivity) getActivity())) {
+                            @Override
+                            public void onFinish() {
+                                ((DonutProgress) getRootView().findViewById(R.id.donut_inicio_jornada)).setProgress(PRESS_TIME);
+                                final Marcacion marc = new Marcacion();
+                                marc.setTipo("J1"); //falta tipo
+                                marc.setPendiente(true);
+                                if (GooglePlayServicesUtils.servicesConnected((BaseActivity) getActivity())) {
 
-                                try {
-                                    ((BaseActivity) getActivity()).showDialogProgress("GPS", "Obteniendo Posición");
-                                    LocationUtils.getLocation(getContext(), new LocationUtils.OnLocationResultListener() {
+                                    try {
+                                        ((BaseActivity) getActivity()).showDialogProgress("GPS", "Obteniendo Posición");
+                                        LocationUtils.getLocation(getContext(), new LocationUtils.OnLocationResultListener() {
 
-                                        @Override
-                                        public void getLocationResult(Location location) {
-                                            if (location != null) {
-                                                marc.setLatitud(location.getLatitude());
-                                                marc.setLongitud(location.getLongitude());
-                                                LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
-                                                LatLng partida = new LatLng(Double.parseDouble(PreferenceManager.getString(Contants.KEY_LATITUD_PARTIDA)),
-                                                        Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA)));
-                                                double distance = SphericalUtil.computeDistanceBetween(pos, partida);
-                                                marc.setEnUbicacion(distance < 30);
-                                                marc.setFecha(Calendar.getInstance().getTime());
-                                                Marcacion.insert(getDataBase(), marc);
-                                                if (distance < 30) {
-                                                    DiaLaboral dia = DiaLaboral.getDia(getDataBase(), Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1);
-                                                    if (dia.getHoraInicio2() != null)
-                                                        SetButtonBreak();
-                                                    SetButtonFinJornada();
-                                                    getRootView().findViewById(R.id.layout_inicio_jornada).setVisibility(View.GONE);
-                                                    Calendar cal_hoy = Calendar.getInstance();
-                                                    try {
-                                                        cal_hoy.setTime(format.parse(dia.getHoraInicio1().replace("h", ":")));
-                                                    } catch (Exception ex) {
-                                                    }
-                                                    int atraso = CheckMinutes(cal_hoy);
-                                                    if (atraso > 0) {
-                                                        marc.setMintutosAtraso(atraso);
-                                                        Marcacion.update(getDataBase(), marc);
-                                                        Permiso permiso = Permiso.getPermisoMarcacion(getDataBase(), 0);
-                                                        if (permiso == null) {
-                                                            fragment.idMarcacion = marc.getID();
-                                                            showDialogFragment(fragment, "Justificacion");
-                                                            Toast.makeText(getContext(), "Usted esta marcando atrasado. Indique su justificación", Toast.LENGTH_LONG).show();
+                                            @Override
+                                            public void getLocationResult(Location location) {
+                                                if (location != null) {
+                                                    marc.setLatitud(location.getLatitude());
+                                                    marc.setLongitud(location.getLongitude());
+                                                    LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
+                                                    LatLng partida = new LatLng(Double.parseDouble(PreferenceManager.getString(Contants.KEY_LATITUD_PARTIDA)),
+                                                            Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA)));
+                                                    double distance = SphericalUtil.computeDistanceBetween(pos, partida);
+                                                    marc.setEnUbicacion(distance < DISTANCE);
+                                                    marc.setFecha(Calendar.getInstance().getTime());
+                                                    Marcacion.insert(getDataBase(), marc);
+                                                    if (distance < DISTANCE) {
+                                                        DiaLaboral dia = DiaLaboral.getDia(getDataBase(), Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1);
+                                                        if (dia.getHoraInicio2() != null)
+                                                            SetButtonBreak();
+                                                        SetButtonFinJornada();
+                                                        getRootView().findViewById(R.id.layout_inicio_jornada).setVisibility(View.GONE);
+                                                        Calendar cal_hoy = Calendar.getInstance();
+                                                        try {
+                                                            cal_hoy.setTime(format.parse(dia.getHoraInicio1().replace("h", ":")));
+                                                        } catch (Exception ex) {
+                                                        }
+                                                        int atraso = CheckMinutes(cal_hoy);
+                                                        if (atraso > 0) {
+                                                            marc.setMintutosAtraso(atraso);
+                                                            Marcacion.update(getDataBase(), marc);
+                                                            Permiso permiso = Permiso.getPermisoMarcacion(getDataBase(), 0);
+                                                            if (permiso == null) {
+                                                                fragment.idMarcacion = marc.getID();
+                                                                showDialogFragment(fragment, "Justificacion");
+                                                                Toast.makeText(getContext(), "Usted esta marcando atrasado. Indique su justificación", Toast.LENGTH_LONG).show();
+                                                            } else {
+                                                                permiso.setIdMarcacion(marc.getID());
+                                                                Permiso.update(getDataBase(), permiso);
+                                                                Bundle bundle = new Bundle();
+                                                                bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
+                                                                requestSync(bundle);
+                                                            }
                                                         } else {
-                                                            permiso.setIdMarcacion(marc.getID());
-                                                            Permiso.update(getDataBase(), permiso);
+                                                            getRootView().findViewById(R.id.layout_inicio_jornada).setVisibility(View.GONE);
+                                                            SetButtonFinJornada();
                                                             Bundle bundle = new Bundle();
                                                             bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
                                                             requestSync(bundle);
                                                         }
                                                     } else {
-                                                        getRootView().findViewById(R.id.layout_inicio_jornada).setVisibility(View.GONE);
-                                                        SetButtonFinJornada();
-                                                        Bundle bundle = new Bundle();
-                                                        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
-                                                        requestSync(bundle);
+                                                        fragment.idMarcacion = marc.getID();
+                                                        showDialogFragment(fragment, "Justificacion");
+                                                        Toast.makeText(getContext(), "Esta marcando fuera de su punto de partida. Ingrese una justificación.", Toast.LENGTH_LONG).show();
                                                     }
                                                 } else {
-                                                    fragment.idMarcacion = marc.getID();
-                                                    showDialogFragment(fragment, "Justificacion");
-                                                    Toast.makeText(getContext(), "Esta marcando fuera de su punto de partida. Ingrese una justificación.", Toast.LENGTH_LONG).show();
+                                                    Toast.makeText(getContext(), "Debe de activar su GPS.", Toast.LENGTH_SHORT).show();
                                                 }
-                                            } else {
-                                                Toast.makeText(getContext(), "Debe de activar su GPS.", Toast.LENGTH_SHORT).show();
+                                                ((BaseActivity) getActivity()).closeDialogProgress();
                                             }
-                                            ((BaseActivity) getActivity()).closeDialogProgress();
-                                        }
-                                    });
-                                } catch (Exception ex) {
+                                        });
+                                    } catch (Exception ex) {
+                                    }
+
                                 }
 
                             }
+                        }.start();
+                    }
+                    if (MotionEvent.ACTION_UP == motionEvent.getAction()) {
+                        count.cancel();
+                        ((DonutProgress) getRootView().findViewById(R.id.donut_inicio_jornada)).setProgress(0);
+                    }
+                    return false;
+                }
+            });
 
-                        }
-                    }.start();
-                }
-                if (MotionEvent.ACTION_UP == motionEvent.getAction()) {
-                    count.cancel();
-                    ((DonutProgress) getRootView().findViewById(R.id.donut_inicio_jornada)).setProgress(0);
-                }
-                return false;
-            }
-        });
-
-        Marcacion ultimaMarcacion = Marcacion.getUltimaMarcacion(getDataBase());
-        if (ultimaMarcacion != null) {
-            Calendar dia_hoy = Calendar.getInstance();
-            Calendar dia_marcacion = Calendar.getInstance();
-            DiaLaboral dia_laboral = DiaLaboral.getDia(getDataBase(), Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1);
-            dia_marcacion.setTime(ultimaMarcacion.getFecha());
-            if (dia_hoy.get(Calendar.DAY_OF_YEAR) == dia_marcacion.get(Calendar.DAY_OF_YEAR)) {
-                if (ultimaMarcacion.getTipo().equalsIgnoreCase("J1")) {
-                    getRootView().findViewById(R.id.layout_inicio_jornada).setVisibility(View.GONE);
-                    if (dia_laboral.getHoraInicio2() != null)
-                        SetButtonBreak();
-                    SetButtonFinJornada();
-                } else if (ultimaMarcacion.getTipo().equalsIgnoreCase("J2")) {
-                    getRootView().findViewById(R.id.layout_inicio_jornada).setVisibility(View.GONE);
-                    getRootView().findViewById(R.id.layout_break).setVisibility(View.GONE);
-                    getRootView().findViewById(R.id.layout_fin_jornada).setVisibility(View.VISIBLE);
-                    SetButtonFinBreak();
-                } else if (ultimaMarcacion.getTipo().equalsIgnoreCase("J3")) {
-                    getRootView().findViewById(R.id.layout_inicio_jornada).setVisibility(View.GONE);
-                    getRootView().findViewById(R.id.layout_fin_break).setVisibility(View.GONE);
-                    SetButtonFinJornada();
-                } else if (ultimaMarcacion.getTipo().equalsIgnoreCase("J4")) {
-                    getRootView().findViewById(R.id.layout_inicio_jornada).setVisibility(View.GONE);
-                    getRootView().findViewById(R.id.layout_fin_jornada).setVisibility(View.GONE);
-                    getRootView().findViewById(R.id.layout_fin_break).setVisibility(View.GONE);
-                    getRootView().findViewById(R.id.layout_break).setVisibility(View.GONE);
-                    getRootView().findViewById(R.id.marcacion_justificar).setVisibility(View.GONE);
+            Marcacion ultimaMarcacion = Marcacion.getUltimaMarcacion(getDataBase());
+            if (ultimaMarcacion != null) {
+                Calendar dia_hoy = Calendar.getInstance();
+                Calendar dia_marcacion = Calendar.getInstance();
+                DiaLaboral dia_laboral = DiaLaboral.getDia(getDataBase(), Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1);
+                dia_marcacion.setTime(ultimaMarcacion.getFecha());
+                if (dia_hoy.get(Calendar.DAY_OF_YEAR) == dia_marcacion.get(Calendar.DAY_OF_YEAR)) {
+                    if (ultimaMarcacion.getTipo().equalsIgnoreCase("J1")) {
+                        getRootView().findViewById(R.id.layout_inicio_jornada).setVisibility(View.GONE);
+                        if (dia_laboral.getHoraInicio2() != null)
+                            SetButtonBreak();
+                        SetButtonFinJornada();
+                    } else if (ultimaMarcacion.getTipo().equalsIgnoreCase("J2")) {
+                        getRootView().findViewById(R.id.layout_inicio_jornada).setVisibility(View.GONE);
+                        getRootView().findViewById(R.id.layout_break).setVisibility(View.GONE);
+                        getRootView().findViewById(R.id.layout_fin_jornada).setVisibility(View.VISIBLE);
+                        SetButtonFinBreak();
+                    } else if (ultimaMarcacion.getTipo().equalsIgnoreCase("J3")) {
+                        getRootView().findViewById(R.id.layout_inicio_jornada).setVisibility(View.GONE);
+                        getRootView().findViewById(R.id.layout_fin_break).setVisibility(View.GONE);
+                        SetButtonFinJornada();
+                    } else if (ultimaMarcacion.getTipo().equalsIgnoreCase("J4")) {
+                        getRootView().findViewById(R.id.layout_inicio_jornada).setVisibility(View.GONE);
+                        getRootView().findViewById(R.id.layout_fin_jornada).setVisibility(View.GONE);
+                        getRootView().findViewById(R.id.layout_fin_break).setVisibility(View.GONE);
+                        getRootView().findViewById(R.id.layout_break).setVisibility(View.GONE);
+                        getRootView().findViewById(R.id.marcacion_justificar).setVisibility(View.GONE);
+                    }
                 }
             }
+        }
+        else
+        {
+            getRootView().findViewById(R.id.layout_inicio_jornada).setVisibility(View.GONE);
+            getRootView().findViewById(R.id.layout_fin_jornada).setVisibility(View.GONE);
+            getRootView().findViewById(R.id.layout_fin_break).setVisibility(View.GONE);
+            getRootView().findViewById(R.id.layout_break).setVisibility(View.GONE);
+            getRootView().findViewById(R.id.marcacion_justificar).setVisibility(View.GONE);
         }
     }
 
@@ -264,10 +281,10 @@ public class MarcacionFragment extends BaseFragment {
                                                 LatLng partida = new LatLng(Double.parseDouble(PreferenceManager.getString(Contants.KEY_LATITUD_PARTIDA)),
                                                         Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA)));
                                                 double distance = SphericalUtil.computeDistanceBetween(pos, partida);
-                                                marc.setEnUbicacion(distance < 30);
+                                                marc.setEnUbicacion(distance < DISTANCE);
                                                 marc.setFecha(Calendar.getInstance().getTime());
                                                 Marcacion.insert(getDataBase(), marc);
-                                                if (distance < 30) {
+                                                if (distance < DISTANCE) {
                                                     getRootView().findViewById(R.id.layout_break).setVisibility(View.GONE);
                                                     SetButtonFinBreak();
                                                     Bundle bundle = new Bundle();
@@ -336,10 +353,10 @@ public class MarcacionFragment extends BaseFragment {
                                                 LatLng partida = new LatLng(Double.parseDouble(PreferenceManager.getString(Contants.KEY_LATITUD_PARTIDA)),
                                                         Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA)));
                                                 double distance = SphericalUtil.computeDistanceBetween(pos, partida);
-                                                marc.setEnUbicacion(distance < 30);
+                                                marc.setEnUbicacion(distance < DISTANCE);
                                                 marc.setFecha(Calendar.getInstance().getTime());
                                                 Marcacion.insert(getDataBase(), marc);
-                                                if (distance < 30) {
+                                                if (distance < DISTANCE) {
                                                     getRootView().findViewById(R.id.layout_fin_break).setVisibility(View.GONE);
                                                     Bundle bundle = new Bundle();
                                                     bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
@@ -407,10 +424,10 @@ public class MarcacionFragment extends BaseFragment {
                                                 LatLng partida = new LatLng(Double.parseDouble(PreferenceManager.getString(Contants.KEY_LATITUD_PARTIDA)),
                                                         Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA)));
                                                 double distance = SphericalUtil.computeDistanceBetween(pos, partida);
-                                                marc.setEnUbicacion(distance < 30);
+                                                marc.setEnUbicacion(distance < DISTANCE);
                                                 marc.setFecha(Calendar.getInstance().getTime());
                                                 Marcacion.insert(getDataBase(), marc);
-                                                if (distance < 30) {
+                                                if (distance < DISTANCE) {
                                                     DiaLaboral dia = DiaLaboral.getDia(getDataBase(), Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1);
                                                     Calendar cal_hoy = Calendar.getInstance();
                                                     try {
@@ -470,5 +487,33 @@ public class MarcacionFragment extends BaseFragment {
         int horas = hoy.get(Calendar.HOUR_OF_DAY) - cal1.get(Calendar.HOUR_OF_DAY);
         int minutos = hoy.get(Calendar.MINUTE) - cal1.get(Calendar.MINUTE);
         return (horas * 60) + minutos;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId())
+        {
+            case R.id.action_syncronize:
+                showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait);
+                Bundle bundle = new Bundle();
+                bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_PENDIENTES_PERMISO);
+                requestSync(bundle);
+                break;
+            case R.id.action_justificacion_previa:
+                Intent intent = new Intent(this.getContext(), JustificacionPreviaActivity.class);
+                startActivity(intent);
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSyncComplete(Bundle data, MessageCollection messages) {
+        super.onSyncComplete(data, messages);
+        if(data.get(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_UPLOAD_PENDIENTES_PERMISO)) {
+            closeDialogProgress();
+            onResume();
+        }
     }
 }

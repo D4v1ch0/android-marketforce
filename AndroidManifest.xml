@@ -181,6 +181,7 @@
         <activity android:name=".cliente.ImportContactsActivity"></activity>
         <!-- Modulo Marcaciones -->
         <activity android:name=".marcaciones.MarcacionActivity"></activity>
+        <activity android:name=".marcaciones.JustificacionPreviaActivity"></activity>
         
     </application>
 

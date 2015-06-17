@@ -259,6 +259,12 @@
                     <webMethod>GET</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>
+                <method>
+                    <name>InsertPermisoPrevio</name>
+                    <action>marcacion/InsertPermisoPrevio</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
             </methods>     
         </webServiceData>
            <webServiceData>

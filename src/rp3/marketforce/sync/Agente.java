@@ -205,6 +205,8 @@ public class Agente {
 				PreferenceManager.setValue(Contants.KEY_ALARMA_FIN, Convert.getDateFromDotNetTicks(jObject.getLong(Contants.KEY_ALARMA_FIN)));
 				PreferenceManager.setValue(Contants.KEY_ALARMA_INTERVALO, jObject.getInt(Contants.KEY_ALARMA_INTERVALO));
 				PreferenceManager.setValue(Contants.KEY_PREFIJO_TELEFONICO, jObject.getString(Contants.KEY_PREFIJO_TELEFONICO));
+                if(!jObject.isNull(Contants.KEY_MARACIONES_DISTANCIA))
+                    PreferenceManager.setValue(Contants.KEY_MARACIONES_DISTANCIA, jObject.getDouble(Contants.KEY_MARACIONES_DISTANCIA) + "");
 			} catch (HttpResponseException e) {
 				if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
 					return SyncAdapter.SYNC_EVENT_AUTH_ERROR;

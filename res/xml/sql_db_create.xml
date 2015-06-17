@@ -291,4 +291,17 @@
         Observacion INTEGER
         )
     </statement>
+    <statement>
+        CREATE TABLE tbJustificacion(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdPermiso INTEGER,
+        Fecha INTEGER,
+        Tipo TEXT,
+        Observacion INTEGER,
+        Ausencia BOOLEAN,
+        Aprobado BOOLEAN,
+        Pendiente BOOLEAN,
+        Propia BOOLEAN
+        )
+    </statement>
 </sql>

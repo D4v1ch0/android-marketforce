@@ -579,4 +579,22 @@ public final class Contract {
         public static final String FIELD_FECHA = COLUMN_FECHA;
         public static final String FIELD_ID_MARCACION= COLUMN_ID_MARCACION;
     }
+
+    public static abstract class Justificaciones implements BaseColumns {
+
+        public static final String TABLE_NAME = "tbJustificacion";
+
+        public static final String COLUMN_TIPO = "Tipo";
+        public static final String COLUMN_FECHA = "Fecha";
+        public static final String COLUMN_OBSERVACION = "Observacion";
+        public static final String COLUMN_ID_PERMISO = "IdPermiso";
+        public static final String COLUMN_AUSENCIA = "Ausencia";
+        public static final String COLUMN_APROBADO = "Aprobado";
+        public static final String COLUMN_PENDIENTE = "Pendiente";
+        public static final String COLUMN_PROPIA = "Propia";
+
+        public static final String FIELD_TIPO = COLUMN_TIPO;
+        public static final String FIELD_OBSERVACION = COLUMN_OBSERVACION;
+        public static final String FIELD_FECHA = COLUMN_FECHA;
+    }
 }

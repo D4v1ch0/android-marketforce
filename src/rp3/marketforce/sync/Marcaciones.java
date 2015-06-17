@@ -19,6 +19,7 @@ import rp3.marketforce.Contants;
 import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.AgendaTareaActividades;
 import rp3.marketforce.models.DiaLaboral;
+import rp3.marketforce.models.marcacion.Justificacion;
 import rp3.marketforce.models.marcacion.Marcacion;
 import rp3.marketforce.models.marcacion.Permiso;
 import rp3.util.Convert;
@@ -48,6 +49,7 @@ public class Marcaciones {
                 fecha.set(Calendar.HOUR_OF_DAY, 0);
                 fecha.set(Calendar.MINUTE, 0);
                 fecha.set(Calendar.SECOND, 0);
+                fecha.set(Calendar.MILLISECOND, 0);
                 jObject.put("FechaTicks", Convert.getDotNetTicksFromDate(fecha.getTime()));
                 jObject.put("HoraInicioTicks", Convert.getDotNetTicksFromDate(marc.getHoraInicio()));
                 jObject.put("HoraFinTicks", Convert.getDotNetTicksFromDate(marc.getHoraFin()));
@@ -135,9 +137,11 @@ public class Marcaciones {
             try {
                 webService.invokeWebService();
                 JSONObject jObject = webService.getJSONObjectResponse();
-                PreferenceManager.setValue(Contants.KEY_APLICA_MARCACION, jObject.getBoolean(Contants.KEY_APLICA_MARCACION));
-                PreferenceManager.setValue(Contants.KEY_LONGITUD_PARTIDA, jObject.getDouble(Contants.KEY_LONGITUD_PARTIDA) + "");
-                PreferenceManager.setValue(Contants.KEY_LATITUD_PARTIDA, jObject.getDouble(Contants.KEY_LATITUD_PARTIDA) + "");
+                if(jObject != null && !jObject.isNull(Contants.KEY_LONGITUD_PARTIDA)) {
+                    PreferenceManager.setValue(Contants.KEY_APLICA_MARCACION, jObject.getBoolean(Contants.KEY_APLICA_MARCACION));
+                    PreferenceManager.setValue(Contants.KEY_LONGITUD_PARTIDA, jObject.getDouble(Contants.KEY_LONGITUD_PARTIDA) + "");
+                    PreferenceManager.setValue(Contants.KEY_LATITUD_PARTIDA, jObject.getDouble(Contants.KEY_LATITUD_PARTIDA) + "");
+                }
             } catch (HttpResponseException e) {
                 if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
                     return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
@@ -204,6 +208,63 @@ public class Marcaciones {
         return SyncAdapter.SYNC_EVENT_SUCCESS;
     }
 
+    public static int executeSyncPermisoPrevio(DataBase db) {
+        List<Justificacion> justificacions = Justificacion.getPermisosPendientesPropias(db);
+
+
+        for(Justificacion permiso : justificacions) {
+            WebService webService = new WebService("MartketForce", "InsertPermisoPrevio");
+            webService.setTimeOut(20000);
+
+            JSONObject jObject = new JSONObject();
+            try {
+
+                jObject.put("Motivo", permiso.getTipo());
+                jObject.put("MotivoTabla", Contants.GENERAL_TABLE_MOTIVO_PERMISO);
+                if(permiso.isAusencia())
+                    jObject.put("Tipo", "F");
+                else
+                    jObject.put("Tipo", "A");
+                jObject.put("TipoTabla", Contants.GENERAL_TABLE_TIPOS_PERMISO);
+                jObject.put("FechaFinTicks", Convert.getDotNetTicksFromDate(permiso.getFecha()));
+                jObject.put("HoraInicioTicks", Convert.getDotNetTicksFromDate(permiso.getFecha()));
+                jObject.put("HoraFinTicks", Convert.getDotNetTicksFromDate(permiso.getFecha()));
+                jObject.put("EsPrevio", true);
+                jObject.put("Estado", "P");
+                jObject.put("EstadoTabla", Contants.GENERAL_TABLE_ESTADO_PERMISO);
+                jObject.put("Observacion", permiso.getObservacion());
+                jObject.put("FechaInicioTicks", Convert.getDotNetTicksFromDate(permiso.getFecha()));
+
+            } catch (Exception ex) {
+
+            }
+
+            webService.addParameter("permiso", jObject);
+
+            try {
+                webService.addCurrentAuthToken();
+
+                try {
+                    webService.invokeWebService();
+                    permiso.setIdPermiso(webService.getIntegerResponse());
+                    permiso.setPendiente(false);
+                    Justificacion.update(db, permiso);
+                } catch (HttpResponseException e) {
+                    if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                        return rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                    return rp3.content.SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+                } catch (Exception e) {
+                    return rp3.content.SyncAdapter.SYNC_EVENT_ERROR;
+                }
+
+            } finally {
+                webService.close();
+            }
+        }
+
+        return SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
     public static int executeSyncPermisoHoy(DataBase db) {
         WebService webService = new WebService("MartketForce", "GetPermisoHoy");
         webService.setTimeOut(20000);
@@ -215,11 +276,11 @@ public class Marcaciones {
             try {
                 webService.invokeWebService();
                 JSONObject jsonObject = webService.getJSONObjectResponse();
-                if(!jsonObject.isNull("EsPrevio"))
+                if(jsonObject != null && !jsonObject.isNull("Tipo"))
                 {
                     Permiso permiso = new Permiso();
-                    permiso.setFecha(Convert.getDateFromDotNetTicks(jsonObject.getInt("FechaInicioTicks")));
-                    permiso.setIdMarcacion(1);
+                    permiso.setFecha(Convert.getDateFromDotNetTicks(jsonObject.getLong("FechaInicioTicks")));
+                    permiso.setIdPermiso(1);
                     permiso.setTipo("FALTA");
                     Permiso.insert(db, permiso);
                 }

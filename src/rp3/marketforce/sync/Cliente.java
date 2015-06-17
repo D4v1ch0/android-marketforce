@@ -112,7 +112,7 @@ public class Cliente {
                                 cl.setNombre2("");
 
                             cl.setFechaNacimiento(Convert.getDateFromDotNetTicks(type.getLong("FechaNacimientoTicks")));
-                            cl.setNombreCompleto(type.getString("NombresCompletos").trim());
+                            cl.setNombreCompleto(type.getString("NombresCompletos").trim().replace("null",""));
                             cl.setURLFoto(type.getString("Foto"));
                             cl.setTipoPersona(type.getString("TipoPersona"));
                             if(!type.isNull("ActividadEconomica"))

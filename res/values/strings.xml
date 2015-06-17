@@ -189,5 +189,10 @@
     <string name="message_fuera_posicion_agenda">Esta marcando fuera de la posición del cliente. Ingrese una justificación.</string>
     <string name="message_marcacion_agenda">Usted no tiene marcación para el inicio de jornada. Desea ingresar este inicio de visita como su inicio de jornada?</string>
     <string name="gcm_defaultSenderId">313284335192</string>
+    <string name="label_fecha_just">Fecha</string>
+    <string name="label_ausencia" />
+    <string name="label_ausencia_just">Ausencia</string>
+    <string name="label_atraso">Atraso</string>
+    <string name="label_justificaciones_previa">Permiso Previo</string>
 
 </resources>

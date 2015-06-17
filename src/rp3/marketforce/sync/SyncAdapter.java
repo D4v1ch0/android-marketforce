@@ -49,6 +49,8 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 
     public static String SYNC_TYPE_UPLOAD_MARCACION = "marcacion";
     public static String SYNC_TYPE_UPLOAD_PERMISO = "permiso";
+    public static String SYNC_TYPE_UPLOAD_PENDIENTES_PERMISO = "permiso_pendientes";
+    public static String SYNC_TYPE_PERMISO_PREVIO = "permiso_previo";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -162,6 +164,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         addDefaultMessage(result);
                     }
 
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = Marcaciones.executeSyncPermisoHoy(db);
+                        addDefaultMessage(result);
+                    }
+
 				/*
 				 * Se comenta carga de fotos ya que se la hara mediante un lazy loader.
 				 * Para esto se cargara tambien en el modelo Cliente la url de la foto para poder cargarla
@@ -229,6 +236,9 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     long cliente = extras.getLong(CrearClienteFragment.ARG_CLIENTE);
                     result = Cliente.executeSyncUpdateFull(db, cliente);
                     addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_PERMISO_PREVIO)) {
+                    result = Marcaciones.executeSyncPermisoPrevio(db);
+                    addDefaultMessage(result);
                 } else if (syncType.equals(SYNC_TYPE_ENVIAR_AGENDA)) {
                     int id = extras.getInt(RutasDetailFragment.ARG_AGENDA_ID);
                     result = Agenda.executeSync(db, id);
@@ -240,6 +250,15 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                 } else if (syncType.equals(SYNC_TYPE_INSERTAR_AGENDA)) {
                     long agenda = extras.getLong(CrearVisitaFragment.ARG_AGENDA);
                     result = Agenda.executeSyncInsert(db, agenda);
+                    addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_UPLOAD_PENDIENTES_PERMISO)) {
+                    result = Marcaciones.executeSync(db);
+                    addDefaultMessage(result);
+
+                    result = Marcaciones.executeSyncPermisoHoy(db);
+                    addDefaultMessage(result);
+
+                    result = Marcaciones.executeSyncPermisoPrevio(db);
                     addDefaultMessage(result);
                 } else if (syncType.equals(SYNC_TYPE_AGENDA_NO_VISITA)) {
                     int id = extras.getInt(MotivoNoVisitaFragment.ARG_AGENDA);
