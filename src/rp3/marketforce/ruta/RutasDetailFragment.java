@@ -765,8 +765,6 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                             JustificacionFragment fragment = new JustificacionFragment();
                             if (distance < 30) {
                                 DiaLaboral dia = DiaLaboral.getDia(getDataBase(), Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1);
-
-                                getRootView().findViewById(R.id.layout_inicio_jornada).setVisibility(View.GONE);
                                 Calendar cal_hoy = Calendar.getInstance();
                                 try {
                                     cal_hoy.setTime(format.parse(dia.getHoraInicio1().replace("h", ":")));
@@ -787,14 +785,25 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                                         Bundle bundle = new Bundle();
                                         bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
                                         requestSync(bundle);
+                                        Toast.makeText(getContext(), "Se ha iniciado la Jornada.", Toast.LENGTH_LONG).show();
                                     }
                                 } else {
-                                    getRootView().findViewById(R.id.layout_inicio_jornada).setVisibility(View.GONE);
                                     Bundle bundle = new Bundle();
                                     bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
                                     requestSync(bundle);
                                 }
                             } else {
+                                DiaLaboral dia = DiaLaboral.getDia(getDataBase(), Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1);
+                                Calendar cal_hoy = Calendar.getInstance();
+                                try {
+                                    cal_hoy.setTime(format.parse(dia.getHoraInicio1().replace("h", ":")));
+                                } catch (Exception ex) {
+                                }
+                                int atraso = CheckMinutes(cal_hoy);
+                                if(atraso > 0) {
+                                    marc.setMintutosAtraso(atraso);
+                                    Marcacion.update(getDataBase(), marc);
+                                }
                                 fragment.idMarcacion = marc.getID();
                                 showDialogFragment(fragment, "Justificacion");
                                 Toast.makeText(getContext(), R.string.message_fuera_posicion_agenda, Toast.LENGTH_LONG).show();

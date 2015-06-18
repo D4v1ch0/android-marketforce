@@ -112,8 +112,8 @@ public class Permiso extends EntityBase<Permiso>
 
     public static Permiso getPermisoMarcacion(DataBase db, long idMarcacion) {
         Cursor c = db.query(Contract.Permiso.TABLE_NAME, new String[]{Contract.Permiso._ID, Contract.Permiso.COLUMN_FECHA, Contract.Permiso.COLUMN_ID_PERMISO,
-                        Contract.Permiso.COLUMN_TIPO, Contract.Permiso.COLUMN_OBSERVACION, Contract.Permiso.COLUMN_ID_MARCACION}, Contract.Permiso.COLUMN_ID_MARCACION + " = ? ",
-                new String[]{idMarcacion + ""});
+                        Contract.Permiso.COLUMN_TIPO, Contract.Permiso.COLUMN_OBSERVACION, Contract.Permiso.COLUMN_ID_MARCACION}, Contract.Permiso.COLUMN_ID_MARCACION + " = ? AND "
+                + Contract.Permiso.COLUMN_TIPO + " <> 'FALTA' ", new String[]{idMarcacion + ""});
         Permiso permiso = null;
 
         if (c.moveToFirst()) {

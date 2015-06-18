@@ -50,7 +50,7 @@
                 android:id="@+id/justificacion_atraso"
                 android:layout_weight="1"
                 android:button="@drawable/custom_checkbox"
-                android:paddingLeft="10dp" />
+                android:paddingLeft="15dp" />
 
             <CheckBox
                 android:layout_width="0dp"
@@ -59,7 +59,7 @@
                 android:id="@+id/justificacion_ausencia"
                 android:layout_weight="1"
                 android:button="@drawable/custom_checkbox"
-                android:paddingLeft="10dp" />
+                android:paddingLeft="15dp" />
         </LinearLayout>
 
         <LinearLayout

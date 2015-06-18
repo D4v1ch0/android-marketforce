@@ -52,6 +52,7 @@ public class JustificacionPreviaFragment extends BaseFragment {
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
         setCalendar();
+        ((CheckBox)rootView.findViewById(R.id.justificacion_ausencia)).setChecked(true);
         SimpleGeneralValueAdapter valueAdapter = new SimpleGeneralValueAdapter(getContext(), getDataBase(), Contants.GENERAL_TABLE_MOTIVO_PERMISO);
         ((Spinner)rootView.findViewById(R.id.justificacion_spinner)).setAdapter(valueAdapter);
         rootView.findViewById(R.id.voice_to_text).setOnClickListener(new View.OnClickListener() {

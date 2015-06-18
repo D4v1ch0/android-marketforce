@@ -99,6 +99,7 @@ public class MarcacionFragment extends BaseFragment {
                                                     marc.setEnUbicacion(distance < DISTANCE);
                                                     marc.setFecha(Calendar.getInstance().getTime());
                                                     Marcacion.insert(getDataBase(), marc);
+                                                    Toast.makeText(getContext(), "Se ha iniciado la Jornada.", Toast.LENGTH_LONG).show();
                                                     if (distance < DISTANCE) {
                                                         DiaLaboral dia = DiaLaboral.getDia(getDataBase(), Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1);
                                                         if (dia.getHoraInicio2() != null)
@@ -134,6 +135,17 @@ public class MarcacionFragment extends BaseFragment {
                                                             requestSync(bundle);
                                                         }
                                                     } else {
+                                                        DiaLaboral dia = DiaLaboral.getDia(getDataBase(), Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1);
+                                                        Calendar cal_hoy = Calendar.getInstance();
+                                                        try {
+                                                            cal_hoy.setTime(format.parse(dia.getHoraInicio1().replace("h", ":")));
+                                                        } catch (Exception ex) {
+                                                        }
+                                                        int atraso = CheckMinutes(cal_hoy);
+                                                        if(atraso > 0) {
+                                                            marc.setMintutosAtraso(atraso);
+                                                            Marcacion.update(getDataBase(), marc);
+                                                        }
                                                         fragment.idMarcacion = marc.getID();
                                                         showDialogFragment(fragment, "Justificacion");
                                                         Toast.makeText(getContext(), "Esta marcando fuera de su punto de partida. Ingrese una justificación.", Toast.LENGTH_LONG).show();
@@ -284,6 +296,7 @@ public class MarcacionFragment extends BaseFragment {
                                                 marc.setEnUbicacion(distance < DISTANCE);
                                                 marc.setFecha(Calendar.getInstance().getTime());
                                                 Marcacion.insert(getDataBase(), marc);
+                                                Toast.makeText(getContext(), "Se ha iniciado el break.", Toast.LENGTH_LONG).show();
                                                 if (distance < DISTANCE) {
                                                     getRootView().findViewById(R.id.layout_break).setVisibility(View.GONE);
                                                     SetButtonFinBreak();
@@ -356,6 +369,7 @@ public class MarcacionFragment extends BaseFragment {
                                                 marc.setEnUbicacion(distance < DISTANCE);
                                                 marc.setFecha(Calendar.getInstance().getTime());
                                                 Marcacion.insert(getDataBase(), marc);
+                                                Toast.makeText(getContext(), "Se ha terminado el break.", Toast.LENGTH_LONG).show();
                                                 if (distance < DISTANCE) {
                                                     getRootView().findViewById(R.id.layout_fin_break).setVisibility(View.GONE);
                                                     Bundle bundle = new Bundle();
@@ -427,11 +441,15 @@ public class MarcacionFragment extends BaseFragment {
                                                 marc.setEnUbicacion(distance < DISTANCE);
                                                 marc.setFecha(Calendar.getInstance().getTime());
                                                 Marcacion.insert(getDataBase(), marc);
+                                                Toast.makeText(getContext(), "Se ha finalizado la Jornada.", Toast.LENGTH_LONG).show();
                                                 if (distance < DISTANCE) {
                                                     DiaLaboral dia = DiaLaboral.getDia(getDataBase(), Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1);
                                                     Calendar cal_hoy = Calendar.getInstance();
                                                     try {
-                                                        cal_hoy.setTime(format.parse(dia.getHoraInicio1().replace("h",":")));
+                                                        if(dia.getHoraFin2() == null)
+                                                            cal_hoy.setTime(format.parse(dia.getHoraFin1().replace("h",":")));
+                                                        else
+                                                            cal_hoy.setTime(format.parse(dia.getHoraFin2().replace("h",":")));
                                                     }
                                                     catch (Exception ex)
                                                     {}

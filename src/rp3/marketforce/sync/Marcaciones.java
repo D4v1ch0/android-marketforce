@@ -51,8 +51,8 @@ public class Marcaciones {
                 fecha.set(Calendar.SECOND, 0);
                 fecha.set(Calendar.MILLISECOND, 0);
                 jObject.put("FechaTicks", Convert.getDotNetTicksFromDate(fecha.getTime()));
-                jObject.put("HoraInicioTicks", Convert.getDotNetTicksFromDate(marc.getHoraInicio()));
-                jObject.put("HoraFinTicks", Convert.getDotNetTicksFromDate(marc.getHoraFin()));
+                jObject.put("HoraInicioTicks", Convert.getDotNetTicksFromDate(marc.getFecha()));
+                jObject.put("HoraFinTicks", Convert.getDotNetTicksFromDate(marc.getFecha()));
                 Calendar hoy = Calendar.getInstance();
                 if(marc.getTipo().equalsIgnoreCase("J1") || marc.getTipo().equalsIgnoreCase("J2") || dia.getHoraFin2() == null) {
                     hoy.setTime(format.parse(dia.getHoraInicio1().replace("h",":")));
