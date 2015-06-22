@@ -51,6 +51,8 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
     public static String SYNC_TYPE_UPLOAD_PERMISO = "permiso";
     public static String SYNC_TYPE_UPLOAD_PENDIENTES_PERMISO = "permiso_pendientes";
     public static String SYNC_TYPE_PERMISO_PREVIO = "permiso_previo";
+    public static String SYNC_TYPE_JUSTIFICACIONES = "justificaciones";
+    public static String SYNC_TYPE_JUSTIFICACIONES_UPLOAD = "justificaciones_upload";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -110,6 +112,9 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         addDefaultMessage(result);
 
                         result = rp3.marketforce.sync.Agente.executeSyncGetUbicaciones(db);
+                        addDefaultMessage(result);
+
+                        result = rp3.marketforce.sync.Marcaciones.executeSyncPermisosPorAprobar(db);
                         addDefaultMessage(result);
                     }
 
@@ -238,6 +243,16 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     addDefaultMessage(result);
                 } else if (syncType.equals(SYNC_TYPE_PERMISO_PREVIO)) {
                     result = Marcaciones.executeSyncPermisoPrevio(db);
+                    addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_JUSTIFICACIONES)) {
+
+                    result = Marcaciones.executeSyncPermisosRevisados(db);
+                    addDefaultMessage(result);
+                    result = Marcaciones.executeSyncPermisosPorAprobar(db);
+                    addDefaultMessage(result);
+
+                } else if (syncType.equals(SYNC_TYPE_JUSTIFICACIONES_UPLOAD)) {
+                    result = Marcaciones.executeSyncPermisosRevisados(db);
                     addDefaultMessage(result);
                 } else if (syncType.equals(SYNC_TYPE_ENVIAR_AGENDA)) {
                     int id = extras.getInt(RutasDetailFragment.ARG_AGENDA_ID);
@@ -394,6 +409,9 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 
                     if (result == SYNC_EVENT_SUCCESS && PreferenceManager.getBoolean(Contants.KEY_ES_SUPERVISOR)) {
                         result = rp3.marketforce.sync.Agente.executeSyncGetAgente(db);
+                        addDefaultMessage(result);
+
+                        result = rp3.marketforce.sync.Marcaciones.executeSyncPermisosPorAprobar(db);
                         addDefaultMessage(result);
                     }
 

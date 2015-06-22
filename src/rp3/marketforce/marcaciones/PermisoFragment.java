@@ -2,6 +2,7 @@ package rp3.marketforce.marcaciones;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -9,7 +10,9 @@ import android.view.ViewGroup;
 
 import rp3.app.BaseFragment;
 import rp3.marketforce.R;
+import rp3.marketforce.models.marcacion.Justificacion;
 import rp3.marketforce.models.marcacion.Permiso;
+import rp3.marketforce.ruta.ObservacionesFragment;
 import rp3.widget.SlidingPaneLayout;
 
 /**
@@ -108,6 +111,9 @@ public class PermisoFragment extends BaseFragment implements PermisoListFragment
 //			}
 //		}
     }
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+         transactionDetailFragment.onActivityResult(requestCode, resultCode, data);
+    }
 
     @Override
     public void onStart() {
@@ -126,7 +132,7 @@ public class PermisoFragment extends BaseFragment implements PermisoListFragment
     }
 
     @Override
-    public void onPermisoSelected(Permiso permiso) {
+    public void onPermisoSelected(Justificacion permiso) {
         selectedClientId = permiso.getID();
 
         if(!mTwoPane) {

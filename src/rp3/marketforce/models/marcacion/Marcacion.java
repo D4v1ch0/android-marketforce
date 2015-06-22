@@ -196,7 +196,7 @@ public class Marcacion extends EntityBase<Marcacion>
     {
         Cursor c = db.query(Contract.Marcacion.TABLE_NAME, new String[]{Contract.Marcacion._ID, Contract.Marcacion.COLUMN_EN_UBICACION, Contract.Marcacion.COLUMN_FECHA,
                 Contract.Marcacion.COLUMN_TIPO, Contract.Marcacion.COLUMN_LATITUD, Contract.Marcacion.COLUMN_LONGITUD, Contract.Marcacion.COLUMN_HORA_INICIO,
-                Contract.Marcacion.COLUMN_HORA_FIN, Contract.Marcacion.COLUMN_PENDIENTE, Contract.Marcacion.COLUMN_MINUTOS_ATRASO});
+                Contract.Marcacion.COLUMN_HORA_FIN, Contract.Marcacion.COLUMN_PENDIENTE, Contract.Marcacion.COLUMN_MINUTOS_ATRASO},null,null,null,null, Contract.Marcacion.COLUMN_FECHA);
         List<Marcacion> marcaciones = new ArrayList<Marcacion>();
 
         if(c.moveToFirst())

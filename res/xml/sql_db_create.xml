@@ -298,9 +298,10 @@
         IdAgente INTEGER,
         Fecha INTEGER,
         Tipo TEXT,
-        Observacion INTEGER,
+        Observacion TEXT,
+        ObservacionSupervisor TEXT,
         Ausencia BOOLEAN,
-        Aprobado BOOLEAN,
+        Estado TEXT,
         Pendiente BOOLEAN,
         Propia BOOLEAN
         )

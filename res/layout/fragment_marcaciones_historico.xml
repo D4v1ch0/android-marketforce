@@ -147,6 +147,62 @@
             android:layout_marginTop="2dp"
             android:layout_marginBottom="2dp"></LinearLayout>
 
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/label_fecha_just"
+                android:id="@+id/textView34"
+                android:textSize="@dimen/text_small_size"
+                android:layout_weight="0.5"
+                android:textColor="@color/color_text_sky_blue"
+                android:textStyle="bold"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/label_primera_jornada"
+                android:id="@+id/textView35"
+                android:textSize="@dimen/text_small_size"
+                android:layout_weight="0.65"
+                android:textColor="@color/color_text_sky_blue"
+                android:textStyle="bold"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/label_segunda_jornada"
+                android:id="@+id/textView36"
+                android:textSize="@dimen/text_small_size"
+                android:layout_weight="0.65"
+                android:textColor="@color/color_text_sky_blue"
+                android:textStyle="bold"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/label_atraso"
+                android:id="@+id/textView37"
+                android:textSize="@dimen/text_small_size"
+                android:layout_weight="0.3"
+                android:textColor="@color/color_text_sky_blue"
+                android:textStyle="bold"
+                android:gravity="center" />
+
+        </LinearLayout>
+
         <ListView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

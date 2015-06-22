@@ -16,6 +16,7 @@ import rp3.content.*;
 import rp3.content.SyncAdapter;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
+import rp3.marketforce.db.Contract;
 import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.AgendaTareaActividades;
 import rp3.marketforce.models.DiaLaboral;
@@ -294,6 +295,89 @@ public class Marcaciones {
 
         } finally {
             webService.close();
+        }
+
+        return SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
+    public static int executeSyncPermisosPorAprobar(DataBase db) {
+        WebService webService = new WebService("MartketForce", "GerPermisosAprobar");
+        webService.setTimeOut(20000);
+        webService.addCurrentAuthToken();
+
+        try {
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+                Justificacion.deleteAll(db, Contract.Justificaciones.TABLE_NAME);
+                JSONArray jsonArray = webService.getJSONArrayResponse();
+                for(int i = 0; i < jsonArray.length(); i ++)
+                {
+                    JSONObject jObject = jsonArray.getJSONObject(i);
+                    Justificacion justificacion = new Justificacion();
+                    justificacion.setIdPermiso(jObject.getInt("IdPermiso"));
+                    justificacion.setIdAgente(jObject.getInt("IdAgente"));
+                    justificacion.setFecha(Convert.getDateFromDotNetTicks(jObject.getLong("FechaInicioTicks")));
+                    justificacion.setTipo(jObject.getString("Motivo"));
+                    justificacion.setAusencia(jObject.getString("Tipo").equalsIgnoreCase("F"));
+                    justificacion.setObservacion(jObject.getString("Observacion"));
+                    justificacion.setEstado("P");
+                    Justificacion.insert(db, justificacion);
+                }
+
+            } catch (HttpResponseException e) {
+                if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return rp3.content.SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return rp3.content.SyncAdapter.SYNC_EVENT_ERROR;
+            }
+
+        } finally {
+            webService.close();
+        }
+
+        return SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
+    public static int executeSyncPermisosRevisados(DataBase db) {
+        List<Justificacion> justificacions = Justificacion.getPermisosPendientesAprobarUpload(db);
+
+
+        for(Justificacion permiso : justificacions) {
+            WebService webService = new WebService("MartketForce", "InsertPermisoPorAprobar");
+            webService.setTimeOut(20000);
+
+            JSONObject jObject = new JSONObject();
+            try {
+                jObject.put("IdPermiso", permiso.getIdPermiso());
+                jObject.put("Estado", permiso.getEstado());
+                jObject.put("ObservacionSupervisor", permiso.getObservacionSupervisor());
+            } catch (Exception ex) {
+
+            }
+
+            webService.addParameter("permiso", jObject);
+
+            try {
+                webService.addCurrentAuthToken();
+
+                try {
+                    webService.invokeWebService();
+                    permiso.setPendiente(false);
+                    Justificacion.update(db, permiso);
+                } catch (HttpResponseException e) {
+                    if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                        return rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                    return rp3.content.SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+                } catch (Exception e) {
+                    return rp3.content.SyncAdapter.SYNC_EVENT_ERROR;
+                }
+
+            } finally {
+                webService.close();
+            }
         }
 
         return SyncAdapter.SYNC_EVENT_SUCCESS;

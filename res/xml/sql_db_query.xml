@@ -1069,11 +1069,30 @@
         tbJustificacion.Tipo,
         tbJustificacion.Observacion,
         tbJustificacion.Ausencia,
-        tbJustificacion.Aprobado,
-        tbAgentesUbicacion.Nombres
+        tbJustificacion.Estado,
+        tbAgentesUbicacion.Nombres || ' ' || tbAgentesUbicacion.Apellidos AS Nombres
         FROM  tbJustificacion
         JOIN tbAgentesUbicacion ON tbAgentesUbicacion.IdAgente
-        AND tbJustificacion.IdAgente
-        WHERE Aprobado = 1 AND Propia = 0 AND Pendiente = 1
+        = tbJustificacion.IdAgente
+        WHERE Estado = 'P' AND Propia = 0 AND Pendiente = 0
+    </statement>
+    <statement name="PermisoPorAgente">
+        SELECT
+        tbJustificacion._id,
+        tbJustificacion.IdPermiso,
+        tbJustificacion.IdAgente,
+        tbJustificacion.Fecha,
+        tbJustificacion.Tipo,
+        tbJustificacion.Observacion,
+        tbJustificacion.Ausencia,
+        tbJustificacion.Estado,
+        tbJustificacion.ObservacionSupervisor,
+        tbJustificacion.Pendiente,
+        tbJustificacion.Propia,
+        tbAgentesUbicacion.Nombres || ' ' || tbAgentesUbicacion.Apellidos AS Nombres
+        FROM  tbJustificacion
+        JOIN tbAgentesUbicacion ON tbAgentesUbicacion.IdAgente
+        = tbJustificacion.IdAgente
+        WHERE tbJustificacion._id = ?
     </statement>
 </sql>

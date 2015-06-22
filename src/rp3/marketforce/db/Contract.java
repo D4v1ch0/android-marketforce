@@ -587,10 +587,11 @@ public final class Contract {
         public static final String COLUMN_TIPO = "Tipo";
         public static final String COLUMN_FECHA = "Fecha";
         public static final String COLUMN_OBSERVACION = "Observacion";
+        public static final String COLUMN_OBSERVACION_SUPERVISOR = "ObservacionSupervisor";
         public static final String COLUMN_ID_AGENTE = "IdAgente";
         public static final String COLUMN_ID_PERMISO = "IdPermiso";
         public static final String COLUMN_AUSENCIA = "Ausencia";
-        public static final String COLUMN_APROBADO = "Aprobado";
+        public static final String COLUMN_ESTADO = "Estado";
         public static final String COLUMN_PENDIENTE = "Pendiente";
         public static final String COLUMN_PROPIA = "Propia";
 
@@ -599,5 +600,6 @@ public final class Contract {
         public static final String FIELD_FECHA = COLUMN_FECHA;
 
         public static final String QUERY_PERMISOS_POR_APROBAR = "PermisosAgentes";
+        public static final String QUERY_PERMISO_POR_AGENTE = "PermisoPorAgente";
     }
 }

@@ -73,7 +73,7 @@ public class MarcacionFragment extends BaseFragment {
         ((ImageView) getRootView().findViewById(R.id.point_hoy)).setImageResource(R.drawable.circle_reprogramed);
         ((ImageView) getRootView().findViewById(R.id.point_semana)).setImageResource(R.drawable.circle_shape);
 
-        List<Marcacion> marcacionList = Marcacion.getMarcaciones(getDataBase());
+        List<DiaMarcacion> marcacionList = getDiasMarcaciones();
         if(marcacionList.size() > 0) {
             MarcacionAdapter adapter = new MarcacionAdapter(this.getContext(), marcacionList);
             ((ListView) historico.findViewById(R.id.list_marcaciones)).setAdapter(adapter);
@@ -268,6 +268,50 @@ public class MarcacionFragment extends BaseFragment {
             marcaciones.findViewById(R.id.layout_break).setVisibility(View.GONE);
             marcaciones.findViewById(R.id.marcacion_justificar).setVisibility(View.GONE);
         }
+    }
+
+    private List<DiaMarcacion> getDiasMarcaciones() {
+        SimpleDateFormat formatFecha = new SimpleDateFormat("EEEE");
+        format5 = new SimpleDateFormat("dd/MM/yy");
+        List<DiaMarcacion> list = new ArrayList<DiaMarcacion>();
+        List<Marcacion> marcaciones = Marcacion.getMarcaciones(getDataBase());
+        DiaMarcacion dia = new DiaMarcacion();
+        Calendar cal = null;
+        for(int i = 0; i < marcaciones.size(); i ++ )
+        {
+            Marcacion setter = marcaciones.get(i);
+            if(cal == null) {
+                cal = Calendar.getInstance();
+                cal.setTime(setter.getFecha());
+            }
+
+            Calendar hoy = Calendar.getInstance();
+            hoy.setTime(setter.getFecha());
+            if(cal.get(Calendar.DAY_OF_YEAR) != hoy.get(Calendar.DAY_OF_YEAR))
+            {
+                list.add(dia);
+                dia = new DiaMarcacion();
+            }
+            if(dia.dia == null)
+            {
+                dia.dia = formatFecha.format(setter.getFecha()).substring(0, 2).toUpperCase();
+                dia.fecha = format5.format(setter.getFecha());
+            }
+
+            if(setter.getTipo().equals("J1"))
+                dia.inicio_jornada1 = format.format(setter.getFecha());
+            if(setter.getTipo().equals("J2"))
+                dia.fin_jornada1 = format.format(setter.getFecha());
+            if(setter.getTipo().equals("J3"))
+                dia.inicio_jornada2 = format.format(setter.getFecha());
+            if(setter.getTipo().equals("J4"))
+                dia.fin_jornada2 = format.format(setter.getFecha());
+
+            if(setter.getMintutosAtraso() > 0)
+                dia.atraso = true;
+        }
+        list.add(dia);
+        return list;
     }
 
     @Override
@@ -600,5 +644,16 @@ public class MarcacionFragment extends BaseFragment {
             closeDialogProgress();
             onResume();
         }
+    }
+
+    public class DiaMarcacion
+    {
+        public String dia;
+        public String fecha;
+        public String inicio_jornada1;
+        public String fin_jornada1;
+        public String inicio_jornada2;
+        public String fin_jornada2;
+        public boolean atraso;
     }
 }

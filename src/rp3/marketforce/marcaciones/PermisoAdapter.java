@@ -55,17 +55,13 @@ public class PermisoAdapter extends BaseAdapter {
         convertView = (View) inflater.inflate(this.context.getApplicationContext().getResources().getLayout(R.layout.rowlist_permiso), null);
 
         Justificacion setter = permisos.get(position);
-        ((TextView) convertView.findViewById(R.id.marcacion_minutos)).setText(setter.getMintutosAtraso() + "");
-        ((TextView) convertView.findViewById(R.id.marcacion_fecha)).setText(format4.format(setter.getFecha()));
-        ((TextView) convertView.findViewById(R.id.marcacion_hora)).setText(format5.format(setter.getFecha()));
-        if(setter.getTipo().equals("J1"))
-            ((TextView) convertView.findViewById(R.id.marcacion_jornada)).setText("Inicio Jornada");
-        if(setter.getTipo().equals("J2"))
-            ((TextView) convertView.findViewById(R.id.marcacion_jornada)).setText("Break");
-        if(setter.getTipo().equals("J3"))
-            ((TextView) convertView.findViewById(R.id.marcacion_jornada)).setText("Fin Break");
-        if(setter.getTipo().equals("J4"))
-            ((TextView) convertView.findViewById(R.id.marcacion_jornada)).setText("Fin Jornada");
+        ((TextView) convertView.findViewById(R.id.permiso_agente)).setText(setter.getAgente());
+        if(setter.isAusencia())
+            ((TextView) convertView.findViewById(R.id.permiso_atraso)).setText(R.string.label_ausencia_just);
+        else
+            ((TextView) convertView.findViewById(R.id.permiso_atraso)).setText(R.string.label_atraso);
+        ((TextView) convertView.findViewById(R.id.permiso_motivo)).setText(setter.getTipoDescripcion());
+        ((TextView) convertView.findViewById(R.id.permiso_fecha)).setText(format5.format(setter.getFecha()));
 
         return convertView;
     }

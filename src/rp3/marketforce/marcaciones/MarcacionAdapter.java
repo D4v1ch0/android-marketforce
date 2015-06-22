@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -22,9 +23,9 @@ public class MarcacionAdapter extends BaseAdapter {
     private SimpleDateFormat format5, format4;
     private Context context;
     private LayoutInflater inflater;
-    private List<Marcacion> marcaciones;
+    private List<MarcacionFragment.DiaMarcacion> marcaciones;
 
-    public MarcacionAdapter(Context context, List<Marcacion> marcaciones)
+    public MarcacionAdapter(Context context, List<MarcacionFragment.DiaMarcacion> marcaciones)
     {
         this.context = context;
         this.inflater = LayoutInflater.from(context);
@@ -39,7 +40,7 @@ public class MarcacionAdapter extends BaseAdapter {
     }
 
     @Override
-    public Marcacion getItem(int position) {
+    public MarcacionFragment.DiaMarcacion getItem(int position) {
         return marcaciones.get(position);
     }
 
@@ -54,18 +55,22 @@ public class MarcacionAdapter extends BaseAdapter {
 
         convertView = (View) inflater.inflate(this.context.getApplicationContext().getResources().getLayout(R.layout.rowlist_marcaciones), null);
 
-        Marcacion setter = marcaciones.get(position);
-        ((TextView) convertView.findViewById(R.id.marcacion_minutos)).setText(setter.getMintutosAtraso() + "");
-        ((TextView) convertView.findViewById(R.id.marcacion_fecha)).setText(format4.format(setter.getFecha()));
-        ((TextView) convertView.findViewById(R.id.marcacion_hora)).setText(format5.format(setter.getFecha()));
-        if(setter.getTipo().equals("J1"))
-            ((TextView) convertView.findViewById(R.id.marcacion_jornada)).setText("Inicio Jornada");
-        if(setter.getTipo().equals("J2"))
-            ((TextView) convertView.findViewById(R.id.marcacion_jornada)).setText("Break");
-        if(setter.getTipo().equals("J3"))
-            ((TextView) convertView.findViewById(R.id.marcacion_jornada)).setText("Fin Break");
-        if(setter.getTipo().equals("J4"))
-            ((TextView) convertView.findViewById(R.id.marcacion_jornada)).setText("Fin Jornada");
+        MarcacionFragment.DiaMarcacion setter = marcaciones.get(position);
+        ((TextView) convertView.findViewById(R.id.marcacion_dia)).setText(setter.dia);
+        ((TextView) convertView.findViewById(R.id.marcacion_fecha)).setText(setter.fecha);
+        if(setter.inicio_jornada1 != null)
+            ((TextView) convertView.findViewById(R.id.marcacion_ini_jor1)).setText(setter.inicio_jornada1);
+        if(setter.inicio_jornada2 != null)
+            ((TextView) convertView.findViewById(R.id.marcacion_ini_for2)).setText(setter.inicio_jornada2);
+        if(setter.fin_jornada1 != null)
+            ((TextView) convertView.findViewById(R.id.marcacion_fin_jor1)).setText(setter.fin_jornada1);
+        if(setter.fin_jornada2 != null)
+            ((TextView) convertView.findViewById(R.id.marcacion_fin_jor2)).setText(setter.fin_jornada2);
+
+        if(setter.atraso)
+            ((ImageView) convertView.findViewById(R.id.marcacion_atraso)).setImageResource(R.drawable.circle_unvisited);
+        else
+            ((ImageView) convertView.findViewById(R.id.marcacion_atraso)).setImageResource(R.drawable.circle_visited);
 
         return convertView;
     }
