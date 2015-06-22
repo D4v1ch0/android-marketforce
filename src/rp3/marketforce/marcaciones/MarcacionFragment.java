@@ -5,9 +5,14 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,7 +21,9 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import rp3.app.BaseActivity;
 import rp3.app.BaseFragment;
@@ -29,6 +36,7 @@ import rp3.marketforce.models.DiaLaboral;
 import rp3.marketforce.models.marcacion.Marcacion;
 import rp3.marketforce.models.marcacion.Permiso;
 import rp3.marketforce.sync.SyncAdapter;
+import rp3.marketforce.utils.DetailsPageAdapter;
 import rp3.util.GooglePlayServicesUtils;
 import rp3.util.LocationUtils;
 import rp3.widget.DigitalClock;
@@ -45,6 +53,9 @@ public class MarcacionFragment extends BaseFragment {
     JustificacionFragment fragment;
     private SimpleDateFormat format1, format2, format3, format4, format5;
     DateFormat format;
+    private ViewPager PagerDetalles;
+    private DetailsPageAdapter pagerAdapter;
+    private FrameLayout marcaciones, historico;
 
     public static MarcacionFragment newInstance() {
         return new MarcacionFragment();
@@ -53,18 +64,64 @@ public class MarcacionFragment extends BaseFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        setContentView(R.layout.fragment_marcacion, R.menu.fragment_marcaciones_menu);
+        setContentView(R.layout.fragment_marcacion_pager, R.menu.fragment_marcaciones_menu);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        ((DigitalClock) getRootView().findViewById(R.id.digitalClock)).setCalendar(Calendar.getInstance());
+        ((ImageView) getRootView().findViewById(R.id.point_hoy)).setImageResource(R.drawable.circle_reprogramed);
+        ((ImageView) getRootView().findViewById(R.id.point_semana)).setImageResource(R.drawable.circle_shape);
+
+        List<Marcacion> marcacionList = Marcacion.getMarcaciones(getDataBase());
+        if(marcacionList.size() > 0) {
+            MarcacionAdapter adapter = new MarcacionAdapter(this.getContext(), marcacionList);
+            ((ListView) historico.findViewById(R.id.list_marcaciones)).setAdapter(adapter);
+            historico.findViewById(R.id.historico_empty).setVisibility(View.GONE);
+        }
+        else
+        {
+            historico.findViewById(R.id.list_marcaciones).setVisibility(View.GONE);
+        }
+
+        PagerDetalles = (ViewPager) getRootView().findViewById(R.id.dashboard_graphics_pager);
+        pagerAdapter = new DetailsPageAdapter();
+        pagerAdapter.addView(marcaciones);
+        pagerAdapter.addView(historico);
+        PagerDetalles.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position)
+                {
+                    case 0:
+                        ((ImageView) getRootView().findViewById(R.id.point_hoy)).setImageResource(R.drawable.circle_reprogramed);
+                        ((ImageView) getRootView().findViewById(R.id.point_semana)).setImageResource(R.drawable.circle_shape);
+                        break;
+                    case 1:
+                        ((ImageView) getRootView().findViewById(R.id.point_semana)).setImageResource(R.drawable.circle_reprogramed);
+                        ((ImageView) getRootView().findViewById(R.id.point_hoy)).setImageResource(R.drawable.circle_shape);
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        PagerDetalles.setAdapter(pagerAdapter);
+        PagerDetalles.setCurrentItem(0);
+        ((DigitalClock) marcaciones.findViewById(R.id.digitalClock)).setCalendar(Calendar.getInstance());
         DISTANCE = Double.parseDouble(PreferenceManager.getString(Contants.KEY_MARACIONES_DISTANCIA));
         Permiso ausencia = Permiso.getAusencia(getDataBase());
         if(ausencia == null) {
-            ((DonutProgress) getRootView().findViewById(R.id.donut_inicio_jornada)).setMax(PRESS_TIME);
-            getRootView().findViewById(R.id.button_inicio_jornada).setOnTouchListener(new View.OnTouchListener() {
+            ((DonutProgress) marcaciones.findViewById(R.id.donut_inicio_jornada)).setMax(PRESS_TIME);
+            marcaciones.findViewById(R.id.button_inicio_jornada).setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
                     if (MotionEvent.ACTION_DOWN == motionEvent.getAction()) {
@@ -72,12 +129,12 @@ public class MarcacionFragment extends BaseFragment {
 
                             @Override
                             public void onTick(long l) {
-                                ((DonutProgress) getRootView().findViewById(R.id.donut_inicio_jornada)).setProgress((int) (PRESS_TIME - l));
+                                ((DonutProgress) marcaciones.findViewById(R.id.donut_inicio_jornada)).setProgress((int) (PRESS_TIME - l));
                             }
 
                             @Override
                             public void onFinish() {
-                                ((DonutProgress) getRootView().findViewById(R.id.donut_inicio_jornada)).setProgress(PRESS_TIME);
+                                ((DonutProgress) marcaciones.findViewById(R.id.donut_inicio_jornada)).setProgress(PRESS_TIME);
                                 final Marcacion marc = new Marcacion();
                                 marc.setTipo("J1"); //falta tipo
                                 marc.setPendiente(true);
@@ -105,7 +162,7 @@ public class MarcacionFragment extends BaseFragment {
                                                         if (dia.getHoraInicio2() != null)
                                                             SetButtonBreak();
                                                         SetButtonFinJornada();
-                                                        getRootView().findViewById(R.id.layout_inicio_jornada).setVisibility(View.GONE);
+                                                        marcaciones.findViewById(R.id.layout_inicio_jornada).setVisibility(View.GONE);
                                                         Calendar cal_hoy = Calendar.getInstance();
                                                         try {
                                                             cal_hoy.setTime(format.parse(dia.getHoraInicio1().replace("h", ":")));
@@ -128,7 +185,7 @@ public class MarcacionFragment extends BaseFragment {
                                                                 requestSync(bundle);
                                                             }
                                                         } else {
-                                                            getRootView().findViewById(R.id.layout_inicio_jornada).setVisibility(View.GONE);
+                                                            marcaciones.findViewById(R.id.layout_inicio_jornada).setVisibility(View.GONE);
                                                             SetButtonFinJornada();
                                                             Bundle bundle = new Bundle();
                                                             bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
@@ -166,7 +223,7 @@ public class MarcacionFragment extends BaseFragment {
                     }
                     if (MotionEvent.ACTION_UP == motionEvent.getAction()) {
                         count.cancel();
-                        ((DonutProgress) getRootView().findViewById(R.id.donut_inicio_jornada)).setProgress(0);
+                        ((DonutProgress) marcaciones.findViewById(R.id.donut_inicio_jornada)).setProgress(0);
                     }
                     return false;
                 }
@@ -180,36 +237,36 @@ public class MarcacionFragment extends BaseFragment {
                 dia_marcacion.setTime(ultimaMarcacion.getFecha());
                 if (dia_hoy.get(Calendar.DAY_OF_YEAR) == dia_marcacion.get(Calendar.DAY_OF_YEAR)) {
                     if (ultimaMarcacion.getTipo().equalsIgnoreCase("J1")) {
-                        getRootView().findViewById(R.id.layout_inicio_jornada).setVisibility(View.GONE);
+                        marcaciones.findViewById(R.id.layout_inicio_jornada).setVisibility(View.GONE);
                         if (dia_laboral.getHoraInicio2() != null)
                             SetButtonBreak();
                         SetButtonFinJornada();
                     } else if (ultimaMarcacion.getTipo().equalsIgnoreCase("J2")) {
-                        getRootView().findViewById(R.id.layout_inicio_jornada).setVisibility(View.GONE);
-                        getRootView().findViewById(R.id.layout_break).setVisibility(View.GONE);
-                        getRootView().findViewById(R.id.layout_fin_jornada).setVisibility(View.VISIBLE);
+                        marcaciones.findViewById(R.id.layout_inicio_jornada).setVisibility(View.GONE);
+                        marcaciones.findViewById(R.id.layout_break).setVisibility(View.GONE);
+                        marcaciones.findViewById(R.id.layout_fin_jornada).setVisibility(View.VISIBLE);
                         SetButtonFinBreak();
                     } else if (ultimaMarcacion.getTipo().equalsIgnoreCase("J3")) {
-                        getRootView().findViewById(R.id.layout_inicio_jornada).setVisibility(View.GONE);
-                        getRootView().findViewById(R.id.layout_fin_break).setVisibility(View.GONE);
+                        marcaciones.findViewById(R.id.layout_inicio_jornada).setVisibility(View.GONE);
+                        marcaciones.findViewById(R.id.layout_fin_break).setVisibility(View.GONE);
                         SetButtonFinJornada();
                     } else if (ultimaMarcacion.getTipo().equalsIgnoreCase("J4")) {
-                        getRootView().findViewById(R.id.layout_inicio_jornada).setVisibility(View.GONE);
-                        getRootView().findViewById(R.id.layout_fin_jornada).setVisibility(View.GONE);
-                        getRootView().findViewById(R.id.layout_fin_break).setVisibility(View.GONE);
-                        getRootView().findViewById(R.id.layout_break).setVisibility(View.GONE);
-                        getRootView().findViewById(R.id.marcacion_justificar).setVisibility(View.GONE);
+                        marcaciones.findViewById(R.id.layout_inicio_jornada).setVisibility(View.GONE);
+                        marcaciones.findViewById(R.id.layout_fin_jornada).setVisibility(View.GONE);
+                        marcaciones.findViewById(R.id.layout_fin_break).setVisibility(View.GONE);
+                        marcaciones.findViewById(R.id.layout_break).setVisibility(View.GONE);
+                        marcaciones.findViewById(R.id.marcacion_justificar).setVisibility(View.GONE);
                     }
                 }
             }
         }
         else
         {
-            getRootView().findViewById(R.id.layout_inicio_jornada).setVisibility(View.GONE);
-            getRootView().findViewById(R.id.layout_fin_jornada).setVisibility(View.GONE);
-            getRootView().findViewById(R.id.layout_fin_break).setVisibility(View.GONE);
-            getRootView().findViewById(R.id.layout_break).setVisibility(View.GONE);
-            getRootView().findViewById(R.id.marcacion_justificar).setVisibility(View.GONE);
+            marcaciones.findViewById(R.id.layout_inicio_jornada).setVisibility(View.GONE);
+            marcaciones.findViewById(R.id.layout_fin_jornada).setVisibility(View.GONE);
+            marcaciones.findViewById(R.id.layout_fin_break).setVisibility(View.GONE);
+            marcaciones.findViewById(R.id.layout_break).setVisibility(View.GONE);
+            marcaciones.findViewById(R.id.marcacion_justificar).setVisibility(View.GONE);
         }
     }
 
@@ -224,6 +281,9 @@ public class MarcacionFragment extends BaseFragment {
         format5 = new SimpleDateFormat("aa");
         format = new SimpleDateFormat("HH:mm");
 
+        marcaciones = (FrameLayout) LayoutInflater.from(getContext()).inflate(R.layout.fragment_marcacion, null);
+        historico = (FrameLayout) LayoutInflater.from(getContext()).inflate(R.layout.fragment_marcaciones_historico, null);
+
         String dia = "";
         Calendar hoy = Calendar.getInstance();
         dia = format1.format(hoy.getTime());
@@ -232,17 +292,24 @@ public class MarcacionFragment extends BaseFragment {
         String mes = format3.format(hoy.getTime());
         String anio = format4.format(hoy.getTime());
         DiaLaboral dialab = DiaLaboral.getDia(getDataBase(), Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1);
-        if (dialab.getHoraFin2() == null)
-            ((TextView) rootView.findViewById(R.id.marcacion_hora_fin)).setText(dialab.getHoraFin1().replace("h", ":"));
-        else
-            ((TextView) rootView.findViewById(R.id.marcacion_hora_fin)).setText(dialab.getHoraFin2().replace("h", ":"));
+        ((TextView) historico.findViewById(R.id.historico_inicio_primera)).setText(dialab.getHoraInicio1().replace("h", ":"));
+        ((TextView) historico.findViewById(R.id.historico_fin_primera)).setText(dialab.getHoraFin1().replace("h", ":"));
+        if (dialab.getHoraFin2() == null) {
+            historico.findViewById(R.id.historico_segunda_jornada).setVisibility(View.GONE);
+            ((TextView) marcaciones.findViewById(R.id.marcacion_hora_fin)).setText(dialab.getHoraFin1().replace("h", ":"));
+        }
+        else {
+            ((TextView) historico.findViewById(R.id.historico_inicio_segunda)).setText(dialab.getHoraInicio2().replace("h", ":"));
+            ((TextView) historico.findViewById(R.id.historico_fin_segunda)).setText(dialab.getHoraFin2().replace("h", ":"));
+            ((TextView) marcaciones.findViewById(R.id.marcacion_hora_fin)).setText(dialab.getHoraFin2().replace("h", ":"));
+        }
 
-        ((TextView) rootView.findViewById(R.id.marcacion_dia)).setText(dia);
-        ((TextView) rootView.findViewById(R.id.marcacion_fecha)).setText(num + " / " + mes + " / " + anio);
+        ((TextView) marcaciones.findViewById(R.id.marcacion_dia)).setText(dia);
+        ((TextView) marcaciones.findViewById(R.id.marcacion_fecha)).setText(num + " / " + mes + " / " + anio);
 
 
         fragment = new JustificacionFragment();
-        rootView.findViewById(R.id.marcacion_justificar).setOnClickListener(new View.OnClickListener() {
+        marcaciones.findViewById(R.id.marcacion_justificar).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showDialogFragment(fragment, "Justificacion");
@@ -259,9 +326,9 @@ public class MarcacionFragment extends BaseFragment {
     }
 
     public void SetButtonBreak() {
-        getRootView().findViewById(R.id.layout_break).setVisibility(View.VISIBLE);
-        ((DonutProgress) getRootView().findViewById(R.id.donut_break)).setMax(PRESS_TIME);
-        getRootView().findViewById(R.id.button_break).setOnTouchListener(new View.OnTouchListener() {
+        marcaciones.findViewById(R.id.layout_break).setVisibility(View.VISIBLE);
+        ((DonutProgress) marcaciones.findViewById(R.id.donut_break)).setMax(PRESS_TIME);
+        marcaciones.findViewById(R.id.button_break).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (MotionEvent.ACTION_DOWN == motionEvent.getAction()) {
@@ -269,12 +336,12 @@ public class MarcacionFragment extends BaseFragment {
 
                         @Override
                         public void onTick(long l) {
-                            ((DonutProgress) getRootView().findViewById(R.id.donut_break)).setProgress((int) (PRESS_TIME - l));
+                            ((DonutProgress) marcaciones.findViewById(R.id.donut_break)).setProgress((int) (PRESS_TIME - l));
                         }
 
                         @Override
                         public void onFinish() {
-                            ((DonutProgress) getRootView().findViewById(R.id.donut_break)).setProgress(PRESS_TIME);
+                            ((DonutProgress) marcaciones.findViewById(R.id.donut_break)).setProgress(PRESS_TIME);
                             final Marcacion marc = new Marcacion();
                             marc.setTipo("J2"); //falta tipo
                             marc.setPendiente(true);
@@ -298,7 +365,7 @@ public class MarcacionFragment extends BaseFragment {
                                                 Marcacion.insert(getDataBase(), marc);
                                                 Toast.makeText(getContext(), "Se ha iniciado el break.", Toast.LENGTH_LONG).show();
                                                 if (distance < DISTANCE) {
-                                                    getRootView().findViewById(R.id.layout_break).setVisibility(View.GONE);
+                                                    marcaciones.findViewById(R.id.layout_break).setVisibility(View.GONE);
                                                     SetButtonFinBreak();
                                                     Bundle bundle = new Bundle();
                                                     bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
@@ -324,7 +391,7 @@ public class MarcacionFragment extends BaseFragment {
                 }
                 if (MotionEvent.ACTION_UP == motionEvent.getAction()) {
                     count.cancel();
-                    ((DonutProgress) getRootView().findViewById(R.id.donut_break)).setProgress(0);
+                    ((DonutProgress) marcaciones.findViewById(R.id.donut_break)).setProgress(0);
                 }
                 return false;
             }
@@ -332,9 +399,9 @@ public class MarcacionFragment extends BaseFragment {
     }
 
     public void SetButtonFinBreak() {
-        getRootView().findViewById(R.id.layout_fin_break).setVisibility(View.VISIBLE);
-        ((DonutProgress) getRootView().findViewById(R.id.donut_fin_break)).setMax(PRESS_TIME);
-        getRootView().findViewById(R.id.button_fin_break).setOnTouchListener(new View.OnTouchListener() {
+        marcaciones.findViewById(R.id.layout_fin_break).setVisibility(View.VISIBLE);
+        ((DonutProgress) marcaciones.findViewById(R.id.donut_fin_break)).setMax(PRESS_TIME);
+        marcaciones.findViewById(R.id.button_fin_break).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (MotionEvent.ACTION_DOWN == motionEvent.getAction()) {
@@ -342,12 +409,12 @@ public class MarcacionFragment extends BaseFragment {
 
                         @Override
                         public void onTick(long l) {
-                            ((DonutProgress) getRootView().findViewById(R.id.donut_fin_break)).setProgress((int) (PRESS_TIME - l));
+                            ((DonutProgress) marcaciones.findViewById(R.id.donut_fin_break)).setProgress((int) (PRESS_TIME - l));
                         }
 
                         @Override
                         public void onFinish() {
-                            ((DonutProgress) getRootView().findViewById(R.id.donut_fin_break)).setProgress(PRESS_TIME);
+                            ((DonutProgress) marcaciones.findViewById(R.id.donut_fin_break)).setProgress(PRESS_TIME);
                             final Marcacion marc = new Marcacion();
                             marc.setTipo("J3"); //falta tipo
                             marc.setPendiente(true);
@@ -371,7 +438,7 @@ public class MarcacionFragment extends BaseFragment {
                                                 Marcacion.insert(getDataBase(), marc);
                                                 Toast.makeText(getContext(), "Se ha terminado el break.", Toast.LENGTH_LONG).show();
                                                 if (distance < DISTANCE) {
-                                                    getRootView().findViewById(R.id.layout_fin_break).setVisibility(View.GONE);
+                                                    marcaciones.findViewById(R.id.layout_fin_break).setVisibility(View.GONE);
                                                     Bundle bundle = new Bundle();
                                                     bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
                                                     requestSync(bundle);
@@ -396,7 +463,7 @@ public class MarcacionFragment extends BaseFragment {
                 }
                 if (MotionEvent.ACTION_UP == motionEvent.getAction()) {
                     count.cancel();
-                    ((DonutProgress) getRootView().findViewById(R.id.donut_fin_break)).setProgress(0);
+                    ((DonutProgress) marcaciones.findViewById(R.id.donut_fin_break)).setProgress(0);
                 }
                 return false;
             }
@@ -404,9 +471,9 @@ public class MarcacionFragment extends BaseFragment {
     }
 
     public void SetButtonFinJornada() {
-        getRootView().findViewById(R.id.layout_fin_jornada).setVisibility(View.VISIBLE);
-        ((DonutProgress) getRootView().findViewById(R.id.donut_fin_jornada)).setMax(PRESS_TIME);
-        getRootView().findViewById(R.id.button_fin_jornada).setOnTouchListener(new View.OnTouchListener() {
+        marcaciones.findViewById(R.id.layout_fin_jornada).setVisibility(View.VISIBLE);
+        ((DonutProgress) marcaciones.findViewById(R.id.donut_fin_jornada)).setMax(PRESS_TIME);
+        marcaciones.findViewById(R.id.button_fin_jornada).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (MotionEvent.ACTION_DOWN == motionEvent.getAction()) {
@@ -414,12 +481,12 @@ public class MarcacionFragment extends BaseFragment {
 
                         @Override
                         public void onTick(long l) {
-                            ((DonutProgress) getRootView().findViewById(R.id.donut_fin_jornada)).setProgress((int) (PRESS_TIME - l));
+                            ((DonutProgress) marcaciones.findViewById(R.id.donut_fin_jornada)).setProgress((int) (PRESS_TIME - l));
                         }
 
                         @Override
                         public void onFinish() {
-                            ((DonutProgress) getRootView().findViewById(R.id.donut_fin_jornada)).setProgress(PRESS_TIME);
+                            ((DonutProgress) marcaciones.findViewById(R.id.donut_fin_jornada)).setProgress(PRESS_TIME);
                             final Marcacion marc = new Marcacion();
                             marc.setTipo("J4"); //falta tipo
                             marc.setPendiente(true);
@@ -463,10 +530,10 @@ public class MarcacionFragment extends BaseFragment {
                                                         Toast.makeText(getContext(), "Usted esta finalizando su jornada por adelantado. Indique su justificación", Toast.LENGTH_LONG).show();
                                                     }
                                                     else {
-                                                        getRootView().findViewById(R.id.layout_fin_jornada).setVisibility(View.GONE);
-                                                        getRootView().findViewById(R.id.layout_fin_break).setVisibility(View.GONE);
-                                                        getRootView().findViewById(R.id.layout_break).setVisibility(View.GONE);
-                                                        getRootView().findViewById(R.id.marcacion_justificar).setVisibility(View.GONE);
+                                                        marcaciones.findViewById(R.id.layout_fin_jornada).setVisibility(View.GONE);
+                                                        marcaciones.findViewById(R.id.layout_fin_break).setVisibility(View.GONE);
+                                                        marcaciones.findViewById(R.id.layout_break).setVisibility(View.GONE);
+                                                        marcaciones.findViewById(R.id.marcacion_justificar).setVisibility(View.GONE);
                                                         Bundle bundle = new Bundle();
                                                         bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
                                                         requestSync(bundle);
@@ -492,7 +559,7 @@ public class MarcacionFragment extends BaseFragment {
                 }
                 if (MotionEvent.ACTION_UP == motionEvent.getAction()) {
                     count.cancel();
-                    ((DonutProgress) getRootView().findViewById(R.id.donut_fin_jornada)).setProgress(0);
+                    ((DonutProgress) marcaciones.findViewById(R.id.donut_fin_jornada)).setProgress(0);
                 }
                 return false;
             }

@@ -1059,4 +1059,21 @@
 		AND Fecha &lt; ?
 		GROUP BY IdAgente
      </statement>
+
+    <statement name="PermisosAgentes">
+        SELECT
+        tbJustificacion._id,
+        tbJustificacion.IdPermiso,
+        tbJustificacion.IdAgente,
+        tbJustificacion.Fecha,
+        tbJustificacion.Tipo,
+        tbJustificacion.Observacion,
+        tbJustificacion.Ausencia,
+        tbJustificacion.Aprobado,
+        tbAgentesUbicacion.Nombres
+        FROM  tbJustificacion
+        JOIN tbAgentesUbicacion ON tbAgentesUbicacion.IdAgente
+        AND tbJustificacion.IdAgente
+        WHERE Aprobado = 1 AND Propia = 0 AND Pendiente = 1
+    </statement>
 </sql>

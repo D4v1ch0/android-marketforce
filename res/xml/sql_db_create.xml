@@ -295,6 +295,7 @@
         CREATE TABLE tbJustificacion(
         _id INTEGER PRIMARY KEY AUTOINCREMENT,
         IdPermiso INTEGER,
+        IdAgente INTEGER,
         Fecha INTEGER,
         Tipo TEXT,
         Observacion INTEGER,

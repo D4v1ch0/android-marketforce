@@ -133,7 +133,7 @@ public class StartActivity extends rp3.app.StartActivity{
 //	}
 	
 	private void callNextActivity(){
-		setServiceRecurring();		
+		setServiceRecurring();
 		startActivity(MainActivity.newIntent(this));
 		finish();
 		setServiceRecurring();

@@ -24,6 +24,7 @@ import rp3.marketforce.dashboard.DashboardFragment;
 import rp3.marketforce.db.Contract;
 import rp3.marketforce.db.DbOpenHelper;
 import rp3.marketforce.information.InformationFragment;
+import rp3.marketforce.marcaciones.PermisoFragment;
 import rp3.marketforce.models.Actividad;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.Agenda.AgendaExt;
@@ -86,6 +87,7 @@ public class MainActivity extends rp3.app.NavActivity{
 	public static final int NAV_RECORRIDO	 	= 11;
     public static final int NAV_RADAR	 	    = 12;
     public static final int NAV_INFORMATION	    = 13;
+    public static final int NAV_JUSTIFICACIONES = 14;
 
     public static final int CERRAR_SESION_DIALOG = 12;
 
@@ -187,6 +189,7 @@ public class MainActivity extends rp3.app.NavActivity{
 
         Date ultimo = SyncAudit.getLastSyncDate();
 		NavItem sincronizar = new NavItem(NAV_SINCRONIZAR, R.string.title_option_setsincronizar , R.drawable.ic_sincronizar, NavItem.TYPE_ACTION, "Ult. Conexión: " + format4.format(ultimo));
+        NavItem justificaciones = new NavItem(NAV_JUSTIFICACIONES, R.string.title_option_justificaciones, R.drawable.solicitar_permiso);
 		NavItem ajustes = new NavItem(NAV_AJUSTES, R.string.title_option_setajustes, R.drawable.ic_ajustes);
 		NavItem cerrarsesion = new NavItem(NAV_CERRAR_SESION, R.string.title_option_setcerrar_sesion, R.drawable.ic_cerrar_sesion);
 		
@@ -205,6 +208,7 @@ public class MainActivity extends rp3.app.NavActivity{
 		if(PreferenceManager.getBoolean(Contants.KEY_ES_SUPERVISOR)) {
             navItems.add(grupo);
             navItems.add(radar);
+            navItems.add(justificaciones);
         }
 		//navItems.add(pedido);
 		//navItems.add(reuniones);
@@ -241,6 +245,11 @@ public class MainActivity extends rp3.app.NavActivity{
                 item.getTitle());
             lastTitle = item.getTitle();
             break;
+            case NAV_JUSTIFICACIONES:
+                setNavFragment(PermisoFragment.newInstance(),
+                        item.getTitle());
+                lastTitle = item.getTitle();
+                break;
 		case NAV_RECORRIDO:
             if(!ConnectionUtils.isNetAvailable(this))
             {

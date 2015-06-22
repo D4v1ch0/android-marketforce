@@ -194,5 +194,12 @@
     <string name="label_ausencia_just">Ausencia</string>
     <string name="label_atraso">Atraso</string>
     <string name="label_justificaciones_previa">Permiso Previo</string>
-
+    <string name="label_primera_jornada">1era Jornada</string>
+    <string name="label_segunda_jornada">2da Jornada</string>
+    <string name="label_marcaciones_historico">Historico Marcaciones</string>
+    <string name="label_sin_marcaciones">No existen marcaciones registradas</string>
+    <string name="label_hora">Hora:</string>
+    <string name="label_minutos_atraso">Minutos Atraso:</string>
+    <string name="label_jornada">Jornada:</string>
+    <string name="title_option_justificaciones">Aprobar Permisos</string>
 </resources>

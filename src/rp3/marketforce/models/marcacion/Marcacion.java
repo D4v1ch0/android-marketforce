@@ -192,6 +192,38 @@ public class Marcacion extends EntityBase<Marcacion>
 
     }
 
+    public static List<Marcacion> getMarcaciones(DataBase db)
+    {
+        Cursor c = db.query(Contract.Marcacion.TABLE_NAME, new String[]{Contract.Marcacion._ID, Contract.Marcacion.COLUMN_EN_UBICACION, Contract.Marcacion.COLUMN_FECHA,
+                Contract.Marcacion.COLUMN_TIPO, Contract.Marcacion.COLUMN_LATITUD, Contract.Marcacion.COLUMN_LONGITUD, Contract.Marcacion.COLUMN_HORA_INICIO,
+                Contract.Marcacion.COLUMN_HORA_FIN, Contract.Marcacion.COLUMN_PENDIENTE, Contract.Marcacion.COLUMN_MINUTOS_ATRASO});
+        List<Marcacion> marcaciones = new ArrayList<Marcacion>();
+
+        if(c.moveToFirst())
+        {
+            do
+            {
+                Marcacion marcacion = new Marcacion();
+                marcacion.setID(CursorUtils.getLong(c, Contract.Marcacion._ID));
+                marcacion.setEnUbicacion(CursorUtils.getBoolean(c, Contract.Marcacion.COLUMN_EN_UBICACION));
+                marcacion.setTipo(CursorUtils.getString(c, Contract.Marcacion.COLUMN_TIPO));
+                marcacion.setFecha(CursorUtils.getDate(c, Contract.Marcacion.COLUMN_FECHA));
+                marcacion.setHoraInicio(CursorUtils.getDate(c, Contract.Marcacion.COLUMN_HORA_INICIO));
+                marcacion.setHoraFin(CursorUtils.getDate(c, Contract.Marcacion.COLUMN_HORA_FIN));
+                marcacion.setLatitud(CursorUtils.getDouble(c, Contract.Marcacion.COLUMN_LATITUD));
+                marcacion.setLongitud(CursorUtils.getDouble(c, Contract.Marcacion.COLUMN_LONGITUD));
+                marcacion.setPendiente(CursorUtils.getBoolean(c, Contract.Marcacion.COLUMN_PENDIENTE));
+                marcacion.setMintutosAtraso(CursorUtils.getInt(c, Contract.Marcacion.COLUMN_MINUTOS_ATRASO));
+                marcacion.setPermiso(Permiso.getPermisoMarcacion(db, marcacion.getID()));
+                marcaciones.add(marcacion);
+
+            }while(c.moveToNext());
+        }
+
+        return marcaciones;
+
+    }
+
     public static Marcacion getUltimaMarcacion(DataBase db) {
         Cursor c = db.query(Contract.Marcacion.TABLE_NAME, new String[]{Contract.Marcacion._ID, Contract.Marcacion.COLUMN_EN_UBICACION, Contract.Marcacion.COLUMN_FECHA,
                 Contract.Marcacion.COLUMN_TIPO, Contract.Marcacion.COLUMN_LATITUD, Contract.Marcacion.COLUMN_LONGITUD, Contract.Marcacion.COLUMN_HORA_INICIO,
