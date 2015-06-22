@@ -77,9 +77,9 @@ public class Calendario {
                     JSONObject type = types.getJSONObject(i);
                     DiaNoLaboral dia = new rp3.marketforce.models.DiaNoLaboral();
 
-
-                    dia.setEsParcial(type.getBoolean("EsLaboral"));
-                    dia.setEsteAnio(type.getBoolean("Orden"));
+                    if (!type.isNull("EsParcial"))
+                        dia.setEsParcial(type.getBoolean("EsParcial"));
+                    dia.setEsteAnio(type.getBoolean("EsteAño"));
                     if (!type.isNull("FechaTicks"))
                         dia.setFecha(Convert.getDateFromDotNetTicks(type.getLong("FechaTicks")));
                     dia.setHoraInicio(type.getString("HoraInicio"));
