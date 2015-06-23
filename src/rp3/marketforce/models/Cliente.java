@@ -107,11 +107,11 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 	@Override
 	public void setValues() {		
 		if(this.getAction() == ACTION_INSERT){			
-			setValue(Contract.Cliente.COLUMN_ID_TIPO_IDENTIFICACION, this.idTipoIdentificacion);						
-			setValue(Contract.Cliente.COLUMN_TIPO_CLIENTE_ID, this.idTipoCliente);
-			setValue(Contract.Cliente.COLUMN_CANAL_ID, this.idCanal);
+			setValue(Contract.Cliente.COLUMN_ID_TIPO_IDENTIFICACION, this.idTipoIdentificacion);
 			setValue(Contract.Cliente.COLUMN_CALIFICACION, this.Calificacion);
 		}
+        setValue(Contract.Cliente.COLUMN_CANAL_ID, this.idCanal);
+        setValue(Contract.Cliente.COLUMN_TIPO_CLIENTE_ID, this.idTipoCliente);
 		setValue(Contract.Cliente.COLUMN_GENERO, this.genero);						
 		setValue(Contract.Cliente.COLUMN_FECHA_NACIMIENTO, this.fechaNacimiento);		
 		setValue(Contract.Cliente.COLUMN_ESTADO_CIVIL, this.estadoCivil);	

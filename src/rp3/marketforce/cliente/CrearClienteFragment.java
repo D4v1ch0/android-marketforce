@@ -89,8 +89,9 @@ import rp3.widget.ViewPager;
 public class CrearClienteFragment extends BaseFragment {
 
     boolean rotated = false;
+    private boolean showVisita = false;
 
-	public static CrearClienteFragment newInstance(long id_cliente, int tipo)
+    public static CrearClienteFragment newInstance(long id_cliente, int tipo)
 	{
 		CrearClienteFragment fragment = new CrearClienteFragment();
 		Bundle args = new Bundle();
@@ -163,7 +164,7 @@ public class CrearClienteFragment extends BaseFragment {
 			if(Validaciones() && CamposObligatorios())
 			{
 				Grabar();
-                if(tipo == Contants.IS_MODIFICACION)
+                if(!showVisita)
 				    finish();
 			}
 			break;
@@ -504,6 +505,7 @@ public class CrearClienteFragment extends BaseFragment {
 				else {
                     bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_CLIENTE_CREATE);
                     showDialogConfirmation(DIALOG_VISITA, R.string.message_crear_visita, R.string.label_crear_visita);
+                    showVisita = true;
                     cliente = cli;
                 }
 				bundle.putLong(ARG_CLIENTE, cli.getID());

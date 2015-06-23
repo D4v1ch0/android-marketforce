@@ -99,16 +99,16 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     }
 
                     if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Agente.executeSync(db);
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.marketforce.sync.Rutas.executeSync(db, null, null, false);
                         addDefaultMessage(result);
                         if (result == SYNC_EVENT_SUCCESS) {
                             SyncAudit.insert(SYNC_TYPE_ACT_AGENDA, SYNC_EVENT_SUCCESS);
                         }
-                    }
-
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Agente.executeSync(db);
-                        addDefaultMessage(result);
                     }
 
                     if (result == SYNC_EVENT_SUCCESS && PreferenceManager.getBoolean(Contants.KEY_ES_SUPERVISOR)) {
