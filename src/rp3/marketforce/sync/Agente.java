@@ -1,5 +1,11 @@
 package rp3.marketforce.sync;
 
+import android.content.Context;
+import android.text.TextUtils;
+
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.iid.InstanceID;
+
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -13,6 +19,7 @@ import rp3.connection.WebService;
 import rp3.content.SyncAdapter;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
+import rp3.marketforce.R;
 import rp3.marketforce.db.Contract;
 import rp3.marketforce.models.AgenteResumen;
 import rp3.marketforce.models.AgenteUbicacion;
@@ -95,6 +102,58 @@ public class Agente {
 		return SyncAdapter.SYNC_EVENT_SUCCESS;		
 	}
 
+    public static int executeSyncGetDeviceId(Context context)
+    {
+        InstanceID instanceID = InstanceID.getInstance(context);
+        try {
+            String token = instanceID.getToken(context.getString(R.string.gcm_defaultSenderId),
+                    GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
+            if(!TextUtils.isEmpty(token))
+            {
+                PreferenceManager.setValue(Contants.KEY_APP_INSTANCE_ID, token);
+            }
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+            return SyncAdapter.SYNC_EVENT_ERROR;
+        }
+
+        return SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
+    public static int executeSyncDeviceId()
+    {
+        WebService webService = new WebService("MartketForce","SetGCMId");
+
+        try
+        {
+            webService.addCurrentAuthToken();
+            JSONObject jObject = new JSONObject();
+            try {
+                jObject.put("AuthId", PreferenceManager.getString(Contants.KEY_APP_INSTANCE_ID));
+            }catch (Exception ex)
+            {}
+            webService.addParameter("gcmid", jObject);
+
+
+            try {
+                webService.invokeWebService();
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return SyncAdapter.SYNC_EVENT_ERROR;
+            }
+
+        }finally{
+            webService.close();
+        }
+
+        return SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
     public static int executeSyncGetUbicaciones(DataBase db){
         WebService webService = new WebService("MartketForce","GetResumenUbicacionAgentes");
 
@@ -136,12 +195,12 @@ public class Agente {
     }
 	
 	public static int executeSyncParametros(DataBase db){
-		WebService webService = new WebService("MartketForce","GetParametros");
-
+		WebService webService = new WebService("MartketForce","GetParametros");			
+			
 		try
-		{
+		{			
 			webService.addCurrentAuthToken();
-
+			
 			try {
 				webService.invokeWebService();
 				JSONObject jObject = webService.getJSONObjectResponse();
@@ -149,6 +208,8 @@ public class Agente {
 				PreferenceManager.setValue(Contants.KEY_ALARMA_FIN, Convert.getDateFromDotNetTicks(jObject.getLong(Contants.KEY_ALARMA_FIN)));
 				PreferenceManager.setValue(Contants.KEY_ALARMA_INTERVALO, jObject.getInt(Contants.KEY_ALARMA_INTERVALO));
 				PreferenceManager.setValue(Contants.KEY_PREFIJO_TELEFONICO, jObject.getString(Contants.KEY_PREFIJO_TELEFONICO));
+                if(!jObject.isNull(Contants.KEY_MARACIONES_DISTANCIA))
+                    PreferenceManager.setValue(Contants.KEY_MARACIONES_DISTANCIA, jObject.getDouble(Contants.KEY_MARACIONES_DISTANCIA) + "");
 			} catch (HttpResponseException e) {
 				if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
 					return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
@@ -156,12 +217,12 @@ public class Agente {
 			} catch (Exception e) {
 				return SyncAdapter.SYNC_EVENT_ERROR;
 			}
-
+			
 		}finally{
 			webService.close();
 		}
-
-		return SyncAdapter.SYNC_EVENT_SUCCESS;
+		
+		return SyncAdapter.SYNC_EVENT_SUCCESS;		
 	}
 
     public static int executeSyncAgentes(DataBase db) {

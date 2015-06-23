@@ -5,12 +5,15 @@ dependencies {
     compile project(':android-core')
     compile project(':AndroidGraphView')
     compile project(':main')
+    compile 'com.github.lzyzsd:circleprogress:1.1.0@aar'
+
 }
 
 android {
-    compileSdkVersion 19
+    compileSdkVersion 21
     buildToolsVersion '20.0.0'
     compileOptions.encoding = 'UTF-8'
+    android.enforceUniquePackageName = false
 
     sourceSets {
         main {

@@ -248,4 +248,33 @@
     <string name="label_medio_referencia_max">MEDIO DE REFERENCIA</string>
     <string name="label_finalizar_subetapa">Finalizar Subetapa</string>
 
+    <!-- Modulo Marcaciones -->
+    <string name="action_marcaciones">Marcar</string>
+    <string name="label_justificar">Justificar</string>
+    <string name="label_iniciar_jornada">Iniciar Jornada</string>
+    <string name="label_break">Break</string>
+    <string name="label_fin_break">Fin de Break</string>
+    <string name="label_fin_jornada">Fin de Jornada</string>
+    <string name="message_fuera_posicion">Esta marcando fuera de su punto de partida. Ingrese una justificación.</string>
+    <string name="message_fuera_posicion_agenda">Esta marcando fuera de la posición del cliente. Ingrese una justificación.</string>
+    <string name="message_marcacion_agenda">Usted no tiene marcación para el inicio de jornada. Desea ingresar este inicio de visita como su inicio de jornada?</string>
+    <string name="gcm_defaultSenderId">313284335192</string>
+    <string name="label_fecha_just">Fecha</string>
+    <string name="label_ausencia_just">Ausencia</string>
+    <string name="label_atraso">Atraso</string>
+    <string name="label_justificaciones_previa">Permiso Previo</string>
+    <string name="label_primera_jornada">1era Jornada</string>
+    <string name="label_segunda_jornada">2da Jornada</string>
+    <string name="label_marcaciones_historico">Historico Marcaciones</string>
+    <string name="label_sin_marcaciones">No existen marcaciones registradas</string>
+    <string name="label_hora">Hora:</string>
+    <string name="label_minutos_atraso">Minutos Atraso:</string>
+    <string name="label_jornada">Jornada:</string>
+    <string name="title_option_justificaciones">Aprobar Permisos</string>
+    <string name="label_tipo">Tipo</string>
+    <string name="label_motivo2">Motivo</string>
+    <string name="label_observaciones_supervisor">Observaciones Supervisor</string>
+    <string name="label_aprobar">Aprobar</string>
+    <string name="label_rechazar">Rechazar</string>
+    <string name="label_estado">Estado</string>
 </resources>

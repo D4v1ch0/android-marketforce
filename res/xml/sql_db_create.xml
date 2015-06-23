@@ -361,4 +361,73 @@
         Tipo TEXT
         )
     </statement>
+    <statement>
+        CREATE TABLE tbDiaLaboral(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdDia INTEGER,
+        Orden INTEGER,
+        EsLaboral BOOLEAN,
+        HoraInicio1 TEXT,
+        HoraFin1 TEXT,
+        HoraInicio2 TEXT,
+        HoraFin2 TEXT
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbDiaNoLaboral(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        Fecha INTEGER,
+        DiaParcial BOOLEAN,
+        EsteAno BOOLEAN,
+        HoraInicio TEXT,
+        HoraFin TEXT
+        )
+    </statement>
+    <!-- Modulo Marcaciones -->
+    <statement>
+        CREATE TABLE tbMarcacion(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        Tipo TEXT,
+        Fecha INTEGER,
+        HoraInicio INTEGER,
+        HoraFin INTEGER,
+        MinutosAtraso INTEGER,
+        Latitud REAL,
+        Longitud REAL,
+        EnUbicacion BOOLEAN,
+        Pendiente BOOLEAN
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbIncidencia(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        Tipo TEXT,
+        Observacion INTEGER
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbPermiso(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdPermiso INTEGER,
+        IdMarcacion INTEGER,
+        Fecha INTEGER,
+        Tipo TEXT,
+        Observacion INTEGER
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbJustificacion(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdPermiso INTEGER,
+        IdAgente INTEGER,
+        Fecha INTEGER,
+        Tipo TEXT,
+        Observacion TEXT,
+        ObservacionSupervisor TEXT,
+        Ausencia BOOLEAN,
+        Estado TEXT,
+        Pendiente BOOLEAN,
+        Propia BOOLEAN
+        )
+    </statement>
 </sql>

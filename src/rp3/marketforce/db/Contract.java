@@ -734,4 +734,108 @@ public final class Contract {
 
     }
 
+
+    public static abstract class DiaLaboral implements BaseColumns {
+
+        public static final String TABLE_NAME = "tbDiaLaboral";
+
+        public static final String COLUMN_ID_DIA = "IdDia";
+        public static final String COLUMN_ORDEN = "Orden";
+        public static final String COLUMN_ES_LABORAL = "EsLaboral";
+        public static final String COLUMN_HORA_INICIO1 = "HoraInicio1";
+        public static final String COLUMN_HORA_FIN1 = "HoraFin1";
+        public static final String COLUMN_HORA_INICIO2 = "HoraInicio2";
+        public static final String COLUMN_HORA_FIN2 = "HoraFin2";
+
+    }
+
+    public static abstract class DiaNoLaboral implements BaseColumns {
+
+        public static final String TABLE_NAME = "tbDiaNoLaboral";
+
+        public static final String COLUMN_FECHA = "Fecha";
+        public static final String COLUMN_DIA_PARCIAL = "DiaParcial";
+        public static final String COLUMN_ESTE_ANIO = "EsteAno";
+        public static final String COLUMN_HORA_INICIO = "HoraInicio";
+        public static final String COLUMN_HORA_FIN = "HoraFin";
+
+    }
+    //MODULO MARCACIONES
+
+    public static abstract class Marcacion implements BaseColumns {
+
+        public static final String TABLE_NAME = "tbMarcacion";
+
+        public static final String COLUMN_TIPO = "Tipo";
+        public static final String COLUMN_FECHA = "Fecha";
+        public static final String COLUMN_HORA_INICIO = "HoraInicio";
+        public static final String COLUMN_HORA_FIN = "HoraFin";
+        public static final String COLUMN_LATITUD = "Latitud";
+        public static final String COLUMN_LONGITUD = "Longitud";
+        public static final String COLUMN_EN_UBICACION = "EnUbicacion";
+        public static final String COLUMN_MINUTOS_ATRASO = "MinutosAtraso";
+        public static final String COLUMN_PENDIENTE = "Pendiente";
+
+        public static final String FIELD_TIPO = COLUMN_TIPO;
+        public static final String FIELD_FECHA = COLUMN_FECHA;
+        public static final String FIELD_HORA_INICIO = COLUMN_HORA_INICIO;
+        public static final String FIELD_HORA_FIN = COLUMN_HORA_FIN;
+        public static final String FIELD_LATITUD = COLUMN_LATITUD;
+        public static final String FIELD_LONGITUD = COLUMN_LONGITUD;
+        public static final String FIELD_EN_UBICACION = COLUMN_EN_UBICACION;
+        public static final String FIELD_PENDIENTE = COLUMN_PENDIENTE;
+        public static final String FIELD_MINUTOS_ATRASO = COLUMN_MINUTOS_ATRASO;
+
+    }
+
+    public static abstract class Incidencia implements BaseColumns {
+
+        public static final String TABLE_NAME = "tbIncidencia";
+
+        public static final String COLUMN_TIPO = "Tipo";
+        public static final String COLUMN_OBSERVACION = "Observacion";
+
+        public static final String FIELD_TIPO = COLUMN_TIPO;
+        public static final String FIELD_OBSERVACION = COLUMN_OBSERVACION;
+
+    }
+
+    public static abstract class Permiso implements BaseColumns {
+
+        public static final String TABLE_NAME = "tbPermiso";
+
+        public static final String COLUMN_TIPO = "Tipo";
+        public static final String COLUMN_FECHA = "Fecha";
+        public static final String COLUMN_OBSERVACION = "Observacion";
+        public static final String COLUMN_ID_MARCACION = "IdMarcacion";
+        public static final String COLUMN_ID_PERMISO = "IdPermiso";
+
+        public static final String FIELD_TIPO = COLUMN_TIPO;
+        public static final String FIELD_OBSERVACION = COLUMN_OBSERVACION;
+        public static final String FIELD_FECHA = COLUMN_FECHA;
+        public static final String FIELD_ID_MARCACION= COLUMN_ID_MARCACION;
+    }
+
+    public static abstract class Justificaciones implements BaseColumns {
+
+        public static final String TABLE_NAME = "tbJustificacion";
+
+        public static final String COLUMN_TIPO = "Tipo";
+        public static final String COLUMN_FECHA = "Fecha";
+        public static final String COLUMN_OBSERVACION = "Observacion";
+        public static final String COLUMN_OBSERVACION_SUPERVISOR = "ObservacionSupervisor";
+        public static final String COLUMN_ID_AGENTE = "IdAgente";
+        public static final String COLUMN_ID_PERMISO = "IdPermiso";
+        public static final String COLUMN_AUSENCIA = "Ausencia";
+        public static final String COLUMN_ESTADO = "Estado";
+        public static final String COLUMN_PENDIENTE = "Pendiente";
+        public static final String COLUMN_PROPIA = "Propia";
+
+        public static final String FIELD_TIPO = COLUMN_TIPO;
+        public static final String FIELD_OBSERVACION = COLUMN_OBSERVACION;
+        public static final String FIELD_FECHA = COLUMN_FECHA;
+
+        public static final String QUERY_PERMISOS_POR_APROBAR = "PermisosAgentes";
+        public static final String QUERY_PERMISO_POR_AGENTE = "PermisoPorAgente";
+    }
 }

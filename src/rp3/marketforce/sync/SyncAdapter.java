@@ -7,6 +7,7 @@ import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
 import rp3.marketforce.ServerActivity;
 import rp3.marketforce.cliente.CrearClienteFragment;
+import rp3.marketforce.marcaciones.JustificacionFragment;
 import rp3.marketforce.models.Tarea;
 import rp3.marketforce.ruta.CrearVisitaFragment;
 import rp3.marketforce.ruta.MotivoNoVisitaFragment;
@@ -20,6 +21,7 @@ import android.content.ContentProviderClient;
 import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 
 public class SyncAdapter extends rp3.content.SyncAdapter {
@@ -48,6 +50,13 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
     public static String SYNC_TYPE_UPLOAD_OPORTUNIDADES = "oportunidades_upload";
     public static String SYNC_TYPE_PENDIENTES_OPORTUNIDADES = "oportunidades_pendientes";
     public static String SYNC_TYPE_UPLOAD_OPORTUNIDAD = "oportunidad_upload";
+
+    public static String SYNC_TYPE_UPLOAD_MARCACION = "marcacion";
+    public static String SYNC_TYPE_UPLOAD_PERMISO = "permiso";
+    public static String SYNC_TYPE_UPLOAD_PENDIENTES_PERMISO = "permiso_pendientes";
+    public static String SYNC_TYPE_PERMISO_PREVIO = "permiso_previo";
+    public static String SYNC_TYPE_JUSTIFICACIONES = "justificaciones";
+    public static String SYNC_TYPE_JUSTIFICACIONES_UPLOAD = "justificaciones_upload";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -108,6 +117,9 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 
                         result = rp3.marketforce.sync.Agente.executeSyncGetUbicaciones(db);
                         addDefaultMessage(result);
+
+                        result = rp3.marketforce.sync.Marcaciones.executeSyncPermisosPorAprobar(db);
+                        addDefaultMessage(result);
                     }
 
                     if (result == SYNC_EVENT_SUCCESS) {
@@ -152,6 +164,34 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         result = rp3.marketforce.sync.Oportunidad.executeSync(db);
                         addDefaultMessage(result);
                     }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Calendario.executeSync(db);
+                        addDefaultMessage(result);
+                    }
+
+                    // MODULO DE MARCACIONES
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Marcaciones.executeSyncGrupo(db);
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Agente.executeSyncGetDeviceId(getContext());
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS && !TextUtils.isEmpty(PreferenceManager.getString(Contants.KEY_APP_INSTANCE_ID))) {
+                        result = rp3.marketforce.sync.Agente.executeSyncDeviceId();
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = Marcaciones.executeSyncPermisoHoy(db);
+                        addDefaultMessage(result);
+                    }
+
 				/*
 				 * Se comenta carga de fotos ya que se la hara mediante un lazy loader.
 				 * Para esto se cargara tambien en el modelo Cliente la url de la foto para poder cargarla
@@ -242,6 +282,19 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     long cliente = extras.getLong(CrearClienteFragment.ARG_CLIENTE);
                     result = Cliente.executeSyncUpdateFull(db, cliente);
                     addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_PERMISO_PREVIO)) {
+                    result = Marcaciones.executeSyncPermisoPrevio(db);
+                    addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_JUSTIFICACIONES)) {
+
+                    result = Marcaciones.executeSyncPermisosRevisados(db);
+                    addDefaultMessage(result);
+                    result = Marcaciones.executeSyncPermisosPorAprobar(db);
+                    addDefaultMessage(result);
+
+                } else if (syncType.equals(SYNC_TYPE_JUSTIFICACIONES_UPLOAD)) {
+                    result = Marcaciones.executeSyncPermisosRevisados(db);
+                    addDefaultMessage(result);
                 } else if (syncType.equals(SYNC_TYPE_ENVIAR_AGENDA)) {
                     int id = extras.getInt(RutasDetailFragment.ARG_AGENDA_ID);
                     result = Agenda.executeSync(db, id);
@@ -254,9 +307,25 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     long agenda = extras.getLong(CrearVisitaFragment.ARG_AGENDA);
                     result = Agenda.executeSyncInsert(db, agenda);
                     addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_UPLOAD_PENDIENTES_PERMISO)) {
+                    result = Marcaciones.executeSync(db);
+                    addDefaultMessage(result);
+
+                    result = Marcaciones.executeSyncPermisoHoy(db);
+                    addDefaultMessage(result);
+
+                    result = Marcaciones.executeSyncPermisoPrevio(db);
+                    addDefaultMessage(result);
                 } else if (syncType.equals(SYNC_TYPE_AGENDA_NO_VISITA)) {
                     int id = extras.getInt(MotivoNoVisitaFragment.ARG_AGENDA);
                     result = Agenda.executeSyncNoVisita(db, id);
+                    addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_UPLOAD_PERMISO)) {
+                    long id = extras.getLong(JustificacionFragment.ARG_PERMISO);
+                    result = Marcaciones.executeSyncPermiso(db, id);
+                    addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_UPLOAD_MARCACION)) {
+                    result = Marcaciones.executeSync(db);
                     addDefaultMessage(result);
                 } else if (syncType.equals(SYNC_TYPE_ACTUALIZAR_AGENDA)) {
                     long inicio = extras.getLong(RutasListFragment.ARG_INICIO);
@@ -283,6 +352,9 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     addDefaultMessage(result);
 
                     result = EnviarUbicacion.executeSyncPendientes(db);
+                    addDefaultMessage(result);
+
+                    result = Marcaciones.executeSync(db);
                     addDefaultMessage(result);
 
                     if (result == SYNC_EVENT_SUCCESS) {
@@ -337,6 +409,9 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     result = EnviarUbicacion.executeSyncPendientes(db);
                     addDefaultMessage(result);
 
+                    result = Marcaciones.executeSync(db);
+                    addDefaultMessage(result);
+
                     if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.sync.GeneralValue.executeSync(db);
                         addDefaultMessage(result);
@@ -380,6 +455,9 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 
                     if (result == SYNC_EVENT_SUCCESS && PreferenceManager.getBoolean(Contants.KEY_ES_SUPERVISOR)) {
                         result = rp3.marketforce.sync.Agente.executeSyncGetAgente(db);
+                        addDefaultMessage(result);
+
+                        result = rp3.marketforce.sync.Marcaciones.executeSyncPermisosPorAprobar(db);
                         addDefaultMessage(result);
                     }
 
@@ -427,13 +505,19 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         result = rp3.marketforce.sync.Oportunidad.executeSync(db);
                         addDefaultMessage(result);
                     }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Marcaciones.executeSyncGrupo(db);
+                        addDefaultMessage(result);
+                    }
+
                 }
 
                 SyncAudit.insert(syncType, result);
             }
             else
             {
-                addDefaultMessage(SYNC_EVENT_CONNECTION_FAILED);
+                //addDefaultMessage(SYNC_EVENT_CONNECTION_FAILED);
                 SyncAudit.insert(syncType, SYNC_EVENT_CONNECTION_FAILED);
             }
 				

@@ -19,7 +19,11 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.Toast;
+
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.iid.InstanceID;
 
 public class StartActivity extends rp3.app.StartActivity{
 
@@ -76,8 +80,8 @@ public class StartActivity extends rp3.app.StartActivity{
 		
 		super.onContinue();		
 		Long days = SyncAudit.getDaysOfLastSync(SyncAdapter.SYNC_TYPE_GENERAL, SyncAdapter.SYNC_EVENT_SUCCESS);
-		
 		if(days == null || days > 0){
+
 			Bundle bundle = new Bundle();
 			bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_GENERAL);
 			requestSync(bundle);
@@ -92,7 +96,7 @@ public class StartActivity extends rp3.app.StartActivity{
                 data.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_SOLO_RESUMEN)) {
             if (messages.hasErrorMessage())
                 if (Session.IsLogged()) {
-                    showDialogConfirmation(REINTENTAR_MESSAGE, R.string.message_server_connection, R.string.title_option_setsincronizar);
+                    callNextActivity();
                 } else {
                     showDialogMessage(messages, new SimpleCallback() {
                         @Override
@@ -129,7 +133,7 @@ public class StartActivity extends rp3.app.StartActivity{
 //	}
 	
 	private void callNextActivity(){
-		setServiceRecurring();		
+		setServiceRecurring();
 		startActivity(MainActivity.newIntent(this));
 		finish();
 		setServiceRecurring();
