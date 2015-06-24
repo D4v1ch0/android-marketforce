@@ -78,7 +78,8 @@ public class Calendario {
                     DiaNoLaboral dia = new rp3.marketforce.models.DiaNoLaboral();
 
 
-                    dia.setEsParcial(type.getBoolean("DiaParcial"));
+                    if (!type.isNull("EsParcial"))
+                        dia.setEsParcial(type.getBoolean("EsParcial"));
                     dia.setEsteAnio(type.getBoolean("EsteAño"));
                     if (!type.isNull("FechaTicks"))
                         dia.setFecha(Convert.getDateFromDotNetTicks(type.getLong("FechaTicks")));
