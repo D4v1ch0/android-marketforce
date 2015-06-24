@@ -1072,7 +1072,7 @@ public class CrearClienteFragment extends BaseFragment {
 				Toast.makeText(getContext(), "Falta primer apellido de cliente.", Toast.LENGTH_LONG).show();
 				return false;
 			}
-            if((cliente.getFechaNacimiento() == null || cliente.getFechaNacimiento().getTime() >= Calendar.getInstance().getTime().getTime()) && info.findViewById(R.id.cliente_fecha_nacimiento).isEnabled())
+            if((cliente.getFechaNacimiento() == null || cliente.getFechaNacimiento().getTime() >= Calendar.getInstance().getTime().getTime()) && info.findViewById(R.id.cliente_fecha_nacimiento).isEnabled() && ((TextView)info.findViewById(R.id.fecha_nacimiento_label)).getText().toString().contains("*"))
             {
                 Toast.makeText(getContext(), "Fecha de nacimiento no puede ser mayor a hoy.", Toast.LENGTH_LONG).show();
                 return false;
