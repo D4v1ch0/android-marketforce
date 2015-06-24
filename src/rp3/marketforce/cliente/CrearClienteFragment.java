@@ -1033,12 +1033,12 @@ public class CrearClienteFragment extends BaseFragment {
 			if(isClient)
 			{
                 ((ImageButton) info.findViewById(R.id.cliente_foto)).setImageBitmap(pree);
-                cliente.setURLFoto(Utils.SaveBitmap(pree, "edit_client"));
+                cliente.setURLFoto(Utils.SaveBitmap(pree, String.format("%s.%s", java.util.UUID.randomUUID(), ".jpg")));
 			}
 			else
 			{
                 ((ImageButton) listViewContactos.get(posContact).findViewById(R.id.cliente_contacto_foto)).setImageBitmap(pree);
-                contactPhotos.set(posContact, Utils.SaveBitmap(pree, "edit_contact"));
+                contactPhotos.set(posContact, Utils.SaveBitmap(pree, String.format("%s.%s", java.util.UUID.randomUUID(), ".jpg")));
 			}        
 	    }
 	}
