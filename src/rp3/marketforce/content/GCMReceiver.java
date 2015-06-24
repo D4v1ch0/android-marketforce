@@ -36,7 +36,7 @@ public class GCMReceiver extends GcmListenerService {
         Log.d("Marketforce", "Message: " + message);
 
         if(!TextUtils.isEmpty(message))
-            NotificationPusher.pushNotification(1, getApplicationContext(), message, title, StartActivity.class);
+            NotificationPusher.pushNotification(1, getApplicationContext(), message, title);
     }
 
 
