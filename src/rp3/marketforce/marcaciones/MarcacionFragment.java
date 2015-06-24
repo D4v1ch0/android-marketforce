@@ -291,6 +291,7 @@ public class MarcacionFragment extends BaseFragment {
             {
                 list.add(dia);
                 dia = new DiaMarcacion();
+                cal.setTime(setter.getFecha());
             }
             if(dia.dia == null)
             {
