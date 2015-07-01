@@ -277,4 +277,8 @@
     <string name="label_aprobar">Aprobar</string>
     <string name="label_rechazar">Rechazar</string>
     <string name="label_estado">Estado</string>
+    <string name="message_sin_observacion">Debe de ingresar una observación.</string>
+    <string name="message_permiso_aprobado">Permiso Aprobado.</string>
+    <string name="message_permiso_rechazado">Permiso Rechazado.</string>
+    <string name="message_falta_motivo">Falta motivo de justificación.</string>
 </resources>

@@ -78,7 +78,7 @@
                     android:background="@drawable/button_feedback_marcacion"
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/lunch2" />
+                    android:src="@drawable/lunch03" />
 
             </RelativeLayout>
 
