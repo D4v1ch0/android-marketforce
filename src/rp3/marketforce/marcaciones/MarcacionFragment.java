@@ -138,6 +138,7 @@ public class MarcacionFragment extends BaseFragment {
                                 final Marcacion marc = new Marcacion();
                                 marc.setTipo("J1"); //falta tipo
                                 marc.setPendiente(true);
+                                marc.setFecha(Calendar.getInstance().getTime());
                                 if (GooglePlayServicesUtils.servicesConnected((BaseActivity) getActivity())) {
 
                                     try {
@@ -154,7 +155,6 @@ public class MarcacionFragment extends BaseFragment {
                                                             Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA)));
                                                     double distance = SphericalUtil.computeDistanceBetween(pos, partida);
                                                     marc.setEnUbicacion(distance < DISTANCE);
-                                                    marc.setFecha(Calendar.getInstance().getTime());
                                                     Marcacion.insert(getDataBase(), marc);
                                                     Toast.makeText(getContext(), "Se ha iniciado la Jornada.", Toast.LENGTH_LONG).show();
                                                     if (distance < DISTANCE) {
@@ -390,6 +390,7 @@ public class MarcacionFragment extends BaseFragment {
                             final Marcacion marc = new Marcacion();
                             marc.setTipo("J2"); //falta tipo
                             marc.setPendiente(true);
+                            marc.setFecha(Calendar.getInstance().getTime());
                             if (GooglePlayServicesUtils.servicesConnected((BaseActivity) getActivity())) {
 
                                 try {
@@ -406,7 +407,6 @@ public class MarcacionFragment extends BaseFragment {
                                                         Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA)));
                                                 double distance = SphericalUtil.computeDistanceBetween(pos, partida);
                                                 marc.setEnUbicacion(distance < DISTANCE);
-                                                marc.setFecha(Calendar.getInstance().getTime());
                                                 Marcacion.insert(getDataBase(), marc);
                                                 Toast.makeText(getContext(), "Se ha iniciado el break.", Toast.LENGTH_LONG).show();
                                                 if (distance < DISTANCE) {
@@ -463,6 +463,7 @@ public class MarcacionFragment extends BaseFragment {
                             final Marcacion marc = new Marcacion();
                             marc.setTipo("J3"); //falta tipo
                             marc.setPendiente(true);
+                            marc.setFecha(Calendar.getInstance().getTime());
                             if (GooglePlayServicesUtils.servicesConnected((BaseActivity) getActivity())) {
 
                                 try {
@@ -479,7 +480,6 @@ public class MarcacionFragment extends BaseFragment {
                                                         Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA)));
                                                 double distance = SphericalUtil.computeDistanceBetween(pos, partida);
                                                 marc.setEnUbicacion(distance < DISTANCE);
-                                                marc.setFecha(Calendar.getInstance().getTime());
                                                 Marcacion.insert(getDataBase(), marc);
                                                 Toast.makeText(getContext(), "Se ha terminado el break.", Toast.LENGTH_LONG).show();
                                                 if (distance < DISTANCE) {
@@ -534,6 +534,7 @@ public class MarcacionFragment extends BaseFragment {
                             ((DonutProgress) marcaciones.findViewById(R.id.donut_fin_jornada)).setProgress(PRESS_TIME);
                             final Marcacion marc = new Marcacion();
                             marc.setTipo("J4"); //falta tipo
+                            marc.setFecha(Calendar.getInstance().getTime());
                             marc.setPendiente(true);
                             if (GooglePlayServicesUtils.servicesConnected((BaseActivity) getActivity())) {
 
@@ -551,7 +552,6 @@ public class MarcacionFragment extends BaseFragment {
                                                         Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA)));
                                                 double distance = SphericalUtil.computeDistanceBetween(pos, partida);
                                                 marc.setEnUbicacion(distance < DISTANCE);
-                                                marc.setFecha(Calendar.getInstance().getTime());
                                                 Marcacion.insert(getDataBase(), marc);
                                                 Toast.makeText(getContext(), "Se ha finalizado la Jornada.", Toast.LENGTH_LONG).show();
                                                 if (distance < DISTANCE) {

@@ -150,6 +150,7 @@ public class PermisoFragment extends BaseFragment implements PermisoListFragment
 
     @Override
     public void onPermisoChanged(Permiso permiso) {
-
+        if (!mTwoPane)
+            slidingPane.openPane();
     }
 }

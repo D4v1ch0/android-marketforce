@@ -1,5 +1,6 @@
 package rp3.marketforce.marcaciones;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,6 +40,7 @@ public class PermisoDetailFragment extends BaseFragment {
     private long clientId;
     private Justificacion justificacion;
     private SimpleDateFormat format5;
+    private PermisoDetailFragmentListener detailFragmentListener;
 
     public static PermisoDetailFragment newInstance(Justificacion permiso) {
         Bundle arguments = new Bundle();
@@ -102,7 +104,7 @@ public class PermisoDetailFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 if(((TextView) getRootView().findViewById(R.id.justificacion_text)).length() <= 0)
-                    Toast.makeText(getContext(), "Debe de ingresar una observación.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), R.string.message_sin_observacion , Toast.LENGTH_LONG).show();
                 else {
                     justificacion.setObservacionSupervisor(((TextView) getRootView().findViewById(R.id.justificacion_text)).getText().toString());
                     justificacion.setEstado("A");
@@ -113,6 +115,9 @@ public class PermisoDetailFragment extends BaseFragment {
                     Bundle bundle = new Bundle();
                     bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_JUSTIFICACIONES_UPLOAD);
                     requestSync(bundle);
+                    ((TextView) getRootView().findViewById(R.id.justificacion_estado)).setText("Aprobado");
+                    detailFragmentListener.onPermisoChanged(null);
+                    Toast.makeText(getContext(), R.string.message_permiso_aprobado, Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -120,7 +125,7 @@ public class PermisoDetailFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 if(((TextView) getRootView().findViewById(R.id.justificacion_text)).length() <= 0)
-                    Toast.makeText(getContext(), "Debe de ingresar una observación.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), R.string.message_sin_observacion , Toast.LENGTH_LONG).show();
                 else {
                     justificacion.setObservacionSupervisor(((TextView) getRootView().findViewById(R.id.justificacion_text)).getText().toString());
                     justificacion.setEstado("R");
@@ -131,6 +136,9 @@ public class PermisoDetailFragment extends BaseFragment {
                     Bundle bundle = new Bundle();
                     bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_JUSTIFICACIONES_UPLOAD);
                     requestSync(bundle);
+                    ((TextView) getRootView().findViewById(R.id.justificacion_estado)).setText("Rechazado");
+                    detailFragmentListener.onPermisoChanged(null);
+                    Toast.makeText(getContext(), R.string.message_permiso_rechazado, Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -169,6 +177,17 @@ public class PermisoDetailFragment extends BaseFragment {
                         .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                 ((TextView) getRootView().findViewById(R.id.justificacion_text)).setText(result.get(0));
             }
+        }
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if(getParentFragment()!=null){
+            detailFragmentListener = (PermisoDetailFragmentListener)getParentFragment();
+        }else{
+            detailFragmentListener = (PermisoDetailFragmentListener) activity;
+            setRetainInstance(true);
         }
     }
 }

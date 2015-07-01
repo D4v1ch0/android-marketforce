@@ -24,6 +24,7 @@ import rp3.marketforce.models.marcacion.Marcacion;
 import rp3.marketforce.models.marcacion.Permiso;
 import rp3.marketforce.ruta.CrearVisitaFragment;
 import rp3.marketforce.sync.SyncAdapter;
+import rp3.marketforce.utils.NothingSelectedSpinnerAdapter;
 
 /**
  * Created by magno_000 on 09/06/2015.
@@ -60,31 +61,36 @@ public class JustificacionFragment extends BaseFragment {
         rootView.findViewById(R.id.aceptar_justificacion).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                permiso.setObservacion(((TextView) rootView.findViewById(R.id.justificacion_text)).getText().toString());
-                permiso.setFecha(Calendar.getInstance().getTime());
-                permiso.setTipo(((GeneralValue) ((Spinner) rootView.findViewById(R.id.justificacion_motivos)).getSelectedItem()).getCode());
-                if(permiso.getID() == 0)
-                    Permiso.insert(getDataBase(), permiso);
+                if(((Spinner) rootView.findViewById(R.id.justificacion_motivos)).getSelectedItemPosition() != 0) {
+                    permiso.setObservacion(((TextView) rootView.findViewById(R.id.justificacion_text)).getText().toString());
+                    permiso.setFecha(Calendar.getInstance().getTime());
+                    permiso.setTipo(((GeneralValue) ((Spinner) rootView.findViewById(R.id.justificacion_motivos)).getSelectedItem()).getCode());
+                    if (permiso.getID() == 0)
+                        Permiso.insert(getDataBase(), permiso);
+                    else
+                        Permiso.update(getDataBase(), permiso);
+
+                    if (idMarcacion == 0) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_PERMISO);
+                        bundle.putLong(ARG_PERMISO, permiso.getID());
+                        requestSync(bundle);
+                    } else {
+                        permiso.setIdMarcacion(idMarcacion);
+                        Permiso.update(getDataBase(), permiso);
+                        Bundle bundle = new Bundle();
+                        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
+                        requestSync(bundle);
+                    }
+
+                    getParentFragment().onResume();
+
+                    finish();
+                }
                 else
-                    Permiso.update(getDataBase(), permiso);
-
-                if(idMarcacion == 0) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_PERMISO);
-                    bundle.putLong(ARG_PERMISO, permiso.getID());
-                    requestSync(bundle);
+                {
+                    Toast.makeText(getContext(), R.string.message_falta_motivo, Toast.LENGTH_LONG).show();
                 }
-                else {
-                    permiso.setIdMarcacion(idMarcacion);
-                    Permiso.update(getDataBase(), permiso);
-                    Bundle bundle = new Bundle();
-                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
-                    requestSync(bundle);
-                }
-
-                getParentFragment().onResume();
-
-                finish();
             }
         });
 
@@ -96,7 +102,10 @@ public class JustificacionFragment extends BaseFragment {
         });
 
         SimpleGeneralValueAdapter valueAdapter = new SimpleGeneralValueAdapter(getContext(), getDataBase(), Contants.GENERAL_TABLE_MOTIVO_PERMISO);
-        ((Spinner)rootView.findViewById(R.id.justificacion_motivos)).setAdapter(valueAdapter);
+        ((Spinner)rootView.findViewById(R.id.justificacion_motivos)).setAdapter(new NothingSelectedSpinnerAdapter(
+                valueAdapter,
+                R.layout.spinner_empty_selected,
+                this.getContext()));
 
         permiso = Permiso.getPermisoMarcacion(getDataBase(), 0);
         if(permiso == null)
