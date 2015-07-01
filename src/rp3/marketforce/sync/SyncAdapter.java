@@ -456,9 +456,6 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     if (result == SYNC_EVENT_SUCCESS && PreferenceManager.getBoolean(Contants.KEY_ES_SUPERVISOR)) {
                         result = rp3.marketforce.sync.Agente.executeSyncGetAgente(db);
                         addDefaultMessage(result);
-
-                        result = rp3.marketforce.sync.Marcaciones.executeSyncPermisosPorAprobar(db);
-                        addDefaultMessage(result);
                     }
 
                     if (result == SYNC_EVENT_SUCCESS) {
@@ -505,12 +502,6 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         result = rp3.marketforce.sync.Oportunidad.executeSync(db);
                         addDefaultMessage(result);
                     }
-
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Marcaciones.executeSyncGrupo(db);
-                        addDefaultMessage(result);
-                    }
-
                 }
 
                 SyncAudit.insert(syncType, result);

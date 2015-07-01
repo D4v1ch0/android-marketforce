@@ -498,7 +498,6 @@ public final class Contract {
         public static final String FIELD_OBLIGATORIO = COLUMN_OBLIGATORIO;
 
     }
-
     /*
     Aqui empieza modulo de oportunidades
      */
