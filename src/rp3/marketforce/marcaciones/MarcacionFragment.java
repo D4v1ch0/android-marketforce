@@ -37,6 +37,7 @@ import rp3.marketforce.models.marcacion.Marcacion;
 import rp3.marketforce.models.marcacion.Permiso;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.DetailsPageAdapter;
+import rp3.util.ConnectionUtils;
 import rp3.util.GooglePlayServicesUtils;
 import rp3.util.LocationUtils;
 import rp3.widget.DigitalClock;
@@ -553,23 +554,20 @@ public class MarcacionFragment extends BaseFragment {
                                                     DiaLaboral dia = DiaLaboral.getDia(getDataBase(), Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1);
                                                     Calendar cal_hoy = Calendar.getInstance();
                                                     try {
-                                                        if(dia.getHoraFin2() == null)
-                                                            cal_hoy.setTime(format.parse(dia.getHoraFin1().replace("h",":")));
+                                                        if (dia.getHoraFin2() == null)
+                                                            cal_hoy.setTime(format.parse(dia.getHoraFin1().replace("h", ":")));
                                                         else
-                                                            cal_hoy.setTime(format.parse(dia.getHoraFin2().replace("h",":")));
+                                                            cal_hoy.setTime(format.parse(dia.getHoraFin2().replace("h", ":")));
+                                                    } catch (Exception ex) {
                                                     }
-                                                    catch (Exception ex)
-                                                    {}
                                                     int atraso = CheckMinutes(cal_hoy);
-                                                    if(atraso < 0 && dia != null)
-                                                    {
-                                                        marc.setMintutosAtraso(atraso*(-1));
+                                                    if (atraso < 0 && dia != null) {
+                                                        marc.setMintutosAtraso(atraso * (-1));
                                                         Marcacion.update(getDataBase(), marc);
                                                         fragment.idMarcacion = marc.getID();
                                                         showDialogFragment(fragment, "Justificacion");
                                                         Toast.makeText(getContext(), "Usted esta finalizando su jornada por adelantado. Indique su justificación", Toast.LENGTH_LONG).show();
-                                                    }
-                                                    else {
+                                                    } else {
                                                         marcaciones.findViewById(R.id.layout_fin_jornada).setVisibility(View.GONE);
                                                         marcaciones.findViewById(R.id.layout_fin_break).setVisibility(View.GONE);
                                                         marcaciones.findViewById(R.id.layout_break).setVisibility(View.GONE);
@@ -618,10 +616,12 @@ public class MarcacionFragment extends BaseFragment {
         switch(item.getItemId())
         {
             case R.id.action_syncronize:
-                showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait);
-                Bundle bundle = new Bundle();
-                bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_PENDIENTES_PERMISO);
-                requestSync(bundle);
+                if(ConnectionUtils.isNetAvailable(this.getContext())) {
+                    showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_PENDIENTES_PERMISO);
+                    requestSync(bundle);
+                }
                 break;
             case R.id.action_justificacion_previa:
                 Intent intent = new Intent(this.getContext(), JustificacionPreviaActivity.class);
