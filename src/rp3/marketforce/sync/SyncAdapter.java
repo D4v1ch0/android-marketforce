@@ -152,13 +152,6 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         addDefaultMessage(result);
                     }
 
-                    // MODULO DE MARCACIONES
-
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Marcaciones.executeSyncGrupo(db);
-                        addDefaultMessage(result);
-                    }
-
                     if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.marketforce.sync.Agente.executeSyncGetDeviceId(getContext());
                         addDefaultMessage(result);
@@ -166,6 +159,13 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 
                     if (result == SYNC_EVENT_SUCCESS && !TextUtils.isEmpty(PreferenceManager.getString(Contants.KEY_APP_INSTANCE_ID))) {
                         result = rp3.marketforce.sync.Agente.executeSyncDeviceId();
+                        addDefaultMessage(result);
+                    }
+
+                    // MODULO DE MARCACIONES
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Marcaciones.executeSyncGrupo(db);
                         addDefaultMessage(result);
                     }
 
