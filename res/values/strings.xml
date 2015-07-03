@@ -178,5 +178,9 @@
     <string name="label_punto_inicio">Punto de Inicio</string>
     <string name="label_ultimo_punto">Último Punto</string>
     <string name="label_senso">Número de Ubicación</string>
+    <string name="label_1hora">1 Hora</string>
+    <string name="label_24horas">24 Horas</string>
+    <string name="label_48horas">48 Horas</string>
+    <string name="label_mas48horas">Más de 48 horas</string>
 
 </resources>
