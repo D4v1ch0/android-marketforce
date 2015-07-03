@@ -259,4 +259,13 @@
         HoraFin TEXT
         )
     </statement>
+    <statement>
+        CREATE TABLE tbAgente(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdAgente INTEGER,
+        Nombre TEXT,
+        Telefono TEXT,
+        Email TEXT
+        )
+    </statement>
 </sql>

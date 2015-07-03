@@ -524,4 +524,18 @@ public final class Contract {
         public static final String COLUMN_HORA_FIN = "HoraFin";
 
     }
+
+    public static abstract class Agente implements BaseColumns {
+
+        public static final String TABLE_NAME = "tbAgente";
+
+        public static final String COLUMN_ID_AGENTE = "IdAgente";
+        public static final String COLUMN_NOMBRE = "Nombre";
+        public static final String COLUMN_TELEFONO = "Telefono";
+        public static final String COLUMN_EMAIL = "Email";
+
+        public static final String FIELD_NOMBRE = COLUMN_NOMBRE;
+        public static final String FIELD_ID_AGENTE = COLUMN_ID_AGENTE;
+
+    }
 }

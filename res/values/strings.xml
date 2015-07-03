@@ -182,5 +182,9 @@
     <string name="label_24horas">24 Horas</string>
     <string name="label_48horas">48 Horas</string>
     <string name="label_mas48horas">Más de 48 horas</string>
+    <string name="label_notificacion">Notificación</string>
+    <string name="label_titulo">Título</string>
+    <string name="label_mensaje">Mensaje</string>
+    <string name="label_enviar_notificacion">Enviar Notificación</string>
 
 </resources>

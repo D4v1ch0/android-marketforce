@@ -104,6 +104,9 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 
                         result = rp3.marketforce.sync.Agente.executeSyncGetUbicaciones(db);
                         addDefaultMessage(result);
+
+                        result = rp3.marketforce.sync.Agente.executeSyncAgentes(db);
+                        addDefaultMessage(result);
                     }
 
                     if (result == SYNC_EVENT_SUCCESS) {

@@ -22,6 +22,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -265,6 +267,12 @@ public class DashboardGrupoFragment extends BaseFragment {
              public void onClick(View view) {
                  adapter.Sort(Contants.ESTADO_VISITADO, asc_visited);
                  asc_visited = !asc_visited;
+             }
+         });
+         ((ListView)parent.findViewById(R.id.grupo_list_view)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
+             @Override
+             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                 showDialogFragment(new AgenteDetalleFragment(), "Agente", "Agente");
              }
          });
 	 	return parent;
