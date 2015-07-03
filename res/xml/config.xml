@@ -223,6 +223,12 @@
                     <webMethod>POST</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>
+                <method>
+                    <name>GetAgentesOportunidad</name>
+                    <action>agente/getagentes</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
                 <!-- Modulo Oportunidad -->
                 <method>
                     <name>GetEtapas</name>
@@ -246,12 +252,6 @@
                     <name>CreateOportunidad</name>
                     <action>oportunidad/create</action>
                     <webMethod>POST</webMethod>
-                    <contentEncoding>gzip</contentEncoding>
-                </method>
-                <method>
-                    <name>GetAgentesOportunidad</name>
-                    <action>agente/getagentes</action>
-                    <webMethod>GET</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>

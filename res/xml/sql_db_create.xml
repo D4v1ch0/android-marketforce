@@ -259,6 +259,13 @@
         HoraFin TEXT
         )
     </statement>
+    <statement>
+        CREATE TABLE tbAgente(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdAgente INTEGER,
+        Nombre TEXT
+        )
+    </statement>
     <!-- Tablas Modulo Oportunidades -->
     <statement>
         CREATE TABLE tbOportunidad(
@@ -365,13 +372,6 @@
         IdTareaActividad INTEGER,
         Resultado TEXT,
         IdsResultados TEXT
-        )
-    </statement>
-    <statement>
-        CREATE TABLE tbAgente(
-        _id INTEGER PRIMARY KEY AUTOINCREMENT,
-        IdAgente INTEGER,
-        Nombre TEXT
         )
     </statement>
     <statement>

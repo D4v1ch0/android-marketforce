@@ -2,50 +2,23 @@ package rp3.marketforce.oportunidad;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.SearchView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import java.net.URISyntaxException;
-import java.sql.Ref;
-import java.util.Calendar;
-import java.util.List;
 
 import rp3.app.BaseFragment;
-import rp3.configuration.PreferenceManager;
-import rp3.marketforce.Contants;
 import rp3.marketforce.R;
-import rp3.marketforce.cliente.ClientDetailFragment;
-import rp3.marketforce.cliente.ClientListFragment;
-import rp3.marketforce.cliente.CrearClienteActivity;
-import rp3.marketforce.cliente.ImportChooseFragment;
-import rp3.marketforce.db.Contract;
-import rp3.marketforce.models.Cliente;
-import rp3.marketforce.models.oportunidad.Agente;
-import rp3.marketforce.models.oportunidad.Etapa;
 import rp3.marketforce.models.oportunidad.Oportunidad;
-import rp3.marketforce.models.oportunidad.OportunidadContacto;
-import rp3.marketforce.models.oportunidad.OportunidadResponsable;
-import rp3.marketforce.models.oportunidad.OportunidadTarea;
-import rp3.marketforce.ruta.MapaActivity;
-import rp3.util.ConnectionUtils;
 import rp3.widget.SlidingPaneLayout;
 
 /**

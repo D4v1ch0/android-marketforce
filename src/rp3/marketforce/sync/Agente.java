@@ -181,18 +181,18 @@ public class Agente {
 
             JSONArray types = webService.getJSONArrayResponse();
 
-            rp3.marketforce.models.oportunidad.Agente.deleteAll(db, Contract.Agente.TABLE_NAME);
+            rp3.marketforce.models.Agente.deleteAll(db, Contract.Agente.TABLE_NAME);
 
             for (int i = 0; i < types.length(); i++) {
 
                 try {
                     JSONObject type = types.getJSONObject(i);
-                    rp3.marketforce.models.oportunidad.Agente agente = new rp3.marketforce.models.oportunidad.Agente();
+                    rp3.marketforce.models.Agente agente = new rp3.marketforce.models.Agente();
 
                     agente.setIdAgente(type.getInt("IdAgente"));
                     agente.setNombre(type.getString("Nombre"));
 
-                    rp3.marketforce.models.oportunidad.Agente.insert(db, agente);
+                    rp3.marketforce.models.Agente.insert(db, agente);
                 } catch (JSONException e) {
                     Log.e("Error", e.toString());
                     return rp3.content.SyncAdapter.SYNC_EVENT_ERROR;

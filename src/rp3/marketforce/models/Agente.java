@@ -1,4 +1,4 @@
-package rp3.marketforce.models.oportunidad;
+package rp3.marketforce.models;
 
 import android.database.Cursor;
 
@@ -8,6 +8,7 @@ import java.util.List;
 import rp3.data.entity.EntityBase;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.db.Contract;
+import rp3.marketforce.models.oportunidad.OportunidadTarea;
 import rp3.util.CursorUtils;
 
 /**

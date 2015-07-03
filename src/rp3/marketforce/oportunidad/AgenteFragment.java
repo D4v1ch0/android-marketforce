@@ -6,9 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -16,9 +13,7 @@ import java.util.List;
 
 import rp3.app.BaseFragment;
 import rp3.marketforce.R;
-import rp3.marketforce.models.Tarea;
-import rp3.marketforce.models.oportunidad.Agente;
-import rp3.marketforce.ruta.CrearVisitaFragment;
+import rp3.marketforce.models.Agente;
 
 /**
  * Created by magno_000 on 28/05/2015.

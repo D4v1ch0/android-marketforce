@@ -16,12 +16,9 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -36,18 +33,13 @@ import rp3.marketforce.R;
 import rp3.marketforce.cliente.ClienteEditActivity;
 import rp3.marketforce.cliente.ClienteEditFragment;
 import rp3.marketforce.cliente.CrearClienteActivity;
-import rp3.marketforce.db.Contract;
-import rp3.marketforce.models.Cliente;
-import rp3.marketforce.models.oportunidad.Agente;
-import rp3.marketforce.models.oportunidad.Etapa;
+import rp3.marketforce.models.Agente;
 import rp3.marketforce.models.oportunidad.Oportunidad;
 import rp3.marketforce.models.oportunidad.OportunidadEtapa;
 import rp3.marketforce.utils.DetailsPageAdapter;
 import rp3.marketforce.utils.DonutChart;
 import rp3.marketforce.utils.DrawableManager;
 import rp3.util.CalendarUtils;
-import rp3.util.Convert;
-import rp3.util.Format;
 import rp3.widget.ViewPager;
 
 /**
