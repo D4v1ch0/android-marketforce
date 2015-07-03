@@ -272,7 +272,7 @@ public class DashboardGrupoFragment extends BaseFragment {
          ((ListView)parent.findViewById(R.id.grupo_list_view)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
              @Override
              public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                 showDialogFragment(new AgenteDetalleFragment(), "Agente", "Agente");
+                 showDialogFragment(AgenteDetalleFragment.newInstance(adapter.getItem(position).getIdAgente()), "Agente", "Agente");
              }
          });
 	 	return parent;

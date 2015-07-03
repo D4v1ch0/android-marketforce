@@ -36,8 +36,8 @@
             android:text="@string/label_sin_especificar"
             android:id="@+id/agente_movil"
             android:enabled="true"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:clickable="true"
             android:textColor="@drawable/text_feedback" />
     </LinearLayout>
@@ -62,10 +62,10 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/label_sin_especificar"
-            android:id="@+id/textView76"
+            android:id="@+id/agente_correo"
             android:enabled="true"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:clickable="true"
             android:textColor="@drawable/text_feedback" />
     </LinearLayout>

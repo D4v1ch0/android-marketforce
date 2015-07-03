@@ -8,6 +8,7 @@ import rp3.marketforce.Contants;
 import rp3.marketforce.ServerActivity;
 import rp3.marketforce.cliente.CrearClienteFragment;
 import rp3.marketforce.models.Tarea;
+import rp3.marketforce.resumen.AgenteDetalleFragment;
 import rp3.marketforce.ruta.CrearVisitaFragment;
 import rp3.marketforce.ruta.MotivoNoVisitaFragment;
 import rp3.marketforce.ruta.RutasDetailFragment;
@@ -45,6 +46,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
     public static String SYNC_TYPE_AGENDA_GEOLOCATION = "agenda_geolocation";
     public static String SYNC_TYPE_UPLOAD_AGENDAS = "agenda_upload";
     public static String SYNC_TYPE_UPLOAD_CLIENTES = "cliente_upload";
+    public static String SYNC_TYPE_SEND_NOTIFICATION = "send_notification";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -201,6 +203,12 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                 } else if (syncType.equals(SYNC_TYPE_SERVER_CODE)) {
                     String code = extras.getString(ServerActivity.SERVER_CODE);
                     result = Server.executeSync(code);
+                    addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_SEND_NOTIFICATION)) {
+                    int idAgente = extras.getInt(AgenteDetalleFragment.ARG_AGENTE);
+                    String title = extras.getString(AgenteDetalleFragment.ARG_TITLE);
+                    String message = extras.getString(AgenteDetalleFragment.ARG_MESSAGE);
+                    result = Agente.executeSyncSendNotification(idAgente, title, message);
                     addDefaultMessage(result);
                 } else if (syncType.equals(SYNC_TYPE_AGENTES_UBICACION)) {
                     result = rp3.marketforce.sync.Agente.executeSyncGetUbicaciones(db);

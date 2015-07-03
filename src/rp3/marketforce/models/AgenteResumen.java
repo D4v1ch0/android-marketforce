@@ -137,6 +137,7 @@ public class AgenteResumen extends rp3.data.entity.EntityBase<AgenteResumen>{
 			do
 			{
 				AgenteResumen agd = new AgenteResumen();
+                agd.setIdAgente(CursorUtils.getInt(c, Contract.AgentesResumen.FIELD_ID_AGENTE));
 				agd.setNombres(CursorUtils.getString(c, Contract.AgentesResumen.FIELD_NOMBRES));
 				agd.setApellidos(CursorUtils.getString(c, Contract.AgentesResumen.FIELD_APELLIDOS));
 				agd.setGestionados(CursorUtils.getInt(c, Contract.AgentesResumen.FIELD_GESTIONADOS));

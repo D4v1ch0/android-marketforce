@@ -117,8 +117,8 @@ public class Agente extends EntityBase<Agente> {
             agente.setID(CursorUtils.getInt(c, Contract.Agente._ID));
             agente.setIdAgente(CursorUtils.getInt(c, Contract.Agente.COLUMN_ID_AGENTE));
             agente.setNombre(CursorUtils.getString(c, Contract.Agente.COLUMN_NOMBRE));
-            agente.setTelefono(CursorUtils.getString(c, Contract.Agente.COLUMN_NOMBRE));
-            agente.setEmail(CursorUtils.getString(c, Contract.Agente.COLUMN_NOMBRE));
+            agente.setTelefono(CursorUtils.getString(c, Contract.Agente.COLUMN_TELEFONO));
+            agente.setEmail(CursorUtils.getString(c, Contract.Agente.COLUMN_EMAIL));
         }
         return agente;
     }

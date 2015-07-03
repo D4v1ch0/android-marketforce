@@ -159,6 +159,9 @@
     <string name="message_direccion_google">Desea obtener la dirección desde Google?</string>
     <string name="message_server_connection">Hubo un error de conexión al servidor. Desea reintentar?</string>
     <string name="message_cerrar_sesion">Esta seguro de cerrar sesión en este dispositivo?</string>
+    <string name="message_ingreso_titulo">Debe de ingresar el titulo de la notificación</string>
+    <string name="message_ingreso_mensaje">Debe de ingresar el mensaje de la notificación</string>
+    <string name="message_notificacion_enviada">Notificación enviada.</string>
     <string name="message_info">MARKET FORCE® Android </string>
     <string name="message_server_connection_reintentar">Hubo un error de conexión al servidor. Desea reintentar? Si escoje no, se ingresará en modo offline.</string>
     <string name="label_sin_especificar">(Sin especificar)</string>
@@ -186,5 +189,6 @@
     <string name="label_titulo">Título</string>
     <string name="label_mensaje">Mensaje</string>
     <string name="label_enviar_notificacion">Enviar Notificación</string>
+    <string name="gcm_defaultSenderId">313284335192</string>
 
 </resources>

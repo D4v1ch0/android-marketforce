@@ -153,6 +153,40 @@ public class Agente {
         return SyncAdapter.SYNC_EVENT_SUCCESS;
     }
 
+    public static int executeSyncSendNotification(int idAgente, String title, String message)
+    {
+        WebService webService = new WebService("MartketForce","SendNotification");
+
+        try
+        {
+            webService.addCurrentAuthToken();
+            JSONObject jObject = new JSONObject();
+            try {
+                jObject.put("IdAgente", idAgente);
+                jObject.put("Titulo", title);
+                jObject.put("Mensaje", message);
+            }catch (Exception ex)
+            {}
+            webService.addParameter("notification", jObject);
+
+
+            try {
+                webService.invokeWebService();
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return SyncAdapter.SYNC_EVENT_ERROR;
+            }
+
+        }finally{
+            webService.close();
+        }
+
+        return SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
     public static int executeSyncGetUbicaciones(DataBase db){
         WebService webService = new WebService("MartketForce","GetResumenUbicacionAgentes");
 
