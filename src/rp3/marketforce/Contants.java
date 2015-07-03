@@ -40,6 +40,7 @@ public class Contants {
     public final static String KEY_SIEMPRE_EDITAR = "SiempreEditarEnGestion";
 	public final static String KEY_SERVER = "server";
 	public final static String KEY_CLIENT = "ClientName";
+    public final static String KEY_APP_INSTANCE_ID = "TokenId";
 
     public final static String CAMPO_FECHA_NACIMIENTO = "FecNac";
     public final static String CAMPO_GENERO = "Gen";
