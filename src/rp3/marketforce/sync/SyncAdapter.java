@@ -56,8 +56,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 	public void onPerformSync(Account account, Bundle extras, String authority,
 			ContentProviderClient provider, SyncResult syncResult) {		
 		super.onPerformSync(account, extras, authority, provider, syncResult);	
-		
-		//android.os.Debug.waitForDebugger();
+
 		String syncType = extras.getString(ARG_SYNC_TYPE);
 		
 		DataBase db = null;		
