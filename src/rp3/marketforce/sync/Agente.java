@@ -283,8 +283,10 @@ public class Agente {
 
                     agente.setIdAgente(type.getInt("IdAgente"));
                     agente.setNombre(type.getString("Nombre"));
-                    agente.setTelefono(type.getString("Telefono"));
-                    agente.setEmail(type.getString("Email"));
+                    if(!type.isNull("Telefono"))
+                        agente.setTelefono(type.getString("Telefono"));
+                    if(!type.isNull("Email"))
+                        agente.setEmail(type.getString("Email"));
 
                     rp3.marketforce.models.Agente.insert(db, agente);
                 } catch (JSONException e) {

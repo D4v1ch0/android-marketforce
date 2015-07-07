@@ -327,7 +327,7 @@ public class MainActivity extends rp3.app.NavActivity{
                 PreferenceManager.setValue(Contants.KEY_ES_ADMINISTRADOR, false);
                 PreferenceManager.setValue(Contants.KEY_CARGO, "");
                 SyncAudit.clearAudit();
-                SyncAudit.insert(SyncAdapter.SYNC_TYPE_GEOPOLITICAL,SyncAdapter.SYNC_EVENT_SUCCESS);
+                //SyncAudit.insert(SyncAdapter.SYNC_TYPE_GEOPOLITICAL,SyncAdapter.SYNC_EVENT_SUCCESS);
                 AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
                 Intent updateServiceIntent = new Intent(context, EnviarUbicacionReceiver.class);

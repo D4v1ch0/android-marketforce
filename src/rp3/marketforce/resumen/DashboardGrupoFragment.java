@@ -14,6 +14,7 @@ import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 import com.jjoe64.graphview.ValueDependentColor;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint.Align;
 import android.os.Bundle;
@@ -45,6 +46,7 @@ public class DashboardGrupoFragment extends BaseFragment {
 	private ViewPager PagerDetalles;
 	private DetailsPageAdapter pagerAdapter;
 	private PagerTabStrip tabStrip;
+    private AgenteDetalleFragment agenteDetalleFragment;
     private boolean asc_pending = true, asc_unvisited = true, asc_visited = true;
 	
 	public static DashboardGrupoFragment newInstance(int i) {
@@ -272,7 +274,8 @@ public class DashboardGrupoFragment extends BaseFragment {
          ((ListView)parent.findViewById(R.id.grupo_list_view)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
              @Override
              public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                 showDialogFragment(AgenteDetalleFragment.newInstance(adapter.getItem(position).getIdAgente()), "Agente", "Agente");
+                 agenteDetalleFragment = AgenteDetalleFragment.newInstance(adapter.getItem(position).getIdAgente());
+                 showDialogFragment(agenteDetalleFragment, "Agente", "Agente");
              }
          });
 	 	return parent;
@@ -315,4 +318,11 @@ public class DashboardGrupoFragment extends BaseFragment {
 		}
 		return labels.toArray(new String[]{});
 	}
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(agenteDetalleFragment != null)
+            agenteDetalleFragment.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }
