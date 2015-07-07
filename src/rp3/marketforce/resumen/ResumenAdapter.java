@@ -34,9 +34,9 @@ public class ResumenAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public Object getItem(int position) {
+	public AgenteResumen getItem(int position) {
 		// TODO Auto-generated method stub
-		return null;
+		return list_resumen.get(position);
 	}
 
 	@Override

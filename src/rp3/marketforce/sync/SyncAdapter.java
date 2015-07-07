@@ -8,6 +8,7 @@ import rp3.marketforce.Contants;
 import rp3.marketforce.ServerActivity;
 import rp3.marketforce.cliente.CrearClienteFragment;
 import rp3.marketforce.models.Tarea;
+import rp3.marketforce.resumen.AgenteDetalleFragment;
 import rp3.marketforce.ruta.CrearVisitaFragment;
 import rp3.marketforce.ruta.MotivoNoVisitaFragment;
 import rp3.marketforce.ruta.RutasDetailFragment;
@@ -20,6 +21,7 @@ import android.content.ContentProviderClient;
 import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 
 public class SyncAdapter extends rp3.content.SyncAdapter {
@@ -44,6 +46,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
     public static String SYNC_TYPE_AGENDA_GEOLOCATION = "agenda_geolocation";
     public static String SYNC_TYPE_UPLOAD_AGENDAS = "agenda_upload";
     public static String SYNC_TYPE_UPLOAD_CLIENTES = "cliente_upload";
+    public static String SYNC_TYPE_SEND_NOTIFICATION = "send_notification";
 
     public static String SYNC_TYPE_UPLOAD_OPORTUNIDADES = "oportunidades_upload";
     public static String SYNC_TYPE_PENDIENTES_OPORTUNIDADES = "oportunidades_pendientes";
@@ -90,6 +93,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     }
 
                     if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Agente.executeSync(db);
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.marketforce.sync.Rutas.executeSync(db, null, null, false);
                         addDefaultMessage(result);
                         if (result == SYNC_EVENT_SUCCESS) {
@@ -97,16 +105,14 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         }
                     }
 
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Agente.executeSync(db);
-                        addDefaultMessage(result);
-                    }
-
                     if (result == SYNC_EVENT_SUCCESS && PreferenceManager.getBoolean(Contants.KEY_ES_SUPERVISOR)) {
                         result = rp3.marketforce.sync.Agente.executeSyncGetAgente(db);
                         addDefaultMessage(result);
 
                         result = rp3.marketforce.sync.Agente.executeSyncGetUbicaciones(db);
+                        addDefaultMessage(result);
+
+                        result = rp3.marketforce.sync.Agente.executeSyncAgentes(db);
                         addDefaultMessage(result);
                     }
 
@@ -141,6 +147,16 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 
                     if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.marketforce.sync.Calendario.executeSync(db);
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Agente.executeSyncGetDeviceId(getContext());
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS && !TextUtils.isEmpty(PreferenceManager.getString(Contants.KEY_APP_INSTANCE_ID))) {
+                        result = rp3.marketforce.sync.Agente.executeSyncDeviceId();
                         addDefaultMessage(result);
                     }
 
@@ -205,6 +221,12 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                 } else if (syncType.equals(SYNC_TYPE_SERVER_CODE)) {
                     String code = extras.getString(ServerActivity.SERVER_CODE);
                     result = Server.executeSync(code);
+                    addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_SEND_NOTIFICATION)) {
+                    int idAgente = extras.getInt(AgenteDetalleFragment.ARG_AGENTE);
+                    String title = extras.getString(AgenteDetalleFragment.ARG_TITLE);
+                    String message = extras.getString(AgenteDetalleFragment.ARG_MESSAGE);
+                    result = Agente.executeSyncSendNotification(idAgente, title, message);
                     addDefaultMessage(result);
                 } else if (syncType.equals(SYNC_TYPE_AGENTES_UBICACION)) {
                     result = rp3.marketforce.sync.Agente.executeSyncGetUbicaciones(db);
