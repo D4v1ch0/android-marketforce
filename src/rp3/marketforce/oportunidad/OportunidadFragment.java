@@ -31,6 +31,7 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
 
     private OportunidadListFragment transactionListFragment;
     private OportunidadDetailFragment transactionDetailFragment;
+    private Oportunidad selectedOportunidad;
     private SlidingPaneLayout slidingPane;
     private String textSearch;
 
@@ -171,6 +172,7 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
         searchPlate.setHintTextColor(getResources().getColor(R.color.color_hint));
         searchPlate.setTextColor(getResources().getColor(R.color.apptheme_color));
         searchPlate.setBackgroundResource(R.drawable.apptheme_edit_text_holo_light);
+        searchPlate.setHint(R.string.hint_search_oportunidad);
 
         if(null!=searchManager ) {
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
@@ -206,7 +208,10 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
     private void RefreshMenu() {
         if (!mTwoPane) {
             menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
-            menu.findItem(R.id.action_edit).setVisible(!isActiveListFragment);
+            if(selectedOportunidad != null)
+                menu.findItem(R.id.action_edit).setVisible(!isActiveListFragment && selectedOportunidad.getEstado().equalsIgnoreCase("A"));
+            else
+                menu.findItem(R.id.action_edit).setVisible(!isActiveListFragment);
             menu.findItem(R.id.action_crear_oportunidad).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_filtro).setVisible(isActiveListFragment && !filtro);
             menu.findItem(R.id.action_quitar_filtro).setVisible(isActiveListFragment && filtro);
@@ -215,7 +220,10 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
             menu.findItem(R.id.action_crear_oportunidad).setVisible(true);
             menu.findItem(R.id.action_filtro).setVisible(!filtro);
             menu.findItem(R.id.action_quitar_filtro).setVisible(filtro);
-            menu.findItem(R.id.action_edit).setVisible(selectedOportunidadId != 0);
+            if(selectedOportunidad != null)
+                menu.findItem(R.id.action_edit).setVisible(selectedOportunidad.getEstado().equalsIgnoreCase("A"));
+            else
+                menu.findItem(R.id.action_edit).setVisible(selectedOportunidadId != 0);
         }
     }
 
@@ -256,6 +264,7 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
 
         RefreshMenu();
 
+        selectedOportunidad = oportunidad;
         selectedOportunidadId = oportunidad.getID();
         transactionDetailFragment = OportunidadDetailFragment.newInstance(selectedOportunidadId);
         setFragment(R.id.content_transaction_detail, transactionDetailFragment);

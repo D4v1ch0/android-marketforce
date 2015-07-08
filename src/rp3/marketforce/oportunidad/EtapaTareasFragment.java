@@ -105,6 +105,9 @@ public class EtapaTareasFragment extends BaseFragment {
         opt.setPendiente(true);
         Oportunidad.update(getDataBase(), opt);
 
+        if(etapa.getIdEtapaPadre() != opt.getIdEtapa())
+            getRootView().findViewById(R.id.finalizar_etapa).setVisibility(View.GONE);
+
         tareas = new ArrayList<OportunidadTarea>();
         List<OportunidadTarea> subTareas = OportunidadTarea.getTareasOportunidadByEtapa(getDataBase(), opt.getIdOportunidad(), idEtapa);
         tareas.addAll(subTareas);

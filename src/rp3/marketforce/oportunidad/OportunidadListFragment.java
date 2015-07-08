@@ -246,7 +246,8 @@ public class OportunidadListFragment extends BaseFragment {
             ((TextView) getRootView().findViewById(R.id.oportunidad_numero)).setText("Oportunidades: " + lista.size());
             double monto = 0;
             for (Oportunidad op : lista) {
-                monto = monto + op.getImporte();
+                if(op.getEstado().equalsIgnoreCase("A"))
+                    monto = monto + op.getImporte();
             }
             ((TextView) getRootView().findViewById(R.id.oportunidad_meta)).setText("Meta: $ " + numberFormat.format(monto));
             list.setSelector(getActivity().getResources().getDrawable(R.drawable.bkg));

@@ -44,7 +44,7 @@
     <string name="label_datos_personas">Contactos</string>
     <string name="label_direccion">Dirección</string>
     <string name="label_ciudad">Ciudad</string>
-    <string name="hint_search_transaction">Buscar Cliente</string>
+    <string name="hint_search_transaction">Buscar</string>
     <string name="hint_search_transaction_rutas">Buscar</string>
     <string name="title_activity_searchable">Búqueda</string>
     <string name="label_recordarme">Recordarme</string>
@@ -259,5 +259,6 @@
     <string name="label_no_referencias">No hay referencias</string>
     <string name="label_medio_referencia_max">MEDIO DE REFERENCIA</string>
     <string name="label_finalizar_subetapa">Finalizar Subetapa</string>
+    <string name="hint_search_oportunidad">Buscar</string>
 
 </resources>

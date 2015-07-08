@@ -69,7 +69,8 @@ public class OportunidadDetailFragment extends BaseFragment {
     private DrawableManager DManager;
     private int curentPage = -1;
     SimpleDateFormat format1 = new SimpleDateFormat("dd");
-    SimpleDateFormat format2 = new SimpleDateFormat("MMMM yyyy");
+    SimpleDateFormat format2 = new SimpleDateFormat("MM");
+    SimpleDateFormat format3 = new SimpleDateFormat("yyyy");
 
     public static OportunidadDetailFragment newInstance(Oportunidad op) {
         return newInstance(op.getID());
@@ -392,7 +393,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                     if (position == 0) {
                         ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa1));
                         if (etp.getEstado().equalsIgnoreCase("R")) {
-                            ((TextView) view_timeline.findViewById(R.id.etapa1_fecha)).setText(format1.format(etp.getFechaFin()) + " de " + format2.format(etp.getFechaFin()));
+                            ((TextView) view_timeline.findViewById(R.id.etapa1_fecha)).setText(format1.format(etp.getFechaFin()) + "/" + format2.format(etp.getFechaFin()) + "/" + format3.format(etp.getFechaFin()));
                             Calendar thisDay = Calendar.getInstance();
                             thisDay.setTime(etp.getFechaFin());
                             ((TextView) view_timeline.findViewById(R.id.etapa1_dias)).setText(CalendarUtils.DayDiffTruncate(thisDay, ant) + " Días");
@@ -403,7 +404,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                     if (position == 1) {
                         ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa2));
                         if (etp.getEstado().equalsIgnoreCase("R")) {
-                            ((TextView) view_timeline.findViewById(R.id.etapa2_fecha)).setText(format1.format(etp.getFechaFin()) + " de " + format2.format(etp.getFechaFin()));
+                            ((TextView) view_timeline.findViewById(R.id.etapa2_fecha)).setText(format1.format(etp.getFechaFin()) + "/" + format2.format(etp.getFechaFin()) + "/" + format3.format(etp.getFechaFin()));
                             Calendar thisDay = Calendar.getInstance();
                             thisDay.setTime(etp.getFechaFin());
                             ((TextView) view_timeline.findViewById(R.id.etapa2_dias)).setText(CalendarUtils.DayDiffTruncate(thisDay, ant) + " Días");
@@ -414,7 +415,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                     if (position == 2) {
                         ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa3));
                         if (etp.getEstado().equalsIgnoreCase("R")) {
-                            ((TextView) view_timeline.findViewById(R.id.etapa3_fecha)).setText(format1.format(etp.getFechaFin()) + " de " + format2.format(etp.getFechaFin()));
+                            ((TextView) view_timeline.findViewById(R.id.etapa3_fecha)).setText(format1.format(etp.getFechaFin()) + "/" + format2.format(etp.getFechaFin()) + "/" + format3.format(etp.getFechaFin()));
                             Calendar thisDay = Calendar.getInstance();
                             thisDay.setTime(etp.getFechaFin());
                             ((TextView) view_timeline.findViewById(R.id.etapa3_dias)).setText(CalendarUtils.DayDiffTruncate(thisDay, ant) + " Días");
@@ -425,7 +426,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                     if (position == 3) {
                         ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa4));
                         if (etp.getEstado().equalsIgnoreCase("R")) {
-                            ((TextView) view_timeline.findViewById(R.id.etapa4_fecha)).setText(format1.format(etp.getFechaFin()) + " de " + format2.format(etp.getFechaFin()));
+                            ((TextView) view_timeline.findViewById(R.id.etapa4_fecha)).setText(format1.format(etp.getFechaFin()) + "/" + format2.format(etp.getFechaFin()) + "/" + format3.format(etp.getFechaFin()));
                             Calendar thisDay = Calendar.getInstance();
                             thisDay.setTime(etp.getFechaFin());
                             ((TextView) view_timeline.findViewById(R.id.etapa4_dias)).setText(CalendarUtils.DayDiffTruncate(thisDay, ant) + " Días");
@@ -436,7 +437,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                     if (position == 4) {
                         ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa5));
                         if (etp.getEstado().equalsIgnoreCase("R")) {
-                            ((TextView) view_timeline.findViewById(R.id.etapa5_fecha)).setText(format1.format(etp.getFechaFin()) + " de " + format2.format(etp.getFechaFin()));
+                            ((TextView) view_timeline.findViewById(R.id.etapa5_fecha)).setText(format1.format(etp.getFechaFin()) + "/" + format2.format(etp.getFechaFin()) + "/" + format3.format(etp.getFechaFin()));
                             Calendar thisDay = Calendar.getInstance();
                             thisDay.setTime(etp.getFechaFin());
                             ((TextView) view_timeline.findViewById(R.id.etapa5_dias)).setText(CalendarUtils.DayDiffTruncate(thisDay, ant) + " Días");

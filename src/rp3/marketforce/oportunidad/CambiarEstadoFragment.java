@@ -48,7 +48,7 @@ public class CambiarEstadoFragment extends BaseFragment {
         final List<GeneralValue> generalValues = new ArrayList<GeneralValue>();
         for(GeneralValue value : values)
         {
-            if(!value.getCode().equalsIgnoreCase("C") && !opt.getEstado().equalsIgnoreCase(value.getCode()))
+            if(!value.getCode().equalsIgnoreCase("ELIM") && !value.getCode().equalsIgnoreCase("C") && !opt.getEstado().equalsIgnoreCase(value.getCode()))
                 generalValues.add(value);
         }
 

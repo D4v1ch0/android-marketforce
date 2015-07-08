@@ -60,6 +60,8 @@ public class OportunidadListAdapter extends BaseAdapter {
         convertView = (View) inflater.inflate(this.contex.getApplicationContext().getResources().getLayout(R.layout.rowlist_oportunidad), null);
 
         ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_nombre)).setText(opt.getDescripcion());
+        ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_probabilidad)).setText("Probabilidad: " + opt.getProbabilidad() + "%");
+        ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_agente)).setText(opt.getAgente().getNombre());
         ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_number)).setText((position + 1)+ "");
         ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_importe)).setText(numberFormat.format(opt.getImporte()));
         ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_contactado)).setText("Contactado: " + format1.format(opt.getFechaCreacion()));

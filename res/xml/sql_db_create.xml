@@ -263,7 +263,9 @@
         CREATE TABLE tbAgente(
         _id INTEGER PRIMARY KEY AUTOINCREMENT,
         IdAgente INTEGER,
-        Nombre TEXT
+        Nombre TEXT,
+        Telefono TEXT,
+        Email TEXT
         )
     </statement>
     <!-- Tablas Modulo Oportunidades -->

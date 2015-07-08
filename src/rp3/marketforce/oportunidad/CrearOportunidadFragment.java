@@ -168,7 +168,8 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
             opt = Oportunidad.getOportunidadId(getDataBase(), id);
         else {
             opt.setEstado("A");
-            opt.setIdEtapa(1);
+            Etapa etp = Etapa.getEtapaNext(getDataBase(), 1);
+            opt.setIdEtapa(etp.getIdEtapa());
             opt.setFechaCreacion(Calendar.getInstance().getTime());
         }
         opt.setDescripcion(((EditText) view.findViewById(R.id.oportunidad_nombre)).getText().toString());

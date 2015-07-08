@@ -310,6 +310,21 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                             SyncAudit.insert(SYNC_TYPE_ACT_AGENDA, SYNC_EVENT_SUCCESS);
                         }
                     }
+                } else if (syncType.equals(SYNC_TYPE_UPLOAD_OPORTUNIDAD)) {
+                    result = Oportunidad.executeSyncInserts(db);
+                    addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_UPLOAD_OPORTUNIDADES)) {
+                    result = Oportunidad.executeSyncInserts(db);
+                    addDefaultMessage(result);
+
+                    result = Oportunidad.executeSyncPendientes(db);
+                    addDefaultMessage(result);
+
+                    result = Oportunidad.executeSync(db);
+                    addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_PENDIENTES_OPORTUNIDADES)) {
+                    result = Oportunidad.executeSyncPendientes(db);
+                    addDefaultMessage(result);
                 } else if (syncType.equals(SYNC_TYPE_UPLOAD_CLIENTES)) {
                     result = Cliente.executeSyncInserts(db);
                     addDefaultMessage(result);

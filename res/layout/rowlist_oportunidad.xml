@@ -85,8 +85,17 @@
                     android:text="Medium Text"
                     android:id="@+id/rowlist_oportunidad_dias"
                     android:textSize="@dimen/text_medium_small_size" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Medium Text"
+                    android:id="@+id/rowlist_oportunidad_probabilidad"
+                    android:textSize="@dimen/text_medium_small_size" />
             </LinearLayout>
         </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
@@ -107,6 +116,14 @@
             android:paddingTop="5dp"
             android:paddingRight="5dp"
             android:paddingBottom="2dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/rowlist_oportunidad_agente"
+            android:textSize="@dimen/text_medium_small_size" />
 
         <RatingBar
             android:id="@+id/rowlist_oportunidad_calificacion"

@@ -53,7 +53,10 @@ public class Oportunidad {
                 jObject.put("Importe", oportunidadUpload.getImporte());
                 jObject.put("Latitud", oportunidadUpload.getLatitud());
                 jObject.put("Longitud", oportunidadUpload.getLongitud());
-                jObject.put("Observacion", oportunidadUpload.getObservacion());
+                if(oportunidadUpload.getObservacion() != null && !oportunidadUpload.getObservacion().equalsIgnoreCase("null"))
+                    jObject.put("Observacion", oportunidadUpload.getObservacion());
+                else
+                    jObject.put("Observacion", "");
                 //jObject.put("Probabilidad", 0);
                 jObject.put("Probabilidad", oportunidadUpload.getProbabilidad());
                 jObject.put("Referencia", oportunidadUpload.getReferencia());
@@ -140,7 +143,10 @@ public class Oportunidad {
                         jObjectEtapa.put("IdEtapaPadre", etapa.getIdEtapaPadre());
                     jObjectEtapa.put("Estado", etapa.getEstado());
                     jObjectEtapa.put("Orden", etapa.getEtapa().getOrden());
-                    jObjectEtapa.put("Observacion", etapa.getObservacion());
+                    if(etapa.getObservacion() != null && !etapa.getObservacion().equalsIgnoreCase("null"))
+                        jObjectEtapa.put("Observacion", etapa.getObservacion());
+                    else
+                        jObjectEtapa.put("Observacion", "");
                     long ticks = etapa.getFechaFin().getTime();
                     if(ticks != 0)
                         jObjectEtapa.put("FechaFinTicks", Convert.getDotNetTicksFromDate(etapa.getFechaFin()));
@@ -314,7 +320,10 @@ public class Oportunidad {
                 jObject.put("Importe", oportunidadUpload.getImporte());
                 jObject.put("Latitud", oportunidadUpload.getLatitud());
                 jObject.put("Longitud", oportunidadUpload.getLongitud());
-                jObject.put("Observacion", oportunidadUpload.getObservacion());
+                if(oportunidadUpload.getObservacion() != null && !oportunidadUpload.getObservacion().equalsIgnoreCase("null"))
+                    jObject.put("Observacion", oportunidadUpload.getObservacion());
+                else
+                    jObject.put("Observacion", "");
                 jObject.put("Probabilidad", oportunidadUpload.getProbabilidad());
                 jObject.put("Referencia", oportunidadUpload.getReferencia());
                 jObject.put("CorreoElectronico", oportunidadUpload.getCorreo());
@@ -400,7 +409,10 @@ public class Oportunidad {
                     if(etapa.getIdEtapaPadre() != 0)
                         jObjectEtapa.put("IdEtapaPadre", etapa.getIdEtapaPadre());
                     jObjectEtapa.put("Estado", etapa.getEstado());
-                    jObjectEtapa.put("Observacion", etapa.getObservacion());
+                    if(etapa.getObservacion() != null && !etapa.getObservacion().equalsIgnoreCase("null"))
+                        jObjectEtapa.put("Observacion", etapa.getObservacion());
+                    else
+                        jObjectEtapa.put("Observacion", "");
                     jObjectEtapa.put("Orden", etapa.getEtapa().getOrden());
                     long ticks = etapa.getFechaFin().getTime();
                     if(ticks != 0)
@@ -571,6 +583,7 @@ public class Oportunidad {
                     opt.setImporte(type.getDouble("Importe"));
                     opt.setProbabilidad(type.getInt("Probabilidad"));
                     opt.setCalificacion(type.getInt("Calificacion"));
+                    opt.setIdAgente(type.getInt("IdAgente"));
                     opt.setFechaCreacion(Convert.getDateFromDotNetTicks(type.getLong("FechaCreacionTicks")));
                     opt.setFechaUltimaGestion(Convert.getDateFromDotNetTicks(type.getLong("FechaUltimaGestionTicks")));
                     if (!type.isNull("Observacion"))
