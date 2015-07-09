@@ -134,7 +134,7 @@ public class DashboardMapFragment extends BaseFragment{
 	
 	public void setMapa()
 	{
-		//map = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.dashboard_map)).getMap();
+		//map = ((MapActivity) getActivity().getFragmentManager().findFragmentById(R.id.dashboard_map)).getMap();
         try {
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Contants.LATITUD, Contants.LONGITUD), Contants.ZOOM), 1, null);
 

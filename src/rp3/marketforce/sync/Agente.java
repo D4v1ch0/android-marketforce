@@ -1,5 +1,7 @@
 package rp3.marketforce.sync;
 
+import android.util.Log;
+
 import android.content.Context;
 import android.text.TextUtils;
 

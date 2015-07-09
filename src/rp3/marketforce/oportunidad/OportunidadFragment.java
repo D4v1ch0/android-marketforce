@@ -2,50 +2,23 @@ package rp3.marketforce.oportunidad;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.SearchView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import java.net.URISyntaxException;
-import java.sql.Ref;
-import java.util.Calendar;
-import java.util.List;
 
 import rp3.app.BaseFragment;
-import rp3.configuration.PreferenceManager;
-import rp3.marketforce.Contants;
 import rp3.marketforce.R;
-import rp3.marketforce.cliente.ClientDetailFragment;
-import rp3.marketforce.cliente.ClientListFragment;
-import rp3.marketforce.cliente.CrearClienteActivity;
-import rp3.marketforce.cliente.ImportChooseFragment;
-import rp3.marketforce.db.Contract;
-import rp3.marketforce.models.Cliente;
-import rp3.marketforce.models.oportunidad.Agente;
-import rp3.marketforce.models.oportunidad.Etapa;
 import rp3.marketforce.models.oportunidad.Oportunidad;
-import rp3.marketforce.models.oportunidad.OportunidadContacto;
-import rp3.marketforce.models.oportunidad.OportunidadResponsable;
-import rp3.marketforce.models.oportunidad.OportunidadTarea;
-import rp3.marketforce.ruta.MapaActivity;
-import rp3.util.ConnectionUtils;
 import rp3.widget.SlidingPaneLayout;
 
 /**
@@ -58,6 +31,7 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
 
     private OportunidadListFragment transactionListFragment;
     private OportunidadDetailFragment transactionDetailFragment;
+    private Oportunidad selectedOportunidad;
     private SlidingPaneLayout slidingPane;
     private String textSearch;
 
@@ -198,6 +172,7 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
         searchPlate.setHintTextColor(getResources().getColor(R.color.color_hint));
         searchPlate.setTextColor(getResources().getColor(R.color.apptheme_color));
         searchPlate.setBackgroundResource(R.drawable.apptheme_edit_text_holo_light);
+        searchPlate.setHint(R.string.hint_search_oportunidad);
 
         if(null!=searchManager ) {
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
@@ -233,7 +208,10 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
     private void RefreshMenu() {
         if (!mTwoPane) {
             menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
-            menu.findItem(R.id.action_edit).setVisible(!isActiveListFragment);
+            if(selectedOportunidad != null)
+                menu.findItem(R.id.action_edit).setVisible(!isActiveListFragment && selectedOportunidad.getEstado().equalsIgnoreCase("A"));
+            else
+                menu.findItem(R.id.action_edit).setVisible(!isActiveListFragment);
             menu.findItem(R.id.action_crear_oportunidad).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_filtro).setVisible(isActiveListFragment && !filtro);
             menu.findItem(R.id.action_quitar_filtro).setVisible(isActiveListFragment && filtro);
@@ -242,7 +220,10 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
             menu.findItem(R.id.action_crear_oportunidad).setVisible(true);
             menu.findItem(R.id.action_filtro).setVisible(!filtro);
             menu.findItem(R.id.action_quitar_filtro).setVisible(filtro);
-            menu.findItem(R.id.action_edit).setVisible(selectedOportunidadId != 0);
+            if(selectedOportunidad != null)
+                menu.findItem(R.id.action_edit).setVisible(selectedOportunidad.getEstado().equalsIgnoreCase("A"));
+            else
+                menu.findItem(R.id.action_edit).setVisible(selectedOportunidadId != 0);
         }
     }
 
@@ -283,6 +264,7 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
 
         RefreshMenu();
 
+        selectedOportunidad = oportunidad;
         selectedOportunidadId = oportunidad.getID();
         transactionDetailFragment = OportunidadDetailFragment.newInstance(selectedOportunidadId);
         setFragment(R.id.content_transaction_detail, transactionDetailFragment);

@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="rp3.marketforce"
-    android:versionCode="27"
-    android:versionName="1.4.2 - Marcaciones - Oportunidades">
+    android:versionCode="25"
+    android:versionName="1.4.1 - Oportunidades">
 
     <uses-sdk
         android:minSdkVersion="13"
@@ -27,7 +27,6 @@
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -192,10 +191,7 @@
         <activity android:name=".oportunidad.CrearOportunidadActivity" android:configChanges="orientation"></activity>
         <activity android:name=".oportunidad.FotoOportunidadActivity" android:theme="@style/MyAppPopupTheme"></activity>
         <activity android:name=".oportunidad.CambiarEstadoActivity" android:theme="@style/MyAppPopupTheme"></activity>
-        <!-- Modulo Marcaciones -->
-        <activity android:name=".marcaciones.MarcacionActivity"></activity>
-        <activity android:name=".marcaciones.JustificacionPreviaActivity"></activity>
-        
+        <activity android:name=".utils.MapActivity" android:theme="@style/AppDialogTheme"></activity>
     </application>
 
 </manifest>

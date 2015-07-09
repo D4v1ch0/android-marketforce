@@ -246,7 +246,8 @@ public class OportunidadListFragment extends BaseFragment {
             ((TextView) getRootView().findViewById(R.id.oportunidad_numero)).setText("Oportunidades: " + lista.size());
             double monto = 0;
             for (Oportunidad op : lista) {
-                monto = monto + op.getImporte();
+                if(op.getEstado().equalsIgnoreCase("A"))
+                    monto = monto + op.getImporte();
             }
             ((TextView) getRootView().findViewById(R.id.oportunidad_meta)).setText("Meta: $ " + numberFormat.format(monto));
             list.setSelector(getActivity().getResources().getDrawable(R.drawable.bkg));
@@ -270,8 +271,15 @@ public class OportunidadListFragment extends BaseFragment {
                 }
             });
 
-            adapter = new OportunidadListAdapter(this.getActivity(), lista, oportunidadListFragmentCallback);
-            list.setAdapter(adapter);
+            if(adapter == null) {
+                adapter = new OportunidadListAdapter(this.getActivity(), lista, oportunidadListFragmentCallback);
+                list.setAdapter(adapter);
+            }
+            else {
+                adapter.setList(lista);
+                adapter.notifyDataSetChanged();
+            }
+
             list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                 @SuppressLint("ResourceAsColor")
@@ -282,7 +290,7 @@ public class OportunidadListFragment extends BaseFragment {
                     oportunidadListFragmentCallback.onOportunidadSelected(lista.get(position));
                 }
             });
-            adapter.notifyDataSetChanged();
+
             if (oportunidadListFragmentCallback.allowSelectedItem() && lista.size() != 0)
                 oportunidadListFragmentCallback.onOportunidadSelected(lista.get(0));
         }

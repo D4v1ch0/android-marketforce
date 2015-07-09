@@ -237,6 +237,37 @@
         Obligatorio BOOLEAN
         )
     </statement>
+    <statement>
+        CREATE TABLE tbDiaLaboral(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdDia INTEGER,
+        Orden INTEGER,
+        EsLaboral BOOLEAN,
+        HoraInicio1 TEXT,
+        HoraFin1 TEXT,
+        HoraInicio2 TEXT,
+        HoraFin2 TEXT
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbDiaNoLaboral(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        Fecha INTEGER,
+        DiaParcial BOOLEAN,
+        EsteAno BOOLEAN,
+        HoraInicio TEXT,
+        HoraFin TEXT
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbAgente(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdAgente INTEGER,
+        Nombre TEXT,
+        Telefono TEXT,
+        Email TEXT
+        )
+    </statement>
     <!-- Tablas Modulo Oportunidades -->
     <statement>
         CREATE TABLE tbOportunidad(
@@ -346,41 +377,12 @@
         )
     </statement>
     <statement>
-        CREATE TABLE tbAgente(
-        _id INTEGER PRIMARY KEY AUTOINCREMENT,
-        IdAgente INTEGER,
-        Nombre TEXT
-        )
-    </statement>
-    <statement>
         CREATE TABLE tbOportunidadResponsable(
         _id INTEGER PRIMARY KEY AUTOINCREMENT,
         IdOportunidad INTEGER,
         _IdOportunidad INTEGER,
         IdAgente INTEGER,
         Tipo TEXT
-        )
-    </statement>
-    <statement>
-        CREATE TABLE tbDiaLaboral(
-        _id INTEGER PRIMARY KEY AUTOINCREMENT,
-        IdDia INTEGER,
-        Orden INTEGER,
-        EsLaboral BOOLEAN,
-        HoraInicio1 TEXT,
-        HoraFin1 TEXT,
-        HoraInicio2 TEXT,
-        HoraFin2 TEXT
-        )
-    </statement>
-    <statement>
-        CREATE TABLE tbDiaNoLaboral(
-        _id INTEGER PRIMARY KEY AUTOINCREMENT,
-        Fecha INTEGER,
-        DiaParcial BOOLEAN,
-        EsteAno BOOLEAN,
-        HoraInicio TEXT,
-        HoraFin TEXT
         )
     </statement>
     <!-- Modulo Marcaciones -->

@@ -362,7 +362,7 @@ public class EtapaFragment extends BaseFragment {
         intent.putExtra(ARG_ITEM_ID, agt.getIdTarea());
         intent.putExtra(ARG_ETAPA, agt.getIdEtapa());
         intent.putExtra(ARG_OPORTUNIDAD, agt.getIdOportunidad());
-        intent.putExtra(ActividadActivity.ARG_VISTA, false);
+        intent.putExtra(ActividadActivity.ARG_VISTA, !opt.getEstado().equalsIgnoreCase("A"));
         intent.putExtra(ActividadActivity.ARG_TITULO, agt.getTarea().getNombreTarea());
         startActivity(intent);
     }
