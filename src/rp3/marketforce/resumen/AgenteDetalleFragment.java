@@ -22,6 +22,7 @@ import rp3.marketforce.models.Agente;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.Utils;
 import rp3.util.ConnectionUtils;
+import rp3.util.StringUtils;
 
 /**
  * Created by magno_000 on 03/07/2015.
@@ -154,7 +155,7 @@ public class AgenteDetalleFragment extends BaseFragment {
 
                         ArrayList<String> result = data
                                 .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                        ((TextView)getRootView().findViewById(R.id.obs_text)).setText(result.get(0));
+                        ((TextView)getRootView().findViewById(R.id.obs_text)).setText(StringUtils.getStringCapSentence(result.get(0)));
                     }
                     break;
             }

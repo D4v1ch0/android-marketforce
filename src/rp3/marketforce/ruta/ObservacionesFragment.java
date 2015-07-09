@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.speech.RecognizerIntent;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,6 +23,7 @@ import rp3.app.BaseFragment;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.utils.Utils;
+import rp3.util.StringUtils;
 
 import static rp3.util.Screen.getOrientation;
 
@@ -207,7 +209,7 @@ public class ObservacionesFragment extends BaseFragment {
 
                         ArrayList<String> result = data
                                 .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                        setTextViewText(R.id.obs_text, result.get(0));
+                        setTextViewText(R.id.obs_text, StringUtils.getStringCapSentence(result.get(0)));
                     }
                     break;
                 default:

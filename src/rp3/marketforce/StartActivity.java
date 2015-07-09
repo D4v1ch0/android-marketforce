@@ -6,14 +6,27 @@ import java.util.Random;
 import rp3.configuration.Configuration;
 import rp3.configuration.PreferenceManager;
 import rp3.content.SimpleCallback;
+import rp3.data.Constants;
 import rp3.data.MessageCollection;
 import rp3.marketforce.content.EnviarUbicacionReceiver;
+import rp3.marketforce.db.Contract;
 import rp3.marketforce.db.DbOpenHelper;
+import rp3.marketforce.models.Actividad;
+import rp3.marketforce.models.Agenda;
+import rp3.marketforce.models.AgendaTarea;
+import rp3.marketforce.models.AgendaTareaActividades;
+import rp3.marketforce.models.Cliente;
+import rp3.marketforce.models.ClienteDireccion;
+import rp3.marketforce.models.Contacto;
+import rp3.marketforce.models.Tarea;
+import rp3.marketforce.models.Ubicacion;
 import rp3.marketforce.sync.Server;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.runtime.Session;
 import rp3.sync.SyncAudit;
 import rp3.util.ConnectionUtils;
+
+import android.accounts.AccountManager;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -78,7 +91,40 @@ public class StartActivity extends rp3.app.StartActivity{
     @Override
 	public void onContinue() {	
 		
-		super.onContinue();		
+		super.onContinue();
+        String proof = PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"");
+        String proof2 = PreferenceManager.getString(Constants.KEY_LAST_PASS,"");
+        String peer = Session.getUser().getLogonName();
+        String peer2 = Session.getUser().getPassword();
+        if(!PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"").equalsIgnoreCase(Session.getUser().getLogonName()) ||
+                !PreferenceManager.getString(Constants.KEY_LAST_PASS,"").equalsIgnoreCase(Session.getUser().getPassword()))
+        {
+            Agenda.deleteAll(getDataBase(), Contract.Agenda.TABLE_NAME);
+            Agenda.AgendaExt.deleteAll(getDataBase(), Contract.AgendaExt.TABLE_NAME);
+            Tarea.deleteAll(getDataBase(), Contract.Tareas.TABLE_NAME);
+            Cliente.deleteAll(getDataBase(), Contract.Cliente.TABLE_NAME);
+            Cliente.ClientExt.deleteAll(getDataBase(), Contract.ClientExt.TABLE_NAME);
+            ClienteDireccion.deleteAll(getDataBase(), Contract.ClienteDireccion.TABLE_NAME);
+            Contacto.deleteAll(getDataBase(), Contract.Contacto.TABLE_NAME);
+            Contacto.ContactoExt.deleteAll(getDataBase(), Contract.ContactoExt.TABLE_NAME);
+            Actividad.deleteAll(getDataBase(), Contract.Actividades.TABLE_NAME);
+            AgendaTarea.deleteAll(getDataBase(), Contract.AgendaTarea.TABLE_NAME);
+            AgendaTareaActividades.deleteAll(getDataBase(), Contract.AgendaTareaActividades.TABLE_NAME);
+            Ubicacion.deleteAll(getDataBase(), Contract.Ubicacion.TABLE_NAME);
+            //GeopoliticalStructure.deleteAll(getDataBase(), rp3.data.models.Contract.GeopoliticalStructure.TABLE_NAME);
+            //GeopoliticalStructureExt.deleteAll(getDataBase(), rp3.data.models.Contract.GeopoliticalStructureExt.TABLE_NAME);
+            PreferenceManager.setValue(Contants.KEY_IDAGENTE, 0);
+            PreferenceManager.setValue(Contants.KEY_IDRUTA, 0);
+            PreferenceManager.setValue(Contants.KEY_ES_SUPERVISOR, false);
+            PreferenceManager.setValue(Contants.KEY_ES_AGENTE, false);
+            PreferenceManager.setValue(Contants.KEY_ES_ADMINISTRADOR, false);
+            PreferenceManager.setValue(Contants.KEY_CARGO, "");
+            SyncAudit.clearAudit();
+        }
+
+        PreferenceManager.setValue(Constants.KEY_LAST_LOGIN, Session.getUser().getLogonName());
+        PreferenceManager.setValue(Constants.KEY_LAST_PASS, Session.getUser().getPassword());
+
 		Long days = SyncAudit.getDaysOfLastSync(SyncAdapter.SYNC_TYPE_GENERAL, SyncAdapter.SYNC_EVENT_SUCCESS);
 		if(days == null || days > 0){
 
