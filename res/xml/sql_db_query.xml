@@ -1049,7 +1049,8 @@
      </statement>
      
 	 <statement name="ResumenAgentes">
-       SELECT Nombres, 
+       SELECT IdAgente,
+        Nombres,
 		Apellidos, 
 		SUM(Gestionados) as Gestionados,
 		SUM(NoGestionados) as NoGestionados, 

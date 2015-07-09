@@ -6,7 +6,15 @@ import android.text.TextUtils;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 
+import android.content.Context;
+import android.text.TextUtils;
+import android.util.Log;
+
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.iid.InstanceID;
+
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.ksoap2.transport.HttpResponseException;
 
@@ -151,6 +159,40 @@ public class Agente {
         return SyncAdapter.SYNC_EVENT_SUCCESS;
     }
 
+    public static int executeSyncSendNotification(int idAgente, String title, String message)
+    {
+        WebService webService = new WebService("MartketForce","SendNotification");
+
+        try
+        {
+            webService.addCurrentAuthToken();
+            JSONObject jObject = new JSONObject();
+            try {
+                jObject.put("IdAgente", idAgente);
+                jObject.put("Titulo", title);
+                jObject.put("Mensaje", message);
+            }catch (Exception ex)
+            {}
+            webService.addParameter("notification", jObject);
+
+
+            try {
+                webService.invokeWebService();
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return SyncAdapter.SYNC_EVENT_ERROR;
+            }
+
+        }finally{
+            webService.close();
+        }
+
+        return SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
     public static int executeSyncGetUbicaciones(DataBase db){
         WebService webService = new WebService("MartketForce","GetResumenUbicacionAgentes");
 
@@ -221,4 +263,49 @@ public class Agente {
 		
 		return SyncAdapter.SYNC_EVENT_SUCCESS;		
 	}
+
+    public static int executeSyncAgentes(DataBase db) {
+        WebService webService = new WebService("MartketForce", "GetAgentesOportunidad");
+        try {
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+            } catch (HttpResponseException e) {
+                if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return rp3.content.SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return rp3.content.SyncAdapter.SYNC_EVENT_ERROR;
+            }
+
+            JSONArray types = webService.getJSONArrayResponse();
+
+            rp3.marketforce.models.Agente.deleteAll(db, Contract.Agente.TABLE_NAME);
+
+            for (int i = 0; i < types.length(); i++) {
+
+                try {
+                    JSONObject type = types.getJSONObject(i);
+                    rp3.marketforce.models.Agente agente = new rp3.marketforce.models.Agente();
+
+                    agente.setIdAgente(type.getInt("IdAgente"));
+                    agente.setNombre(type.getString("Nombre"));
+                    if(!type.isNull("Telefono"))
+                        agente.setTelefono(type.getString("Telefono"));
+                    if(!type.isNull("Email"))
+                        agente.setEmail(type.getString("Email"));
+
+                    rp3.marketforce.models.Agente.insert(db, agente);
+                } catch (JSONException e) {
+                    Log.e("Error", e.toString());
+                    return rp3.content.SyncAdapter.SYNC_EVENT_ERROR;
+                }
+            }
+        } finally {
+            webService.close();
+        }
+
+        return rp3.marketforce.sync.SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
 }

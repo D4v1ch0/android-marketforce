@@ -14,6 +14,7 @@ import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 import com.jjoe64.graphview.ValueDependentColor;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint.Align;
 import android.os.Bundle;
@@ -22,6 +23,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -43,6 +46,7 @@ public class DashboardGrupoFragment extends BaseFragment {
 	private ViewPager PagerDetalles;
 	private DetailsPageAdapter pagerAdapter;
 	private PagerTabStrip tabStrip;
+    private AgenteDetalleFragment agenteDetalleFragment;
     private boolean asc_pending = true, asc_unvisited = true, asc_visited = true;
 	
 	public static DashboardGrupoFragment newInstance(int i) {
@@ -267,6 +271,13 @@ public class DashboardGrupoFragment extends BaseFragment {
                  asc_visited = !asc_visited;
              }
          });
+         ((ListView)parent.findViewById(R.id.grupo_list_view)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
+             @Override
+             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                 agenteDetalleFragment = AgenteDetalleFragment.newInstance(adapter.getItem(position).getIdAgente());
+                 showDialogFragment(agenteDetalleFragment, "Agente", "Agente");
+             }
+         });
 	 	return parent;
 	 }
 
@@ -307,4 +318,11 @@ public class DashboardGrupoFragment extends BaseFragment {
 		}
 		return labels.toArray(new String[]{});
 	}
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(agenteDetalleFragment != null)
+            agenteDetalleFragment.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

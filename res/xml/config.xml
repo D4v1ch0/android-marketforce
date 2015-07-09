@@ -228,6 +228,24 @@
                     <webMethod>GET</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>
+                <method>
+                    <name>GetAgentesOportunidad</name>
+                    <action>agente/getagentes</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>SetGCMId</name>
+                    <action>agente/setgcmid</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>SendNotification</name>
+                    <action>agente/sendnotification</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
                 <!-- Modulo Marcacion -->
                 <method>
                     <name>InsertMarcacion</name>
