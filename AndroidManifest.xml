@@ -17,9 +17,8 @@
         android:name="rp3.marketforce.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
     <uses-permission android:name="rp3.marketforce.permission.C2D_MESSAGE" />
-
-
-
+    
+    
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />

@@ -159,6 +159,9 @@
     <string name="message_direccion_google">Desea obtener la dirección desde Google?</string>
     <string name="message_server_connection">Hubo un error de conexión al servidor. Desea reintentar?</string>
     <string name="message_cerrar_sesion">Esta seguro de cerrar sesión en este dispositivo?</string>
+    <string name="message_ingreso_titulo">Debe de ingresar el titulo de la notificación</string>
+    <string name="message_ingreso_mensaje">Debe de ingresar el mensaje de la notificación</string>
+    <string name="message_notificacion_enviada">Notificación enviada.</string>
     <string name="message_info">MARKET FORCE® Android </string>
     <string name="message_server_connection_reintentar">Hubo un error de conexión al servidor. Desea reintentar? Si escoje no, se ingresará en modo offline.</string>
     <string name="label_sin_especificar">(Sin especificar)</string>
@@ -178,6 +181,15 @@
     <string name="label_punto_inicio">Punto de Inicio</string>
     <string name="label_ultimo_punto">Último Punto</string>
     <string name="label_senso">Número de Ubicación</string>
+    <string name="label_1hora">1 Hora</string>
+    <string name="label_24horas">24 Horas</string>
+    <string name="label_48horas">48 Horas</string>
+    <string name="label_mas48horas">Más de 48 horas</string>
+    <string name="label_notificacion">Notificación</string>
+    <string name="label_titulo">Título</string>
+    <string name="label_mensaje">Mensaje</string>
+    <string name="label_enviar_notificacion">Enviar Notificación</string>
+    <string name="gcm_defaultSenderId">313284335192</string>
     <!-- Modulo Oportunidad -->
     <string name="title_option_oportunidad">Oportunidades</string>
     <string name="label_crear_oportunidad">Crear</string>

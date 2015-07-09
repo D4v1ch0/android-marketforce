@@ -154,6 +154,40 @@ public class Agente {
         return SyncAdapter.SYNC_EVENT_SUCCESS;
     }
 
+    public static int executeSyncSendNotification(int idAgente, String title, String message)
+    {
+        WebService webService = new WebService("MartketForce","SendNotification");
+
+        try
+        {
+            webService.addCurrentAuthToken();
+            JSONObject jObject = new JSONObject();
+            try {
+                jObject.put("IdAgente", idAgente);
+                jObject.put("Titulo", title);
+                jObject.put("Mensaje", message);
+            }catch (Exception ex)
+            {}
+            webService.addParameter("notification", jObject);
+
+
+            try {
+                webService.invokeWebService();
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return SyncAdapter.SYNC_EVENT_ERROR;
+            }
+
+        }finally{
+            webService.close();
+        }
+
+        return SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
     public static int executeSyncGetUbicaciones(DataBase db){
         WebService webService = new WebService("MartketForce","GetResumenUbicacionAgentes");
 
@@ -242,18 +276,22 @@ public class Agente {
 
             JSONArray types = webService.getJSONArrayResponse();
 
-            rp3.marketforce.models.oportunidad.Agente.deleteAll(db, Contract.Agente.TABLE_NAME);
+            rp3.marketforce.models.Agente.deleteAll(db, Contract.Agente.TABLE_NAME);
 
             for (int i = 0; i < types.length(); i++) {
 
                 try {
                     JSONObject type = types.getJSONObject(i);
-                    rp3.marketforce.models.oportunidad.Agente agente = new rp3.marketforce.models.oportunidad.Agente();
+                    rp3.marketforce.models.Agente agente = new rp3.marketforce.models.Agente();
 
                     agente.setIdAgente(type.getInt("IdAgente"));
                     agente.setNombre(type.getString("Nombre"));
+                    if(!type.isNull("Telefono"))
+                        agente.setTelefono(type.getString("Telefono"));
+                    if(!type.isNull("Email"))
+                        agente.setEmail(type.getString("Email"));
 
-                    rp3.marketforce.models.oportunidad.Agente.insert(db, agente);
+                    rp3.marketforce.models.Agente.insert(db, agente);
                 } catch (JSONException e) {
                     Log.e("Error", e.toString());
                     return rp3.content.SyncAdapter.SYNC_EVENT_ERROR;

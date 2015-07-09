@@ -9,6 +9,7 @@ import rp3.marketforce.ServerActivity;
 import rp3.marketforce.cliente.CrearClienteFragment;
 import rp3.marketforce.marcaciones.JustificacionFragment;
 import rp3.marketforce.models.Tarea;
+import rp3.marketforce.resumen.AgenteDetalleFragment;
 import rp3.marketforce.ruta.CrearVisitaFragment;
 import rp3.marketforce.ruta.MotivoNoVisitaFragment;
 import rp3.marketforce.ruta.RutasDetailFragment;
@@ -46,6 +47,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
     public static String SYNC_TYPE_AGENDA_GEOLOCATION = "agenda_geolocation";
     public static String SYNC_TYPE_UPLOAD_AGENDAS = "agenda_upload";
     public static String SYNC_TYPE_UPLOAD_CLIENTES = "cliente_upload";
+    public static String SYNC_TYPE_SEND_NOTIFICATION = "send_notification";
 
     public static String SYNC_TYPE_UPLOAD_OPORTUNIDADES = "oportunidades_upload";
     public static String SYNC_TYPE_PENDIENTES_OPORTUNIDADES = "oportunidades_pendientes";
@@ -66,8 +68,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 	public void onPerformSync(Account account, Bundle extras, String authority,
 			ContentProviderClient provider, SyncResult syncResult) {		
 		super.onPerformSync(account, extras, authority, provider, syncResult);	
-		
-		//android.os.Debug.waitForDebugger();
+
 		String syncType = extras.getString(ARG_SYNC_TYPE);
 		
 		DataBase db = null;		
@@ -116,6 +117,9 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         addDefaultMessage(result);
 
                         result = rp3.marketforce.sync.Agente.executeSyncGetUbicaciones(db);
+                        addDefaultMessage(result);
+
+                        result = rp3.marketforce.sync.Agente.executeSyncAgentes(db);
                         addDefaultMessage(result);
 
                         result = rp3.marketforce.sync.Marcaciones.executeSyncPermisosPorAprobar(db);
@@ -240,6 +244,12 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                 } else if (syncType.equals(SYNC_TYPE_SERVER_CODE)) {
                     String code = extras.getString(ServerActivity.SERVER_CODE);
                     result = Server.executeSync(code);
+                    addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_SEND_NOTIFICATION)) {
+                    int idAgente = extras.getInt(AgenteDetalleFragment.ARG_AGENTE);
+                    String title = extras.getString(AgenteDetalleFragment.ARG_TITLE);
+                    String message = extras.getString(AgenteDetalleFragment.ARG_MESSAGE);
+                    result = Agente.executeSyncSendNotification(idAgente, title, message);
                     addDefaultMessage(result);
                 } else if (syncType.equals(SYNC_TYPE_UPLOAD_OPORTUNIDAD)) {
 
