@@ -134,7 +134,7 @@ public class Rutas {
                                 agenda.setFechaFinReal(Convert.getDateFromDotNetTicks(type.getLong("FechaFinGestionTicks")));
                             }
                             agenda.setCiudad(type.getString("Ciudad"));
-                            agenda.setNombreCompleto(type.getString("NombresCompletos"));
+                            agenda.setNombreCompleto(type.getString("NombresCompletos").trim().replace("null",""));
                             agenda.setDireccion(type.getString("Direccion"));
 
                             agenda.setEstadoAgenda(type.getString("EstadoAgenda"));
