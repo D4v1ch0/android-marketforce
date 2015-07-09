@@ -124,4 +124,8 @@ public class OportunidadListAdapter extends BaseAdapter {
         // TODO Auto-generated method stub
         return list_oportunidad.get(position);
     }
+
+    public void setList(List<Oportunidad> lista) {
+        list_oportunidad = lista;
+    }
 }

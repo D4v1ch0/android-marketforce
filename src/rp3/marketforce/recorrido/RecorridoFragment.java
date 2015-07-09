@@ -182,7 +182,7 @@ public class RecorridoFragment  extends BaseFragment {
 	private void setMapa()
 	{
 		ult = null;
-		//map = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.recorrido_map)).getMap();
+		//map = ((MapActivity) getActivity().getFragmentManager().findFragmentById(R.id.recorrido_map)).getMap();
 		map.clear();
 		map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Contants.LATITUD, Contants.LONGITUD), Contants.ZOOM), 1, null);
 		

@@ -39,6 +39,7 @@ import rp3.marketforce.models.oportunidad.OportunidadEtapa;
 import rp3.marketforce.utils.DetailsPageAdapter;
 import rp3.marketforce.utils.DonutChart;
 import rp3.marketforce.utils.DrawableManager;
+import rp3.marketforce.utils.MapActivity;
 import rp3.util.CalendarUtils;
 import rp3.widget.ViewPager;
 
@@ -49,6 +50,10 @@ public class OportunidadDetailFragment extends BaseFragment {
     public static final String ARG_ITEM_ID = "rp3.pos.transactionid";
 
     public static final String STATE_CLIENT_ID = "clientId";
+
+    private static final int IDINFO = 501;
+    private static final int IDTIMELINE = 502;
+    private static final int IDFOTOS= 503;
 
     private long clientId;
     private Oportunidad opt;
@@ -134,9 +139,9 @@ public class OportunidadDetailFragment extends BaseFragment {
                     .findViewById(R.id.linearLayout_content_contactos);
         }
 
-        linearLayoutRigth.removeAllViews();
-        linearLayoutAdress.removeAllViews();
-        linearLayoutContact.removeAllViews();
+        //linearLayoutRigth.removeAllViews();
+        //linearLayoutAdress.removeAllViews();
+        //linearLayoutContact.removeAllViews();
 
         TabInfo.setOnClickListener(new View.OnClickListener() {
 
@@ -181,16 +186,21 @@ public class OportunidadDetailFragment extends BaseFragment {
 
             }
         });
-        pagerAdapter = new DetailsPageAdapter();
+        if(pagerAdapter == null)
+            pagerAdapter = new DetailsPageAdapter();
 
 
-        if(curentPage == -1)
+        if(curentPage == -1) {
             setPageConfig(PagerDetalles.getCurrentItem());
-        else
+        }
+        else {
             setPageConfig(curentPage);
+        }
+
         if (opt != null) {
             renderOportunidad(getRootView());
         }
+        
     }
 
     @Override
@@ -276,8 +286,15 @@ public class OportunidadDetailFragment extends BaseFragment {
 
             inflater = (LayoutInflater) this.getActivity().getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE);
-            View view_info = inflater.inflate(
-                    R.layout.layout_oportunidad_info, null);
+
+            View view_info = null;
+            if(pagerAdapter.getCount() != 3) {
+                view_info = inflater.inflate(
+                        R.layout.layout_oportunidad_info, null);
+                view_info.setId(IDINFO);
+            }
+            else
+                view_info = pagerAdapter.getView(0).findViewById(IDINFO);
 
             List<Integer> values = new ArrayList<Integer>();
             values.add(100 - opt.getProbabilidad());
@@ -302,8 +319,19 @@ public class OportunidadDetailFragment extends BaseFragment {
             ((TextView) view_info.findViewById(R.id.oportunidad_referencia)).setText(opt.getDireccionReferencia());
             ((TextView) view_info.findViewById(R.id.oportunidades_comentarios)).setText(opt.getObservacion());
 
+            view_info.findViewById(R.id.oportunidad_locacion).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), MapActivity.class);
+                    intent.putExtra(MapActivity.ARG_LATITUD, opt.getLatitud());
+                    intent.putExtra(MapActivity.ARG_LONGITUD, opt.getLongitud());
+                    startActivity(intent);
+                }
+            });
+
             if (opt.getOportunidadResponsables().size() > 0) {
                 view_info.findViewById(R.id.oportunidad_sin_responsables).setVisibility(View.GONE);
+                ((LinearLayout) view_info.findViewById(R.id.oportunidad_responsables)).removeAllViews();
                 for (int i = 0; i < opt.getOportunidadResponsables().size(); i++) {
                     View view_responsable = inflater.inflate(
                             R.layout.rowlist_responsable_detail, null);
@@ -315,6 +343,7 @@ public class OportunidadDetailFragment extends BaseFragment {
 
             if (opt.getOportunidadContactos().size() > 0) {
                 view_info.findViewById(R.id.oportunidad_sin_contactos).setVisibility(View.GONE);
+                ((LinearLayout) view_info.findViewById(R.id.oportunidad_contactos)).removeAllViews();
                 for (int i = 0; i < opt.getOportunidadContactos().size(); i++) {
                     View view_contacto = inflater.inflate(
                             R.layout.rowlist_oportunidad_contacto, null);
@@ -353,18 +382,25 @@ public class OportunidadDetailFragment extends BaseFragment {
                 }
             }
 
+            ScrollView fl = null;
+            if(pagerAdapter.getCount() != 3) {
+                linearLayoutRigth.addView(view_info);
 
-            linearLayoutRigth.addView(view_info);
-
-            ScrollView fl = new ScrollView(getActivity());
-            ((ViewGroup) linearLayoutRigth.getParent()).removeView(linearLayoutRigth);
-            fl.addView(linearLayoutRigth);
-            pagerAdapter.addView(fl);
+                fl = new ScrollView(getActivity());
+                ((ViewGroup) linearLayoutRigth.getParent()).removeView(linearLayoutRigth);
+                fl.addView(linearLayoutRigth);
+                pagerAdapter.addView(fl);
+            }
 
             //Timeline
-
-            View view_timeline = inflater.inflate(
-                    R.layout.layout_oportunidad_timeline, null);
+            View view_timeline = null;
+            if(pagerAdapter.getCount() != 3) {
+                view_timeline = inflater.inflate(
+                        R.layout.layout_oportunidad_timeline, null);
+                view_timeline.setId(IDTIMELINE);
+            }
+            else
+                view_timeline = pagerAdapter.getView(1).findViewById(IDTIMELINE);
 
             LinearLayout etapas_layout = ((LinearLayout) view_timeline.findViewById(R.id.oportunidad_etapas));
             List<OportunidadEtapa> etapas = null;
@@ -379,6 +415,7 @@ public class OportunidadDetailFragment extends BaseFragment {
             int position = 0;
             Calendar ant = Calendar.getInstance();
             ant.setTime(opt.getFechaCreacion());
+            etapas_layout.removeAllViews();
             for (OportunidadEtapa etp : etapas) {
                 if(etp.getEtapa().getIdEtapaPadre() == 0) {
                     View row_etapa = inflater.inflate(R.layout.rowlist_oportunidad_etapa, null);
@@ -467,19 +504,28 @@ public class OportunidadDetailFragment extends BaseFragment {
             ((TextView) view_timeline.findViewById(R.id.timeline_total_dias)).setText("Total " + totalDias + " Días");
 
             linearLayoutAdress.setVisibility(View.VISIBLE);
-            linearLayoutAdress.addView(view_timeline);
 
 
-            fl = new ScrollView(getActivity());
-            ((ViewGroup) linearLayoutAdress.getParent()).removeView(linearLayoutAdress);
-            fl.addView(linearLayoutAdress);
-            pagerAdapter.addView(fl);
+            if(pagerAdapter.getCount() != 3) {
+                linearLayoutAdress.addView(view_timeline);
+
+                fl = new ScrollView(getActivity());
+                ((ViewGroup) linearLayoutAdress.getParent()).removeView(linearLayoutAdress);
+                fl.addView(linearLayoutAdress);
+                pagerAdapter.addView(fl);
+            }
 
 
             linearLayoutContact.setVisibility(View.VISIBLE);
 
-            View view_fotos = inflater.inflate(
-                    R.layout.layout_oportunidad_fotos, null);
+            View view_fotos = null;
+            if(pagerAdapter.getCount() != 3) {
+                view_fotos = inflater.inflate(
+                        R.layout.layout_oportunidad_fotos, null);
+                view_fotos.setId(IDFOTOS);
+            }
+            else
+                view_fotos = pagerAdapter.getView(2).findViewById(IDFOTOS);
 
             if (opt.getOportunidadFotos().size() > 0) {
                 for (int i = 0; i < opt.getOportunidadFotos().size(); i++) {
@@ -542,19 +588,24 @@ public class OportunidadDetailFragment extends BaseFragment {
                 }
             }
 
+            if(pagerAdapter.getCount() != 3) {
+                linearLayoutContact.addView(view_fotos);
 
-            linearLayoutContact.addView(view_fotos);
+                fl = new ScrollView(getActivity());
+                ((ViewGroup) linearLayoutContact.getParent()).removeView(linearLayoutContact);
+                fl.addView(linearLayoutContact);
+                pagerAdapter.addView(fl);
+            }
+
+            if(PagerDetalles.getAdapter() == null) {
+                PagerDetalles.setAdapter(pagerAdapter);
+                PagerDetalles.setCurrentItem(curentPage);
+            }
 
 
-            fl = new ScrollView(getActivity());
-            ((ViewGroup) linearLayoutContact.getParent()).removeView(linearLayoutContact);
-            fl.addView(linearLayoutContact);
-            pagerAdapter.addView(fl);
 
-            PagerDetalles.setAdapter(pagerAdapter);
-            PagerDetalles.setCurrentItem(curentPage);
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
 
         //TabInfo.setBackgroundColor(getResources().getColor(R.color.tab_activated));

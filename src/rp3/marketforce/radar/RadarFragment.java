@@ -138,7 +138,7 @@ public class RadarFragment extends BaseFragment {
             }
         });
 
-        //map = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.recorrido_map)).getMap();
+        //map = ((MapActivity) getActivity().getFragmentManager().findFragmentById(R.id.recorrido_map)).getMap();
         map.clear();
         List<AgenteUbicacion> list_ubicaciones = AgenteUbicacion.getResumen(getDataBase());
         markers = new ArrayList<Marker>();
@@ -192,7 +192,7 @@ public class RadarFragment extends BaseFragment {
     }
 
     private void setMapa() {
-       // map = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.recorrido_map)).getMap();
+       // map = ((MapActivity) getActivity().getFragmentManager().findFragmentById(R.id.recorrido_map)).getMap();
         map.clear();
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Contants.LATITUD, Contants.LONGITUD), Contants.ZOOM), 1, null);
 

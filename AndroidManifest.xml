@@ -191,7 +191,7 @@
         <activity android:name=".oportunidad.CrearOportunidadActivity" android:configChanges="orientation"></activity>
         <activity android:name=".oportunidad.FotoOportunidadActivity" android:theme="@style/MyAppPopupTheme"></activity>
         <activity android:name=".oportunidad.CambiarEstadoActivity" android:theme="@style/MyAppPopupTheme"></activity>
-        
+        <activity android:name=".utils.MapActivity" android:theme="@style/AppDialogTheme"></activity>
     </application>
 
 </manifest>

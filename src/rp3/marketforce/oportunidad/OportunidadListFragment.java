@@ -271,8 +271,15 @@ public class OportunidadListFragment extends BaseFragment {
                 }
             });
 
-            adapter = new OportunidadListAdapter(this.getActivity(), lista, oportunidadListFragmentCallback);
-            list.setAdapter(adapter);
+            if(adapter == null) {
+                adapter = new OportunidadListAdapter(this.getActivity(), lista, oportunidadListFragmentCallback);
+                list.setAdapter(adapter);
+            }
+            else {
+                adapter.setList(lista);
+                adapter.notifyDataSetChanged();
+            }
+
             list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                 @SuppressLint("ResourceAsColor")
@@ -283,7 +290,7 @@ public class OportunidadListFragment extends BaseFragment {
                     oportunidadListFragmentCallback.onOportunidadSelected(lista.get(position));
                 }
             });
-            adapter.notifyDataSetChanged();
+
             if (oportunidadListFragmentCallback.allowSelectedItem() && lista.size() != 0)
                 oportunidadListFragmentCallback.onOportunidadSelected(lista.get(0));
         }
