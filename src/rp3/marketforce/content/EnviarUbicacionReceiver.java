@@ -66,29 +66,28 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 					public void getLocationResult(Location location) {	
 						try
 						{
-							if(location!=null){			
-								if(ConnectionUtils.isNetAvailable(context))
-								{
-									Ubicacion ub = new Ubicacion();
-									ub.setLatitud(location.getLatitude());
-									ub.setLongitud(location.getLongitude());
-									ub.setFecha(Calendar.getInstance().getTimeInMillis());
-									ub.setPendiente(true);
-									Ubicacion.insert(DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class), ub);
-									
-									Bundle bundle = new Bundle();
-									bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_BATCH);
-									rp3.sync.SyncUtils.requestSync(bundle);
-								}
-								else
-								{
-									Ubicacion ub = new Ubicacion();
-									ub.setLatitud(location.getLatitude());
-									ub.setLongitud(location.getLongitude());
-									ub.setFecha(Calendar.getInstance().getTimeInMillis());
-									ub.setPendiente(true);
-									Ubicacion.insert(DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class), ub);
-								}
+							if(location!=null){
+                                if(Session.IsLogged()) {
+                                    if (ConnectionUtils.isNetAvailable(context)) {
+                                        Ubicacion ub = new Ubicacion();
+                                        ub.setLatitud(location.getLatitude());
+                                        ub.setLongitud(location.getLongitude());
+                                        ub.setFecha(Calendar.getInstance().getTimeInMillis());
+                                        ub.setPendiente(true);
+                                        Ubicacion.insert(DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class), ub);
+
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_BATCH);
+                                        rp3.sync.SyncUtils.requestSync(bundle);
+                                    } else {
+                                        Ubicacion ub = new Ubicacion();
+                                        ub.setLatitud(location.getLatitude());
+                                        ub.setLongitud(location.getLongitude());
+                                        ub.setFecha(Calendar.getInstance().getTimeInMillis());
+                                        ub.setPendiente(true);
+                                        Ubicacion.insert(DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class), ub);
+                                    }
+                                }
 							}	
 						}
 						catch(Exception e)
