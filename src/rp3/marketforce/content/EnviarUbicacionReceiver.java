@@ -10,6 +10,7 @@ import rp3.app.BaseActivity;
 import rp3.configuration.PreferenceManager;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
+import rp3.marketforce.models.DiaLaboral;
 import rp3.marketforce.models.Ubicacion;
 import rp3.marketforce.sync.EnviarUbicacion;
 import rp3.marketforce.sync.SyncAdapter;
@@ -57,8 +58,9 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 			
 			String prueba = cal.getTime().toString();
 			String prueba2 = calendar.getTime().toString();
-			
-			if(calendarCurrent.getTimeInMillis() < calendar.getTimeInMillis())
+
+            DiaLaboral diaLaboral = DiaLaboral.getDia(DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class), Utils.getDayOfWeek(calendarCurrent));
+			if(calendarCurrent.getTimeInMillis() < calendar.getTimeInMillis() && diaLaboral.isEsLaboral())
 			{
 				LocationUtils.getLocation(context, new OnLocationResultListener() {
 					
