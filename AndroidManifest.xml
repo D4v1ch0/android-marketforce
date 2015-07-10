@@ -183,6 +183,7 @@
         <!-- Modulo Marcaciones -->
         <activity android:name=".marcaciones.MarcacionActivity"></activity>
         <activity android:name=".marcaciones.JustificacionPreviaActivity"></activity>
+        <activity android:name=".marcaciones.PermisoActivity"></activity>
         
     </application>
 

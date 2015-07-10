@@ -8,6 +8,7 @@ import com.google.android.gms.gcm.GcmListenerService;
 
 import rp3.marketforce.R;
 import rp3.marketforce.marcaciones.MarcacionActivity;
+import rp3.marketforce.marcaciones.PermisoActivity;
 import rp3.util.NotificationPusher;
 
 /**
@@ -16,6 +17,7 @@ import rp3.util.NotificationPusher;
 public class GCMReceiver extends GcmListenerService {
 
     public static final String NOTIFICATION_TYPE_MARCACION = "MARCACION";
+    public static final String NOTIFICATION_TYPE_APROBAR_JUSTIFICACION = "APROBAR_JUSTIFICACION";
 
     @Override
     public void onMessageReceived(String from, Bundle data) {
@@ -36,6 +38,8 @@ public class GCMReceiver extends GcmListenerService {
             {
                 if(type.equalsIgnoreCase(NOTIFICATION_TYPE_MARCACION))
                     NotificationPusher.pushNotification(1, getApplicationContext(), message, title, MarcacionActivity.class);
+                else if(type.equalsIgnoreCase(NOTIFICATION_TYPE_APROBAR_JUSTIFICACION))
+                    NotificationPusher.pushNotification(1, getApplicationContext(), message, title, PermisoActivity.class);
                 else
                     NotificationPusher.pushNotification(1, getApplicationContext(), message, title);
             }
