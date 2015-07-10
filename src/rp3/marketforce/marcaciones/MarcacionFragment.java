@@ -483,10 +483,28 @@ public class MarcacionFragment extends BaseFragment {
                                                 Marcacion.insert(getDataBase(), marc);
                                                 Toast.makeText(getContext(), "Se ha terminado el break.", Toast.LENGTH_LONG).show();
                                                 if (distance < DISTANCE) {
-                                                    marcaciones.findViewById(R.id.layout_fin_break).setVisibility(View.GONE);
-                                                    Bundle bundle = new Bundle();
-                                                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
-                                                    requestSync(bundle);
+                                                    Marcacion ultimaMarcacion = Marcacion.getUltimaMarcacion(getDataBase());
+                                                    Calendar cal_hoy = Calendar.getInstance();
+                                                    try {
+                                                        cal_hoy.setTime(ultimaMarcacion.getFecha());
+                                                    }
+                                                    catch (Exception ex)
+                                                    {}
+                                                    int atraso = CheckMinutes(cal_hoy);
+                                                    if(atraso > 60)
+                                                    {
+                                                        marc.setMintutosAtraso(atraso - 60);
+                                                        Marcacion.update(getDataBase(), marc);
+                                                        fragment.idMarcacion = marc.getID();
+                                                        showDialogFragment(fragment, "Justificacion");
+                                                        Toast.makeText(getContext(), "Usted esta llegando atrasado. Indique su justificación", Toast.LENGTH_LONG).show();
+                                                    }
+                                                    else {
+                                                        marcaciones.findViewById(R.id.layout_fin_break).setVisibility(View.GONE);
+                                                        Bundle bundle = new Bundle();
+                                                        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
+                                                        requestSync(bundle);
+                                                    }
                                                 } else {
                                                     fragment.idMarcacion = marc.getID();
                                                     showDialogFragment(fragment, "Justificacion");

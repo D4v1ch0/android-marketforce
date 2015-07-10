@@ -62,30 +62,36 @@ public class JustificacionFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
                 if(((Spinner) rootView.findViewById(R.id.justificacion_motivos)).getSelectedItemPosition() != 0) {
-                    permiso.setObservacion(((TextView) rootView.findViewById(R.id.justificacion_text)).getText().toString());
-                    permiso.setFecha(Calendar.getInstance().getTime());
-                    permiso.setTipo(((GeneralValue) ((Spinner) rootView.findViewById(R.id.justificacion_motivos)).getSelectedItem()).getCode());
-                    if (permiso.getID() == 0)
-                        Permiso.insert(getDataBase(), permiso);
-                    else
-                        Permiso.update(getDataBase(), permiso);
+                    if(((TextView) rootView.findViewById(R.id.justificacion_text)).length() > 0) {
+                        permiso.setObservacion(((TextView) rootView.findViewById(R.id.justificacion_text)).getText().toString());
+                        permiso.setFecha(Calendar.getInstance().getTime());
+                        permiso.setTipo(((GeneralValue) ((Spinner) rootView.findViewById(R.id.justificacion_motivos)).getSelectedItem()).getCode());
+                        if (permiso.getID() == 0)
+                            Permiso.insert(getDataBase(), permiso);
+                        else
+                            Permiso.update(getDataBase(), permiso);
 
-                    if (idMarcacion == 0) {
-                        Bundle bundle = new Bundle();
-                        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_PERMISO);
-                        bundle.putLong(ARG_PERMISO, permiso.getID());
-                        requestSync(bundle);
-                    } else {
-                        permiso.setIdMarcacion(idMarcacion);
-                        Permiso.update(getDataBase(), permiso);
-                        Bundle bundle = new Bundle();
-                        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
-                        requestSync(bundle);
+                        if (idMarcacion == 0) {
+                            Bundle bundle = new Bundle();
+                            bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_PERMISO);
+                            bundle.putLong(ARG_PERMISO, permiso.getID());
+                            requestSync(bundle);
+                        } else {
+                            permiso.setIdMarcacion(idMarcacion);
+                            Permiso.update(getDataBase(), permiso);
+                            Bundle bundle = new Bundle();
+                            bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
+                            requestSync(bundle);
+                        }
+
+                        getParentFragment().onResume();
+
+                        finish();
                     }
-
-                    getParentFragment().onResume();
-
-                    finish();
+                    else
+                    {
+                        Toast.makeText(getContext(), R.string.message_sin_observacion, Toast.LENGTH_LONG).show();
+                    }
                 }
                 else
                 {
