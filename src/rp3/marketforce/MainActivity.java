@@ -15,6 +15,7 @@ import rp3.app.BaseFragment;
 import rp3.app.NavActivity;
 import rp3.app.nav.NavItem;
 import rp3.configuration.PreferenceManager;
+import rp3.data.Constants;
 import rp3.data.MessageCollection;
 import rp3.data.models.GeopoliticalStructure;
 import rp3.data.models.GeopoliticalStructure.GeopoliticalStructureExt;
@@ -312,27 +313,10 @@ public class MainActivity extends rp3.app.NavActivity{
         switch (id)
         {
             case CERRAR_SESION_DIALOG:
-                Agenda.deleteAll(getDataBase(), Contract.Agenda.TABLE_NAME);
-                AgendaExt.deleteAll(getDataBase(), Contract.AgendaExt.TABLE_NAME);
-                Tarea.deleteAll(getDataBase(), Contract.Tareas.TABLE_NAME);
-                Cliente.deleteAll(getDataBase(), Contract.Cliente.TABLE_NAME);
-                ClientExt.deleteAll(getDataBase(), Contract.ClientExt.TABLE_NAME);
-                ClienteDireccion.deleteAll(getDataBase(), Contract.ClienteDireccion.TABLE_NAME);
-                Contacto.deleteAll(getDataBase(), Contract.Contacto.TABLE_NAME);
-                ContactoExt.deleteAll(getDataBase(), Contract.ContactoExt.TABLE_NAME);
-                Actividad.deleteAll(getDataBase(), Contract.Actividades.TABLE_NAME);
-                AgendaTarea.deleteAll(getDataBase(), Contract.AgendaTarea.TABLE_NAME);
-                AgendaTareaActividades.deleteAll(getDataBase(), Contract.AgendaTareaActividades.TABLE_NAME);
-                Ubicacion.deleteAll(getDataBase(), Contract.Ubicacion.TABLE_NAME);
-                //GeopoliticalStructure.deleteAll(getDataBase(), rp3.data.models.Contract.GeopoliticalStructure.TABLE_NAME);
-                //GeopoliticalStructureExt.deleteAll(getDataBase(), rp3.data.models.Contract.GeopoliticalStructureExt.TABLE_NAME);
-                PreferenceManager.setValue(Contants.KEY_IDAGENTE, 0);
-                PreferenceManager.setValue(Contants.KEY_IDRUTA, 0);
-                PreferenceManager.setValue(Contants.KEY_ES_SUPERVISOR, false);
-                PreferenceManager.setValue(Contants.KEY_ES_AGENTE, false);
-                PreferenceManager.setValue(Contants.KEY_ES_ADMINISTRADOR, false);
-                PreferenceManager.setValue(Contants.KEY_CARGO, "");
-                SyncAudit.clearAudit();
+
+                PreferenceManager.setValue(Constants.KEY_LAST_LOGIN, Session.getUser().getLogonName());
+                PreferenceManager.setValue(Constants.KEY_LAST_PASS, Session.getUser().getPassword());
+                PreferenceManager.setValue(Constants.KEY_LAST_TOKEN, "temp");
                 //SyncAudit.insert(SyncAdapter.SYNC_TYPE_GEOPOLITICAL,SyncAdapter.SYNC_EVENT_SUCCESS);
                 AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 

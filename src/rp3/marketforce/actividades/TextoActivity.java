@@ -5,6 +5,7 @@ import rp3.marketforce.R;
 import rp3.marketforce.models.Actividad;
 import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.AgendaTareaActividades;
+import rp3.util.StringUtils;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -131,7 +132,7 @@ public class TextoActivity extends ActividadActivity {
 
                     ArrayList<String> result = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    setTextViewText(R.id.actividad_texto_respuesta, result.get(0));
+                    setTextViewText(R.id.actividad_texto_respuesta, StringUtils.getStringCapSentence(result.get(0)));
                 }
                 break;
             }
