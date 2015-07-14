@@ -17,6 +17,7 @@ public class GCMReceiver extends GcmListenerService {
     public void onMessageReceived(String from, Bundle data) {
         String message = data.getString("Message");
         String title = data.getString("Title");
+        String footer = data.getString("Footer","");
         if(TextUtils.isEmpty(title))
         {
             title = getApplicationContext().getString(R.string.app_name);
@@ -25,7 +26,7 @@ public class GCMReceiver extends GcmListenerService {
         Log.d("Marketforce", "Message: " + message);
 
         if(!TextUtils.isEmpty(message))
-            NotificationPusher.pushNotification(1, getApplicationContext(), message, title);
+            NotificationPusher.pushNotification(1, getApplicationContext(), message, title, footer);
     }
 
 
