@@ -38,7 +38,9 @@
                     android:padding="3dp"
                     android:text="@string/label_agente"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:clickable="true"
+                    android:textColor="@drawable/text_feedback" />
 
                 <ImageView
                     android:id="@+id/header_visited"
