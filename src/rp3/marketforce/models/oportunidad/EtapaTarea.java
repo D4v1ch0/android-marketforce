@@ -96,6 +96,7 @@ public class EtapaTarea extends EntityBase<EtapaTarea> {
             etp.setOrden(CursorUtils.getInt(c, Contract.EtapaTarea.COLUMN_ORDEN));
             list.add(etp);
         }
+        c.close();
         return list;
     }
 }

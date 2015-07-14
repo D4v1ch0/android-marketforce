@@ -149,7 +149,7 @@ public class OportunidadTareaActividad extends EntityBase<OportunidadTareaActivi
                 lista_actividades.add(actividad);
             }while(c.moveToNext());
         }
-
+        c.close();
         return lista_actividades;
     }
 
@@ -181,7 +181,7 @@ public class OportunidadTareaActividad extends EntityBase<OportunidadTareaActivi
                 lista_actividades.add(actividad);
             }while(c.moveToNext());
         }
-
+        c.close();
         return lista_actividades;
     }
 
@@ -210,7 +210,7 @@ public class OportunidadTareaActividad extends EntityBase<OportunidadTareaActivi
                 actividad.setIdTareaActividad(CursorUtils.getInt(c, Contract.OportunidadTareaActividad.COLUMN_TAREA_ACTIVIDAD_ID));
                 actividad.setIdTarea(CursorUtils.getInt(c, Contract.OportunidadTareaActividad.COLUMN_ID_TAREA));
         }
-
+        c.close();
         return actividad;
 
     }

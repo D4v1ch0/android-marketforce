@@ -126,6 +126,7 @@ public class Etapa extends EntityBase<Etapa> {
             etp.setOrden(CursorUtils.getInt(c, Contract.Etapa.COLUMN_ORDEN));
             list.add(etp);
         }
+        c.close();
         return list;
     }
 

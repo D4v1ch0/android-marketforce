@@ -221,7 +221,7 @@ public class Oportunidad {
                     jObject.put("IdOportunidad", opt.getIdOportunidad());
                     jObject.put("IdMedia", i+1);
                     jObject.put("Nombre", opt.getIdOportunidad() + "_Foto" + i +".jpg");
-                    jObject.put("Contenido", Utils.CroppedBitmapToBase64(foto.getURLFoto()));
+                    jObject.put("Contenido", Utils.BitmapToBase64(foto.getURLFoto()));
                 } catch (Exception ex) {
 
                 }
@@ -262,7 +262,7 @@ public class Oportunidad {
                     jObject.put("IdOportunidadContacto", cont.getIdOportunidadContacto());
                     jObject.put("IdMedia", i+1);
                     jObject.put("Nombre", opt.getIdOportunidad() + "_Foto" + i +".jpg");
-                    jObject.put("Contenido", Utils.CroppedBitmapToBase64(cont.getURLFoto()));
+                    jObject.put("Contenido", Utils.BitmapToBase64(cont.getURLFoto()));
                 } catch (Exception ex) {
 
                 }
@@ -468,7 +468,7 @@ public class Oportunidad {
                     jObject.put("IdOportunidad", opt.getIdOportunidad());
                     jObject.put("IdMedia", i+1);
                     jObject.put("Nombre", opt.getIdOportunidad() + "_Foto" + i +".jpg");
-                    jObject.put("Contenido", Utils.CroppedBitmapToBase64(foto.getURLFoto()));
+                    jObject.put("Contenido", Utils.BitmapToBase64(foto.getURLFoto()));
                 } catch (Exception ex) {
 
                 }
@@ -511,7 +511,7 @@ public class Oportunidad {
                     jObject.put("IdOportunidadContacto", cont.getIdOportunidadContacto());
                     jObject.put("IdMedia", i+1);
                     jObject.put("Nombre", opt.getIdOportunidad() + "_Foto" + i +".jpg");
-                    jObject.put("Contenido", Utils.CroppedBitmapToBase64(cont.getURLFoto()));
+                    jObject.put("Contenido", Utils.BitmapToBase64(cont.getURLFoto()));
                 } catch (Exception ex) {
 
                 }

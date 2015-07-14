@@ -43,7 +43,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
+        android:inputType="textCapSentences|textPersonName"
         android:ems="10"
         android:id="@+id/oportunidad_tipo"
         android:layout_gravity="center_horizontal"
@@ -63,7 +63,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
+        android:inputType="textCapSentences|textPersonName"
         android:ems="10"
         android:id="@+id/oportunidad_referencia"
         android:layout_gravity="center_horizontal"
@@ -91,7 +91,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textMultiLine"
+            android:inputType="textMultiLine|textCapSentences"
             android:lines="3"
             android:maxLines="3"
             android:background="@color/caldroid_transparent"

@@ -106,6 +106,7 @@ public class OportunidadFoto extends EntityBase<OportunidadFoto> {
             foto.setURLFoto(CursorUtils.getString(c, Contract.OportunidadFoto.COLUMN_URL_FOTO));
             list.add(foto);
         }
+        c.close();
         return list;
     }
 
@@ -124,6 +125,7 @@ public class OportunidadFoto extends EntityBase<OportunidadFoto> {
             foto.setURLFoto(CursorUtils.getString(c, Contract.OportunidadFoto.COLUMN_URL_FOTO));
             list.add(foto);
         }
+        c.close();
         return list;
     }
 
@@ -142,6 +144,7 @@ public class OportunidadFoto extends EntityBase<OportunidadFoto> {
             foto.setURLFoto(CursorUtils.getString(c, Contract.OportunidadFoto.COLUMN_URL_FOTO));
 
         }
+        c.close();
         return foto;
     }
 }

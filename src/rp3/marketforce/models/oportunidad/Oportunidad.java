@@ -376,6 +376,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
             opt.setAgente(Agente.getAgente(db, opt.getIdAgente()));
             list.add(opt);
         }
+        c.close();
         return list;
     }
 
@@ -421,6 +422,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
             opt.setAgente(Agente.getAgente(db, opt.getIdAgente()));
             list.add(opt);
         }
+        c.close();
         return list;
     }
 
@@ -481,6 +483,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
         while(c.moveToNext()){
             list.add(CursorUtils.getLong(c, Contract.Oportunidad._ID));
         }
+        c.close();
 
         return getOportunidadesByIds(db, list);
     }
@@ -528,6 +531,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
             opt.setEtapa(Etapa.getEtapaById(db, opt.getIdEtapa()));
             list.add(opt);
         }
+        c.close();
         return list;
     }
 

@@ -104,6 +104,7 @@ public class OportunidadResponsable extends EntityBase<OportunidadResponsable> {
             cont.setTipo(CursorUtils.getString(c, Contract.OportunidadResponsable.COLUMN_TIPO));
             list.add(cont);
         }
+        c.close();
         return list;
     }
 
@@ -120,6 +121,7 @@ public class OportunidadResponsable extends EntityBase<OportunidadResponsable> {
             cont.setTipo(CursorUtils.getString(c, Contract.OportunidadResponsable.COLUMN_TIPO));
             list.add(cont);
         }
+        c.close();
         return list;
 
     }

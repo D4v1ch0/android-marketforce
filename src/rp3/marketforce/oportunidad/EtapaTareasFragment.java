@@ -40,6 +40,7 @@ import rp3.marketforce.oportunidad.actividades.TextoActivity;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.Utils;
 import rp3.util.ConnectionUtils;
+import rp3.util.StringUtils;
 
 import static rp3.util.Screen.getOrientation;
 
@@ -197,7 +198,8 @@ public class EtapaTareasFragment extends BaseFragment {
                         ArrayList<String> result = data
                                 .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                         OportunidadEtapa oportunidadEtapa = OportunidadEtapa.getEtapaOportunidad(getDataBase(), opt.getIdOportunidad(), idEtapa);
-                        oportunidadEtapa.setObservacion(result.get(0));
+                        oportunidadEtapa.setObservacion(StringUtils.getStringCapSentence(result.get(0)));
+                        ((EditText)getRootView().findViewById(R.id.obs_etapa)).setText(StringUtils.getStringCapSentence(result.get(0)));
                         OportunidadEtapa.update(getDataBase(), oportunidadEtapa);
                     }
                     break;

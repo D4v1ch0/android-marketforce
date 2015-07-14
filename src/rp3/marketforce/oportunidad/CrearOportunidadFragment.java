@@ -70,6 +70,7 @@ import rp3.marketforce.utils.Utils;
 import rp3.util.ConnectionUtils;
 import rp3.util.GooglePlayServicesUtils;
 import rp3.util.LocationUtils;
+import rp3.util.StringUtils;
 
 /**
  * Created by magno_000 on 19/05/2015.
@@ -807,7 +808,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
                 if (resultCode == RESULT_OK && null != data) {
                     ArrayList<String> result = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    ((TextView) view.findViewById(R.id.oportunidad_comentario)).setText(result.get(0));
+                    ((TextView) view.findViewById(R.id.oportunidad_comentario)).setText(StringUtils.getStringCapSentence(result.get(0)));
                 }
             } else {
                 Bitmap pree = null;
