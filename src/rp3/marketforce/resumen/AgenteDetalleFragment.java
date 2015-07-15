@@ -61,41 +61,45 @@ public class AgenteDetalleFragment extends BaseFragment {
         super.onFragmentCreateView(rootView, savedInstanceState);
         idAgente = getArguments().getInt(ARG_AGENTE);
 
-        final Agente agente = Agente.getAgente(getDataBase(), idAgente);
+        if(idAgente != 0) {
+            final Agente agente = Agente.getAgente(getDataBase(), idAgente);
 
-        ((TextView) rootView.findViewById(R.id.agente_nombre)).setText(agente.getNombre());
-        if(!TextUtils.isEmpty(agente.getTelefono())) {
-            ((TextView) rootView.findViewById(R.id.agente_movil)).setText(agente.getTelefono());
-            ((TextView) rootView.findViewById(R.id.agente_movil)).setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v) {
-                    String uri = "tel:" + agente.getTelefono();
-                    Intent intent = new Intent(Intent.ACTION_DIAL);
-                    intent.setData(Uri.parse(uri));
-                    Uri mUri = Uri.parse("smsto:" + Utils.convertToSMSNumber(agente.getTelefono()));
-                    Intent mIntent = new Intent(Intent.ACTION_SENDTO, mUri);
-                    mIntent.putExtra("chat",true);
-                    Intent chooserIntent = Intent.createChooser(mIntent, "Seleccionar Acción");
-                    chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { intent });
-                    startActivity(chooserIntent);
-                }});
+            ((TextView) rootView.findViewById(R.id.agente_nombre)).setText(agente.getNombre());
+            if (!TextUtils.isEmpty(agente.getTelefono())) {
+                ((TextView) rootView.findViewById(R.id.agente_movil)).setText(agente.getTelefono());
+                ((TextView) rootView.findViewById(R.id.agente_movil)).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String uri = "tel:" + agente.getTelefono();
+                        Intent intent = new Intent(Intent.ACTION_DIAL);
+                        intent.setData(Uri.parse(uri));
+                        Uri mUri = Uri.parse("smsto:" + Utils.convertToSMSNumber(agente.getTelefono()));
+                        Intent mIntent = new Intent(Intent.ACTION_SENDTO, mUri);
+                        mIntent.putExtra("chat", true);
+                        Intent chooserIntent = Intent.createChooser(mIntent, "Seleccionar Acción");
+                        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{intent});
+                        startActivity(chooserIntent);
+                    }
+                });
+            } else
+                ((TextView) rootView.findViewById(R.id.agente_movil)).setClickable(false);
+
+            if (!TextUtils.isEmpty(agente.getEmail())) {
+                ((TextView) rootView.findViewById(R.id.agente_correo)).setText(agente.getEmail());
+                ((TextView) rootView.findViewById(R.id.agente_correo)).setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                                "mailto", agente.getEmail(), null));
+                        startActivity(Intent.createChooser(intent, "Send Email"));
+                    }
+                });
+            } else
+                ((TextView) rootView.findViewById(R.id.agente_correo)).setClickable(false);
         }
         else
-            ((TextView) rootView.findViewById(R.id.agente_movil)).setClickable(false);
-
-        if(!TextUtils.isEmpty(agente.getEmail())) {
-            ((TextView) rootView.findViewById(R.id.agente_correo)).setText(agente.getEmail());
-            ((TextView) rootView.findViewById(R.id.agente_correo)).setOnClickListener(new View.OnClickListener(){
-
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                            "mailto", agente.getEmail(), null));
-                    startActivity(Intent.createChooser(intent, "Send Email"));
-                }});
-        }
-        else
-            ((TextView) rootView.findViewById(R.id.agente_correo)).setClickable(false);
+            rootView.findViewById(R.id.agente_datos).setVisibility(View.GONE);
 
         rootView.findViewById(R.id.agente_enviar_notificación).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,6 +120,7 @@ public class AgenteDetalleFragment extends BaseFragment {
                     bundle.putString(ARG_MESSAGE, ((TextView) rootView.findViewById(R.id.obs_text)).getText().toString());
                     requestSync(bundle);
                     Toast.makeText(getContext(), R.string.message_notificacion_enviada, Toast.LENGTH_LONG).show();
+                    finish();
                 }
                 else
                     Toast.makeText(getContext(), R.string.message_error_sync_no_net_available, Toast.LENGTH_LONG).show();

@@ -271,6 +271,14 @@ public class DashboardGrupoFragment extends BaseFragment {
                  asc_visited = !asc_visited;
              }
          });
+         parent.findViewById(R.id.grupo_agente_pendientes).setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 agenteDetalleFragment = AgenteDetalleFragment.newInstance(0);
+                 showDialogFragment(agenteDetalleFragment, "Agente", "Todos los Agentes");
+             }
+         });
+
          ((ListView)parent.findViewById(R.id.grupo_list_view)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
              @Override
              public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

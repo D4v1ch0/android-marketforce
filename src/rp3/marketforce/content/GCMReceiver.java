@@ -23,6 +23,7 @@ public class GCMReceiver extends GcmListenerService {
     public void onMessageReceived(String from, Bundle data) {
         String message = data.getString("Message");
         String title = data.getString("Title");
+        String footer = data.getString("Footer","");
         String type = data.getString("Type");
         if(TextUtils.isEmpty(title))
         {
@@ -33,7 +34,7 @@ public class GCMReceiver extends GcmListenerService {
 
         if(!TextUtils.isEmpty(message)) {
             if(TextUtils.isEmpty(type))
-                NotificationPusher.pushNotification(1, getApplicationContext(), message, title);
+                NotificationPusher.pushNotification(1, getApplicationContext(), message, title, footer);
             else
             {
                 if(type.equalsIgnoreCase(NOTIFICATION_TYPE_MARCACION))
