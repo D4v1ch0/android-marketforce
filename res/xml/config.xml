@@ -5,8 +5,8 @@
         <allowHelpOnAut>TRUE</allowHelpOnAut>
         <imagesFolder>/Content/AgendaComercial/img/clientes/</imagesFolder>
         <cancelAlarmTime>22H00</cancelAlarmTime>
-        <forgotPassword>http://54.94.162.88/MarketForce/Security/Account/RequestingPasswordRecovery</forgotPassword>
-        <help>http://54.94.162.88/MarketForce/help/index.htm</help>
+        <forgotPassword>[@server:http://190.216.215.133/Rp3MarketForce]/Security/Account/RequestingPasswordRecovery</forgotPassword>
+        <help>[@server:http://190.216.215.133/Rp3MarketForce]/help/index.htm</help>
         <mail>marketforce@rp3.com.ec</mail>
     </appConfiguration>
     <dataBaseConfiguration>       
@@ -16,7 +16,7 @@
     <webServiceConfiguration>                
         <webServiceData>
             <name>Core</name>
-            <url>[@server:http://54.94.162.88/marketforce]/api</url>
+            <url>[@server:http://190.216.215.133/Rp3MarketForce]/api</url>
             <!--url>http://10.10.0.122/AgendaComercial/api</url-->
             <type>REST</type>
             <oAuthClientId>android-app-marketforce</oAuthClientId>
@@ -62,7 +62,7 @@
         </webServiceData>
            <webServiceData>
             <name>MartketForce</name>
-            <url>[@server:http://54.94.162.88/marketforce]/api</url>
+            <url>[@server:http://190.216.215.133/Rp3MarketForce]/api</url>
             <!--url>http://10.10.0.122/AgendaComercial/api</url-->
             <type>REST</type>
             <oAuthClientId>android-app-marketforce</oAuthClientId>
@@ -250,7 +250,7 @@
         </webServiceData>
            <webServiceData>
             <name>ServerVerification</name>
-            <url>http://54.94.162.88/rp3deploy/api</url>
+            <url>http://190.216.215.133/rp3deploy/api</url>
             <type>REST</type>
             <methods>
                 <method>
