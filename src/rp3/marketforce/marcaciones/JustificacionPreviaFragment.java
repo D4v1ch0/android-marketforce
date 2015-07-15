@@ -30,6 +30,7 @@ import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.marcacion.Justificacion;
 import rp3.marketforce.sync.SyncAdapter;
+import rp3.util.StringUtils;
 
 /**
  * Created by magno_000 on 17/06/2015.
@@ -188,7 +189,7 @@ public class JustificacionPreviaFragment extends BaseFragment {
 
                         ArrayList<String> result = data
                                 .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                        ((TextView)getRootView().findViewById(R.id.justificacion_text)).setText(result.get(0));
+                        ((TextView)getRootView().findViewById(R.id.justificacion_text)).setText(StringUtils.getStringCapSentence(result.get(0)));
                     }
                     break;
             }

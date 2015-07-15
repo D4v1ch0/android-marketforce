@@ -42,7 +42,7 @@ public class GCMReceiver extends GcmListenerService {
                 else if(type.equalsIgnoreCase(NOTIFICATION_TYPE_APROBAR_JUSTIFICACION))
                     NotificationPusher.pushNotification(1, getApplicationContext(), message, title, PermisoActivity.class);
                 else
-                    NotificationPusher.pushNotification(1, getApplicationContext(), message, title);
+                    NotificationPusher.pushNotification(1, getApplicationContext(), message, title, footer);
             }
         }
     }

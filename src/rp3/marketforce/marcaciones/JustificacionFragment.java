@@ -25,6 +25,7 @@ import rp3.marketforce.models.marcacion.Permiso;
 import rp3.marketforce.ruta.CrearVisitaFragment;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.NothingSelectedSpinnerAdapter;
+import rp3.util.StringUtils;
 
 /**
  * Created by magno_000 on 09/06/2015.
@@ -153,7 +154,7 @@ public class JustificacionFragment extends BaseFragment {
 
                         ArrayList<String> result = data
                                 .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                        ((TextView)getRootView().findViewById(R.id.justificacion_text)).setText(result.get(0));
+                        ((TextView)getRootView().findViewById(R.id.justificacion_text)).setText(StringUtils.getStringCapSentence(result.get(0)));
                     }
                     break;
             }

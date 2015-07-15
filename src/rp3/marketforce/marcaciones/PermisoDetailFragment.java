@@ -25,6 +25,7 @@ import rp3.marketforce.models.marcacion.Permiso;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.DetailsPageAdapter;
 import rp3.marketforce.utils.DrawableManager;
+import rp3.util.StringUtils;
 import rp3.widget.ViewPager;
 
 /**
@@ -175,7 +176,7 @@ public class PermisoDetailFragment extends BaseFragment {
 
                 ArrayList<String> result = data
                         .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                ((TextView) getRootView().findViewById(R.id.justificacion_text)).setText(result.get(0));
+                ((TextView) getRootView().findViewById(R.id.justificacion_text)).setText(StringUtils.getStringCapSentence(result.get(0)));
             }
         }
     }

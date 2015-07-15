@@ -274,6 +274,10 @@ public class PermisoListFragment extends BaseFragment {
 
                 }
             });
+            if(data.size() == 0)
+                getRootView().findViewById(R.id.list_permisos_ninguno).setVisibility(View.VISIBLE);
+            else
+                getRootView().findViewById(R.id.list_permisos_ninguno).setVisibility(View.GONE);
         }
 
         @Override

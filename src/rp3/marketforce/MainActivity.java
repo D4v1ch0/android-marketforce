@@ -90,7 +90,7 @@ public class MainActivity extends rp3.app.NavActivity{
 	public static final int NAV_RECORRIDO	 	= 11;
     public static final int NAV_RADAR	 	    = 12;
     public static final int NAV_INFORMATION	    = 13;
-    public static final int NAV_JUSTIFICACIONES = 14;
+    public static final int NAV_JUSTIFICACIONES = 15;
 
     public static final int CERRAR_SESION_DIALOG = 12;
 
@@ -248,11 +248,6 @@ public class MainActivity extends rp3.app.NavActivity{
                 item.getTitle());
             lastTitle = item.getTitle();
             break;
-            case NAV_JUSTIFICACIONES:
-                setNavFragment(PermisoFragment.newInstance(),
-                        item.getTitle());
-                lastTitle = item.getTitle();
-                break;
 		case NAV_RECORRIDO:
             if(!ConnectionUtils.isNetAvailable(this))
             {
@@ -306,6 +301,11 @@ public class MainActivity extends rp3.app.NavActivity{
 		case NAV_CERRAR_SESION:
             showDialogConfirmation(CERRAR_SESION_DIALOG, R.string.message_cerrar_sesion, R.string.title_option_setcerrar_sesion);
 			break;
+            case NAV_JUSTIFICACIONES:
+                setNavFragment(PermisoFragment.newInstance(),
+                        item.getTitle());
+                lastTitle = item.getTitle();
+                break;
 		default:
 			break;
 		}
