@@ -439,6 +439,13 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 					agenda.setEstadoAgenda(Contants.ESTADO_VISITADO);
 					agenda.setEstadoAgendaDescripcion(Contants.DESC_VISITADO);
 					agenda.setFechaFinReal(Calendar.getInstance().getTime());
+                    final Context ctx = getContext();
+                    Location location = LocationUtils.getLastLocation(ctx);
+                    agenda.setLatitud(location.getLatitude());
+                    agenda.setLongitud(location.getLongitude());
+                    LatLng pos = new LatLng(agenda.getLatitud(), agenda.getLongitud());
+                    LatLng cli = new LatLng(agenda.getClienteDireccion().getLatitud(), agenda.getClienteDireccion().getLongitud());
+                    agenda.setDistancia((long) SphericalUtil.computeDistanceBetween(pos, cli));
 					agenda.setEnviado(false);
                     Agenda.update(getDataBase(), agenda);
                     if (agenda.getObservaciones() == null || agenda.getObservaciones().length() <= 0)
@@ -448,8 +455,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                     //bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ENVIAR_AGENDA);
                     //bundle.putInt(ARG_AGENDA_ID, (int) idAgenda);
                     //requestSync(bundle);
-					final Context ctx = getContext();
-					try
+					/*try
 					{
 					LocationUtils.getLocation(ctx, new OnLocationResultListener() {
 						
@@ -477,6 +483,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 					}
 					catch(Exception ex)
 					{	}
+					*/
 
 					((ImageView) rootView.findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_visited);
 					setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());	
