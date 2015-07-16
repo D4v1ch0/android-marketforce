@@ -272,11 +272,6 @@ public class MainActivity extends rp3.app.NavActivity{
                         item.getTitle());
                 lastTitle = item.getTitle();
                 break;
-            case NAV_OPORTUNIDAD:
-                setNavFragment(OportunidadFragment.newInstance(),
-                        item.getTitle());
-                lastTitle = item.getTitle();
-                break;
             case NAV_SINCRONIZAR:
                 if (!ConnectionUtils.isNetAvailable(this)) {
                     Toast.makeText(this, "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
@@ -301,6 +296,11 @@ public class MainActivity extends rp3.app.NavActivity{
                 break;
             case NAV_CERRAR_SESION:
                 showDialogConfirmation(CERRAR_SESION_DIALOG, R.string.message_cerrar_sesion, R.string.title_option_setcerrar_sesion);
+                break;
+            case NAV_OPORTUNIDAD:
+                setNavFragment(OportunidadFragment.newInstance(),
+                        item.getTitle());
+                lastTitle = item.getTitle();
                 break;
             default:
                 break;
