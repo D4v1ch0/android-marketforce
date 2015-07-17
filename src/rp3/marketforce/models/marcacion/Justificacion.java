@@ -31,6 +31,7 @@ public class Justificacion extends EntityBase<Justificacion>
     private String estado;
     private boolean pendiente;
     private boolean propia;
+    private String jornada;
 
     private String agente;
     private String tipoDescripcion;
@@ -135,6 +136,14 @@ public class Justificacion extends EntityBase<Justificacion>
         this.observacionSupervisor = observacionSupervisor;
     }
 
+    public String getJornada() {
+        return jornada;
+    }
+
+    public void setJornada(String jornada) {
+        this.jornada = jornada;
+    }
+
     public String getEstado() {
         return estado;
     }
@@ -167,6 +176,7 @@ public class Justificacion extends EntityBase<Justificacion>
         setValue(Contract.Justificaciones.COLUMN_PENDIENTE, this.pendiente);
         setValue(Contract.Justificaciones.COLUMN_PROPIA, this.propia);
         setValue(Contract.Justificaciones.COLUMN_ID_AGENTE, this.idAgente);
+        setValue(Contract.Justificaciones.COLUMN_JORNADA, this.jornada);
     }
 
     @Override
@@ -184,7 +194,8 @@ public class Justificacion extends EntityBase<Justificacion>
     public static List<Justificacion> getPermisosPendientesPropias(DataBase db) {
         Cursor c = db.query(Contract.Justificaciones.TABLE_NAME, new String[]{Contract.Justificaciones._ID, Contract.Justificaciones.COLUMN_FECHA, Contract.Justificaciones.COLUMN_ID_PERMISO,
                         Contract.Justificaciones.COLUMN_TIPO, Contract.Justificaciones.COLUMN_OBSERVACION, Contract.Justificaciones.COLUMN_AUSENCIA, Contract.Justificaciones.COLUMN_ESTADO,
-                        Contract.Justificaciones.COLUMN_PENDIENTE, Contract.Justificaciones.COLUMN_PROPIA, Contract.Justificaciones.COLUMN_OBSERVACION_SUPERVISOR}, Contract.Justificaciones.COLUMN_PENDIENTE + " = ? AND " + Contract.Justificaciones.COLUMN_PROPIA + " = ?",
+                        Contract.Justificaciones.COLUMN_PENDIENTE, Contract.Justificaciones.COLUMN_PROPIA, Contract.Justificaciones.COLUMN_OBSERVACION_SUPERVISOR, Contract.Justificaciones.COLUMN_JORNADA}
+                , Contract.Justificaciones.COLUMN_PENDIENTE + " = ? AND " + Contract.Justificaciones.COLUMN_PROPIA + " = ?",
                 new String[]{1 + "", 1 + ""});
         List<Justificacion> permisos = new ArrayList<Justificacion>();
 
@@ -199,6 +210,7 @@ public class Justificacion extends EntityBase<Justificacion>
             permiso.setEstado(CursorUtils.getString(c, Contract.Justificaciones.COLUMN_ESTADO));
             permiso.setPendiente(CursorUtils.getBoolean(c, Contract.Justificaciones.COLUMN_PENDIENTE));
             permiso.setPropia(CursorUtils.getBoolean(c, Contract.Justificaciones.COLUMN_PROPIA));
+            permiso.setJornada(CursorUtils.getString(c, Contract.Justificaciones.COLUMN_JORNADA));
             permisos.add(permiso);
         }
 
@@ -226,7 +238,12 @@ public class Justificacion extends EntityBase<Justificacion>
                 permiso.setObservacion(CursorUtils.getString(c, Contract.Justificaciones.COLUMN_OBSERVACION));
                 permiso.setEstado(CursorUtils.getString(c, Contract.Justificaciones.COLUMN_ESTADO));
                 permiso.setAgente(CursorUtils.getString(c, Contract.AgentesUbicacion.COLUMN_NOMBRES));
-                permiso.setTipoDescripcion(GeneralValue.getGeneralValue(db, Contants.GENERAL_TABLE_MOTIVO_PERMISO, permiso.getTipo()).getValue());
+                permiso.setJornada(CursorUtils.getString(c, Contract.Justificaciones.COLUMN_JORNADA));
+                GeneralValue tipo = GeneralValue.getGeneralValue(db, Contants.GENERAL_TABLE_MOTIVO_PERMISO, permiso.getTipo());
+                if(tipo != null)
+                    permiso.setTipoDescripcion(tipo.getValue());
+                else
+                    permiso.setTipoDescripcion("Sin Justificar");
                 permisos.add(permiso);
             }while(c.moveToNext());
         }
@@ -239,7 +256,7 @@ public class Justificacion extends EntityBase<Justificacion>
     public static List<Justificacion> getPermisosPendientesAprobarUpload(DataBase db) {
         Cursor c = db.query(Contract.Justificaciones.TABLE_NAME, new String[]{Contract.Justificaciones._ID, Contract.Justificaciones.COLUMN_FECHA, Contract.Justificaciones.COLUMN_ID_PERMISO,
                         Contract.Justificaciones.COLUMN_TIPO, Contract.Justificaciones.COLUMN_OBSERVACION, Contract.Justificaciones.COLUMN_AUSENCIA, Contract.Justificaciones.COLUMN_ESTADO, Contract.Justificaciones.COLUMN_OBSERVACION_SUPERVISOR,
-                        Contract.Justificaciones.COLUMN_PENDIENTE, Contract.Justificaciones.COLUMN_PROPIA, Contract.Justificaciones.COLUMN_ID_AGENTE}, Contract.Justificaciones.COLUMN_PROPIA + " = ? AND "
+                        Contract.Justificaciones.COLUMN_PENDIENTE, Contract.Justificaciones.COLUMN_PROPIA, Contract.Justificaciones.COLUMN_ID_AGENTE, Contract.Justificaciones.COLUMN_JORNADA}, Contract.Justificaciones.COLUMN_PROPIA + " = ? AND "
                         + Contract.Justificaciones.COLUMN_PENDIENTE + " = ?",
                 new String[]{ 0 + "" , 1 + ""});
         List<Justificacion> permisos = new ArrayList<Justificacion>();
@@ -257,6 +274,7 @@ public class Justificacion extends EntityBase<Justificacion>
             permiso.setPendiente(CursorUtils.getBoolean(c, Contract.Justificaciones.COLUMN_PENDIENTE));
             permiso.setPropia(CursorUtils.getBoolean(c, Contract.Justificaciones.COLUMN_PROPIA));
             permiso.setObservacionSupervisor(CursorUtils.getString(c, Contract.Justificaciones.COLUMN_OBSERVACION_SUPERVISOR));
+            permiso.setJornada(CursorUtils.getString(c, Contract.Justificaciones.COLUMN_JORNADA));
             permisos.add(permiso);
         }
 
@@ -283,8 +301,13 @@ public class Justificacion extends EntityBase<Justificacion>
             permiso.setPendiente(CursorUtils.getBoolean(c, Contract.Justificaciones.COLUMN_PENDIENTE));
             permiso.setPropia(CursorUtils.getBoolean(c, Contract.Justificaciones.COLUMN_PROPIA));
             permiso.setObservacionSupervisor(CursorUtils.getString(c, Contract.Justificaciones.COLUMN_OBSERVACION_SUPERVISOR));
-            permiso.setTipoDescripcion(GeneralValue.getGeneralValue(db, Contants.GENERAL_TABLE_MOTIVO_PERMISO, permiso.getTipo()).getValue());
+            GeneralValue tipo = GeneralValue.getGeneralValue(db, Contants.GENERAL_TABLE_MOTIVO_PERMISO, permiso.getTipo());
+            if(tipo != null)
+                permiso.setTipoDescripcion(tipo.getValue());
+            else
+                permiso.setTipoDescripcion("Sin Justificar");
             permiso.setAgente(CursorUtils.getString(c, Contract.AgentesUbicacion.COLUMN_NOMBRES));
+            permiso.setJornada(CursorUtils.getString(c, Contract.Justificaciones.COLUMN_JORNADA));
         }
 
         return permiso;

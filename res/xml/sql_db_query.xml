@@ -1071,6 +1071,7 @@
         tbJustificacion.Observacion,
         tbJustificacion.Ausencia,
         tbJustificacion.Estado,
+        tbJustificacion.Jornada,
         tbAgente.Nombre AS Nombres
         FROM  tbJustificacion
         JOIN tbAgente ON tbAgente.IdAgente
@@ -1090,6 +1091,7 @@
         tbJustificacion.ObservacionSupervisor,
         tbJustificacion.Pendiente,
         tbJustificacion.Propia,
+        tbJustificacion.Jornada,
         tbAgente.Nombre AS Nombres
         FROM  tbJustificacion
         JOIN tbAgente ON tbAgente.IdAgente

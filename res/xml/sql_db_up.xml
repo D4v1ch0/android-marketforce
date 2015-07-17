@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sql>
+    <statement name="ToVersion2">
+        ALTER TABLE tbJustificacion ADD COLUMN Jornada TEXT;
+    </statement>
+</sql>

@@ -17,7 +17,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/label_agente_cargo"
             android:id="@+id/textView26"
-            android:layout_weight="0.5"
+            android:layout_weight="0.25"
             android:textStyle="bold"
             android:textColor="@color/color_text_sky_blue" />
 
@@ -27,7 +27,32 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Medium Text"
             android:id="@+id/justificacion_agente"
-            android:layout_weight="1" />
+            android:layout_weight="0.75" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_margin="5dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_tipo"
+            android:id="@+id/textView28"
+            android:layout_weight="0.25"
+            android:textStyle="bold"
+            android:textColor="@color/color_text_sky_blue" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/justificacion_tipo"
+            android:layout_weight="0.75" />
     </LinearLayout>
 
     <LinearLayout
@@ -40,27 +65,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/label_tipo"
-            android:id="@+id/textView28"
-            android:layout_weight="1"
-            android:textStyle="bold"
-            android:textColor="@color/color_text_sky_blue" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
-            android:id="@+id/justificacion_tipo"
-            android:layout_weight="1" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/label_motivo2"
             android:id="@+id/textView29"
-            android:layout_weight="1"
+            android:layout_weight="0.25"
             android:textStyle="bold"
             android:textColor="@color/color_text_sky_blue" />
 
@@ -70,7 +77,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Medium Text"
             android:id="@+id/justificacion_motivo"
-            android:layout_weight="1" />
+            android:layout_weight="0.75" />
     </LinearLayout>
 
     <LinearLayout
@@ -85,7 +92,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/label_fecha_just"
             android:id="@+id/textView30"
-            android:layout_weight="0.5"
+            android:layout_weight="0.25"
             android:textStyle="bold"
             android:textColor="@color/color_text_sky_blue" />
 
@@ -95,7 +102,33 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Medium Text"
             android:id="@+id/justificacion_fecha"
-            android:layout_weight="1" />
+            android:layout_weight="0.75" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:id="@+id/justificacion_layout_jornada">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/laber_jornada_sin"
+            android:id="@+id/textView76"
+            android:layout_weight="0.25"
+            android:textStyle="bold"
+            android:textColor="@color/color_text_sky_blue" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/justificacion_jornada"
+            android:layout_weight="0.75" />
     </LinearLayout>
 
     <LinearLayout
@@ -200,7 +233,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/label_estado"
             android:id="@+id/textView33"
-            android:layout_weight="0.5"
+            android:layout_weight="0.25"
             android:textStyle="bold"
             android:textColor="@color/color_text_sky_blue" />
 
@@ -210,7 +243,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Medium Text"
             android:id="@+id/justificacion_estado"
-            android:layout_weight="1" />
+            android:layout_weight="0.75" />
     </LinearLayout>
 
     <LinearLayout

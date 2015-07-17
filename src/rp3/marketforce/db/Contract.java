@@ -608,6 +608,7 @@ public final class Contract {
         public static final String COLUMN_ESTADO = "Estado";
         public static final String COLUMN_PENDIENTE = "Pendiente";
         public static final String COLUMN_PROPIA = "Propia";
+        public static final String COLUMN_JORNADA = "Jornada";
 
         public static final String FIELD_TIPO = COLUMN_TIPO;
         public static final String FIELD_OBSERVACION = COLUMN_OBSERVACION;

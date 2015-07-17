@@ -312,7 +312,8 @@
         Ausencia BOOLEAN,
         Estado TEXT,
         Pendiente BOOLEAN,
-        Propia BOOLEAN
+        Propia BOOLEAN,
+        Jornada TEXT
         )
     </statement>
 </sql>

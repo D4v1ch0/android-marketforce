@@ -8,6 +8,7 @@ import rp3.configuration.PreferenceManager;
 import rp3.content.SimpleCallback;
 import rp3.data.Constants;
 import rp3.data.MessageCollection;
+import rp3.db.sqlite.DataBase;
 import rp3.marketforce.content.EnviarUbicacionReceiver;
 import rp3.marketforce.db.Contract;
 import rp3.marketforce.db.DbOpenHelper;
@@ -56,8 +57,7 @@ public class StartActivity extends rp3.app.StartActivity{
 		}
 		else
 			Configuration.reinitializeConfiguration(context, DbOpenHelper.class);
-		Configuration.TryInitializeConfiguration(this, DbOpenHelper.class);	
-		
+		Configuration.TryInitializeConfiguration(this, DbOpenHelper.class);
 	}
 	
 	private void setServiceRecurring(){

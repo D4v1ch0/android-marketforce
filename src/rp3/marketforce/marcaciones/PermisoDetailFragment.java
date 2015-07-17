@@ -59,7 +59,7 @@ public class PermisoDetailFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        format5 = new SimpleDateFormat("dd/MM/yy");
+        format5 = new SimpleDateFormat("EEEE dd/MM/yy HH:mm");
         if (getParentFragment() == null)
             setRetainInstance(true);
 
@@ -86,10 +86,23 @@ public class PermisoDetailFragment extends BaseFragment {
         if(justificacion==null) return;
         ((TextView) getRootView().findViewById(R.id.justificacion_agente)).setText(justificacion.getAgente());
         ((TextView) getRootView().findViewById(R.id.justificacion_motivo)).setText(justificacion.getTipoDescripcion());
-        if(justificacion.isAusencia())
+        if(justificacion.isAusencia()) {
             ((TextView) getRootView().findViewById(R.id.justificacion_tipo)).setText(R.string.label_ausencia_just);
-        else
+            getRootView().findViewById(R.id.justificacion_layout_jornada).setVisibility(View.GONE);
+        }
+        else {
             ((TextView) getRootView().findViewById(R.id.justificacion_tipo)).setText(R.string.label_atraso);
+            if(justificacion.getJornada().equalsIgnoreCase("J1"))
+                ((TextView) getRootView().findViewById(R.id.justificacion_jornada)).setText("Inicio de Jornada");
+            else if(justificacion.getJornada().equalsIgnoreCase("J2"))
+                ((TextView) getRootView().findViewById(R.id.justificacion_jornada)).setText("Break");
+            else if(justificacion.getJornada().equalsIgnoreCase("J3"))
+                ((TextView) getRootView().findViewById(R.id.justificacion_jornada)).setText("Inicio 2da Jornada");
+            else if(justificacion.getJornada().equalsIgnoreCase("J4"))
+                ((TextView) getRootView().findViewById(R.id.justificacion_jornada)).setText("Fin de Jornada");
+            else
+                ((TextView) getRootView().findViewById(R.id.justificacion_jornada)).setText(justificacion.getJornada());
+        }
         if(justificacion.getEstado().equalsIgnoreCase("P"))
             ((TextView) getRootView().findViewById(R.id.justificacion_estado)).setText("Pendiente");
         else {
@@ -98,7 +111,7 @@ public class PermisoDetailFragment extends BaseFragment {
             ((TextView) getRootView().findViewById(R.id.justificacion_estado)).setText("Aprobado");
         }
         ((TextView) getRootView().findViewById(R.id.justificacion_obs)).setText(justificacion.getObservacion());
-        ((TextView) getRootView().findViewById(R.id.justificacion_fecha)).setText(format5.format(justificacion.getFecha()));
+        ((TextView) getRootView().findViewById(R.id.justificacion_fecha)).setText(StringUtils.getStringCapSentence(format5.format(justificacion.getFecha())));
         if(justificacion.getObservacionSupervisor() != null)
             ((TextView) getRootView().findViewById(R.id.justificacion_text)).setText(justificacion.getObservacionSupervisor());
         getRootView().findViewById(R.id.justificacion_aprobar).setOnClickListener(new View.OnClickListener() {

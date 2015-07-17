@@ -320,6 +320,7 @@ public class Marcaciones {
                     justificacion.setIdAgente(jObject.getInt("IdAgente"));
                     justificacion.setFecha(Convert.getDateFromDotNetTicks(jObject.getLong("FechaInicioTicks")));
                     justificacion.setTipo(jObject.getString("Motivo"));
+                    justificacion.setJornada(jObject.getString("TipoJornada"));
                     justificacion.setAusencia(jObject.getString("Tipo").equalsIgnoreCase("F"));
                     justificacion.setObservacion(jObject.getString("Observacion"));
                     justificacion.setEstado("P");
