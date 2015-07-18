@@ -441,49 +441,47 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 					agenda.setFechaFinReal(Calendar.getInstance().getTime());
                     final Context ctx = getContext();
                     Location location = LocationUtils.getLastLocation(ctx);
-                    agenda.setLatitud(location.getLatitude());
-                    agenda.setLongitud(location.getLongitude());
-                    LatLng pos = new LatLng(agenda.getLatitud(), agenda.getLongitud());
-                    LatLng cli = new LatLng(agenda.getClienteDireccion().getLatitud(), agenda.getClienteDireccion().getLongitud());
-                    agenda.setDistancia((long) SphericalUtil.computeDistanceBetween(pos, cli));
+                    if(location != null) {
+                        agenda.setLatitud(location.getLatitude());
+                        agenda.setLongitud(location.getLongitude());
+                        LatLng pos = new LatLng(agenda.getLatitud(), agenda.getLongitud());
+                        LatLng cli = new LatLng(agenda.getClienteDireccion().getLatitud(), agenda.getClienteDireccion().getLongitud());
+                        agenda.setDistancia((long) SphericalUtil.computeDistanceBetween(pos, cli));
+                    }
 					agenda.setEnviado(false);
                     Agenda.update(getDataBase(), agenda);
                     if (agenda.getObservaciones() == null || agenda.getObservaciones().length() <= 0)
                         setTextViewText(R.id.detail_agenda_observacion, getString(R.string.label_sin_observaciones));
                     new AsyncUpdater.UpdateAgenda().execute((int) idAgenda);
-                    //Bundle bundle = new Bundle();
-                    //bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ENVIAR_AGENDA);
-                    //bundle.putInt(ARG_AGENDA_ID, (int) idAgenda);
-                    //requestSync(bundle);
-					/*try
-					{
-					LocationUtils.getLocation(ctx, new OnLocationResultListener() {
-						
-						@Override
-						public void getLocationResult(Location location) {				
-							if(location!=null){		
-								agenda.setLatitud(location.getLatitude());
-								agenda.setLongitud(location.getLongitude());
-							}
-								agenda.setEnviado(false);
-                                LatLng pos = new LatLng(agenda.getLatitud(), agenda.getLongitud());
-                                LatLng cli = new LatLng(agenda.getClienteDireccion().getLatitud(), agenda.getClienteDireccion().getLongitud());
-                                agenda.setDistancia((long) SphericalUtil.computeDistanceBetween(pos, cli));
-								BaseActivity act = (BaseActivity) ctx;
-								Agenda.update(act.getDataBase(), agenda);
-								Bundle bundle = new Bundle();
-								bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_AGENDA_GEOLOCATION);
-								bundle.putInt(ARG_AGENDA_ID, (int) idAgenda);
-                                bundle.putDouble(ARG_LONGITUD, location.getLongitude());
-                                bundle.putDouble(ARG_LATITUD, location.getLatitude());
-								act.requestSync(bundle);
-	
-						}
-					});
-					}
-					catch(Exception ex)
-					{	}
-					*/
+                    if(location == null) {
+                        try {
+                            LocationUtils.getLocation(ctx, new OnLocationResultListener() {
+
+                                @Override
+                                public void getLocationResult(Location location) {
+                                    if (location != null) {
+                                        agenda.setLatitud(location.getLatitude());
+                                        agenda.setLongitud(location.getLongitude());
+                                    }
+                                    agenda.setEnviado(false);
+                                    LatLng pos = new LatLng(agenda.getLatitud(), agenda.getLongitud());
+                                    LatLng cli = new LatLng(agenda.getClienteDireccion().getLatitud(), agenda.getClienteDireccion().getLongitud());
+                                    agenda.setDistancia((long) SphericalUtil.computeDistanceBetween(pos, cli));
+                                    BaseActivity act = (BaseActivity) ctx;
+                                    Agenda.update(act.getDataBase(), agenda);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_AGENDA_GEOLOCATION);
+                                    bundle.putInt(ARG_AGENDA_ID, (int) idAgenda);
+                                    bundle.putDouble(ARG_LONGITUD, location.getLongitude());
+                                    bundle.putDouble(ARG_LATITUD, location.getLatitude());
+                                    act.requestSync(bundle);
+
+                                }
+                            });
+                        } catch (Exception ex) {
+                        }
+                    }
+
 
 					((ImageView) rootView.findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_visited);
 					setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());	
