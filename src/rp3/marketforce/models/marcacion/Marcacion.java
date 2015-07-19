@@ -248,6 +248,31 @@ public class Marcacion extends EntityBase<Marcacion>
         return marcacion;
     }
 
+    public static Marcacion getUltimaMarcacion(DataBase db, String jornada) {
+        Cursor c = db.query(Contract.Marcacion.TABLE_NAME, new String[]{Contract.Marcacion._ID, Contract.Marcacion.COLUMN_EN_UBICACION, Contract.Marcacion.COLUMN_FECHA,
+                Contract.Marcacion.COLUMN_TIPO, Contract.Marcacion.COLUMN_LATITUD, Contract.Marcacion.COLUMN_LONGITUD, Contract.Marcacion.COLUMN_HORA_INICIO,
+                Contract.Marcacion.COLUMN_HORA_FIN, Contract.Marcacion.COLUMN_PENDIENTE, Contract.Marcacion.COLUMN_MINUTOS_ATRASO}, Contract.Marcacion.COLUMN_TIPO + " = ?",
+                new String[] {jornada}, null, null, Contract.Marcacion._ID + " DESC");
+
+        Marcacion marcacion = null;
+        if (c.moveToFirst()) {
+            marcacion = new Marcacion();
+            marcacion.setID(CursorUtils.getLong(c, Contract.Marcacion._ID));
+            marcacion.setEnUbicacion(CursorUtils.getBoolean(c, Contract.Marcacion.COLUMN_EN_UBICACION));
+            marcacion.setTipo(CursorUtils.getString(c, Contract.Marcacion.COLUMN_TIPO));
+            marcacion.setFecha(CursorUtils.getDate(c, Contract.Marcacion.COLUMN_FECHA));
+            marcacion.setHoraInicio(CursorUtils.getDate(c, Contract.Marcacion.COLUMN_HORA_INICIO));
+            marcacion.setHoraFin(CursorUtils.getDate(c, Contract.Marcacion.COLUMN_HORA_FIN));
+            marcacion.setLatitud(CursorUtils.getDouble(c, Contract.Marcacion.COLUMN_LATITUD));
+            marcacion.setLongitud(CursorUtils.getDouble(c, Contract.Marcacion.COLUMN_LONGITUD));
+            marcacion.setPendiente(CursorUtils.getBoolean(c, Contract.Marcacion.COLUMN_PENDIENTE));
+            marcacion.setMintutosAtraso(CursorUtils.getInt(c, Contract.Marcacion.COLUMN_MINUTOS_ATRASO));
+            marcacion.setPermiso(Permiso.getPermisoMarcacion(db, marcacion.getID()));
+        }
+
+        return marcacion;
+    }
+
     public static Marcacion getMarcacion(DataBase db, long idMarcacion) {
         Cursor c = db.query(Contract.Marcacion.TABLE_NAME, new String[]{Contract.Marcacion._ID, Contract.Marcacion.COLUMN_EN_UBICACION, Contract.Marcacion.COLUMN_FECHA,
                 Contract.Marcacion.COLUMN_TIPO, Contract.Marcacion.COLUMN_LATITUD, Contract.Marcacion.COLUMN_LONGITUD, Contract.Marcacion.COLUMN_HORA_INICIO,

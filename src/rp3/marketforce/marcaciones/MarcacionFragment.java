@@ -37,6 +37,8 @@ import rp3.marketforce.models.marcacion.Marcacion;
 import rp3.marketforce.models.marcacion.Permiso;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.DetailsPageAdapter;
+import rp3.marketforce.utils.Utils;
+import rp3.util.CalendarUtils;
 import rp3.util.GooglePlayServicesUtils;
 import rp3.util.LocationUtils;
 import rp3.widget.DigitalClock;
@@ -336,17 +338,24 @@ public class MarcacionFragment extends BaseFragment {
         String num = format2.format(hoy.getTime());
         String mes = format3.format(hoy.getTime());
         String anio = format4.format(hoy.getTime());
-        DiaLaboral dialab = DiaLaboral.getDia(getDataBase(), Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1);
-        ((TextView) historico.findViewById(R.id.historico_inicio_primera)).setText(dialab.getHoraInicio1().replace("h", ":"));
-        ((TextView) historico.findViewById(R.id.historico_fin_primera)).setText(dialab.getHoraFin1().replace("h", ":"));
-        if (dialab.getHoraFin2() == null) {
-            historico.findViewById(R.id.historico_segunda_jornada).setVisibility(View.GONE);
-            ((TextView) marcaciones.findViewById(R.id.marcacion_hora_fin)).setText(dialab.getHoraFin1().replace("h", ":"));
+        DiaLaboral dialab = DiaLaboral.getDia(getDataBase(), Utils.getDayOfWeek(Calendar.getInstance()));
+        if(dialab.isEsLaboral()) {
+            ((TextView) historico.findViewById(R.id.historico_inicio_primera)).setText(dialab.getHoraInicio1().replace("h", ":"));
+            ((TextView) historico.findViewById(R.id.historico_fin_primera)).setText(dialab.getHoraFin1().replace("h", ":"));
+            if (dialab.getHoraFin2() == null) {
+                historico.findViewById(R.id.historico_segunda_jornada).setVisibility(View.GONE);
+                ((TextView) marcaciones.findViewById(R.id.marcacion_hora_fin)).setText(dialab.getHoraFin1().replace("h", ":"));
+            } else {
+                ((TextView) historico.findViewById(R.id.historico_inicio_segunda)).setText(dialab.getHoraInicio2().replace("h", ":"));
+                ((TextView) historico.findViewById(R.id.historico_fin_segunda)).setText(dialab.getHoraFin2().replace("h", ":"));
+                ((TextView) marcaciones.findViewById(R.id.marcacion_hora_fin)).setText(dialab.getHoraFin2().replace("h", ":"));
+            }
         }
-        else {
-            ((TextView) historico.findViewById(R.id.historico_inicio_segunda)).setText(dialab.getHoraInicio2().replace("h", ":"));
-            ((TextView) historico.findViewById(R.id.historico_fin_segunda)).setText(dialab.getHoraFin2().replace("h", ":"));
-            ((TextView) marcaciones.findViewById(R.id.marcacion_hora_fin)).setText(dialab.getHoraFin2().replace("h", ":"));
+        else
+        {
+            historico.findViewById(R.id.historico_segunda_jornada).setVisibility(View.GONE);
+            historico.findViewById(R.id.historico_primera_jornada).setVisibility(View.GONE);
+            ((TextView) marcaciones.findViewById(R.id.marcacion_hora_fin)).setVisibility(View.INVISIBLE);
         }
 
         ((TextView) marcaciones.findViewById(R.id.marcacion_dia)).setText(dia);
@@ -483,7 +492,7 @@ public class MarcacionFragment extends BaseFragment {
                                                 Marcacion.insert(getDataBase(), marc);
                                                 Toast.makeText(getContext(), "Se ha terminado el break.", Toast.LENGTH_LONG).show();
                                                 if (distance < DISTANCE) {
-                                                    Marcacion ultimaMarcacion = Marcacion.getUltimaMarcacion(getDataBase());
+                                                    Marcacion ultimaMarcacion = Marcacion.getUltimaMarcacion(getDataBase(), "J2");
                                                     Calendar cal_hoy = Calendar.getInstance();
                                                     try {
                                                         cal_hoy.setTime(ultimaMarcacion.getFecha());
