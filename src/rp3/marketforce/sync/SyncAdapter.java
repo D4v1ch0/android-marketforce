@@ -68,6 +68,8 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 		
 		try{
             db = DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class);
+            if(db == null)
+                Log.e("Error:","db is null");
             if(TestConnection.executeSync()) {
 
                 if (syncType == null || syncType.equals(SYNC_TYPE_GENERAL)) {
