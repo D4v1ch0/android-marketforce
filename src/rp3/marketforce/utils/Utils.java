@@ -19,6 +19,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.graphics.Matrix;
 import android.graphics.drawable.GradientDrawable;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore.MediaColumns;
@@ -97,7 +98,7 @@ public class Utils {
             }
         }
 
-        if(orientation == Configuration.ORIENTATION_PORTRAIT)
+        if(orientation == ExifInterface.ORIENTATION_ROTATE_90)
         {
             Matrix matrix = new Matrix();
             matrix.postRotate(90);

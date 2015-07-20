@@ -4,6 +4,7 @@ package rp3.marketforce.ruta;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -215,17 +216,24 @@ public class ObservacionesFragment extends BaseFragment {
                 default:
                     if(fileUri != null) {
                         String path = fileUri.getPath();
+                        int rotation = 0;
+                        try {
+                            ExifInterface exif = new ExifInterface(path);
+                            rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                        }
+                        catch (Exception ex)
+                        {}
                         switch (requestCode) {
                             case PHOTO_1:
-                                ((ImageButton) getRootView().findViewById(R.id.obs_foto1)).setImageBitmap(Utils.resizeBitMapImage(path, 500, 500, getOrientation()));
+                                ((ImageButton) getRootView().findViewById(R.id.obs_foto1)).setImageBitmap(Utils.resizeBitMapImage(path, 500, 500, rotation));
                                 agenda.setFoto1Int(path);
                                 break;
                             case PHOTO_2:
-                                ((ImageButton) getRootView().findViewById(R.id.obs_foto2)).setImageBitmap(Utils.resizeBitMapImage(path, 500, 500, getOrientation()));
+                                ((ImageButton) getRootView().findViewById(R.id.obs_foto2)).setImageBitmap(Utils.resizeBitMapImage(path, 500, 500, rotation));
                                 agenda.setFoto2Int(path);
                                 break;
                             case PHOTO_3:
-                                ((ImageButton) getRootView().findViewById(R.id.obs_foto3)).setImageBitmap(Utils.resizeBitMapImage(path, 500, 500, getOrientation()));
+                                ((ImageButton) getRootView().findViewById(R.id.obs_foto3)).setImageBitmap(Utils.resizeBitMapImage(path, 500, 500, rotation));
                                 agenda.setFoto3Int(path);
                                 break;
                             default:
