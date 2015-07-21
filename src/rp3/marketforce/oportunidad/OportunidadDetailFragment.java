@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -40,7 +41,9 @@ import rp3.marketforce.utils.DetailsPageAdapter;
 import rp3.marketforce.utils.DonutChart;
 import rp3.marketforce.utils.DrawableManager;
 import rp3.marketforce.utils.MapActivity;
+import rp3.marketforce.utils.Utils;
 import rp3.util.CalendarUtils;
+import rp3.util.ViewUtils;
 import rp3.widget.ViewPager;
 
 /**
@@ -311,9 +314,21 @@ public class OportunidadDetailFragment extends BaseFragment {
             //((ProgressBar) view_info.findViewById(R.id.oportunidad_probabilidad_progress)).setProgress(opt.getProbabilidad());
             ((TextView) view_info.findViewById(R.id.oportunidad_importe)).setText(numberFormat.format(opt.getImporte()));
             ((TextView) view_info.findViewById(R.id.oportunidad_movil)).setText(opt.getTelefono1());
+            if(((TextView) view_info.findViewById(R.id.oportunidad_movil)).length() > 0)
+                ViewUtils.setPhoneActionClickListener(view_info.findViewById(R.id.oportunidad_movil), Utils.convertToSMSNumber(opt.getTelefono1()));
+
             ((TextView) view_info.findViewById(R.id.oportunidad_fijo)).setText(opt.getTelefono2());
+            if(((TextView) view_info.findViewById(R.id.oportunidad_fijo)).length() > 0)
+                ViewUtils.setPhoneActionClickListener(view_info.findViewById(R.id.oportunidad_fijo), Utils.convertToSMSNumber(opt.getTelefono2()));
+
             ((TextView) view_info.findViewById(R.id.oportunidad_correo)).setText(opt.getCorreo());
+            if(((TextView) view_info.findViewById(R.id.oportunidad_correo)).length() > 0)
+                ViewUtils.setEmailActionClickListener(view_info.findViewById(R.id.oportunidad_correo), opt.getCorreo());
+
             ((TextView) view_info.findViewById(R.id.oportunidad_pagina_web)).setText(opt.getPaginaWeb());
+            if(((TextView) view_info.findViewById(R.id.oportunidad_pagina_web)).length() > 0)
+                ViewUtils.setLinkActionClickListener(view_info.findViewById(R.id.oportunidad_pagina_web), opt.getPaginaWeb());
+
             ((TextView) view_info.findViewById(R.id.oportunidad_direccion)).setText(opt.getDireccion());
             ((TextView) view_info.findViewById(R.id.oportunidad_medio_referencia)).setText(opt.getReferencia());
             ((TextView) view_info.findViewById(R.id.oportunidad_referencia)).setText(opt.getDireccionReferencia());

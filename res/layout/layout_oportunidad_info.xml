@@ -190,7 +190,9 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/oportunidad_movil"
             android:layout_weight="0.66"
-            android:layout_marginLeft="5dp" />
+            android:layout_marginLeft="5dp"
+            android:clickable="false"
+            android:textColor="@drawable/text_feedback" />
     </LinearLayout>
 
     <LinearLayout
@@ -227,7 +229,9 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/oportunidad_fijo"
             android:layout_weight="0.66"
-            android:layout_marginLeft="5dp" />
+            android:layout_marginLeft="5dp"
+            android:clickable="false"
+            android:textColor="@drawable/text_feedback" />
     </LinearLayout>
 
     <LinearLayout
@@ -264,7 +268,9 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/oportunidad_correo"
             android:layout_weight="0.66"
-            android:layout_marginLeft="5dp" />
+            android:layout_marginLeft="5dp"
+            android:clickable="false"
+            android:textColor="@drawable/text_feedback" />
     </LinearLayout>
 
     <LinearLayout
@@ -301,7 +307,9 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/oportunidad_pagina_web"
             android:layout_weight="0.66"
-            android:layout_marginLeft="5dp" />
+            android:layout_marginLeft="5dp"
+            android:clickable="false"
+            android:textColor="@drawable/text_feedback" />
     </LinearLayout>
 
     <LinearLayout
