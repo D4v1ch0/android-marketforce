@@ -74,6 +74,7 @@ public class Canal extends rp3.data.entity.EntityBase<Canal>{
 		
 			list.add(tpcl);
 		}
+        c.close();
 		return list;
 	}
 

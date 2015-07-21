@@ -135,6 +135,7 @@ public class Campo extends rp3.data.entity.EntityBase<Campo> {
                 campos.add(cp);
             }while(c.moveToNext());
         }
+        c.close();
 
         return campos;
     }
@@ -165,6 +166,7 @@ public class Campo extends rp3.data.entity.EntityBase<Campo> {
                 campos.add(cp);
             }while(c.moveToNext());
         }
+        c.close();
 
         return campos;
     }
