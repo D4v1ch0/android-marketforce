@@ -1,11 +1,22 @@
 package rp3.marketforce.ruta;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.media.ExifInterface;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Locale;
+
 import rp3.app.BaseFragment;
 import rp3.content.SimpleGeneralValueAdapter;
 import rp3.data.models.GeneralValue;
@@ -14,6 +25,8 @@ import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.ruta.ContactsAgendaFragment.SaveContactsListener;
 import rp3.marketforce.sync.SyncAdapter;
+import rp3.marketforce.utils.Utils;
+import rp3.util.StringUtils;
 
 public class MotivoNoVisitaFragment extends BaseFragment {
 	public static MotivoNoVisitaFragment newInstance(long idAgenda)
@@ -30,6 +43,7 @@ public class MotivoNoVisitaFragment extends BaseFragment {
 	private long idAgenda;
 	private Agenda agenda;
 	private SaveContactsListener saveListener;
+    public static final int REQ_CODE_SPEECH_INPUT = 101;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,7 +82,7 @@ public class MotivoNoVisitaFragment extends BaseFragment {
 
 			@Override
 			public void onClick(View v) {
-				agenda.setObservaciones(getTextViewString(R.id.no_visita_observaciones));
+				agenda.setObservaciones(getTextViewString(R.id.obs_text));
 				agenda.setIdMotivoNoVisita(((GeneralValue)((Spinner) rootView.findViewById(R.id.no_visita_motivos)).getSelectedItem()).getCode());
 				agenda.setEstadoAgenda(Contants.ESTADO_NO_VISITADO);
 				agenda.setEstadoAgendaDescripcion(Contants.DESC_NO_VISITADO);
@@ -99,6 +113,41 @@ public class MotivoNoVisitaFragment extends BaseFragment {
 				dismiss();
 				
 			}});
+        ((ImageView) rootView.findViewById(R.id.observaciones_voice_to_text)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                promptSpeechInput();
+            }
+        });
 	}
+
+    private void promptSpeechInput() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+                "Hable Ahora");
+        try {
+            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+        } catch (ActivityNotFoundException a) {
+            Toast.makeText(getContext(),
+                    "Dispositivo no soporta voz a texto.",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+
+            if (resultCode == RESULT_OK && null != data) {
+
+                ArrayList<String> result = data
+                        .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                setTextViewText(R.id.obs_text, StringUtils.getStringCapSentence(result.get(0)));
+            }
+
+        }
+    }
 
 }

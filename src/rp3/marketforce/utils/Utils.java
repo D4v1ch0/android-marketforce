@@ -122,6 +122,30 @@ public class Utils {
             }
         }
 
+        if(orientation == ExifInterface.ORIENTATION_ROTATE_180)
+        {
+            Matrix matrix = new Matrix();
+            matrix.postRotate(180);
+            bitMapImage = Bitmap.createBitmap(bitMapImage, 0, 0, bitMapImage.getWidth(), bitMapImage.getHeight(), matrix, true);
+
+            FileOutputStream out = null;
+            try {
+                out = new FileOutputStream(filePath);
+                bitMapImage.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
+                // PNG is a lossless format, the compression factor (100) is ignored
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (out != null) {
+                        out.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         return bitMapImage;
     }
 

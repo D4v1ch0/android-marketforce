@@ -456,6 +456,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			
 			list.add(agd);
 		}
+        c.close();
 		return list;
 	}
 	
@@ -505,6 +506,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			
 			list.add(agd);
 		}
+        c.close();
 		return list;
 	}
 	
@@ -576,6 +578,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 				agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getIdAgenda(), agd.getIdRuta(), false));
 			
 		}
+        c.close();
 		return agd;
 	}
 
@@ -631,6 +634,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
                 agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getIdAgenda(), agd.getIdRuta(), false));
 
         }
+        c.close();
         return agd;
     }
 	
@@ -687,6 +691,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getIdAgenda(), agd.getIdRuta(), false));
 			
 		}
+        c.close();
 		return agd;
 	}
 	
@@ -741,6 +746,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
             }
 			
 		}
+        c.close();
 		return agd;
 	}
 	
@@ -755,6 +761,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 		{
 			estado = CursorUtils.getString(c, Contract.Agenda.COLUMN_ESTADO_AGENDA);
 		}
+        c.close();
 		return estado;
 	}
 	
@@ -804,6 +811,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setDireccion(agd.getClienteDireccion().getDireccion());
 			agds.add(agd);
 		}
+        c.close();
 		return agds;
 	}
 	
@@ -859,6 +867,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 				list_agenda.add(agd);
 			}while(c.moveToNext());
 		}
+        c.close();
 		return list_agenda;
 	}
 	
@@ -911,6 +920,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			}while(c.moveToNext());
 			
 		}
+        c.close();
 		return list_agenda;
 	}
 	
@@ -951,6 +961,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			
 			list.add(agd);
 		}
+        c.close();
 		return list;
 	}
 	
@@ -997,6 +1008,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 				list.add(agd);
 			}while(c.moveToNext());
 		}
+        c.close();
 		
 		return list;
 	}
@@ -1042,7 +1054,8 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 				list.add(agd);
 			}while(c.moveToNext());
 		}
-		
+        c.close();
+
 		return list;
 	}
 	
@@ -1074,7 +1087,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 				list.add(agd);
 			}while(c.moveToNext());
 		}
-		
+        c.close();
 		return list;
 	}
 	
@@ -1102,6 +1115,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 		{
 			cont = CursorUtils.getInt(c,"conteo");
 		}
+        c.close();
 		return cont;
 	}
 

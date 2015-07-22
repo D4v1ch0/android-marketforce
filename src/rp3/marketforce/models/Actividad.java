@@ -165,6 +165,7 @@ public class Actividad extends EntityBase<Actividad>
 			
 			actividades.add(act);
 		}
+        c.close();
 		
 		return actividades;
 	}
@@ -191,6 +192,7 @@ public class Actividad extends EntityBase<Actividad>
 
             actividades.add(act);
         }
+        c.close();
 
         return actividades;
     }
@@ -215,6 +217,7 @@ public class Actividad extends EntityBase<Actividad>
 			act.setIdTipoActividad(CursorUtils.getInt(c,Contract.Actividades.COLUMN_TIPO_ACTIVIDAD_ID));
 			act.setActividades_hijas(getActividadesHijas(db, idTarea, act.getIdTareaActividad()));
 		}
+        c.close();
 		
 		return act;
 	}
@@ -239,6 +242,7 @@ public class Actividad extends EntityBase<Actividad>
 			act.setIdTipoActividad(CursorUtils.getInt(c,Contract.Actividades.COLUMN_TIPO_ACTIVIDAD_ID));
 			act.setActividades_hijas(getActividadesHijas(db, idTarea, act.getIdTareaActividad()));
 		}
+        c.close();
 		
 		return act;
 	}
@@ -264,6 +268,7 @@ public class Actividad extends EntityBase<Actividad>
 			
 			actividades.add(act);
 		}
+        c.close();
 		
 		return actividades;
 	}

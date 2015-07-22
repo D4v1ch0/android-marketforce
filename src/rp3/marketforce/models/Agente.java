@@ -103,6 +103,7 @@ public class Agente extends EntityBase<Agente> {
             agente.setNombre(CursorUtils.getString(c, Contract.Agente.COLUMN_NOMBRE));
             list.add(agente);
         }
+        c.close();
         return list;
     }
 
@@ -120,6 +121,7 @@ public class Agente extends EntityBase<Agente> {
             agente.setTelefono(CursorUtils.getString(c, Contract.Agente.COLUMN_TELEFONO));
             agente.setEmail(CursorUtils.getString(c, Contract.Agente.COLUMN_EMAIL));
         }
+        c.close();
         return agente;
     }
 }

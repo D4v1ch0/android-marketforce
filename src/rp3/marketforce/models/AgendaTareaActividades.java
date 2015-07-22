@@ -214,6 +214,7 @@ public class AgendaTareaActividades extends rp3.data.entity.EntityBase<AgendaTar
 				lista_actividades.add(actividad);
 			}while(c.moveToNext());
 		}
+        c.close();
 		
 		return lista_actividades;
 	}
@@ -254,6 +255,7 @@ public class AgendaTareaActividades extends rp3.data.entity.EntityBase<AgendaTar
 				lista_actividades.add(actividad);
 			}while(c.moveToNext());
 		}
+        c.close();
 		
 		return lista_actividades;
 	}
@@ -293,6 +295,7 @@ public class AgendaTareaActividades extends rp3.data.entity.EntityBase<AgendaTar
 				lista_actividades.add(actividad);
 			}while(c.moveToNext());
 		}
+        c.close();
 		
 		return lista_actividades;
 	}
@@ -326,6 +329,7 @@ public class AgendaTareaActividades extends rp3.data.entity.EntityBase<AgendaTar
 			//actividad.setTipo(CursorUtils.getString(c, Contract.Actividades.COLUMN_TIPO));
 			//actividad.setIdTipoActividad(CursorUtils.getInt(c, Contract.Actividades.COLUMN_TIPO_ACTIVIDAD_ID));
 		}
+        c.close();
 		
 		return actividad;
 	}
@@ -360,6 +364,7 @@ public class AgendaTareaActividades extends rp3.data.entity.EntityBase<AgendaTar
             //actividad.setTipo(CursorUtils.getString(c, Contract.Actividades.COLUMN_TIPO));
             //actividad.setIdTipoActividad(CursorUtils.getInt(c, Contract.Actividades.COLUMN_TIPO_ACTIVIDAD_ID));
         }
+        c.close();
 
         return actividad;
     }
@@ -393,6 +398,7 @@ public class AgendaTareaActividades extends rp3.data.entity.EntityBase<AgendaTar
 			actividad.setTipo(CursorUtils.getString(c, Contract.Actividades.COLUMN_TIPO));
 			actividad.setIdTipoActividad(CursorUtils.getInt(c, Contract.Actividades.COLUMN_TIPO_ACTIVIDAD_ID));
 		}
+        c.close();
 		
 		return actividad;
 	}

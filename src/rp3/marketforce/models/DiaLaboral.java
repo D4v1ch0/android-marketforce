@@ -152,7 +152,7 @@ public class DiaLaboral extends EntityBase<DiaLaboral>
                 dias.add(dia);
             }while(c.moveToNext());
         }
-
+        c.close();
         return dias;
 
     }
@@ -174,7 +174,7 @@ public class DiaLaboral extends EntityBase<DiaLaboral>
             dia.setEsLaboral(CursorUtils.getBoolean(c, Contract.DiaLaboral.COLUMN_ES_LABORAL));
 
         }
-
+        c.close();
         return dia;
     }
 

@@ -384,6 +384,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 		while(c.moveToNext()){
 			result.add(CursorUtils.getLong(c,Contract.Cliente._ID));
 		}
+        c.close();
 		return result;
 	}
 	
@@ -394,6 +395,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 		while(c.moveToNext()){
 			rest = CursorUtils.getBoolean(c, Contract.Cliente.COLUMN_NUEVO);
 		}
+        c.close();
 		return rest;
 	}
 	
@@ -440,6 +442,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			
 			list.add(cl);
 		}
+        c.close();
 		return list;
 	}
 	
@@ -475,6 +478,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			
 			list.add(cl);
 		}
+        c.close();
 		return list;
 
 	}
@@ -533,7 +537,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 					client.setClienteDirecciones(ClienteDireccion.getClienteDirecciones(db, client.getIdCliente(), false));
 			
 		}
-		
+        c.close();
 		return client;
 	}
 	
@@ -590,7 +594,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 					client.setClienteDirecciones(ClienteDireccion.getClienteDirecciones(db, client.getIdCliente(), false));
 			
 		}
-		
+        c.close();
 		return client;
 	}
 	
@@ -652,7 +656,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 				list_clientes.add(client);
 			}while(c.moveToNext());
 		}
-		
+        c.close();
 		return list_clientes;
 	}
 	
@@ -714,7 +718,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 				list_clientes.add(client);
 			}while(c.moveToNext());
 		}
-		
+        c.close();
 		return list_clientes;
 	}
 	
@@ -877,6 +881,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			
 			list.add(cl);
 		}
+        c.close();
 		return list;
 
 	}

@@ -133,7 +133,7 @@ public class AgendaTareaOpciones extends rp3.data.entity.EntityBase<AgendaTareaO
 				list_opc.add(opcion);
 			}while(c.moveToNext());
 		}
-		
+        c.close();
 		return list_opc;
 	}
 	

@@ -164,7 +164,7 @@ public class Tarea extends EntityBase<Tarea>
             tareas.add(tarea);
         }while(c.moveToNext());
     }
-
+    c.close();
     return tareas;
 
 }
@@ -193,7 +193,7 @@ public class Tarea extends EntityBase<Tarea>
                 tareas.add(tarea);
             }while(c.moveToNext());
         }
-
+        c.close();
         return tareas;
 
     }
@@ -214,7 +214,7 @@ public class Tarea extends EntityBase<Tarea>
                 tarea.setEstadoTarea(CursorUtils.getString(c, Contract.Tareas.COLUMN_ESTADO_TAREA));
             }while(c.moveToNext());
         }
-
+        c.close();
         return tarea;
 
     }
@@ -235,7 +235,7 @@ public class Tarea extends EntityBase<Tarea>
                 tarea.setEstadoTarea(CursorUtils.getString(c, Contract.Tareas.COLUMN_ESTADO_TAREA));
             }while(c.moveToNext());
         }
-
+        c.close();
         return tarea;
 
     }
