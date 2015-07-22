@@ -146,6 +146,7 @@ public class AgenteResumen extends rp3.data.entity.EntityBase<AgenteResumen>{
 				list.add(agd);
 			}while(c.moveToNext());
 		}
+        c.close();
 		return list;
 	}
 

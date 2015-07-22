@@ -160,6 +160,7 @@ public class AgendaTarea extends rp3.data.entity.EntityBase<AgendaTarea> {
 			agdt.setActividades(AgendaTareaActividades.getActividades(db, agdt.getIdRuta(), agdt.getIdAgenda(), agdt.getIdTarea()));
 			list.add(agdt);
 		}
+        c.close();
 		return list;
 	}
 	
@@ -186,6 +187,7 @@ public class AgendaTarea extends rp3.data.entity.EntityBase<AgendaTarea> {
 			tarea.setEstadoTarea(CursorUtils.getString(c, Contract.AgendaTarea.FIELD_ESTADO_TAREA));
 
 		}
+        c.close();
 		return tarea;
 	}
 
@@ -212,6 +214,7 @@ public class AgendaTarea extends rp3.data.entity.EntityBase<AgendaTarea> {
             tarea.setEstadoTarea(CursorUtils.getString(c, Contract.AgendaTarea.FIELD_ESTADO_TAREA));
 
         }
+        c.close();
         return tarea;
     }
 	

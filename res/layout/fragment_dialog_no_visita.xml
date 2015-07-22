@@ -38,12 +38,40 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/no_visita_observaciones"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textMultiLine" />
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <EditText
+                android:id="@+id/obs_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textMultiLine|textCapSentences"
+                android:lines="3"
+                android:maxLines="3"
+                android:background="@drawable/observaciones_fondo"
+                android:padding="3dp"
+                android:scrollbars="vertical"
+                android:fadeScrollbars="false"
+                android:gravity="top">
+
+                <requestFocus />
+            </EditText>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/observaciones_voice_to_text"
+                android:src="@drawable/ic_action_mic"
+                android:clickable="true"
+                android:layout_alignTop="@+id/obs_text"
+                android:layout_alignRight="@+id/obs_text"
+                android:layout_alignEnd="@+id/obs_text" />
+
+        </RelativeLayout>
 
     </LinearLayout>
 

@@ -43,6 +43,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	private RutasListFragment rutasListFragment;
 	private RutasDetailFragment rutasDetailfragment;
 	private ObservacionesFragment obsFragment;
+    private MotivoNoVisitaFragment motivoNoVisitaFragment;
 	private SlidingPaneLayout slidingPane;
 	private boolean openPane = true;
     private Menu menuRutas;
@@ -270,7 +271,8 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	    			{
 	    				if(Agenda.getAgendaEstado(getDataBase(), selectedTransactionId).equalsIgnoreCase(Contants.ESTADO_PENDIENTE) ||
 	    				   Agenda.getAgendaEstado(getDataBase(), selectedTransactionId).equalsIgnoreCase(Contants.ESTADO_REPROGRAMADO))
-	    					this.showDialogFragment(MotivoNoVisitaFragment.newInstance(selectedTransactionId), MotivoNoVisitaFragment.TAG);
+                           motivoNoVisitaFragment = MotivoNoVisitaFragment.newInstance(selectedTransactionId);
+	    					this.showDialogFragment(motivoNoVisitaFragment, MotivoNoVisitaFragment.TAG);
 	    			}
 	    			else
 	    			{
@@ -304,7 +306,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 		 }
          else
          {
-             rutasDetailfragment.onActivityResult(requestCode, resultCode, data);
+             motivoNoVisitaFragment.onActivityResult(requestCode, resultCode, data);
          }
 	}
 

@@ -74,6 +74,7 @@ public class TipoCliente extends rp3.data.entity.EntityBase<TipoCliente>{
 		
 			list.add(tpcl);
 		}
+        c.close();
 		return list;
 	}
 	

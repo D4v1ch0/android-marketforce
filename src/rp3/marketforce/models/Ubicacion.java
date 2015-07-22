@@ -115,7 +115,7 @@ public class Ubicacion extends rp3.data.entity.EntityBase<Ubicacion> {
 				ubicaciones.add(ub);
 			}while(c.moveToNext());
 		}
-		
+        c.close();
 		return ubicaciones;
 	}
 	
@@ -148,7 +148,7 @@ public class Ubicacion extends rp3.data.entity.EntityBase<Ubicacion> {
 				ubicaciones.add(ub);
 			}while(c.moveToNext());
 		}
-		
+        c.close();
 		return ubicaciones;
 	}
 
