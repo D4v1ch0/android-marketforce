@@ -49,6 +49,7 @@ public class JustificacionFragment extends BaseFragment {
     @Override
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
+        setCancelable(false);
 
         getDialog().setTitle("Justificación");
 
@@ -79,6 +80,9 @@ public class JustificacionFragment extends BaseFragment {
                             requestSync(bundle);
                         } else {
                             permiso.setIdMarcacion(idMarcacion);
+                            Marcacion marc = Marcacion.getMarcacion(getDataBase(), idMarcacion);
+                            marc.setPendiente(true);
+                            Marcacion.update(getDataBase(), marc);
                             Permiso.update(getDataBase(), permiso);
                             Bundle bundle = new Bundle();
                             bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);

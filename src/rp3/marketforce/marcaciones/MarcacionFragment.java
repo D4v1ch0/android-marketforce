@@ -135,7 +135,7 @@ public class MarcacionFragment extends BaseFragment {
                             ((DonutProgress) marcaciones.findViewById(R.id.donut_inicio_jornada)).setProgress(PRESS_TIME);
                             final Marcacion marc = new Marcacion();
                             marc.setTipo("J1"); //falta tipo
-                            marc.setPendiente(true);
+                            marc.setPendiente(false);
                             marc.setFecha(Calendar.getInstance().getTime());
                             if (GooglePlayServicesUtils.servicesConnected((BaseActivity) getActivity())) {
 
@@ -177,6 +177,8 @@ public class MarcacionFragment extends BaseFragment {
                                                             Toast.makeText(getContext(), "Usted esta marcando atrasado. Indique su justificación", Toast.LENGTH_LONG).show();
                                                         } else {
                                                             permiso.setIdMarcacion(marc.getID());
+                                                            marc.setPendiente(true);
+                                                            Marcacion.update(getDataBase(), marc);
                                                             Permiso.update(getDataBase(), permiso);
                                                             Bundle bundle = new Bundle();
                                                             bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
@@ -184,6 +186,8 @@ public class MarcacionFragment extends BaseFragment {
                                                         }
                                                     } else {
                                                         marcaciones.findViewById(R.id.layout_inicio_jornada).setVisibility(View.GONE);
+                                                        marc.setPendiente(true);
+                                                        Marcacion.update(getDataBase(), marc);
                                                         SetButtonFinJornada();
                                                         Bundle bundle = new Bundle();
                                                         bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
@@ -385,7 +389,7 @@ public class MarcacionFragment extends BaseFragment {
                             ((DonutProgress) marcaciones.findViewById(R.id.donut_break)).setProgress(PRESS_TIME);
                             final Marcacion marc = new Marcacion();
                             marc.setTipo("J2"); //falta tipo
-                            marc.setPendiente(true);
+                            marc.setPendiente(false);
                             marc.setFecha(Calendar.getInstance().getTime());
                             if (GooglePlayServicesUtils.servicesConnected((BaseActivity) getActivity())) {
 
@@ -408,6 +412,8 @@ public class MarcacionFragment extends BaseFragment {
                                                 if (distance < DISTANCE) {
                                                     marcaciones.findViewById(R.id.layout_break).setVisibility(View.GONE);
                                                     SetButtonFinBreak();
+                                                    marc.setPendiente(true);
+                                                    Marcacion.update(getDataBase(), marc);
                                                     Bundle bundle = new Bundle();
                                                     bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
                                                     requestSync(bundle);
@@ -458,7 +464,7 @@ public class MarcacionFragment extends BaseFragment {
                             ((DonutProgress) marcaciones.findViewById(R.id.donut_fin_break)).setProgress(PRESS_TIME);
                             final Marcacion marc = new Marcacion();
                             marc.setTipo("J3"); //falta tipo
-                            marc.setPendiente(true);
+                            marc.setPendiente(false);
                             marc.setFecha(Calendar.getInstance().getTime());
                             if (GooglePlayServicesUtils.servicesConnected((BaseActivity) getActivity())) {
 
@@ -497,6 +503,8 @@ public class MarcacionFragment extends BaseFragment {
                                                     }
                                                     else {
                                                         marcaciones.findViewById(R.id.layout_fin_break).setVisibility(View.GONE);
+                                                        marc.setPendiente(true);
+                                                        Marcacion.update(getDataBase(), marc);
                                                         Bundle bundle = new Bundle();
                                                         bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
                                                         requestSync(bundle);
@@ -549,7 +557,7 @@ public class MarcacionFragment extends BaseFragment {
                             final Marcacion marc = new Marcacion();
                             marc.setTipo("J4"); //falta tipo
                             marc.setFecha(Calendar.getInstance().getTime());
-                            marc.setPendiente(true);
+                            marc.setPendiente(false);
                             if (GooglePlayServicesUtils.servicesConnected((BaseActivity) getActivity())) {
 
                                 try {
@@ -593,6 +601,8 @@ public class MarcacionFragment extends BaseFragment {
                                                         marcaciones.findViewById(R.id.layout_fin_break).setVisibility(View.GONE);
                                                         marcaciones.findViewById(R.id.layout_break).setVisibility(View.GONE);
                                                         marcaciones.findViewById(R.id.marcacion_justificar).setVisibility(View.GONE);
+                                                        marc.setPendiente(true);
+                                                        Marcacion.update(getDataBase(), marc);
                                                         Bundle bundle = new Bundle();
                                                         bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
                                                         requestSync(bundle);

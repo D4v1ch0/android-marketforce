@@ -213,7 +213,7 @@ public class Justificacion extends EntityBase<Justificacion>
             permiso.setJornada(CursorUtils.getString(c, Contract.Justificaciones.COLUMN_JORNADA));
             permisos.add(permiso);
         }
-
+        c.close();
         return permisos;
 
     }
@@ -247,7 +247,7 @@ public class Justificacion extends EntityBase<Justificacion>
                 permisos.add(permiso);
             }while(c.moveToNext());
         }
-
+        c.close();
         return permisos;
 
     }
@@ -277,7 +277,7 @@ public class Justificacion extends EntityBase<Justificacion>
             permiso.setJornada(CursorUtils.getString(c, Contract.Justificaciones.COLUMN_JORNADA));
             permisos.add(permiso);
         }
-
+        c.close();
         return permisos;
 
     }
@@ -309,7 +309,7 @@ public class Justificacion extends EntityBase<Justificacion>
             permiso.setAgente(CursorUtils.getString(c, Contract.AgentesUbicacion.COLUMN_NOMBRES));
             permiso.setJornada(CursorUtils.getString(c, Contract.Justificaciones.COLUMN_JORNADA));
         }
-
+        c.close();
         return permiso;
     }
 }
