@@ -5,8 +5,8 @@
         <allowHelpOnAut>TRUE</allowHelpOnAut>
         <imagesFolder>/Content/AgendaComercial/img/clientes/</imagesFolder>
         <cancelAlarmTime>22H00</cancelAlarmTime>
-        <forgotPassword>[@server:http://190.216.215.133/Rp3MarketForce]/Security/Account/RequestingPasswordRecovery</forgotPassword>
-        <help>[@server:http://190.216.215.133/Rp3MarketForce]/help/index.htm</help>
+        <forgotPassword>/Security/Account/RequestingPasswordRecovery</forgotPassword>
+        <help>/help/app/principal.html</help>
         <mail>marketforce@rp3.com.ec</mail>
     </appConfiguration>
     <dataBaseConfiguration>       
