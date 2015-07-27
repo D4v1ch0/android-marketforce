@@ -120,6 +120,10 @@ public class DashboardAgendaAdapter extends BaseAdapter{
                             ctx.startActivity(Intent.createChooser(intent, "Send Email"));
                         }
                     });
+                    ((TextView) convertView.findViewById(R.id.dashboard_agenda_mail)).setTextColor(ctx.getResources().getColor(R.color.color_text_sky_blue));
+                    SpannableString content = new SpannableString(agd.getCliente().getCorreoElectronico());
+                    content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+                    ((TextView) convertView.findViewById(R.id.dashboard_agenda_mail)).setText(content);
                 } else
                     ((TextView) convertView.findViewById(R.id.dashboard_agenda_mail)).setText(R.string.label_sin_especificar);
 
