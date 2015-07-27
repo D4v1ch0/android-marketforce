@@ -32,7 +32,7 @@ public class FotoOportunidadActivity extends BaseActivity {
         Point size = new Point();
         display.getSize(size);
         params.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        params.width = WindowManager.LayoutParams.MATCH_PARENT;
+        params.width = WindowManager.LayoutParams.WRAP_CONTENT;
         params.alpha = 1.0f;
         params.dimAmount = 0.5f;
         params.y = params.y + 50;

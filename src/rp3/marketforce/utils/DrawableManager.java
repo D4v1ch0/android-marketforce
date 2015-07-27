@@ -12,6 +12,7 @@ import org.kobjects.util.Util;
 
 import rp3.marketforce.R;
 import rp3.util.BitmapUtils;
+import rp3.widget.ZoomView;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -155,7 +156,44 @@ public class DrawableManager {
                     @Override
                     public void handleMessage(Message message) {
                         //SaveBitmap(((BitmapDrawable) message.obj).getBitmap(), getFilename(urlString));
+                        Drawable dr = (Drawable) message.obj;
                         imageView.setImageDrawable((Drawable) message.obj);
+                    }
+                };
+
+                Thread thread = new Thread() {
+                    @Override
+                    public void run() {
+                        //	TODO : set imageView to a "pending" image
+                        Drawable drawable = fetchDrawable(urlString);
+                        Message message = handler.obtainMessage(1, drawable);
+                        handler.sendMessage(message);
+                    }
+                };
+                thread.start();
+            }
+
+        }
+    }
+
+    public void fetchDrawableOnThreadOnline(final String urlString, final ZoomView imageView) {
+        ctx = imageView.getContext();
+        if (mMemoryCache.get(urlString) != null) {
+            imageView.setImage(new BitmapDrawable(mMemoryCache.get(urlString)));
+        }
+        else {
+
+            Drawable d = Drawable.createFromPath(getFilename(urlString));
+            if (d != null) {
+                imageView.setImage(d);
+            } else {
+
+                final Handler handler = new Handler() {
+                    @Override
+                    public void handleMessage(Message message) {
+                        //SaveBitmap(((BitmapDrawable) message.obj).getBitmap(), getFilename(urlString));
+                        Drawable dr = (Drawable) message.obj;
+                        imageView.setImage((Drawable) message.obj);
                     }
                 };
 

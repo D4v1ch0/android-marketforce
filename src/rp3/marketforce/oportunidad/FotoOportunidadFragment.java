@@ -1,6 +1,7 @@
 package rp3.marketforce.oportunidad;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
@@ -47,6 +48,11 @@ public class FotoOportunidadFragment extends BaseFragment {
         FotoOportunidadFragment fragment = new FotoOportunidadFragment();
         fragment.setArguments(arguments);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
     }
 
     @Override
@@ -142,11 +148,6 @@ public class FotoOportunidadFragment extends BaseFragment {
                     point.set(x / 2, y / 2);
                 }
             });
-
-            RectF drawableRect = new RectF(0, 0, 120, 120);
-            RectF viewRect = new RectF(0, 0, 350, 350);
-            matrix.setRectToRect(drawableRect, viewRect, Matrix.ScaleToFit.CENTER);
-            ((ImageView) this.getRootView().findViewById(R.id.image_set)).setImageMatrix(matrix);
         }
     }
 }

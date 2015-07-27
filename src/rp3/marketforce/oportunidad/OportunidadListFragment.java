@@ -276,6 +276,9 @@ public class OportunidadListFragment extends BaseFragment {
                 list.setAdapter(adapter);
             }
             else {
+                if(list.getAdapter() == null) {
+                    list.setAdapter(adapter);
+                }
                 adapter.setList(lista);
                 adapter.notifyDataSetChanged();
             }
