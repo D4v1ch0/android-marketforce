@@ -93,6 +93,7 @@ public class Contants {
 	public final static double LONGITUD = -79.9623577;
 	public final static int ZOOM = 11;
 	public final static String DEFAULT_APP = "DEMO";
+    public final static float SCALE_IMAGE = 0.9f;
 
     public final static String SQLITE_VERSION_SEARCH = "3.8.4";
 	

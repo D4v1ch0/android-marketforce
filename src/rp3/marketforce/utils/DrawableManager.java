@@ -10,8 +10,11 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.kobjects.util.Util;
 
+import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.util.BitmapUtils;
+import rp3.util.DrawableUtils;
+import rp3.util.Screen;
 import rp3.widget.ZoomView;
 
 import android.content.Context;
@@ -23,6 +26,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.support.v4.util.LruCache;
+import android.view.Display;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
@@ -142,8 +147,16 @@ public class DrawableManager {
 
     public void fetchDrawableOnThreadOnline(final String urlString, final ImageView imageView) {
         ctx = imageView.getContext();
+        WindowManager wm = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
+        final Display display = wm.getDefaultDisplay();
         if (mMemoryCache.get(urlString) != null) {
-            imageView.setImageDrawable(new BitmapDrawable(mMemoryCache.get(urlString)));
+            Drawable dr = new BitmapDrawable(mMemoryCache.get(urlString));
+            while(dr.getIntrinsicWidth() > display.getWidth() - 100)
+            {
+                dr = DrawableUtils.scaleImage(dr, Contants.SCALE_IMAGE, imageView.getContext());
+            }
+            imageView.setImageDrawable(dr);
+            dr = null;
         }
         else {
 
@@ -157,7 +170,8 @@ public class DrawableManager {
                     public void handleMessage(Message message) {
                         //SaveBitmap(((BitmapDrawable) message.obj).getBitmap(), getFilename(urlString));
                         Drawable dr = (Drawable) message.obj;
-                        imageView.setImageDrawable((Drawable) message.obj);
+                        imageView.setImageDrawable(dr);
+                        dr = null;
                     }
                 };
 
@@ -166,6 +180,10 @@ public class DrawableManager {
                     public void run() {
                         //	TODO : set imageView to a "pending" image
                         Drawable drawable = fetchDrawable(urlString);
+                        while(drawable.getIntrinsicWidth() > display.getWidth() - 100)
+                        {
+                            drawable = DrawableUtils.scaleImage(drawable, Contants.SCALE_IMAGE, imageView.getContext());
+                        }
                         Message message = handler.obtainMessage(1, drawable);
                         handler.sendMessage(message);
                     }
