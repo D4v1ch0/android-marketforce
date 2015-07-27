@@ -17,6 +17,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,7 +83,7 @@ public class DashboardAgendaAdapter extends BaseAdapter{
                 else
                     ((TextView) convertView.findViewById(R.id.dashboard_agenda_rowlist_nombre)).setText(agd.getCliente().getNombre1());
                 if (agd.getClienteDireccion() != null && agd.getClienteDireccion().getTelefono1().length() > 0) {
-                    ((TextView) convertView.findViewById(R.id.dashboard_agenda_phone)).setText(agd.getClienteDireccion().getTelefono1());
+                    //((TextView) convertView.findViewById(R.id.dashboard_agenda_phone)).setText(agd.getClienteDireccion().getTelefono1());
                     ((TextView) convertView.findViewById(R.id.dashboard_agenda_phone)).setClickable(true);
                     ((TextView) convertView.findViewById(R.id.dashboard_agenda_phone)).setOnClickListener(new OnClickListener() {
                         @Override
@@ -97,6 +99,10 @@ public class DashboardAgendaAdapter extends BaseAdapter{
                             ctx.startActivity(chooserIntent);
                         }
                     });
+                    ((TextView) convertView.findViewById(R.id.dashboard_agenda_phone)).setTextColor(ctx.getResources().getColor(R.color.color_text_sky_blue));
+                    SpannableString content = new SpannableString(agd.getClienteDireccion().getTelefono1());
+                    content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+                    ((TextView) convertView.findViewById(R.id.dashboard_agenda_phone)).setText(content);
                 } else
                     ((TextView) convertView.findViewById(R.id.dashboard_agenda_phone)).setText(R.string.label_sin_especificar);
 

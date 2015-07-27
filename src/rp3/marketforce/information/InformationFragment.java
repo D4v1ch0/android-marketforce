@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import rp3.app.BaseFragment;
 import rp3.configuration.PreferenceManager;
+import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 
 /**
@@ -49,7 +50,7 @@ public class InformationFragment extends BaseFragment {
         rootView.findViewById(R.id.information_help).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(rp3.configuration.Configuration.getAppConfiguration().getHelpUrl()));
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(PreferenceManager.getString(Contants.KEY_SERVER) + rp3.configuration.Configuration.getAppConfiguration().getHelpUrl()));
                 startActivity(browserIntent);
             }
         });
