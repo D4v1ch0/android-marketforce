@@ -122,7 +122,8 @@
                 android:layout_weight="0.6"
                 android:textSize="@dimen/text_input_size"
                 android:gravity="center_vertical"
-                android:textColor="@drawable/text_feedback" />
+                android:textColor="@drawable/text_feedback"
+                android:clickable="true" />
         </LinearLayout>
 
         <LinearLayout
