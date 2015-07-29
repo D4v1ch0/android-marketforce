@@ -24,20 +24,8 @@ public class FotoOportunidadActivity extends BaseActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND,
-                WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        WindowManager.LayoutParams params = getWindow().getAttributes();
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        params.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        params.width = WindowManager.LayoutParams.WRAP_CONTENT;
-        params.alpha = 1.0f;
-        params.dimAmount = 0.5f;
-        params.y = params.y + 50;
-        getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
         super.onCreate(savedInstanceState);
+        getActionBar().hide();
         long id = 0;
         id = getIntent().getLongExtra(ARG_ID, 0);
         int tipo = getIntent().getIntExtra(ARG_TIPO, 1);

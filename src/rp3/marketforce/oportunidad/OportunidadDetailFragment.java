@@ -314,20 +314,32 @@ public class OportunidadDetailFragment extends BaseFragment {
             //((ProgressBar) view_info.findViewById(R.id.oportunidad_probabilidad_progress)).setProgress(opt.getProbabilidad());
             ((TextView) view_info.findViewById(R.id.oportunidad_importe)).setText(numberFormat.format(opt.getImporte()));
             ((TextView) view_info.findViewById(R.id.oportunidad_movil)).setText(opt.getTelefono1());
-            if(((TextView) view_info.findViewById(R.id.oportunidad_movil)).length() > 0)
+            if(((TextView) view_info.findViewById(R.id.oportunidad_movil)).length() > 0) {
                 ViewUtils.setPhoneActionClickListener(view_info.findViewById(R.id.oportunidad_movil), Utils.convertToSMSNumber(opt.getTelefono1()));
+                ((TextView) view_info.findViewById(R.id.oportunidad_movil)).setPaintFlags(((TextView) view_info.findViewById(R.id.oportunidad_movil)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                ((TextView) view_info.findViewById(R.id.oportunidad_movil)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
+            }
 
             ((TextView) view_info.findViewById(R.id.oportunidad_fijo)).setText(opt.getTelefono2());
-            if(((TextView) view_info.findViewById(R.id.oportunidad_fijo)).length() > 0)
+            if(((TextView) view_info.findViewById(R.id.oportunidad_fijo)).length() > 0) {
                 ViewUtils.setPhoneActionClickListener(view_info.findViewById(R.id.oportunidad_fijo), Utils.convertToSMSNumber(opt.getTelefono2()));
+                ((TextView) view_info.findViewById(R.id.oportunidad_fijo)).setPaintFlags(((TextView) view_info.findViewById(R.id.oportunidad_fijo)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                ((TextView) view_info.findViewById(R.id.oportunidad_fijo)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
+            }
 
             ((TextView) view_info.findViewById(R.id.oportunidad_correo)).setText(opt.getCorreo());
-            if(((TextView) view_info.findViewById(R.id.oportunidad_correo)).length() > 0)
+            if(((TextView) view_info.findViewById(R.id.oportunidad_correo)).length() > 0) {
                 ViewUtils.setEmailActionClickListener(view_info.findViewById(R.id.oportunidad_correo), opt.getCorreo());
+                ((TextView) view_info.findViewById(R.id.oportunidad_correo)).setPaintFlags(((TextView) view_info.findViewById(R.id.oportunidad_correo)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                ((TextView) view_info.findViewById(R.id.oportunidad_correo)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
+            }
 
             ((TextView) view_info.findViewById(R.id.oportunidad_pagina_web)).setText(opt.getPaginaWeb());
-            if(((TextView) view_info.findViewById(R.id.oportunidad_pagina_web)).length() > 0)
+            if(((TextView) view_info.findViewById(R.id.oportunidad_pagina_web)).length() > 0) {
                 ViewUtils.setLinkActionClickListener(view_info.findViewById(R.id.oportunidad_pagina_web), opt.getPaginaWeb());
+                ((TextView) view_info.findViewById(R.id.oportunidad_pagina_web)).setPaintFlags(((TextView) view_info.findViewById(R.id.oportunidad_pagina_web)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                ((TextView) view_info.findViewById(R.id.oportunidad_pagina_web)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
+            }
 
             ((TextView) view_info.findViewById(R.id.oportunidad_direccion)).setText(opt.getDireccion());
             ((TextView) view_info.findViewById(R.id.oportunidad_medio_referencia)).setText(opt.getReferencia());

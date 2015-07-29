@@ -151,7 +151,7 @@ public class DrawableManager {
         final Display display = wm.getDefaultDisplay();
         if (mMemoryCache.get(urlString) != null) {
             Drawable dr = new BitmapDrawable(mMemoryCache.get(urlString));
-            while(dr.getIntrinsicWidth() > display.getWidth() - 100)
+            while(dr.getIntrinsicWidth() > display.getWidth() - 100 || dr.getIntrinsicHeight() > display.getHeight() - 100)
             {
                 dr = DrawableUtils.scaleImage(dr, Contants.SCALE_IMAGE, imageView.getContext());
             }

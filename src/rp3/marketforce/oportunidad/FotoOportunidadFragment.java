@@ -2,6 +2,7 @@ package rp3.marketforce.oportunidad;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.util.FloatMath;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -148,6 +150,15 @@ public class FotoOportunidadFragment extends BaseFragment {
                     point.set(x / 2, y / 2);
                 }
             });
+            float image_height = ((ImageView) this.getRootView().findViewById(R.id.image_set)).getDrawable().getIntrinsicHeight();
+            float image_width = ((ImageView) this.getRootView().findViewById(R.id.image_set)).getDrawable().getIntrinsicWidth();
+            WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+            float screen_width = wm.getDefaultDisplay().getWidth();
+            float screen_height = wm.getDefaultDisplay().getHeight();
+            RectF drawableRect = new RectF(0, 0, image_width, image_height);
+            RectF viewRect = new RectF(0, 0, screen_width, screen_height);
+            matrix.setRectToRect(drawableRect, viewRect, Matrix.ScaleToFit.CENTER);
+            ((ImageView) this.getRootView().findViewById(R.id.image_set)).setImageMatrix(matrix);
         }
     }
 }
