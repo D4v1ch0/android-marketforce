@@ -651,8 +651,48 @@ public class MapaActivity extends BaseActivity {
 
 
         setTextViewText(R.id.map_name, cli.getNombreCompleto());
-        setTextViewText(R.id.map_phone, cld.getTelefono1());
-        setTextViewText(R.id.map_mail, cli.getCorreoElectronico());
+        if(agenda.getClienteDireccion().getTelefono1() != null && agenda.getClienteDireccion().getTelefono1().length() > 0) {
+            setTextViewText(R.id.map_phone, agenda.getClienteDireccion().getTelefono1());
+            ((TextView) getRootView().findViewById(R.id.map_phone)).setClickable(true);
+            ((TextView) getRootView().findViewById(R.id.map_phone)).setOnClickListener(new OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    String uri = "tel:" + agenda.getClienteDireccion().getTelefono1();
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse(uri));
+                    Uri mUri = Uri.parse("smsto:" + Utils.convertToSMSNumber(agenda.getClienteDireccion().getTelefono1()));
+                    Intent mIntent = new Intent(Intent.ACTION_SENDTO, mUri);
+                    mIntent.putExtra("chat",true);
+                    Intent chooserIntent = Intent.createChooser(mIntent, "Seleccionar Acción");
+                    chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { intent });
+                    startActivity(chooserIntent);
+                }});
+            ((TextView) getRootView().findViewById(R.id.map_phone)).setPaintFlags(((TextView) getRootView().findViewById(R.id.map_phone)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+            ((TextView) getRootView().findViewById(R.id.map_phone)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
+        }
+        else {
+            setTextViewText(R.id.map_phone, getResources().getString(R.string.label_sin_especificar));
+            ((TextView) getRootView().findViewById(R.id.map_phone)).setClickable(false);
+        }
+
+        if(agenda.getCliente().getCorreoElectronico() != null && agenda.getCliente().getCorreoElectronico().length() > 0) {
+            setTextViewText(R.id.map_mail, agenda.getCliente().getCorreoElectronico());
+            ((TextView) getRootView().findViewById(R.id.map_mail)).setClickable(true);
+            ((TextView) getRootView().findViewById(R.id.map_mail)).setOnClickListener(new OnClickListener(){
+
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                            "mailto",agenda.getCliente().getCorreoElectronico(), null));
+                    startActivity(Intent.createChooser(intent, "Send Email"));
+                }});
+            ((TextView) getRootView().findViewById(R.id.map_mail)).setPaintFlags(((TextView) getRootView().findViewById(R.id.map_mail)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+            ((TextView) getRootView().findViewById(R.id.map_mail)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
+        }
+        else {
+            setTextViewText(R.id.map_mail, getResources().getString(R.string.label_sin_especificar));
+            ((TextView) getRootView().findViewById(R.id.map_mail)).setClickable(false);
+        }
 
 
         expand.setVisibility(View.VISIBLE);
@@ -709,9 +749,48 @@ public class MapaActivity extends BaseActivity {
         }
 	    
 	    setTextViewText(R.id.map_name, agenda.getNombreCompleto());
-	    setTextViewText(R.id.map_phone, agenda.getClienteDireccion().getTelefono1());
-	    setTextViewText(R.id.map_mail, agenda.getCliente().getCorreoElectronico());
-	    
+        if(agenda.getClienteDireccion().getTelefono1() != null && agenda.getClienteDireccion().getTelefono1().length() > 0) {
+            setTextViewText(R.id.map_phone, agenda.getClienteDireccion().getTelefono1());
+            ((TextView) getRootView().findViewById(R.id.map_phone)).setClickable(true);
+            ((TextView) getRootView().findViewById(R.id.map_phone)).setOnClickListener(new OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    String uri = "tel:" + agenda.getClienteDireccion().getTelefono1();
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse(uri));
+                    Uri mUri = Uri.parse("smsto:" + Utils.convertToSMSNumber(agenda.getClienteDireccion().getTelefono1()));
+                    Intent mIntent = new Intent(Intent.ACTION_SENDTO, mUri);
+                    mIntent.putExtra("chat",true);
+                    Intent chooserIntent = Intent.createChooser(mIntent, "Seleccionar Acción");
+                    chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { intent });
+                    startActivity(chooserIntent);
+                }});
+            ((TextView) getRootView().findViewById(R.id.map_phone)).setPaintFlags(((TextView) getRootView().findViewById(R.id.map_phone)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+            ((TextView) getRootView().findViewById(R.id.map_phone)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
+        }
+        else {
+            setTextViewText(R.id.map_phone, getResources().getString(R.string.label_sin_especificar));
+            ((TextView) getRootView().findViewById(R.id.map_phone)).setClickable(false);
+        }
+
+        if(agenda.getCliente().getCorreoElectronico() != null && agenda.getCliente().getCorreoElectronico().length() > 0) {
+            setTextViewText(R.id.map_mail, agenda.getCliente().getCorreoElectronico());
+            ((TextView) getRootView().findViewById(R.id.map_mail)).setClickable(true);
+            ((TextView) getRootView().findViewById(R.id.map_mail)).setOnClickListener(new OnClickListener(){
+
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                            "mailto",agenda.getCliente().getCorreoElectronico(), null));
+                    startActivity(Intent.createChooser(intent, "Send Email"));
+                }});
+            ((TextView) getRootView().findViewById(R.id.map_mail)).setPaintFlags(((TextView) getRootView().findViewById(R.id.map_mail)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+            ((TextView) getRootView().findViewById(R.id.map_mail)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
+        }
+        else {
+            setTextViewText(R.id.map_mail, getResources().getString(R.string.label_sin_especificar));
+            ((TextView) getRootView().findViewById(R.id.map_mail)).setClickable(false);
+        }
 
 	    
 	    expand.setVisibility(View.VISIBLE);
