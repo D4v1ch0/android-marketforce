@@ -123,14 +123,15 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/label_responsables_max"
-        android:id="@+id/textView34"
+        android:id="@+id/oportunidad_todos_responsables"
         android:textColor="@color/color_text_sky_blue"
         android:textStyle="bold"
         android:paddingLeft="12dp"
         android:paddingTop="5dp"
         android:paddingRight="8dp"
         android:paddingBottom="5dp"
-        android:background="@color/color_grey" />
+        android:background="@color/color_grey"
+        android:clickable="true" />
 
     <TextView
         android:layout_width="fill_parent"

@@ -49,7 +49,9 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/label_oportunidad_venta"
-                    android:id="@+id/responsable_nombre" />
+                    android:id="@+id/responsable_nombre"
+                    android:textColor="@drawable/text_feedback"
+                    android:clickable="true" />
 
             </LinearLayout>
 

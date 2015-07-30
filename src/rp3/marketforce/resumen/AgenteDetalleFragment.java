@@ -20,6 +20,7 @@ import java.util.Locale;
 import rp3.app.BaseFragment;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agente;
+import rp3.marketforce.models.oportunidad.Oportunidad;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.Utils;
 import rp3.util.ConnectionUtils;
@@ -33,6 +34,7 @@ public class AgenteDetalleFragment extends BaseFragment {
     public int idAgente;
 
     public final static String ARG_AGENTE = "id_agente";
+    public final static String ARG_OPORTUNIDAD = "es_oportunidad";
     public final static String ARG_TITLE = "titulo";
     public final static String ARG_MESSAGE = "mensaje";
     public final static int REQ_CODE_SPEECH_INPUT = 100;
@@ -41,6 +43,16 @@ public class AgenteDetalleFragment extends BaseFragment {
     {
         Bundle bundle = new Bundle();
         bundle.putInt(ARG_AGENTE, idAgente);
+        AgenteDetalleFragment fragment = new AgenteDetalleFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    public static AgenteDetalleFragment newInstance(int idAgente, boolean esOportunidad)
+    {
+        Bundle bundle = new Bundle();
+        bundle.putInt(ARG_AGENTE, idAgente);
+        bundle.putBoolean(ARG_OPORTUNIDAD, esOportunidad);
         AgenteDetalleFragment fragment = new AgenteDetalleFragment();
         fragment.setArguments(bundle);
         return fragment;
@@ -61,8 +73,9 @@ public class AgenteDetalleFragment extends BaseFragment {
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
         idAgente = getArguments().getInt(ARG_AGENTE);
+        final boolean es_oportunidad = getArguments().getBoolean(ARG_OPORTUNIDAD, false);
 
-        if(idAgente != 0) {
+        if(idAgente != 0 && !es_oportunidad) {
             final Agente agente = Agente.getAgente(getDataBase(), idAgente);
 
             ((TextView) rootView.findViewById(R.id.agente_nombre)).setText(agente.getNombre());
@@ -118,14 +131,30 @@ public class AgenteDetalleFragment extends BaseFragment {
                     return;
                 }
                 if(ConnectionUtils.isNetAvailable(getContext())) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SEND_NOTIFICATION);
-                    bundle.putInt(ARG_AGENTE, idAgente);
-                    bundle.putString(ARG_TITLE, ((TextView) rootView.findViewById(R.id.agente_titulo)).getText().toString());
-                    bundle.putString(ARG_MESSAGE, ((TextView) rootView.findViewById(R.id.obs_text)).getText().toString());
-                    requestSync(bundle);
-                    Toast.makeText(getContext(), R.string.message_notificacion_enviada, Toast.LENGTH_LONG).show();
-                    finish();
+                    if(es_oportunidad)
+                    {
+                        Oportunidad opt = Oportunidad.getOportunidadId(getDataBase(), idAgente);
+                        for (int i = 0; i < opt.getOportunidadResponsables().size(); i++) {
+                            Bundle bundle = new Bundle();
+                            bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SEND_NOTIFICATION);
+                            bundle.putInt(ARG_AGENTE, opt.getOportunidadResponsables().get(i).getIdAgente());
+                            bundle.putString(ARG_TITLE, ((TextView) rootView.findViewById(R.id.agente_titulo)).getText().toString());
+                            bundle.putString(ARG_MESSAGE, ((TextView) rootView.findViewById(R.id.obs_text)).getText().toString());
+                            requestSync(bundle);
+                        }
+                        Toast.makeText(getContext(), R.string.message_notificacion_enviada, Toast.LENGTH_LONG).show();
+                        finish();
+                    }
+                    else {
+                        Bundle bundle = new Bundle();
+                        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SEND_NOTIFICATION);
+                        bundle.putInt(ARG_AGENTE, idAgente);
+                        bundle.putString(ARG_TITLE, ((TextView) rootView.findViewById(R.id.agente_titulo)).getText().toString());
+                        bundle.putString(ARG_MESSAGE, ((TextView) rootView.findViewById(R.id.obs_text)).getText().toString());
+                        requestSync(bundle);
+                        Toast.makeText(getContext(), R.string.message_notificacion_enviada, Toast.LENGTH_LONG).show();
+                        finish();
+                    }
                 }
                 else
                     Toast.makeText(getContext(), R.string.message_error_sync_no_net_available, Toast.LENGTH_LONG).show();

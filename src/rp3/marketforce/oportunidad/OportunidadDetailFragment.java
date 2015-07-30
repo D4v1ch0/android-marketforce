@@ -37,6 +37,7 @@ import rp3.marketforce.cliente.CrearClienteActivity;
 import rp3.marketforce.models.Agente;
 import rp3.marketforce.models.oportunidad.Oportunidad;
 import rp3.marketforce.models.oportunidad.OportunidadEtapa;
+import rp3.marketforce.resumen.AgenteDetalleFragment;
 import rp3.marketforce.utils.DetailsPageAdapter;
 import rp3.marketforce.utils.DonutChart;
 import rp3.marketforce.utils.DrawableManager;
@@ -70,6 +71,7 @@ public class OportunidadDetailFragment extends BaseFragment {
     private ImageButton TabDirecciones;
     private ImageButton TabContactos;
     private ImageView ArrowInfo, ArrowDir, ArrowCont;
+    private AgenteDetalleFragment agenteDetalleFragment;
 
     private String str_titulo;
     private final int REQUEST_CODE_DETAIL_EDIT = 3;
@@ -358,12 +360,29 @@ public class OportunidadDetailFragment extends BaseFragment {
 
             if (opt.getOportunidadResponsables().size() > 0) {
                 view_info.findViewById(R.id.oportunidad_sin_responsables).setVisibility(View.GONE);
+                view_info.findViewById(R.id.oportunidad_todos_responsables).setClickable(true);
+                view_info.findViewById(R.id.oportunidad_todos_responsables).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        agenteDetalleFragment = AgenteDetalleFragment.newInstance((int) opt.getID(), true);
+                        showDialogFragment(agenteDetalleFragment, "Agente", "Todos los Responsables");
+                    }
+                });
                 ((LinearLayout) view_info.findViewById(R.id.oportunidad_responsables)).removeAllViews();
                 for (int i = 0; i < opt.getOportunidadResponsables().size(); i++) {
                     View view_responsable = inflater.inflate(
                             R.layout.rowlist_responsable_detail, null);
+                    final Agente agt = Agente.getAgente(getDataBase(), opt.getOportunidadResponsables().get(i).getIdAgente());
                     ((TextView) view_responsable.findViewById(R.id.responsable_number)).setText(i + 1 + "");
-                    ((TextView) view_responsable.findViewById(R.id.responsable_nombre)).setText(Agente.getAgente(getDataBase(), opt.getOportunidadResponsables().get(i).getIdAgente()).getNombre());
+                    ((TextView) view_responsable.findViewById(R.id.responsable_nombre)).setText(agt.getNombre());
+                    ((TextView) view_responsable.findViewById(R.id.responsable_nombre)).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            agenteDetalleFragment = AgenteDetalleFragment.newInstance(agt.getIdAgente());
+                            showDialogFragment(agenteDetalleFragment, "Agente", "Agente");
+                        }
+                    });
+
                     ((LinearLayout) view_info.findViewById(R.id.oportunidad_responsables)).addView(view_responsable);
                 }
             }
