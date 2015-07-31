@@ -431,7 +431,11 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                     Agenda.update(getDataBase(), agenda);
                     if (agenda.getObservaciones() == null || agenda.getObservaciones().length() <= 0)
                         setTextViewText(R.id.detail_agenda_observacion, getString(R.string.label_sin_observaciones));
-                    new AsyncUpdater.UpdateAgenda().execute((int) idAgenda);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ENVIAR_AGENDA);
+                    bundle.putInt(ARG_AGENDA_ID, (int) idAgenda);
+                    requestSync(bundle);
+                    //new AsyncUpdater.UpdateAgenda().execute((int) idAgenda);
                     if(location == null) {
                         try {
                             LocationUtils.getLocation(ctx, new OnLocationResultListener() {
