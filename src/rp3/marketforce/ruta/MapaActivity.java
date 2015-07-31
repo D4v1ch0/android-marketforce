@@ -423,7 +423,7 @@ public class MapaActivity extends BaseActivity {
 		Uri mUri = Uri.parse("smsto:" + Utils.convertToSMSNumber(agenda.getClienteDireccion().getTelefono1()));
         Intent mIntent = new Intent(Intent.ACTION_SENDTO, mUri);
         mIntent.putExtra("chat",true);
-        Intent chooserIntent = Intent.createChooser(mIntent, "Seleccionar Acci�n");
+        Intent chooserIntent = Intent.createChooser(mIntent, "Seleccionar Acción");
         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { intent });
         startActivity(chooserIntent);
 	}
@@ -457,8 +457,48 @@ public class MapaActivity extends BaseActivity {
 			map.animateCamera(CameraUpdateFactory.newLatLngZoom(pos2, 12), 2000, null);
 			
 			setTextViewText(R.id.map_name, agenda.getNombreCompleto());
-		    setTextViewText(R.id.map_phone, agenda.getClienteDireccion().getTelefono1());
-		    setTextViewText(R.id.map_mail, agenda.getCliente().getCorreoElectronico());
+            if(agenda.getClienteDireccion().getTelefono1() != null && agenda.getClienteDireccion().getTelefono1().length() > 0) {
+                setTextViewText(R.id.map_phone, agenda.getClienteDireccion().getTelefono1());
+                ((TextView) getRootView().findViewById(R.id.map_phone)).setClickable(true);
+                ((TextView) getRootView().findViewById(R.id.map_phone)).setOnClickListener(new OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        String uri = "tel:" + agenda.getClienteDireccion().getTelefono1();
+                        Intent intent = new Intent(Intent.ACTION_DIAL);
+                        intent.setData(Uri.parse(uri));
+                        Uri mUri = Uri.parse("smsto:" + Utils.convertToSMSNumber(agenda.getClienteDireccion().getTelefono1()));
+                        Intent mIntent = new Intent(Intent.ACTION_SENDTO, mUri);
+                        mIntent.putExtra("chat",true);
+                        Intent chooserIntent = Intent.createChooser(mIntent, "Seleccionar Acción");
+                        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { intent });
+                        startActivity(chooserIntent);
+                    }});
+                ((TextView) getRootView().findViewById(R.id.map_phone)).setPaintFlags(((TextView) getRootView().findViewById(R.id.map_phone)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                ((TextView) getRootView().findViewById(R.id.map_phone)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
+            }
+            else {
+                setTextViewText(R.id.map_phone, getResources().getString(R.string.label_sin_especificar));
+                ((TextView) getRootView().findViewById(R.id.map_phone)).setClickable(false);
+            }
+
+            if(agenda.getCliente().getCorreoElectronico() != null && agenda.getCliente().getCorreoElectronico().length() > 0) {
+                setTextViewText(R.id.map_mail, agenda.getCliente().getCorreoElectronico());
+                ((TextView) getRootView().findViewById(R.id.map_mail)).setClickable(true);
+                ((TextView) getRootView().findViewById(R.id.map_mail)).setOnClickListener(new OnClickListener(){
+
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                                "mailto",agenda.getCliente().getCorreoElectronico(), null));
+                        startActivity(Intent.createChooser(intent, "Send Email"));
+                    }});
+                ((TextView) getRootView().findViewById(R.id.map_mail)).setPaintFlags(((TextView) getRootView().findViewById(R.id.map_mail)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                ((TextView) getRootView().findViewById(R.id.map_mail)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
+            }
+            else {
+                setTextViewText(R.id.map_mail, getResources().getString(R.string.label_sin_especificar));
+                ((TextView) getRootView().findViewById(R.id.map_mail)).setClickable(false);
+            }
 		    
 		    DManager.fetchDrawableOnThread(PreferenceManager.getString("server") + 
 					rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + agenda.getCliente().getURLFoto(),
@@ -523,8 +563,8 @@ public class MapaActivity extends BaseActivity {
         });
         map.clear();
         Location loc = LocationUtils.getLocation(this);
-        Cliente cli = Cliente.getClienteID(getDataBase(), id, true);
-        ClienteDireccion cld = cli.getClienteDireccionPrincipal();
+        final Cliente cli = Cliente.getClienteID(getDataBase(), id, true);
+        final ClienteDireccion cld = cli.getClienteDireccionPrincipal();
         if(cld.getLongitud() != 0 && cld.getLatitud() != 0 && loc != null)
         {
             final String url = makeURL(loc.getLatitude(), loc.getLongitude(), cld.getLatitud(), cld.getLongitud());
@@ -547,8 +587,48 @@ public class MapaActivity extends BaseActivity {
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(pos2, 12), 2000, null);
 
             setTextViewText(R.id.map_name, cli.getNombreCompleto());
-            setTextViewText(R.id.map_phone, cld.getTelefono1());
-            setTextViewText(R.id.map_mail, cli.getCorreoElectronico());
+            if(cld.getTelefono1() != null && cld.getTelefono1().length() > 0) {
+                setTextViewText(R.id.map_phone, cld.getTelefono1());
+                ((TextView) getRootView().findViewById(R.id.map_phone)).setClickable(true);
+                ((TextView) getRootView().findViewById(R.id.map_phone)).setOnClickListener(new OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        String uri = "tel:" + cld.getTelefono1();
+                        Intent intent = new Intent(Intent.ACTION_DIAL);
+                        intent.setData(Uri.parse(uri));
+                        Uri mUri = Uri.parse("smsto:" + Utils.convertToSMSNumber(cld.getTelefono1()));
+                        Intent mIntent = new Intent(Intent.ACTION_SENDTO, mUri);
+                        mIntent.putExtra("chat",true);
+                        Intent chooserIntent = Intent.createChooser(mIntent, "Seleccionar Acción");
+                        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { intent });
+                        startActivity(chooserIntent);
+                    }});
+                ((TextView) getRootView().findViewById(R.id.map_phone)).setPaintFlags(((TextView) getRootView().findViewById(R.id.map_phone)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                ((TextView) getRootView().findViewById(R.id.map_phone)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
+            }
+            else {
+                setTextViewText(R.id.map_phone, getResources().getString(R.string.label_sin_especificar));
+                ((TextView) getRootView().findViewById(R.id.map_phone)).setClickable(false);
+            }
+
+            if(cli.getCorreoElectronico() != null && cli.getCorreoElectronico().length() > 0) {
+                setTextViewText(R.id.map_mail, cli.getCorreoElectronico());
+                ((TextView) getRootView().findViewById(R.id.map_mail)).setClickable(true);
+                ((TextView) getRootView().findViewById(R.id.map_mail)).setOnClickListener(new OnClickListener(){
+
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                                "mailto",cli.getCorreoElectronico(), null));
+                        startActivity(Intent.createChooser(intent, "Send Email"));
+                    }});
+                ((TextView) getRootView().findViewById(R.id.map_mail)).setPaintFlags(((TextView) getRootView().findViewById(R.id.map_mail)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                ((TextView) getRootView().findViewById(R.id.map_mail)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
+            }
+            else {
+                setTextViewText(R.id.map_mail, getResources().getString(R.string.label_sin_especificar));
+                ((TextView) getRootView().findViewById(R.id.map_mail)).setClickable(false);
+            }
 
             DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
                             rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + cli.getURLFoto(),
@@ -629,8 +709,8 @@ public class MapaActivity extends BaseActivity {
             }
         });
         map.clear();
-        Cliente cli = Cliente.getClienteID(getDataBase(), id, true);
-        ClienteDireccion cld = cli.getClienteDireccionPrincipal();
+        final Cliente cli = Cliente.getClienteID(getDataBase(), id, true);
+        final ClienteDireccion cld = cli.getClienteDireccionPrincipal();
 
         if (cld.getLatitud() == 0 && cld.getLongitud() == 0) {
             Toast.makeText(this, "Este cliente no tiene ingresada una geolocalización.", Toast.LENGTH_LONG).show();
@@ -651,16 +731,16 @@ public class MapaActivity extends BaseActivity {
 
 
         setTextViewText(R.id.map_name, cli.getNombreCompleto());
-        if(agenda.getClienteDireccion().getTelefono1() != null && agenda.getClienteDireccion().getTelefono1().length() > 0) {
-            setTextViewText(R.id.map_phone, agenda.getClienteDireccion().getTelefono1());
+        if(cld.getTelefono1() != null && cld.getTelefono1().length() > 0) {
+            setTextViewText(R.id.map_phone, cld.getTelefono1());
             ((TextView) getRootView().findViewById(R.id.map_phone)).setClickable(true);
             ((TextView) getRootView().findViewById(R.id.map_phone)).setOnClickListener(new OnClickListener(){
                 @Override
                 public void onClick(View v) {
-                    String uri = "tel:" + agenda.getClienteDireccion().getTelefono1();
+                    String uri = "tel:" + cld.getTelefono1();
                     Intent intent = new Intent(Intent.ACTION_DIAL);
                     intent.setData(Uri.parse(uri));
-                    Uri mUri = Uri.parse("smsto:" + Utils.convertToSMSNumber(agenda.getClienteDireccion().getTelefono1()));
+                    Uri mUri = Uri.parse("smsto:" + Utils.convertToSMSNumber(cld.getTelefono1()));
                     Intent mIntent = new Intent(Intent.ACTION_SENDTO, mUri);
                     mIntent.putExtra("chat",true);
                     Intent chooserIntent = Intent.createChooser(mIntent, "Seleccionar Acción");
@@ -675,15 +755,15 @@ public class MapaActivity extends BaseActivity {
             ((TextView) getRootView().findViewById(R.id.map_phone)).setClickable(false);
         }
 
-        if(agenda.getCliente().getCorreoElectronico() != null && agenda.getCliente().getCorreoElectronico().length() > 0) {
-            setTextViewText(R.id.map_mail, agenda.getCliente().getCorreoElectronico());
+        if(cli.getCorreoElectronico() != null && cli.getCorreoElectronico().length() > 0) {
+            setTextViewText(R.id.map_mail, cli.getCorreoElectronico());
             ((TextView) getRootView().findViewById(R.id.map_mail)).setClickable(true);
             ((TextView) getRootView().findViewById(R.id.map_mail)).setOnClickListener(new OnClickListener(){
 
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                            "mailto",agenda.getCliente().getCorreoElectronico(), null));
+                            "mailto",cli.getCorreoElectronico(), null));
                     startActivity(Intent.createChooser(intent, "Send Email"));
                 }});
             ((TextView) getRootView().findViewById(R.id.map_mail)).setPaintFlags(((TextView) getRootView().findViewById(R.id.map_mail)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -693,7 +773,6 @@ public class MapaActivity extends BaseActivity {
             setTextViewText(R.id.map_mail, getResources().getString(R.string.label_sin_especificar));
             ((TextView) getRootView().findViewById(R.id.map_mail)).setClickable(false);
         }
-
 
         expand.setVisibility(View.VISIBLE);
         persona.setVisibility(View.VISIBLE);
