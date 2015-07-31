@@ -579,7 +579,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                     if (opt.getOportunidadFotos().get(i).getURLFoto().length() > 0) {
                         switch (i) {
                             case 0:
-                                DManager.fetchDrawableOnThreadOnline(PreferenceManager.getString("server") +
+                                DManager.fetchDrawableThumbnailOnThreadOnline(PreferenceManager.getString("server") +
                                                 rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_OPORTUNIDADES) + opt.getOportunidadFotos().get(i).getURLFoto().replace("\"",""),
                                         ((ImageView) view_fotos.findViewById(R.id.oportunidad_photo1)));
                                 final int finalI = i;
@@ -596,7 +596,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                                 view_fotos.findViewById(R.id.photo1_layout).setVisibility(View.VISIBLE);
                                 break;
                             case 1:
-                                DManager.fetchDrawableOnThreadOnline(PreferenceManager.getString("server") +
+                                DManager.fetchDrawableThumbnailOnThreadOnline(PreferenceManager.getString("server") +
                                                 rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_OPORTUNIDADES) + opt.getOportunidadFotos().get(i).getURLFoto().replace("\"",""),
                                         ((ImageView) view_fotos.findViewById(R.id.oportunidad_photo2)));
                                 final int finalI2 = i;
@@ -613,7 +613,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                                 view_fotos.findViewById(R.id.photo2_layout).setVisibility(View.VISIBLE);
                                 break;
                             case 2:
-                                DManager.fetchDrawableOnThreadOnline(PreferenceManager.getString("server") +
+                                DManager.fetchDrawableThumbnailOnThreadOnline(PreferenceManager.getString("server") +
                                                 rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_OPORTUNIDADES) + opt.getOportunidadFotos().get(i).getURLFoto().replace("\"",""),
                                         ((ImageView) view_fotos.findViewById(R.id.oportunidad_photo3)));
                                 final int finalI3 = i;

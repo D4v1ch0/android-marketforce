@@ -80,7 +80,7 @@ public class DrawableManager {
         } catch (MalformedURLException e) {
             Log.e(this.getClass().getSimpleName(), "fetchDrawable failed", e);
             return ctx.getResources().getDrawable(R.drawable.user);
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(this.getClass().getSimpleName(), "fetchDrawable failed", e);
             return ctx.getResources().getDrawable(R.drawable.user);
         }
@@ -162,6 +162,10 @@ public class DrawableManager {
 
             Drawable d = Drawable.createFromPath(getFilename(urlString));
             if (d != null) {
+                while(d.getIntrinsicWidth() > display.getWidth() - 100 || d.getIntrinsicHeight() > display.getHeight() - 100)
+                {
+                    d = DrawableUtils.scaleImage(d, Contants.SCALE_IMAGE, imageView.getContext());
+                }
                 imageView.setImageDrawable(d);
             } else {
 
@@ -183,6 +187,59 @@ public class DrawableManager {
                         while(drawable.getIntrinsicWidth() > display.getWidth() - 100)
                         {
                             drawable = DrawableUtils.scaleImage(drawable, Contants.SCALE_IMAGE, imageView.getContext());
+                        }
+                        Message message = handler.obtainMessage(1, drawable);
+                        handler.sendMessage(message);
+                    }
+                };
+                thread.start();
+            }
+
+        }
+    }
+
+    public void fetchDrawableThumbnailOnThreadOnline(final String urlString, final ImageView imageView) {
+        ctx = imageView.getContext();
+        WindowManager wm = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
+        final Display display = wm.getDefaultDisplay();
+        if (mMemoryCache.get(urlString) != null) {
+            Drawable dr = new BitmapDrawable(mMemoryCache.get(urlString));
+            while(dr.getIntrinsicWidth() > 300 || dr.getIntrinsicHeight() > 300)
+            {
+                dr = DrawableUtils.scaleImage(dr, 0.5f, imageView.getContext());
+            }
+            imageView.setImageDrawable(dr);
+            dr = null;
+        }
+        else {
+
+            Drawable d = Drawable.createFromPath(getFilename(urlString));
+            if (d != null) {
+                while(d.getIntrinsicWidth() > 300 || d.getIntrinsicHeight() > 300)
+                {
+                    d = DrawableUtils.scaleImage(d, 0.5f, imageView.getContext());
+                }
+                imageView.setImageDrawable(d);
+            } else {
+
+                final Handler handler = new Handler() {
+                    @Override
+                    public void handleMessage(Message message) {
+                        //SaveBitmap(((BitmapDrawable) message.obj).getBitmap(), getFilename(urlString));
+                        Drawable dr = (Drawable) message.obj;
+                        imageView.setImageDrawable(dr);
+                        dr = null;
+                    }
+                };
+
+                Thread thread = new Thread() {
+                    @Override
+                    public void run() {
+                        //	TODO : set imageView to a "pending" image
+                        Drawable drawable = fetchDrawable(urlString);
+                        while(drawable.getIntrinsicWidth() > 300 || drawable.getIntrinsicHeight() > 300)
+                        {
+                            drawable = DrawableUtils.scaleImage(drawable, 0.5f, imageView.getContext());
                         }
                         Message message = handler.obtainMessage(1, drawable);
                         handler.sendMessage(message);
