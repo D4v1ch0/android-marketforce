@@ -8,6 +8,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -657,7 +659,18 @@ public class OportunidadDetailFragment extends BaseFragment {
         //TabInfo.setBackgroundColor(getResources().getColor(R.color.tab_activated));
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        BitmapDrawable dr = (BitmapDrawable)((ImageView)linearLayoutContact.findViewById(IDFOTOS).findViewById(R.id.oportunidad_photo1)).getDrawable();
+        if(dr != null) {((ImageView)linearLayoutContact.findViewById(IDFOTOS).findViewById(R.id.oportunidad_photo1)).setImageDrawable(null);}
+        dr = (BitmapDrawable)((ImageView)linearLayoutContact.findViewById(IDFOTOS).findViewById(R.id.oportunidad_photo2)).getDrawable();
+        if(dr != null) {((ImageView)linearLayoutContact.findViewById(IDFOTOS).findViewById(R.id.oportunidad_photo2)).setImageDrawable(null);}
+        dr = (BitmapDrawable)((ImageView)linearLayoutContact.findViewById(IDFOTOS).findViewById(R.id.oportunidad_photo3)).getDrawable();
+        if(dr != null) {((ImageView)linearLayoutContact.findViewById(IDFOTOS).findViewById(R.id.oportunidad_photo3)).setImageDrawable(null);}
+        dr = null;
 
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

@@ -161,4 +161,10 @@ public class FotoOportunidadFragment extends BaseFragment {
             ((ImageView) this.getRootView().findViewById(R.id.image_set)).setImageMatrix(matrix);
         }
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        ((ImageView) this.getRootView().findViewById(R.id.image_set)).setImageDrawable(null);
+    }
 }
