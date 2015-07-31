@@ -212,7 +212,7 @@ public class RadarFragment extends BaseFragment {
 
             try
             {
-                ((BaseActivity)getActivity()).showDialogProgress("GPS","Obteniendo Posición");
+                ((BaseActivity)getActivity()).showDialogProgress("GPS","Obteniendo Ubicación");
                 LocationUtils.getLocation(getContext(), new LocationUtils.OnLocationResultListener() {
 
                     @Override
