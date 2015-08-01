@@ -58,6 +58,7 @@ public class DrawableManager {
 
         Log.d(this.getClass().getSimpleName(), "image url:" + urlString);
         try {
+            System.gc();
             InputStream is = fetch(urlString);
             Bitmap bitmap = BitmapFactory.decodeStream(is);
             Drawable resp;
@@ -87,6 +88,7 @@ public class DrawableManager {
 
         Log.d(this.getClass().getSimpleName(), "image url:" + urlString);
         try {
+            System.gc();
             InputStream is = fetch(urlString);
             Bitmap bitmap = BitmapFactory.decodeStream(is);
 
@@ -108,6 +110,7 @@ public class DrawableManager {
 
     public void fetchDrawableOnThread(final String urlString, final ImageView imageView) {
     	ctx = imageView.getContext();
+        System.gc();
         if (mMemoryCache.get(urlString) != null) {
             imageView.setImageDrawable(new BitmapDrawable(mMemoryCache.get(urlString)));
         }

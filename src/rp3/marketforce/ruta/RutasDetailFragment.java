@@ -40,6 +40,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.Paint;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -286,6 +287,8 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                                    "mailto",agenda.getCliente().getCorreoElectronico(), null));
                            startActivity(Intent.createChooser(intent, "Send Email"));
                        }});
+                   ((TextView) rootView.findViewById(R.id.textView_mail)).setPaintFlags(((TextView) rootView.findViewById(R.id.textView_mail)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                   ((TextView) rootView.findViewById(R.id.textView_mail)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
                }
                else {
                    setTextViewText(R.id.textView_mail, getResources().getString(R.string.label_sin_especificar));
@@ -308,6 +311,8 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { intent });
                            startActivity(chooserIntent);
                        }});
+                   ((TextView) rootView.findViewById(R.id.textView_movil)).setPaintFlags(((TextView) rootView.findViewById(R.id.textView_movil)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                   ((TextView) rootView.findViewById(R.id.textView_movil)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
                }
                else {
                    setTextViewText(R.id.textView_movil, getResources().getString(R.string.label_sin_especificar));
@@ -452,7 +457,11 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                     Agenda.update(getDataBase(), agenda);
                     if (agenda.getObservaciones() == null || agenda.getObservaciones().length() <= 0)
                         setTextViewText(R.id.detail_agenda_observacion, getString(R.string.label_sin_observaciones));
-                    new AsyncUpdater.UpdateAgenda().execute((int) idAgenda);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ENVIAR_AGENDA);
+                    bundle.putInt(ARG_AGENDA_ID, (int) idAgenda);
+                    requestSync(bundle);
+                    //new AsyncUpdater.UpdateAgenda().execute((int) idAgenda);
                     if(location == null) {
                         try {
                             LocationUtils.getLocation(ctx, new OnLocationResultListener() {

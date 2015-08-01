@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -422,6 +423,8 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 								            "mailto", finalEmail_str, null));
 									startActivity(Intent.createChooser(intent, "Send Email"));
 								}});
+                    ((TextView) view_rowlist.findViewById(R.id.textView_content)).setPaintFlags(((TextView) view_rowlist.findViewById(R.id.textView_content)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                    ((TextView) view_rowlist.findViewById(R.id.textView_content)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
 					email = false;
 				}
 
@@ -531,17 +534,20 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 					{
 						((TextView) view_rowlist
 								.findViewById(R.id.textView_content)).setClickable(true);
+                        final String finaltelf_str = str_titulo;
 						((TextView) view_rowlist
 								.findViewById(R.id.textView_content)).setOnClickListener(new OnClickListener(){
 
 									@Override
 									public void onClick(View v) {
-										String uri = "tel:" + str_titulo;
+										String uri = "tel:" + finaltelf_str;
 										Intent intent = new Intent(Intent.ACTION_CALL);
 										intent.setData(Uri.parse(uri));
 										startActivity(intent);
 									}});
 						telf = false;
+                        ((TextView) view_rowlist.findViewById(R.id.textView_content)).setPaintFlags(((TextView) view_rowlist.findViewById(R.id.textView_content)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                        ((TextView) view_rowlist.findViewById(R.id.textView_content)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
 					}
 
 					if (y + 1 == testArrayDetailsAdress.length)
@@ -745,6 +751,8 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 								            "mailto", finalEmail_str, null));
 									startActivity(Intent.createChooser(intent, "Send Email"));
 								}});
+                    ((TextView) view_rowlist.findViewById(R.id.textView_content)).setPaintFlags(((TextView) view_rowlist.findViewById(R.id.textView_content)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                    ((TextView) view_rowlist.findViewById(R.id.textView_content)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
 					email = false;
 				}
 
@@ -854,16 +862,19 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 					{
 						((TextView) view_rowlist
 								.findViewById(R.id.textView_content)).setClickable(true);
+                        final String finalTelf_str = str_titulo;
 						((TextView) view_rowlist
 								.findViewById(R.id.textView_content)).setOnClickListener(new OnClickListener(){
 
 									@Override
 									public void onClick(View v) {
-										String uri = "tel:" + str_titulo;
+										String uri = "tel:" + finalTelf_str;
 										Intent intent = new Intent(Intent.ACTION_CALL);
 										intent.setData(Uri.parse(uri));
 										startActivity(intent);
 									}});
+                        ((TextView) view_rowlist.findViewById(R.id.textView_content)).setPaintFlags(((TextView) view_rowlist.findViewById(R.id.textView_content)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                        ((TextView) view_rowlist.findViewById(R.id.textView_content)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
 						telf = false;
 					}
 
@@ -1041,16 +1052,19 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 				{
 					((TextView) view_rowlist
 							.findViewById(R.id.textView_content)).setClickable(true);
+                    final String finalTelf_str = str_titulo;
 					((TextView) view_rowlist
 							.findViewById(R.id.textView_content)).setOnClickListener(new OnClickListener(){
 
 								@Override
 								public void onClick(View v) {
-									String uri = "tel:" + str_titulo;
+									String uri = "tel:" + finalTelf_str;
 									Intent intent = new Intent(Intent.ACTION_CALL);
 									intent.setData(Uri.parse(uri));
 									startActivity(intent);
 								}});
+                    ((TextView) view_rowlist.findViewById(R.id.textView_content)).setPaintFlags(((TextView) view_rowlist.findViewById(R.id.textView_content)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                    ((TextView) view_rowlist.findViewById(R.id.textView_content)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
 					telf = false;
 				}
 				
@@ -1058,15 +1072,18 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 				{
 					((TextView) view_rowlist
 							.findViewById(R.id.textView_content)).setClickable(true);
+                    final String finalEmail_str = str_titulo;
 					((TextView) view_rowlist
 							.findViewById(R.id.textView_content)).setOnClickListener(new OnClickListener(){
 
 								@Override
 								public void onClick(View v) {
 									Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-								            "mailto",str_titulo, null));
+								            "mailto",finalEmail_str, null));
 									startActivity(Intent.createChooser(intent, "Send Email"));
 								}});
+                    ((TextView) view_rowlist.findViewById(R.id.textView_content)).setPaintFlags(((TextView) view_rowlist.findViewById(R.id.textView_content)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                    ((TextView) view_rowlist.findViewById(R.id.textView_content)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
 					email = false;
 				}
 
@@ -1150,16 +1167,19 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 						{
 							((TextView) view_rowlist
 									.findViewById(R.id.textView_content)).setClickable(true);
+                            final String finalTelf_str = str_titulo;
 							((TextView) view_rowlist
 									.findViewById(R.id.textView_content)).setOnClickListener(new OnClickListener(){
 
 										@Override
 										public void onClick(View v) {
-											String uri = "tel:" + str_titulo;
+											String uri = "tel:" + finalTelf_str;
 											Intent intent = new Intent(Intent.ACTION_CALL);
 											intent.setData(Uri.parse(uri));
 											startActivity(intent);
 										}});
+                            ((TextView) view_rowlist.findViewById(R.id.textView_content)).setPaintFlags(((TextView) view_rowlist.findViewById(R.id.textView_content)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                            ((TextView) view_rowlist.findViewById(R.id.textView_content)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
 							telf = false;
 						}
 	

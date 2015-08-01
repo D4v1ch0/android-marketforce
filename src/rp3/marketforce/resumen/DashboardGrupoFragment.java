@@ -16,6 +16,7 @@ import com.jjoe64.graphview.ValueDependentColor;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.os.Bundle;
 import android.support.v4.view.PagerTabStrip;
@@ -271,6 +272,9 @@ public class DashboardGrupoFragment extends BaseFragment {
                  asc_visited = !asc_visited;
              }
          });
+
+         ((TextView) parent.findViewById(R.id.grupo_agente_pendientes)).setPaintFlags(((TextView) parent.findViewById(R.id.grupo_agente_pendientes)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+         ((TextView) parent.findViewById(R.id.grupo_agente_pendientes)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
          parent.findViewById(R.id.grupo_agente_pendientes).setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View v) {

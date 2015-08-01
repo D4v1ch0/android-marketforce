@@ -16,7 +16,10 @@ import rp3.util.BitmapUtils;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.Paint;
 import android.net.Uri;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,7 +84,7 @@ public class DashboardAgendaAdapter extends BaseAdapter{
                 else
                     ((TextView) convertView.findViewById(R.id.dashboard_agenda_rowlist_nombre)).setText(agd.getCliente().getNombre1());
                 if (agd.getClienteDireccion() != null && agd.getClienteDireccion().getTelefono1().length() > 0) {
-                    ((TextView) convertView.findViewById(R.id.dashboard_agenda_phone)).setText(agd.getClienteDireccion().getTelefono1());
+                    //((TextView) convertView.findViewById(R.id.dashboard_agenda_phone)).setText(agd.getClienteDireccion().getTelefono1());
                     ((TextView) convertView.findViewById(R.id.dashboard_agenda_phone)).setClickable(true);
                     ((TextView) convertView.findViewById(R.id.dashboard_agenda_phone)).setOnClickListener(new OnClickListener() {
                         @Override
@@ -97,13 +100,16 @@ public class DashboardAgendaAdapter extends BaseAdapter{
                             ctx.startActivity(chooserIntent);
                         }
                     });
+                    ((TextView) convertView.findViewById(R.id.dashboard_agenda_phone)).setPaintFlags(((TextView) convertView.findViewById(R.id.dashboard_agenda_phone)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                    ((TextView) convertView.findViewById(R.id.dashboard_agenda_phone)).setText(agd.getClienteDireccion().getTelefono1());
+                    ((TextView) convertView.findViewById(R.id.dashboard_agenda_phone)).setTextColor(ctx.getResources().getColorStateList(R.drawable.text_link));
                 } else
                     ((TextView) convertView.findViewById(R.id.dashboard_agenda_phone)).setText(R.string.label_sin_especificar);
 
                 ((TextView) convertView.findViewById(R.id.dashboard_agenda_hora)).setText(format4.format(agd.getFechaInicio()));
 
                 if (agd.getCliente().getCorreoElectronico().length() > 0) {
-                    ((TextView) convertView.findViewById(R.id.dashboard_agenda_mail)).setText(agd.getCliente().getCorreoElectronico());
+                    //((TextView) convertView.findViewById(R.id.dashboard_agenda_mail)).setText(agd.getCliente().getCorreoElectronico());
                     ((TextView) convertView.findViewById(R.id.dashboard_agenda_mail)).setClickable(true);
                     ((TextView) convertView.findViewById(R.id.dashboard_agenda_mail)).setOnClickListener(new OnClickListener() {
 
@@ -114,6 +120,9 @@ public class DashboardAgendaAdapter extends BaseAdapter{
                             ctx.startActivity(Intent.createChooser(intent, "Send Email"));
                         }
                     });
+                    ((TextView) convertView.findViewById(R.id.dashboard_agenda_mail)).setPaintFlags(((TextView) convertView.findViewById(R.id.dashboard_agenda_mail)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                    ((TextView) convertView.findViewById(R.id.dashboard_agenda_mail)).setText(agd.getCliente().getCorreoElectronico());
+                    ((TextView) convertView.findViewById(R.id.dashboard_agenda_mail)).setTextColor(ctx.getResources().getColorStateList(R.drawable.text_link));
                 } else
                     ((TextView) convertView.findViewById(R.id.dashboard_agenda_mail)).setText(R.string.label_sin_especificar);
 

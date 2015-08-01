@@ -580,7 +580,8 @@ public class Agenda {
 
                 try {
                     webService.addCurrentAuthToken();
-
+                    agendaUpload.setFoto1Ext("1");
+                    rp3.marketforce.models.Agenda.update(db, agendaUpload);
                     try {
                         webService.invokeWebService();
                     } catch (HttpResponseException e) {
@@ -614,7 +615,8 @@ public class Agenda {
 
                 try {
                     webService.addCurrentAuthToken();
-
+                    agendaUpload.setFoto2Ext("1");
+                    rp3.marketforce.models.Agenda.update(db, agendaUpload);
                     try {
                         webService.invokeWebService();
                     } catch (HttpResponseException e) {
@@ -648,7 +650,8 @@ public class Agenda {
 
                 try {
                     webService.addCurrentAuthToken();
-
+                    agendaUpload.setFoto3Ext("1");
+                    rp3.marketforce.models.Agenda.update(db, agendaUpload);
                     try {
                         webService.invokeWebService();
                     } catch (HttpResponseException e) {

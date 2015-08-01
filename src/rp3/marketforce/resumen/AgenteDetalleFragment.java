@@ -3,6 +3,7 @@ package rp3.marketforce.resumen;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
@@ -81,6 +82,8 @@ public class AgenteDetalleFragment extends BaseFragment {
                         startActivity(chooserIntent);
                     }
                 });
+                ((TextView) rootView.findViewById(R.id.agente_movil)).setPaintFlags(((TextView) rootView.findViewById(R.id.agente_movil)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                ((TextView) rootView.findViewById(R.id.agente_movil)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
             } else
                 ((TextView) rootView.findViewById(R.id.agente_movil)).setClickable(false);
 
@@ -95,6 +98,8 @@ public class AgenteDetalleFragment extends BaseFragment {
                         startActivity(Intent.createChooser(intent, "Send Email"));
                     }
                 });
+                ((TextView) rootView.findViewById(R.id.agente_correo)).setPaintFlags(((TextView) rootView.findViewById(R.id.agente_correo)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                ((TextView) rootView.findViewById(R.id.agente_correo)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
             } else
                 ((TextView) rootView.findViewById(R.id.agente_correo)).setClickable(false);
         }
