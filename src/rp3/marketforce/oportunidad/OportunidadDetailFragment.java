@@ -370,6 +370,8 @@ public class OportunidadDetailFragment extends BaseFragment {
                         showDialogFragment(agenteDetalleFragment, "Agente", "Todos los Responsables");
                     }
                 });
+                ((TextView) view_info.findViewById(R.id.oportunidad_todos_responsables)).setPaintFlags(((TextView) view_info.findViewById(R.id.oportunidad_todos_responsables)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                ((TextView) view_info.findViewById(R.id.oportunidad_todos_responsables)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
                 ((LinearLayout) view_info.findViewById(R.id.oportunidad_responsables)).removeAllViews();
                 for (int i = 0; i < opt.getOportunidadResponsables().size(); i++) {
                     View view_responsable = inflater.inflate(
@@ -384,7 +386,8 @@ public class OportunidadDetailFragment extends BaseFragment {
                             showDialogFragment(agenteDetalleFragment, "Agente", "Agente");
                         }
                     });
-
+                    ((TextView) view_responsable.findViewById(R.id.responsable_nombre)).setPaintFlags(((TextView) view_responsable.findViewById(R.id.responsable_nombre)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                    ((TextView) view_responsable.findViewById(R.id.responsable_nombre)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
                     ((LinearLayout) view_info.findViewById(R.id.oportunidad_responsables)).addView(view_responsable);
                 }
             }
