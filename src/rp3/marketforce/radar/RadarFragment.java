@@ -46,6 +46,7 @@ import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.AgenteUbicacion;
 import rp3.marketforce.models.Ubicacion;
+import rp3.marketforce.resumen.AgenteDetalleFragment;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.util.GooglePlayServicesUtils;
 import rp3.util.LocationUtils;
@@ -245,7 +246,7 @@ public class RadarFragment extends BaseFragment {
 
     private void SetPoints()
     {
-        List<AgenteUbicacion> list_ubicaciones = AgenteUbicacion.getResumen(getDataBase());
+        final List<AgenteUbicacion> list_ubicaciones = AgenteUbicacion.getResumen(getDataBase());
         markers = new ArrayList<Marker>();
         map.addMarker(new MarkerOptions().position(sup));
 
@@ -283,11 +284,18 @@ public class RadarFragment extends BaseFragment {
 
             mark.showInfoWindow();
             mark.setTitle(list_ubicaciones.get(i).getNombres() + " " + list_ubicaciones.get(i).getApellidos() + " - " + format1.format(list_ubicaciones.get(i).getFecha()));
-            mark.setSnippet(NumberFormat.getInstance().format(distance) + " kilometro(s).");
+            mark.setSnippet(NumberFormat.getInstance().format(distance) + " kilometro(s)." + "\n" + "Touch para enviar notificación.");
             markers.add(mark);
         }
 
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(sup, 12), 2000, null);
+        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                int idAgente = list_ubicaciones.get(markers.indexOf(marker)).getIdAgente();
+                showDialogFragment(AgenteDetalleFragment.newInstance(idAgente), "Agente", "Agente");
+            }
+        });
     }
 
     private Bitmap writeTextOnDrawable(int drawableId, String text) {

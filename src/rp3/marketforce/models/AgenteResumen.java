@@ -129,7 +129,7 @@ public class AgenteResumen extends rp3.data.entity.EntityBase<AgenteResumen>{
 		
         String query = QueryDir.getQuery( Contract.AgentesResumen.QUERY_RESUMEN );
 		
-		Cursor c = db.rawQuery(query,new String [] { "" + inicio, "" + fin });
+		Cursor c = db.rawQuery(query,new String [] { "" + inicio, "" + fin, "" + inicio, "" + fin  });
 		
 		List<AgenteResumen> list = new ArrayList<AgenteResumen>();
 		if(c.moveToFirst())
@@ -138,8 +138,8 @@ public class AgenteResumen extends rp3.data.entity.EntityBase<AgenteResumen>{
 			{
 				AgenteResumen agd = new AgenteResumen();
                 agd.setIdAgente(CursorUtils.getInt(c, Contract.AgentesResumen.FIELD_ID_AGENTE));
-				agd.setNombres(CursorUtils.getString(c, Contract.AgentesResumen.FIELD_NOMBRES));
-				agd.setApellidos(CursorUtils.getString(c, Contract.AgentesResumen.FIELD_APELLIDOS));
+				agd.setNombres(CursorUtils.getString(c, Contract.Agente.FIELD_NOMBRE));
+				//agd.setApellidos(CursorUtils.getString(c, Contract.AgentesResumen.FIELD_APELLIDOS));
 				agd.setGestionados(CursorUtils.getInt(c, Contract.AgentesResumen.FIELD_GESTIONADOS));
 				agd.setNoGestionados((CursorUtils.getInt(c, Contract.AgentesResumen.FIELD_NO_GESTIONADOS)));	
 				agd.setPendientes(CursorUtils.getInt(c, Contract.AgentesResumen.FIELD_PENDIENTES));			
