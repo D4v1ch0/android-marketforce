@@ -119,6 +119,12 @@ public class AgenteDetalleFragment extends BaseFragment {
         else
             rootView.findViewById(R.id.agente_datos).setVisibility(View.GONE);
 
+        if(es_oportunidad)
+        {
+            Oportunidad opt = Oportunidad.getOportunidadId(getDataBase(), idAgente);
+            ((TextView) rootView.findViewById(R.id.agente_titulo)).setText(opt.getDescripcion());
+        }
+
         rootView.findViewById(R.id.agente_enviar_notificación).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

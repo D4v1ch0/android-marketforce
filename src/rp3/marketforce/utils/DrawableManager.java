@@ -155,18 +155,16 @@ public class DrawableManager {
         final Display display = wm.getDefaultDisplay();
         if (mMemoryCache.get(urlString) != null) {
             Bitmap bitmap = mMemoryCache.get(urlString);
-            while(bitmap.getWidth() > display.getWidth() - 100 || bitmap.getHeight() > display.getHeight() - 100)
-            {
-                bitmap = BitmapUtils.resizeFromScale(bitmap, Contants.SCALE_IMAGE);
-            }
+            if (bitmap != null)
+                while (bitmap.getWidth() > display.getWidth() - 100 || bitmap.getHeight() > display.getHeight() - 100) {
+                    bitmap = BitmapUtils.resizeFromScale(bitmap, Contants.SCALE_IMAGE);
+                }
             imageView.setImageBitmap(bitmap);
-        }
-        else {
+        } else {
 
             Bitmap bitmap = BitmapFactory.decodeFile(getFilename(urlString));
             if (bitmap != null) {
-                while(bitmap.getWidth() > display.getWidth() - 100 || bitmap.getHeight() > display.getHeight() - 100)
-                {
+                while (bitmap.getWidth() > display.getWidth() - 100 || bitmap.getHeight() > display.getHeight() - 100) {
                     bitmap = BitmapUtils.resizeFromScale(bitmap, Contants.SCALE_IMAGE);
                 }
                 imageView.setImageBitmap(bitmap);
@@ -186,10 +184,10 @@ public class DrawableManager {
                     public void run() {
                         //	TODO : set imageView to a "pending" image
                         Bitmap bitmap = fetchBitmap(urlString);
-                        while(bitmap.getWidth() > display.getWidth() - 100 || bitmap.getHeight() > display.getHeight() - 100)
-                        {
-                            bitmap = BitmapUtils.resizeFromScale(bitmap, Contants.SCALE_IMAGE);
-                        }
+                        if (bitmap != null)
+                            while (bitmap.getWidth() > display.getWidth() - 100 || bitmap.getHeight() > display.getHeight() - 100) {
+                                bitmap = BitmapUtils.resizeFromScale(bitmap, Contants.SCALE_IMAGE);
+                            }
                         Message message = handler.obtainMessage(1, bitmap);
                         handler.sendMessage(message);
                     }
@@ -207,18 +205,16 @@ public class DrawableManager {
         final Display display = wm.getDefaultDisplay();
         if (mMemoryCache.get(urlString) != null) {
             Bitmap bitmap = mMemoryCache.get(urlString);
-            while(bitmap.getWidth() > 400 || bitmap.getHeight() > 400)
-            {
-                bitmap = BitmapUtils.resizeFromScale(bitmap, 0.6f);
-            }
+            if (bitmap != null)
+                while (bitmap.getWidth() > 400 || bitmap.getHeight() > 400) {
+                    bitmap = BitmapUtils.resizeFromScale(bitmap, 0.6f);
+                }
             imageView.setImageBitmap(bitmap);
-        }
-        else {
+        } else {
 
             Drawable d = Drawable.createFromPath(getFilename(urlString));
             if (d != null) {
-                while(d.getIntrinsicWidth() > 400 || d.getIntrinsicHeight() > 400)
-                {
+                while (d.getIntrinsicWidth() > 400 || d.getIntrinsicHeight() > 400) {
                     d = DrawableUtils.scaleImage(d, 0.6f, imageView.getContext());
                 }
                 imageView.setImageDrawable(d);
@@ -238,10 +234,10 @@ public class DrawableManager {
                     public void run() {
                         //	TODO : set imageView to a "pending" image
                         Bitmap bitmap = fetchBitmap(urlString);
-                        while(bitmap.getWidth() > 400 || bitmap.getHeight() > 400)
-                        {
-                            bitmap = BitmapUtils.resizeFromScale(bitmap, 0.6f);
-                        }
+                        if (bitmap != null)
+                            while (bitmap.getWidth() > 400 || bitmap.getHeight() > 400) {
+                                bitmap = BitmapUtils.resizeFromScale(bitmap, 0.6f);
+                            }
                         Message message = handler.obtainMessage(1, bitmap);
                         handler.sendMessage(message);
                     }
