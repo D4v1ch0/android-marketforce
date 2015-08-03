@@ -1049,15 +1049,28 @@
      </statement>
      
 	 <statement name="ResumenAgentes">
-       SELECT IdAgente,
-        Nombres,
-		Apellidos, 
-		SUM(Gestionados) as Gestionados,
-		SUM(NoGestionados) as NoGestionados, 
-		SUM(Pendientes) as Pendientes 
-		FROM tbAgentesResumen
-		WHERE Fecha &gt;= ?
-		AND Fecha &lt; ?
-		GROUP BY IdAgente
+       SELECT tbAgente.IdAgente,
+         tbAgente.Nombre,
+		SUM(tbAgentesResumen.Gestionados) as Gestionados,
+		SUM(tbAgentesResumen.NoGestionados) as NoGestionados,
+		SUM(tbAgentesResumen.Pendientes) as Pendientes
+		FROM tbAgente
+        LEFT JOIN tbAgentesResumen
+        ON tbAgente.IdAgente = tbAgentesResumen.IdAgente
+		WHERE tbAgentesResumen.Fecha &gt;= ?
+		AND tbAgentesResumen.Fecha &lt; ?
+		GROUP BY tbAgente.IdAgente
+         UNION ALL
+         SELECT tbAgente.IdAgente,
+         tbAgente.Nombre,
+         0 as Gestionados,
+         0 as NoGestionados,
+         0 as Pendientes
+         FROM tbAgente
+         LEFT JOIN tbAgentesResumen
+         ON tbAgente.IdAgente = tbAgentesResumen.IdAgente
+         AND tbAgentesResumen.Fecha &gt;= ?
+         AND tbAgentesResumen.Fecha &lt; ?
+         GROUP BY tbAgente.IdAgente
      </statement>
 </sql>
