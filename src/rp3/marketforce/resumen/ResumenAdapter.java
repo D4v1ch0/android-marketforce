@@ -128,7 +128,7 @@ public class ResumenAdapter extends BaseAdapter {
 		{
 			AgenteResumen agd = list_resumen.get(position);
 			
-			((TextView) convertView.findViewById(R.id.grupo_agente_nombre)).setText(agd.getNombres() + " " + agd.getApellidos());
+			((TextView) convertView.findViewById(R.id.grupo_agente_nombre)).setText(agd.getNombres());
 			((TextView) convertView.findViewById(R.id.grupo_agente_visitados)).setText(agd.getGestionados() + "");
 			((TextView) convertView.findViewById(R.id.grupo_agente_no_visitados)).setText(agd.getNoGestionados() + "");
 			((TextView) convertView.findViewById(R.id.grupo_agente_pendientes)).setText(agd.getPendientes() + "");
