@@ -22,6 +22,7 @@ import rp3.util.Convert;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -174,6 +175,8 @@ public class DashboardAgendaFragment extends BaseFragment {
                                     startActivity(chooserIntent);
                                 }
                             });
+                            ((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_phone)).setPaintFlags(((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_phone)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                            ((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_phone)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
                         } else
                             ((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_phone)).setText(R.string.label_sin_especificar);
 
@@ -191,6 +194,8 @@ public class DashboardAgendaFragment extends BaseFragment {
                                     startActivity(Intent.createChooser(intent, "Send Email"));
                                 }
                             });
+                            ((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_mail)).setPaintFlags(((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_mail)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                            ((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_mail)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
                         } else
                             ((TextView) agenda_layout.findViewById(R.id.dashboard_agenda_mail)).setText(R.string.label_sin_especificar);
 
