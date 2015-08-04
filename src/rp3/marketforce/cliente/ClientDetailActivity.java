@@ -20,6 +20,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
+import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.TypedValue;
@@ -747,7 +749,9 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
 	
 	private void renderContacto(View rootView)
 	{
+        boolean telf = false, email = false;
 		hideDialogConfirmation();
+        String email_str = "";
 
 		testArrayDetails = this.getApplicationContext().getResources()
 				.getStringArray(R.array.testArrayDetails);
@@ -767,6 +771,8 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
 					if (!contacto.getCorreo().equals("null"))
 						str_titulo = "" + contacto.getCorreo();
 
+                email_str = str_titulo;
+                email = true;
 				flag = false;
 				break;
 				
@@ -800,6 +806,25 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
 					((TextView) view_rowlist
 							.findViewById(R.id.textView_content))
 							.setText(str_titulo);
+
+                if(email)
+                {
+                    ((TextView) view_rowlist
+                            .findViewById(R.id.textView_content)).setClickable(true);
+                    final String finalEmail_str = email_str;
+                    ((TextView) view_rowlist
+                            .findViewById(R.id.textView_content)).setOnClickListener(new OnClickListener(){
+
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                                    "mailto", finalEmail_str, null));
+                            startActivity(Intent.createChooser(intent, "Send Email"));
+                        }});
+                    ((TextView) view_rowlist.findViewById(R.id.textView_content)).setPaintFlags(((TextView) view_rowlist.findViewById(R.id.textView_content)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                    ((TextView) view_rowlist.findViewById(R.id.textView_content)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
+                    email = false;
+                }
 				
 				((TextView) view_rowlist
 						.findViewById(R.id.textView_title)).setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.text_medium_size));

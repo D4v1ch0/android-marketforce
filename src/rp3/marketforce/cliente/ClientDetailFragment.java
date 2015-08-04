@@ -600,18 +600,12 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 
 						@Override
 						public void onClick(View v) {
-							if((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE)
-							{
-								ClientDetailFragment transactionDetailFragment = ClientDetailFragment.newInstance(client);
-								showDialogFragment(transactionDetailFragment, "Contacto");
-							}
-							else
-							{
+
 								Intent intent = new Intent(getActivity(), ClientDetailActivity.class);
 								intent.putExtra(ARG_ITEM_ID, client.getContactos().get(position).getId());
 								intent.putExtra(ARG_ITEM_TIPO_PERSONA, "C");
 								startActivity(intent);
-							}
+
 							
 						}});
 				
@@ -920,16 +914,10 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 
                     @Override
                     public void onClick(View v) {
-                        if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE) {
-                            ClientDetailFragment transactionDetailFragment = ClientDetailFragment.newInstance(client);
-                            showDialogFragment(transactionDetailFragment, "Contacto");
-                        } else {
-                            Intent intent = new Intent(getActivity(), ClientDetailActivity.class);
-                            intent.putExtra(ARG_ITEM_ID, client.getContactos().get(position).getId());
-                            intent.putExtra(ARG_ITEM_TIPO_PERSONA, "C");
-                            startActivity(intent);
-                        }
-
+                        Intent intent = new Intent(getActivity(), ClientDetailActivity.class);
+                        intent.putExtra(ARG_ITEM_ID, client.getContactos().get(position).getId());
+                        intent.putExtra(ARG_ITEM_TIPO_PERSONA, "C");
+                        startActivity(intent);
                     }
                 });
 
