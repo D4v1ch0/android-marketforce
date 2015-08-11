@@ -615,6 +615,7 @@ public final class Contract {
         public static final String FIELD_FECHA = COLUMN_FECHA;
 
         public static final String QUERY_PERMISOS_POR_APROBAR = "PermisosAgentes";
+		public static final String QUERY_PERMISOS_POR_APROBAR_COUNT = "PermisosAgentesCount";
         public static final String QUERY_PERMISO_POR_AGENTE = "PermisoPorAgente";
     }
 }

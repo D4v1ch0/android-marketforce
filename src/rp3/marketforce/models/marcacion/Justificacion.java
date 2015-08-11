@@ -252,6 +252,20 @@ public class Justificacion extends EntityBase<Justificacion>
 
     }
 
+    public static int getPermisosPendientesAprobarCount(DataBase db) {
+        String query = QueryDir.getQuery(Contract.Justificaciones.QUERY_PERMISOS_POR_APROBAR_COUNT);
+
+        Cursor c = db.rawQuery(query);
+        int conteo = 0;
+
+        if (c.moveToFirst()) {
+            conteo = c.getInt(0);
+        }
+        c.close();
+        return conteo;
+
+    }
+
 
     public static List<Justificacion> getPermisosPendientesAprobarUpload(DataBase db) {
         Cursor c = db.query(Contract.Justificaciones.TABLE_NAME, new String[]{Contract.Justificaciones._ID, Contract.Justificaciones.COLUMN_FECHA, Contract.Justificaciones.COLUMN_ID_PERMISO,

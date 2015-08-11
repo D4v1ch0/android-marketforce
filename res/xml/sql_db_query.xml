@@ -1091,6 +1091,12 @@
         = tbJustificacion.IdAgente
         WHERE Estado = 'P' AND Propia = 0 AND Pendiente = 0 ORDER BY tbJustificacion.Fecha DESC
     </statement>
+    <statement name="PermisosAgentesCount">
+        SELECT
+        COUNT(*)
+        FROM  tbJustificacion
+        WHERE Estado = 'P' AND Propia = 0 AND Pendiente = 0 ORDER BY tbJustificacion.Fecha DESC
+    </statement>
     <statement name="PermisoPorAgente">
         SELECT
         tbJustificacion._id,
