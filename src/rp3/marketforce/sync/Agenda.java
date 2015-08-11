@@ -408,6 +408,7 @@ public class Agenda {
 
                 agenda.setIdAgenda(id);
                 agenda.setIdRuta(PreferenceManager.getInt(Contants.KEY_IDRUTA));
+                agenda.setEnviado(true);
 
                 rp3.marketforce.models.Agenda.update(db, agenda);
 
