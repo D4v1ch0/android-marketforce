@@ -45,7 +45,9 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="8dp"
         android:padding="8dp"
-        android:background="@color/color_white_maps_list" >
+        android:background="@color/color_white_maps_list"
+        android:id="@+id/radar_ubicaciones"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="fill_parent"
@@ -53,7 +55,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/label_1hora"
             android:drawableLeft="@drawable/map_position"
-            android:id="@+id/textView51"
+            android:id="@+id/radar_ubicacion1"
             android:gravity="center|right"
             android:textSize="@dimen/text_small_size" />
 
@@ -63,7 +65,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/label_24horas"
             android:drawableLeft="@drawable/map_verde"
-            android:id="@+id/textView52"
+            android:id="@+id/radar_ubicacion2"
             android:gravity="center|right"
             android:textSize="@dimen/text_small_size" />
 
@@ -74,7 +76,7 @@
             android:text="@string/label_48horas"
             android:drawableLeft="@drawable/map_naranja"
             android:drawablePadding="15dp"
-            android:id="@+id/textView55"
+            android:id="@+id/radar_ubicacion3"
             android:gravity="center|right"
             android:textSize="@dimen/text_small_size" />
 
@@ -85,7 +87,7 @@
             android:text="@string/label_mas48horas"
             android:drawableLeft="@drawable/map_rojo"
             android:drawablePadding="15dp"
-            android:id="@+id/textView56"
+            android:id="@+id/radar_ubicacion4"
             android:gravity="center|right"
             android:textSize="@dimen/text_small_size"
             android:layout_marginBottom="3dp" />

@@ -34,6 +34,9 @@ public class Contants {
 	public final static String KEY_ALARMA_FIN = "HoraFinTrackingPositionTicks";
 	public final static String KEY_ALARMA_INTERVALO = "MinutosIntervaloTrackingPosition";
 	public final static String KEY_PREFIJO_TELEFONICO = "DefaultInternationalPhoneNumberCode";
+    public final static String KEY_AGENTE_UBICACION_1 = "AgenteUbicacion1";
+    public final static String KEY_AGENTE_UBICACION_2 = "AgenteUbicacion2";
+    public final static String KEY_AGENTE_UBICACION_3 = "AgenteUbicacion3";
     public final static String KEY_PERMITIR_CREACION = "PermitirCreacion";
     public final static String KEY_PERMITIR_MODIFICACION = "PermitirModificacion";
     public final static String KEY_SOLO_FALTANTES = "SoloFaltantesEditarEnGestion";
