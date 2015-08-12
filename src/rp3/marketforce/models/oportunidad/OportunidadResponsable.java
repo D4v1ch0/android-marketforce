@@ -108,6 +108,23 @@ public class OportunidadResponsable extends EntityBase<OportunidadResponsable> {
         return list;
     }
 
+    public static OportunidadResponsable getResponsable(DataBase db, int idOportunidad, int idAgente) {
+        Cursor c = db.query(Contract.OportunidadResponsable.TABLE_NAME,new String[] {Contract.OportunidadResponsable._ID, Contract.OportunidadResponsable.COLUMN_ID_OPORTUNIDAD,
+                Contract.OportunidadResponsable.COLUMN_TIPO, Contract.OportunidadResponsable.COLUMN_ID_AGENTE}, Contract.OportunidadResponsable.COLUMN_ID_OPORTUNIDAD + " = ? AND " +
+                Contract.OportunidadResponsable.COLUMN_ID_AGENTE + " = ?", new String[]{idOportunidad + "", idAgente + ""});
+
+        OportunidadResponsable cont = null;
+        if(c.moveToFirst()){
+            cont = new OportunidadResponsable();
+            cont.setID(CursorUtils.getInt(c, Contract.OportunidadResponsable._ID));
+            cont.setIdOportunidad(CursorUtils.getInt(c, Contract.OportunidadResponsable.COLUMN_ID_OPORTUNIDAD));
+            cont.setIdAgente(CursorUtils.getInt(c, Contract.OportunidadResponsable.COLUMN_ID_AGENTE));
+            cont.setTipo(CursorUtils.getString(c, Contract.OportunidadResponsable.COLUMN_TIPO));
+        }
+        c.close();
+        return cont;
+    }
+
     public static List<OportunidadResponsable> getResponsablesOportunidadInt(DataBase db, long id) {
         Cursor c = db.query(Contract.OportunidadResponsable.TABLE_NAME, new String[] {Contract.OportunidadResponsable._ID, Contract.OportunidadResponsable.COLUMN_ID_OPORTUNIDAD,
                 Contract.OportunidadResponsable.COLUMN_TIPO, Contract.OportunidadResponsable.COLUMN_ID_AGENTE}, Contract.OportunidadResponsable.COLUMN_ID_OPORTUNIDAD_INT + " = ?", new String[] {id + ""});
@@ -124,5 +141,11 @@ public class OportunidadResponsable extends EntityBase<OportunidadResponsable> {
         c.close();
         return list;
 
+    }
+
+    public static void deleteResponsable (DataBase db, int idOportunidad, int idAgente)
+    {
+        long i = db.delete(Contract.OportunidadResponsable.TABLE_NAME, Contract.OportunidadResponsable.COLUMN_ID_OPORTUNIDAD + " = ? AND " +
+                    Contract.OportunidadResponsable.COLUMN_ID_AGENTE + " = ?", new String[]{idOportunidad + "", idAgente + ""});
     }
 }

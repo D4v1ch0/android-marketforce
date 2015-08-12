@@ -58,6 +58,7 @@ public class CambiarEstadoFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 opt.setEstado(generalValues.get(i).getCode());
+                opt.setPendiente(true);
                 Oportunidad.update(getDataBase(), opt);
                 finish();
             }

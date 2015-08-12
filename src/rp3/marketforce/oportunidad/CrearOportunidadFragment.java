@@ -97,7 +97,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
 
     private LinearLayout ContactosContainer, ResponsableContainer;
     private List<LinearLayout> listViewResponsables, listViewContactos;
-    private List<Integer> listAgentesIds;
+    private List<Integer> listAgentesIds, listAgentesIdsDelete;
     private List<OportunidadContacto> listContactos;
     private Location currentLoc;
     private long id = 0;
@@ -206,28 +206,46 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
         else
             Oportunidad.update(getDataBase(), opt);
 
-        for(int i = 0; i < listViewResponsables.size(); i ++)
+        for(int i = 0; i < listAgentesIds.size(); i ++)
         {
-            OportunidadResponsable responsable = new OportunidadResponsable();
-            if(opt.getOportunidadResponsables()!= null && opt.getOportunidadResponsables().size() > i)
+            OportunidadResponsable responsable = OportunidadResponsable.getResponsable(getDataBase(), opt.getIdOportunidad(), listAgentesIds.get(i));
+            if(responsable == null)
             {
-                responsable = opt.getOportunidadResponsables().get(i);
+                responsable = new OportunidadResponsable();
+                responsable.set_idOportunidad((int) opt.getID());
+                responsable.setIdOportunidad(opt.getIdOportunidad());
+                responsable.setIdAgente(listAgentesIds.get(i));
             }
-            responsable.set_idOportunidad((int) opt.getID());
-            responsable.setIdOportunidad(opt.getIdOportunidad());
-            responsable.setIdAgente(listAgentesIds.get(i));
-            if(((TextView) listViewResponsables.get(i).findViewById(R.id.responsable_tipo)).getText().toString().equalsIgnoreCase("Gestor"))
-                responsable.setTipo("G");
-            if(((TextView) listViewResponsables.get(i).findViewById(R.id.responsable_tipo)).getText().toString().equalsIgnoreCase("Interesado"))
-                responsable.setTipo("I");
-            if(((TextView) listViewResponsables.get(i).findViewById(R.id.responsable_tipo)).getText().toString().equalsIgnoreCase("Creador"))
-                responsable.setTipo("C");
+
+            //PATCH
+                try {
+                    if(((TextView) listViewResponsables.get(i).findViewById(R.id.responsable_tipo)).getText().toString().equalsIgnoreCase("Gestor"))
+                        responsable.setTipo("G");
+                    if(((TextView) listViewResponsables.get(i).findViewById(R.id.responsable_tipo)).getText().toString().equalsIgnoreCase("Interesado"))
+                        responsable.setTipo("I");
+                    if(((TextView) listViewResponsables.get(i).findViewById(R.id.responsable_tipo)).getText().toString().equalsIgnoreCase("Creador"))
+                        responsable.setTipo("C");
+                }
+                catch (Exception ex)
+                {
+                    if(!responsable.getTipo().equalsIgnoreCase("C"))
+                        responsable.setTipo("G");
+                }
+            //END PATCH
+
 
 
             if(responsable.getID() == 0)
                 OportunidadResponsable.insert(getDataBase(), responsable);
             else
                 OportunidadResponsable.update(getDataBase(), responsable);
+        }
+
+        if(id != 0)
+        {
+            OportunidadResponsable.deleteResponsable(getDataBase(), opt.getIdOportunidad(), 0);
+            for(int ir = 0; ir < listAgentesIdsDelete.size(); ir++)
+                OportunidadResponsable.deleteResponsable(getDataBase(), opt.getIdOportunidad(), listAgentesIdsDelete.get(ir));
         }
 
         for(int i = 0; i < listViewContactos.size(); i ++)
@@ -410,6 +428,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
             listViewResponsables = new ArrayList<LinearLayout>();
             listViewContactos = new ArrayList<LinearLayout>();
             listAgentesIds = new ArrayList<Integer>();
+            listAgentesIdsDelete = new ArrayList<Integer>();
         }
 
         ResponsableContainer = (LinearLayout) view.findViewById(R.id.oportunidad_responsables);
@@ -495,7 +514,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
         ((SeekBar) view.findViewById(R.id.oportunidad_probabilidad)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                ((TextView) view.findViewById(R.id.oportunidad_prob_label)).setText(i+"%");
+                ((TextView) view.findViewById(R.id.oportunidad_prob_label)).setText(i + "%");
             }
 
             @Override
@@ -645,7 +664,9 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
                 public void onClick(View v) {
                     listViewResponsables.remove(responsable);
                     ResponsableContainer.removeView(responsable);
-                    listAgentesIds.remove(listAgentesIds.indexOf(id));
+                    if(listAgentesIds.indexOf(id) != -1)
+                        listAgentesIds.remove(listAgentesIds.indexOf(id));
+                    listAgentesIdsDelete.add(id);
                 }
             });
         }
@@ -682,52 +703,6 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
             cont.setCargo(((EditText)listViewContactos.get(i).findViewById(R.id.contacto_cargo)).getText().toString());
             listContactos.add(cont);
         }
-    }
-
-    private void addResponsable()
-    {
-        AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
-        builderSingle.setIcon(R.drawable.ic_launcher);
-        builderSingle.setTitle("Seleccione un agente");
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                getContext(),
-                android.R.layout.select_dialog_singlechoice);
-        final List<Agente> agentes = Agente.getAgentes(getDataBase());
-        for(Agente agt : agentes)
-            arrayAdapter.add(agt.getNombre());
-
-        builderSingle.setNegativeButton("Cancelar",
-                new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-
-        builderSingle.setAdapter(arrayAdapter,
-                new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Agente choose = agentes.get(which);
-                        final LinearLayout responsable = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.rowlist_responsable, null);
-                        final int pos = listViewResponsables.size();
-                        ((ImageView) responsable.findViewById(R.id.eliminar_responsable)).setOnClickListener(new View.OnClickListener() {
-
-                            @Override
-                            public void onClick(View v) {
-                                listViewResponsables.remove(responsable);
-                                ResponsableContainer.removeView(responsable);
-                            }
-                        });
-                        ((TextView) responsable.findViewById(R.id.responsable_nombre)).setText(choose.getNombre());
-                        listAgentesIds.add(choose.getIdAgente());
-                        ResponsableContainer.addView(responsable);
-                        listViewResponsables.add(responsable);
-                    }
-                });
-        builderSingle.show();
     }
 
     private void addContacto()
@@ -889,7 +864,9 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
             public void onClick(View v) {
                 listViewResponsables.remove(responsable);
                 ResponsableContainer.removeView(responsable);
-                listAgentesIds.remove(listAgentesIds.indexOf(agente.getIdAgente()));
+                if(listAgentesIds.indexOf(agente.getIdAgente()) != -1)
+                    listAgentesIds.remove(listAgentesIds.indexOf(agente.getIdAgente()));
+                listAgentesIdsDelete.add(agente.getIdAgente());
             }
         });
         ((TextView) responsable.findViewById(R.id.responsable_nombre)).setText(agente.getNombre());

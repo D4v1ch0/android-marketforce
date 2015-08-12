@@ -375,6 +375,7 @@ public class Oportunidad {
                 boolean principal = true;
                 for (OportunidadContacto agt : oportunidadUpload.getOportunidadContactos()) {
                     JSONObject jObjectContacto = new JSONObject();
+                    jObjectContacto.put("IdOportunidad", oportunidadUpload.getIdOportunidad());
                     jObjectContacto.put("IdOportunidadContacto", agt.getIdOportunidadContacto());
                     jObjectContacto.put("Cargo", agt.getCargo());
                     jObjectContacto.put("CorreoElectronico", "");
@@ -394,6 +395,7 @@ public class Oportunidad {
                 JSONArray jArrayResponsables = new JSONArray();
                 for (OportunidadResponsable agt : oportunidadUpload.getOportunidadResponsables()) {
                     JSONObject jObjectResponsable = new JSONObject();
+                    jObjectResponsable.put("IdOportunidad", oportunidadUpload.getIdOportunidad());
                     jObjectResponsable.put("IdAgente", agt.getIdAgente());
                     jObjectResponsable.put("Tipo", agt.getTipo());
                     jObjectResponsable.put("TipoTabla", Contants.GENERAL_TABLE_TIPO_RESPONSABLES);

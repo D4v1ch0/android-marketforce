@@ -39,6 +39,8 @@ public class AgenteDetalleFragment extends BaseFragment {
     public final static String ARG_MESSAGE = "mensaje";
     public final static int REQ_CODE_SPEECH_INPUT = 100;
 
+    public int id_oportunidad = 0;
+
     public static AgenteDetalleFragment newInstance(int idAgente)
     {
         Bundle bundle = new Bundle();
@@ -119,9 +121,9 @@ public class AgenteDetalleFragment extends BaseFragment {
         else
             rootView.findViewById(R.id.agente_datos).setVisibility(View.GONE);
 
-        if(es_oportunidad)
+        if(es_oportunidad || id_oportunidad != 0)
         {
-            Oportunidad opt = Oportunidad.getOportunidadId(getDataBase(), idAgente);
+            Oportunidad opt = Oportunidad.getOportunidadId(getDataBase(), id_oportunidad);
             ((TextView) rootView.findViewById(R.id.agente_titulo)).setText(opt.getDescripcion());
         }
 
@@ -139,7 +141,7 @@ public class AgenteDetalleFragment extends BaseFragment {
                 if(ConnectionUtils.isNetAvailable(getContext())) {
                     if(es_oportunidad)
                     {
-                        Oportunidad opt = Oportunidad.getOportunidadId(getDataBase(), idAgente);
+                        Oportunidad opt = Oportunidad.getOportunidadId(getDataBase(), id_oportunidad);
                         for (int i = 0; i < opt.getOportunidadResponsables().size(); i++) {
                             Bundle bundle = new Bundle();
                             bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SEND_NOTIFICATION);

@@ -367,6 +367,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                     @Override
                     public void onClick(View v) {
                         agenteDetalleFragment = AgenteDetalleFragment.newInstance((int) opt.getID(), true);
+                        agenteDetalleFragment.id_oportunidad = (int)opt.getID();
                         showDialogFragment(agenteDetalleFragment, "Agente", "Todos los Responsables");
                     }
                 });
@@ -383,6 +384,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                         @Override
                         public void onClick(View v) {
                             agenteDetalleFragment = AgenteDetalleFragment.newInstance(agt.getIdAgente());
+                            agenteDetalleFragment.id_oportunidad = (int)opt.getID();
                             showDialogFragment(agenteDetalleFragment, "Agente", "Agente");
                         }
                     });
@@ -401,7 +403,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                     ((TextView) view_contacto.findViewById(R.id.oportunidad_contacto_number)).setText(i + 1 + "");
                     ((TextView) view_contacto.findViewById(R.id.oportunidad_contacto_nombre)).setText(opt.getOportunidadContactos().get(i).getNombre());
                     ((TextView) view_contacto.findViewById(R.id.oportunidad_contacto_cargo)).setText(opt.getOportunidadContactos().get(i).getCargo());
-                    if(opt.getOportunidadContactos().get(i).getURLFoto().replace("\"","").length() > 0) {
+                    if(opt.getOportunidadContactos().get(i).getURLFoto() != null && opt.getOportunidadContactos().get(i).getURLFoto().replace("\"","").length() > 0) {
                         DManager.fetchDrawableOnThreadOnline(PreferenceManager.getString("server") +
                                         rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_OPORTUNIDADES) + opt.getOportunidadContactos().get(i).getURLFoto().replace("\"", ""),
                                 (ImageView) view_contacto.getRootView().findViewById(R.id.oportunidad_contacto_foto));
@@ -665,6 +667,7 @@ public class OportunidadDetailFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        /*
         BitmapDrawable dr = (BitmapDrawable)((ImageView)linearLayoutContact.findViewById(IDFOTOS).findViewById(R.id.oportunidad_photo1)).getDrawable();
         if(dr != null) {((ImageView)linearLayoutContact.findViewById(IDFOTOS).findViewById(R.id.oportunidad_photo1)).setImageDrawable(null);}
         dr = (BitmapDrawable)((ImageView)linearLayoutContact.findViewById(IDFOTOS).findViewById(R.id.oportunidad_photo2)).getDrawable();
@@ -672,6 +675,7 @@ public class OportunidadDetailFragment extends BaseFragment {
         dr = (BitmapDrawable)((ImageView)linearLayoutContact.findViewById(IDFOTOS).findViewById(R.id.oportunidad_photo3)).getDrawable();
         if(dr != null) {((ImageView)linearLayoutContact.findViewById(IDFOTOS).findViewById(R.id.oportunidad_photo3)).setImageDrawable(null);}
         dr = null;
+        */
 
     }
 
