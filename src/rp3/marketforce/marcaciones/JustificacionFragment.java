@@ -53,6 +53,9 @@ public class JustificacionFragment extends BaseFragment {
 
         getDialog().setTitle("Justificación");
 
+        if(idMarcacion != 0)
+            rootView.findViewById(R.id.cancelar_justificacion).setVisibility(View.GONE);
+
         rootView.findViewById(R.id.cancelar_justificacion).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

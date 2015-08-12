@@ -8,6 +8,8 @@ import java.util.List;
 
 import rp3.app.BaseActivity;
 import rp3.marketforce.R;
+import rp3.marketforce.db.DbOpenHelper;
+import rp3.runtime.Session;
 
 /**
  * Created by magno_000 on 10/07/2015.
@@ -17,6 +19,8 @@ public class PermisoActivity extends BaseActivity{
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        Session.Start(this);
+        rp3.configuration.Configuration.TryInitializeConfiguration(this, DbOpenHelper.class);
         setHomeAsUpEnabled(true, true);
         setTitle("Aprobar Permisos");
 
