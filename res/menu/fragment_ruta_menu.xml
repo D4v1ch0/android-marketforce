@@ -18,6 +18,7 @@
           </menu>
       </item>
       <item android:id="@+id/action_cambiar_contacto" android:title="@string/action_cambiar_contacto"></item>
+      <item android:id="@+id/action_suspender_agenda" android:title="@string/action_suspender_agenda"></item>
       <item android:id="@+id/action_no_visita" android:title="@string/label_action_motivos_no_visita"></item>
       <item android:id="@+id/action_reprogramar" android:title="@string/menu_reprogramar_agenda"></item>
 </menu>
