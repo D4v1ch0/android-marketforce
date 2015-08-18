@@ -1,9 +1,12 @@
 package rp3.marketforce.ruta;
 
 import rp3.app.BaseFragment;
+import rp3.configuration.PreferenceManager;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
+import rp3.marketforce.resumen.AgenteDetalleFragment;
+import rp3.marketforce.sync.SyncAdapter;
 import rp3.util.ConnectionUtils;
 import rp3.util.Screen;
 import rp3.widget.SlidingPaneLayout;
@@ -24,10 +27,12 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.reflect.Field;
 import java.sql.Ref;
+import java.text.SimpleDateFormat;
 
 public class RutasFragment extends BaseFragment implements RutasListFragment.TransactionListFragmentListener, ContactsAgendaFragment.SaveContactsListener{
 
@@ -48,6 +53,11 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	private boolean openPane = true;
     private Menu menuRutas;
     private boolean isMainFragment = true;
+    public SimpleDateFormat format1 = new SimpleDateFormat("EEEE");
+    public SimpleDateFormat format2 = new SimpleDateFormat("dd");
+    public SimpleDateFormat format3 = new SimpleDateFormat("MMMM");
+    public SimpleDateFormat format5 = new SimpleDateFormat("yyyy");
+    public SimpleDateFormat format4= new SimpleDateFormat("HH:mm");
 
 
     public static RutasFragment newInstance(int transactionTypeId) {
@@ -253,6 +263,28 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	    				Toast.makeText(getContext(), R.string.warning_seleccionar_agenda, Toast.LENGTH_LONG).show();
 	    			}
 	    			return true;
+                case R.id.action_suspender_agenda:
+                    if(selectedTransactionId != 0)
+                    {
+                        if(PreferenceManager.getInt(Contants.KEY_ID_SUPERVISOR, 0) != 0)
+                        {
+                            Agenda agdNot = Agenda.getAgenda(getDataBase(), selectedTransactionId);
+                            Bundle bundle = new Bundle();
+                            bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SEND_NOTIFICATION);
+                            bundle.putInt(AgenteDetalleFragment.ARG_AGENTE, PreferenceManager.getInt(Contants.KEY_ID_SUPERVISOR));
+                            bundle.putString(AgenteDetalleFragment.ARG_TITLE, "Anular Agenda");
+                            bundle.putString(AgenteDetalleFragment.ARG_MESSAGE,
+                                    "Se solicita anulación de agenda del " + format1.format(agdNot.getFechaInicio()) + ", " + format2.format(agdNot.getFechaInicio()) + " de "
+                                    + format3.format(agdNot.getFechaInicio()) + ", hecha al cliente " + agdNot.getCliente().getNombreCompleto());
+                            requestSync(bundle);
+                            Toast.makeText(getContext(), R.string.message_notificacion_enviada, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                    else
+                    {
+                        Toast.makeText(getContext(), R.string.warning_seleccionar_agenda, Toast.LENGTH_LONG).show();
+                    }
+                    return true;
 	    		case R.id.action_cambiar_contacto:
 	    			if(selectedTransactionId != 0)
 	    			{
@@ -354,6 +386,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
                 menuRutas.findItem(R.id.action_cambiar_contacto).setVisible(true);
                 menuRutas.findItem(R.id.action_no_visita).setVisible(true);
                 menuRutas.findItem(R.id.action_reprogramar).setVisible(true);
+                menuRutas.findItem(R.id.action_suspender_agenda).setVisible(true);
                 if(selectedTransactionId != 0)
                 {
                     String estado = Agenda.getAgendaEstado(getDataBase(), selectedTransactionId);
@@ -361,6 +394,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
                         menuRutas.findItem(R.id.action_cambiar_contacto).setVisible(false);
                     if(!estado.equalsIgnoreCase(Contants.ESTADO_PENDIENTE) && !estado.equalsIgnoreCase(Contants.ESTADO_REPROGRAMADO))
                     {
+                        menuRutas.findItem(R.id.action_suspender_agenda).setVisible(false);
                         menuRutas.findItem(R.id.action_no_visita).setVisible(false);
                         menuRutas.findItem(R.id.action_reprogramar).setVisible(false);
                     }
@@ -381,6 +415,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
                     }
                 }
                 menuRutas.findItem(R.id.action_cambiar_contacto).setVisible(false);
+                menuRutas.findItem(R.id.action_suspender_agenda).setVisible(false);
                 menuRutas.findItem(R.id.action_no_visita).setVisible(false);
                 menuRutas.findItem(R.id.action_reprogramar).setVisible(false);
                 if(rutasDetailfragment != null)

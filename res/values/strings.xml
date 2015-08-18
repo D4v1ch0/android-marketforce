@@ -84,6 +84,7 @@
     <string name="label_desde_graph">Desde %s</string>
     <string name="label_empty_agenda">No hay visitas programadas para hoy</string>
     <string name="action_cambiar_contacto">Cambiar Contacto</string>
+    <string name="action_suspender_agenda">Solicitud de Anulación</string>
     <string name="action_observaciones">Observaciones</string>
     <string name="label_tipo_persona">Tipo de Persona</string>
     <string name="label_primer_nombre">Primer Nombre</string>
