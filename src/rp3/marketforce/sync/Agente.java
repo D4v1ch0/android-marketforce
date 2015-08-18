@@ -42,6 +42,8 @@ public class Agente {
                 if(!jObject.isNull(Contants.KEY_FOTO))
                     PreferenceManager.setValue(Contants.KEY_FOTO, jObject.getString(Contants.KEY_FOTO));
 				PreferenceManager.setValue(Contants.KEY_ES_SUPERVISOR, jObject.getBoolean(Contants.KEY_ES_SUPERVISOR));
+                if(!jObject.isNull(Contants.KEY_ID_SUPERVISOR))
+                    PreferenceManager.setValue(Contants.KEY_ID_SUPERVISOR, jObject.getInt(Contants.KEY_ID_SUPERVISOR));
 				PreferenceManager.setValue(Contants.KEY_ES_AGENTE, jObject.getBoolean(Contants.KEY_ES_AGENTE));
 				PreferenceManager.setValue(Contants.KEY_ES_ADMINISTRADOR, jObject.getBoolean(Contants.KEY_ES_ADMINISTRADOR));
 				PreferenceManager.setValue(Contants.KEY_CARGO, jObject.getString(Contants.KEY_CARGO));
