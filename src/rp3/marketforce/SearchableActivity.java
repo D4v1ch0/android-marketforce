@@ -236,7 +236,7 @@ public class SearchableActivity extends BaseActivity
 				break;
 			case R.id.action_ver_posicion:
 				if (!ConnectionUtils.isNetAvailable(this)) {
-					Toast.makeText(this, "Sin Conexi髇. Active el acceso a internet para entrar a esta opci髇.", Toast.LENGTH_LONG).show();
+					Toast.makeText(this, "Sin Conexi贸n. Active el acceso a internet para entrar a esta opci贸n.", Toast.LENGTH_LONG).show();
 				} else if (selectedClientId != 0) {
 					Intent intent3 = new Intent(this, MapaActivity.class);
 					intent3.putExtra(MapaActivity.ACTION_TYPE, MapaActivity.ACTION_POSICION_CLIENTE);
@@ -248,7 +248,7 @@ public class SearchableActivity extends BaseActivity
 				return true;
 			case R.id.action_como_llegar:
 				if (!ConnectionUtils.isNetAvailable(this)) {
-					Toast.makeText(this, "Sin Conexi髇. Active el acceso a internet para entrar a esta opci髇.", Toast.LENGTH_LONG).show();
+					Toast.makeText(this, "Sin Conexi贸n. Active el acceso a internet para entrar a esta opci贸n.", Toast.LENGTH_LONG).show();
 				} else if (selectedClientId != 0) {
 					Intent intent4 = new Intent(this, MapaActivity.class);
 					intent4.putExtra(MapaActivity.ACTION_TYPE, MapaActivity.ACTION_LLEGAR_CLIENTE);
