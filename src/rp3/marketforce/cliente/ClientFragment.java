@@ -41,7 +41,8 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
     private Menu menu;
 	public boolean mTwoPane = false;
     public boolean isActiveListFragment = true;
-	private long selectedClientId;	
+	private long selectedClientId;
+	private boolean isContact = false;
     
 	public static ClientFragment newInstance(int transactionTypeId) {
 		ClientFragment fragment = new ClientFragment();
@@ -169,7 +170,7 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
                 menu.findItem(R.id.action_crear_cliente).setVisible(false);
 
             if(PreferenceManager.getBoolean(Contants.KEY_PERMITIR_MODIFICACION))
-                menu.findItem(R.id.action_editar_cliente).setVisible(!isActiveListFragment);
+                menu.findItem(R.id.action_editar_cliente).setVisible(!isActiveListFragment && !isContact);
             else
                 menu.findItem(R.id.action_editar_cliente).setVisible(false);
         }
@@ -181,7 +182,7 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
                 menu.findItem(R.id.action_crear_cliente).setVisible(false);
 
             if(PreferenceManager.getBoolean(Contants.KEY_PERMITIR_MODIFICACION))
-                menu.findItem(R.id.action_editar_cliente).setVisible(selectedClientId!=0);
+                menu.findItem(R.id.action_editar_cliente).setVisible(selectedClientId!=0 && !isContact);
             else
                 menu.findItem(R.id.action_editar_cliente).setVisible(false);
 
@@ -193,9 +194,13 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
 		selectedClientId = cl.getID();
 
 		if(!mTwoPane) {
-            slidingPane.closePane();
-            isActiveListFragment = false;
-        }
+			slidingPane.closePane();
+			isActiveListFragment = false;
+		}
+		if(cl.getTipoPersona().equalsIgnoreCase("C"))
+			isContact = true;
+		else
+			isContact = false;
         RefreshMenu();
 
 		transactionDetailFragment = ClientDetailFragment.newInstance(cl);

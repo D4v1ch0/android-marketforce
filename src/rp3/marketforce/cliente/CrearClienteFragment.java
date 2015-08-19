@@ -672,42 +672,46 @@ public class CrearClienteFragment extends BaseFragment {
 			setPageConfig(PagerDetalles.getCurrentItem());
             rotated = true;
 		}
-		TabInfo.setOnClickListener(new OnClickListener(){
+		TabInfo.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				PagerDetalles.setCurrentItem(0);
-			}});
+            @Override
+            public void onClick(View v) {
+                PagerDetalles.setCurrentItem(0);
+            }
+        });
 		
-		TabDirecciones.setOnClickListener(new OnClickListener(){
+		TabDirecciones.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				PagerDetalles.setCurrentItem(1);
-			}});
+            @Override
+            public void onClick(View v) {
+                PagerDetalles.setCurrentItem(1);
+            }
+        });
 		
-		TabContactos.setOnClickListener(new OnClickListener(){
+		TabContactos.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				PagerDetalles.setCurrentItem(2);
-			}});
+            @Override
+            public void onClick(View v) {
+                PagerDetalles.setCurrentItem(2);
+            }
+        });
 		
-		PagerDetalles.setOnPageChangeListener(new OnPageChangeListener(){
+		PagerDetalles.setOnPageChangeListener(new OnPageChangeListener() {
 
-			@Override
-			public void onPageScrollStateChanged(int arg0) {
-			}
+            @Override
+            public void onPageScrollStateChanged(int arg0) {
+            }
 
-			@Override
-			public void onPageScrolled(int arg0, float arg1, int arg2) {
-			}
+            @Override
+            public void onPageScrolled(int arg0, float arg1, int arg2) {
+            }
 
-			@Override
-			public void onPageSelected(int arg0) {
-				setPageConfig(arg0);
-				
-			}});
+            @Override
+            public void onPageSelected(int arg0) {
+                setPageConfig(arg0);
+
+            }
+        });
         if(getArguments().containsKey(ARG_TIPO) && getArguments().getInt(ARG_TIPO) != 0 && !rotated)
         {
             tipo = getArguments().getInt(ARG_TIPO);
@@ -726,17 +730,17 @@ public class CrearClienteFragment extends BaseFragment {
         SimpleDateFormat format1 = new SimpleDateFormat("dd MMMM yyyy");
 		Cliente cli = Cliente.getClienteID(getDataBase(), idCliente, true);
 		((Spinner)info.findViewById(R.id.cliente_canal)).setSelection(getPosition(((Spinner)info.findViewById(R.id.cliente_canal)).getAdapter(), cli.getIdCanal()));
-		((Spinner)info.findViewById(R.id.cliente_tipo_identificacion)).setSelection(getPosition(((Spinner)info.findViewById(R.id.cliente_tipo_identificacion)).getAdapter(), cli.getTipoIdentificacionId()));
+		((Spinner)info.findViewById(R.id.cliente_tipo_identificacion)).setSelection(getPosition(((Spinner) info.findViewById(R.id.cliente_tipo_identificacion)).getAdapter(), cli.getTipoIdentificacionId()));
 		((EditText)info.findViewById(R.id.cliente_identificacion)).setText(cli.getIdentificacion());
-		((Spinner)info.findViewById(R.id.crear_cliente_tipo_persona)).setSelection(getPosition(((Spinner)info.findViewById(R.id.crear_cliente_tipo_persona)).getAdapter(), cli.getTipoPersona()));
-		((Spinner)info.findViewById(R.id.cliente_tipo_cliente)).setSelection(getPosition(((Spinner)info.findViewById(R.id.cliente_tipo_cliente)).getAdapter(), cli.getIdTipoCliente()));
+		((Spinner)info.findViewById(R.id.crear_cliente_tipo_persona)).setSelection(getPosition(((Spinner) info.findViewById(R.id.crear_cliente_tipo_persona)).getAdapter(), cli.getTipoPersona()));
+		((Spinner)info.findViewById(R.id.cliente_tipo_cliente)).setSelection(getPosition(((Spinner) info.findViewById(R.id.cliente_tipo_cliente)).getAdapter(), cli.getIdTipoCliente()));
         if(cli.getFechaNacimiento() != null && cli.getFechaNacimiento().getTime() != 0) {
             ((EditText) info.findViewById(R.id.cliente_fecha_nacimiento)).setText(format1.format(cli.getFechaNacimiento()));
             cliente.setFechaNacimiento(cli.getFechaNacimiento());
         }
-		DManager.fetchDrawableOnThread(PreferenceManager.getString("server") + 
-				rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + Utils.getImageDPISufix(getActivity(), cli.getURLFoto()), 
-				(ImageButton)info.findViewById(R.id.cliente_foto));
+		DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
+                        rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + Utils.getImageDPISufix(getActivity(), cli.getURLFoto()),
+                (ImageButton) info.findViewById(R.id.cliente_foto));
 		if(cli.getTipoPersona().equalsIgnoreCase("N"))
 		{
 			((EditText)info.findViewById(R.id.cliente_primer_nombre)).setText(cli.getNombre1());
@@ -813,31 +817,31 @@ public class CrearClienteFragment extends BaseFragment {
 	    myAlertDialog.setMessage("Obtener de");
 
 	    myAlertDialog.setPositiveButton("Galería",
-	            new DialogInterface.OnClickListener() {
-	                public void onClick(DialogInterface arg0, int arg1) {
-	                	Intent galleryIntent = new Intent();
-	            	    galleryIntent.setType("image/*");
-	            	    galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-	                    galleryIntent.putExtra("return-data", true);
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        Intent galleryIntent = new Intent();
+                        galleryIntent.setType("image/*");
+                        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                        galleryIntent.putExtra("return-data", true);
                         galleryIntent.putExtra("crop", "true");
                         galleryIntent.putExtra("aspectX", 1);
                         galleryIntent.putExtra("aspectY", 1);
-	                    getActivity().startActivityForResult(galleryIntent, idView);
-	                }
-	            });
+                        getActivity().startActivityForResult(galleryIntent, idView);
+                    }
+                });
 
 	    myAlertDialog.setNegativeButton("Cámara",
-	            new DialogInterface.OnClickListener() {
-	                public void onClick(DialogInterface arg0, int arg1) {
-	                	Intent captureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-	            	    captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photo);
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        Intent captureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                        captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photo);
                         captureIntent.putExtra("crop", "true");
                         captureIntent.putExtra("aspectX", 1);
                         captureIntent.putExtra("aspectY", 1);
-	                    getActivity().startActivityForResult(captureIntent, idView);
+                        getActivity().startActivityForResult(captureIntent, idView);
 
-	                }
-	            });
+                    }
+                });
 	    myAlertDialog.show();	
 	}
 
@@ -944,24 +948,26 @@ public class CrearClienteFragment extends BaseFragment {
 		final LinearLayout contacto = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.layout_cliente_contacto_detail, null);
 		final int pos = listViewContactos.size();
         contacto.findViewById(R.id.cliente_nombres).requestFocus();
-		((Button) contacto.findViewById(R.id.eliminar_contacto)).setOnClickListener(new OnClickListener(){
+		((Button) contacto.findViewById(R.id.eliminar_contacto)).setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				listViewContactos.remove(contacto);
-				ContactosContainer.removeView(contacto);
-				contactPhotos.remove(pos);
-			}});
+            @Override
+            public void onClick(View v) {
+                listViewContactos.remove(contacto);
+                ContactosContainer.removeView(contacto);
+                contactPhotos.remove(pos);
+            }
+        });
 		contactPhotos.add("");
 		((Spinner) contacto.findViewById(R.id.cliente_direccion_contacto)).setAdapter(getDirecciones());
-		((ImageButton) contacto.findViewById(R.id.cliente_contacto_foto)).setOnClickListener(new OnClickListener(){
+		((ImageButton) contacto.findViewById(R.id.cliente_contacto_foto)).setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				posContact = pos;
-				isClient = false;	
-				takePicture(1);
-			}});
+            @Override
+            public void onClick(View v) {
+                posContact = pos;
+                isClient = false;
+                takePicture(1);
+            }
+        });
 		ContactosContainer.addView(contacto);
 		listViewContactos.add(contacto);
         SetCamposContactos();
@@ -1013,23 +1019,30 @@ public class CrearClienteFragment extends BaseFragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {
             Bitmap pree = null;
-            if(data.getData() != null) {
-                try {
-                    pree = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            if(data != null) {
+                if (data.getData() != null) {
+                    try {
+                        pree = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else if (data.getExtras().containsKey("data"))
+                    pree = (Bitmap) data.getExtras().get("data");
+                else
+                    try {
+                        photo = Uri.parse(data.getAction());
+                        pree = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), photo);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
             }
-            else
-            if(data.getExtras().containsKey("data"))
-                pree = (Bitmap)data.getExtras().get("data");
-            else
+            else {
                 try {
-                    photo = Uri.parse(data.getAction());
                     pree = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), photo);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
 			if(isClient)
 			{
                 ((ImageButton) info.findViewById(R.id.cliente_foto)).setImageBitmap(pree);

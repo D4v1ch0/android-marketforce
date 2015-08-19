@@ -46,7 +46,7 @@
     <string name="label_ciudad">Ciudad</string>
     <string name="hint_search_transaction">Buscar</string>
     <string name="hint_search_transaction_rutas">Buscar</string>
-    <string name="title_activity_searchable">Búqueda</string>
+    <string name="title_activity_searchable">Búsqueda</string>
     <string name="label_recordarme">Recordarme</string>
     <string name="label_registtrarse">Registrarse</string>
     <string name="label_olvido_clave">¿Olvidó su contraseña?</string>
