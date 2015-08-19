@@ -11,6 +11,7 @@ import rp3.marketforce.utils.DrawableManager;
 import rp3.marketforce.utils.Utils;
 import rp3.util.BitmapUtils;
 import rp3.util.Screen;
+import rp3.util.ViewUtils;
 import rp3.widget.ViewPager;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -639,9 +640,9 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	
 	private void renderClienteJuridico(View rootView)
 	{
-		boolean telf = false, email = false;
+		boolean telf = false, email = false, pagina_web = false;
 		hideDialogConfirmation();
-        String email_str = "";
+        String email_str = "", pagina_Web_str = "";
 
 		testArrayDetails = this.getActivity().getResources()
 				.getStringArray(R.array.testArrayDetailsJuridico);
@@ -695,7 +696,9 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 					if (!client.getPaginaWeb().equals("null"))
 						str_titulo = "" + client.getPaginaWeb();
 
+				pagina_Web_str = str_titulo;
 				flag = false;
+				pagina_web = true;
 				break;
 				
 			case ITEM_ACTIVIDAD:
@@ -748,6 +751,17 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
                     ((TextView) view_rowlist.findViewById(R.id.textView_content)).setPaintFlags(((TextView) view_rowlist.findViewById(R.id.textView_content)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
                     ((TextView) view_rowlist.findViewById(R.id.textView_content)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
 					email = false;
+				}
+				if(pagina_web)
+				{
+					((TextView) view_rowlist
+							.findViewById(R.id.textView_content)).setClickable(true);
+					final String finalpagina_Web = pagina_Web_str;
+					ViewUtils.setLinkActionClickListener(((TextView) view_rowlist
+							.findViewById(R.id.textView_content)), finalpagina_Web);
+					((TextView) view_rowlist.findViewById(R.id.textView_content)).setPaintFlags(((TextView) view_rowlist.findViewById(R.id.textView_content)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+					((TextView) view_rowlist.findViewById(R.id.textView_content)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
+					pagina_web = false;
 				}
 
 				linearLayoutRigth.addView(view_rowlist);

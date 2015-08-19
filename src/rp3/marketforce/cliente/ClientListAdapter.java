@@ -56,6 +56,15 @@ public class ClientListAdapter extends SectionAdapter{
             this.clienteListFragmentCallback = clienteListFragmentCallback;
         }
 	}
+
+	public void swapElements(ArrayList<ArrayList<rp3.marketforce.models.Cliente>> data, List<String> headersortList,
+							  int order,ClienteListFragmentListener clienteListFragmentCallback) {
+		this.dataList = data;
+		this.headersortList = headersortList;
+		this.order = order;
+		this.clienteListFragmentCallback = clienteListFragmentCallback;
+
+	}
 	
 	@Override
 	public Object getItem(int pos) {	

@@ -389,8 +389,12 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 
                     list_order.add(list_aux);
                 }
-                adapter = new ClientListAdapter(this.getActivity(), list_order, headersortList, ORDER_BY_NAME, clienteListFragmentCallback);
-                headerList.setAdapter(adapter);
+                if(adapter == null) {
+                    adapter = new ClientListAdapter(this.getActivity(), list_order, headersortList, ORDER_BY_NAME, clienteListFragmentCallback);
+                    headerList.setAdapter(adapter);
+                }
+                else
+                    adapter.swapElements(list_order, headersortList, ORDER_BY_LAST_NAME, clienteListFragmentCallback);
                 adapter.notifyDataSetChanged();
                 if (clienteListFragmentCallback.allowSelectedItem())
                     clienteListFragmentCallback.onClienteSelected(list_order.get(0).get(0));
@@ -453,8 +457,12 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 
                     list_order.add(list_aux);
                 }
-                adapter = new ClientListAdapter(this.getActivity(), list_order, headersortList, ORDER_BY_LAST_NAME, clienteListFragmentCallback);
-                headerList.setAdapter(adapter);
+                if(adapter == null) {
+                    adapter = new ClientListAdapter(this.getActivity(), list_order, headersortList, ORDER_BY_NAME, clienteListFragmentCallback);
+                    headerList.setAdapter(adapter);
+                }
+                else
+                    adapter.swapElements(list_order, headersortList, ORDER_BY_LAST_NAME, clienteListFragmentCallback);
                 adapter.notifyDataSetChanged();
                 if (clienteListFragmentCallback.allowSelectedItem())
                     clienteListFragmentCallback.onClienteSelected(list_order.get(0).get(0));
