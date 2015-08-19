@@ -1,21 +1,28 @@
 package rp3.marketforce;
 
+import rp3.configuration.PreferenceManager;
 import rp3.marketforce.R;
 import rp3.app.BaseActivity;
 import rp3.marketforce.cliente.ClientDetailFragment;
 import rp3.marketforce.cliente.ClientDetailFragment.ClienteDetailFragmentListener;
 import rp3.marketforce.cliente.ClientListFragment;
+import rp3.marketforce.cliente.CrearClienteActivity;
+import rp3.marketforce.cliente.ImportChooseFragment;
 import rp3.marketforce.models.Cliente;
+import rp3.marketforce.ruta.MapaActivity;
+import rp3.util.ConnectionUtils;
 import rp3.widget.SlidingPaneLayout;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
+import android.widget.Toast;
 
 
 public class SearchableActivity extends BaseActivity
@@ -35,6 +42,9 @@ public class SearchableActivity extends BaseActivity
 	private ClientDetailFragment clientDetailFragment;
 	private ClientListFragment clientListFragment;
 	private SlidingPaneLayout slidingPane;
+	public boolean isActiveListFragment = true;
+	private Menu menu;
+	private boolean isContact = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +82,30 @@ public class SearchableActivity extends BaseActivity
 			mTwoPane = true;
 		else
 			mTwoPane = false;
+
+		slidingPane.setPanelSlideListener(new SlidingPaneLayout.PanelSlideListener(){
+
+			@Override
+			public void onPanelSlide(View panel, float slideOffset) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onPanelOpened(View panel) {
+				isActiveListFragment = true;
+				//getActivity().getActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
+				RefreshMenu();
+			}
+
+			@Override
+			public void onPanelClosed(View panel) {
+				isActiveListFragment = false;
+				// if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.JELLY_BEAN_MR2) {
+				// getActivity().getActionBar().setHomeButtonEnabled(true);
+				//}
+				RefreshMenu();
+			}});
 		
 		if(savedInstanceState!=null){
 			selectedClientId = savedInstanceState.getLong(STATE_SELECTED_ID);
@@ -109,19 +143,49 @@ public class SearchableActivity extends BaseActivity
 //			Log.e("TAG","NULL");
 //		}
 	}
+
+	private void RefreshMenu(){
+		if(!mTwoPane){
+			menu.findItem(R.id.action_search).setVisible(false);
+			menu.findItem(R.id.submenu_rutas).setVisible(!isActiveListFragment);
+			if(PreferenceManager.getBoolean(Contants.KEY_PERMITIR_CREACION))
+				menu.findItem(R.id.action_crear_cliente).setVisible(isActiveListFragment);
+			else
+				menu.findItem(R.id.action_crear_cliente).setVisible(false);
+
+			if(PreferenceManager.getBoolean(Contants.KEY_PERMITIR_MODIFICACION))
+				menu.findItem(R.id.action_editar_cliente).setVisible(!isActiveListFragment && !isContact);
+			else
+				menu.findItem(R.id.action_editar_cliente).setVisible(false);
+		}
+		else{
+			menu.findItem(R.id.action_search).setVisible(false);
+			if(PreferenceManager.getBoolean(Contants.KEY_PERMITIR_CREACION))
+				menu.findItem(R.id.action_crear_cliente).setVisible(isActiveListFragment);
+			else
+				menu.findItem(R.id.action_crear_cliente).setVisible(false);
+
+			if(PreferenceManager.getBoolean(Contants.KEY_PERMITIR_MODIFICACION))
+				menu.findItem(R.id.action_editar_cliente).setVisible(selectedClientId!=0 && !isContact);
+			else
+				menu.findItem(R.id.action_editar_cliente).setVisible(false);
+
+		}
+	}
 	
 	@Override
 	public void onClienteSelected(Cliente cliente) {
 		
 		selectedClientId = cliente.getID();
 		tipoPersona = cliente.getTipoPersona();
-		
+
 		clientDetailFragment = ClientDetailFragment.newInstance(cliente);
-		setVisibleEditActionButtons( selectedClientId != 0 );						
+		setVisibleEditActionButtons(selectedClientId != 0 );
 		setFragment(R.id.content_transaction_detail, clientDetailFragment);	
 		
 		if(!mTwoPane)
-			slidingPane.closePane();		      							  
+			slidingPane.closePane();
+
 	}
 
 	
@@ -133,41 +197,13 @@ public class SearchableActivity extends BaseActivity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.searchable, menu);		
-		
-//		menuItemActionEdit = menu.findItem(R.id.action_edit);
-//		menuItemActionDiscard = menu.findItem(R.id.action_discard);	    
-	    
-		boolean visibleActionDetail = mTwoPane && selectedClientId != 0;
-        setVisibleEditActionButtons(visibleActionDetail);
-        
-		MenuItem searchViewItem = menu.findItem(R.id.action_search);
-	    SearchView searchView = (SearchView) searchViewItem.getActionView();
-	    
-	    int searchPlateId = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
-	  	 EditText searchPlate = (EditText) searchView.findViewById(searchPlateId);
-	  	 searchPlate.setHintTextColor(getResources().getColor(R.color.color_hint));
-	  	 searchPlate.setTextColor(getResources().getColor(R.color.apptheme_color));
-	  	 searchPlate.setBackgroundResource(R.drawable.apptheme_edit_text_holo_light);
+		this.menu = menu;
+		getMenuInflater().inflate(R.menu.fragment_client_menu, menu);
 
-	    searchView.setIconifiedByDefault(false);
-	    searchView.setQuery(query, false);
-	    searchView.setOnQueryTextListener(new OnQueryTextListener() {
-			
-			@Override
-			public boolean onQueryTextSubmit(String query) {
-				
-				executeSearch(query);				
-				setFragment(R.id.content_transaction_detail, ClientDetailFragment.newInstance(0));					
-				return true;
-			}
-			
-			@Override
-			public boolean onQueryTextChange(String newText) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-		});
+//		menuItemActionEdit = menu.findItem(R.id.action_edit);
+//		menuItemActionDiscard = menu.findItem(R.id.action_discard);
+
+		RefreshMenu();
 	    
 		return true;
 	}
@@ -186,16 +222,44 @@ public class SearchableActivity extends BaseActivity
             		this.finish();
             	}
                 return true;
-            case R.id.action_edit:
-    			
-//    			Intent intent = new Intent(this,TransactionEditActivity.class);
-//    			intent.putExtra(TransactionEditActivity.EXTRA_TRANSACTIONID, selectedTransactionId);    			
-//    			startActivity(intent);
-    			
-    			return true;
-    		case R.id.action_discard:    			
-//    			transactionDetailFragment.beginDelete();    			
-    			return true;
+			case R.id.action_editar_cliente:
+				Intent intent2 = new Intent(this, CrearClienteActivity.class);
+				intent2.putExtra(CrearClienteActivity.ARG_IDCLIENTE, selectedClientId);
+				startActivity(intent2);
+				break;
+			case R.id.action_crear_cliente:
+				Intent intent = new Intent(this, CrearClienteActivity.class);
+				startActivity(intent);
+				break;
+			case R.id.action_import_contacts:
+				showDialogFragment(ImportChooseFragment.newInstance(), "Import");
+				break;
+			case R.id.action_ver_posicion:
+				if (!ConnectionUtils.isNetAvailable(this)) {
+					Toast.makeText(this, "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
+				} else if (selectedClientId != 0) {
+					Intent intent3 = new Intent(this, MapaActivity.class);
+					intent3.putExtra(MapaActivity.ACTION_TYPE, MapaActivity.ACTION_POSICION_CLIENTE);
+					intent3.putExtra(MapaActivity.ARG_AGENDA, selectedClientId);
+					startActivity(intent3);
+				} else {
+					Toast.makeText(this, "Debe seleccionar una cliente.", Toast.LENGTH_LONG).show();
+				}
+				return true;
+			case R.id.action_como_llegar:
+				if (!ConnectionUtils.isNetAvailable(this)) {
+					Toast.makeText(this, "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
+				} else if (selectedClientId != 0) {
+					Intent intent4 = new Intent(this, MapaActivity.class);
+					intent4.putExtra(MapaActivity.ACTION_TYPE, MapaActivity.ACTION_LLEGAR_CLIENTE);
+					intent4.putExtra(MapaActivity.ARG_AGENDA, selectedClientId);
+					startActivity(intent4);
+				} else {
+					Toast.makeText(this, R.string.warning_seleccionar_cliente, Toast.LENGTH_LONG).show();
+				}
+				return true;
+			default:
+				break;
         }
         
         return super.onOptionsItemSelected(item);
