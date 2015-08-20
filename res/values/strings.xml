@@ -193,5 +193,6 @@
     <string name="label_mensaje">Mensaje</string>
     <string name="label_enviar_notificacion">Enviar Notificación</string>
     <string name="gcm_defaultSenderId">313284335192</string>
+    <string name="label_agentes">Agentes</string>
 
 </resources>
