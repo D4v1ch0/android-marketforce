@@ -126,8 +126,15 @@ public class JustificacionFragment extends BaseFragment {
             permiso = new Permiso();
         else
         {
-            ((TextView) rootView.findViewById(R.id.justificacion_text)).setText(permiso.getObservacion());
-            ((Spinner)rootView.findViewById(R.id.justificacion_motivos)).setSelection(getPosition(((Spinner) rootView.findViewById(R.id.justificacion_motivos)).getAdapter(), permiso.getTipo()));
+            try {
+                ((TextView) rootView.findViewById(R.id.justificacion_text)).setText(permiso.getObservacion());
+                ((Spinner)rootView.findViewById(R.id.justificacion_motivos)).setSelection(getPosition(((Spinner) rootView.findViewById(R.id.justificacion_motivos)).getAdapter(), permiso.getTipo()));
+            }
+            catch (Exception ex)
+            {
+                ex.printStackTrace();
+            }
+
         }
     }
 
