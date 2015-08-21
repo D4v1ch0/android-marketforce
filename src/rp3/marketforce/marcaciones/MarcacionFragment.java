@@ -23,6 +23,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import rp3.app.BaseActivity;
@@ -76,6 +77,7 @@ public class MarcacionFragment extends BaseFragment {
         ((ImageView) getRootView().findViewById(R.id.point_semana)).setImageResource(R.drawable.circle_shape);
 
         List<DiaMarcacion> marcacionList = getDiasMarcaciones();
+        Collections.sort(marcacionList);
         if (marcacionList.size() > 0) {
             MarcacionAdapter adapter = new MarcacionAdapter(this.getContext(), marcacionList);
             ((ListView) historico.findViewById(R.id.list_marcaciones)).setAdapter(adapter);
@@ -303,6 +305,8 @@ public class MarcacionFragment extends BaseFragment {
 
             if(setter.getMintutosAtraso() > 0)
                 dia.atraso = true;
+
+            dia.ticks = setter.getFecha().getTime();
         }
         list.add(dia);
         return list;
@@ -671,14 +675,30 @@ public class MarcacionFragment extends BaseFragment {
         }
     }
 
-    public class DiaMarcacion
+    public class DiaMarcacion implements Comparable
     {
         public String dia;
         public String fecha;
+        public long ticks;
         public String inicio_jornada1;
         public String fin_jornada1;
         public String inicio_jornada2;
         public String fin_jornada2;
         public boolean atraso;
+
+        @Override
+        public int compareTo(Object o) {
+            DiaMarcacion f = (DiaMarcacion)o;
+
+            if (ticks > f.ticks) {
+                return -1;
+            }
+            else if (ticks <  f.ticks) {
+                return 1;
+            }
+            else {
+                return 0;
+            }
+        }
     }
 }
