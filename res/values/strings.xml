@@ -68,6 +68,8 @@
     <string name="label_hasta">Hasta:</string>
     <string name="label_cliente">Cliente</string>
     <string name="label_crear_visita">Crear Visita</string>
+    <string name="label_ver_agentes">Ver Agentes</string>
+    <string name="label_ver_rutas">Ver Rutas</string>
     <string name="label_conf_tareas">Agregar Tareas</string>
     <string name="label_menu_ver_rutas">Ver Rutas</string>
     <string name="label_menu_ver_posicion">Mostrar Ubicación</string>
@@ -191,6 +193,7 @@
     <string name="label_mensaje">Mensaje</string>
     <string name="label_enviar_notificacion">Enviar Notificación</string>
     <string name="gcm_defaultSenderId">313284335192</string>
+    <string name="label_agentes">Agentes</string>
     <!-- Modulo Oportunidad -->
     <string name="title_option_oportunidad">Oportunidades</string>
     <string name="label_crear_oportunidad">Crear</string>

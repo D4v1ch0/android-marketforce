@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/action_ver_ruta" android:icon="@drawable/ic_rutas" android:title="@string/label_ver_rutas"
+    <item android:id="@+id/action_ver_agentes" android:icon="@drawable/ic_datos" android:title="@string/label_ver_agentes"
         android:showAsAction="always|collapseActionView"     ></item>
 </menu>

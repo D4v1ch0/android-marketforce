@@ -8,12 +8,14 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.view.InflateException;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -32,6 +34,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.lang.reflect.Type;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,22 +52,27 @@ import rp3.marketforce.R;
 import rp3.marketforce.models.AgenteUbicacion;
 import rp3.marketforce.models.Ubicacion;
 import rp3.marketforce.resumen.AgenteDetalleFragment;
+import rp3.marketforce.ruta.MapaActivity;
 import rp3.marketforce.sync.SyncAdapter;
+import rp3.util.ConnectionUtils;
 import rp3.util.GooglePlayServicesUtils;
 import rp3.util.LocationUtils;
 
 /**
  * Created by magno_000 on 27/03/2015.
  */
-public class RadarFragment extends BaseFragment {
+public class RadarFragment extends BaseFragment implements AgenteRadarFragment.AgenteRadarDialogListener {
     private GoogleMap map;
     private AgenteDetalleFragment agenteDetalleFragment;
     private ArrayList<Marker> markers;
+    private ArrayList<Integer> notShow;
     private static View view;
     private Calendar cal;
     private SimpleDateFormat format1;
     private LatLng sup;
     private SupportMapFragment mapFragment;
+    private boolean ub1 = true, ub2 = true, ub3 = true, ub4 = true;
+    List<AgenteUbicacion> list_ubicaciones;
 
     public static RadarFragment newInstance() {
         RadarFragment fragment = new RadarFragment();
@@ -75,7 +83,9 @@ public class RadarFragment extends BaseFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         setRetainInstance(true);
-        setContentView(R.layout.fragment_radar);
+        if(notShow == null)
+            notShow = new ArrayList<Integer>();
+        setContentView(R.layout.fragment_radar, R.menu.fragment_radar_menu);
 
     }
 
@@ -99,6 +109,62 @@ public class RadarFragment extends BaseFragment {
             ((TextView)view.findViewById(R.id.radar_ubicacion2)).setText(PreferenceManager.getInt(Contants.KEY_AGENTE_UBICACION_2, 24) + " hora(s)");
             ((TextView)view.findViewById(R.id.radar_ubicacion3)).setText(PreferenceManager.getInt(Contants.KEY_AGENTE_UBICACION_3, 48) + " hora(s)");
             ((TextView)view.findViewById(R.id.radar_ubicacion4)).setText("+ " + PreferenceManager.getInt(Contants.KEY_AGENTE_UBICACION_3, 48) + " hora(s)");
+            if(!ub1)((TextView) view.findViewById(R.id.radar_ubicacion1)).setTypeface(null, Typeface.NORMAL);
+            if(!ub2)((TextView) view.findViewById(R.id.radar_ubicacion2)).setTypeface(null, Typeface.NORMAL);
+            if(!ub3)((TextView) view.findViewById(R.id.radar_ubicacion3)).setTypeface(null, Typeface.NORMAL);
+            if(!ub4)((TextView) view.findViewById(R.id.radar_ubicacion4)).setTypeface(null, Typeface.NORMAL);
+            view.findViewById(R.id.radar_ubicacion1).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (((TextView) v).getTypeface() != null && ((TextView) v).getTypeface().isBold()) {
+                        ((TextView) v).setTypeface(null, Typeface.NORMAL);
+                        ub1 = false;
+                    } else {
+                        ((TextView) v).setTypeface(null, Typeface.BOLD);
+                        ub1 = true;
+                    }
+                    SetOldPoints();
+                }
+            });
+            view.findViewById(R.id.radar_ubicacion2).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (((TextView) v).getTypeface() != null && ((TextView) v).getTypeface().isBold()) {
+                        ((TextView) v).setTypeface(null, Typeface.NORMAL);
+                        ub2 = false;
+                    } else {
+                        ((TextView) v).setTypeface(null, Typeface.BOLD);
+                        ub2 = true;
+                    }
+                    SetOldPoints();
+                }
+            });
+            view.findViewById(R.id.radar_ubicacion3).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (((TextView) v).getTypeface() != null && ((TextView) v).getTypeface().isBold()) {
+                        ((TextView) v).setTypeface(null, Typeface.NORMAL);
+                        ub3 = false;
+                    } else {
+                        ((TextView) v).setTypeface(null, Typeface.BOLD);
+                        ub3 = true;
+                    }
+                    SetOldPoints();
+                }
+            });
+            view.findViewById(R.id.radar_ubicacion4).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (((TextView) v).getTypeface() != null && ((TextView) v).getTypeface().isBold()) {
+                        ((TextView) v).setTypeface(null, Typeface.NORMAL);
+                        ub4 = false;
+                    } else {
+                        ((TextView) v).setTypeface(null, Typeface.BOLD);
+                        ub4 = true;
+                    }
+                    SetOldPoints();
+                }
+            });
             showDialogProgress("Cargando", "Mostrando Mapa");
             new Handler().postDelayed(new Runnable() {
 
@@ -116,6 +182,25 @@ public class RadarFragment extends BaseFragment {
                                 map = googleMap;
                                 view.findViewById(R.id.progress_map).setVisibility(View.GONE);
                                 closeDialogProgress();
+                                view.findViewById(R.id.radar_refresh).setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        notShow = new ArrayList<Integer>();
+                                        ub1 = true;
+                                        ub2 = true;
+                                        ub3 = true;
+                                        ub4 = true;
+                                        ((TextView) view.findViewById(R.id.radar_ubicacion1)).setTypeface(null, Typeface.BOLD);
+                                        ((TextView) view.findViewById(R.id.radar_ubicacion2)).setTypeface(null, Typeface.BOLD);
+                                        ((TextView) view.findViewById(R.id.radar_ubicacion3)).setTypeface(null, Typeface.BOLD);
+                                        ((TextView) view.findViewById(R.id.radar_ubicacion4)).setTypeface(null, Typeface.BOLD);
+                                        showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait);
+
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_AGENTES_UBICACION);
+                                        requestSync(bundle);
+                                    }
+                                });
                                 if(sup == null)
                                     setMapa();
                                 else
@@ -136,24 +221,17 @@ public class RadarFragment extends BaseFragment {
     }
 
     private void SetOldPoints() {
-        view.findViewById(R.id.radar_refresh).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait);
-                Bundle bundle = new Bundle();
-                bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_AGENTES_UBICACION);
-                requestSync(bundle);
-
-            }
-        });
 
         //map = ((MapActivity) getActivity().getFragmentManager().findFragmentById(R.id.recorrido_map)).getMap();
         map.clear();
-        final List<AgenteUbicacion> list_ubicaciones = AgenteUbicacion.getResumen(getDataBase());
+        if(list_ubicaciones == null)
+            list_ubicaciones = AgenteUbicacion.getResumen(getDataBase());
         markers = new ArrayList<Marker>();
         map.addMarker(new MarkerOptions().position(sup));
 
         for (int i = 0; i < list_ubicaciones.size(); i++) {
+            if(notShow.contains(list_ubicaciones.get(i).getIdAgente()))
+                continue;
             LatLng pos = new LatLng(list_ubicaciones.get(i).getLatitud(), list_ubicaciones.get(i).getLongitud());
 
             double distance = SphericalUtil.computeDistanceBetween(pos, sup);
@@ -165,30 +243,40 @@ public class RadarFragment extends BaseFragment {
             long diff = dt2.getTime() - list_ubicaciones.get(i).getFecha().getTime();
             double diffHours = diff / (60 * 60 * 1000);
             if(diffHours < PreferenceManager.getInt(Contants.KEY_AGENTE_UBICACION_1, 1)) {
-                mark = map.addMarker(new MarkerOptions().position(pos)
-                        .icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.map_position, i + 1 + ""))));
-                map.addPolyline(new PolylineOptions().add(pos,sup).color(getResources().getColor(R.color.color_pending)));
+                if(ub1) {
+                    mark = map.addMarker(new MarkerOptions().position(pos)
+                            .icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.map_position, i + 1 + ""))));
+                    map.addPolyline(new PolylineOptions().add(pos, sup).color(getResources().getColor(R.color.color_pending)));
+                }
             }
             else if(diffHours < PreferenceManager.getInt(Contants.KEY_AGENTE_UBICACION_2, 24)) {
-                mark = map.addMarker(new MarkerOptions().position(pos)
-                        .icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.map_verde, i + 1 + ""))));
-                map.addPolyline(new PolylineOptions().add(pos,sup).color(getResources().getColor(R.color.color_visited)));
+                if(ub2) {
+                    mark = map.addMarker(new MarkerOptions().position(pos)
+                            .icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.map_verde, i + 1 + ""))));
+                    map.addPolyline(new PolylineOptions().add(pos, sup).color(getResources().getColor(R.color.color_visited)));
+                }
             }
             else if(diffHours < PreferenceManager.getInt(Contants.KEY_AGENTE_UBICACION_3, 48)) {
-                mark = map.addMarker(new MarkerOptions().position(pos)
-                        .icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.map_naranja, i + 1 + ""))));
-                map.addPolyline(new PolylineOptions().add(pos,sup).color(getResources().getColor(R.color.color_orange)));
+                if(ub3) {
+                    mark = map.addMarker(new MarkerOptions().position(pos)
+                            .icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.map_naranja, i + 1 + ""))));
+                    map.addPolyline(new PolylineOptions().add(pos, sup).color(getResources().getColor(R.color.color_orange)));
+                }
             }
             else {
-                mark = map.addMarker(new MarkerOptions().position(pos)
-                        .icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.map_rojo, i + 1 + ""))));
-                map.addPolyline(new PolylineOptions().add(pos,sup).color(getResources().getColor(R.color.color_unvisited)));
+                if(ub4) {
+                    mark = map.addMarker(new MarkerOptions().position(pos)
+                            .icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.map_rojo, i + 1 + ""))));
+                    map.addPolyline(new PolylineOptions().add(pos, sup).color(getResources().getColor(R.color.color_unvisited)));
+                }
             }
 
-            mark.showInfoWindow();
-            mark.setTitle(list_ubicaciones.get(i).getNombres() + " " + list_ubicaciones.get(i).getApellidos() + " - " + format1.format(list_ubicaciones.get(i).getFecha()));
-            mark.setSnippet(NumberFormat.getInstance().format(distance) + " kilometro(s)." + "\n" + "Touch para enviar notificación.");
-            markers.add(mark);
+            if(mark != null) {
+                mark.showInfoWindow();
+                mark.setTitle(list_ubicaciones.get(i).getNombres() + " " + list_ubicaciones.get(i).getApellidos() + " - " + format1.format(list_ubicaciones.get(i).getFecha()));
+                mark.setSnippet(NumberFormat.getInstance().format(distance) + " kilometro(s)." + "\n" + "Touch para enviar notificación.");
+                markers.add(mark);
+            }
         }
 
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(sup, 12), 2000, null);
@@ -209,6 +297,18 @@ public class RadarFragment extends BaseFragment {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_ver_agentes:
+                AgenteRadarFragment fragment = AgenteRadarFragment.newInstance(notShow);
+                showDialogFragment(fragment, "Agentes","Agentes");
+
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(agenteDetalleFragment != null)
             agenteDetalleFragment.onActivityResult(requestCode, resultCode, data);
@@ -219,18 +319,6 @@ public class RadarFragment extends BaseFragment {
        // map = ((MapActivity) getActivity().getFragmentManager().findFragmentById(R.id.recorrido_map)).getMap();
         map.clear();
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Contants.LATITUD, Contants.LONGITUD), Contants.ZOOM), 1, null);
-
-        view.findViewById(R.id.radar_refresh).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait);
-
-                Bundle bundle = new Bundle();
-                bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_AGENTES_UBICACION);
-                requestSync(bundle);
-
-            }
-        });
 
         if (GooglePlayServicesUtils.servicesConnected((BaseActivity) getActivity())) {
 
@@ -269,11 +357,14 @@ public class RadarFragment extends BaseFragment {
 
     private void SetPoints()
     {
-        final List<AgenteUbicacion> list_ubicaciones = AgenteUbicacion.getResumen(getDataBase());
+        if(list_ubicaciones == null)
+            list_ubicaciones = AgenteUbicacion.getResumen(getDataBase());
         markers = new ArrayList<Marker>();
         map.addMarker(new MarkerOptions().position(sup));
 
         for (int i = 0; i < list_ubicaciones.size(); i++) {
+            if(notShow.contains(list_ubicaciones.get(i).getIdAgente()))
+                continue;
             LatLng pos = new LatLng(list_ubicaciones.get(i).getLatitud(), list_ubicaciones.get(i).getLongitud());
 
             double distance = SphericalUtil.computeDistanceBetween(pos, sup);
@@ -285,30 +376,40 @@ public class RadarFragment extends BaseFragment {
             long diff = dt2.getTime() - list_ubicaciones.get(i).getFecha().getTime();
             double diffHours = diff / (60 * 60 * 1000);
             if(diffHours < PreferenceManager.getInt(Contants.KEY_AGENTE_UBICACION_1, 1)) {
-                mark = map.addMarker(new MarkerOptions().position(pos)
-                        .icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.map_position, i + 1 + ""))));
-                map.addPolyline(new PolylineOptions().add(pos,sup).color(getResources().getColor(R.color.color_pending)));
+                if(ub1) {
+                    mark = map.addMarker(new MarkerOptions().position(pos)
+                            .icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.map_position, i + 1 + ""))));
+                    map.addPolyline(new PolylineOptions().add(pos, sup).color(getResources().getColor(R.color.color_pending)));
+                }
             }
             else if(diffHours < PreferenceManager.getInt(Contants.KEY_AGENTE_UBICACION_2, 24)) {
-                mark = map.addMarker(new MarkerOptions().position(pos)
-                        .icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.map_verde, i + 1 + ""))));
-                map.addPolyline(new PolylineOptions().add(pos,sup).color(getResources().getColor(R.color.color_visited)));
+                if(ub2) {
+                    mark = map.addMarker(new MarkerOptions().position(pos)
+                            .icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.map_verde, i + 1 + ""))));
+                    map.addPolyline(new PolylineOptions().add(pos, sup).color(getResources().getColor(R.color.color_visited)));
+                }
             }
             else if(diffHours < PreferenceManager.getInt(Contants.KEY_AGENTE_UBICACION_3, 48)) {
-                mark = map.addMarker(new MarkerOptions().position(pos)
-                        .icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.map_naranja, i + 1 + ""))));
-                map.addPolyline(new PolylineOptions().add(pos,sup).color(getResources().getColor(R.color.color_orange)));
+                if(ub3) {
+                    mark = map.addMarker(new MarkerOptions().position(pos)
+                            .icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.map_naranja, i + 1 + ""))));
+                    map.addPolyline(new PolylineOptions().add(pos, sup).color(getResources().getColor(R.color.color_orange)));
+                }
             }
             else {
-                mark = map.addMarker(new MarkerOptions().position(pos)
-                        .icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.map_rojo, i + 1 + ""))));
-                map.addPolyline(new PolylineOptions().add(pos,sup).color(getResources().getColor(R.color.color_unvisited)));
+                if(ub4) {
+                    mark = map.addMarker(new MarkerOptions().position(pos)
+                            .icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.map_rojo, i + 1 + ""))));
+                    map.addPolyline(new PolylineOptions().add(pos, sup).color(getResources().getColor(R.color.color_unvisited)));
+                }
             }
 
-            mark.showInfoWindow();
-            mark.setTitle(list_ubicaciones.get(i).getNombres() + " " + list_ubicaciones.get(i).getApellidos() + " - " + format1.format(list_ubicaciones.get(i).getFecha()));
-            mark.setSnippet(NumberFormat.getInstance().format(distance) + " kilometro(s)." + "\n" + "Touch para enviar notificación.");
-            markers.add(mark);
+            if(mark != null) {
+                mark.showInfoWindow();
+                mark.setTitle(list_ubicaciones.get(i).getNombres() + " " + list_ubicaciones.get(i).getApellidos() + " - " + format1.format(list_ubicaciones.get(i).getFecha()));
+                mark.setSnippet(NumberFormat.getInstance().format(distance) + " kilometro(s)." + "\n" + "Touch para enviar notificación.");
+                markers.add(mark);
+            }
         }
 
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(sup, 12), 2000, null);
@@ -353,6 +454,12 @@ public class RadarFragment extends BaseFragment {
 
         canvas.drawText(text, xPos, yPos, paint);
 
-        return  bm;
+        return bm;
+    }
+
+    @Override
+    public void onFinishAgenteRadarDialog(ArrayList<Integer> notShow) {
+        this.notShow = notShow;
+        SetOldPoints();
     }
 }

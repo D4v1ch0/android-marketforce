@@ -1,6 +1,7 @@
 package rp3.marketforce.models;
 
 import android.database.Cursor;
+import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,7 +15,7 @@ import rp3.util.CursorUtils;
 /**
  * Created by magno_000 on 27/03/2015.
  */
-public class AgenteUbicacion extends rp3.data.entity.EntityBase<AgenteResumen>{
+public class AgenteUbicacion extends rp3.data.entity.EntityBase<AgenteResumen> {
 
     private long id;
     private int idAgente;
@@ -23,6 +24,7 @@ public class AgenteUbicacion extends rp3.data.entity.EntityBase<AgenteResumen>{
     private Date fecha;
     private double latitud;
     private double longitud;
+    private boolean show;
 
     public double getLatitud() {
         return latitud;
@@ -40,7 +42,13 @@ public class AgenteUbicacion extends rp3.data.entity.EntityBase<AgenteResumen>{
         this.longitud = longitud;
     }
 
+    public boolean isShow() {
+        return show;
+    }
 
+    public void setShow(boolean show) {
+        this.show = show;
+    }
 
     @Override
     public long getID() {
@@ -137,6 +145,7 @@ public class AgenteUbicacion extends rp3.data.entity.EntityBase<AgenteResumen>{
                 agd.setFecha(CursorUtils.getDate(c, Contract.AgentesUbicacion.FIELD_FECHA));
                 agd.setLatitud(CursorUtils.getDouble(c, Contract.AgentesUbicacion.FIELD_LATITUD));
                 agd.setLongitud(CursorUtils.getDouble(c, Contract.AgentesUbicacion.FIELD_LONGITUD));
+                agd.setShow(true);
                 list.add(agd);
             }while(c.moveToNext());
         }

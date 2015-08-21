@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/agentes_list"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            style="@style/Widget.Button.Theme"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/label_button_cancelar"
+            android:id="@+id/agente_cancelar"
+            android:layout_weight="1"
+            android:layout_margin="3dp" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/label_button_aceptar_act"
+            android:id="@+id/agente_aceptar"
+            style="@style/Widget.Button.Theme"
+            android:layout_weight="1"
+            android:layout_margin="3dp" />
+    </LinearLayout>
+</LinearLayout>
