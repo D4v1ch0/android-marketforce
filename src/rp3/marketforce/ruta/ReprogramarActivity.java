@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import hirondelle.date4j.DateTime;
@@ -48,13 +49,6 @@ import com.roomorama.caldroid.CalendarHelper;
 public class ReprogramarActivity extends BaseActivity {
 	
 	private static final int TIME_PICKER_INTERVAL = 5;
-    public static final int DURACION_15_MINUTOS = 0;
-    public static final int DURACION_30_MINUTOS = 1;
-    public static final int DURACION_45_MINUTOS = 2;
-    public static final int DURACION_60_MINUTOS = 3;
-    public static final int DURACION_90_MINUTOS = 4;
-    public static final int DURACION_120_MINUTOS = 5;
-    public static final int DURACION_180_MINUTOS = 6;
 
     public static final int ID_DURACION = 0;
     public static final int ID_TIEMPO = 1;
@@ -67,10 +61,11 @@ public class ReprogramarActivity extends BaseActivity {
 	private Agenda agenda;
 	private NumberPicker minutePicker;
 	private ArrayList<String> displayedValues;
+    private SimpleGeneralValueAdapter adapterDuracion;
     private String[] arrayDuracion;
     private int duracion = 0, tiempo = 0;
     private CaldroidFragment caldroidFragment;
-    SimpleDateFormat format1 = new SimpleDateFormat("EEEE dd/MM/yyyy HH:mm");
+    SimpleDateFormat format1 = new SimpleDateFormat("HH:mm");
 
     /** Called when the activity is first created. */
 	@Override
@@ -82,8 +77,6 @@ public class ReprogramarActivity extends BaseActivity {
 	    setContentView(R.layout.dialog_reprogramar_agenda, R.menu.fragment_crear_cliente);
 	    
 	    idAgenda = getIntent().getExtras().getLong(ARG_AGENDA);
-        arrayDuracion = this.getResources()
-                .getStringArray(R.array.arrayDuracion);
 	    fecha = Calendar.getInstance();
 	    agenda = Agenda.getAgenda(getDataBase(), idAgenda);
 
@@ -99,6 +92,7 @@ public class ReprogramarActivity extends BaseActivity {
 	    desdePicker.setCurrentMinute(agenda.getFechaInicio().getMinutes() / 5);
 	    desdePicker.setCurrentHour(agenda.getFechaInicio().getHours());
         fecha.setTime(agenda.getFechaInicio());
+        adapterDuracion = new SimpleGeneralValueAdapter(this, getDataBase(), Contants.GENERAL_TABLE_DURACION_VISITA);
         SimpleGeneralValueAdapter motivosAdapter = new SimpleGeneralValueAdapter(this, getDataBase(), Contants.GENERAL_TABLE_MOTIVOS_REPROGRAMACION);
         ((Spinner) findViewById(R.id.reprogramar_motivo)).setAdapter(new NothingSelectedSpinnerAdapter(
                 motivosAdapter,
@@ -131,30 +125,19 @@ public class ReprogramarActivity extends BaseActivity {
         args.putInt(CaldroidFragment.YEAR, fecha.get(Calendar.YEAR));
         caldroidFragment.setArguments(args);
 
-        switch((int)agenda.getDuracion())
-        {
-            case 15: Duracion.setText(arrayDuracion[DURACION_15_MINUTOS]); break;
-            case 30: Duracion.setText(arrayDuracion[DURACION_30_MINUTOS]); break;
-            case 45: Duracion.setText(arrayDuracion[DURACION_45_MINUTOS]); break;
-            case 60: Duracion.setText(arrayDuracion[DURACION_60_MINUTOS]); break;
-            case 90: Duracion.setText(arrayDuracion[DURACION_90_MINUTOS]); break;
-            case 120: Duracion.setText(arrayDuracion[DURACION_120_MINUTOS]); break;
-            case 180: Duracion.setText(arrayDuracion[DURACION_180_MINUTOS]); break;
-            default:  Duracion.setText(arrayDuracion[DURACION_15_MINUTOS]); break;
-        }
-
-        switch((int)agenda.getTiempoViaje())
-        {
-            case 15: TiempoViaje.setText(arrayDuracion[DURACION_15_MINUTOS]); break;
-            case 30: TiempoViaje.setText(arrayDuracion[DURACION_30_MINUTOS]); break;
-            case 45: TiempoViaje.setText(arrayDuracion[DURACION_45_MINUTOS]); break;
-            case 60: TiempoViaje.setText(arrayDuracion[DURACION_60_MINUTOS]); break;
-            case 90: TiempoViaje.setText(arrayDuracion[DURACION_90_MINUTOS]); break;
-            case 120: TiempoViaje.setText(arrayDuracion[DURACION_120_MINUTOS]); break;
-            case 180: TiempoViaje.setText(arrayDuracion[DURACION_180_MINUTOS]); break;
-            default: TiempoViaje.setText(arrayDuracion[DURACION_15_MINUTOS]); break;
-        }
+        Duracion.setText(GeneralValue.getGeneralValue(getDataBase(), Contants.GENERAL_TABLE_DURACION_VISITA, agenda.getDuracion() + "").getValue());
+        TiempoViaje.setText(GeneralValue.getGeneralValue(getDataBase(), Contants.GENERAL_TABLE_DURACION_VISITA, agenda.getTiempoViaje() + "").getValue());
         DesdeText.setText(format1.format(fecha.getTime()));
+
+        duracion = (int) agenda.getDuracion();
+        tiempo = (int) agenda.getTiempoViaje();
+
+        List<String> stringList = new ArrayList<String>();
+        for(int i = 0; i < adapterDuracion.getCount(); i ++)
+            stringList.add(adapterDuracion.getGeneralValue(i).getValue());
+
+        arrayDuracion = new String[stringList.size()];
+        stringList.toArray(arrayDuracion);
 	}
 
     @Override
@@ -171,27 +154,8 @@ public class ReprogramarActivity extends BaseActivity {
 		Calendar cal = Calendar.getInstance();
 		Calendar calFin = Calendar.getInstance();
 
-        switch(duracion)
-        {
-            case DURACION_15_MINUTOS: agenda.setDuracion(15); break;
-            case DURACION_30_MINUTOS: agenda.setDuracion(30); break;
-            case DURACION_45_MINUTOS: agenda.setDuracion(45); break;
-            case DURACION_60_MINUTOS: agenda.setDuracion(60); break;
-            case DURACION_90_MINUTOS: agenda.setDuracion(90); break;
-            case DURACION_120_MINUTOS: agenda.setDuracion(120); break;
-            case DURACION_180_MINUTOS: agenda.setDuracion(180); break;
-        }
-
-        switch(tiempo)
-        {
-            case DURACION_15_MINUTOS: agenda.setTiempoViaje(15); break;
-            case DURACION_30_MINUTOS: agenda.setTiempoViaje(30); break;
-            case DURACION_45_MINUTOS: agenda.setTiempoViaje(45); break;
-            case DURACION_60_MINUTOS: agenda.setTiempoViaje(60); break;
-            case DURACION_90_MINUTOS: agenda.setTiempoViaje(90); break;
-            case DURACION_120_MINUTOS: agenda.setTiempoViaje(120); break;
-            case DURACION_180_MINUTOS: agenda.setTiempoViaje(180); break;
-        }
+        agenda.setDuracion(duracion);
+        agenda.setTiempoViaje(tiempo);
 
         Calendar cal_hoy = Calendar.getInstance();
         //if((fecha.get(Calendar.YEAR) < cal_hoy.get(Calendar.YEAR)) || (fecha.get(Calendar.MONTH) < cal_hoy.get(Calendar.MONTH))
@@ -212,9 +176,16 @@ public class ReprogramarActivity extends BaseActivity {
         cal.set(Calendar.HOUR_OF_DAY, fecha.get(Calendar.HOUR_OF_DAY));
         cal.set(Calendar.MINUTE, fecha.get(Calendar.MINUTE));
 
-        calFin.set(Calendar.HOUR_OF_DAY, fecha.get(Calendar.HOUR_OF_DAY));
-        calFin.set(Calendar.MINUTE, fecha.get(Calendar.MINUTE));
-        calFin.add(Calendar.MINUTE, (int) agenda.getDuracion());
+        if(duracion < 1440) {
+            calFin.set(Calendar.HOUR_OF_DAY, fecha.get(Calendar.HOUR_OF_DAY));
+            calFin.set(Calendar.MINUTE, fecha.get(Calendar.MINUTE));
+            calFin.add(Calendar.MINUTE, (int) agenda.getDuracion());
+        }
+        else
+        {
+            calFin.set(Calendar.HOUR_OF_DAY, 23);
+            calFin.set(Calendar.MINUTE, 59);
+        }
 
         agenda.setFechaInicio(cal.getTime());
         agenda.setFechaFin(calFin.getTime());
@@ -369,14 +340,14 @@ public class ReprogramarActivity extends BaseActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         if(type == ID_DURACION)
                         {
-                            duracion = which;
-                            Duracion.setText(arrayAdapter.getItem(which));
+                            duracion = Integer.parseInt(adapterDuracion.getGeneralValue(which).getCode());
+                            Duracion.setText(adapterDuracion.getGeneralValue(which).getValue());
                             dialog.dismiss();
                         }
                         else if(type == ID_TIEMPO)
                         {
-                            tiempo = which;
-                            TiempoViaje.setText(arrayAdapter.getItem(which));
+                            tiempo = Integer.parseInt(adapterDuracion.getGeneralValue(which).getCode());
+                            TiempoViaje.setText(adapterDuracion.getGeneralValue(which).getValue());
                             dialog.dismiss();
                         }
 

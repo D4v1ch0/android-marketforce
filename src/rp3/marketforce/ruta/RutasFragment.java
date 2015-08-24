@@ -56,8 +56,6 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
     public SimpleDateFormat format1 = new SimpleDateFormat("EEEE");
     public SimpleDateFormat format2 = new SimpleDateFormat("dd");
     public SimpleDateFormat format3 = new SimpleDateFormat("MMMM");
-    public SimpleDateFormat format5 = new SimpleDateFormat("yyyy");
-    public SimpleDateFormat format4= new SimpleDateFormat("HH:mm");
 
 
     public static RutasFragment newInstance(int transactionTypeId) {
