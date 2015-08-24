@@ -67,7 +67,7 @@ public class JustificacionFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
                 if(((Spinner) rootView.findViewById(R.id.justificacion_motivos)).getSelectedItemPosition() != 0) {
-                    if(((TextView) rootView.findViewById(R.id.justificacion_text)).length() > 0) {
+                    if(((TextView) rootView.findViewById(R.id.justificacion_text)).getText().toString().trim().length() > 0) {
                         permiso.setObservacion(((TextView) rootView.findViewById(R.id.justificacion_text)).getText().toString());
                         permiso.setFecha(Calendar.getInstance().getTime());
                         permiso.setTipo(((GeneralValue) ((Spinner) rootView.findViewById(R.id.justificacion_motivos)).getSelectedItem()).getCode());

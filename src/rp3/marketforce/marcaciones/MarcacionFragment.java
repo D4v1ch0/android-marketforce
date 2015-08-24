@@ -174,6 +174,7 @@ public class MarcacionFragment extends BaseFragment {
                                                         Marcacion.update(getDataBase(), marc);
                                                         Permiso permiso = Permiso.getPermisoMarcacion(getDataBase(), 0);
                                                         if (permiso == null) {
+                                                            fragment = new JustificacionFragment();
                                                             fragment.idMarcacion = marc.getID();
                                                             showDialogFragment(fragment, "Justificacion");
                                                             Toast.makeText(getContext(), "Usted esta marcando atrasado. Indique su justificación", Toast.LENGTH_LONG).show();
@@ -207,6 +208,7 @@ public class MarcacionFragment extends BaseFragment {
                                                         marc.setMintutosAtraso(atraso);
                                                         Marcacion.update(getDataBase(), marc);
                                                     }
+                                                    fragment = new JustificacionFragment();
                                                     fragment.idMarcacion = marc.getID();
                                                     showDialogFragment(fragment, "Justificacion");
                                                     Toast.makeText(getContext(), "Esta marcando fuera de su punto de partida. Ingrese una justificación.", Toast.LENGTH_LONG).show();
@@ -422,6 +424,7 @@ public class MarcacionFragment extends BaseFragment {
                                                     bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
                                                     requestSync(bundle);
                                                 } else {
+                                                    fragment = new JustificacionFragment();
                                                     fragment.idMarcacion = marc.getID();
                                                     showDialogFragment(fragment, "Justificacion");
                                                     Toast.makeText(getContext(), R.string.message_fuera_posicion, Toast.LENGTH_LONG).show();
@@ -501,6 +504,7 @@ public class MarcacionFragment extends BaseFragment {
                                                     {
                                                         marc.setMintutosAtraso(atraso - 60);
                                                         Marcacion.update(getDataBase(), marc);
+                                                        fragment = new JustificacionFragment();
                                                         fragment.idMarcacion = marc.getID();
                                                         showDialogFragment(fragment, "Justificacion");
                                                         Toast.makeText(getContext(), "Usted esta llegando atrasado. Indique su justificación", Toast.LENGTH_LONG).show();
@@ -514,6 +518,7 @@ public class MarcacionFragment extends BaseFragment {
                                                         requestSync(bundle);
                                                     }
                                                 } else {
+                                                    fragment = new JustificacionFragment();
                                                     fragment.idMarcacion = marc.getID();
                                                     showDialogFragment(fragment, "Justificacion");
                                                     Toast.makeText(getContext(), R.string.message_fuera_posicion, Toast.LENGTH_LONG).show();
@@ -596,6 +601,7 @@ public class MarcacionFragment extends BaseFragment {
                                                     {
                                                         marc.setMintutosAtraso(atraso*(-1));
                                                         Marcacion.update(getDataBase(), marc);
+                                                        fragment = new JustificacionFragment();
                                                         fragment.idMarcacion = marc.getID();
                                                         showDialogFragment(fragment, "Justificacion");
                                                         Toast.makeText(getContext(), "Usted esta finalizando su jornada por adelantado. Indique su justificación", Toast.LENGTH_LONG).show();
@@ -612,6 +618,7 @@ public class MarcacionFragment extends BaseFragment {
                                                         requestSync(bundle);
                                                     }
                                                 } else {
+                                                    fragment = new JustificacionFragment();
                                                     fragment.idMarcacion = marc.getID();
                                                     showDialogFragment(fragment, "Justificacion");
                                                     Toast.makeText(getContext(), R.string.message_fuera_posicion, Toast.LENGTH_LONG).show();

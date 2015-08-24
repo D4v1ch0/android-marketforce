@@ -18,6 +18,9 @@ import android.widget.Toast;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
+import org.w3c.dom.Text;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -38,9 +41,12 @@ import rp3.util.StringUtils;
 public class JustificacionPreviaFragment extends BaseFragment {
 
     private final int REQ_CODE_SPEECH_INPUT = 100;
+    private int TIME_PICKER_INTERVAL = 5;
 
     private CaldroidFragment caldroidFragment;
     private Calendar fecha;
+
+    SimpleDateFormat format1 = new SimpleDateFormat("HH:mm");
 
     @Override
     public void onAttach(Activity activity) {
@@ -54,6 +60,7 @@ public class JustificacionPreviaFragment extends BaseFragment {
         super.onFragmentCreateView(rootView, savedInstanceState);
         setCalendar();
         ((CheckBox)rootView.findViewById(R.id.justificacion_ausencia)).setChecked(true);
+        hideLlegada();
         SimpleGeneralValueAdapter valueAdapter = new SimpleGeneralValueAdapter(getContext(), getDataBase(), Contants.GENERAL_TABLE_MOTIVO_PERMISO);
         ((Spinner)rootView.findViewById(R.id.justificacion_spinner)).setAdapter(valueAdapter);
         rootView.findViewById(R.id.voice_to_text).setOnClickListener(new View.OnClickListener() {
@@ -66,42 +73,63 @@ public class JustificacionPreviaFragment extends BaseFragment {
         ((CheckBox)rootView.findViewById(R.id.justificacion_atraso)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked)
-                    ((CheckBox)rootView.findViewById(R.id.justificacion_ausencia)).setChecked(false);
-                else
-                    ((CheckBox)rootView.findViewById(R.id.justificacion_ausencia)).setChecked(true);
+                if(isChecked) {
+                    ((CheckBox) rootView.findViewById(R.id.justificacion_ausencia)).setChecked(false);
+                    showLlegada();
+                }
+                else {
+                    ((CheckBox) rootView.findViewById(R.id.justificacion_ausencia)).setChecked(true);
+                    hideLlegada();
+                }
             }
         });
         ((CheckBox)rootView.findViewById(R.id.justificacion_ausencia)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked)
-                    ((CheckBox)rootView.findViewById(R.id.justificacion_atraso)).setChecked(false);
-                else
-                    ((CheckBox)rootView.findViewById(R.id.justificacion_atraso)).setChecked(true);
+                if (isChecked) {
+                    ((CheckBox) rootView.findViewById(R.id.justificacion_atraso)).setChecked(false);
+                    hideLlegada();
+                } else {
+                    ((CheckBox) rootView.findViewById(R.id.justificacion_atraso)).setChecked(true);
+                    showLlegada();
+                }
             }
         });
+    }
+
+    @Override
+    public void onDailogTimePickerChange(int id, int hours, int minutes) {
+        fecha.set(Calendar.HOUR_OF_DAY, hours);
+        fecha.set(Calendar.MINUTE, minutes);
+        ((TextView)getRootView().findViewById(R.id.permiso_llegada_text)).setText(format1.format(fecha.getTime()));
+        super.onDailogTimePickerChange(id, hours, minutes);
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId())
         {
             case R.id.action_save:
-                Justificacion justificacion = new Justificacion();
-                justificacion.setFecha(fecha.getTime());
-                justificacion.setPropia(true);
-                if(((TextView)getRootView().findViewById(R.id.justificacion_text)).length() > 0)
-                    justificacion.setObservacion(((TextView)getRootView().findViewById(R.id.justificacion_text)).getText().toString());
+                if(((TextView)getRootView().findViewById(R.id.justificacion_text)).getText().toString().trim().length() > 0) {
+                    Justificacion justificacion = new Justificacion();
+                    justificacion.setFecha(fecha.getTime());
+                    justificacion.setPropia(true);
+                    if (((TextView) getRootView().findViewById(R.id.justificacion_text)).length() > 0)
+                        justificacion.setObservacion(((TextView) getRootView().findViewById(R.id.justificacion_text)).getText().toString());
+                    else
+                        justificacion.setObservacion("");
+                    justificacion.setTipo(((GeneralValue) ((Spinner) getRootView().findViewById(R.id.justificacion_spinner)).getSelectedItem()).getCode());
+                    justificacion.setAusencia(((CheckBox) getRootView().findViewById(R.id.justificacion_ausencia)).isChecked());
+                    justificacion.setPendiente(true);
+                    Justificacion.insert(getDataBase(), justificacion);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_PERMISO_PREVIO);
+                    requestSync(bundle);
+                    finish();
+                }
                 else
-                    justificacion.setObservacion("");
-                justificacion.setTipo(((GeneralValue) ((Spinner) getRootView().findViewById(R.id.justificacion_spinner)).getSelectedItem()).getCode());
-                justificacion.setAusencia( ((CheckBox)getRootView().findViewById(R.id.justificacion_ausencia)).isChecked());
-                justificacion.setPendiente(true);
-                Justificacion.insert(getDataBase(), justificacion);
-                Bundle bundle = new Bundle();
-                bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_PERMISO_PREVIO);
-                requestSync(bundle);
-                finish();
+                {
+                    Toast.makeText(this.getContext(), "Debe de ingresar una observación.", Toast.LENGTH_LONG).show();
+                }
                 break;
             case R.id.action_cancel:
                 finish();
@@ -205,6 +233,26 @@ public class JustificacionPreviaFragment extends BaseFragment {
                 position = f;
         }
         return position;
+    }
+
+    private void showLlegada() {
+        getRootView().findViewById(R.id.permiso_llegada).setVisibility(View.VISIBLE);
+        ((TextView)getRootView().findViewById(R.id.permiso_llegada_text)).setText(format1.format(fecha.getTime()));
+        getRootView().findViewById(R.id.permiso_llegada_text).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialogTimePicker(1, fecha.get(Calendar.HOUR_OF_DAY), fecha.get(Calendar.MINUTE), TIME_PICKER_INTERVAL);
+            }
+        });
+
+    }
+
+    private void hideLlegada()
+    {
+        getRootView().findViewById(R.id.permiso_llegada).setVisibility(View.GONE);
+        fecha.set(Calendar.HOUR_OF_DAY, 0);
+        fecha.set(Calendar.MINUTE, 0);
+        fecha.set(Calendar.SECOND, 0);
     }
 }
 
