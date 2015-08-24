@@ -81,6 +81,18 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         addDefaultMessage(result);
                     }
 
+                    result = Cliente.executeSyncInserts(db);
+                    addDefaultMessage(result);
+
+                    result = Cliente.executeSyncPendientes(db);
+                    addDefaultMessage(result);
+
+                    result = Agenda.executeSyncInserts(db);
+                    addDefaultMessage(result);
+
+                    result = Agenda.executeSyncPendientes(db);
+                    addDefaultMessage(result);
+
                     if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.marketforce.sync.Cliente.executeSync(db);
                         addDefaultMessage(result);
@@ -307,6 +319,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         if (result == SYNC_EVENT_SUCCESS) {
                             SyncAudit.insert(SYNC_TYPE_CLIENTE_UPDATE, SYNC_EVENT_SUCCESS);
                         }
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Cliente.executeSyncDeletes(db);
+                        addDefaultMessage(result);
                     }
                 } else if (syncType.equals(SYNC_TYPE_TODO)) {
                     result = Cliente.executeSyncInserts(db);

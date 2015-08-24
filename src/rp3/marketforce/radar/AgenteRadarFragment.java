@@ -2,6 +2,8 @@ package rp3.marketforce.radar;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -49,6 +51,14 @@ public class AgenteRadarFragment extends BaseFragment {
         List<AgenteUbicacion> list_ubicaciones = AgenteUbicacion.getResumen(getDataBase());
         adapter = new AgenteRadarAdapter(this.getContext(), list_ubicaciones, ids);
         ((ListView) rootView.findViewById(R.id.agentes_list)).setAdapter(adapter);
+        ((CheckBox) rootView.findViewById(R.id.import_seleccionar_todos)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                adapter.SelectAll(isChecked);
+            }
+        });
+        if(ids.size() == list_ubicaciones.size())
+            ((CheckBox) rootView.findViewById(R.id.import_seleccionar_todos)).setChecked(false);
 
         rootView.findViewById(R.id.agente_aceptar).setOnClickListener(new View.OnClickListener() {
             @Override

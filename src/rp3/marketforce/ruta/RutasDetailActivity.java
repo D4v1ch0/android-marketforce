@@ -19,7 +19,7 @@ import android.widget.SearchView;
 import android.widget.Toast;
 import android.widget.SearchView.OnQueryTextListener;
 
-public class RutasDetailActivity extends rp3.app.BaseActivity{
+public class RutasDetailActivity extends rp3.app.BaseActivity implements ContactsAgendaFragment.SaveContactsListener{
 
 	private long transactionId;
 	private final String STATE_TRANSACTIONID = "transactionId";
@@ -163,7 +163,12 @@ public class RutasDetailActivity extends rp3.app.BaseActivity{
     	}
     	return super.onOptionsItemSelected(item);
     }
-    
+
+	@Override
+	public void Refresh() {
+		rutasDetailFragment.onResume();
+	}
+
 //    @Override
 //	public void onDeleteSuccess(Transaction transaction) {		
 ////		startActivity(new Intent(this,TransactionListActivity.class));
