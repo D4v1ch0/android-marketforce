@@ -52,8 +52,12 @@ public class ContactsAgendaFragment extends BaseFragment {
 	}
 	
 	@Override
-	public void onAttach(Activity activity) {    	
-	    super.onAttach(activity);
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		if(getParentFragment()!=null)
+			saveListener = (SaveContactsListener) getParentFragment();
+		else
+			saveListener = (SaveContactsListener) activity;
 	}
 	    
 	@Override
@@ -64,7 +68,7 @@ public class ContactsAgendaFragment extends BaseFragment {
 	    
 	@Override
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
-		saveListener = (SaveContactsListener) getParentFragment();
+
 		getDialog().setTitle("Escoger Contacto");
 		boolean id_interno = true;
 		if(agenda.getIdCliente() != 0)
