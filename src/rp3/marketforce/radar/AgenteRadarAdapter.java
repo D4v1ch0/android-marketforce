@@ -58,6 +58,20 @@ public class AgenteRadarAdapter extends BaseAdapter {
         return listNotShowed;
     }
 
+    public void SelectAll(boolean select)
+    {
+        listNotShowed.clear();
+        if(!select)
+        {
+            for(AgenteUbicacion ag : list_resumen)
+                listNotShowed.add(ag.getIdAgente());
+        }
+
+        this.notifyDataSetChanged();
+
+
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = (View) inflater.inflate(this.ctx.getApplicationContext().getResources().getLayout(R.layout.rowlist_agente_radar), null);

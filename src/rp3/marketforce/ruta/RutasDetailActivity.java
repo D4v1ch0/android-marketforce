@@ -1,9 +1,12 @@
 package rp3.marketforce.ruta;
 
+import rp3.configuration.PreferenceManager;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.db.DbOpenHelper;
 import rp3.marketforce.models.Agenda;
+import rp3.marketforce.resumen.AgenteDetalleFragment;
+import rp3.marketforce.sync.SyncAdapter;
 import rp3.util.ConnectionUtils;
 import rp3.util.Screen;
 import android.content.Context;
@@ -19,13 +22,19 @@ import android.widget.SearchView;
 import android.widget.Toast;
 import android.widget.SearchView.OnQueryTextListener;
 
-public class RutasDetailActivity extends rp3.app.BaseActivity{
+import java.text.SimpleDateFormat;
+
+public class RutasDetailActivity extends rp3.app.BaseActivity implements ContactsAgendaFragment.SaveContactsListener{
 
 	private long transactionId;
 	private final String STATE_TRANSACTIONID = "transactionId";
 	private RutasDetailFragment rutasDetailFragment;
 	
 	public final static String EXTRA_TRANSACTIONID = "transactionId";
+
+	public SimpleDateFormat format1 = new SimpleDateFormat("EEEE");
+	public SimpleDateFormat format2 = new SimpleDateFormat("dd");
+	public SimpleDateFormat format3 = new SimpleDateFormat("MMMM");
 	
 	public static Intent newIntent(Context c, long id){
 		Intent intent = new Intent(c, RutasDetailActivity.class);
@@ -120,6 +129,28 @@ public class RutasDetailActivity extends rp3.app.BaseActivity{
     				Toast.makeText(this, R.string.warning_seleccionar_agenda, Toast.LENGTH_LONG).show();
     			}
     			return true;
+			case R.id.action_suspender_agenda:
+				if(transactionId != 0)
+				{
+					if(PreferenceManager.getInt(Contants.KEY_ID_SUPERVISOR, 0) != 0)
+					{
+						Agenda agdNot = Agenda.getAgenda(getDataBase(), transactionId);
+						Bundle bundle = new Bundle();
+						bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SEND_NOTIFICATION);
+						bundle.putInt(AgenteDetalleFragment.ARG_AGENTE, PreferenceManager.getInt(Contants.KEY_ID_SUPERVISOR));
+						bundle.putString(AgenteDetalleFragment.ARG_TITLE, "Anular Agenda");
+						bundle.putString(AgenteDetalleFragment.ARG_MESSAGE,
+								"Se solicita anulación de agenda del " + format1.format(agdNot.getFechaInicio()) + ", " + format2.format(agdNot.getFechaInicio()) + " de "
+										+ format3.format(agdNot.getFechaInicio()) + ", hecha al cliente " + agdNot.getCliente().getNombreCompleto());
+						requestSync(bundle);
+						Toast.makeText(this, R.string.message_notificacion_enviada, Toast.LENGTH_LONG).show();
+					}
+				}
+				else
+				{
+					Toast.makeText(this, R.string.warning_seleccionar_agenda, Toast.LENGTH_LONG).show();
+				}
+				return true;
     		case R.id.action_cambiar_contacto:
     			if(transactionId != 0)
     			{
@@ -163,7 +194,12 @@ public class RutasDetailActivity extends rp3.app.BaseActivity{
     	}
     	return super.onOptionsItemSelected(item);
     }
-    
+
+	@Override
+	public void Refresh() {
+		rutasDetailFragment.onResume();
+	}
+
 //    @Override
 //	public void onDeleteSuccess(Transaction transaction) {		
 ////		startActivity(new Intent(this,TransactionListActivity.class));

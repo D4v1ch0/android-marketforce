@@ -63,6 +63,7 @@ import rp3.util.LocationUtils;
  */
 public class RadarFragment extends BaseFragment implements AgenteRadarFragment.AgenteRadarDialogListener {
     private GoogleMap map;
+    private boolean isRotated = false;
     private AgenteDetalleFragment agenteDetalleFragment;
     private ArrayList<Marker> markers;
     private ArrayList<Integer> notShow;
@@ -98,6 +99,7 @@ public class RadarFragment extends BaseFragment implements AgenteRadarFragment.A
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (view != null) {
+            isRotated = true;
             ViewGroup parent = (ViewGroup) view.getParent();
             if (parent != null)
                 parent.removeView(view);
@@ -201,8 +203,13 @@ public class RadarFragment extends BaseFragment implements AgenteRadarFragment.A
                                         requestSync(bundle);
                                     }
                                 });
-                                if(sup == null)
-                                    setMapa();
+                                if(sup == null) {
+                                    showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait);
+
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_AGENTES_UBICACION);
+                                    requestSync(bundle);
+                                }
                                 else
                                     SetOldPoints();
 
@@ -325,7 +332,7 @@ public class RadarFragment extends BaseFragment implements AgenteRadarFragment.A
             try
             {
                 ((BaseActivity)getActivity()).showDialogProgress("GPS","Obteniendo Ubicación");
-                LocationUtils.getLocation(getContext(), new LocationUtils.OnLocationResultListener() {
+                LocationUtils.getLocation(getContext(), 100, new LocationUtils.OnLocationResultListener() {
 
                     @Override
                     public void getLocationResult(Location location) {
