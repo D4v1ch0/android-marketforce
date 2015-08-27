@@ -192,6 +192,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         addDefaultMessage(result);
                     }
 
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = Marcaciones.executeSyncMarcacionesHoy(db);
+                        addDefaultMessage(result);
+                    }
+
 				/*
 				 * Se comenta carga de fotos ya que se la hara mediante un lazy loader.
 				 * Para esto se cargara tambien en el modelo Cliente la url de la foto para poder cargarla
@@ -299,6 +304,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 
                     result = Marcaciones.executeSyncPermisoPrevio(db);
                     addDefaultMessage(result);
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = Marcaciones.executeSyncMarcacionesHoy(db);
+                        addDefaultMessage(result);
+                    }
                 } else if (syncType.equals(SYNC_TYPE_AGENDA_NO_VISITA)) {
                     int id = extras.getInt(MotivoNoVisitaFragment.ARG_AGENDA);
                     result = Agenda.executeSyncNoVisita(db, id);
@@ -470,6 +480,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 
                     if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.marketforce.sync.Marcaciones.executeSyncGrupo(db);
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = Marcaciones.executeSyncMarcacionesHoy(db);
                         addDefaultMessage(result);
                     }
 

@@ -158,6 +158,61 @@ public class Marcaciones {
         return SyncAdapter.SYNC_EVENT_SUCCESS;
     }
 
+    public static int executeSyncMarcacionesHoy(DataBase db){
+
+        Marcacion ultimaMarcacion = Marcacion.getUltimaMarcacion(db);
+        Calendar dia_hoy = Calendar.getInstance();
+        Calendar dia_marcacion = Calendar.getInstance();
+        if(ultimaMarcacion != null)
+            dia_marcacion.setTime(ultimaMarcacion.getFecha());
+        if(ultimaMarcacion == null || dia_hoy.get(Calendar.DAY_OF_YEAR) != dia_marcacion.get(Calendar.DAY_OF_YEAR)) {
+            WebService webService = new WebService("MartketForce", "GetMarcacionesHoy");
+
+            try {
+                webService.addCurrentAuthToken();
+
+                try {
+                    webService.invokeWebService();
+                    JSONArray types = webService.getJSONArrayResponse();
+                    for (int i = 0; i < types.length(); i++) {
+                        JSONObject type = types.getJSONObject(i);
+                        Marcacion marcacion = new Marcacion();
+                        marcacion.setPendiente(false);
+                        marcacion.setTipo(type.getString("Tipo"));
+                        marcacion.setEnUbicacion(type.getBoolean("EnUbicacion"));
+                        if(marcacion.getTipo().equalsIgnoreCase("J1") || marcacion.getTipo().equalsIgnoreCase("J3")) {
+                            marcacion.setFecha(Convert.getDateFromDotNetTicks(type.getLong("HoraInicioTicks")));
+                            marcacion.setHoraFin(Convert.getDateFromDotNetTicks(type.getLong("HoraInicioTicks")));
+                            marcacion.setHoraInicio(Convert.getDateFromDotNetTicks(type.getLong("HoraInicioTicks")));
+                        }
+                        else
+                        {
+                            marcacion.setFecha(Convert.getDateFromDotNetTicks(type.getLong("HoraFinTicks")));
+                            marcacion.setHoraFin(Convert.getDateFromDotNetTicks(type.getLong("HoraFinTicks")));
+                            marcacion.setHoraInicio(Convert.getDateFromDotNetTicks(type.getLong("HoraFinTicks")));
+                        }
+                        marcacion.setLatitud(type.getDouble("Latitud"));
+                        marcacion.setLongitud(type.getDouble("Longitud"));
+                        marcacion.setMintutosAtraso(type.getInt("MinutosAtraso"));
+                        Marcacion.insert(db, marcacion);
+
+                    }
+                } catch (HttpResponseException e) {
+                    if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                        return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                    return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+                } catch (Exception e) {
+                    return SyncAdapter.SYNC_EVENT_ERROR;
+                }
+
+            } finally {
+                webService.close();
+            }
+        }
+
+        return SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
     public static int executeSyncPermiso(DataBase db, long id) {
         Permiso permiso = Permiso.getPermisoById(db, id);
 

@@ -295,6 +295,12 @@
                     <webMethod>POST</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>
+                <method>
+                    <name>GetMarcacionesHoy</name>
+                    <action>marcacion/getmarcacioneshoy</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
             </methods>     
         </webServiceData>
            <webServiceData>
