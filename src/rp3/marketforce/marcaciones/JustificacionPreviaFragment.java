@@ -52,6 +52,7 @@ public class JustificacionPreviaFragment extends BaseFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         fecha = Calendar.getInstance();
+        fecha.add(Calendar.DATE, 1);
         setContentView(R.layout.fragment_justificaciones_previas, R.menu.fragment_crear_cliente);
     }
 
@@ -73,11 +74,10 @@ public class JustificacionPreviaFragment extends BaseFragment {
         ((CheckBox)rootView.findViewById(R.id.justificacion_atraso)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
+                if (isChecked) {
                     ((CheckBox) rootView.findViewById(R.id.justificacion_ausencia)).setChecked(false);
                     showLlegada();
-                }
-                else {
+                } else {
                     ((CheckBox) rootView.findViewById(R.id.justificacion_ausencia)).setChecked(true);
                     hideLlegada();
                 }
@@ -161,6 +161,9 @@ public class JustificacionPreviaFragment extends BaseFragment {
         caldroidFragment = new CaldroidFragment();
         Bundle args = new Bundle();
         Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, 1);
+        caldroidFragment.setMinDate(cal.getTime());
+        //caldroidFragment.setCalendarDate(cal.getTime());
         args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
         args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
         args.putBoolean(CaldroidFragment.ENABLE_SWIPE, true);
@@ -172,7 +175,7 @@ public class JustificacionPreviaFragment extends BaseFragment {
         t.replace(R.id.crear_visita_calendar, caldroidFragment);
         t.commit();
 
-        caldroidFragment.setMinDate(Calendar.getInstance().getTime());
+        //caldroidFragment.setMinDate(Calendar.getInstance().getTime());
         final CaldroidListener listener = new CaldroidListener() {
 
             @Override
@@ -201,8 +204,8 @@ public class JustificacionPreviaFragment extends BaseFragment {
 
         };
         caldroidFragment.setCaldroidListener(listener);
-        caldroidFragment.setBackgroundResourceForDate(R.color.caldroid_white, Calendar.getInstance().getTime());
-        caldroidFragment.setBackgroundResourceForDate(R.drawable.blue_border_date, fecha.getTime());
+        caldroidFragment.setBackgroundResourceForDate(R.color.caldroid_white, cal.getTime());
+        caldroidFragment.setBackgroundResourceForDate(R.drawable.blue_border_date, cal.getTime());
     }
 
     public static JustificacionPreviaFragment newInstance() {

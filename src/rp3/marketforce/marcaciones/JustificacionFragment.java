@@ -38,6 +38,7 @@ public class JustificacionFragment extends BaseFragment {
 
     private Permiso permiso;
 
+    public boolean setCancelar = false;
     public long idMarcacion;
 
     @Override
@@ -53,7 +54,7 @@ public class JustificacionFragment extends BaseFragment {
 
         getDialog().setTitle("Justificación");
 
-        if(idMarcacion != 0)
+        if(idMarcacion != 0 && !setCancelar)
             rootView.findViewById(R.id.cancelar_justificacion).setVisibility(View.GONE);
 
         rootView.findViewById(R.id.cancelar_justificacion).setOnClickListener(new View.OnClickListener() {

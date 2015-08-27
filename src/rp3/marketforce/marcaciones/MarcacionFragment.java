@@ -40,6 +40,7 @@ import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.DetailsPageAdapter;
 import rp3.marketforce.utils.Utils;
 import rp3.util.CalendarUtils;
+import rp3.util.ConnectionUtils;
 import rp3.util.GooglePlayServicesUtils;
 import rp3.util.LocationUtils;
 import rp3.widget.DigitalClock;
@@ -136,7 +137,7 @@ public class MarcacionFragment extends BaseFragment {
                         public void onFinish() {
                             ((DonutProgress) marcaciones.findViewById(R.id.donut_inicio_jornada)).setProgress(PRESS_TIME);
                             final Marcacion marc = new Marcacion();
-                            marc.setTipo("J1"); //falta tipo
+                            marc.setTipo("J1");
                             marc.setPendiente(false);
                             marc.setFecha(Calendar.getInstance().getTime());
                             if (GooglePlayServicesUtils.servicesConnected((BaseActivity) getActivity())) {
@@ -172,26 +173,16 @@ public class MarcacionFragment extends BaseFragment {
                                                     if (atraso > 0) {
                                                         marc.setMintutosAtraso(atraso);
                                                         Marcacion.update(getDataBase(), marc);
-                                                        Permiso permiso = Permiso.getPermisoMarcacion(getDataBase(), 0);
-                                                        if (permiso == null) {
-                                                            fragment = new JustificacionFragment();
-                                                            fragment.idMarcacion = marc.getID();
-                                                            showDialogFragment(fragment, "Justificacion");
-                                                            Toast.makeText(getContext(), "Usted esta marcando atrasado. Indique su justificación", Toast.LENGTH_LONG).show();
-                                                        } else {
-                                                            permiso.setIdMarcacion(marc.getID());
-                                                            marc.setPendiente(true);
-                                                            Marcacion.update(getDataBase(), marc);
-                                                            Permiso.update(getDataBase(), permiso);
-                                                            Bundle bundle = new Bundle();
-                                                            bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
-                                                            requestSync(bundle);
-                                                        }
+                                                        fragment = new JustificacionFragment();
+                                                        fragment.idMarcacion = marc.getID();
+                                                        showDialogFragment(fragment, "Justificacion");
+                                                        Toast.makeText(getContext(), "Usted esta marcando atrasado. Indique su justificación", Toast.LENGTH_LONG).show();
+
                                                     } else {
                                                         marcaciones.findViewById(R.id.layout_inicio_jornada).setVisibility(View.GONE);
                                                         marc.setPendiente(true);
                                                         Marcacion.update(getDataBase(), marc);
-                                                        SetButtonFinJornada();
+                                                        //SetButtonFinJornada();
                                                         Bundle bundle = new Bundle();
                                                         bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
                                                         requestSync(bundle);
@@ -363,6 +354,7 @@ public class MarcacionFragment extends BaseFragment {
         marcaciones.findViewById(R.id.marcacion_justificar).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                fragment.setCancelar = true;
                 showDialogFragment(fragment, "Justificacion");
             }
         });
@@ -658,10 +650,16 @@ public class MarcacionFragment extends BaseFragment {
         switch(item.getItemId())
         {
             case R.id.action_syncronize:
-                showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait);
-                Bundle bundle = new Bundle();
-                bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_PENDIENTES_PERMISO);
-                requestSync(bundle);
+                if(!ConnectionUtils.isNetAvailable(this.getContext()))
+                {
+                    Toast.makeText(this.getContext(), "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_PENDIENTES_PERMISO);
+                    requestSync(bundle);
+                }
                 break;
             case R.id.action_justificacion_previa:
                 Intent intent = new Intent(this.getContext(), JustificacionPreviaActivity.class);
@@ -676,7 +674,7 @@ public class MarcacionFragment extends BaseFragment {
     @Override
     public void onSyncComplete(Bundle data, MessageCollection messages) {
         super.onSyncComplete(data, messages);
-        if(data.get(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_UPLOAD_PENDIENTES_PERMISO)) {
+        if(data != null && data.get(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_UPLOAD_PENDIENTES_PERMISO)) {
             closeDialogProgress();
             onResume();
         }
