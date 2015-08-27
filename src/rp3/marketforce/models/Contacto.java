@@ -254,6 +254,11 @@ public class Contacto extends rp3.data.entity.EntityBase<Contacto>{
 		s.close();
 		return setter;
 	}
+
+	public static void deleteContactos(DataBase db, String originalIds)
+	{
+		db.delete(Contract.Contacto.TABLE_NAME, Contract.Contacto.COLUMN_ID_CLIENTE + " NOT IN (" + originalIds + "?)",0);
+	}
 	
 	public static long getLastId(DataBase db, long idCliente)
 	{
