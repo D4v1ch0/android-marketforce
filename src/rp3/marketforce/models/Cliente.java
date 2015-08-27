@@ -456,17 +456,22 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 		while(c.moveToNext()){
 			Cliente cl = new Cliente();
 			cl.setID(c.getInt(0));
-			cl.setNombre1(CursorUtils.getString(c,Contract.ClientExt.COLUMN_NOMBRE1));
-			cl.setApellido1(CursorUtils.getString(c,Contract.ClientExt.COLUMN_APELLIDO1));
-			cl.setIdentificacion(CursorUtils.getString(c,Contract.ClientExt.COLUMN_IDENTIFICACION));
-			cl.setCorreoElectronico(CursorUtils.getString(c,Contract.ClientExt.COLUMN_CORREO_ELECTRONICO));	
-			cl.setDireccion(CursorUtils.getString(c,Contract.ClientExt.COLUMN_DIRECCION));
-			cl.setTelefono(CursorUtils.getString(c,Contract.ClientExt.COLUMN_TELEFONO));
+			cl.setNombre1(CursorUtils.getString(c, Contract.ClientExt.COLUMN_NOMBRE1));
+			cl.setApellido1(CursorUtils.getString(c, Contract.ClientExt.COLUMN_APELLIDO1));
+			cl.setIdentificacion(CursorUtils.getString(c, Contract.ClientExt.COLUMN_IDENTIFICACION));
+			cl.setCorreoElectronico(CursorUtils.getString(c, Contract.ClientExt.COLUMN_CORREO_ELECTRONICO));
+			cl.setDireccion(CursorUtils.getString(c, Contract.ClientExt.COLUMN_DIRECCION));
+			cl.setTelefono(CursorUtils.getString(c, Contract.ClientExt.COLUMN_TELEFONO));
 			cl.setTipoPersona(CursorUtils.getString(c, Contract.Cliente.COLUMN_TIPO_PERSONA));
 			cl.setIdCliente(CursorUtils.getInt(c, Contract.Cliente.COLUMN_ID_CLIENTE));
-			if(cl.getTipoPersona().equalsIgnoreCase("C"))
-				cl.setNombreCompleto(cl.getApellido1() + " " + cl.getNombre1() + " - " + CursorUtils.getString(c, Contract.ContactoExt.COLUMN_CARGO)
-						+ " de " + getClienteIDServer(db, cl.getIdCliente(), false).getNombreCompleto().trim());
+			if(cl.getTipoPersona().equalsIgnoreCase("C")) {
+				Cliente cliente = getClienteIDServer(db, cl.getIdCliente(), false);
+				if(cliente == null)
+					continue;
+				else
+					cl.setNombreCompleto(cl.getApellido1() + " " + cl.getNombre1() + " - " + CursorUtils.getString(c, Contract.ContactoExt.COLUMN_CARGO)
+						+ " de " + cliente.getNombreCompleto().trim());
+			}
 			else
 				cl.setNombreCompleto(CursorUtils.getString(c, Contract.ClientExt.COLUMN_NOMBRE_COMPLETO));
 			
@@ -895,6 +900,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
         if(idsNotDelete.length() > 0)
         {
             db.delete(Contract.Cliente.TABLE_NAME, Contract.Cliente.COLUMN_ID_CLIENTE + " NOT IN (" + idsNotDelete + "?)",0);
+			Contacto.deleteContactos(db, idsNotDelete);
         }
     }
 
