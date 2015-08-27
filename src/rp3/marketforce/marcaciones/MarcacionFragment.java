@@ -60,6 +60,7 @@ public class MarcacionFragment extends BaseFragment {
     private ViewPager PagerDetalles;
     private DetailsPageAdapter pagerAdapter;
     private FrameLayout marcaciones, historico;
+    private int currentItem = 0;
 
     public static MarcacionFragment newInstance() {
         return new MarcacionFragment();
@@ -109,6 +110,7 @@ public class MarcacionFragment extends BaseFragment {
                         ((ImageView) getRootView().findViewById(R.id.point_hoy)).setImageResource(R.drawable.circle_shape);
                         break;
                 }
+                currentItem = position;
             }
 
             @Override
@@ -117,7 +119,7 @@ public class MarcacionFragment extends BaseFragment {
             }
         });
         PagerDetalles.setAdapter(pagerAdapter);
-        PagerDetalles.setCurrentItem(0);
+        PagerDetalles.setCurrentItem(currentItem);
         ((DigitalClock) marcaciones.findViewById(R.id.digitalClock)).setCalendar(Calendar.getInstance());
         DISTANCE = Double.parseDouble(PreferenceManager.getString(Contants.KEY_MARACIONES_DISTANCIA));
         Permiso ausencia = Permiso.getAusencia(getDataBase());
