@@ -1049,29 +1049,31 @@
      </statement>
      
 	 <statement name="ResumenAgentes">
-       SELECT tbAgente.IdAgente,
-         tbAgente.Nombre,
+       SELECT tbAgentesUbicacion.IdAgente,
+         tbAgentesUbicacion.Nombres,
+         tbAgentesUbicacion.Apellidos,
 		SUM(tbAgentesResumen.Gestionados) as Gestionados,
 		SUM(tbAgentesResumen.NoGestionados) as NoGestionados,
 		SUM(tbAgentesResumen.Pendientes) as Pendientes
-		FROM tbAgente
+		FROM tbAgentesUbicacion
         LEFT JOIN tbAgentesResumen
-        ON tbAgente.IdAgente = tbAgentesResumen.IdAgente
+        ON tbAgentesUbicacion.IdAgente = tbAgentesResumen.IdAgente
 		WHERE tbAgentesResumen.Fecha &gt;= ?
 		AND tbAgentesResumen.Fecha &lt; ?
-		GROUP BY tbAgente.IdAgente
+		GROUP BY tbAgentesUbicacion.IdAgente
          UNION ALL
-         SELECT tbAgente.IdAgente,
-         tbAgente.Nombre,
+         SELECT tbAgentesUbicacion.IdAgente,
+         tbAgentesUbicacion.Nombres,
+         tbAgentesUbicacion.Apellidos,
          0 as Gestionados,
          0 as NoGestionados,
          0 as Pendientes
-         FROM tbAgente
+         FROM tbAgentesUbicacion
          LEFT JOIN tbAgentesResumen
-         ON tbAgente.IdAgente = tbAgentesResumen.IdAgente
+         ON tbAgentesUbicacion.IdAgente = tbAgentesResumen.IdAgente
          AND tbAgentesResumen.Fecha &gt;= ?
          AND tbAgentesResumen.Fecha &lt; ?
-         GROUP BY tbAgente.IdAgente
+         GROUP BY tbAgentesUbicacion.IdAgente
      </statement>
 
     <statement name="PermisosAgentes">
