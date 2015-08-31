@@ -30,6 +30,7 @@ import rp3.app.BaseActivity;
 import rp3.app.BaseFragment;
 import rp3.configuration.PreferenceManager;
 import rp3.data.MessageCollection;
+import rp3.db.sqlite.DataBase;
 import rp3.maps.utils.SphericalUtil;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
@@ -159,7 +160,14 @@ public class MarcacionFragment extends BaseFragment {
                                                             Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA)));
                                                     double distance = SphericalUtil.computeDistanceBetween(pos, partida);
                                                     marc.setEnUbicacion(distance < DISTANCE);
-                                                    Marcacion.insert(getDataBase(), marc);
+                                                    try {
+                                                        Marcacion.insert(getDataBase(), marc);
+                                                    }
+                                                    catch(Exception ex)
+                                                    {
+                                                        DataBase db = DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class);
+                                                        Marcacion.insert(db, marc);
+                                                    }
                                                     Toast.makeText(getContext(), "Se ha iniciado la Jornada.", Toast.LENGTH_LONG).show();
                                                     if (distance < DISTANCE) {
                                                         DiaLaboral dia = DiaLaboral.getDia(getDataBase(), Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1);
@@ -417,7 +425,14 @@ public class MarcacionFragment extends BaseFragment {
                                                             Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA)));
                                                     double distance = SphericalUtil.computeDistanceBetween(pos, partida);
                                                     marc.setEnUbicacion(distance < DISTANCE);
-                                                    Marcacion.insert(getDataBase(), marc);
+                                                    try {
+                                                        Marcacion.insert(getDataBase(), marc);
+                                                    }
+                                                    catch(Exception ex)
+                                                    {
+                                                        DataBase db = DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class);
+                                                        Marcacion.insert(db, marc);
+                                                    }
                                                     Toast.makeText(getContext(), "Se ha iniciado el break.", Toast.LENGTH_LONG).show();
                                                     if (distance < DISTANCE) {
                                                         marcaciones.findViewById(R.id.layout_break).setVisibility(View.GONE);
@@ -500,7 +515,14 @@ public class MarcacionFragment extends BaseFragment {
                                                             Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA)));
                                                     double distance = SphericalUtil.computeDistanceBetween(pos, partida);
                                                     marc.setEnUbicacion(distance < DISTANCE);
-                                                    Marcacion.insert(getDataBase(), marc);
+                                                    try {
+                                                        Marcacion.insert(getDataBase(), marc);
+                                                    }
+                                                    catch(Exception ex)
+                                                    {
+                                                        DataBase db = DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class);
+                                                        Marcacion.insert(db, marc);
+                                                    }
                                                     Toast.makeText(getContext(), "Se ha terminado el break.", Toast.LENGTH_LONG).show();
                                                     if (distance < DISTANCE) {
                                                         Marcacion ultimaMarcacion = Marcacion.getUltimaMarcacion(getDataBase(), "J2");
@@ -598,7 +620,14 @@ public class MarcacionFragment extends BaseFragment {
                                                             Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA)));
                                                     double distance = SphericalUtil.computeDistanceBetween(pos, partida);
                                                     marc.setEnUbicacion(distance < DISTANCE);
-                                                    Marcacion.insert(getDataBase(), marc);
+                                                    try {
+                                                        Marcacion.insert(getDataBase(), marc);
+                                                    }
+                                                    catch(Exception ex)
+                                                    {
+                                                        DataBase db = DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class);
+                                                        Marcacion.insert(db, marc);
+                                                    }
                                                     Toast.makeText(getContext(), "Se ha finalizado la Jornada.", Toast.LENGTH_LONG).show();
                                                     if (distance < DISTANCE) {
                                                         DiaLaboral dia = DiaLaboral.getDia(getDataBase(), Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1);
