@@ -196,19 +196,35 @@ public class RadarFragment extends BaseFragment implements AgenteRadarFragment.A
                                         ((TextView) view.findViewById(R.id.radar_ubicacion2)).setTypeface(null, Typeface.BOLD);
                                         ((TextView) view.findViewById(R.id.radar_ubicacion3)).setTypeface(null, Typeface.BOLD);
                                         ((TextView) view.findViewById(R.id.radar_ubicacion4)).setTypeface(null, Typeface.BOLD);
+                                        if(ConnectionUtils.isNetAvailable(getContext())) {
+                                            showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait);
+
+                                            Bundle bundle = new Bundle();
+                                            bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_AGENTES_UBICACION);
+                                            requestSync(bundle);
+                                        }
+                                        else
+                                        {
+                                            Toast.makeText(getContext(), "Sin conexión. No se puede obtener últimas ubicaciones.", Toast.LENGTH_LONG).show();
+                                            closeDialogProgress();
+                                            setMapa();
+                                        }
+                                    }
+                                });
+                                if(sup == null) {
+                                    if(ConnectionUtils.isNetAvailable(getContext())) {
                                         showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait);
 
                                         Bundle bundle = new Bundle();
                                         bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_AGENTES_UBICACION);
                                         requestSync(bundle);
                                     }
-                                });
-                                if(sup == null) {
-                                    showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait);
-
-                                    Bundle bundle = new Bundle();
-                                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_AGENTES_UBICACION);
-                                    requestSync(bundle);
+                                    else
+                                    {
+                                        Toast.makeText(getContext(), "Sin conexión. No se puede obtener últimas ubicaciones.", Toast.LENGTH_LONG).show();
+                                        closeDialogProgress();
+                                        setMapa();
+                                    }
                                 }
                                 else
                                     SetOldPoints();

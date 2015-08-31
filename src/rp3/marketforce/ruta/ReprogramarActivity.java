@@ -125,6 +125,10 @@ public class ReprogramarActivity extends BaseActivity {
         args.putInt(CaldroidFragment.YEAR, fecha.get(Calendar.YEAR));
         caldroidFragment.setArguments(args);
 
+        if(agenda.getDuracion() == 0)
+            agenda.setDuracion(15);
+        if(agenda.getTiempoViaje() == 0)
+            agenda.setTiempoViaje(15);
         Duracion.setText(GeneralValue.getGeneralValue(getDataBase(), Contants.GENERAL_TABLE_DURACION_VISITA, agenda.getDuracion() + "").getValue());
         TiempoViaje.setText(GeneralValue.getGeneralValue(getDataBase(), Contants.GENERAL_TABLE_DURACION_VISITA, agenda.getTiempoViaje() + "").getValue());
         DesdeText.setText(format1.format(fecha.getTime()));
