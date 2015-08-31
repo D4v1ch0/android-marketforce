@@ -192,10 +192,10 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         addDefaultMessage(result);
                     }
 
-                    if (result == SYNC_EVENT_SUCCESS) {
+                    /*if (result == SYNC_EVENT_SUCCESS) {
                         result = Marcaciones.executeSyncMarcacionesHoy(db);
                         addDefaultMessage(result);
-                    }
+                    }*/
 
 				/*
 				 * Se comenta carga de fotos ya que se la hara mediante un lazy loader.
