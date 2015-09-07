@@ -244,6 +244,12 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                 } else if (syncType.equals(SYNC_TYPE_ENVIAR_AGENDA)) {
                     int id = extras.getInt(RutasDetailFragment.ARG_AGENDA_ID);
                     result = Agenda.executeSync(db, id);
+                    if(result != SYNC_EVENT_SUCCESS)
+                    {
+                        rp3.marketforce.models.Agenda agenda = rp3.marketforce.models.Agenda.getAgenda(db, id);
+                        agenda.setEnviado(false);
+                        rp3.marketforce.models.Agenda.update(db, agenda);
+                    }
                     addDefaultMessage(result);
                 } else if (syncType.equals(SYNC_TYPE_REPROGRAMAR_AGENDA)) {
                     int id = extras.getInt(RutasDetailFragment.ARG_AGENDA_ID);
