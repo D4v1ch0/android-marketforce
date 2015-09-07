@@ -385,4 +385,15 @@
         Tipo TEXT
         )
     </statement>
+    <statement>
+        CREATE TABLE tbOportunidadBitacora(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdOportunidad INTEGER,
+        _IdOportunidad INTEGER,
+        IdOportunidadBitacora INTEGER,
+        IdAgente INTEGER,
+        Detalle TEXT,
+        FechaInicio INTEGER
+        )
+    </statement>
 </sql>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sql>
+    <statement name="ToVersion3">
+        CREATE TABLE tbOportunidadBitacora(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdOportunidad INTEGER,
+        _IdOportunidad INTEGER,
+        IdOportunidadBitacora INTEGER,
+        IdAgente INTEGER,
+        Detalle TEXT,
+        FechaInicio INTEGER
+        )
+    </statement>
+</sql>
