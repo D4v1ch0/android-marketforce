@@ -20,10 +20,13 @@ import java.util.List;
 import java.util.Locale;
 
 import rp3.app.BaseFragment;
+import rp3.configuration.PreferenceManager;
+import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Actividad;
 import rp3.marketforce.models.oportunidad.Etapa;
 import rp3.marketforce.models.oportunidad.Oportunidad;
+import rp3.marketforce.models.oportunidad.OportunidadBitacora;
 import rp3.marketforce.models.oportunidad.OportunidadEtapa;
 import rp3.marketforce.models.oportunidad.OportunidadTarea;
 import rp3.marketforce.oportunidad.actividades.ActividadActivity;
@@ -53,7 +56,8 @@ public class EtapaFragment extends BaseFragment {
     private SubEtapaAdapter adapter;
     private Oportunidad opt;
     SimpleDateFormat format1 = new SimpleDateFormat("dd");
-    SimpleDateFormat format2 = new SimpleDateFormat("MMMM yyyy");
+    SimpleDateFormat format2 = new SimpleDateFormat("MM");
+    SimpleDateFormat format3 = new SimpleDateFormat("yyyy");
 
     public static EtapaFragment newInstance(int idEtapa, long idOportunidad) {
         Bundle arguments = new Bundle();
@@ -142,7 +146,7 @@ public class EtapaFragment extends BaseFragment {
                 case 0:
                     getRootView().findViewById(R.id.etapa1_layout).setVisibility(View.VISIBLE);
                     if (etp.getEstado().equalsIgnoreCase("R")) {
-                        ((TextView) getRootView().findViewById(R.id.etapa1_fecha)).setText(format1.format(etp.getFechaFin()) + " de " + format2.format(etp.getFechaFin()));
+                        ((TextView) getRootView().findViewById(R.id.etapa1_fecha)).setText(format1.format(etp.getFechaFin()) + "/" + format2.format(etp.getFechaFin()) + "/" + format3.format(etp.getFechaFin()));
                         Calendar thisDay = Calendar.getInstance();
                         thisDay.setTime(etp.getFechaFin());
                         ((TextView) getRootView().findViewById(R.id.etapa1_dias)).setText(CalendarUtils.DayDiff(thisDay, ant) + " Días");
@@ -153,7 +157,7 @@ public class EtapaFragment extends BaseFragment {
                 case 1:
                     getRootView().findViewById(R.id.etapa2_layout).setVisibility(View.VISIBLE);
                     if (etp.getEstado().equalsIgnoreCase("R")) {
-                        ((TextView) getRootView().findViewById(R.id.etapa2_fecha)).setText(format1.format(etp.getFechaFin()) + " de " + format2.format(etp.getFechaFin()));
+                        ((TextView) getRootView().findViewById(R.id.etapa2_fecha)).setText(format1.format(etp.getFechaFin()) + "/" + format2.format(etp.getFechaFin()) + "/" + format3.format(etp.getFechaFin()));
                         Calendar thisDay = Calendar.getInstance();
                         thisDay.setTime(etp.getFechaFin());
                         ((TextView) getRootView().findViewById(R.id.etapa2_dias)).setText(CalendarUtils.DayDiff(thisDay, ant) + " Días");
@@ -164,7 +168,7 @@ public class EtapaFragment extends BaseFragment {
                 case 2:
                     getRootView().findViewById(R.id.etapa3_layout).setVisibility(View.VISIBLE);
                     if (etp.getEstado().equalsIgnoreCase("R")) {
-                        ((TextView) getRootView().findViewById(R.id.etapa3_fecha)).setText(format1.format(etp.getFechaFin()) + " de " + format2.format(etp.getFechaFin()));
+                        ((TextView) getRootView().findViewById(R.id.etapa3_fecha)).setText(format1.format(etp.getFechaFin()) + "/" + format2.format(etp.getFechaFin()) + "/" + format3.format(etp.getFechaFin()));
                         Calendar thisDay = Calendar.getInstance();
                         thisDay.setTime(etp.getFechaFin());
                         ((TextView) getRootView().findViewById(R.id.etapa3_dias)).setText(CalendarUtils.DayDiff(thisDay, ant) + " Días");
@@ -175,7 +179,7 @@ public class EtapaFragment extends BaseFragment {
                 case 3:
                     getRootView().findViewById(R.id.etapa4_layout).setVisibility(View.VISIBLE);
                     if (etp.getEstado().equalsIgnoreCase("R")) {
-                        ((TextView) getRootView().findViewById(R.id.etapa4_fecha)).setText(format1.format(etp.getFechaFin()) + " de " + format2.format(etp.getFechaFin()));
+                        ((TextView) getRootView().findViewById(R.id.etapa4_fecha)).setText(format1.format(etp.getFechaFin()) + "/" + format2.format(etp.getFechaFin()) + "/" + format3.format(etp.getFechaFin()));
                         Calendar thisDay = Calendar.getInstance();
                         thisDay.setTime(etp.getFechaFin());
                         ((TextView) getRootView().findViewById(R.id.etapa4_dias)).setText(CalendarUtils.DayDiff(thisDay, ant) + " Días");
@@ -186,7 +190,7 @@ public class EtapaFragment extends BaseFragment {
                 case 4:
                     getRootView().findViewById(R.id.etapa5_layout).setVisibility(View.VISIBLE);
                     if (etp.getEstado().equalsIgnoreCase("R")) {
-                        ((TextView) getRootView().findViewById(R.id.etapa5_fecha)).setText(format1.format(etp.getFechaFin()) + " de " + format2.format(etp.getFechaFin()));
+                        ((TextView) getRootView().findViewById(R.id.etapa5_fecha)).setText(format1.format(etp.getFechaFin()) + "/" + format2.format(etp.getFechaFin()) + "/" + format3.format(etp.getFechaFin()));
                         Calendar thisDay = Calendar.getInstance();
                         thisDay.setTime(etp.getFechaFin());
                         ((TextView) getRootView().findViewById(R.id.etapa5_dias)).setText(CalendarUtils.DayDiff(thisDay, ant) + " Días");
@@ -248,6 +252,15 @@ public class EtapaFragment extends BaseFragment {
                 OportunidadEtapa.update(getDataBase(), oportunidadEtapa);
 
                 Etapa next = Etapa.getEtapaNext(getDataBase(), etapa.getOrden() + 1);
+
+                //Se ingresa a log de oportunidad
+                OportunidadBitacora bitacora = new OportunidadBitacora();
+                bitacora.setIdAgente(PreferenceManager.getInt(Contants.KEY_IDAGENTE));
+                bitacora.setFecha(Calendar.getInstance().getTime());
+                bitacora.setIdOportunidad(opt.getIdOportunidad());
+                bitacora.set_idOportunidad((int) opt.getID());
+                bitacora.setDetalle("Se finalizó etapa " + etapa.getOrden() + ": " + etapa.getDescripcion());
+                OportunidadBitacora.insert(getDataBase(), bitacora);
 
                 if(etapa.getOrden() < 5)
                 {

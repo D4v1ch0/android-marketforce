@@ -244,7 +244,7 @@
                 </method>
                 <method>
                     <name>GetOportunidades</name>
-                    <action>oportunidad/getoportunidades</action>
+                    <action>oportunidad/getoportunidades?ultimaactualizacion=@ultimaactualizacion</action>
                     <webMethod>GET</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>

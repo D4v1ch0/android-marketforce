@@ -6,13 +6,16 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import rp3.app.BaseFragment;
+import rp3.configuration.PreferenceManager;
 import rp3.data.models.GeneralValue;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.oportunidad.Oportunidad;
+import rp3.marketforce.models.oportunidad.OportunidadBitacora;
 
 /**
  * Created by magno_000 on 28/05/2015.
@@ -59,6 +62,13 @@ public class CambiarEstadoFragment extends BaseFragment {
 
                 opt.setEstado(generalValues.get(i).getCode());
                 opt.setPendiente(true);
+                OportunidadBitacora bitacora = new OportunidadBitacora();
+                bitacora.setIdAgente(PreferenceManager.getInt(Contants.KEY_IDAGENTE));
+                bitacora.setFecha(Calendar.getInstance().getTime());
+                bitacora.setIdOportunidad(opt.getIdOportunidad());
+                bitacora.set_idOportunidad((int) opt.getID());
+                bitacora.setDetalle("Se cambió estado a " + generalValues.get(i).getValue());
+                OportunidadBitacora.insert(getDataBase(), bitacora);
                 Oportunidad.update(getDataBase(), opt);
                 finish();
             }

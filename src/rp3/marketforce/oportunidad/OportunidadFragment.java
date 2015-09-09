@@ -41,6 +41,7 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
     public boolean isActiveListFragment = true;
     private long selectedOportunidadId;
     private boolean filtro = false;
+    private OportunidadBitacoraListFragment subFragment;
 
     public static OportunidadFragment newInstance() {
         OportunidadFragment fragment = new OportunidadFragment();
@@ -55,7 +56,7 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        setContentView(R.layout.fragment_oportunidad,R.menu.fragment_oportunidad_menu);
+        setContentView(R.layout.fragment_oportunidad, R.menu.fragment_oportunidad_menu);
 
     }
 
@@ -88,6 +89,14 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
                 transactionListFragment.filtro = false;
             }
             RefreshMenu();
+        }
+        else
+        {
+            if (resultCode == RESULT_OK) {
+                if (resultCode == RESULT_OK && null != data) {
+                    subFragment.onActivityResult(requestCode, resultCode, data);
+                }
+            }
         }
     }
 
@@ -215,15 +224,20 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
             menu.findItem(R.id.action_crear_oportunidad).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_filtro).setVisible(isActiveListFragment && !filtro);
             menu.findItem(R.id.action_quitar_filtro).setVisible(isActiveListFragment && filtro);
+            menu.findItem(R.id.action_ver_bitacora).setVisible(!isActiveListFragment);
         } else {
             menu.findItem(R.id.action_search).setVisible(true);
             menu.findItem(R.id.action_crear_oportunidad).setVisible(true);
             menu.findItem(R.id.action_filtro).setVisible(!filtro);
             menu.findItem(R.id.action_quitar_filtro).setVisible(filtro);
-            if(selectedOportunidad != null)
+            if(selectedOportunidad != null) {
                 menu.findItem(R.id.action_edit).setVisible(selectedOportunidad.getEstado().equalsIgnoreCase("A"));
-            else
+                menu.findItem(R.id.action_ver_bitacora).setVisible(true);
+            }
+            else {
                 menu.findItem(R.id.action_edit).setVisible(selectedOportunidadId != 0);
+                menu.findItem(R.id.action_ver_bitacora).setVisible(selectedOportunidadId != 0);
+            }
         }
     }
 
@@ -238,6 +252,10 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
                 Intent intent3 = new Intent(getContext(), CrearOportunidadActivity.class);
                 intent3.putExtra(CrearOportunidadActivity.ARG_ID, selectedOportunidadId);
                 startActivity(intent3);
+                break;
+            case R.id.action_ver_bitacora:
+                subFragment = OportunidadBitacoraListFragment.newInstance((int) selectedOportunidadId);
+                showDialogFragment(subFragment, "Bitácora", "Bitácora");
                 break;
             case R.id.action_quitar_filtro:
                 filtroData.setClass(getContext(), FiltroOportunidadActivity.class);
@@ -280,4 +298,5 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
     public boolean allowSelectedItem() {
         return false;
     }
+
 }

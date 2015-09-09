@@ -264,5 +264,7 @@
     <string name="label_medio_referencia_max">MEDIO DE REFERENCIA</string>
     <string name="label_finalizar_subetapa">Finalizar Subetapa</string>
     <string name="hint_search_oportunidad">Buscar</string>
+    <string name="label_bitacora">Bitácora</string>
+    <string name="label_agregar_entrada">Agregar Nueva Entrada</string>
 
 </resources>

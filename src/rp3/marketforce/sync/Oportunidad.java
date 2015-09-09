@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import org.ksoap2.transport.HttpResponseException;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import rp3.configuration.PreferenceManager;
@@ -21,6 +22,7 @@ import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.AgendaTareaActividades;
 import rp3.marketforce.models.oportunidad.*;
 import rp3.marketforce.utils.Utils;
+import rp3.sync.SyncAudit;
 import rp3.util.Convert;
 
 /**
@@ -135,6 +137,17 @@ public class Oportunidad {
                 }
                 jObject.put("OportunidadResponsables", jArrayResponsables);
 
+                JSONArray jArrayBitacora = new JSONArray();
+                for (OportunidadBitacora bit : oportunidadUpload.getOportunidadBitacoras()) {
+                    JSONObject jObjectBitacora = new JSONObject();
+                    jObjectBitacora.put("IdAgente", bit.getIdAgente());
+                    jObjectBitacora.put("Detalle", bit.getDetalle());
+                    jObjectBitacora.put("FecIngTicks", Convert.getDotNetTicksFromDate(bit.getFecha()));
+
+                    jArrayBitacora.put(jObjectBitacora);
+                }
+                jObject.put("OportunidadBitacoras", jArrayBitacora);
+
                 JSONArray jArrayEtapas = new JSONArray();
                 for (OportunidadEtapa etapa : oportunidadUpload.getOportunidadEtapas()) {
                     JSONObject jObjectEtapa = new JSONObject();
@@ -195,6 +208,10 @@ public class Oportunidad {
                 for (OportunidadResponsable agt : oportunidadUpload.getOportunidadResponsables()) {
                     agt.setIdOportunidad(id);
                     OportunidadResponsable.update(db, agt);
+                }
+                for (OportunidadBitacora bit : oportunidadUpload.getOportunidadBitacoras()) {
+                    bit.setIdOportunidad(id);
+                    OportunidadBitacora.update(db, bit);
                 }
 
                 } catch (HttpResponseException e) {
@@ -404,6 +421,19 @@ public class Oportunidad {
                 }
                 jObject.put("OportunidadResponsables", jArrayResponsables);
 
+                JSONArray jArrayBitacora = new JSONArray();
+                for (OportunidadBitacora bit : oportunidadUpload.getOportunidadBitacoras()) {
+                    JSONObject jObjectBitacora = new JSONObject();
+                    jObjectBitacora.put("IdOportunidad", bit.getIdOportunidad());
+                    jObjectBitacora.put("IdOportunidadBitacora", bit.getIdOportunidadBitacora());
+                    jObjectBitacora.put("IdAgente", bit.getIdAgente());
+                    jObjectBitacora.put("Detalle", bit.getDetalle());
+                    jObjectBitacora.put("FecIngTicks", Convert.getDotNetTicksFromDate(bit.getFecha()));
+
+                    jArrayBitacora.put(jObjectBitacora);
+                }
+                jObject.put("OportunidadBitacoras", jArrayBitacora);
+
                 JSONArray jArrayEtapas = new JSONArray();
                 for (OportunidadEtapa etapa : oportunidadUpload.getOportunidadEtapas()) {
                     JSONObject jObjectEtapa = new JSONObject();
@@ -550,6 +580,11 @@ public class Oportunidad {
         WebService webService = new WebService("MartketForce","GetOportunidades");
         try
         {
+            Calendar fechaUlt = Calendar.getInstance();
+            fechaUlt.setTime(SyncAudit.getLastSyncDate(rp3.marketforce.sync.SyncAdapter.SYNC_TYPE_UPLOAD_OPORTUNIDADES, SyncAdapter.SYNC_EVENT_SUCCESS));
+            fechaUlt.add(Calendar.MINUTE, -15);
+            long fecha = rp3.util.Convert.getDotNetTicksFromDate(fechaUlt.getTime());
+            webService.addParameter("@ultimaactualizacion", fecha);
             webService.addCurrentAuthToken();
 
             try {
@@ -564,18 +599,19 @@ public class Oportunidad {
 
             JSONArray types = webService.getJSONArrayResponse();
 
-            rp3.marketforce.models.oportunidad.Oportunidad.deleteAll(db, Contract.Oportunidad.TABLE_NAME);
-            OportunidadTarea.deleteAll(db, Contract.OportunidadTarea.TABLE_NAME);
-            OportunidadTareaActividad.deleteAll(db, Contract.OportunidadTareaActividad.TABLE_NAME);
-            OportunidadResponsable.deleteAll(db, Contract.OportunidadResponsable.TABLE_NAME);
-            OportunidadContacto.deleteAll(db, Contract.OportunidadContacto.TABLE_NAME);
-            OportunidadFoto.deleteAll(db, Contract.OportunidadFoto.TABLE_NAME);
-            OportunidadEtapa.deleteAll(db, Contract.OportunidadEtapa.TABLE_NAME);
+            //rp3.marketforce.models.oportunidad.Oportunidad.deleteAll(db, Contract.Oportunidad.TABLE_NAME);
+            //OportunidadTarea.deleteAll(db, Contract.OportunidadTarea.TABLE_NAME);
+            //OportunidadTareaActividad.deleteAll(db, Contract.OportunidadTareaActividad.TABLE_NAME);
+            //OportunidadResponsable.deleteAll(db, Contract.OportunidadResponsable.TABLE_NAME);
+            //OportunidadContacto.deleteAll(db, Contract.OportunidadContacto.TABLE_NAME);
+            //OportunidadFoto.deleteAll(db, Contract.OportunidadFoto.TABLE_NAME);
+            //OportunidadEtapa.deleteAll(db, Contract.OportunidadEtapa.TABLE_NAME);
 
             for(int i=0; i < types.length(); i++){
 
                 try {
                     JSONObject type = types.getJSONObject(i);
+                    rp3.marketforce.models.oportunidad.Oportunidad.deleteOportunidadIdServer(db, type.getInt("IdOportunidad"));
                     rp3.marketforce.models.oportunidad.Oportunidad opt = new rp3.marketforce.models.oportunidad.Oportunidad();
 
                     opt.setIdEtapa(type.getInt("IdEtapa"));
@@ -664,6 +700,21 @@ public class Oportunidad {
                             opResp.setTipo(str.getString("Tipo"));
 
                         OportunidadResponsable.insert(db, opResp);
+                    }
+
+                    strs = type.getJSONArray("OportunidadBitacoras");
+
+                    for (int j = 0; j < strs.length(); j++) {
+                        JSONObject str = strs.getJSONObject(j);
+                        OportunidadBitacora opBit = new OportunidadBitacora();
+
+                        opBit.setIdOportunidad(opt.getIdOportunidad());
+                        opBit.setIdAgente(str.getInt("IdAgente"));
+                        opBit.setIdOportunidadBitacora(str.getInt("IdOportunidadBitacora"));
+                        opBit.setDetalle(str.getString("Detalle"));
+                        opBit.setFecha(Convert.getDateFromDotNetTicks(str.getLong("FecIngTicks")));
+
+                        OportunidadBitacora.insert(db, opBit);
                     }
 
                     if (!type.isNull("OportunidadEtapas")) {

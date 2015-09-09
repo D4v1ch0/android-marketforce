@@ -9,6 +9,8 @@
         IdAgente INTEGER,
         Detalle TEXT,
         FechaInicio INTEGER
-        )
+        );
+        ALTER tbOportunidadContacto ADD COLUMN Telefono TEXT;
+        ALTER tbOportunidadContacto ADD COLUMN Email TEXT;
     </statement>
 </sql>

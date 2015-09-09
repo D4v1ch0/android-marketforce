@@ -14,5 +14,7 @@
         android:showAsAction="always|collapseActionView"     ></item>
     <item android:id="@+id/action_edit" android:icon="@drawable/ic_action_edit_dark" android:title="@string/label_crear_visita"
         android:showAsAction="always|collapseActionView"     ></item>
+    <item android:id="@+id/action_ver_bitacora" android:icon="@drawable/ic_datos" android:title="@string/label_bitacora"
+        android:showAsAction="always|collapseActionView"     ></item>
 
 </menu>

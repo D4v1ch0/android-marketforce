@@ -57,6 +57,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
     private List<OportunidadTarea> oportunidadTareas;
     private List<OportunidadFoto> oportunidadFotos;
     private List<OportunidadEtapa> oportunidadEtapas;
+    private List<OportunidadBitacora> oportunidadBitacoras;
     private Etapa etapa;
     private Agente agente;
 
@@ -293,6 +294,14 @@ public class Oportunidad extends EntityBase<Oportunidad> {
 
     public void setOportunidadEtapas(List<OportunidadEtapa> oportunidadEtapas) {
         this.oportunidadEtapas = oportunidadEtapas;
+    }
+
+    public List<OportunidadBitacora> getOportunidadBitacoras() {
+        return oportunidadBitacoras;
+    }
+
+    public void setOportunidadBitacoras(List<OportunidadBitacora> oportunidadBitacoras) {
+        this.oportunidadBitacoras = oportunidadBitacoras;
     }
 
     public Agente getAgente() {
@@ -571,7 +580,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
     }
 
     public static Oportunidad getOportunidadId(DataBase db, long opId) {
-        String query = QueryDir.getQuery( Contract.Oportunidad.QUERY_OPORTUNIDAD_BY_ID );
+        String query = QueryDir.getQuery(Contract.Oportunidad.QUERY_OPORTUNIDAD_BY_ID);
         Cursor c = db.rawQuery(query,""+opId);
 
         Oportunidad opt = new Oportunidad();
@@ -607,6 +616,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
                 opt.setOportunidadTareas(OportunidadTarea.getTareasOportunidad(db, opt.getIdOportunidad()));
                 opt.setOportunidadFotos(OportunidadFoto.getFotos(db, opt.getIdOportunidad()));
                 opt.setOportunidadEtapas(OportunidadEtapa.getEtapasOportunidad(db, opt.getIdOportunidad()));
+                opt.setOportunidadBitacoras(OportunidadBitacora.getBitacoraOportunidad(db, opt.getIdOportunidad()));
             }
             else
             {
@@ -615,6 +625,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
                 opt.setOportunidadTareas(OportunidadTarea.getTareasOportunidadInt(db, opt.getID()));
                 opt.setOportunidadFotos(OportunidadFoto.getFotosInt(db, opt.getID()));
                 opt.setOportunidadEtapas(OportunidadEtapa.getEtapasOportunidadInt(db, opt.getID()));
+                opt.setOportunidadBitacoras(OportunidadBitacora.getBitacoraOportunidadInt(db, opt.getID()));
             }
 
         }
@@ -658,6 +669,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
             opt.setOportunidadTareas(OportunidadTarea.getTareasOportunidad(db, opt.getIdOportunidad()));
             opt.setOportunidadFotos(OportunidadFoto.getFotos(db, opt.getIdOportunidad()));
             opt.setOportunidadEtapas(OportunidadEtapa.getEtapasOportunidad(db, opt.getIdOportunidad()));
+            opt.setOportunidadBitacoras(OportunidadBitacora.getBitacoraOportunidad(db, opt.getIdOportunidad()));
             oportunidades.add(opt);
         }
         c.close();
@@ -701,11 +713,33 @@ public class Oportunidad extends EntityBase<Oportunidad> {
             opt.setOportunidadTareas(OportunidadTarea.getTareasOportunidadInt(db, opt.getID()));
             opt.setOportunidadFotos(OportunidadFoto.getFotosInt(db, opt.getID()));
             opt.setOportunidadEtapas(OportunidadEtapa.getEtapasOportunidadInt(db, opt.getID()));
+            opt.setOportunidadBitacoras(OportunidadBitacora.getBitacoraOportunidadInt(db, opt.getID()));
 
             oportunidades.add(opt);
         }
         c.close();
         return oportunidades;
+    }
+
+    public static boolean existOportunidadServer(DataBase db, int idServer)
+    {
+        Cursor c = db.query(Contract.Oportunidad.TABLE_NAME, Contract.Oportunidad._ID, Contract.Oportunidad.COLUMN_ID_OPORTUNIDAD + " = ?", idServer + "");
+        if(c.moveToFirst())
+            return true;
+        else
+            return false;
+    }
+
+    public static void deleteOportunidadIdServer(DataBase db, int idServer)
+    {
+        db.delete(Contract.Oportunidad.TABLE_NAME, Contract.Oportunidad.COLUMN_ID_OPORTUNIDAD + " = ?", idServer);
+        db.delete(Contract.OportunidadResponsable.TABLE_NAME, Contract.Oportunidad.COLUMN_ID_OPORTUNIDAD + " = ?", idServer);
+        db.delete(Contract.OportunidadTarea.TABLE_NAME, Contract.Oportunidad.COLUMN_ID_OPORTUNIDAD + " = ?", idServer);
+        db.delete(Contract.OportunidadTareaActividad.TABLE_NAME, Contract.Oportunidad.COLUMN_ID_OPORTUNIDAD + " = ?", idServer);
+        db.delete(Contract.OportunidadEtapa.TABLE_NAME, Contract.Oportunidad.COLUMN_ID_OPORTUNIDAD + " = ?", idServer);
+        db.delete(Contract.OportunidadContacto.TABLE_NAME, Contract.Oportunidad.COLUMN_ID_OPORTUNIDAD + " = ?", idServer);
+        db.delete(Contract.OportunidadBitacora.TABLE_NAME, Contract.Oportunidad.COLUMN_ID_OPORTUNIDAD + " = ?", idServer);
+        db.delete(Contract.OportunidadFoto.TABLE_NAME, Contract.Oportunidad.COLUMN_ID_OPORTUNIDAD + " = ?", idServer);
     }
 
     public class OportunidadExt extends EntityBase<OportunidadExt>{

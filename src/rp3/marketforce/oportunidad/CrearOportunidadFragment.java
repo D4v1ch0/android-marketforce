@@ -59,6 +59,7 @@ import rp3.marketforce.models.Agente;
 import rp3.marketforce.models.oportunidad.Etapa;
 import rp3.marketforce.models.oportunidad.EtapaTarea;
 import rp3.marketforce.models.oportunidad.Oportunidad;
+import rp3.marketforce.models.oportunidad.OportunidadBitacora;
 import rp3.marketforce.models.oportunidad.OportunidadContacto;
 import rp3.marketforce.models.oportunidad.OportunidadEtapa;
 import rp3.marketforce.models.oportunidad.OportunidadFoto;
@@ -201,10 +202,26 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
         opt.setPendiente(true);
 
 
-        if(opt.getID() == 0 )
+        if(opt.getID() == 0 ) {
             Oportunidad.insert(getDataBase(), opt);
-        else
+            OportunidadBitacora bitacora = new OportunidadBitacora();
+            bitacora.setIdAgente(PreferenceManager.getInt(Contants.KEY_IDAGENTE));
+            bitacora.setFecha(Calendar.getInstance().getTime());
+            bitacora.setIdOportunidad(opt.getIdOportunidad());
+            bitacora.set_idOportunidad((int) opt.getID());
+            bitacora.setDetalle("Se creó oportunidad");
+            OportunidadBitacora.insert(getDataBase(), bitacora);
+        }
+        else {
             Oportunidad.update(getDataBase(), opt);
+            OportunidadBitacora bitacora = new OportunidadBitacora();
+            bitacora.setIdAgente(PreferenceManager.getInt(Contants.KEY_IDAGENTE));
+            bitacora.setFecha(Calendar.getInstance().getTime());
+            bitacora.setIdOportunidad(opt.getIdOportunidad());
+            bitacora.set_idOportunidad((int) opt.getID());
+            bitacora.setDetalle("Se actualizó oportunidad");
+            OportunidadBitacora.insert(getDataBase(), bitacora);
+        }
 
         for(int i = 0; i < listAgentesIds.size(); i ++)
         {

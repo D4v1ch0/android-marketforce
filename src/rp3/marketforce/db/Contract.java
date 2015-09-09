@@ -768,9 +768,9 @@ public final class Contract {
 
 		public static final String COLUMN_ID_OPORTUNIDAD = "IdOportunidad";
 		public static final String COLUMN_ID_OPORTUNIDAD_INT = "_IdOportunidad";
-		public static final String COLUMN_ID_OPORTUNIDAD_BITACORA = "IdOportunidad";
+		public static final String COLUMN_ID_OPORTUNIDAD_BITACORA = "IdOportunidadBitacora";
 		public static final String COLUMN_ID_AGENTE = "IdAgente";
-		public static final String COLUMN_DETALLE = "Tipo";
+		public static final String COLUMN_DETALLE = "Detalle";
 		public static final String COLUMN_FECHA = "FechaInicio";
 
 		public static final String FIELD_ID_OPORTUNIDAD = COLUMN_ID_OPORTUNIDAD;
