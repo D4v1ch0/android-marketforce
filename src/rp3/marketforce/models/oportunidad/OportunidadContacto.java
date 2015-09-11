@@ -7,6 +7,7 @@ import java.util.List;
 
 import rp3.data.entity.EntityBase;
 import rp3.db.sqlite.DataBase;
+import rp3.marketforce.Contants;
 import rp3.marketforce.db.Contract;
 import rp3.util.CursorUtils;
 
@@ -135,6 +136,8 @@ public class OportunidadContacto extends EntityBase<OportunidadContacto> {
         setValue(Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD_INT, this._idOportunidad);
         setValue(Contract.OportunidadContacto.COLUMN_CARGO, this.cargo);
         setValue(Contract.OportunidadContacto.COLUMN_URL_FOTO, this.URLFoto);
+        setValue(Contract.OportunidadContacto.COLUMN_TELEFONO, this.movil);
+        setValue(Contract.OportunidadContacto.COLUMN_EMAIL, this.email);
     }
 
     @Override
@@ -148,8 +151,8 @@ public class OportunidadContacto extends EntityBase<OportunidadContacto> {
     }
 
     public static List<OportunidadContacto> getContactosOportunidad(DataBase db, int idOportunidad) {
-        Cursor c = db.query(Contract.OportunidadContacto.TABLE_NAME, new String[] {Contract.OportunidadContacto._ID, Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD,
-                Contract.OportunidadContacto.COLUMN_NOMBRE, Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD_CONTACTO, Contract.OportunidadContacto.COLUMN_CARGO,
+        Cursor c = db.query(Contract.OportunidadContacto.TABLE_NAME, new String[] {Contract.OportunidadContacto._ID, Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD, Contract.OportunidadContacto.COLUMN_EMAIL,
+                Contract.OportunidadContacto.COLUMN_NOMBRE, Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD_CONTACTO, Contract.OportunidadContacto.COLUMN_CARGO, Contract.OportunidadContacto.COLUMN_TELEFONO,
                 Contract.OportunidadContacto.COLUMN_URL_FOTO}, Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD + " = ?",
                 new String[] {idOportunidad + ""});
 
@@ -162,6 +165,8 @@ public class OportunidadContacto extends EntityBase<OportunidadContacto> {
             cont.setIdOportunidadContacto(CursorUtils.getInt(c, Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD_CONTACTO));
             cont.setCargo(CursorUtils.getString(c, Contract.OportunidadContacto.COLUMN_CARGO));
             cont.setURLFoto(CursorUtils.getString(c, Contract.OportunidadContacto.COLUMN_URL_FOTO));
+            cont.setMovil(CursorUtils.getString(c, Contract.OportunidadContacto.COLUMN_TELEFONO));
+            cont.setEmail(CursorUtils.getString(c, Contract.OportunidadContacto.COLUMN_EMAIL));
             list.add(cont);
         }
         c.close();
@@ -169,8 +174,8 @@ public class OportunidadContacto extends EntityBase<OportunidadContacto> {
     }
 
     public static List<OportunidadContacto> getContactosOportunidadInt(DataBase db, long id) {
-        Cursor c = db.query(Contract.OportunidadContacto.TABLE_NAME, new String[] {Contract.OportunidadContacto._ID, Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD,
-                        Contract.OportunidadContacto.COLUMN_NOMBRE, Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD_CONTACTO, Contract.OportunidadContacto.COLUMN_CARGO,
+        Cursor c = db.query(Contract.OportunidadContacto.TABLE_NAME, new String[] {Contract.OportunidadContacto._ID, Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD, Contract.OportunidadContacto.COLUMN_EMAIL,
+                        Contract.OportunidadContacto.COLUMN_NOMBRE, Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD_CONTACTO, Contract.OportunidadContacto.COLUMN_CARGO, Contract.OportunidadContacto.COLUMN_TELEFONO,
                         Contract.OportunidadContacto.COLUMN_URL_FOTO}, Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD_INT + " = ?",
                 new String[] {id + ""});
 
@@ -183,6 +188,8 @@ public class OportunidadContacto extends EntityBase<OportunidadContacto> {
             cont.setIdOportunidadContacto(CursorUtils.getInt(c, Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD_CONTACTO));
             cont.setCargo(CursorUtils.getString(c, Contract.OportunidadContacto.COLUMN_CARGO));
             cont.setURLFoto(CursorUtils.getString(c, Contract.OportunidadContacto.COLUMN_URL_FOTO));
+            cont.setMovil(CursorUtils.getString(c, Contract.OportunidadContacto.COLUMN_TELEFONO));
+            cont.setEmail(CursorUtils.getString(c, Contract.OportunidadContacto.COLUMN_EMAIL));
             list.add(cont);
         }
         c.close();
@@ -190,8 +197,8 @@ public class OportunidadContacto extends EntityBase<OportunidadContacto> {
     }
 
     public static OportunidadContacto getContactoInt(DataBase db, long id) {
-        Cursor c = db.query(Contract.OportunidadContacto.TABLE_NAME, new String[] {Contract.OportunidadContacto._ID, Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD,
-                        Contract.OportunidadContacto.COLUMN_NOMBRE, Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD_CONTACTO, Contract.OportunidadContacto.COLUMN_CARGO,
+        Cursor c = db.query(Contract.OportunidadContacto.TABLE_NAME, new String[] {Contract.OportunidadContacto._ID, Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD, Contract.OportunidadContacto.COLUMN_EMAIL,
+                        Contract.OportunidadContacto.COLUMN_NOMBRE, Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD_CONTACTO, Contract.OportunidadContacto.COLUMN_CARGO,Contract.OportunidadContacto.COLUMN_TELEFONO,
                         Contract.OportunidadContacto.COLUMN_URL_FOTO}, Contract.OportunidadContacto._ID + " = ?",
                 new String[] {id + ""});
 
@@ -203,6 +210,8 @@ public class OportunidadContacto extends EntityBase<OportunidadContacto> {
             cont.setIdOportunidadContacto(CursorUtils.getInt(c, Contract.OportunidadContacto.COLUMN_ID_OPORTUNIDAD_CONTACTO));
             cont.setCargo(CursorUtils.getString(c, Contract.OportunidadContacto.COLUMN_CARGO));
             cont.setURLFoto(CursorUtils.getString(c, Contract.OportunidadContacto.COLUMN_URL_FOTO));
+            cont.setMovil(CursorUtils.getString(c, Contract.OportunidadContacto.COLUMN_TELEFONO));
+            cont.setEmail(CursorUtils.getString(c, Contract.OportunidadContacto.COLUMN_EMAIL));
         }
         c.close();
         return cont;

@@ -276,7 +276,9 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
             cont.set_idOportunidad((int) opt.getID());
             cont.setIdOportunidad(opt.getIdOportunidad());
             cont.setNombre(((EditText) listViewContactos.get(i).findViewById(R.id.contacto_nombre)).getText().toString());
-            cont.setCargo(((EditText)listViewContactos.get(i).findViewById(R.id.contacto_cargo)).getText().toString());
+            cont.setCargo(((EditText) listViewContactos.get(i).findViewById(R.id.contacto_cargo)).getText().toString());
+            cont.setEmail(((EditText)listViewContactos.get(i).findViewById(R.id.contacto_email)).getText().toString());
+            cont.setMovil(((EditText)listViewContactos.get(i).findViewById(R.id.contacto_movil)).getText().toString());
             if(contactPhotos.get(i).length() > 0)
                 cont.setURLFoto(contactPhotos.get(i));
 
@@ -553,6 +555,8 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
                 if(listContactos.size() > i) {
                     ((EditText) listViewContactos.get(i).findViewById(R.id.contacto_nombre)).setText(listContactos.get(i).getNombre());
                     ((EditText) listViewContactos.get(i).findViewById(R.id.contacto_cargo)).setText(listContactos.get(i).getCargo());
+                    ((EditText) listViewContactos.get(i).findViewById(R.id.contacto_email)).setText(listContactos.get(i).getEmail() == null ? "" : listContactos.get(i).getEmail());
+                    ((EditText) listViewContactos.get(i).findViewById(R.id.contacto_movil)).setText(listContactos.get(i).getMovil() == null ? "" : listContactos.get(i).getMovil());
                 }
             }
         }
@@ -717,7 +721,9 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
         {
             OportunidadContacto cont = new OportunidadContacto();
             cont.setNombre(((EditText) listViewContactos.get(i).findViewById(R.id.contacto_nombre)).getText().toString());
-            cont.setCargo(((EditText)listViewContactos.get(i).findViewById(R.id.contacto_cargo)).getText().toString());
+            cont.setCargo(((EditText) listViewContactos.get(i).findViewById(R.id.contacto_cargo)).getText().toString());
+            cont.setEmail(((EditText) listViewContactos.get(i).findViewById(R.id.contacto_email)).getText().toString());
+            cont.setMovil(((EditText) listViewContactos.get(i).findViewById(R.id.contacto_movil)).getText().toString());
             listContactos.add(cont);
         }
     }
@@ -777,7 +783,9 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
         });
         ((EditText) contacto.findViewById(R.id.contacto_nombre)).setText(opCont.getNombre());
         ((EditText) contacto.findViewById(R.id.contacto_cargo)).setText(opCont.getCargo());
-        if(opCont.getURLFoto().length() != 0) {
+        ((EditText) contacto.findViewById(R.id.contacto_email)).setText(opCont.getEmail() == null ? "" : opCont.getEmail());
+        ((EditText) contacto.findViewById(R.id.contacto_movil)).setText(opCont.getMovil() == null ? "" : opCont.getMovil());
+        if(opCont.getURLFoto() != null && opCont.getURLFoto().length() != 0) {
             DManager.fetchDrawableOnThreadOnline(PreferenceManager.getString("server") +
                             rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_OPORTUNIDADES) + opCont.getURLFoto().replace("\"", ""),
                     (ImageView) contacto.findViewById(R.id.contacto_foto));

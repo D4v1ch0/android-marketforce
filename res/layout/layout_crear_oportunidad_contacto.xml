@@ -57,6 +57,44 @@
                 android:layout_height="1dp"
                 android:background="@color/color_grey_lines" />
 
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:id="@+id/contacto_movil"
+                android:hint="@string/label_telefono_1"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:background="@color/caldroid_transparent"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:inputType="phone" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/color_grey_lines" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:id="@+id/contacto_email"
+                android:hint="@string/label_correo"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:background="@color/caldroid_transparent"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:inputType="textEmailAddress" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/color_grey_lines" />
+
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

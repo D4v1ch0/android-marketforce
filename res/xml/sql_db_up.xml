@@ -10,7 +10,7 @@
         Detalle TEXT,
         FechaInicio INTEGER
         );
-        ALTER tbOportunidadContacto ADD COLUMN Telefono TEXT;
-        ALTER tbOportunidadContacto ADD COLUMN Email TEXT;
+        ALTER TABLE tbOportunidadContacto ADD COLUMN Telefono TEXT;
+        ALTER TABLE tbOportunidadContacto ADD COLUMN Email TEXT;
     </statement>
 </sql>

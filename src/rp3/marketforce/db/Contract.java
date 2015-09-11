@@ -634,6 +634,8 @@ public final class Contract {
         public static final String COLUMN_NOMBRE = "Nombre";
         public static final String COLUMN_CARGO = "Cargo";
         public static final String COLUMN_URL_FOTO = "URLFoto";
+		public static final String COLUMN_TELEFONO = "Telefono";
+		public static final String COLUMN_EMAIL = "Email";
 
         public static final String FIELD_ID_OPORTUNIDAD_CONTACTO = COLUMN_ID_OPORTUNIDAD_CONTACTO;
         public static final String FIELD_ID_OPORTUNIDAD = COLUMN_ID_OPORTUNIDAD;
@@ -641,6 +643,8 @@ public final class Contract {
         public static final String FIELD_URL_FOTO = COLUMN_URL_FOTO;
         public static final String FIELD_NOMBRE = COLUMN_NOMBRE;
         public static final String FIELD_CARGO = COLUMN_CARGO;
+		public static final String FIELD_TELEFONO = COLUMN_TELEFONO;
+		public static final String FIELD_EMAIL = COLUMN_EMAIL;
 
     }
 

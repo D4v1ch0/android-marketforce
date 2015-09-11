@@ -403,7 +403,28 @@ public class OportunidadDetailFragment extends BaseFragment {
                     ((TextView) view_contacto.findViewById(R.id.oportunidad_contacto_number)).setText(i + 1 + "");
                     ((TextView) view_contacto.findViewById(R.id.oportunidad_contacto_nombre)).setText(opt.getOportunidadContactos().get(i).getNombre());
                     ((TextView) view_contacto.findViewById(R.id.oportunidad_contacto_cargo)).setText(opt.getOportunidadContactos().get(i).getCargo());
-                    if(opt.getOportunidadContactos().get(i).getURLFoto() != null && opt.getOportunidadContactos().get(i).getURLFoto().replace("\"","").length() > 0) {
+
+                    if(opt.getOportunidadContactos().get(i).getEmail() != null && opt.getOportunidadContactos().get(i).getEmail().length() != 0)
+                    {
+                        ((TextView) view_contacto.findViewById(R.id.oportunidad_contacto_email)).setText(opt.getOportunidadContactos().get(i).getEmail());
+                        ViewUtils.setEmailActionClickListener(view_contacto.findViewById(R.id.oportunidad_contacto_email), opt.getOportunidadContactos().get(i).getEmail());
+                        ((TextView) view_contacto.findViewById(R.id.oportunidad_contacto_email)).setPaintFlags(((TextView) view_contacto.findViewById(R.id.oportunidad_contacto_email)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                        ((TextView) view_contacto.findViewById(R.id.oportunidad_contacto_email)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
+                    }
+                    else
+                        ((TextView) view_contacto.findViewById(R.id.oportunidad_contacto_email)).setText(R.string.label_sin_especificar);
+
+                    if(opt.getOportunidadContactos().get(i).getMovil() != null && opt.getOportunidadContactos().get(i).getMovil().length() != 0)
+                    {
+                        ((TextView) view_contacto.findViewById(R.id.oportunidad_contacto_movil)).setText(opt.getOportunidadContactos().get(i).getMovil());
+                        ViewUtils.setPhoneActionClickListener(view_contacto.findViewById(R.id.oportunidad_contacto_movil), opt.getOportunidadContactos().get(i).getMovil());
+                        ((TextView) view_contacto.findViewById(R.id.oportunidad_contacto_movil)).setPaintFlags(((TextView) view_contacto.findViewById(R.id.oportunidad_contacto_movil)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                        ((TextView) view_contacto.findViewById(R.id.oportunidad_contacto_movil)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
+                    }
+                    else
+                        ((TextView) view_contacto.findViewById(R.id.oportunidad_contacto_movil)).setText(R.string.label_sin_especificar);
+
+                    if(opt.getOportunidadContactos().get(i).getURLFoto() != null && opt.getOportunidadContactos().get(i).getURLFoto().replace("\"", "").length() > 0) {
                         DManager.fetchDrawableOnThreadOnline(PreferenceManager.getString("server") +
                                         rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_OPORTUNIDADES) + opt.getOportunidadContactos().get(i).getURLFoto().replace("\"", ""),
                                 (ImageView) view_contacto.getRootView().findViewById(R.id.oportunidad_contacto_foto));

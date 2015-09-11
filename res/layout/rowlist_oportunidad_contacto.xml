@@ -64,6 +64,29 @@
                     android:text="@string/label_oportunidad_venta"
                     android:id="@+id/oportunidad_contacto_cargo" />
 
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/label_oportunidad_venta"
+                    android:id="@+id/oportunidad_contacto_movil"
+                    android:textSize="@dimen/text_medium_small_size"
+                    android:minLines="1"
+                    android:maxLines="1"
+                    android:lines="1" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/label_oportunidad_venta"
+                    android:id="@+id/oportunidad_contacto_email"
+                    android:textSize="@dimen/text_medium_small_size"
+                    android:ellipsize="end"
+                    android:minLines="1"
+                    android:maxLines="1"
+                    android:lines="1" />
+
             </LinearLayout>
 
             <RelativeLayout

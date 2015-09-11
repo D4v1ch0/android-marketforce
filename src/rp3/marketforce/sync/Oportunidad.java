@@ -395,9 +395,9 @@ public class Oportunidad {
                     jObjectContacto.put("IdOportunidad", oportunidadUpload.getIdOportunidad());
                     jObjectContacto.put("IdOportunidadContacto", agt.getIdOportunidadContacto());
                     jObjectContacto.put("Cargo", agt.getCargo());
-                    jObjectContacto.put("CorreoElectronico", "");
+                    jObjectContacto.put("CorreoElectronico", agt.getEmail());
                     jObjectContacto.put("Telefono2", "");
-                    jObjectContacto.put("Telefono1", "");
+                    jObjectContacto.put("Telefono1", agt.getMovil());
                     jObjectContacto.put("Nombre", agt.getNombre());
                     if(principal)
                         jObjectContacto.put("EsPrincipal", true);
@@ -683,6 +683,16 @@ public class Oportunidad {
                             opCont.setCargo(str.getString("Cargo"));
                         else
                             opCont.setCargo("");
+
+                        if(!str.isNull("Telefono1") || !str.getString("Telefono1").equalsIgnoreCase("null"))
+                            opCont.setMovil(str.getString("Telefono1"));
+                        else
+                            opCont.setMovil("");
+
+                        if(!str.isNull("CorreoElectronico") || !str.getString("CorreoElectronico").equalsIgnoreCase("null"))
+                            opCont.setEmail(str.getString("CorreoElectronico"));
+                        else
+                            opCont.setEmail("");
                         opCont.setURLFoto(str.getString("Path"));
 
                         OportunidadContacto.insert(db, opCont);
