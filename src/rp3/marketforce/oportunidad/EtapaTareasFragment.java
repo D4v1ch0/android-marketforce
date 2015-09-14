@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Locale;
 
 import rp3.app.BaseFragment;
+import rp3.configuration.PreferenceManager;
+import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.db.Contract;
 import rp3.marketforce.models.Actividad;
@@ -29,6 +31,7 @@ import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.oportunidad.Etapa;
 import rp3.marketforce.models.oportunidad.EtapaTarea;
 import rp3.marketforce.models.oportunidad.Oportunidad;
+import rp3.marketforce.models.oportunidad.OportunidadBitacora;
 import rp3.marketforce.models.oportunidad.OportunidadEtapa;
 import rp3.marketforce.models.oportunidad.OportunidadTarea;
 import rp3.marketforce.oportunidad.actividades.ActividadActivity;
@@ -153,6 +156,15 @@ public class EtapaTareasFragment extends BaseFragment {
                 }
 
                 Etapa next = Etapa.getEtapaNext(getDataBase(), etapa.getOrden() + 1);
+
+                //Se ingresa a log de oportunidad
+                OportunidadBitacora bitacora = new OportunidadBitacora();
+                bitacora.setIdAgente(PreferenceManager.getInt(Contants.KEY_IDAGENTE));
+                bitacora.setFecha(Calendar.getInstance().getTime());
+                bitacora.setIdOportunidad(opt.getIdOportunidad());
+                bitacora.set_idOportunidad((int) opt.getID());
+                bitacora.setDetalle("Se finalizó subetapa " + etapa.getOrden() + ": " + etapa.getDescripcion());
+                OportunidadBitacora.insert(getDataBase(), bitacora);
 
                 if(next != null) {
                     OportunidadEtapa oportunidadEtapaNext = OportunidadEtapa.getEtapaOportunidad(getDataBase(), opt.getIdOportunidad(), next.getIdEtapa());
