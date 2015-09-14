@@ -163,7 +163,7 @@ public class EtapaTareasFragment extends BaseFragment {
                 bitacora.setFecha(Calendar.getInstance().getTime());
                 bitacora.setIdOportunidad(opt.getIdOportunidad());
                 bitacora.set_idOportunidad((int) opt.getID());
-                bitacora.setDetalle("Se finalizó subetapa " + etapa.getOrden() + ": " + etapa.getDescripcion());
+                bitacora.setDetalle("Se finalizÃ³ subetapa " + etapa.getOrden() + ": " + etapa.getDescripcion());
                 OportunidadBitacora.insert(getDataBase(), bitacora);
 
                 if(next != null) {
