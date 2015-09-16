@@ -231,9 +231,9 @@ public class SearchableActivity extends BaseActivity
 				Intent intent = new Intent(this, CrearClienteActivity.class);
 				startActivity(intent);
 				break;
-			case R.id.action_import_contacts:
-				showDialogFragment(ImportChooseFragment.newInstance(), "Import");
-				break;
+			//case R.id.action_import_contacts:
+			//	showDialogFragment(ImportChooseFragment.newInstance(), "Import");
+			//	break;
 			case R.id.action_ver_posicion:
 				if (!ConnectionUtils.isNetAvailable(this)) {
 					Toast.makeText(this, "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();

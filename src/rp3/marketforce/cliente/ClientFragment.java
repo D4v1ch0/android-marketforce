@@ -219,9 +219,9 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
                 Intent intent = new Intent(this.getActivity(), CrearClienteActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.action_import_contacts:
-                showDialogFragment(ImportChooseFragment.newInstance(), "Import");
-                break;
+            //case R.id.action_import_contacts:
+            //    showDialogFragment(ImportChooseFragment.newInstance(), "Import");
+            //    break;
             case R.id.action_ver_posicion:
                 if (!ConnectionUtils.isNetAvailable(getContext())) {
                     Toast.makeText(getContext(), "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
