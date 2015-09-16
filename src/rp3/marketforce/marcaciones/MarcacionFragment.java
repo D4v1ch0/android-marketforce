@@ -142,7 +142,7 @@ public class MarcacionFragment extends BaseFragment {
                             if (currentItem == 0) {
                                 final Marcacion marc = new Marcacion();
                                 marc.setTipo("J1");
-                                marc.setPendiente(false);
+                                marc.setPendiente(true);
                                 marc.setFecha(Calendar.getInstance().getTime());
                                 if (GooglePlayServicesUtils.servicesConnected((BaseActivity) getActivity())) {
 
@@ -407,7 +407,7 @@ public class MarcacionFragment extends BaseFragment {
                             if (currentItem == 0) {
                                 final Marcacion marc = new Marcacion();
                                 marc.setTipo("J2"); //falta tipo
-                                marc.setPendiente(false);
+                                marc.setPendiente(true);
                                 marc.setFecha(Calendar.getInstance().getTime());
                                 if (GooglePlayServicesUtils.servicesConnected((BaseActivity) getActivity())) {
 
@@ -497,7 +497,7 @@ public class MarcacionFragment extends BaseFragment {
                             if (currentItem == 0) {
                                 final Marcacion marc = new Marcacion();
                                 marc.setTipo("J3"); //falta tipo
-                                marc.setPendiente(false);
+                                marc.setPendiente(true);
                                 marc.setFecha(Calendar.getInstance().getTime());
                                 if (GooglePlayServicesUtils.servicesConnected((BaseActivity) getActivity())) {
 
@@ -603,7 +603,7 @@ public class MarcacionFragment extends BaseFragment {
                                 final Marcacion marc = new Marcacion();
                                 marc.setTipo("J4"); //falta tipo
                                 marc.setFecha(Calendar.getInstance().getTime());
-                                marc.setPendiente(false);
+                                marc.setPendiente(true);
                                 if (GooglePlayServicesUtils.servicesConnected((BaseActivity) getActivity())) {
 
                                     try {

@@ -113,6 +113,10 @@ public class Marcaciones {
                     webService.invokeWebService();
                     marc.setPendiente(false);
                     rp3.marketforce.models.marcacion.Marcacion.update(db, marc);
+                    if(marc.getPermiso() != null)
+                    {
+                        Permiso.delete(db, marc.getPermiso());
+                    }
                 } catch (HttpResponseException e) {
                     if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
                         return rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR;

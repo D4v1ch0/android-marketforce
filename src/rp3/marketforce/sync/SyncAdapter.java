@@ -353,8 +353,8 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     result = EnviarUbicacion.executeSyncPendientes(db);
                     addDefaultMessage(result);
 
-                    result = Marcaciones.executeSync(db);
-                    addDefaultMessage(result);
+                    //result = Marcaciones.executeSync(db);
+                    //addDefaultMessage(result);
 
                     if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.marketforce.sync.Rutas.executeSync(db, null, null, false);
