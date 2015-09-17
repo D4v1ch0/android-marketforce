@@ -24,7 +24,10 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
+import android.location.LocationManager;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
@@ -44,8 +47,21 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 			rp3.configuration.Configuration.TryInitializeConfiguration(context);
 			if(context == null)
 				Utils.ErrorToFile("Context is null - " + Calendar.getInstance().getTime().toString());
-			else
-				Utils.ErrorToFile("Context is ok - " + Calendar.getInstance().getTime().toString());
+			else {
+				String gps = "";
+				String net = "";
+				if (ConnectionUtils.isNetAvailable(context))
+					net = "ON";
+				else
+					net = "OFF";
+				LocationManager mlocManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+				if (mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+					gps = "ON";
+				}else{
+					gps = "OFF";
+				}
+				Utils.ErrorToFile("Context is ok - GPS: " + gps + " - NET: " + net + " - BATTERY: " + getBatteryLevel(context) + " - " + Calendar.getInstance().getTime().toString());
+			}
 			Calendar calendarCurrent = Calendar.getInstance();
 			calendarCurrent.setTimeInMillis(System.currentTimeMillis());
 			
@@ -152,5 +168,17 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 				calendar.getTimeInMillis() + (i1 * 1000 * 5),
 				1000 * 60 * PreferenceManager.getInt(Contants.KEY_ALARMA_INTERVALO), pi);
 	}
-	
+
+	public float getBatteryLevel(Context ctx) {
+		Intent batteryIntent = ctx.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+		int level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+		int scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+
+		// Error checking that probably isn't needed but I added just in case.
+		if(level == -1 || scale == -1) {
+			return 50.0f;
+		}
+
+		return ((float)level / (float)scale) * 100.0f;
+	}
 }
