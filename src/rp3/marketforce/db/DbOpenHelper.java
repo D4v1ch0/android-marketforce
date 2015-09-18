@@ -20,13 +20,19 @@ public class DbOpenHelper extends rp3.db.sqlite.DataBaseOpenHelper {
 		{
 			switch (i)
 			{
+				case 2: UpgradeToVersion(db, i); break;
 				case 3: UpgradeToVersion3(db); break;
 			}
 		}
 	}
 
+	public void UpgradeToVersion(SQLiteDatabase database, int version)
+	{
+		database.execSQL(QueryDir.getQuery(TO_VERSION + version));
+	}
+
 	public void UpgradeToVersion3(SQLiteDatabase database)
 	{
-		database.execSQL(QueryDir.getQuery(TO_VERSION + 3));
+
 	}
 }
