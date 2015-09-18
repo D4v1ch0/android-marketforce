@@ -10,7 +10,11 @@
         Detalle TEXT,
         FechaInicio INTEGER
         );
+    </statement>
+    <statement name="ToVersion3-1">
         ALTER TABLE tbOportunidadContacto ADD COLUMN Telefono TEXT;
+    </statement>
+    <statement name="ToVersion3-2">
         ALTER TABLE tbOportunidadContacto ADD COLUMN Email TEXT;
     </statement>
 </sql>

@@ -318,9 +318,7 @@
         _IdOportunidad INTEGER,
         Nombre TEXT,
         Cargo TEXT,
-        URLFoto TEXT,
-        Telefono TEXT,
-        Email TEXT
+        URLFoto TEXT
         )
     </statement>
     <statement>
