@@ -14,21 +14,27 @@ public class DbOpenHelper extends rp3.db.sqlite.DataBaseOpenHelper {
 		super(context);		
 	}
 
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        super.onUpgrade(db, oldVersion, newVersion);
-        Log.e("Tag", "OnUpgrade SQLite");
-        for(int i = oldVersion + 1; i <= newVersion; i++ )
-        {
-            switch (i)
-            {
-                case 2: UpgradeToVersion2(db); break;
-            }
-        }
-    }
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		super.onUpgrade(db, oldVersion, newVersion);
+		Log.e("Tag", "OnUpgrade SQLite");
+		for(int i = oldVersion + 1; i <= newVersion; i++ )
+		{
+			switch (i)
+			{
+				case 2: UpgradeToVersion(db, i); break;
+				case 3: UpgradeToVersion3(db); break;
+			}
+		}
+	}
 
-    public void UpgradeToVersion2(SQLiteDatabase database)
-    {
-        database.execSQL(QueryDir.getQuery(TO_VERSION + 2));
-    }
+	public void UpgradeToVersion(SQLiteDatabase database, int version)
+	{
+		database.execSQL(QueryDir.getQuery(TO_VERSION + version));
+	}
+
+	public void UpgradeToVersion3(SQLiteDatabase database)
+	{
+
+	}
 }
