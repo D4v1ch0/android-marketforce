@@ -73,7 +73,7 @@ public class OportunidadDetailFragment extends BaseFragment {
     private ImageButton TabDirecciones;
     private ImageButton TabContactos;
     private ImageView ArrowInfo, ArrowDir, ArrowCont;
-    private AgenteDetalleFragment agenteDetalleFragment;
+    public AgenteDetalleFragment agenteDetalleFragment;
 
     private String str_titulo;
     private final int REQUEST_CODE_DETAIL_EDIT = 3;

@@ -94,7 +94,10 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
         {
             if (resultCode == RESULT_OK) {
                 if (resultCode == RESULT_OK && null != data) {
-                    subFragment.onActivityResult(requestCode, resultCode, data);
+                    if(subFragment != null)
+                        subFragment.onActivityResult(requestCode, resultCode, data);
+                    if(transactionDetailFragment != null && transactionDetailFragment.agenteDetalleFragment != null)
+                        transactionDetailFragment.agenteDetalleFragment.onActivityResult(requestCode, resultCode, data);
                 }
             }
         }
