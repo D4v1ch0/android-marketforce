@@ -11,7 +11,7 @@
     </appConfiguration>
     <dataBaseConfiguration>       
        <name>Rp3MarketForce.db</name>
-       <version>2</version>
+       <version>4</version>
     </dataBaseConfiguration>        
     <webServiceConfiguration>                
         <webServiceData>
