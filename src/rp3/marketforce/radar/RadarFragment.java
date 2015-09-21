@@ -167,7 +167,7 @@ public class RadarFragment extends BaseFragment implements AgenteRadarFragment.A
                     SetOldPoints();
                 }
             });
-            showDialogProgress("Cargando", "Mostrando Mapa");
+            ((BaseActivity)getActivity()).showDialogProgress("GPS", "Cargando Ubicaciones");
             new Handler().postDelayed(new Runnable() {
 
                 @Override
@@ -197,8 +197,7 @@ public class RadarFragment extends BaseFragment implements AgenteRadarFragment.A
                                         ((TextView) view.findViewById(R.id.radar_ubicacion3)).setTypeface(null, Typeface.BOLD);
                                         ((TextView) view.findViewById(R.id.radar_ubicacion4)).setTypeface(null, Typeface.BOLD);
                                         if(ConnectionUtils.isNetAvailable(getContext())) {
-                                            showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait);
-
+                                            ((BaseActivity)getActivity()).showDialogProgress("GPS", "Cargando Ubicaciones");
                                             Bundle bundle = new Bundle();
                                             bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_AGENTES_UBICACION);
                                             requestSync(bundle);
@@ -206,14 +205,12 @@ public class RadarFragment extends BaseFragment implements AgenteRadarFragment.A
                                         else
                                         {
                                             Toast.makeText(getContext(), "Sin conexión. No se puede obtener últimas ubicaciones.", Toast.LENGTH_LONG).show();
-                                            closeDialogProgress();
                                             setMapa();
                                         }
                                     }
                                 });
                                 if(sup == null) {
                                     if(ConnectionUtils.isNetAvailable(getContext())) {
-                                        showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait);
 
                                         Bundle bundle = new Bundle();
                                         bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_AGENTES_UBICACION);
@@ -222,7 +219,6 @@ public class RadarFragment extends BaseFragment implements AgenteRadarFragment.A
                                     else
                                     {
                                         Toast.makeText(getContext(), "Sin conexión. No se puede obtener últimas ubicaciones.", Toast.LENGTH_LONG).show();
-                                        closeDialogProgress();
                                         setMapa();
                                     }
                                 }
@@ -311,6 +307,7 @@ public class RadarFragment extends BaseFragment implements AgenteRadarFragment.A
                 showDialogFragment(agenteDetalleFragment, "Agente", "Agente");
             }
         });
+        ((BaseActivity) getActivity()).closeDialogProgress();
     }
 
 
@@ -347,7 +344,6 @@ public class RadarFragment extends BaseFragment implements AgenteRadarFragment.A
 
             try
             {
-                ((BaseActivity)getActivity()).showDialogProgress("GPS","Obteniendo Ubicación");
                 LocationUtils.getLocation(getContext(), 100, new LocationUtils.OnLocationResultListener() {
 
                     @Override
