@@ -105,7 +105,8 @@ public class OportunidadBitacoraListFragment extends BaseFragment implements Opo
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             if (resultCode == RESULT_OK && null != data) {
-                subFragment.onActivityResult(requestCode, resultCode, data);
+                if(subFragment != null)
+                    subFragment.onActivityResult(requestCode, resultCode, data);
             }
         }
     }

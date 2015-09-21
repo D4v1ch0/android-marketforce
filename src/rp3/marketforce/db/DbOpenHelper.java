@@ -39,6 +39,10 @@ public class DbOpenHelper extends rp3.db.sqlite.DataBaseOpenHelper {
 
 	public void UpgradeToVersion4(SQLiteDatabase database)
 	{
-
+		try {
+			database.execSQL(QueryDir.getQuery(TO_VERSION + "4-1"));
+			database.execSQL(QueryDir.getQuery(TO_VERSION + "4-2"));
+		}
+		catch(Exception ex){}
 	}
 }
