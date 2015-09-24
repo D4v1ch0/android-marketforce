@@ -284,7 +284,8 @@
         IdEtapa INTEGER,
         Estado TEXT,
         FechaCreacion INTEGER,
-        Pendiente BOOLEAN
+        Pendiente BOOLEAN,
+        IdOportunidadTipo INTEGER
         )
     </statement>
     <statement>
@@ -330,7 +331,8 @@
         Orden INTEGER,
         Estado TEXT,
         IdEtapaPadre INTEGER,
-        Descripcion TEXT
+        Descripcion TEXT,
+        IdOportunidadTipo INTEGER
         )
     </statement>
     <statement>
@@ -396,6 +398,13 @@
         IdAgente INTEGER,
         Detalle TEXT,
         FechaInicio INTEGER
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbOportunidadTipo(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdOportunidadTipo INTEGER,
+        Descripcion TEXT
         )
     </statement>
 </sql>

@@ -82,10 +82,10 @@ public class EtapaTarea extends EntityBase<EtapaTarea> {
         return null;
     }
 
-    public static List<EtapaTarea> getEtapaTareas(DataBase dataBase) {
+    public static List<EtapaTarea> getEtapaTareas(DataBase dataBase, int tipo) {
         String query = QueryDir.getQuery(Contract.EtapaTarea.QUERY_ETAPAS);
 
-        Cursor c = dataBase.rawQuery(query);
+        Cursor c = dataBase.rawQuery(query, new String[]{tipo + ""});
 
         List<EtapaTarea> list = new ArrayList<EtapaTarea>();
         while(c.moveToNext()){

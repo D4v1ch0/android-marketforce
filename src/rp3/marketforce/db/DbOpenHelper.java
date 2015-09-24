@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import rp3.db.QueryDir;
+import rp3.sync.SyncAudit;
 
 public class DbOpenHelper extends rp3.db.sqlite.DataBaseOpenHelper {
 
@@ -23,6 +24,7 @@ public class DbOpenHelper extends rp3.db.sqlite.DataBaseOpenHelper {
 				case 2: UpgradeToVersion(db, i); break;
 				case 3: UpgradeToVersion3(db); break;
 				case 4: UpgradeToVersion4(db); break;
+				case 5: UpgradeToVersion5(db); break;
 			}
 		}
 	}
@@ -44,5 +46,12 @@ public class DbOpenHelper extends rp3.db.sqlite.DataBaseOpenHelper {
 			database.execSQL(QueryDir.getQuery(TO_VERSION + "4-2"));
 		}
 		catch(Exception ex){}
+	}
+	public void UpgradeToVersion5(SQLiteDatabase database)
+	{
+		database.execSQL(QueryDir.getQuery(TO_VERSION + "5-1"));
+		database.execSQL(QueryDir.getQuery(TO_VERSION + "5-2"));
+		database.execSQL(QueryDir.getQuery(TO_VERSION + "5-3"));
+		SyncAudit.clearAudit();
 	}
 }

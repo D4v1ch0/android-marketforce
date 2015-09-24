@@ -54,6 +54,7 @@ public class Etapa {
                     etapa.setIdEtapa(type.getInt("IdEtapa"));
                     etapa.setOrden(type.getInt("Orden"));
                     etapa.setEstado(type.getString("Estado"));
+                    etapa.setIdOportunidadTipo(type.getInt("IdOportunidadTipo"));
                     if(!type.isNull("IdEtapaPadre"))
                         etapa.setIdEtapaPadre(type.getInt("IdEtapaPadre"));
                     else
@@ -77,6 +78,49 @@ public class Etapa {
                         EtapaTarea.insert(db, etapaTarea);
                     }
 
+
+                } catch (JSONException e) {
+                    Log.e("Error", e.toString());
+                    return rp3.content.SyncAdapter.SYNC_EVENT_ERROR;
+                }
+            }
+        }finally{
+            webService.close();
+        }
+
+        return SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
+    public static int executeSyncTipos(DataBase db){
+        WebService webService = new WebService("MartketForce","GetOportunidadTipos");
+        try
+        {
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return rp3.content.SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return rp3.content.SyncAdapter.SYNC_EVENT_ERROR;
+            }
+
+            JSONArray types = webService.getJSONArrayResponse();
+
+            rp3.marketforce.models.oportunidad.OportunidadTipo.deleteAll(db, Contract.OportunidadTipo.TABLE_NAME);
+
+            for(int i=0; i < types.length(); i++){
+
+                try {
+                    JSONObject type = types.getJSONObject(i);
+                    rp3.marketforce.models.oportunidad.OportunidadTipo optTipo = new rp3.marketforce.models.oportunidad.OportunidadTipo();
+
+                    optTipo.setIdOportunidadTipo(type.getInt("IdOportunidadTipo"));
+                    optTipo.setDescripcion(type.getString("Descripcion"));
+
+                    rp3.marketforce.models.oportunidad.OportunidadTipo.insert(db, optTipo);
 
                 } catch (JSONException e) {
                     Log.e("Error", e.toString());

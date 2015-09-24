@@ -17,4 +17,17 @@
     <statement name="ToVersion4-2">
         ALTER TABLE tbOportunidadContacto ADD COLUMN Email TEXT;
     </statement>
+    <statement name="ToVersion5-1">
+        ALTER TABLE tbOportunidad ADD COLUMN IdOportunidadTipo INTEGER;
+    </statement>
+    <statement name="ToVersion5-2">
+        ALTER TABLE tbEtapa ADD COLUMN IdOportunidadTipo INTEGER;
+    </statement>
+    <statement name="ToVersion5-3">
+        CREATE TABLE tbOportunidadTipo(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdOportunidadTipo INTEGER,
+        Descripcion TEXT
+        );
+    </statement>
 </sql>

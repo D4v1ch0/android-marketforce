@@ -243,6 +243,7 @@
     <string name="message_desde_hasta_cantidad">Valor desde no puede ser mayor a valor hasta.</string>
     <string name="message_un_estado">Mínimo debe de escoger un estado.</string>
     <string name="message_sin_descripcion">Debe escribir el nombre de la oportunidad.</string>
+    <string name="message_sin_tipo_oportunidad">Debe seleccionar un tipo de oportunidad.</string>
     <string name="message_una_etapa">Mínimo debe de escoger una etapa.</string>
     <string name="label_no_oportunidades">No hay oportunidades</string>
     <string name="label_informacion_max">INFORMACIÓN</string>

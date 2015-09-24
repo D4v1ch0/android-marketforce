@@ -175,6 +175,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 
                     //Modulo Oportunidades
                     if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Etapa.executeSyncTipos(db);
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.marketforce.sync.Etapa.executeSync(db);
                         addDefaultMessage(result);
                     }
@@ -446,6 +451,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     }
 
                     //Modulo Oportunidades
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Etapa.executeSyncTipos(db);
+                        addDefaultMessage(result);
+                    }
+
                     if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.marketforce.sync.Etapa.executeSync(db);
                         addDefaultMessage(result);

@@ -155,7 +155,7 @@ public class EtapaTareasFragment extends BaseFragment {
                     OportunidadEtapa.update(getDataBase(), subEtapa);
                 }
 
-                Etapa next = Etapa.getEtapaNext(getDataBase(), etapa.getOrden() + 1);
+                Etapa next = Etapa.getEtapaNext(getDataBase(), etapa.getOrden() + 1, opt.getIdOportunidadTipo());
 
                 //Se ingresa a log de oportunidad
                 OportunidadBitacora bitacora = new OportunidadBitacora();

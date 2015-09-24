@@ -274,7 +274,7 @@ public class FiltroOportunidadFragment extends BaseFragment {
                     if (((TextView) getRootView().findViewById(R.id.filtro_hasta)).length() > 0)
                         bundle.putDouble(HASTA_CANTIDAD, Double.parseDouble(((TextView) getRootView().findViewById(R.id.filtro_hasta)).getText().toString()));
 
-                    if(((CheckBox) getRootView().findViewById(R.id.filtro_etapa1)).isChecked())
+                    /*if(((CheckBox) getRootView().findViewById(R.id.filtro_etapa1)).isChecked())
                         etapas.add(Etapa.getEtapaNext(getDataBase(), 1).getIdEtapa());
                     if(((CheckBox) getRootView().findViewById(R.id.filtro_etapa2)).isChecked())
                         etapas.add(Etapa.getEtapaNext(getDataBase(), 2).getIdEtapa());
@@ -283,7 +283,7 @@ public class FiltroOportunidadFragment extends BaseFragment {
                     if(((CheckBox) getRootView().findViewById(R.id.filtro_etapa4)).isChecked())
                         etapas.add(Etapa.getEtapaNext(getDataBase(), 4).getIdEtapa());
                     if(((CheckBox) getRootView().findViewById(R.id.filtro_etapa5)).isChecked())
-                        etapas.add(Etapa.getEtapaNext(getDataBase(), 5).getIdEtapa());
+                        etapas.add(Etapa.getEtapaNext(getDataBase(), 5).getIdEtapa());*/
 
                     if(((CheckBox) getRootView().findViewById(R.id.filtro_activos)).isChecked())
                         estados.add("A");

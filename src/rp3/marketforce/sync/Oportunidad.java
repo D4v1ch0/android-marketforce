@@ -43,6 +43,7 @@ public class Oportunidad {
             JSONObject jObject = new JSONObject();
             try {
                 jObject.put("IdOportunidad", oportunidadUpload.getIdOportunidad());
+                jObject.put("IdOportunidadTipo", oportunidadUpload.getIdOportunidadTipo());
                 jObject.put("IdInterno", oportunidadUpload.getID());
                 jObject.put("IdEtapa", oportunidadUpload.getIdEtapa());
                 jObject.put("IdAgente", oportunidadUpload.getIdAgente());
@@ -326,6 +327,7 @@ public class Oportunidad {
             JSONObject jObject = new JSONObject();
             try {
                 jObject.put("IdOportunidad", oportunidadUpload.getIdOportunidad());
+                jObject.put("IdOportunidadTipo", oportunidadUpload.getIdOportunidadTipo());
                 jObject.put("IdInterno", oportunidadUpload.getID());
                 jObject.put("IdEtapa", oportunidadUpload.getIdEtapa());
                 jObject.put("IdAgente", oportunidadUpload.getIdAgente());
@@ -616,6 +618,7 @@ public class Oportunidad {
 
                     opt.setIdEtapa(type.getInt("IdEtapa"));
                     opt.setIdOportunidad(type.getInt("IdOportunidad"));
+                    opt.setIdOportunidadTipo(type.getInt("IdOportunidadTipo"));
                     opt.setDescripcion(type.getString("Descripcion"));
                     opt.setDireccion(type.getString("Direccion"));
                     opt.setImporte(type.getDouble("Importe"));

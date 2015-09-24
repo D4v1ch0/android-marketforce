@@ -1093,6 +1093,7 @@
         tbOportunidad.Estado,
         tbOportunidad.FechaCreacion,
         tbOportunidad.Pendiente,
+        tbOportunidad.IdOportunidadTipo,
         tbOportunidadExt.Descripcion AS tbOportunidadExt_Descripcion,
         tbOportunidadExt.Direccion AS tbOportunidadExt_Direccion,
         tbOportunidadExt.Referencia AS tbOportunidadExt_Referencia,
@@ -1124,6 +1125,7 @@
         tbOportunidad.Estado,
         tbOportunidad.FechaCreacion,
         tbOportunidad.Pendiente,
+        tbOportunidad.IdOportunidadTipo,
         tbOportunidadExt.Descripcion AS tbOportunidadExt_Descripcion,
         tbOportunidadExt.Direccion AS tbOportunidadExt_Direccion,
         tbOportunidadExt.Referencia AS tbOportunidadExt_Referencia,
@@ -1156,6 +1158,7 @@
         tbOportunidad.Estado,
         tbOportunidad.FechaCreacion,
         tbOportunidad.Pendiente,
+        tbOportunidad.IdOportunidadTipo,
         tbOportunidadExt.Descripcion AS tbOportunidadExt_Descripcion,
         tbOportunidadExt.Direccion AS tbOportunidadExt_Direccion,
         tbOportunidadExt.Referencia AS tbOportunidadExt_Referencia,
@@ -1187,6 +1190,7 @@
         tbOportunidad.Estado,
         tbOportunidad.FechaCreacion,
         tbOportunidad.Pendiente,
+        tbOportunidad.IdOportunidadTipo,
         tbOportunidadExt.Descripcion AS tbOportunidadExt_Descripcion,
         tbOportunidadExt.Direccion AS tbOportunidadExt_Direccion,
         tbOportunidadExt.Referencia AS tbOportunidadExt_Referencia,
@@ -1218,6 +1222,7 @@
         tbOportunidad.Estado,
         tbOportunidad.FechaCreacion,
         tbOportunidad.Pendiente,
+        tbOportunidad.IdOportunidadTipo,
         tbOportunidadExt.Descripcion AS tbOportunidadExt_Descripcion,
         tbOportunidadExt.Direccion AS tbOportunidadExt_Direccion,
         tbOportunidadExt.Referencia AS tbOportunidadExt_Referencia,
@@ -1240,6 +1245,8 @@
         tbEtapaTarea.IdTarea,
         tbEtapaTarea.Orden
         FROM tbEtapaTarea
+        JOIN tbEtapa ON tbEtapa.IdEtapa = tbEtapaTarea.IdEtapa
+        WHERE tbEtapa.IdOportunidadTipo = ?
         ORDER BY tbEtapaTarea.IdEtapa, tbEtapaTarea.Orden
     </statement>
     <statement name="OportunidadSearch">
@@ -1258,6 +1265,7 @@
         tbOportunidad.Estado,
         tbOportunidad.FechaCreacion,
         tbOportunidad.Pendiente,
+        tbOportunidad.IdOportunidadTipo,
         tbOportunidadExt.Descripcion AS tbOportunidadExt_Descripcion,
         tbOportunidadExt.Direccion AS tbOportunidadExt_Direccion,
         tbOportunidadExt.Referencia AS tbOportunidadExt_Referencia,

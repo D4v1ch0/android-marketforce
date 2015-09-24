@@ -22,6 +22,7 @@ public class Etapa extends EntityBase<Etapa> {
     private int orden;
     private String estado;
     private List<Etapa> subEtapas;
+    private int idOportunidadTipo;
 
     @Override
     public long getID() {
@@ -91,6 +92,14 @@ public class Etapa extends EntityBase<Etapa> {
         this.estado = estado;
     }
 
+    public int getIdOportunidadTipo() {
+        return idOportunidadTipo;
+    }
+
+    public void setIdOportunidadTipo(int idOportunidadTipo) {
+        this.idOportunidadTipo = idOportunidadTipo;
+    }
+
     @Override
     public void setValues() {
         setValue(Contract.Etapa.COLUMN_ID_ETAPA, this.idEtapa);
@@ -98,6 +107,7 @@ public class Etapa extends EntityBase<Etapa> {
         setValue(Contract.Etapa.COLUMN_DESCRIPCION, this.descripcion);
         setValue(Contract.Etapa.COLUMN_ESTADO, this.estado);
         setValue(Contract.Etapa.COLUMN_ORDEN, this.orden);
+        setValue(Contract.Etapa.COLUMN_ID_OPORTUNIDAD_TIPO, this.idOportunidadTipo);
     }
 
     @Override
@@ -110,10 +120,11 @@ public class Etapa extends EntityBase<Etapa> {
         return null;
     }
 
-    public static List<Etapa> getEtapasAll(DataBase db){
+    public static List<Etapa> getEtapasAll(DataBase db, int tipo){
 
         Cursor c = db.query(Contract.Etapa.TABLE_NAME, new String[] {Contract.Etapa._ID, Contract.Etapa.COLUMN_ID_ETAPA, Contract.Etapa.COLUMN_ID_ETAPA_PADRE,
-                Contract.Etapa.COLUMN_ESTADO, Contract.Etapa.COLUMN_ORDEN, Contract.Etapa.COLUMN_DESCRIPCION});
+                Contract.Etapa.COLUMN_ESTADO, Contract.Etapa.COLUMN_ORDEN, Contract.Etapa.COLUMN_DESCRIPCION, Contract.Etapa.COLUMN_ID_OPORTUNIDAD_TIPO},
+                Contract.Etapa.COLUMN_ID_OPORTUNIDAD_TIPO + " = ?", new String[] {tipo + ""});
 
         List<Etapa> list = new ArrayList<Etapa>();
         while(c.moveToNext()){
@@ -124,6 +135,7 @@ public class Etapa extends EntityBase<Etapa> {
             etp.setDescripcion(CursorUtils.getString(c, Contract.Etapa.COLUMN_DESCRIPCION));
             etp.setEstado(CursorUtils.getString(c, Contract.Etapa.COLUMN_DESCRIPCION));
             etp.setOrden(CursorUtils.getInt(c, Contract.Etapa.COLUMN_ORDEN));
+            etp.setIdOportunidadTipo(CursorUtils.getInt(c, Contract.Etapa.COLUMN_ID_OPORTUNIDAD_TIPO));
             list.add(etp);
         }
         c.close();
@@ -133,7 +145,7 @@ public class Etapa extends EntityBase<Etapa> {
     public static List<Etapa> getEtapas(DataBase db){
 
         Cursor c = db.query(Contract.Etapa.TABLE_NAME, new String[] {Contract.Etapa._ID, Contract.Etapa.COLUMN_ID_ETAPA, Contract.Etapa.COLUMN_ID_ETAPA_PADRE,
-                Contract.Etapa.COLUMN_ESTADO, Contract.Etapa.COLUMN_ORDEN, Contract.Etapa.COLUMN_DESCRIPCION}, Contract.Etapa.COLUMN_ID_ETAPA_PADRE + " = ?", new String[]{"0"});
+                Contract.Etapa.COLUMN_ESTADO, Contract.Etapa.COLUMN_ORDEN, Contract.Etapa.COLUMN_DESCRIPCION, Contract.Etapa.COLUMN_ID_OPORTUNIDAD_TIPO}, Contract.Etapa.COLUMN_ID_ETAPA_PADRE + " = ?", new String[]{"0"});
 
         List<Etapa> list = new ArrayList<Etapa>();
         while(c.moveToNext()){
@@ -144,6 +156,7 @@ public class Etapa extends EntityBase<Etapa> {
             etp.setDescripcion(CursorUtils.getString(c, Contract.Etapa.COLUMN_DESCRIPCION));
             etp.setEstado(CursorUtils.getString(c, Contract.Etapa.COLUMN_DESCRIPCION));
             etp.setOrden(CursorUtils.getInt(c, Contract.Etapa.COLUMN_ORDEN));
+            etp.setIdOportunidadTipo(CursorUtils.getInt(c, Contract.Etapa.COLUMN_ID_OPORTUNIDAD_TIPO));
             list.add(etp);
         }
         c.close();
@@ -153,7 +166,7 @@ public class Etapa extends EntityBase<Etapa> {
     public static List<Etapa> getSubEtapasQuery(DataBase db, int idEtapa){
 
         Cursor c = db.query(Contract.Etapa.TABLE_NAME, new String[] {Contract.Etapa._ID, Contract.Etapa.COLUMN_ID_ETAPA, Contract.Etapa.COLUMN_ID_ETAPA_PADRE,
-                Contract.Etapa.COLUMN_ESTADO, Contract.Etapa.COLUMN_ORDEN, Contract.Etapa.COLUMN_DESCRIPCION}, Contract.Etapa.COLUMN_ID_ETAPA_PADRE + " = ?", new String[]{idEtapa + ""});
+                Contract.Etapa.COLUMN_ESTADO, Contract.Etapa.COLUMN_ORDEN, Contract.Etapa.COLUMN_DESCRIPCION, Contract.Etapa.COLUMN_ID_OPORTUNIDAD_TIPO}, Contract.Etapa.COLUMN_ID_ETAPA_PADRE + " = ?", new String[]{idEtapa + ""});
 
         List<Etapa> list = new ArrayList<Etapa>();
         while(c.moveToNext()){
@@ -164,6 +177,7 @@ public class Etapa extends EntityBase<Etapa> {
             etp.setDescripcion(CursorUtils.getString(c, Contract.Etapa.COLUMN_DESCRIPCION));
             etp.setEstado(CursorUtils.getString(c, Contract.Etapa.COLUMN_DESCRIPCION));
             etp.setOrden(CursorUtils.getInt(c, Contract.Etapa.COLUMN_ORDEN));
+            etp.setIdOportunidadTipo(CursorUtils.getInt(c, Contract.Etapa.COLUMN_ID_OPORTUNIDAD_TIPO));
             list.add(etp);
         }
         c.close();
@@ -172,7 +186,7 @@ public class Etapa extends EntityBase<Etapa> {
 
     public static Etapa getEtapaById(DataBase db, int idEtapa) {
         Cursor c = db.query(Contract.Etapa.TABLE_NAME, new String[] {Contract.Etapa._ID, Contract.Etapa.COLUMN_ID_ETAPA, Contract.Etapa.COLUMN_ID_ETAPA_PADRE,
-                Contract.Etapa.COLUMN_ESTADO, Contract.Etapa.COLUMN_ORDEN, Contract.Etapa.COLUMN_DESCRIPCION}, Contract.Etapa.COLUMN_ID_ETAPA + " = ? ", new String[] {idEtapa + ""} );
+                Contract.Etapa.COLUMN_ESTADO, Contract.Etapa.COLUMN_ORDEN, Contract.Etapa.COLUMN_DESCRIPCION, Contract.Etapa.COLUMN_ID_OPORTUNIDAD_TIPO}, Contract.Etapa.COLUMN_ID_ETAPA + " = ? ", new String[] {idEtapa + ""} );
 
         Etapa etp = new Etapa();
         while(c.moveToNext()){
@@ -183,15 +197,16 @@ public class Etapa extends EntityBase<Etapa> {
             etp.setEstado(CursorUtils.getString(c, Contract.Etapa.COLUMN_DESCRIPCION));
             etp.setOrden(CursorUtils.getInt(c, Contract.Etapa.COLUMN_ORDEN));
             etp.setSubEtapas(getSubEtapasQuery(db, idEtapa));
+            etp.setIdOportunidadTipo(CursorUtils.getInt(c, Contract.Etapa.COLUMN_ID_OPORTUNIDAD_TIPO));
         }
         c.close();
         return etp;
     }
 
-    public static Etapa getEtapaNext(DataBase db, int orden) {
+    public static Etapa getEtapaNext(DataBase db, int orden, int tipo) {
         Cursor c = db.query(Contract.Etapa.TABLE_NAME, new String[] {Contract.Etapa._ID, Contract.Etapa.COLUMN_ID_ETAPA, Contract.Etapa.COLUMN_ID_ETAPA_PADRE,
-                Contract.Etapa.COLUMN_ESTADO, Contract.Etapa.COLUMN_ORDEN, Contract.Etapa.COLUMN_DESCRIPCION},  Contract.Etapa.COLUMN_ID_ETAPA_PADRE + " = 0 AND " +
-                Contract.Etapa.COLUMN_ORDEN + " = ? ", new String[] {orden + ""} );
+                Contract.Etapa.COLUMN_ESTADO, Contract.Etapa.COLUMN_ORDEN, Contract.Etapa.COLUMN_DESCRIPCION, Contract.Etapa.COLUMN_ID_OPORTUNIDAD_TIPO},  Contract.Etapa.COLUMN_ID_ETAPA_PADRE + " = 0 AND " +
+                Contract.Etapa.COLUMN_ORDEN + " = ? AND " + Contract.Etapa.COLUMN_ID_OPORTUNIDAD_TIPO + " = ?", new String[] {orden + "", tipo + ""} );
 
         Etapa etp = new Etapa();
         while(c.moveToNext()){
@@ -201,6 +216,7 @@ public class Etapa extends EntityBase<Etapa> {
             etp.setDescripcion(CursorUtils.getString(c, Contract.Etapa.COLUMN_DESCRIPCION));
             etp.setEstado(CursorUtils.getString(c, Contract.Etapa.COLUMN_DESCRIPCION));
             etp.setOrden(CursorUtils.getInt(c, Contract.Etapa.COLUMN_ORDEN));
+            etp.setIdOportunidadTipo(CursorUtils.getInt(c, Contract.Etapa.COLUMN_ID_OPORTUNIDAD_TIPO));
         }
         c.close();
         return etp;

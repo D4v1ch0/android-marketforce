@@ -30,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,8 +66,10 @@ import rp3.marketforce.models.oportunidad.OportunidadEtapa;
 import rp3.marketforce.models.oportunidad.OportunidadFoto;
 import rp3.marketforce.models.oportunidad.OportunidadResponsable;
 import rp3.marketforce.models.oportunidad.OportunidadTarea;
+import rp3.marketforce.models.oportunidad.OportunidadTipo;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.DrawableManager;
+import rp3.marketforce.utils.NothingSelectedSpinnerAdapter;
 import rp3.marketforce.utils.Utils;
 import rp3.util.ConnectionUtils;
 import rp3.util.GooglePlayServicesUtils;
@@ -100,6 +103,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
     private List<LinearLayout> listViewResponsables, listViewContactos;
     private List<Integer> listAgentesIds, listAgentesIdsDelete;
     private List<OportunidadContacto> listContactos;
+    private List<OportunidadTipo> listTipos;
     private Location currentLoc;
     private long id = 0;
     private int tipo;
@@ -166,11 +170,12 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
 
     private void Grabar() {
         Oportunidad opt = new Oportunidad();
+        opt.setIdOportunidadTipo(listTipos.get(((Spinner) view.findViewById(R.id.oportunidad_tipo_etapas)).getSelectedItemPosition()).getIdOportunidadTipo());
         if(id != 0)
             opt = Oportunidad.getOportunidadId(getDataBase(), id);
         else {
             opt.setEstado("A");
-            Etapa etp = Etapa.getEtapaNext(getDataBase(), 1);
+            Etapa etp = Etapa.getEtapaNext(getDataBase(), 1, opt.getIdOportunidadTipo());
             opt.setIdEtapa(etp.getIdEtapa());
             opt.setFechaCreacion(Calendar.getInstance().getTime());
         }
@@ -306,7 +311,8 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
         }
 
         if(id == 0) {
-            List<EtapaTarea> etapaTareas = EtapaTarea.getEtapaTareas(getDataBase());
+            List<Etapa> etapas = Etapa.getEtapasAll(getDataBase(), opt.getIdOportunidadTipo());
+            List<EtapaTarea> etapaTareas = EtapaTarea.getEtapaTareas(getDataBase(), opt.getIdOportunidadTipo());
             for (EtapaTarea tarea : etapaTareas) {
                 OportunidadTarea oportunidadTarea = new OportunidadTarea();
                 oportunidadTarea.setEstado("P");
@@ -318,14 +324,16 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
                 OportunidadTarea.insert(getDataBase(), oportunidadTarea);
             }
 
-            List<Etapa> etapas = Etapa.getEtapasAll(getDataBase());
+            int etapaPadre = -1;
             for(Etapa etapa : etapas)
             {
                 OportunidadEtapa oportunidadEtapa = new OportunidadEtapa();
                 oportunidadEtapa.setEstado("P");
                 oportunidadEtapa.setIdEtapa(etapa.getIdEtapa());
-                if(etapa.getIdEtapa() == 1 || etapa.getIdEtapaPadre() == 1) {
+                if(etapa.getOrden() == 1 && (etapa.getIdEtapaPadre() == 0 || etapa.getIdEtapaPadre() == etapaPadre)) {
                     oportunidadEtapa.setFechaInicio(Calendar.getInstance().getTime());
+                    if(etapa.getIdEtapaPadre() == 0)
+                        etapaPadre = etapa.getIdEtapa();
                 }
                 oportunidadEtapa.setIdEtapaPadre(etapa.getIdEtapaPadre());
                 oportunidadEtapa.set_idOportunidad((int) opt.getID());
@@ -547,6 +555,22 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
             }
         });
 
+        listTipos = OportunidadTipo.getOportunidadTipoAll(getDataBase());
+        List<String> tipos = new ArrayList<String>();
+
+        for(OportunidadTipo oportunidadTipo: listTipos)
+        {
+            tipos.add(oportunidadTipo.getDescripcion());
+        }
+
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_spinner_dropdown_item, tipos.toArray(new String[tipos.size()]));
+        ((Spinner) view.findViewById(R.id.oportunidad_tipo_etapas)).setAdapter(adapter);
+        ((Spinner) view.findViewById(R.id.oportunidad_tipo_etapas)).setAdapter(new NothingSelectedSpinnerAdapter(
+                adapter,
+                R.layout.spinner_empty_selected,
+                this.getContext()));
+        ((Spinner) view.findViewById(R.id.oportunidad_tipo_etapas)).setPrompt("Seleccione un tipo");
+
         if(id != 0)
             setDatosOportunidad();
 
@@ -621,6 +645,14 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
                 addThisAgente(resp.getIdAgente(), resp.getTipo());
             for (OportunidadContacto opCont : opt.getOportunidadContactos())
                 addContacto(opCont.getID());
+
+            for(int i = 0; i < listTipos.size(); i++)
+            {
+                if(listTipos.get(i).getIdOportunidadTipo() == opt.getIdOportunidadTipo())
+                {
+                    ((Spinner) view.findViewById(R.id.oportunidad_tipo_etapas)).setSelection(i+1);
+                }
+            }
 
             for (int i = 0; i < opt.getOportunidadFotos().size(); i++) {
                 photos.set(i, opt.getOportunidadFotos().get(i).getURLFoto());
@@ -874,6 +906,11 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
         if(((TextView) view.findViewById(R.id.oportunidad_nombre)).length() <= 0)
         {
             Toast.makeText(getContext(), R.string.message_sin_descripcion, Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if(((Spinner) view.findViewById(R.id.oportunidad_tipo_etapas)).getSelectedItemId() == 0)
+        {
+            Toast.makeText(getContext(), R.string.message_sin_tipo_oportunidad, Toast.LENGTH_LONG).show();
             return false;
         }
         return true;

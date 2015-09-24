@@ -15,6 +15,7 @@ import rp3.marketforce.models.Actividad;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.AgendaTareaActividades;
+import rp3.marketforce.models.Canal;
 import rp3.marketforce.models.Cliente;
 import rp3.marketforce.models.ClienteDireccion;
 import rp3.marketforce.models.Contacto;
@@ -52,9 +53,10 @@ public class StartActivity extends rp3.app.StartActivity{
 		}
 		else
 			Configuration.reinitializeConfiguration(context, DbOpenHelper.class);
-		Configuration.TryInitializeConfiguration(this, DbOpenHelper.class);	
-		
-	}
+		Configuration.TryInitializeConfiguration(this, DbOpenHelper.class);
+        Canal.getCanal(getDataBase(), "1");
+
+    }
 	
 	private void setServiceRecurring(){
 		Intent i = new Intent(this, EnviarUbicacionReceiver.class);
