@@ -29,6 +29,7 @@ public class ServerActivity extends BaseActivity {
 	public void IrStart()
 	{
 		PreferenceManager.setValue(Contants.KEY_FIRST_TIME, false);
+		PreferenceManager.setValue(Contants.KEY_SECOND_TIME, false);
 		startActivity(new Intent(this, StartActivity.class));
 		finish();
 	}
