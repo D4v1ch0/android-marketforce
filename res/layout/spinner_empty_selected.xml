@@ -9,4 +9,7 @@
     android:textSize="18sp"
     android:textColor="#808080"
     android:text="Seleccione una opción"
-    android:padding="12dp" />
+    android:paddingLeft="7dp"
+    android:paddingTop="10dp"
+    android:paddingRight="10dp"
+    android:paddingBottom="10dp" />

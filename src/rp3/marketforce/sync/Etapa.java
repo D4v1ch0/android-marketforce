@@ -60,6 +60,11 @@ public class Etapa {
                     else
                         etapa.setIdEtapaPadre(0);
 
+                    if(!type.isNull("Dias"))
+                        etapa.setDias(type.getInt("Dias"));
+                    else
+                        etapa.setDias(0);
+
                     etapa.setDescripcion(type.getString("Descripcion"));
 
                     rp3.marketforce.models.oportunidad.Etapa.insert(db, etapa);

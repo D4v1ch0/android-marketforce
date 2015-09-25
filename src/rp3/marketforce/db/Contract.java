@@ -660,6 +660,7 @@ public final class Contract {
         public static final String COLUMN_ORDEN = "Orden";
         public static final String COLUMN_ESTADO = "Estado";
 		public static final String COLUMN_ID_OPORTUNIDAD_TIPO = "IdOportunidadTipo";
+		public static final String COLUMN_DIAS = "Dias";
 
         public static final String FIELD_ID_ETAPA = COLUMN_ID_ETAPA;
         public static final String FIELD_ID_ETAPA_PADRE = COLUMN_ID_ETAPA_PADRE;
@@ -667,6 +668,7 @@ public final class Contract {
         public static final String FIELD_ORDEN = COLUMN_ORDEN;
         public static final String FIELD_ESTADO = COLUMN_ESTADO;
 		public static final String FIELD_ID_OPORTUNIDAD_TIPO = COLUMN_ID_OPORTUNIDAD_TIPO;
+		public static final String FIELD_DIAS = COLUMN_DIAS;
 
     }
 

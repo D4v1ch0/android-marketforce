@@ -30,4 +30,7 @@
         Descripcion TEXT
         );
     </statement>
+    <statement name="ToVersion5-4">
+        ALTER TABLE tbEtapa ADD COLUMN Dias INTEGER;
+    </statement>
 </sql>

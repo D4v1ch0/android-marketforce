@@ -170,7 +170,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
 
     private void Grabar() {
         Oportunidad opt = new Oportunidad();
-        opt.setIdOportunidadTipo(listTipos.get(((Spinner) view.findViewById(R.id.oportunidad_tipo_etapas)).getSelectedItemPosition()).getIdOportunidadTipo());
+        opt.setIdOportunidadTipo(listTipos.get(((Spinner) view.findViewById(R.id.oportunidad_tipo_etapas)).getSelectedItemPosition() - 1).getIdOportunidadTipo());
         if(id != 0)
             opt = Oportunidad.getOportunidadId(getDataBase(), id);
         else {
@@ -569,7 +569,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
                 adapter,
                 R.layout.spinner_empty_selected,
                 this.getContext()));
-        ((Spinner) view.findViewById(R.id.oportunidad_tipo_etapas)).setPrompt("Seleccione un tipo");
+        ((Spinner) view.findViewById(R.id.oportunidad_tipo_etapas)).setPrompt(" Seleccione un tipo");
 
         if(id != 0)
             setDatosOportunidad();
@@ -653,6 +653,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
                     ((Spinner) view.findViewById(R.id.oportunidad_tipo_etapas)).setSelection(i+1);
                 }
             }
+            view.findViewById(R.id.oportunidad_tipo_etapas).setEnabled(false);
 
             for (int i = 0; i < opt.getOportunidadFotos().size(); i++) {
                 photos.set(i, opt.getOportunidadFotos().get(i).getURLFoto());
@@ -908,7 +909,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
             Toast.makeText(getContext(), R.string.message_sin_descripcion, Toast.LENGTH_LONG).show();
             return false;
         }
-        if(((Spinner) view.findViewById(R.id.oportunidad_tipo_etapas)).getSelectedItemId() == 0)
+        if(((Spinner) view.findViewById(R.id.oportunidad_tipo_etapas)).getSelectedItemPosition() == 0)
         {
             Toast.makeText(getContext(), R.string.message_sin_tipo_oportunidad, Toast.LENGTH_LONG).show();
             return false;

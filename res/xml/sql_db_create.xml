@@ -332,7 +332,8 @@
         Estado TEXT,
         IdEtapaPadre INTEGER,
         Descripcion TEXT,
-        IdOportunidadTipo INTEGER
+        IdOportunidadTipo INTEGER,
+        Dias INTEGER
         )
     </statement>
     <statement>

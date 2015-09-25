@@ -504,57 +504,109 @@ public class OportunidadDetailFragment extends BaseFragment {
                     if (position == 0) {
                         ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa1));
                         if (etp.getEstado().equalsIgnoreCase("R")) {
-                            ((TextView) view_timeline.findViewById(R.id.etapa1_fecha)).setText(format1.format(etp.getFechaFin()) + "/" + format2.format(etp.getFechaFin()) + "/" + format3.format(etp.getFechaFin()));
-                            Calendar thisDay = Calendar.getInstance();
-                            thisDay.setTime(etp.getFechaFin());
-                            ((TextView) view_timeline.findViewById(R.id.etapa1_dias)).setText(CalendarUtils.DayDiffTruncate(thisDay, ant) + " Días");
                             ((ImageView) view_timeline.findViewById(R.id.etapa1_indicator)).setImageResource(R.drawable.timeline1);
+                        }
+                        if(etp.getFechaInicio().getTime() > 0)
+                            ((TextView) view_timeline.findViewById(R.id.etapa1_fecha)).setText(format1.format(etp.getFechaInicio()) + "/" + format2.format(etp.getFechaInicio()) + "/" + format3.format(etp.getFechaInicio()));
+                        Calendar thisDay = Calendar.getInstance();
+                        if(etp.getFechaFin().getTime() > 0)
+                            thisDay.setTime(etp.getFechaFin());
+                        long dias = CalendarUtils.DayDiffTruncate(thisDay, ant);
+                        dias = etp.getEtapa().getDias() - dias;
+                        if(ant.getTime().getTime() > 0) {
+                            if (dias < 0) {
+                                ((TextView) view_timeline.findViewById(R.id.etapa1_dias)).setTextColor(getResources().getColor(R.color.color_unvisited));
+                                dias = dias * -1;
+                            }
+                            ((TextView) view_timeline.findViewById(R.id.etapa1_dias)).setText(dias + " Días");
                             totalDias = totalDias + CalendarUtils.DayDiffTruncate(thisDay, ant);
                         }
                     }
                     if (position == 1) {
                         ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa2));
                         if (etp.getEstado().equalsIgnoreCase("R")) {
-                            ((TextView) view_timeline.findViewById(R.id.etapa2_fecha)).setText(format1.format(etp.getFechaFin()) + "/" + format2.format(etp.getFechaFin()) + "/" + format3.format(etp.getFechaFin()));
-                            Calendar thisDay = Calendar.getInstance();
-                            thisDay.setTime(etp.getFechaFin());
-                            ((TextView) view_timeline.findViewById(R.id.etapa2_dias)).setText(CalendarUtils.DayDiffTruncate(thisDay, ant) + " Días");
                             ((ImageView) view_timeline.findViewById(R.id.etapa2_indicator)).setImageResource(R.drawable.timeline2);
+                        }
+                        if(etp.getFechaInicio().getTime() > 0)
+                            ((TextView) view_timeline.findViewById(R.id.etapa2_fecha)).setText(format1.format(etp.getFechaInicio()) + "/" + format2.format(etp.getFechaInicio()) + "/" + format3.format(etp.getFechaInicio()));
+                        Calendar thisDay = Calendar.getInstance();
+                        if (etp.getFechaFin().getTime() > 0)
+                            thisDay.setTime(etp.getFechaFin());
+                        long dias = CalendarUtils.DayDiffTruncate(thisDay, ant);
+                        dias = etp.getEtapa().getDias() - dias;
+                        if(ant.getTime().getTime() > 0) {
+                            if (dias < 0) {
+                                ((TextView) view_timeline.findViewById(R.id.etapa2_dias)).setTextColor(getResources().getColor(R.color.color_unvisited));
+                                dias = dias * -1;
+                            }
+                            ((TextView) view_timeline.findViewById(R.id.etapa2_dias)).setText(dias + " Días");
                             totalDias = totalDias + CalendarUtils.DayDiffTruncate(thisDay, ant);
                         }
                     }
                     if (position == 2) {
                         ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa3));
                         if (etp.getEstado().equalsIgnoreCase("R")) {
-                            ((TextView) view_timeline.findViewById(R.id.etapa3_fecha)).setText(format1.format(etp.getFechaFin()) + "/" + format2.format(etp.getFechaFin()) + "/" + format3.format(etp.getFechaFin()));
-                            Calendar thisDay = Calendar.getInstance();
-                            thisDay.setTime(etp.getFechaFin());
-                            ((TextView) view_timeline.findViewById(R.id.etapa3_dias)).setText(CalendarUtils.DayDiffTruncate(thisDay, ant) + " Días");
                             ((ImageView) view_timeline.findViewById(R.id.etapa3_indicator)).setImageResource(R.drawable.timeline3);
+                        }
+                        if(etp.getFechaInicio().getTime() > 0)
+                            ((TextView) view_timeline.findViewById(R.id.etapa3_fecha)).setText(format1.format(etp.getFechaInicio()) + "/" + format2.format(etp.getFechaInicio()) + "/" + format3.format(etp.getFechaInicio()));
+                        Calendar thisDay = Calendar.getInstance();
+                        if (etp.getFechaFin().getTime() > 0)
+                            thisDay.setTime(etp.getFechaFin());
+                        long dias = CalendarUtils.DayDiffTruncate(thisDay, ant);
+                        dias = etp.getEtapa().getDias() - dias;
+                        if(ant.getTime().getTime() > 0) {
+                            if (dias < 0) {
+                                ((TextView) view_timeline.findViewById(R.id.etapa3_dias)).setTextColor(getResources().getColor(R.color.color_unvisited));
+                                dias = dias * -1;
+                            }
+                            ((TextView) view_timeline.findViewById(R.id.etapa3_dias)).setText(dias + " Días");
                             totalDias = totalDias + CalendarUtils.DayDiffTruncate(thisDay, ant);
                         }
+
                     }
                     if (position == 3) {
                         ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa4));
                         if (etp.getEstado().equalsIgnoreCase("R")) {
-                            ((TextView) view_timeline.findViewById(R.id.etapa4_fecha)).setText(format1.format(etp.getFechaFin()) + "/" + format2.format(etp.getFechaFin()) + "/" + format3.format(etp.getFechaFin()));
-                            Calendar thisDay = Calendar.getInstance();
-                            thisDay.setTime(etp.getFechaFin());
-                            ((TextView) view_timeline.findViewById(R.id.etapa4_dias)).setText(CalendarUtils.DayDiffTruncate(thisDay, ant) + " Días");
                             ((ImageView) view_timeline.findViewById(R.id.etapa4_indicator)).setImageResource(R.drawable.timeline4);
+                        }
+                        if(etp.getFechaInicio().getTime() > 0)
+                            ((TextView) view_timeline.findViewById(R.id.etapa4_fecha)).setText(format1.format(etp.getFechaInicio()) + "/" + format2.format(etp.getFechaInicio()) + "/" + format3.format(etp.getFechaInicio()));
+                        Calendar thisDay = Calendar.getInstance();
+                        if (etp.getFechaFin().getTime() > 0)
+                            thisDay.setTime(etp.getFechaFin());
+                        long dias = CalendarUtils.DayDiffTruncate(thisDay, ant);
+                        dias = etp.getEtapa().getDias() - dias;
+                        if(ant.getTime().getTime() > 0) {
+                            if (dias < 0) {
+                                ((TextView) view_timeline.findViewById(R.id.etapa4_dias)).setTextColor(getResources().getColor(R.color.color_unvisited));
+                                dias = dias * -1;
+                            }
+                            ((TextView) view_timeline.findViewById(R.id.etapa4_dias)).setText(dias + " Días");
                             totalDias = totalDias + CalendarUtils.DayDiffTruncate(thisDay, ant);
                         }
                     }
                     if (position == 4) {
                         ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa5));
                         if (etp.getEstado().equalsIgnoreCase("R")) {
-                            ((TextView) view_timeline.findViewById(R.id.etapa5_fecha)).setText(format1.format(etp.getFechaFin()) + "/" + format2.format(etp.getFechaFin()) + "/" + format3.format(etp.getFechaFin()));
-                            Calendar thisDay = Calendar.getInstance();
-                            thisDay.setTime(etp.getFechaFin());
-                            ((TextView) view_timeline.findViewById(R.id.etapa5_dias)).setText(CalendarUtils.DayDiffTruncate(thisDay, ant) + " Días");
                             ((ImageView) view_timeline.findViewById(R.id.etapa5_indicator)).setImageResource(R.drawable.timeline5);
+                        }
+                        if(etp.getFechaInicio().getTime() > 0)
+                            ((TextView) view_timeline.findViewById(R.id.etapa5_fecha)).setText(format1.format(etp.getFechaInicio()) + "/" + format2.format(etp.getFechaInicio()) + "/" + format3.format(etp.getFechaInicio()));
+                        Calendar thisDay = Calendar.getInstance();
+                        if (etp.getFechaFin().getTime() > 0)
+                            thisDay.setTime(etp.getFechaFin());
+                        long dias = CalendarUtils.DayDiffTruncate(thisDay, ant);
+                        dias = etp.getEtapa().getDias() - dias;
+                        if(ant.getTime().getTime() > 0) {
+                            if (dias < 0) {
+                                ((TextView) view_timeline.findViewById(R.id.etapa5_dias)).setTextColor(getResources().getColor(R.color.color_unvisited));
+                                dias = dias * -1;
+                            }
+                            ((TextView) view_timeline.findViewById(R.id.etapa5_dias)).setText(dias + " Días");
                             totalDias = totalDias + CalendarUtils.DayDiffTruncate(thisDay, ant);
                         }
+
                         row_etapa.findViewById(R.id.grey_line).setVisibility(View.GONE);
                     }
                     row_etapa.setId(etp.getIdEtapa());

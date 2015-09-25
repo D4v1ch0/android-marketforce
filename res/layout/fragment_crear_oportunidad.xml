@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/oportunidad_tipo_etapas"
         android:background="@color/caldroid_white"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="12dp"
         android:layout_marginRight="5dp"
         android:spinnerMode="dialog" />
 
