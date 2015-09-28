@@ -11,39 +11,12 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.4"
-            android:gravity="center_vertical"
-            android:orientation="vertical" >
-
-            <Button
-                android:id="@+id/eliminar_contacto"
-                style="@style/Widget.Button.Theme"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/label_eliminar_contacto" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
             android:layout_weight="0.6"
             android:orientation="vertical" >
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
-
-                <LinearLayout
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="7dp"
-                    android:layout_marginTop="7dp"
-                    android:background="@color/color_grey_lines"
-                    android:orientation="vertical" >
-
-                </LinearLayout>
 
                 <EditText
                     android:id="@+id/cliente_nombres"
@@ -77,15 +50,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
-                <LinearLayout
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="7dp"
-                    android:layout_marginTop="7dp"
-                    android:background="@color/color_grey_lines"
-                    android:orientation="vertical" >
-                </LinearLayout>
-
                 <EditText
                     android:id="@+id/cliente_apellidos"
                     android:layout_width="wrap_content"
@@ -117,16 +81,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
-                <LinearLayout
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="7dp"
-                    android:layout_marginTop="7dp"
-                    android:layout_weight="1"
-                    android:background="@color/color_grey_lines"
-                    android:orientation="vertical" >
-                </LinearLayout>
-
                 <EditText
                     android:id="@+id/cliente_cargo"
                     android:layout_width="match_parent"
@@ -157,21 +111,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
-                <LinearLayout
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="7dp"
-                    android:layout_marginTop="7dp"
-                    android:layout_weight="1"
-                    android:background="@color/color_grey_lines"
-                    android:orientation="vertical" >
-                </LinearLayout>
-
                 <Spinner
                     android:id="@+id/cliente_direccion_contacto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:background="@color/caldroid_white"
+                    android:layout_marginLeft="3dp"
+                    android:spinnerMode="dialog" />
 
             </LinearLayout>
 
@@ -187,15 +134,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
-
-                <LinearLayout
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="7dp"
-                    android:layout_marginTop="7dp"
-                    android:background="@color/color_grey_lines"
-                    android:orientation="vertical" >
-                </LinearLayout>
 
                 <EditText
                     android:id="@+id/cliente_correo_contacto"
@@ -227,15 +165,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
-
-                <LinearLayout
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="7dp"
-                    android:layout_marginTop="7dp"
-                    android:background="@color/color_grey_lines"
-                    android:orientation="vertical" >
-                </LinearLayout>
 
                 <EditText
                     android:id="@+id/cliente_telefono1_contacto"
@@ -270,15 +199,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
-
-                <LinearLayout
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="7dp"
-                    android:layout_marginTop="7dp"
-                    android:background="@color/color_grey_lines"
-                    android:orientation="vertical" >
-                </LinearLayout>
 
                 <EditText
                     android:id="@+id/cliente_telefono2_contacto"
@@ -317,10 +237,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="center"
+                    android:gravity="center|left"
                     android:text="@string/label_asignar_imagen"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/color_text_sky_blue" />
+                    android:textColor="@color/color_text_sky_blue"
+                    android:layout_marginLeft="15dp" />
 
                 <ImageButton
                     android:id="@+id/cliente_contacto_foto"
@@ -330,6 +251,14 @@
                     android:src="@drawable/ic_action_camera" />
 
             </LinearLayout>
+
+            <Button
+                style="@style/Widget.Button.Theme"
+                android:id="@+id/eliminar_contacto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="@string/label_eliminar_contacto" />
 
         </LinearLayout>
     </LinearLayout>

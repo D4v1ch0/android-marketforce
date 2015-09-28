@@ -16,8 +16,8 @@
     <webServiceConfiguration>                
         <webServiceData>
             <name>Core</name>
-            <url>[@server:http://www.rp3marketforce.com/Rp3MarketForce]/api</url>
-            <!--url>http://10.10.0.122/AgendaComercial/api</url-->
+            <!--url>[@server:http://www.rp3marketforce.com/Rp3MarketForce]/api</url-->
+            <url>http://10.10.0.106/AgendaComercial/api</url>
             <type>REST</type>
             <oAuthClientId>android-app-marketforce</oAuthClientId>
             <oAuthClientSecret>rp3-marketforce2014</oAuthClientSecret>
@@ -62,8 +62,8 @@
         </webServiceData>
            <webServiceData>
             <name>MartketForce</name>
-            <url>[@server:http://www.rp3marketforce.com/Rp3MarketForce]/api</url>
-            <!--url>http://10.10.0.122/AgendaComercial/api</url-->
+            <!--url>[@server:http://www.rp3marketforce.com/Rp3MarketForce]/api</url-->
+            <url>http://10.10.0.106/AgendaComercial/api</url>
             <type>REST</type>
             <oAuthClientId>android-app-marketforce</oAuthClientId>
             <oAuthClientSecret>rp3-marketforce2014</oAuthClientSecret>

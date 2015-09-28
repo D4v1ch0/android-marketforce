@@ -11,6 +11,20 @@
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_información_max"
+            android:id="@+id/textView33"
+            android:textColor="@color/color_text_sky_blue"
+            android:textStyle="bold"
+            android:paddingLeft="12dp"
+            android:paddingTop="5dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="5dp"
+            android:background="@color/color_grey" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -30,7 +44,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.6"
-                android:background="@color/caldroid_white" />
+                android:background="@color/caldroid_white"
+                android:layout_marginLeft="3dp"
+                android:spinnerMode="dialog" />
         </LinearLayout>
 
         <LinearLayout
@@ -54,7 +70,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.6"
-                android:background="@color/caldroid_transparent" />
+                android:background="@color/caldroid_transparent"
+                android:layout_marginLeft="3dp"
+                android:spinnerMode="dialog" />
         </LinearLayout>
 
         <LinearLayout
@@ -109,7 +127,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.6"
-                android:background="@color/caldroid_white" />
+                android:background="@color/caldroid_white"
+                android:layout_marginLeft="3dp"
+                android:spinnerMode="dialog" />
         </LinearLayout>
 
         <LinearLayout
@@ -133,7 +153,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.6"
-                android:background="@color/caldroid_white" />
+                android:background="@color/caldroid_white"
+                android:layout_marginLeft="3dp"
+                android:spinnerMode="dialog" />
         </LinearLayout>
 
         <LinearLayout
@@ -149,7 +171,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -390,26 +413,13 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:visibility="gone" >
+            android:visibility="visible" >
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingRight="5dp" >
-
-                <TextView
-                    android:id="@+id/nombre_label"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.4"
-                    android:background="@color/color_grey"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="5dp"
-                    android:text="@string/label_nombre"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/color_text_sky_blue"
-                    android:textSize="@dimen/text_small_size" />
 
                 <EditText
                     android:id="@+id/cliente_nombre"
@@ -425,7 +435,8 @@
                     android:paddingLeft="15dp"
                     android:paddingTop="10dp"
                     android:paddingRight="10dp"
-                    android:paddingBottom="10dp" />
+                    android:paddingBottom="10dp"
+                    android:hint="@string/label_nombre" />
             </LinearLayout>
 
             <LinearLayout
@@ -441,19 +452,6 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:paddingRight="5dp" >
-
-                <TextView
-                    android:id="@+id/razon_social_label"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.4"
-                    android:background="@color/color_grey"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="5dp"
-                    android:text="@string/label_razon_social"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/color_text_sky_blue"
-                    android:textSize="@dimen/text_small_size" />
 
                 <EditText
                     android:id="@+id/cliente_razon_social"
@@ -469,7 +467,8 @@
                     android:paddingLeft="15dp"
                     android:paddingTop="10dp"
                     android:paddingRight="10dp"
-                    android:paddingBottom="10dp" />
+                    android:paddingBottom="10dp"
+                    android:hint="@string/label_razon_social" />
             </LinearLayout>
 
             <LinearLayout
@@ -486,19 +485,6 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:paddingRight="5dp" >
-
-                <TextView
-                    android:id="@+id/correo_juridico_label"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.4"
-                    android:background="@color/color_grey"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="5dp"
-                    android:text="@string/label_correo"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/color_text_sky_blue"
-                    android:textSize="@dimen/text_small_size" />
 
                 <EditText
                     android:id="@+id/cliente_correo_juridico"
@@ -514,7 +500,8 @@
                     android:paddingLeft="15dp"
                     android:paddingTop="10dp"
                     android:paddingRight="10dp"
-                    android:paddingBottom="10dp" />
+                    android:paddingBottom="10dp"
+                    android:hint="@string/label_correo" />
             </LinearLayout>
 
             <LinearLayout
@@ -531,20 +518,6 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:paddingRight="5dp" >
-
-                <TextView
-                    android:id="@+id/pagina_web_label"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="0.4"
-                    android:background="@color/color_grey"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="5dp"
-                    android:text="@string/label_pagina_web"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/color_text_sky_blue"
-                    android:textSize="@dimen/text_small_size" />
 
                 <EditText
                     android:id="@+id/cliente_pagina_web"
@@ -560,7 +533,8 @@
                     android:paddingLeft="15dp"
                     android:paddingTop="10dp"
                     android:paddingRight="10dp"
-                    android:paddingBottom="10dp" />
+                    android:paddingBottom="10dp"
+                    android:hint="@string/label_pagina_web" />
             </LinearLayout>
 
             <LinearLayout
@@ -578,19 +552,6 @@
                 android:gravity="center"
                 android:paddingRight="5dp" >
 
-                <TextView
-                    android:id="@+id/actividad_economica_label"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.4"
-                    android:background="@color/color_grey"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="5dp"
-                    android:text="@string/label_actividad_economica"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/color_text_sky_blue"
-                    android:textSize="@dimen/text_small_size" />
-
                 <EditText
                     android:id="@+id/cliente_actividad_economica"
                     android:layout_width="0dp"
@@ -605,7 +566,8 @@
                     android:paddingLeft="15dp"
                     android:paddingTop="10dp"
                     android:paddingRight="10dp"
-                    android:paddingBottom="10dp" />
+                    android:paddingBottom="10dp"
+                    android:hint="@string/label_actividad_economica" />
             </LinearLayout>
 
             <LinearLayout
@@ -636,12 +598,12 @@
                 android:text="@string/label_asignar_imagen"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/color_text_sky_blue"
-                android:textSize="@dimen/text_small_size" />
+                android:textSize="@dimen/text_small_size"
+                android:paddingLeft="15dp" />
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="0.4"
                 android:orientation="vertical" >
 
                 <ImageButton
@@ -649,9 +611,123 @@
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:adjustViewBounds="false"
-                    android:src="@drawable/ic_action_camera" />
+                    android:src="@drawable/ic_action_camera"
+                    android:scaleType="fitCenter" />
 
             </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_ubicacion_max"
+            android:id="@+id/textView51"
+            android:textColor="@color/color_text_sky_blue"
+            android:textStyle="bold"
+            android:paddingLeft="12dp"
+            android:paddingTop="5dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="5dp"
+            android:background="@color/color_grey" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp" >
+
+            <TextView
+                android:id="@+id/agregar_direccion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:drawableLeft="@drawable/ic_new_item"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                android:text="@string/label_agregar_direccion"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/color_text_sky_blue" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/bg_button_bg_main_pressed"
+            android:orientation="vertical" >
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/crear_cliente_container_direccion"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_contactos_max"
+            android:id="@+id/textView52"
+            android:textColor="@color/color_text_sky_blue"
+            android:textStyle="bold"
+            android:paddingLeft="12dp"
+            android:paddingTop="5dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="5dp"
+            android:background="@color/color_grey" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/agregar_contacto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:clickable="true"
+                android:drawableLeft="@drawable/ic_new_item"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                android:text="@string/label_agregar_contacto"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/color_text_sky_blue" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/bg_button_bg_main_pressed"
+            android:orientation="vertical" >
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/crear_cliente_container_contacto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
         </LinearLayout>
 
     </LinearLayout>

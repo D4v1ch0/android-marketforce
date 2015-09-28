@@ -164,10 +164,10 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
         if(!mTwoPane){
             menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
             menu.findItem(R.id.submenu_rutas).setVisible(!isActiveListFragment);
-            if(PreferenceManager.getBoolean(Contants.KEY_PERMITIR_CREACION))
-                menu.findItem(R.id.action_crear_cliente).setVisible(isActiveListFragment);
-            else
-                menu.findItem(R.id.action_crear_cliente).setVisible(false);
+            //if(PreferenceManager.getBoolean(Contants.KEY_PERMITIR_CREACION))
+                menu.findItem(R.id.action_crear_cliente).setVisible(true);
+            //else
+            //    menu.findItem(R.id.action_crear_cliente).setVisible(false);
 
             if(PreferenceManager.getBoolean(Contants.KEY_PERMITIR_MODIFICACION))
                 menu.findItem(R.id.action_editar_cliente).setVisible(!isActiveListFragment && !isContact);
@@ -176,10 +176,10 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
         }
         else{
             menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
-            if(PreferenceManager.getBoolean(Contants.KEY_PERMITIR_CREACION))
-                menu.findItem(R.id.action_crear_cliente).setVisible(isActiveListFragment);
-            else
-                menu.findItem(R.id.action_crear_cliente).setVisible(false);
+            //if(PreferenceManager.getBoolean(Contants.KEY_PERMITIR_CREACION))
+                menu.findItem(R.id.action_crear_cliente).setVisible(true);
+            //else
+            //    menu.findItem(R.id.action_crear_cliente).setVisible(false);
 
             if(PreferenceManager.getBoolean(Contants.KEY_PERMITIR_MODIFICACION))
                 menu.findItem(R.id.action_editar_cliente).setVisible(selectedClientId!=0 && !isContact);
