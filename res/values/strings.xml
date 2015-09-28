@@ -104,7 +104,7 @@
     <string name="label_actividad_economica">Actividad Económica</string>
     <string name="label_agregar_direccion">Añadir Dirección</string>
     <string name="label_tipo_direccion">Tipo Dirección</string>
-    <string name="label_es_principal">Es Principal</string>
+    <string name="label_es_principal">Es Dirección Principal</string>
     <string name="label_obtener_ubicacion">Ubicación</string>
     <string name="label_latitud">Latitud</string>
     <string name="label_longitud">Longitud</string>
@@ -194,6 +194,11 @@
     <string name="label_enviar_notificacion">Enviar Notificación</string>
     <string name="gcm_defaultSenderId">313284335192</string>
     <string name="label_agentes">Agentes</string>
+    <string name="label_datos_generales">Datos Generales</string>
+    <string name="label_datos_generales_max">DATOS GENERALES</string>
+    <string name="label_ubicacion_max">UBICACIÓN</string>
+    <string name="label_información_max">INFORMACIÓN</string>
+    <string name="label_contactos_max">CONTACTOS</string>
 
     <!-- Modulo Marcaciones -->
     <string name="action_marcaciones">Marcar</string>

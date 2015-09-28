@@ -14,6 +14,7 @@ public class Contants {
     public final static int GENERAL_TABLE_TIPO_MARCACION = 1044;
 	public final static String IMAGE_FOLDER = "imagesFolder";
 	public final static String KEY_FIRST_TIME = "firstTime";
+    public final static String KEY_SECOND_TIME = "secondTime";
 	
 	public final static String ESTADO_GESTIONANDO = "G";
     public final static String ESTADO_ELIMINADO = "ELIM";

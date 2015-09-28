@@ -50,7 +50,7 @@ public class StartActivity extends rp3.app.StartActivity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
-		if(PreferenceManager.getBoolean(Contants.KEY_FIRST_TIME, true))
+		if(PreferenceManager.getBoolean(Contants.KEY_FIRST_TIME, true) || PreferenceManager.getBoolean(Contants.KEY_SECOND_TIME, true))
 		{
 			startActivity(new Intent(this, ServerActivity.class));
 			finish();
