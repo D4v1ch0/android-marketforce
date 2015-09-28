@@ -104,7 +104,7 @@
     <string name="label_actividad_economica">Actividad Económica</string>
     <string name="label_agregar_direccion">Añadir Dirección</string>
     <string name="label_tipo_direccion">Tipo Dirección</string>
-    <string name="label_es_principal">Es Principal</string>
+    <string name="label_es_principal">Es Dirección Principal</string>
     <string name="label_obtener_ubicacion">Ubicación</string>
     <string name="label_latitud">Latitud</string>
     <string name="label_longitud">Longitud</string>

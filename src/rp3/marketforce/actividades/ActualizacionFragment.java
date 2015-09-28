@@ -59,6 +59,7 @@ import rp3.marketforce.models.TipoCliente;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.DetailsPageAdapter;
 import rp3.marketforce.utils.DrawableManager;
+import rp3.marketforce.utils.NothingSelectedSpinnerAdapter;
 import rp3.marketforce.utils.Utils;
 import rp3.util.ConnectionUtils;
 import rp3.util.GooglePlayServicesUtils;
@@ -113,7 +114,7 @@ public class ActualizacionFragment extends BaseFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        //tryEnableGooglePlayServices(true);
+        tryEnableGooglePlayServices(true);
         setContentView(R.layout.fragment_crear_cliente, R.menu.fragment_crear_cliente);
         setRetainInstance(true);
     }
@@ -147,9 +148,9 @@ public class ActualizacionFragment extends BaseFragment {
         Cliente cli = agd.getCliente();
         ClienteDireccion cliDir = agd.getClienteDireccion();
         Contacto contacto = agd.getContacto();
-        cli.setIdCanal((int) ((Spinner)getRootView().findViewById(R.id.cliente_canal)).getAdapter().getItemId(((Spinner)getRootView().findViewById(R.id.cliente_canal)).getSelectedItemPosition()));
+        cli.setIdCanal((int) ((Spinner) getRootView().findViewById(R.id.cliente_canal)).getAdapter().getItemId(((Spinner) getRootView().findViewById(R.id.cliente_canal)).getSelectedItemPosition()));
         cli.setIdTipoIdentificacion((int) ((Spinner)getRootView().findViewById(R.id.cliente_tipo_identificacion)).getAdapter().getItemId(((Spinner)getRootView().findViewById(R.id.cliente_tipo_identificacion)).getSelectedItemPosition()));
-        cli.setIdentificacion(((EditText)getRootView().findViewById(R.id.cliente_identificacion)).getText().toString());
+        cli.setIdentificacion(((EditText) getRootView().findViewById(R.id.cliente_identificacion)).getText().toString());
         cli.setTipoPersona(((GeneralValue)((Spinner)getRootView().findViewById(R.id.crear_cliente_tipo_persona)).getSelectedItem()).getCode());
         cli.setIdTipoCliente((int) ((Spinner)getRootView().findViewById(R.id.cliente_tipo_cliente)).getAdapter().getItemId(((Spinner)getRootView().findViewById(R.id.cliente_tipo_cliente)).getSelectedItemPosition()));
         if(cliente.getURLFoto() != null && !cliente.getURLFoto().trim().equals(""))
@@ -191,13 +192,13 @@ public class ActualizacionFragment extends BaseFragment {
 
             cliDir.set_idCliente(cli.getID());
             cliDir.setIdClienteDireccion(agd.getIdClienteDireccion());
-            cliDir.setDireccion(((EditText)listViewDirecciones.get(0).findViewById(R.id.cliente_direccion)).getText().toString());
-            cliDir.setTipoDireccion(((GeneralValue)((Spinner)listViewDirecciones.get(0).findViewById(R.id.cliente_tipo_direccion_spinner)).getSelectedItem()).getCode());
-            cliDir.setEsPrincipal(((CheckBox)listViewDirecciones.get(0).findViewById(R.id.cliente_es_principal)).isChecked());
-            cliDir.setTelefono1(((EditText)listViewDirecciones.get(0).findViewById(R.id.cliente_telefono1)).getText().toString());
-            cliDir.setTelefono2(((EditText)listViewDirecciones.get(0).findViewById(R.id.cliente_telefono2)).getText().toString());
-            cliDir.setReferencia(((EditText)listViewDirecciones.get(0).findViewById(R.id.cliente_referencia)).getText().toString());
-            cliDir.setCiudadDescripcion(((AutoCompleteTextView)listViewDirecciones.get(0).findViewById(R.id.cliente_ciudad)).getText().toString());
+            cliDir.setDireccion(((EditText) listViewDirecciones.get(0).findViewById(R.id.cliente_direccion)).getText().toString());
+            cliDir.setTipoDireccion(((GeneralValue) ((Spinner) listViewDirecciones.get(0).findViewById(R.id.cliente_tipo_direccion_spinner)).getSelectedItem()).getCode());
+            cliDir.setEsPrincipal(((CheckBox) listViewDirecciones.get(0).findViewById(R.id.cliente_es_principal)).isChecked());
+            cliDir.setTelefono1(((EditText) listViewDirecciones.get(0).findViewById(R.id.cliente_telefono1)).getText().toString());
+            cliDir.setTelefono2(((EditText) listViewDirecciones.get(0).findViewById(R.id.cliente_telefono2)).getText().toString());
+            cliDir.setReferencia(((EditText) listViewDirecciones.get(0).findViewById(R.id.cliente_referencia)).getText().toString());
+            cliDir.setCiudadDescripcion(((AutoCompleteTextView) listViewDirecciones.get(0).findViewById(R.id.cliente_ciudad)).getText().toString());
             if(listCiudades.size() > 0 && listCiudades.get(0) != null)
                 cliDir.setIdCiudad((int) listCiudades.get(0).getID());
 
@@ -247,103 +248,107 @@ public class ActualizacionFragment extends BaseFragment {
     public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
 
-        if(listViewDirecciones == null)
-        {
-            listViewDirecciones = new ArrayList<LinearLayout>();
-            listViewContactos = new ArrayList<LinearLayout>();
-            listCiudades = new ArrayList<GeopoliticalStructure>();
-            //ciudades = GeopoliticalStructure.getGeopoliticalStructureCities(getDataBase());
 
-            adapter = new GeopoliticalStructureAdapter(getContext(), getDataBase());
+        listViewDirecciones = new ArrayList<LinearLayout>();
+        listViewContactos = new ArrayList<LinearLayout>();
+        listCiudades = new ArrayList<GeopoliticalStructure>();
+        //ciudades = GeopoliticalStructure.getGeopoliticalStructureCities(getDataBase());
 
-            inflater = (LayoutInflater) this.getActivity().getSystemService(
-                    Context.LAYOUT_INFLATER_SERVICE);
-            ((TextView) getRootView().findViewById(R.id.agregar_direccion)).setOnClickListener(new View.OnClickListener() {
+        adapter = new GeopoliticalStructureAdapter(getContext(), getDataBase());
 
-                @Override
-                public void onClick(View v) {
-                    addDireccion();
+        inflater = (LayoutInflater) this.getActivity().getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE);
+        ((TextView) getRootView().findViewById(R.id.agregar_direccion)).setOnClickListener(new View.OnClickListener() {
 
-                }
-            });
-            DireccionContainer = (LinearLayout) getRootView().findViewById(R.id.crear_cliente_container_direccion);
+            @Override
+            public void onClick(View v) {
+                addDireccion();
 
-            ((TextView) getRootView().findViewById(R.id.agregar_contacto)).setOnClickListener(new View.OnClickListener() {
+            }
+        });
+        DireccionContainer = (LinearLayout) getRootView().findViewById(R.id.crear_cliente_container_direccion);
 
-                @Override
-                public void onClick(View v) {
-                    addContacto();
+        ((TextView) getRootView().findViewById(R.id.agregar_contacto)).setOnClickListener(new View.OnClickListener() {
 
-                }
-            });
-            ContactosContainer = (LinearLayout) getRootView().findViewById(R.id.crear_cliente_container_contacto);
+            @Override
+            public void onClick(View v) {
+                addContacto();
 
-            SimpleGeneralValueAdapter tipoPersonaAdapter = new SimpleGeneralValueAdapter(getContext(), getDataBase(), rp3.marketforce.Contants.GENERAL_TABLE_TIPO_PERSONA);
-            SimpleGeneralValueAdapter tipoEstadoCivilAdapter = new SimpleGeneralValueAdapter(getContext(), getDataBase(), rp3.marketforce.Contants.GENERAL_TABLE_ESTADO_CIVIL);
-            SimpleGeneralValueAdapter tipoGeneroAdapter = new SimpleGeneralValueAdapter(getContext(), getDataBase(), rp3.marketforce.Contants.GENERAL_TABLE_GENERO);
-            SimpleIdentifiableAdapter tipoCliente = new SimpleIdentifiableAdapter(getContext(), TipoCliente.getTipoCliente(getDataBase(), ""));
-            SimpleIdentifiableAdapter tipoCanal = new SimpleIdentifiableAdapter(getContext(), Canal.getCanal(getDataBase(), ""));
-            SimpleDictionaryAdapter tipoIdentificacion = new SimpleDictionaryAdapter(getContext(), IdentificationType.getAll(getDataBase()));
+            }
+        });
+        ContactosContainer = (LinearLayout) getRootView().findViewById(R.id.crear_cliente_container_contacto);
 
-            ((Spinner) getRootView().findViewById(R.id.crear_cliente_tipo_persona)).setAdapter(tipoPersonaAdapter);
-            ((Spinner) getRootView().findViewById(R.id.crear_cliente_tipo_persona)).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+        SimpleGeneralValueAdapter tipoPersonaAdapter = new SimpleGeneralValueAdapter(getContext(), getDataBase(), rp3.marketforce.Contants.GENERAL_TABLE_TIPO_PERSONA);
+        SimpleGeneralValueAdapter tipoEstadoCivilAdapter = new SimpleGeneralValueAdapter(getContext(), getDataBase(), rp3.marketforce.Contants.GENERAL_TABLE_ESTADO_CIVIL);
+        SimpleGeneralValueAdapter tipoGeneroAdapter = new SimpleGeneralValueAdapter(getContext(), getDataBase(), rp3.marketforce.Contants.GENERAL_TABLE_GENERO);
+        SimpleIdentifiableAdapter tipoCliente = new SimpleIdentifiableAdapter(getContext(), TipoCliente.getTipoCliente(getDataBase(), ""));
+        SimpleIdentifiableAdapter tipoCanal = new SimpleIdentifiableAdapter(getContext(), Canal.getCanal(getDataBase(), ""));
+        SimpleDictionaryAdapter tipoIdentificacion = new SimpleDictionaryAdapter(getContext(), IdentificationType.getAll(getDataBase()));
 
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view,
-                                           int position, long id) {
-                    if(position == 1)
-                    {
-                        ((LinearLayout) getRootView().findViewById(R.id.crear_cliente_content_natural)).setVisibility(View.VISIBLE);
-                        ((LinearLayout) getRootView().findViewById(R.id.crear_cliente_content_juridico)).setVisibility(View.GONE);
-                    }
-                    else
-                    {
-                        ((LinearLayout) getRootView().findViewById(R.id.crear_cliente_content_natural)).setVisibility(View.GONE);
-                        ((LinearLayout) getRootView().findViewById(R.id.crear_cliente_content_juridico)).setVisibility(View.VISIBLE);
-                    }
+        ((Spinner) getRootView().findViewById(R.id.crear_cliente_tipo_persona)).setAdapter(tipoPersonaAdapter);
+        ((Spinner) getRootView().findViewById(R.id.crear_cliente_tipo_persona)).setPrompt("Seleccione un tipo de persona");
+        ((Spinner) getRootView().findViewById(R.id.crear_cliente_tipo_persona)).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                if (position == 1) {
+                    ((LinearLayout) getRootView().findViewById(R.id.crear_cliente_content_natural)).setVisibility(View.VISIBLE);
+                    ((LinearLayout) getRootView().findViewById(R.id.crear_cliente_content_juridico)).setVisibility(View.GONE);
+                } else {
+                    ((LinearLayout) getRootView().findViewById(R.id.crear_cliente_content_natural)).setVisibility(View.GONE);
+                    ((LinearLayout) getRootView().findViewById(R.id.crear_cliente_content_juridico)).setVisibility(View.VISIBLE);
                 }
 
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                    // TODO Auto-generated method stub
+            }
 
-                }});
-            ((Spinner) getRootView().findViewById(R.id.cliente_estado_civil)).setAdapter(tipoEstadoCivilAdapter);
-            ((Spinner) getRootView().findViewById(R.id.cliente_genero)).setAdapter(tipoGeneroAdapter);
-            ((Spinner) getRootView().findViewById(R.id.cliente_tipo_cliente)).setAdapter(tipoCliente);
-            ((Spinner) getRootView().findViewById(R.id.cliente_canal)).setAdapter(tipoCanal);
-            ((Spinner) getRootView().findViewById(R.id.cliente_tipo_identificacion)).setAdapter(tipoIdentificacion);
-            ((ImageButton) getRootView().findViewById(R.id.cliente_foto)).setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v) {
-                    isClient = true;
-                    takePicture(1);
-                }});
-            ((EditText) getRootView().findViewById(R.id.cliente_fecha_nacimiento)).setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v) {
-                    showDialogDatePicker(0);
-                }});
-        }
-        else
-        {
-            rotated = true;
-            if(agd.getIdContacto() == 0)
-                getRootView().findViewById(R.id.detail_tab_contactos_layout).setVisibility(View.GONE);
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // TODO Auto-generated method stub
 
-        }
+            }
+        });
+        ((Spinner) getRootView().findViewById(R.id.cliente_estado_civil)).setAdapter(tipoEstadoCivilAdapter);
+        ((Spinner) getRootView().findViewById(R.id.cliente_estado_civil)).setPrompt("Seleccione un estado civil");
+        ((Spinner) getRootView().findViewById(R.id.cliente_genero)).setAdapter(tipoGeneroAdapter);
+        ((Spinner) getRootView().findViewById(R.id.cliente_genero)).setPrompt("Seleccione un género");
+        ((Spinner) getRootView().findViewById(R.id.cliente_tipo_cliente)).setAdapter(tipoCliente);
+        ((Spinner) getRootView().findViewById(R.id.cliente_tipo_cliente)).setAdapter(new NothingSelectedSpinnerAdapter(
+                tipoCliente,
+                R.layout.spinner_empty_selected,
+                this.getContext(), "Tipo de Cliente"));
+        ((Spinner) getRootView().findViewById(R.id.cliente_tipo_cliente)).setPrompt("Seleccione una tipo de cliente");
+        ((Spinner) getRootView().findViewById(R.id.cliente_canal)).setAdapter(tipoCanal);
+        ((Spinner) getRootView().findViewById(R.id.cliente_canal)).setAdapter(new NothingSelectedSpinnerAdapter(
+                tipoCanal,
+                R.layout.spinner_empty_selected,
+                this.getContext(), "Canal"));
+        ((Spinner) getRootView().findViewById(R.id.cliente_canal)).setPrompt("Seleccione un canal");
+        ((Spinner) getRootView().findViewById(R.id.cliente_tipo_identificacion)).setAdapter(tipoIdentificacion);
+        ((Spinner) getRootView().findViewById(R.id.cliente_tipo_identificacion)).setPrompt("Seleccione un tipo de identificación");
+        ((ImageButton) getRootView().findViewById(R.id.cliente_foto)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isClient = true;
+                takePicture(1);
+            }
+        });
+        ((EditText) getRootView().findViewById(R.id.cliente_fecha_nacimiento)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialogDatePicker(0);
+            }
+        });
 
-        if(getArguments().containsKey(ARG_TAREA) && getArguments().getInt(ARG_TAREA) != 0 && !rotated)
+
+        if (getArguments().containsKey(ARG_TAREA) && getArguments().getInt(ARG_TAREA) != 0 && !rotated)
             idTarea = getArguments().getInt(ARG_TAREA);
-        if(getArguments().containsKey(ARG_AGENDA) && getArguments().getLong(ARG_AGENDA) != 0 && !rotated)
-        {
+        if (getArguments().containsKey(ARG_AGENDA) && getArguments().getLong(ARG_AGENDA) != 0 && !rotated) {
             idAgenda = getArguments().getLong(ARG_AGENDA);
             agd = Agenda.getAgenda(getDataBase(), idAgenda);
             setDatosClientes();
         }
-        if(getArguments().containsKey(ARG_TIPO) && getArguments().getInt(ARG_TIPO) != 0 && !rotated)
-        {
+        if (getArguments().containsKey(ARG_TIPO) && getArguments().getInt(ARG_TIPO) != 0 && !rotated) {
             tipo = getArguments().getInt(ARG_TIPO);
             SetCampos();
         }
@@ -506,7 +511,7 @@ public class ActualizacionFragment extends BaseFragment {
         }
         else
         {
-            getRootView().findViewById(R.id.detail_tab_contactos_layout).setVisibility(View.GONE);
+            getRootView().findViewById(R.id.cliente_contactos_header).setVisibility(View.GONE);
         }
 
 
@@ -544,7 +549,7 @@ public class ActualizacionFragment extends BaseFragment {
                     public void onClick(DialogInterface arg0, int arg1) {
                         Intent captureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                         captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photo);
-                        captureIntent.putExtra("crop", "true");
+                        //captureIntent.putExtra("crop", "true");
                         captureIntent.putExtra("aspectX", 1);
                         captureIntent.putExtra("aspectY", 1);
                         getActivity().startActivityForResult(captureIntent, idView);
@@ -558,6 +563,18 @@ public class ActualizacionFragment extends BaseFragment {
     {
         final LinearLayout direccion = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.layout_cliente_direccion_detail, null);
         final int pos = listViewDirecciones.size();
+        direccion.findViewById(R.id.cliente_direccion).setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus)
+                {
+                    for(LinearLayout contacto : listViewContactos)
+                    {
+                        ((Spinner)contacto.findViewById(R.id.cliente_direccion_contacto)).setAdapter(getDirecciones());
+                    }
+                }
+            }
+        });
         ((Button) direccion.findViewById(R.id.eliminar_direccion)).setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -600,6 +617,7 @@ public class ActualizacionFragment extends BaseFragment {
             }});
         SimpleGeneralValueAdapter tipoDireccionAdapter = new SimpleGeneralValueAdapter(getContext(), getDataBase(), rp3.marketforce.Contants.GENERAL_TABLE_TIPO_DIRECCION);
         ((Spinner) direccion.findViewById(R.id.cliente_tipo_direccion_spinner)).setAdapter(tipoDireccionAdapter);
+        ((Spinner) direccion.findViewById(R.id.cliente_tipo_direccion_spinner)).setPrompt("Seleccione tipo de dirección");
 
         ((AutoCompleteTextView)direccion.findViewById(R.id.cliente_ciudad)).setAdapter(adapter);
         ((AutoCompleteTextView)direccion.findViewById(R.id.cliente_ciudad)).setThreshold(3);
@@ -706,7 +724,7 @@ public class ActualizacionFragment extends BaseFragment {
         {
             list.add(((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_direccion)).getText().toString());
         }
-        return new ArrayAdapter<String>(getActivity(), android.R.layout.simple_dropdown_item_1line, list);
+        return new ArrayAdapter<String>(getActivity(), rp3.core.R.layout.base_rowlist_simple_spinner_small, list);
     }
 
     public boolean Validaciones()
@@ -714,6 +732,17 @@ public class ActualizacionFragment extends BaseFragment {
         if(listViewDirecciones.size() <= 0)
         {
             Toast.makeText(getContext(), "No se puede agregar clientes sin dirección.", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if(((Spinner) getRootView().findViewById(R.id.cliente_tipo_cliente)).getSelectedItemPosition() == 0)
+        {
+            Toast.makeText(getContext(), "Falta especificar el tipo de cliente.", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        if(((Spinner) getRootView().findViewById(R.id.cliente_canal)).getSelectedItemPosition() == 0)
+        {
+            Toast.makeText(getContext(), "Falta especificar el canal del cliente.", Toast.LENGTH_LONG).show();
             return false;
         }
         if(((Spinner) getRootView().findViewById(R.id.crear_cliente_tipo_persona)).getSelectedItemPosition() == 1)
