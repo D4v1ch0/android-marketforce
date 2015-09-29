@@ -8,7 +8,14 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import rp3.app.BaseActivity;
 import rp3.app.BaseFragment;
+import rp3.app.NavActivity;
+import rp3.app.nav.NavItem;
+import rp3.marketforce.MainActivity;
 import rp3.marketforce.R;
 import rp3.marketforce.models.marcacion.Justificacion;
 import rp3.marketforce.models.marcacion.Permiso;
@@ -152,5 +159,7 @@ public class PermisoFragment extends BaseFragment implements PermisoListFragment
     public void onPermisoChanged(Permiso permiso) {
         if (!mTwoPane)
             slidingPane.openPane();
+        transactionListFragment.onResume();
+
     }
 }

@@ -232,6 +232,7 @@
     <string name="message_permiso_aprobado">Permiso Aprobado.</string>
     <string name="message_permiso_rechazado">Permiso Rechazado.</string>
     <string name="message_falta_motivo">Falta motivo de justificación.</string>
+    <string name="message_cargando_justificaciones">Cargando Justificaciones</string>
     <string name="label_no_permisos">No hay permisos por aprobar</string>
     <string name="laber_jornada_sin">Jornada</string>
     <string name="label_llegada">Llegada:</string>

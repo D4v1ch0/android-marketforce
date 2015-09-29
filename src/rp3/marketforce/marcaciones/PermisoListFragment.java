@@ -15,8 +15,10 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import rp3.app.BaseActivity;
 import rp3.app.BaseFragment;
 import rp3.data.MessageCollection;
+import rp3.marketforce.MainActivity;
 import rp3.marketforce.R;
 import rp3.marketforce.loader.PermisoLoader;
 import rp3.marketforce.models.marcacion.Justificacion;
@@ -73,14 +75,19 @@ public class PermisoListFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (currentTransactionBoolean) {
-            ejecutarConsulta();
-        } else {
-            Bundle args = new Bundle();
-            if(loaderPermiso == null)
-                loaderPermiso = new LoaderJustificacion();
-            getLoaderManager().initLoader(0, args, loaderPermiso);
+        ((BaseActivity) getActivity()).showDialogProgress(R.string.loading, R.string.message_cargando_justificaciones);
+        if(ConnectionUtils.isNetAvailable(getContext())) {
+            Bundle bundle = new Bundle();
+            bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_JUSTIFICACIONES);
+            requestSync(bundle);
         }
+        else
+        {
+            Toast.makeText(getContext(), R.string.message_error_sync_no_net_available, Toast.LENGTH_LONG).show();
+            refreshLayout.setRefreshing(false);
+            ((MainActivity) getActivity()).updateBadgeNavItem(MainActivity.NAV_JUSTIFICACIONES, Justificacion.getPermisosPendientesAprobarCount(getDataBase()));
+        }
+
     }
 
     @Override
@@ -289,22 +296,37 @@ public class PermisoListFragment extends BaseFragment {
     public void onSyncComplete(Bundle data, MessageCollection messages) {
         super.onSyncComplete(data, messages);
 
-        closeDialogProgress();
-        refreshLayout.setRefreshing(false);
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (ConnectionUtils.isNetAvailable(getContext())) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_JUSTIFICACIONES);
-                    requestSync(bundle);
-                } else {
-                    Toast.makeText(getContext(), R.string.message_error_sync_no_net_available, Toast.LENGTH_LONG).show();
-                    refreshLayout.setRefreshing(false);
+        if(data != null && data.getString(SyncAdapter.ARG_SYNC_TYPE).equalsIgnoreCase(SyncAdapter.SYNC_TYPE_JUSTIFICACIONES)) {
+            ((BaseActivity) getActivity()).closeDialogProgress();
+            ((MainActivity) getActivity()).updateBadgeNavItem(MainActivity.NAV_JUSTIFICACIONES, Justificacion.getPermisosPendientesAprobarCount(getDataBase()));
+            refreshLayout.setRefreshing(false);
+            refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    if (ConnectionUtils.isNetAvailable(getContext())) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_JUSTIFICACIONES);
+                        requestSync(bundle);
+                    } else {
+                        Toast.makeText(getContext(), R.string.message_error_sync_no_net_available, Toast.LENGTH_LONG).show();
+                        refreshLayout.setRefreshing(false);
+                    }
                 }
-            }
-        });
-        onResume();
+            });
+            setList();
+        }
+    }
+
+    public void setList()
+    {
+        if (currentTransactionBoolean) {
+            ejecutarConsulta();
+        } else {
+            Bundle args = new Bundle();
+            if(loaderPermiso == null)
+                loaderPermiso = new LoaderJustificacion();
+            getLoaderManager().initLoader(0, args, loaderPermiso);
+        }
     }
 
 }
