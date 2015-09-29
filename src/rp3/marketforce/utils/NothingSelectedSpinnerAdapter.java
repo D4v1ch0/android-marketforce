@@ -7,6 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.SpinnerAdapter;
+import android.widget.TextView;
+
+import rp3.marketforce.R;
 
 /**
  * Decorator Adapter to allow a Spinner to show a 'Nothing Selected...' initially
@@ -20,6 +23,22 @@ public class NothingSelectedSpinnerAdapter implements SpinnerAdapter, ListAdapte
     protected int nothingSelectedLayout;
     protected int nothingSelectedDropdownLayout;
     protected LayoutInflater layoutInflater;
+    protected String nothingText;
+
+    /**
+     * Use this constructor to have NO 'Select One...' item, instead use
+     * the standard prompt or nothing at all.
+     * @param spinnerAdapter wrapped Adapter.
+     * @param nothingSelectedLayout layout for nothing selected, perhaps
+     * you want text grayed out like a prompt...
+     * @param context
+     */
+    public NothingSelectedSpinnerAdapter(
+            SpinnerAdapter spinnerAdapter,
+            int nothingSelectedLayout, Context context, String text) {
+
+        this(spinnerAdapter, nothingSelectedLayout, -1, context, text);
+    }
 
     /**
      * Use this constructor to have NO 'Select One...' item, instead use
@@ -33,7 +52,7 @@ public class NothingSelectedSpinnerAdapter implements SpinnerAdapter, ListAdapte
             SpinnerAdapter spinnerAdapter,
             int nothingSelectedLayout, Context context) {
 
-        this(spinnerAdapter, nothingSelectedLayout, -1, context);
+        this(spinnerAdapter, nothingSelectedLayout, -1, context, "");
     }
 
     /**
@@ -49,11 +68,12 @@ public class NothingSelectedSpinnerAdapter implements SpinnerAdapter, ListAdapte
      * @param context
      */
     public NothingSelectedSpinnerAdapter(SpinnerAdapter spinnerAdapter,
-                                         int nothingSelectedLayout, int nothingSelectedDropdownLayout, Context context) {
+                                         int nothingSelectedLayout, int nothingSelectedDropdownLayout, Context context, String nothingText) {
         this.adapter = spinnerAdapter;
         this.context = context;
         this.nothingSelectedLayout = nothingSelectedLayout;
         this.nothingSelectedDropdownLayout = nothingSelectedDropdownLayout;
+        this.nothingText = nothingText;
         layoutInflater = LayoutInflater.from(context);
     }
 
@@ -75,7 +95,10 @@ public class NothingSelectedSpinnerAdapter implements SpinnerAdapter, ListAdapte
      * @return
      */
     protected View getNothingSelectedView(ViewGroup parent) {
-        return layoutInflater.inflate(nothingSelectedLayout, parent, false);
+        View view = layoutInflater.inflate(nothingSelectedLayout, parent, false);
+        if(nothingText.trim().length() > 0)
+            ((TextView)view.findViewById(android.R.id.text1)).setText(nothingText);
+        return view;
     }
 
     @Override
