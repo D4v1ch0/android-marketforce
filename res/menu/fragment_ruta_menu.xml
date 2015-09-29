@@ -10,15 +10,19 @@
           />
       <item android:id="@+id/action_crear_visita" android:icon="@drawable/ic_action_new" android:title="@string/label_crear_visita"
           android:showAsAction="always|collapseActionView"     ></item>
-      <item android:id="@+id/submenu_rutas" android:showAsAction="ifRoom" android:title="Mapa" android:icon="@drawable/ic_rutas">
+      <item android:id="@+id/submenu_rutas" android:showAsAction="always" android:title="Mapa" android:icon="@drawable/ic_rutas">
           <menu>
               <item android:id="@+id/action_ver_ruta" android:title="@string/label_menu_ver_rutas"></item>
 		      <item android:id="@+id/action_ver_posicion" android:title="@string/label_menu_ver_posicion"></item>
 		      <item android:id="@+id/action_como_llegar" android:title="@string/label_menu_como_llegar"></item>
           </menu>
       </item>
+    <item android:id="@+id/submenu_agenda" android:showAsAction="ifRoom" android:title="Otras opciones" android:icon="@drawable/ic_action_overflow">
+        <menu>
       <item android:id="@+id/action_cambiar_contacto" android:title="@string/action_cambiar_contacto"></item>
       <item android:id="@+id/action_suspender_agenda" android:title="@string/action_suspender_agenda"></item>
       <item android:id="@+id/action_no_visita" android:title="@string/label_action_motivos_no_visita"></item>
       <item android:id="@+id/action_reprogramar" android:title="@string/menu_reprogramar_agenda"></item>
+        </menu>
+    </item>
 </menu>

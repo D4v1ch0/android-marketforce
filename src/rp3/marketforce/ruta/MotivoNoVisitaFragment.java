@@ -9,9 +9,11 @@ import android.speech.RecognizerIntent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -56,6 +58,8 @@ public class MotivoNoVisitaFragment extends BaseFragment {
         
         if(idAgenda != 0){        	
         	agenda = Agenda.getAgenda(getDataBase(), idAgenda);
+			if(agenda == null)
+				agenda = Agenda.getAgendaClienteNull(getDataBase(), idAgenda);
         }
         super.setContentView(R.layout.fragment_dialog_no_visita);
 	}
@@ -82,7 +86,14 @@ public class MotivoNoVisitaFragment extends BaseFragment {
 
 			@Override
 			public void onClick(View v) {
-				agenda.setObservaciones(getTextViewString(R.id.obs_text));
+				if(((EditText)rootView.findViewById(R.id.obs_text)).getText().toString().trim().length() <= 0)
+				{
+					Toast.makeText(getContext(),
+							"Debe escribir una observación.",
+							Toast.LENGTH_SHORT).show();
+					return;
+				}
+				agenda.setObservaciones(((EditText)rootView.findViewById(R.id.obs_text)).getText().toString());
 				agenda.setIdMotivoNoVisita(((GeneralValue)((Spinner) rootView.findViewById(R.id.no_visita_motivos)).getSelectedItem()).getCode());
 				agenda.setEstadoAgenda(Contants.ESTADO_NO_VISITADO);
 				agenda.setEstadoAgendaDescripcion(Contants.DESC_NO_VISITADO);
