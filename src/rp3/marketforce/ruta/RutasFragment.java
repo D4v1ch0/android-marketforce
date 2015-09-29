@@ -267,13 +267,15 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
                         if(PreferenceManager.getInt(Contants.KEY_ID_SUPERVISOR, 0) != 0)
                         {
                             Agenda agdNot = Agenda.getAgenda(getDataBase(), selectedTransactionId);
+                            if(agdNot == null)
+                                agdNot = Agenda.getAgendaClienteNull(getDataBase(), selectedTransactionId);
                             Bundle bundle = new Bundle();
                             bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SEND_NOTIFICATION);
                             bundle.putInt(AgenteDetalleFragment.ARG_AGENTE, PreferenceManager.getInt(Contants.KEY_ID_SUPERVISOR));
                             bundle.putString(AgenteDetalleFragment.ARG_TITLE, "Anular Agenda");
                             bundle.putString(AgenteDetalleFragment.ARG_MESSAGE,
                                     "Se solicita anulación de agenda del " + format1.format(agdNot.getFechaInicio()) + ", " + format2.format(agdNot.getFechaInicio()) + " de "
-                                    + format3.format(agdNot.getFechaInicio()) + ", hecha al cliente " + agdNot.getCliente().getNombreCompleto());
+                                            + format3.format(agdNot.getFechaInicio()) + ", hecha al cliente " + agdNot.getNombreCompleto());
                             requestSync(bundle);
                             Toast.makeText(getContext(), R.string.message_notificacion_enviada, Toast.LENGTH_LONG).show();
                         }
@@ -347,9 +349,9 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
             slidingPane.closePane();
         }
 
+        selectedTransactionId = id;
         RefreshMenu();
-		
-		selectedTransactionId = id;
+
     	rutasDetailfragment = RutasDetailFragment.newInstance(selectedTransactionId);     	
     	setFragment(R.id.content_transaction_detail, rutasDetailfragment);           					
 	}
@@ -375,26 +377,50 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
     {
         menuRutas.setGroupVisible(R.id.submenu_rutas, true);
         menuRutas.findItem(R.id.submenu_rutas).setVisible(true);
+        Agenda agenda = Agenda.getAgenda(getDataBase(), selectedTransactionId);
         if(!mTwoPane)
         {
             if(!isMainFragment)
             {
                 menuRutas.findItem(R.id.action_search_ruta).setVisible(false);
                 menuRutas.findItem(R.id.action_crear_visita).setVisible(false);
-                menuRutas.findItem(R.id.action_cambiar_contacto).setVisible(true);
-                menuRutas.findItem(R.id.action_no_visita).setVisible(true);
-                menuRutas.findItem(R.id.action_reprogramar).setVisible(true);
-                menuRutas.findItem(R.id.action_suspender_agenda).setVisible(true);
+                for(int i = 0; i < menuRutas.size(); i ++)
+                {
+                    if(menuRutas.getItem(i).getItemId() == R.id.submenu_agenda)
+                    {
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_cambiar_contacto).setVisible(agenda != null);
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_reprogramar).setVisible(agenda != null);
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_suspender_agenda).setVisible(true);
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_no_visita).setVisible(true);
+                    }
+                }
                 if(selectedTransactionId != 0)
                 {
                     String estado = Agenda.getAgendaEstado(getDataBase(), selectedTransactionId);
-                    if(estado.equalsIgnoreCase(Contants.ESTADO_NO_VISITADO) || estado.equalsIgnoreCase(Contants.ESTADO_VISITADO))
-                        menuRutas.findItem(R.id.action_cambiar_contacto).setVisible(false);
+                    if(estado.equalsIgnoreCase(Contants.ESTADO_NO_VISITADO) || estado.equalsIgnoreCase(Contants.ESTADO_VISITADO)) {
+                        for(int i = 0; i < menuRutas.size(); i ++)
+                        {
+                            if(menuRutas.getItem(i).getItemId() == R.id.submenu_agenda)
+                            {
+                                menuRutas.getItem(i).getSubMenu().findItem(R.id.action_cambiar_contacto).setVisible(false);
+                                menuRutas.getItem(i).getSubMenu().findItem(R.id.action_no_visita).setVisible(false);
+                                menuRutas.findItem(R.id.submenu_agenda).setVisible(false);
+                            }
+                        }
+                    }
+                    else
+                        menuRutas.findItem(R.id.submenu_agenda).setVisible(true);
                     if(!estado.equalsIgnoreCase(Contants.ESTADO_PENDIENTE) && !estado.equalsIgnoreCase(Contants.ESTADO_REPROGRAMADO))
                     {
-                        menuRutas.findItem(R.id.action_suspender_agenda).setVisible(false);
-                        menuRutas.findItem(R.id.action_no_visita).setVisible(false);
-                        menuRutas.findItem(R.id.action_reprogramar).setVisible(false);
+                        for(int i = 0; i < menuRutas.size(); i ++)
+                        {
+                            if(menuRutas.getItem(i).getItemId() == R.id.submenu_agenda)
+                            {
+                                menuRutas.getItem(i).getSubMenu().findItem(R.id.action_cambiar_contacto).setVisible(false);
+                                menuRutas.getItem(i).getSubMenu().findItem(R.id.action_reprogramar).setVisible(false);
+                                menuRutas.getItem(i).getSubMenu().findItem(R.id.action_suspender_agenda).setVisible(false);
+                            }
+                        }
                     }
                 }
                 if(rutasDetailfragment != null)
@@ -404,6 +430,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
             {
                 menuRutas.findItem(R.id.action_search_ruta).setVisible(true);
                 menuRutas.findItem(R.id.action_crear_visita).setVisible(true);
+                menuRutas.findItem(R.id.submenu_agenda).setVisible(false);
                 for(int i = 0; i < menuRutas.size(); i ++)
                 {
                     if(menuRutas.getItem(i).getItemId() == R.id.submenu_rutas)
@@ -411,11 +438,15 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_como_llegar).setVisible(false);
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_ver_posicion).setVisible(false);
                     }
+
+                    if(menuRutas.getItem(i).getItemId() == R.id.submenu_agenda)
+                    {
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_cambiar_contacto).setVisible(false);
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_reprogramar).setVisible(false);
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_suspender_agenda).setVisible(false);
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_no_visita).setVisible(false);
+                    }
                 }
-                menuRutas.findItem(R.id.action_cambiar_contacto).setVisible(false);
-                menuRutas.findItem(R.id.action_suspender_agenda).setVisible(false);
-                menuRutas.findItem(R.id.action_no_visita).setVisible(false);
-                menuRutas.findItem(R.id.action_reprogramar).setVisible(false);
                 if(rutasDetailfragment != null)
                     rutasDetailfragment.reDoMenu = false;
             }
@@ -424,9 +455,6 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
         {
             menuRutas.findItem(R.id.action_search_ruta).setVisible(true);
             menuRutas.findItem(R.id.action_crear_visita).setVisible(true);
-            menuRutas.findItem(R.id.action_cambiar_contacto).setVisible(true);
-            menuRutas.findItem(R.id.action_no_visita).setVisible(true);
-            menuRutas.findItem(R.id.action_reprogramar).setVisible(true);
             for(int i = 0; i < menuRutas.size(); i ++)
             {
                 if(menuRutas.getItem(i).getItemId() == R.id.submenu_rutas)
@@ -434,29 +462,57 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
                     menuRutas.getItem(i).getSubMenu().findItem(R.id.action_como_llegar).setVisible(true);
                     menuRutas.getItem(i).getSubMenu().findItem(R.id.action_ver_posicion).setVisible(true);
                 }
+                if(menuRutas.getItem(i).getItemId() == R.id.submenu_agenda)
+                {
+                    menuRutas.getItem(i).getSubMenu().findItem(R.id.action_cambiar_contacto).setVisible(agenda != null);
+                    menuRutas.getItem(i).getSubMenu().findItem(R.id.action_reprogramar).setVisible(agenda != null);
+                    menuRutas.getItem(i).getSubMenu().findItem(R.id.action_no_visita).setVisible(true);
+                }
             }
             if(selectedTransactionId != 0)
             {
                 String estado = Agenda.getAgendaEstado(getDataBase(), selectedTransactionId);
-                if(estado.equalsIgnoreCase(Contants.ESTADO_NO_VISITADO) || estado.equalsIgnoreCase(Contants.ESTADO_VISITADO))
-                    menuRutas.findItem(R.id.action_cambiar_contacto).setVisible(false);
+                if(estado.equalsIgnoreCase(Contants.ESTADO_NO_VISITADO) || estado.equalsIgnoreCase(Contants.ESTADO_VISITADO)) {
+                    for(int i = 0; i < menuRutas.size(); i ++)
+                    {
+                        if(menuRutas.getItem(i).getItemId() == R.id.submenu_agenda)
+                        {
+                            menuRutas.getItem(i).getSubMenu().findItem(R.id.action_cambiar_contacto).setVisible(false);
+                            menuRutas.getItem(i).getSubMenu().findItem(R.id.action_no_visita).setVisible(false);
+                            menuRutas.findItem(R.id.submenu_agenda).setVisible(false);
+                        }
+                    }
+                }
+                else
+                    menuRutas.findItem(R.id.submenu_agenda).setVisible(true);
                 if(!estado.equalsIgnoreCase(Contants.ESTADO_PENDIENTE) && !estado.equalsIgnoreCase(Contants.ESTADO_REPROGRAMADO))
                 {
-                    menuRutas.findItem(R.id.action_no_visita).setVisible(false);
-                    menuRutas.findItem(R.id.action_reprogramar).setVisible(false);
+                    for(int i = 0; i < menuRutas.size(); i ++)
+                    {
+                        if(menuRutas.getItem(i).getItemId() == R.id.submenu_agenda)
+                        {
+                            menuRutas.getItem(i).getSubMenu().findItem(R.id.action_cambiar_contacto).setVisible(false);
+                            menuRutas.getItem(i).getSubMenu().findItem(R.id.action_reprogramar).setVisible(false);
+                            menuRutas.getItem(i).getSubMenu().findItem(R.id.action_suspender_agenda).setVisible(false);
+                        }
+                    }
                 }
             }
             else
             {
-                menuRutas.findItem(R.id.action_cambiar_contacto).setVisible(false);
-                menuRutas.findItem(R.id.action_no_visita).setVisible(false);
-                menuRutas.findItem(R.id.action_reprogramar).setVisible(false);
+                menuRutas.findItem(R.id.submenu_agenda).setVisible(false);
                 for(int i = 0; i < menuRutas.size(); i ++)
                 {
                     if(menuRutas.getItem(i).getItemId() == R.id.submenu_rutas)
                     {
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_como_llegar).setVisible(false);
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_ver_posicion).setVisible(false);
+                    }
+                    if(menuRutas.getItem(i).getItemId() == R.id.submenu_agenda)
+                    {
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_cambiar_contacto).setVisible(false);
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_reprogramar).setVisible(false);
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_no_visita).setVisible(false);
                     }
                 }
             }

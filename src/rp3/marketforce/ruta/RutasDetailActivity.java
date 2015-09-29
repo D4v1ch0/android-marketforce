@@ -135,13 +135,15 @@ public class RutasDetailActivity extends rp3.app.BaseActivity implements Contact
 					if(PreferenceManager.getInt(Contants.KEY_ID_SUPERVISOR, 0) != 0)
 					{
 						Agenda agdNot = Agenda.getAgenda(getDataBase(), transactionId);
+						if(agdNot == null)
+							agdNot = Agenda.getAgendaClienteNull(getDataBase(), transactionId);
 						Bundle bundle = new Bundle();
 						bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SEND_NOTIFICATION);
 						bundle.putInt(AgenteDetalleFragment.ARG_AGENTE, PreferenceManager.getInt(Contants.KEY_ID_SUPERVISOR));
 						bundle.putString(AgenteDetalleFragment.ARG_TITLE, "Anular Agenda");
 						bundle.putString(AgenteDetalleFragment.ARG_MESSAGE,
 								"Se solicita anulación de agenda del " + format1.format(agdNot.getFechaInicio()) + ", " + format2.format(agdNot.getFechaInicio()) + " de "
-										+ format3.format(agdNot.getFechaInicio()) + ", hecha al cliente " + agdNot.getCliente().getNombreCompleto());
+										+ format3.format(agdNot.getFechaInicio()) + ", hecha al cliente " + agdNot.getNombreCompleto());
 						requestSync(bundle);
 						Toast.makeText(this, R.string.message_notificacion_enviada, Toast.LENGTH_LONG).show();
 					}

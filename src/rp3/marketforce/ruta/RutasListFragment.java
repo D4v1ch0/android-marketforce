@@ -316,7 +316,7 @@ public class RutasListFragment extends rp3.app.BaseFragment{
 			public boolean onItemLongClick(
 					AdapterView<?> parent, View view,
 					final int position, long id) {
-				if(adapter.getItem(position).getNombreCompleto() != null)
+				if(adapter.getItem(position).getNombreCompleto() != null && adapter.getItem(position).getCliente() != null)
 				{
 					adapter.setAction(false);
 					PopupMenu popup = new PopupMenu(getContext(), view);

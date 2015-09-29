@@ -707,46 +707,48 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 
     public void RefreshMenu()
     {
-            menuRutas.setGroupVisible(R.id.submenu_rutas, true);
-            menuRutas.findItem(R.id.submenu_rutas).setVisible(true);
-            menuRutas.findItem(R.id.action_search_ruta).setVisible(false);
-            menuRutas.findItem(R.id.action_crear_visita).setVisible(false);
-            menuRutas.findItem(R.id.action_cambiar_contacto).setVisible(true);
-            menuRutas.findItem(R.id.action_no_visita).setVisible(true);
-            menuRutas.findItem(R.id.action_reprogramar).setVisible(true);
-            for(int i = 0; i < menuRutas.size(); i ++)
+        menuRutas.findItem(R.id.action_search_ruta).setVisible(false);
+        menuRutas.findItem(R.id.action_crear_visita).setVisible(false);
+        Agenda agendaNoClient = Agenda.getAgenda(getDataBase(), idAgenda);
+        for(int i = 0; i < menuRutas.size(); i ++)
+        {
+            if(menuRutas.getItem(i).getItemId() == R.id.submenu_agenda)
             {
-                if(menuRutas.getItem(i).getItemId() == R.id.submenu_rutas)
-                {
-                    menuRutas.getItem(i).getSubMenu().findItem(R.id.action_como_llegar).setVisible(true);
-                    menuRutas.getItem(i).getSubMenu().findItem(R.id.action_ver_posicion).setVisible(true);
-                }
+                menuRutas.getItem(i).getSubMenu().findItem(R.id.action_cambiar_contacto).setVisible(agendaNoClient != null);
+                menuRutas.getItem(i).getSubMenu().findItem(R.id.action_reprogramar).setVisible(agendaNoClient != null);
+                menuRutas.getItem(i).getSubMenu().findItem(R.id.action_suspender_agenda).setVisible(true);
+                menuRutas.getItem(i).getSubMenu().findItem(R.id.action_no_visita).setVisible(true);
             }
-            if(idAgenda != 0)
-            {
-                String estado = Agenda.getAgendaEstado(getDataBase(), idAgenda);
-                if(estado.equalsIgnoreCase(Contants.ESTADO_NO_VISITADO) || estado.equalsIgnoreCase(Contants.ESTADO_VISITADO))
-                    menuRutas.findItem(R.id.action_cambiar_contacto).setVisible(false);
-                if(!estado.equalsIgnoreCase(Contants.ESTADO_PENDIENTE) && !estado.equalsIgnoreCase(Contants.ESTADO_REPROGRAMADO))
-                {
-                    menuRutas.findItem(R.id.action_no_visita).setVisible(false);
-                    menuRutas.findItem(R.id.action_reprogramar).setVisible(false);
-                }
-            }
-            else
-            {
-                menuRutas.findItem(R.id.action_cambiar_contacto).setVisible(false);
-                menuRutas.findItem(R.id.action_no_visita).setVisible(false);
-                menuRutas.findItem(R.id.action_reprogramar).setVisible(false);
+        }
+        if(idAgenda != 0)
+        {
+            String estado = Agenda.getAgendaEstado(getDataBase(), idAgenda);
+            if(estado.equalsIgnoreCase(Contants.ESTADO_NO_VISITADO) || estado.equalsIgnoreCase(Contants.ESTADO_VISITADO)) {
                 for(int i = 0; i < menuRutas.size(); i ++)
                 {
-                    if(menuRutas.getItem(i).getItemId() == R.id.submenu_rutas)
+                    if(menuRutas.getItem(i).getItemId() == R.id.submenu_agenda)
                     {
-                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_como_llegar).setVisible(false);
-                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_ver_posicion).setVisible(false);
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_cambiar_contacto).setVisible(false);
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_no_visita).setVisible(false);
+                        menuRutas.findItem(R.id.submenu_agenda).setVisible(false);
                     }
                 }
             }
+            else
+                menuRutas.findItem(R.id.submenu_agenda).setVisible(true);
+            if(!estado.equalsIgnoreCase(Contants.ESTADO_PENDIENTE) && !estado.equalsIgnoreCase(Contants.ESTADO_REPROGRAMADO))
+            {
+                for(int i = 0; i < menuRutas.size(); i ++)
+                {
+                    if(menuRutas.getItem(i).getItemId() == R.id.submenu_agenda)
+                    {
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_cambiar_contacto).setVisible(false);
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_reprogramar).setVisible(false);
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_suspender_agenda).setVisible(false);
+                    }
+                }
+            }
+        }
     }
 
     private void SetMarcacion()
