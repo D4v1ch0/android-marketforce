@@ -218,11 +218,9 @@
     <string name="label_solo_activos">Mostrar activos</string>
     <string name="label_probabilidad_venta">Probabilidad de venta</string>
     <string name="label_cantidad_min">Cantidad</string>
-    <string name="label_contactos_max">CONTACTOS</string>
     <string name="label_no_contacto">No hay contactos</string>
     <string name="label_responsables_max">RESPONSABLES</string>
     <string name="label_no_responsables">No hay responsbles</string>
-    <string name="label_datos_generales_max">DATOS GENERALES</string>
     <string name="label_comentarios_max">COMENTARIOS</string>
     <string name="label_no_etapas">No hay etapas</string>
     <string name="label_no_fotos">No hay fotos</string>
@@ -272,5 +270,6 @@
     <string name="hint_search_oportunidad">Buscar</string>
     <string name="label_bitacora">Bitácora</string>
     <string name="label_agregar_entrada">Agregar Nueva Entrada</string>
+    <string name="label_es_principal_contacto">Es Contacto Principal</string>
 
 </resources>

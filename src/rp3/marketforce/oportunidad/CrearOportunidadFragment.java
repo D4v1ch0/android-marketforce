@@ -101,7 +101,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
 
     private LinearLayout ContactosContainer, ResponsableContainer;
     private List<LinearLayout> listViewResponsables, listViewContactos;
-    private List<Integer> listAgentesIds, listAgentesIdsDelete;
+    private List<Integer> listAgentesIds, listAgentesIdsDelete, listContactosIdsDelete;
     private List<OportunidadContacto> listContactos;
     private List<OportunidadTipo> listTipos;
     private Location currentLoc;
@@ -293,6 +293,12 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
                 OportunidadContacto.update(getDataBase(), cont);
         }
 
+        if(id != 0)
+        {
+            for(int ir = 0; ir < listContactosIdsDelete.size(); ir++)
+                OportunidadContacto.deleteContacto(getDataBase(), listContactosIdsDelete.get(ir));
+        }
+
         for(int i = 0; i < photos.size(); i ++)
         {
             OportunidadFoto foto = new OportunidadFoto();
@@ -456,6 +462,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
             listViewContactos = new ArrayList<LinearLayout>();
             listAgentesIds = new ArrayList<Integer>();
             listAgentesIdsDelete = new ArrayList<Integer>();
+            listContactosIdsDelete = new ArrayList<>();
         }
 
         ResponsableContainer = (LinearLayout) view.findViewById(R.id.oportunidad_responsables);
@@ -789,7 +796,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
         listViewContactos.add(contacto);
     }
 
-    private void addContacto(long id)
+    private void addContacto(final long id)
     {
         OportunidadContacto opCont = OportunidadContacto.getContactoInt(getDataBase(), id);
         final LinearLayout contacto = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.layout_crear_oportunidad_contacto, null);
@@ -803,7 +810,9 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
                 listViewContactos.remove(contacto);
                 ContactosContainer.removeView(contacto);
                 contactPhotos.remove(pos);
-            }});
+                listContactosIdsDelete.add((int)id);
+            }
+        });
         contactPhotos.add("");
         contacto.findViewById(R.id.contacto_foto).setOnClickListener(new View.OnClickListener() {
 

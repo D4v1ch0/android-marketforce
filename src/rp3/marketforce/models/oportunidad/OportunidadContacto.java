@@ -216,4 +216,10 @@ public class OportunidadContacto extends EntityBase<OportunidadContacto> {
         c.close();
         return cont;
     }
+
+    public static void deleteContacto (DataBase db, int idContacto)
+    {
+        long i = db.delete(Contract.OportunidadContacto.TABLE_NAME,
+                Contract.OportunidadContacto._ID + " = ?", new String[]{idContacto + ""});
+    }
 }
