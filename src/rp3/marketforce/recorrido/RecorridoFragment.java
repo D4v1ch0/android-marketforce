@@ -211,7 +211,7 @@ public class RecorridoFragment  extends BaseFragment {
 
     	List<Ubicacion> list_ubicaciones = Ubicacion.getRecorrido(getDataBase(), cal);
     	markers = new ArrayList<Marker>();
-    	
+    	int f = -1;
     	for(int i = 0; i < list_ubicaciones.size(); i ++)
 		{
     		double distance = 31;
@@ -224,6 +224,7 @@ public class RecorridoFragment  extends BaseFragment {
 			
 			if(distance > 30 || i == list_ubicaciones.size() -1)
 			{
+                f++;
                 if(i == 0)
                 {
                     Marker mark = map.addMarker(new MarkerOptions().position(pos)
@@ -241,7 +242,7 @@ public class RecorridoFragment  extends BaseFragment {
                 else
                 {
                     Marker mark = map.addMarker(new MarkerOptions().position(pos)
-                            .icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.markerpoint, i + ""))));
+                            .icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.markerpoint, f + ""))));
                     mark.showInfoWindow();
                     markers.add(mark);
                 }
@@ -249,15 +250,17 @@ public class RecorridoFragment  extends BaseFragment {
 				
 				map.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 12), 1, null);
 				
-				if(i != 0)
-				{
-					LatLng org = new LatLng(list_ubicaciones.get(i-1).getLatitud(), list_ubicaciones.get(i-1).getLongitud());
-					showRuta(org, pos);
-				}
-				
 				ult = pos;
 			}
 		}
+
+        if(markers.size() > 1) {
+            for (int i = 1; i < markers.size(); i++) {
+                LatLng org = new LatLng(markers.get(i-1).getPosition().latitude, markers.get(i-1).getPosition().longitude);
+                LatLng dest = new LatLng(markers.get(i).getPosition().latitude, markers.get(i).getPosition().longitude);
+                showRuta(org, dest);
+            }
+        }
 	}
 	
 	protected void irSiguiente() {
@@ -427,7 +430,7 @@ public class RecorridoFragment  extends BaseFragment {
 	    paint.setColor(Color.BLUE);
 	    //paint.setTypeface(tf);
 	    paint.setTextAlign(Align.CENTER);
-	    paint.setTextSize(getResources().getDimension(R.dimen.text_xsmall_size));
+	    paint.setTextSize(getResources().getDimension(R.dimen.text_xxsmall_size));
 
 	    Rect textRect = new Rect();
 	    paint.getTextBounds(text, 0, text.length(), textRect);
