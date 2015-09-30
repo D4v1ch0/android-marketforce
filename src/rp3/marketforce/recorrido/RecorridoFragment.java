@@ -56,6 +56,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import rp3.app.BaseFragment;
+import rp3.configuration.Configuration;
+import rp3.configuration.PreferenceManager;
 import rp3.maps.utils.SphericalUtil;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
@@ -306,6 +308,8 @@ public class RecorridoFragment  extends BaseFragment {
 	public String makeURL (double sourcelat, double sourcelog, double destlat, double destlog ){
         StringBuilder urlString = new StringBuilder();
         urlString.append("http://maps.googleapis.com/maps/api/directions/json");
+        urlString.append("?key=");
+        urlString.append(Configuration.getAppConfiguration().getWebKey());
         urlString.append("?origin=");// from
         urlString.append(Double.toString(sourcelat));
         urlString.append(",");
