@@ -237,5 +237,18 @@ public class Etapa extends EntityBase<Etapa> {
         return etp;
     }
 
+    public static List<Integer> getEtapasIdsByOrden(DataBase db, int orden) {
+        Cursor c = db.query(Contract.Etapa.TABLE_NAME, new String[] {Contract.Etapa._ID, Contract.Etapa.COLUMN_ID_ETAPA, Contract.Etapa.COLUMN_ID_ETAPA_PADRE, Contract.Etapa.COLUMN_DIAS,
+                Contract.Etapa.COLUMN_ESTADO, Contract.Etapa.COLUMN_ORDEN, Contract.Etapa.COLUMN_DESCRIPCION, Contract.Etapa.COLUMN_ID_OPORTUNIDAD_TIPO},  Contract.Etapa.COLUMN_ID_ETAPA_PADRE + " = 0 AND " +
+                Contract.Etapa.COLUMN_ORDEN + " = ? ", new String[] {orden + ""} );
+
+        List<Integer> etp = new ArrayList<>();
+        while(c.moveToNext()){
+            etp.add(CursorUtils.getInt(c, Contract.Etapa.COLUMN_ID_ETAPA));
+        }
+        c.close();
+        return etp;
+    }
+
 
 }

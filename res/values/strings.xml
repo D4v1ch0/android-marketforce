@@ -271,5 +271,10 @@
     <string name="label_bitacora">Bitácora</string>
     <string name="label_agregar_entrada">Agregar Nueva Entrada</string>
     <string name="label_es_principal_contacto">Es Contacto Principal</string>
+    <string name="label_primera_etapa">Primera Etapa</string>
+    <string name="label_segunda_etapa">Segunda Etapa</string>
+    <string name="label_tercera_etapa">Tercera Etapa</string>
+    <string name="label_cuarta_etapa">Cuarta Etapa</string>
+    <string name="label_quinta_etapa">Quinta Etapa</string>
 
 </resources>

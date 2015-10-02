@@ -196,7 +196,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/label_oportunidad_venta"
+                android:text="@string/label_primera_etapa"
                 android:id="@+id/textView19"
                 android:layout_weight="1" />
 
@@ -262,7 +262,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/label_primer_contacto"
+                android:text="@string/label_segunda_etapa"
                 android:id="@+id/textView21"
                 android:layout_weight="1" />
 
@@ -328,7 +328,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/label_solucion_propuesta"
+                android:text="@string/label_tercera_etapa"
                 android:id="@+id/textView23"
                 android:layout_weight="1" />
 
@@ -394,7 +394,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/label_negociacion"
+                android:text="@string/label_cuarta_etapa"
                 android:id="@+id/textView25"
                 android:layout_weight="1" />
 
@@ -460,7 +460,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/label_cierre_operacion"
+                android:text="@string/label_quinta_etapa"
                 android:id="@+id/textView27"
                 android:layout_weight="1" />
 
