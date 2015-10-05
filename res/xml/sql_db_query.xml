@@ -1106,7 +1106,7 @@
         FROM tbOportunidad
         JOIN tbOportunidadExt
         ON tbOportunidad._id = tbOportunidadExt.docid
-        ORDER BY tbOportunidad.Calificacion DESC, tbOportunidad.Importe DESC
+        ORDER BY tbOportunidad.FechaCreacion DESC, tbOportunidad.Calificacion DESC, tbOportunidad.Importe DESC
     </statement>
 
     <statement name="OportunidadesByIds">
@@ -1139,7 +1139,7 @@
         JOIN tbOportunidadExt
         ON tbOportunidad._id = tbOportunidadExt.docid
         WHERE tbOportunidad._id IN ( ? )
-        ORDER BY tbOportunidad.Calificacion DESC, tbOportunidad.Importe DESC
+        ORDER BY tbOportunidad.FechaCreacion DESC, tbOportunidad.Calificacion DESC, tbOportunidad.Importe DESC
     </statement>
 
     <statement name="OportunidadById">
