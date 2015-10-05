@@ -451,7 +451,7 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
                 Bundle bundle = new Bundle();
                 bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_INSERTAR_AGENDA);
                 bundle.putLong(ARG_AGENDA, agenda.getID());
-                //requestSync(bundle);
+                requestSync(bundle);
 
                 finish();
                 break;

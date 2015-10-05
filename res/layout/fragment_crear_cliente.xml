@@ -44,7 +44,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.6"
-                android:background="@color/caldroid_white"
+                android:background="@color/caldroid_transparent"
                 android:layout_marginLeft="3dp"
                 android:spinnerMode="dialog" />
         </LinearLayout>
@@ -127,8 +127,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.6"
-                android:background="@color/caldroid_white"
-                android:layout_marginLeft="3dp"
+                android:background="@color/caldroid_transparent"
+                android:layout_marginLeft="6dp"
                 android:spinnerMode="dialog" />
         </LinearLayout>
 
@@ -153,8 +153,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.6"
-                android:background="@color/caldroid_white"
-                android:layout_marginLeft="3dp"
+                android:background="@color/caldroid_transparent"
+                android:layout_marginLeft="6dp"
                 android:spinnerMode="dialog" />
         </LinearLayout>
 
@@ -372,7 +372,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.6"
-                    android:background="@color/caldroid_white"
+                    android:background="@color/caldroid_transparent"
                     android:spinnerMode="dialog" />
             </LinearLayout>
 
@@ -395,7 +395,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.6"
-                    android:background="@color/caldroid_white"
+                    android:background="@color/caldroid_transparent"
                     android:spinnerMode="dialog" />
             </LinearLayout>
 

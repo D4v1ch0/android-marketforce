@@ -9,6 +9,7 @@
         <forgotPassword>/Security/Account/RequestingPasswordRecovery</forgotPassword>
         <help>/help/app/principal.html</help>
         <mail>marketforce@rp3.com.ec</mail>
+        <webkey>AIzaSyBvVkVay4J9uIRTFHXMntzCragAcrEwr54</webkey>
     </appConfiguration>
     <dataBaseConfiguration>       
        <name>Rp3MarketForce.db</name>
