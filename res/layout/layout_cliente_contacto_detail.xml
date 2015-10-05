@@ -116,7 +116,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@color/caldroid_white"
+                    android:background="@color/caldroid_transparent"
                     android:layout_marginLeft="5dp"
                     android:spinnerMode="dialog" />
 

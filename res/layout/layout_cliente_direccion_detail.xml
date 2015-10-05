@@ -18,7 +18,7 @@
                 android:id="@+id/cliente_tipo_direccion_spinner"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/caldroid_white"
+                android:background="@color/caldroid_transparent"
                 android:layout_marginLeft="3dp"
                 android:spinnerMode="dialog" />
 

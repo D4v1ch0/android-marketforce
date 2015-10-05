@@ -134,7 +134,7 @@
     <string name="warning_seleccionar_agenda">Debe seleccionar una agenda</string>
     <string name="warning_seleccionar_cliente">Debe seleccionar un cliente</string>
     <string name="warning_gestionar_agenda">La agenda debe de tener el estado Gestionando para poder modificarla.</string>
-    <string name="warning_gestionar_otra_agenda">No puede gestionar otra agenda mientras tenga otra agenda como Gestionando.</string>
+    <string name="warning_gestionar_otra_agenda">No puede gestionar esta agenda, si existe otra abierta con estado "Gestionando".</string>
     <string name="warning_gestion_agenda_otro_dia">No puede gestionar una agenda que no sea del día de hoy.</string>
     <string name="label_agente_cargo">Agente</string>
     <string name="label_supervisor">Supervisor</string>

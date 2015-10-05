@@ -57,6 +57,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import rp3.app.BaseFragment;
+import rp3.configuration.Configuration;
+import rp3.configuration.PreferenceManager;
 import rp3.maps.utils.SphericalUtil;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
@@ -212,7 +214,7 @@ public class RecorridoFragment  extends BaseFragment {
 
     	List<Ubicacion> list_ubicaciones = Ubicacion.getRecorrido(getDataBase(), cal);
     	markers = new ArrayList<Marker>();
-    	
+    	int f = -1;
     	for(int i = 0; i < list_ubicaciones.size(); i ++)
 		{
     		double distance = 31;
@@ -225,6 +227,7 @@ public class RecorridoFragment  extends BaseFragment {
 			
 			if(distance > 30 || i == list_ubicaciones.size() -1)
 			{
+                f++;
                 if(i == 0)
                 {
                     Marker mark = map.addMarker(new MarkerOptions().position(pos)
@@ -242,7 +245,7 @@ public class RecorridoFragment  extends BaseFragment {
                 else
                 {
                     Marker mark = map.addMarker(new MarkerOptions().position(pos)
-                            .icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.markerpoint, i + ""))));
+                            .icon(BitmapDescriptorFactory.fromBitmap(writeTextOnDrawable(R.drawable.markerpoint, f + ""))));
                     mark.showInfoWindow();
                     markers.add(mark);
                 }
@@ -250,15 +253,17 @@ public class RecorridoFragment  extends BaseFragment {
 				
 				map.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 12), 1, null);
 				
-				if(i != 0)
-				{
-					LatLng org = new LatLng(list_ubicaciones.get(i-1).getLatitud(), list_ubicaciones.get(i-1).getLongitud());
-					showRuta(org, pos);
-				}
-				
 				ult = pos;
 			}
 		}
+
+        if(markers.size() > 1) {
+            for (int i = 1; i < markers.size(); i++) {
+                LatLng org = new LatLng(markers.get(i-1).getPosition().latitude, markers.get(i-1).getPosition().longitude);
+                LatLng dest = new LatLng(markers.get(i).getPosition().latitude, markers.get(i).getPosition().longitude);
+                showRuta(org, dest);
+            }
+        }
 	}
 	
 	protected void irSiguiente() {
@@ -303,8 +308,10 @@ public class RecorridoFragment  extends BaseFragment {
 	
 	public String makeURL (double sourcelat, double sourcelog, double destlat, double destlog ){
         StringBuilder urlString = new StringBuilder();
-        urlString.append("http://maps.googleapis.com/maps/api/directions/json");
-        urlString.append("?origin=");// from
+        urlString.append("https://maps.googleapis.com/maps/api/directions/json");
+        urlString.append("?key=");
+        urlString.append(Configuration.getAppConfiguration().getWebKey());
+        urlString.append("&origin=");// from
         urlString.append(Double.toString(sourcelat));
         urlString.append(",");
         urlString
@@ -428,7 +435,7 @@ public class RecorridoFragment  extends BaseFragment {
 	    paint.setColor(Color.BLUE);
 	    //paint.setTypeface(tf);
 	    paint.setTextAlign(Align.CENTER);
-	    paint.setTextSize(getResources().getDimension(R.dimen.text_xsmall_size));
+	    paint.setTextSize(getResources().getDimension(R.dimen.text_xxsmall_size));
 
 	    Rect textRect = new Rect();
 	    paint.getTextBounds(text, 0, text.length(), textRect);
