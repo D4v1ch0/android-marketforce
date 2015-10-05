@@ -302,7 +302,14 @@ public class RadarFragment extends BaseFragment implements AgenteRadarFragment.A
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                int idAgente = list_ubicaciones.get(markers.indexOf(marker)).getIdAgente();
+                int idAgente = 0;
+                for (int i = 0; i < list_ubicaciones.size(); i++) {
+                    String title = list_ubicaciones.get(i).getNombres() + " " + list_ubicaciones.get(i).getApellidos() + " - " + format1.format(list_ubicaciones.get(i).getFecha());
+                    if(title.equalsIgnoreCase(marker.getTitle())) {
+                        idAgente = list_ubicaciones.get(i).getIdAgente();
+                    }
+                }
+
                 agenteDetalleFragment = AgenteDetalleFragment.newInstance(idAgente);
                 showDialogFragment(agenteDetalleFragment, "Agente", "Agente");
             }
@@ -435,7 +442,14 @@ public class RadarFragment extends BaseFragment implements AgenteRadarFragment.A
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                int idAgente = list_ubicaciones.get(markers.indexOf(marker)).getIdAgente();
+                int idAgente = 0;
+                for (int i = 0; i < list_ubicaciones.size(); i++) {
+                    String title = list_ubicaciones.get(i).getNombres() + " " + list_ubicaciones.get(i).getApellidos() + " - " + format1.format(list_ubicaciones.get(i).getFecha());
+                    if(title.equalsIgnoreCase(marker.getTitle())) {
+                        idAgente = list_ubicaciones.get(i).getIdAgente();
+                    }
+                }
+
                 agenteDetalleFragment = AgenteDetalleFragment.newInstance(idAgente);
                 showDialogFragment(agenteDetalleFragment, "Agente", "Agente");
             }
