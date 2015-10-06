@@ -157,6 +157,8 @@ public class DashboardAgendaAdapter extends BaseAdapter{
 
 
             }
+            if(!agd.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO))
+                convertView.findViewById(R.id.dashboard_agenda_gestionando).setVisibility(View.GONE);
         }
         else
         {
