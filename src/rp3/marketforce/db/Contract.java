@@ -538,4 +538,35 @@ public final class Contract {
         public static final String FIELD_ID_AGENTE = COLUMN_ID_AGENTE;
 
     }
+
+	/* Modulo Pedidos */
+
+	public static abstract class Pedido implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbPedido";
+
+		public static final String COLUMN_ID_PEDIDO = "IdPedido";
+		public static final String COLUMN_ID_AGENDA = "IdAgenda";
+		public static final String COLUMN_ID_CLIENTE = "IdCliente";
+		public static final String COLUMN_VALOR_TOTAL = "ValorTotal";
+		public static final String COLUMN_EMAIL = "Email";
+		public static final String COLUMN_ESTADO = "Estado";
+		public static final String COLUMN_FECHA_CREACION = "FechaCreacion";
+
+	}
+
+	public static abstract class PedidoDetalle implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbPedidoDetalle";
+
+		public static final String COLUMN_ID_PEDIDO = "IdPedido";
+		public static final String COLUMN_ID_PEDIDO_INT = "_IdPedido";
+		public static final String COLUMN_ID_PEDIDO_DETALLE = "IdPedidoDetalle";
+		public static final String COLUMN_ID_PRODUCTO = "IdProducto";
+		public static final String COLUMN_DESCRIPCION = "Descripcion";
+		public static final String COLUMN_VALOR_UNITARIO = "ValorUnitario";
+		public static final String COLUMN_CANTIDAD = "Cantidad";
+		public static final String COLUMN_VALOR_TOTAL = "ValorTotal";
+
+	}
 }

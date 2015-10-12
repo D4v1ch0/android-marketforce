@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sql>
+    <statement name="ToVersion6-1">
+        CREATE TABLE tbPedido(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdPedido INTEGER,
+        IdAgenda INTEGER,
+        IdCliente INTEGER,
+        ValorTotal REAL,
+        Email TEXT,
+        Estado TEXT,
+        FechaCreacion INTEGER
+        );
+    </statement>
+    <statement name="ToVersion6-2">
+        CREATE TABLE tbPedidoDetalle(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdPedidoDetalle INTEGER,
+        IdPedido INTEGER,
+        _IdPedido INTEGER,
+        IdProducto INTEGER,
+        Descripcion TEXT,
+        ValorUnitario REAL,
+        Cantidad INTEGER,
+        ValorTotal REAL
+        );
+    </statement>
+</sql>

@@ -268,4 +268,30 @@
         Email TEXT
         )
     </statement>
+    <!-- Modulo Pedidos -->
+    <statement>
+        CREATE TABLE tbPedido(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdPedido INTEGER,
+        IdAgenda INTEGER,
+        IdCliente INTEGER,
+        ValorTotal REAL,
+        Email TEXT,
+        Estado TEXT,
+        FechaCreacion INTEGER
+        );
+    </statement>
+    <statement>
+        CREATE TABLE tbPedidoDetalle(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdPedidoDetalle INTEGER,
+        IdPedido INTEGER,
+        _IdPedido INTEGER,
+        IdProducto INTEGER,
+        Descripcion TEXT,
+        ValorUnitario REAL,
+        Cantidad INTEGER,
+        ValorTotal REAL
+        );
+    </statement>
 </sql>

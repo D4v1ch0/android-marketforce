@@ -199,5 +199,7 @@
     <string name="label_ubicacion_max">UBICACIÓN</string>
     <string name="label_información_max">INFORMACIÓN</string>
     <string name="label_contactos_max">CONTACTOS</string>
+    <!-- Modulo Pedidos -->
+    <string name="action_crear_pedido">Crear Pedido</string>
 
 </resources>
