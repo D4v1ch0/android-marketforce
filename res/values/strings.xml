@@ -201,5 +201,6 @@
     <string name="label_contactos_max">CONTACTOS</string>
     <!-- Modulo Pedidos -->
     <string name="action_crear_pedido">Crear Pedido</string>
+    <string name="action_editar_pedido">Editar Pedido</string>
 
 </resources>
