@@ -76,18 +76,6 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     @Override
     public void onResume() {
         super.onResume();
-        if(code != null)
-        {
-            productFragment = null;
-            try {
-                productFragment = ProductFragment.newInstance(code);
-                showDialogFragment(productFragment, "Producto");
-            }
-            catch (Exception ex)
-            {
-                ex.printStackTrace();
-            }
-        }
     }
 
     @Override
@@ -282,10 +270,10 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             if (resultCode == RESULT_OK) {
                 //get the extras that are returned from the intent
                 String contents = data.getStringExtra("SCAN_RESULT");
-                String format = data.getStringExtra("SCAN_RESULT_FORMAT");
-                Toast toast = Toast.makeText(this.getContext(), "Content:" + contents + " Format:" + format, Toast.LENGTH_LONG);
-                toast.show();
                 code = contents;
+                productFragment = ProductFragment.newInstance(code);
+                productFragment.setCancelable(false);
+                showDialogFragment(productFragment, "Producto","");
             }
         }
     }

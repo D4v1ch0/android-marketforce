@@ -59,7 +59,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        setContentView(R.layout.fragment_client,R.menu.fragment_client_menu);
+        setContentView(R.layout.fragment_client,R.menu.fragment_pedido_menu);
 
     }
 
@@ -165,28 +165,13 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
     private void RefreshMenu(){
         if(!mTwoPane){
             menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
-            menu.findItem(R.id.submenu_rutas).setVisible(!isActiveListFragment);
-            if(PreferenceManager.getBoolean(Contants.KEY_PERMITIR_CREACION))
-                menu.findItem(R.id.action_crear_cliente).setVisible(isActiveListFragment);
-            else
-                menu.findItem(R.id.action_crear_cliente).setVisible(false);
-
-            if(PreferenceManager.getBoolean(Contants.KEY_PERMITIR_MODIFICACION))
-                menu.findItem(R.id.action_editar_cliente).setVisible(!isActiveListFragment && !isContact);
-            else
-                menu.findItem(R.id.action_editar_cliente).setVisible(false);
+            menu.findItem(R.id.action_crear_pedido).setVisible(isActiveListFragment);
+            menu.findItem(R.id.action_editar_pedido).setVisible(!isActiveListFragment);
         }
         else{
             menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
-            if(PreferenceManager.getBoolean(Contants.KEY_PERMITIR_CREACION))
-                menu.findItem(R.id.action_crear_cliente).setVisible(isActiveListFragment);
-            else
-                menu.findItem(R.id.action_crear_cliente).setVisible(false);
-
-            if(PreferenceManager.getBoolean(Contants.KEY_PERMITIR_MODIFICACION))
-                menu.findItem(R.id.action_editar_cliente).setVisible(selectedClientId!=0 && !isContact);
-            else
-                menu.findItem(R.id.action_editar_cliente).setVisible(false);
+            menu.findItem(R.id.action_crear_pedido).setVisible(isActiveListFragment);
+            menu.findItem(R.id.action_editar_pedido).setVisible(selectedClientId!=0);
 
         }
     }

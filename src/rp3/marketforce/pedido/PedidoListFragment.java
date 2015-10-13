@@ -81,7 +81,6 @@ public class PedidoListFragment extends BaseFragment {
 
         if(savedInstanceState == null)
         {
-            currentTransactionBoolean = getArguments().getBoolean(ARG_TRANSACTIONTYPEBO);
             Bundle args = new Bundle();
             args.putString(LoaderPedidos.STRING_SEARCH, currentTransactionSearch);
             loaderPedidos = new LoaderPedidos();

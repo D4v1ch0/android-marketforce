@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -79,19 +80,25 @@ public class ProductFragment extends BaseFragment {
         rootView.findViewById(R.id.producto_aceptar).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PedidoDetalle detalle = new PedidoDetalle();
-                detalle.setCantidad(Integer.parseInt(((EditText) rootView.findViewById(R.id.producto_cantidad)).getText().toString()));
-                try {
-                    detalle.setDescripcion(jsonObject.getString("d"));
-                    detalle.setValorUnitario(jsonObject.getDouble("p"));
-                    detalle.setIdProducto(jsonObject.getInt("id"));
-                    detalle.setValorTotal(detalle.getValorUnitario() * detalle.getCantidad());
-                }catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                if(((EditText) rootView.findViewById(R.id.producto_cantidad)).length() > 0) {
+                    PedidoDetalle detalle = new PedidoDetalle();
+                    detalle.setCantidad(Integer.parseInt(((EditText) rootView.findViewById(R.id.producto_cantidad)).getText().toString()));
+                    try {
+                        detalle.setDescripcion(jsonObject.getString("d"));
+                        detalle.setValorUnitario(jsonObject.getDouble("p"));
+                        detalle.setIdProducto(jsonObject.getInt("id"));
+                        detalle.setValorTotal(detalle.getValorUnitario() * detalle.getCantidad());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
-                createFragmentListener.onAcceptSuccess(detalle);
-                dismiss();
+                    createFragmentListener.onAcceptSuccess(detalle);
+                    dismiss();
+                }
+                else
+                {
+                    Toast.makeText(getContext(), "Ingrese una cantidad", Toast.LENGTH_LONG).show();
+                }
 
             }
         });
