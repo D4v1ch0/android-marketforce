@@ -24,6 +24,7 @@ import rp3.marketforce.cliente.ClientDetailFragment;
 import rp3.marketforce.cliente.ClientListFragment;
 import rp3.marketforce.cliente.CrearClienteActivity;
 import rp3.marketforce.models.Cliente;
+import rp3.marketforce.models.pedido.Pedido;
 import rp3.marketforce.ruta.MapaActivity;
 import rp3.util.ConnectionUtils;
 import rp3.widget.SlidingPaneLayout;
@@ -31,7 +32,7 @@ import rp3.widget.SlidingPaneLayout;
 /**
  * Created by magno_000 on 12/10/2015.
  */
-public class PedidoFragment extends BaseFragment {
+public class PedidoFragment extends BaseFragment implements PedidoListFragment.PedidoListFragmentListener,PedidoDetailFragment.PedidoDetailFragmentListener {
 
     private static final int PARALLAX_SIZE = 0;
 
@@ -193,46 +194,48 @@ public class PedidoFragment extends BaseFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
-            case R.id.action_editar_cliente:
-                Intent intent2 = new Intent(getActivity(), CrearClienteActivity.class);
-                intent2.putExtra(CrearClienteActivity.ARG_IDCLIENTE, selectedClientId);
+            case R.id.action_editar_pedido:
+                Intent intent2 = new Intent(getActivity(), CrearPedidoActivity.class);
+                intent2.putExtra(CrearPedidoActivity.ARG_IDPEDIDO, selectedClientId);
                 startActivity(intent2);
                 break;
-            case R.id.action_crear_cliente:
-                Intent intent = new Intent(this.getActivity(), CrearClienteActivity.class);
+            case R.id.action_crear_pedido:
+                Intent intent = new Intent(this.getActivity(), CrearPedidoActivity.class);
                 startActivity(intent);
                 break;
-            //case R.id.action_import_contacts:
-            //    showDialogFragment(ImportChooseFragment.newInstance(), "Import");
-            //    break;
-            case R.id.action_ver_posicion:
-                if (!ConnectionUtils.isNetAvailable(getContext())) {
-                    Toast.makeText(getContext(), "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
-                } else if (selectedClientId != 0) {
-                    Intent intent3 = new Intent(getActivity(), MapaActivity.class);
-                    intent3.putExtra(MapaActivity.ACTION_TYPE, MapaActivity.ACTION_POSICION_CLIENTE);
-                    intent3.putExtra(MapaActivity.ARG_AGENDA, selectedClientId);
-                    startActivity(intent3);
-                } else {
-                    Toast.makeText(getContext(), "Debe seleccionar una cliente.", Toast.LENGTH_LONG).show();
-                }
-                return true;
-            case R.id.action_como_llegar:
-                if (!ConnectionUtils.isNetAvailable(getContext())) {
-                    Toast.makeText(getContext(), "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
-                } else if (selectedClientId != 0) {
-                    Intent intent4 = new Intent(getActivity(), MapaActivity.class);
-                    intent4.putExtra(MapaActivity.ACTION_TYPE, MapaActivity.ACTION_LLEGAR_CLIENTE);
-                    intent4.putExtra(MapaActivity.ARG_AGENDA, selectedClientId);
-                    startActivity(intent4);
-                } else {
-                    Toast.makeText(getContext(), R.string.warning_seleccionar_cliente, Toast.LENGTH_LONG).show();
-                }
-                return true;
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onPermisoChanged(Pedido permiso) {
+
+    }
+
+    @Override
+    public void onPermisoSelected(Pedido pedido) {
+        selectedClientId = pedido.getID();
+
+        if(!mTwoPane) {
+            slidingPane.closePane();
+            isActiveListFragment = false;
+        }
+
+        RefreshMenu();
+
+        transactionDetailFragment = PedidoDetailFragment.newInstance(pedido);
+        setFragment(R.id.content_transaction_detail, transactionDetailFragment);
+    }
+
+    @Override
+    public void onFinalizaConsulta() {
+
+    }
+
+    @Override
+    public boolean allowSelectedItem() {
+        return mTwoPane;
+    }
 }

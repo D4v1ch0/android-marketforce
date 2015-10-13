@@ -9,6 +9,7 @@ import java.util.List;
 import rp3.data.entity.EntityBase;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.db.Contract;
+import rp3.marketforce.models.Cliente;
 import rp3.util.CursorUtils;
 
 /**
@@ -26,6 +27,7 @@ public class Pedido extends EntityBase<Pedido> {
     private Date fechaCreacion;
 
     private List<PedidoDetalle> pedidoDetalles;
+    private Cliente cliente;
 
     @Override
     public long getID() {
@@ -107,6 +109,14 @@ public class Pedido extends EntityBase<Pedido> {
         return pedidoDetalles;
     }
 
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
     public void setPedidoDetalles(List<PedidoDetalle> pedidoDetalles) {
         this.pedidoDetalles = pedidoDetalles;
     }
@@ -148,13 +158,17 @@ public class Pedido extends EntityBase<Pedido> {
             pedido.setEmail(CursorUtils.getString(c, Contract.Pedido.COLUMN_EMAIL));
             pedido.setEstado(CursorUtils.getString(c, Contract.Pedido.COLUMN_ESTADO));
             pedido.setFechaCreacion(CursorUtils.getDate(c, Contract.Pedido.COLUMN_FECHA_CREACION));
+            pedido.setCliente(Cliente.getClienteIDServer(db, pedido.getIdCliente(), false));
+            pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetalles(db, pedido.getIdPedido()));
+            if(pedido.getPedidoDetalles().size() < 0)
+                pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetallesInt(db, pedido.getID()));
             list.add(pedido);
         }
         c.close();
         return list;
     }
 
-    public static Pedido getPedido(DataBase db, int id) {
+    public static Pedido getPedido(DataBase db, long id) {
         Cursor c = db.query(Contract.Pedido.TABLE_NAME, new String[] {Contract.Pedido._ID, Contract.Pedido.COLUMN_ID_PEDIDO, Contract.Pedido.COLUMN_ID_AGENDA,
                 Contract.Pedido.COLUMN_ID_CLIENTE, Contract.Pedido.COLUMN_VALOR_TOTAL, Contract.Pedido.COLUMN_EMAIL, Contract.Pedido.COLUMN_ESTADO,}
                 ,Contract.Pedido._ID + " = ? ", new String[]{id + ""}, null,null, Contract.Pedido.COLUMN_FECHA_CREACION);
@@ -170,6 +184,7 @@ public class Pedido extends EntityBase<Pedido> {
             pedido.setEmail(CursorUtils.getString(c, Contract.Pedido.COLUMN_EMAIL));
             pedido.setEstado(CursorUtils.getString(c, Contract.Pedido.COLUMN_ESTADO));
             pedido.setFechaCreacion(CursorUtils.getDate(c, Contract.Pedido.COLUMN_FECHA_CREACION));
+            pedido.setCliente(Cliente.getClienteIDServer(db, pedido.getIdCliente(), false));
             pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetalles(db, pedido.getIdPedido()));
             if(pedido.getPedidoDetalles().size() < 0)
                 pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetallesInt(db, pedido.getID()));

@@ -179,7 +179,9 @@
         <activity android:name=".ruta.ObservacionesActivity" android:theme="@style/MyAppPopupTheme"></activity>
         <activity android:name=".ruta.FotoActivity" android:theme="@style/MyAppPopupTheme"></activity>
         <activity android:name=".cliente.ImportContactsActivity"></activity>
-        
+
+        <!-- Modulo Pedidos -->
+        <activity android:name=".pedido.CrearPedidoActivity"></activity>
     </application>
 
 </manifest>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:baselineAligned="false"
+    android:orientation="vertical"
+    android:padding="10dp" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/pedido_cliente"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:layout_marginRight="5dp"
+            android:textSize="@dimen/text_large_size"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical" >
+
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:id="@+id/pedido_estado"
+                android:src="@drawable/circle_pending" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight=".7"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical" >
+
+            <TextView
+                android:id="@+id/pedido_valor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="3dp"
+                android:gravity="center_vertical"
+                style="@style/Widget.TextView.XSmall"
+                android:textSize="@dimen/text_xsmall_size"
+                android:textStyle="bold"
+                android:textColor="@color/color_text_sky_blue" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight=".7"
+        android:gravity="center_vertical" >
+
+        <TextView
+            android:id="@+id/label_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            style="@style/Widget.TextView.XSmall"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textSize="@dimen/text_xsmall_size"
+            android:textColor="@color/color_text_sky_blue"
+            android:text="@string/label_cantidad" />
+
+        <TextView
+            style="@style/Widget.TextView.XSmall"
+            android:id="@+id/pedido_cantidad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textSize="@dimen/text_xsmall_size" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -202,5 +202,17 @@
     <!-- Modulo Pedidos -->
     <string name="action_crear_pedido">Crear Pedido</string>
     <string name="action_editar_pedido">Editar Pedido</string>
+    <string name="label_sin_pedidos">No tiene pedidos</string>
+    <string name="label_cantidad">Cantidad:</string>
+    <string name="label_cliente_2">Cliente:</string>
+    <string name="label_correo_2">Correo:</string>
+    <string name="label_descripción">Descripción</string>
+    <string name="label_valor_unitario">V. Unitario</string>
+    <string name="label_valor_total">Total</string>
+    <string name="label_cantidad_items">Cantidad de Items:</string>
+    <string name="label_total_pedido">Total Pedido:</string>
+    <string name="label_agregar_producto">Agregar Producto</string>
+    <string name="message_guardar_pedido">Desea guardar los datos del pedido?</string>
+    <string name="message_guardar_pedido_accept">Desea guardar los datos del pedido y darlo por cerrado?</string>
 
 </resources>

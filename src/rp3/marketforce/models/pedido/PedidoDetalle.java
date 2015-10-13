@@ -179,4 +179,14 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
         c.close();
         return list;
     }
+
+    public static void deleteDetallesByIdPedido(DataBase db, int idPedido)
+    {
+        db.delete(Contract.PedidoDetalle.TABLE_NAME, Contract.PedidoDetalle.COLUMN_ID_PEDIDO + " = ?", new String[]{idPedido + ""});
+    }
+
+    public static void deleteDetallesByIdPedidoInt(DataBase db, int idPedido)
+    {
+        db.delete(Contract.PedidoDetalle.TABLE_NAME, Contract.PedidoDetalle.COLUMN_ID_PEDIDO_INT + " = ?", new String[]{idPedido + ""});
+    }
 }

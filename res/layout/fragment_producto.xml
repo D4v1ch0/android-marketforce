@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView3"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.35"
+            android:src="@drawable/ic_launcher" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.65"
+            android:padding="5dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Medium Text"
+                android:id="@+id/producto_descripcion"
+                android:lines="3"
+                android:maxLines="3"
+                android:textColor="@color/color_text_sky_blue"
+                android:textSize="@dimen/text_medium_small_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Medium Text"
+                android:id="@+id/producto_precio" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_cantidad"
+            android:id="@+id/textView19"
+            android:layout_weight="0.35" />
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:id="@+id/producto_cantidad"
+            android:layout_weight="0.65"
+            android:inputType="number" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/action_cancel"
+            android:id="@+id/producto_cancelar"
+            android:layout_margin="5dp"
+            style="@style/Widget.Button.Theme"
+            android:layout_weight="1" />
+
+        <Button
+            style="@style/Widget.Button.Theme"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/label_eliminar_contacto"
+            android:id="@+id/producto_eliminar"
+            android:layout_margin="5dp"
+            android:layout_weight="1" />
+
+        <Button
+            style="@style/Widget.Button.Theme"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/label_button_aceptar_act"
+            android:id="@+id/producto_aceptar"
+            android:layout_margin="5dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+</LinearLayout>
