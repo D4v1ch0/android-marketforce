@@ -8,6 +8,7 @@ import rp3.marketforce.Contants;
 import rp3.marketforce.ServerActivity;
 import rp3.marketforce.cliente.CrearClienteFragment;
 import rp3.marketforce.models.Tarea;
+import rp3.marketforce.pedido.CrearPedidoFragment;
 import rp3.marketforce.resumen.AgenteDetalleFragment;
 import rp3.marketforce.ruta.CrearVisitaFragment;
 import rp3.marketforce.ruta.MotivoNoVisitaFragment;
@@ -47,6 +48,8 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
     public static String SYNC_TYPE_UPLOAD_AGENDAS = "agenda_upload";
     public static String SYNC_TYPE_UPLOAD_CLIENTES = "cliente_upload";
     public static String SYNC_TYPE_SEND_NOTIFICATION = "send_notification";
+
+    public static String SYNC_TYPE_UPDATE_PEDIDO = "update_pedido";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -254,6 +257,10 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                 } else if (syncType.equals(SYNC_TYPE_REPROGRAMAR_AGENDA)) {
                     int id = extras.getInt(RutasDetailFragment.ARG_AGENDA_ID);
                     result = Agenda.executeSyncReschedule(db, id);
+                    addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_UPDATE_PEDIDO)) {
+                    long id = extras.getLong(CrearPedidoFragment.ARG_PEDIDO);
+                    result = Pedido.executeSync(db, id);
                     addDefaultMessage(result);
                 } else if (syncType.equals(SYNC_TYPE_INSERTAR_AGENDA)) {
                     long agenda = extras.getLong(CrearVisitaFragment.ARG_AGENDA);

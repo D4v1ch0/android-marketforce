@@ -27,7 +27,7 @@ public class PedidoLoader extends
     public List<Pedido> loadInBackground() {
         List<Pedido> result = null;
 
-        if(search.length() <= 0)
+        if(search == null || search.length() <= 0)
             result = Pedido.getPedidos(db);
         else
             result = Pedido.getPedidos(db);

@@ -74,8 +74,8 @@ public class PedidoDetailFragment extends BaseFragment {
         PedidoDetalleAdapter adapter = new PedidoDetalleAdapter(this.getContext(), pedido.getPedidoDetalles());
         ((ListView) getRootView().findViewById(R.id.pedido_detalles)).setAdapter(adapter);
 
-        ((TextView) getRootView().findViewById(R.id.pedido_cantidad)).setText(pedido.getPedidoDetalles().size());
-        ((TextView) getRootView().findViewById(R.id.pedido_cantidad)).setText("$ " + df.format(pedido.getValorTotal()));
+        ((TextView) getRootView().findViewById(R.id.pedido_cantidad)).setText(pedido.getPedidoDetalles().size() + "");
+        ((TextView) getRootView().findViewById(R.id.pedido_total)).setText("$ " + df.format(pedido.getValorTotal()));
 
     }
 

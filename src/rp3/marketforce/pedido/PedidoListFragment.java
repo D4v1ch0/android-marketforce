@@ -71,7 +71,7 @@ public class PedidoListFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-
+        ejecutarConsulta();
     }
 
     @Override
@@ -84,6 +84,7 @@ public class PedidoListFragment extends BaseFragment {
             Bundle args = new Bundle();
             args.putString(LoaderPedidos.STRING_SEARCH, currentTransactionSearch);
             loaderPedidos = new LoaderPedidos();
+
         }
     }
 

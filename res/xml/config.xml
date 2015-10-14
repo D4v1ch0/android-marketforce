@@ -247,6 +247,13 @@
                     <webMethod>POST</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>
+                <!-- Modulo Pedido -->
+                <method>
+                    <name>UpdatePedido</name>
+                    <action>pedido/UpdateFull</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
             </methods>     
         </webServiceData>
            <webServiceData>

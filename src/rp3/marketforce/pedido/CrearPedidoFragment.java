@@ -76,6 +76,15 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     @Override
     public void onResume() {
         super.onResume();
+        if(code != null) {
+            try {
+                productFragment = ProductFragment.newInstance(code);
+                productFragment.setCancelable(false);
+                showDialogFragment(productFragment, "Producto", "");
+                code = null;
+            } catch (Exception ex) {
+            }
+        }
     }
 
     @Override
@@ -130,57 +139,47 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     }
 
     private void Grabar(boolean pendiente) {
-        Pedido pedido = new Pedido();
-        if(idCliente != 0)
-            pedido = Pedido.getPedido(getDataBase(), idCliente);
-        else
+        if (idCliente == 0)
             pedido.setFechaCreacion(Calendar.getInstance().getTime());
 
         Cliente cli = list_cliente.get(list_nombres.indexOf(cliente_auto.getText().toString()));
         pedido.setIdCliente((int) cli.getIdCliente());
-        if(((EditText) getRootView().findViewById(R.id.pedido_email)).length() > 0)
+        if (((EditText) getRootView().findViewById(R.id.pedido_email)).length() > 0)
             pedido.setEmail(((EditText) getRootView().findViewById(R.id.pedido_email)).getText().toString());
 
         double valorTotal = 0;
-
-        for(PedidoDetalle detalle : pedido.getPedidoDetalles())
-        {
+        for (PedidoDetalle detalle : pedido.getPedidoDetalles()) {
             valorTotal = valorTotal + detalle.getValorTotal();
         }
 
         pedido.setValorTotal(valorTotal);
-        if(pendiente)
+        if (pendiente)
             pedido.setEstado("P");
         else
             pedido.setEstado("C");
 
-        if(pedido.getID() == 0)
+        if (pedido.getID() == 0)
             Pedido.insert(getDataBase(), pedido);
         else
             Pedido.update(getDataBase(), pedido);
 
-        for(PedidoDetalle detalle : pedido.getPedidoDetalles())
-        {
+        if (pedido.getIdPedido() != 0)
+            PedidoDetalle.deleteDetallesByIdPedido(getDataBase(), pedido.getIdPedido());
+        else
+            PedidoDetalle.deleteDetallesByIdPedidoInt(getDataBase(), (int) pedido.getID());
+
+        for (PedidoDetalle detalle : pedido.getPedidoDetalles()) {
             detalle.setIdPedido(pedido.getIdPedido());
-            detalle.set_idPedido((int)pedido.getID());
-            if(detalle.getID() == 0)
-                PedidoDetalle.insert(getDataBase(), detalle);
-            else
-                PedidoDetalle.update(getDataBase(), detalle);
+            detalle.set_idPedido((int) pedido.getID());
+            PedidoDetalle.insert(getDataBase(), detalle);
         }
 
 
-
-        if(ConnectionUtils.isNetAvailable(getActivity()))
-        {
+        if (ConnectionUtils.isNetAvailable(getActivity())) {
             Bundle bundle = new Bundle();
-            if(idCliente != 0)
-                bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_CLIENTE_UPDATE_FULL);
-            else {
-                bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_CLIENTE_CREATE);
-            }
+            bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPDATE_PEDIDO);
             bundle.putLong(ARG_PEDIDO, pedido.getID());
-            //requestSync(bundle);
+            requestSync(bundle);
         }
     }
 
@@ -257,6 +256,11 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         adapter = new PedidoDetalleAdapter(this.getContext(), pedido.getPedidoDetalles());
         ((ListView) getRootView().findViewById(R.id.pedido_detalles)).setAdapter(adapter);
 
+        ((TextView) getRootView().findViewById(R.id.pedido_cantidad)).setText(pedido.getPedidoDetalles().size() + "");
+        ((TextView) getRootView().findViewById(R.id.pedido_total)).setText("$ " + pedido.getValorTotal());
+        ((TextView) getRootView().findViewById(R.id.pedido_cliente)).setText(pedido.getCliente().getNombreCompleto());
+        ((TextView) getRootView().findViewById(R.id.pedido_email)).setText(pedido.getEmail());
+
     }
 
     @Override
@@ -271,9 +275,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                 //get the extras that are returned from the intent
                 String contents = data.getStringExtra("SCAN_RESULT");
                 code = contents;
-                productFragment = ProductFragment.newInstance(code);
-                productFragment.setCancelable(false);
-                showDialogFragment(productFragment, "Producto","");
+
             }
         }
     }
@@ -319,6 +321,16 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             adapter.setList(pedido.getPedidoDetalles());
 
         adapter.notifyDataSetChanged();
+
+        ((TextView) getRootView().findViewById(R.id.pedido_cantidad)).setText(pedido.getPedidoDetalles().size() + "");
+
+        double valorTotal = 0;
+        for(PedidoDetalle detalle : pedido.getPedidoDetalles())
+        {
+            valorTotal = valorTotal + detalle.getValorTotal();
+        }
+
+        ((TextView) getRootView().findViewById(R.id.pedido_total)).setText("$ " + valorTotal);
 
     }
 }

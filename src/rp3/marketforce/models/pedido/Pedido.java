@@ -144,7 +144,7 @@ public class Pedido extends EntityBase<Pedido> {
 
     public static List<Pedido> getPedidos(DataBase db) {
         Cursor c = db.query(Contract.Pedido.TABLE_NAME, new String[] {Contract.Pedido._ID, Contract.Pedido.COLUMN_ID_PEDIDO, Contract.Pedido.COLUMN_ID_AGENDA,
-                Contract.Pedido.COLUMN_ID_CLIENTE, Contract.Pedido.COLUMN_VALOR_TOTAL, Contract.Pedido.COLUMN_EMAIL, Contract.Pedido.COLUMN_ESTADO,}
+                Contract.Pedido.COLUMN_ID_CLIENTE, Contract.Pedido.COLUMN_VALOR_TOTAL, Contract.Pedido.COLUMN_EMAIL, Contract.Pedido.COLUMN_ESTADO, Contract.Pedido.COLUMN_FECHA_CREACION}
                 ,null, null, null,null, Contract.Pedido.COLUMN_FECHA_CREACION);
 
         List<Pedido> list = new ArrayList<Pedido>();
@@ -159,8 +159,9 @@ public class Pedido extends EntityBase<Pedido> {
             pedido.setEstado(CursorUtils.getString(c, Contract.Pedido.COLUMN_ESTADO));
             pedido.setFechaCreacion(CursorUtils.getDate(c, Contract.Pedido.COLUMN_FECHA_CREACION));
             pedido.setCliente(Cliente.getClienteIDServer(db, pedido.getIdCliente(), false));
-            pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetalles(db, pedido.getIdPedido()));
-            if(pedido.getPedidoDetalles().size() < 0)
+            if(pedido.getIdPedido() != 0)
+                pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetalles(db, pedido.getIdPedido()));
+            else
                 pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetallesInt(db, pedido.getID()));
             list.add(pedido);
         }
@@ -170,7 +171,7 @@ public class Pedido extends EntityBase<Pedido> {
 
     public static Pedido getPedido(DataBase db, long id) {
         Cursor c = db.query(Contract.Pedido.TABLE_NAME, new String[] {Contract.Pedido._ID, Contract.Pedido.COLUMN_ID_PEDIDO, Contract.Pedido.COLUMN_ID_AGENDA,
-                Contract.Pedido.COLUMN_ID_CLIENTE, Contract.Pedido.COLUMN_VALOR_TOTAL, Contract.Pedido.COLUMN_EMAIL, Contract.Pedido.COLUMN_ESTADO,}
+                Contract.Pedido.COLUMN_ID_CLIENTE, Contract.Pedido.COLUMN_VALOR_TOTAL, Contract.Pedido.COLUMN_EMAIL, Contract.Pedido.COLUMN_ESTADO, Contract.Pedido.COLUMN_FECHA_CREACION}
                 ,Contract.Pedido._ID + " = ? ", new String[]{id + ""}, null,null, Contract.Pedido.COLUMN_FECHA_CREACION);
 
         Pedido pedido = new Pedido();
@@ -186,7 +187,9 @@ public class Pedido extends EntityBase<Pedido> {
             pedido.setFechaCreacion(CursorUtils.getDate(c, Contract.Pedido.COLUMN_FECHA_CREACION));
             pedido.setCliente(Cliente.getClienteIDServer(db, pedido.getIdCliente(), false));
             pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetalles(db, pedido.getIdPedido()));
-            if(pedido.getPedidoDetalles().size() < 0)
+            if(pedido.getIdPedido() != 0)
+                pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetalles(db, pedido.getIdPedido()));
+            else
                 pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetallesInt(db, pedido.getID()));
         }
         c.close();
