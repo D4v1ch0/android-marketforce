@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
 
 import rp3.marketforce.R;
@@ -25,9 +26,8 @@ public class PedidoDetalleAdapter extends BaseAdapter {
     private Context context;
     private LayoutInflater inflater;
     private List<PedidoDetalle> detalles;
-    private int id_icon;
-    private int id_color;
     private DecimalFormat df;
+    private NumberFormat numberFormat;
 
     public PedidoDetalleAdapter(Context context, List<PedidoDetalle> detalles) {
         this.context = context;
@@ -35,6 +35,9 @@ public class PedidoDetalleAdapter extends BaseAdapter {
         this.detalles = detalles;
         df = new DecimalFormat("#.##");
         df.setRoundingMode(RoundingMode.CEILING);
+        numberFormat = NumberFormat.getInstance();
+        numberFormat.setMaximumFractionDigits(2);
+        numberFormat.setMinimumFractionDigits(2);
     }
 
     @Override
@@ -61,8 +64,8 @@ public class PedidoDetalleAdapter extends BaseAdapter {
         PedidoDetalle detalle = detalles.get(position);
 
         ((TextView) convertView.findViewById(R.id.pedido_detalle_descripcion)).setText(detalle.getDescripcion() + " x " + detalle.getCantidad());
-        ((TextView) convertView.findViewById(R.id.pedido_detalle_unitario)).setText("$ " + df.format(detalle.getValorUnitario()));
-        ((TextView) convertView.findViewById(R.id.pedido_detalle_valor_total)).setText("$ " + df.format(detalle.getValorTotal()));
+        ((TextView) convertView.findViewById(R.id.pedido_detalle_unitario)).setText("$ " + numberFormat.format(detalle.getValorUnitario()));
+        ((TextView) convertView.findViewById(R.id.pedido_detalle_valor_total)).setText("$ " + numberFormat.format(detalle.getValorTotal()));
 
         return convertView;
     }

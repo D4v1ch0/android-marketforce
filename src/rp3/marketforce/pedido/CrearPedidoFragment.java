@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -49,6 +50,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     public ProductFragment productFragment;
     private String code;
     private PedidoDetalleAdapter adapter;
+    private NumberFormat numberFormat;
 
     public static CrearPedidoFragment newInstance(long id_pedido)
     {
@@ -63,6 +65,9 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         pedido = new Pedido();
+        numberFormat = NumberFormat.getInstance();
+        numberFormat.setMaximumFractionDigits(2);
+        numberFormat.setMinimumFractionDigits(2);
     }
 
     @Override
@@ -257,7 +262,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         ((ListView) getRootView().findViewById(R.id.pedido_detalles)).setAdapter(adapter);
 
         ((TextView) getRootView().findViewById(R.id.pedido_cantidad)).setText(pedido.getPedidoDetalles().size() + "");
-        ((TextView) getRootView().findViewById(R.id.pedido_total)).setText("$ " + pedido.getValorTotal());
+        ((TextView) getRootView().findViewById(R.id.pedido_total)).setText("$ " + numberFormat.format(pedido.getValorTotal()));
         ((TextView) getRootView().findViewById(R.id.pedido_cliente)).setText(pedido.getCliente().getNombreCompleto());
         ((TextView) getRootView().findViewById(R.id.pedido_email)).setText(pedido.getEmail());
 
@@ -304,14 +309,48 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
     @Override
     public void onDeleteSuccess(PedidoDetalle transaction) {
+        int exists = -1;
+        for(int i = 0; i < pedido.getPedidoDetalles().size(); i++)
+        {
+            if(pedido.getPedidoDetalles().get(i).getIdProducto() == transaction.getIdProducto())
+                exists = i;
+        }
 
+        if(exists != -1)
+            pedido.getPedidoDetalles().remove(exists);
+
+        adapter.setList(pedido.getPedidoDetalles());
+
+        adapter.notifyDataSetChanged();
+
+        ((TextView) getRootView().findViewById(R.id.pedido_cantidad)).setText(pedido.getPedidoDetalles().size() + "");
+
+        double valorTotal = 0;
+        for(PedidoDetalle detalle : pedido.getPedidoDetalles())
+        {
+            valorTotal = valorTotal + detalle.getValorTotal();
+        }
+
+        ((TextView) getRootView().findViewById(R.id.pedido_total)).setText("$ " + numberFormat.format(valorTotal));
     }
 
     @Override
     public void onAcceptSuccess(PedidoDetalle transaction) {
+        int exists = -1;
+
         if(pedido.getPedidoDetalles() == null)
             pedido.setPedidoDetalles(new ArrayList<PedidoDetalle>());
-        pedido.getPedidoDetalles().add(transaction);
+
+        for(int i = 0; i < pedido.getPedidoDetalles().size(); i++)
+        {
+            if(pedido.getPedidoDetalles().get(i).getIdProducto() == transaction.getIdProducto())
+                exists = i;
+        }
+
+        if(exists == -1)
+            pedido.getPedidoDetalles().add(transaction);
+        else
+            pedido.getPedidoDetalles().set(exists, transaction);
 
         if(adapter == null) {
             adapter = new PedidoDetalleAdapter(this.getContext(), pedido.getPedidoDetalles());
@@ -330,7 +369,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             valorTotal = valorTotal + detalle.getValorTotal();
         }
 
-        ((TextView) getRootView().findViewById(R.id.pedido_total)).setText("$ " + valorTotal);
+        ((TextView) getRootView().findViewById(R.id.pedido_total)).setText("$ " + numberFormat.format(valorTotal));
 
     }
 }

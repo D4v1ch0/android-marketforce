@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.NumberFormat;
 import java.util.List;
 
 import rp3.marketforce.R;
@@ -23,14 +24,16 @@ public class PedidoAdapter extends BaseAdapter {
     private Context context;
     private LayoutInflater inflater;
     private List<Pedido> pedidos;
-    private int id_icon;
-    private int id_color;
+    private NumberFormat numberFormat;
 
     public PedidoAdapter(Context context, List<Pedido> pedidos)
     {
         this.context = context;
         this.inflater = LayoutInflater.from(context);
         this.pedidos = pedidos;
+        numberFormat = NumberFormat.getInstance();
+        numberFormat.setMaximumFractionDigits(2);
+        numberFormat.setMinimumFractionDigits(2);
     }
 
     @Override
@@ -63,7 +66,7 @@ public class PedidoAdapter extends BaseAdapter {
 
         ((TextView) convertView.findViewById(R.id.pedido_cliente)).setText(pedido.getCliente().getNombreCompleto());
         ((TextView) convertView.findViewById(R.id.pedido_items)).setText(pedido.getPedidoDetalles().size() + "");
-        ((TextView) convertView.findViewById(R.id.pedido_valor)).setText("$" + pedido.getValorTotal());
+        ((TextView) convertView.findViewById(R.id.pedido_valor)).setText("$ " + numberFormat.format(pedido.getValorTotal()));
 
         return convertView;
     }
