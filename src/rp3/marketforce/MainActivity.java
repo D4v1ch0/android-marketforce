@@ -114,7 +114,7 @@ public class MainActivity extends rp3.app.NavActivity{
 		Session.Start(this);
 		rp3.configuration.Configuration.TryInitializeConfiguration(this, DbOpenHelper.class);
 
-		extractDatabase();
+		//extractDatabase();
 
         DManager = new DrawableManager();
 
