@@ -25,6 +25,7 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
     private double valorUnitario;
     private int cantidad;
     private double valorTotal;
+    private String urlFoto;
 
     @Override
     public long getID() {
@@ -110,6 +111,14 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
         this.valorTotal = valorTotal;
     }
 
+    public String getUrlFoto() {
+        return urlFoto;
+    }
+
+    public void setUrlFoto(String urlFoto) {
+        this.urlFoto = urlFoto;
+    }
+
     @Override
     public void setValues() {
         setValue(Contract.PedidoDetalle.COLUMN_ID_PEDIDO, this.idPedido);
@@ -120,6 +129,7 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
         setValue(Contract.PedidoDetalle.COLUMN_VALOR_UNITARIO, this.valorUnitario);
         setValue(Contract.PedidoDetalle.COLUMN_CANTIDAD, this.cantidad);
         setValue(Contract.PedidoDetalle.COLUMN_VALOR_TOTAL, this.valorTotal);
+        setValue(Contract.PedidoDetalle.COLUMN_URL_FOTO, this.urlFoto);
     }
 
     @Override
@@ -135,7 +145,7 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
     public static List<PedidoDetalle> getPedidoDetalles(DataBase db, int idPedido) {
         Cursor c = db.query(Contract.PedidoDetalle.TABLE_NAME, new String[] {Contract.PedidoDetalle._ID, Contract.PedidoDetalle.COLUMN_ID_PEDIDO, Contract.PedidoDetalle.COLUMN_ID_PEDIDO_DETALLE,
                 Contract.PedidoDetalle.COLUMN_ID_PEDIDO_INT, Contract.PedidoDetalle.COLUMN_ID_PRODUCTO, Contract.PedidoDetalle.COLUMN_VALOR_UNITARIO, Contract.PedidoDetalle.COLUMN_CANTIDAD,
-                Contract.PedidoDetalle.COLUMN_VALOR_TOTAL, Contract.PedidoDetalle.COLUMN_DESCRIPCION}
+                Contract.PedidoDetalle.COLUMN_VALOR_TOTAL, Contract.PedidoDetalle.COLUMN_DESCRIPCION, Contract.PedidoDetalle.COLUMN_URL_FOTO}
                 ,Contract.PedidoDetalle.COLUMN_ID_PEDIDO + " = ? ", new String[]{idPedido + ""});
 
         List<PedidoDetalle> list = new ArrayList<PedidoDetalle>();
@@ -150,6 +160,7 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
             detalle.setCantidad(CursorUtils.getInt(c, Contract.PedidoDetalle.COLUMN_CANTIDAD));
             detalle.setValorTotal(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_TOTAL));
             detalle.setDescripcion(CursorUtils.getString(c, Contract.PedidoDetalle.COLUMN_DESCRIPCION));
+            detalle.setUrlFoto(CursorUtils.getString(c, Contract.PedidoDetalle.COLUMN_URL_FOTO));
             list.add(detalle);
         }
         c.close();
@@ -159,7 +170,7 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
     public static List<PedidoDetalle> getPedidoDetallesInt(DataBase db, long idPedido) {
         Cursor c = db.query(Contract.PedidoDetalle.TABLE_NAME, new String[] {Contract.PedidoDetalle._ID, Contract.PedidoDetalle.COLUMN_ID_PEDIDO, Contract.PedidoDetalle.COLUMN_ID_PEDIDO_DETALLE,
                 Contract.PedidoDetalle.COLUMN_ID_PEDIDO_INT, Contract.PedidoDetalle.COLUMN_ID_PRODUCTO, Contract.PedidoDetalle.COLUMN_VALOR_UNITARIO, Contract.PedidoDetalle.COLUMN_CANTIDAD,
-                Contract.PedidoDetalle.COLUMN_VALOR_TOTAL, Contract.PedidoDetalle.COLUMN_DESCRIPCION}
+                Contract.PedidoDetalle.COLUMN_VALOR_TOTAL, Contract.PedidoDetalle.COLUMN_DESCRIPCION, Contract.PedidoDetalle.COLUMN_URL_FOTO}
                 ,Contract.PedidoDetalle.COLUMN_ID_PEDIDO_INT + " = ? ", new String[]{idPedido + ""});
 
         List<PedidoDetalle> list = new ArrayList<PedidoDetalle>();
@@ -174,6 +185,7 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
             detalle.setCantidad(CursorUtils.getInt(c, Contract.PedidoDetalle.COLUMN_CANTIDAD));
             detalle.setValorTotal(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_TOTAL));
             detalle.setDescripcion(CursorUtils.getString(c, Contract.PedidoDetalle.COLUMN_DESCRIPCION));
+            detalle.setUrlFoto(CursorUtils.getString(c, Contract.PedidoDetalle.COLUMN_URL_FOTO));
             list.add(detalle);
         }
         c.close();

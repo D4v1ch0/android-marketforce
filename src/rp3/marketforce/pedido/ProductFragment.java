@@ -3,6 +3,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -10,8 +11,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import rp3.app.BaseFragment;
+import rp3.configuration.PreferenceManager;
+import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.pedido.PedidoDetalle;
+import rp3.marketforce.utils.DrawableManager;
 
 /**
  * Created by magno_000 on 13/10/2015.
@@ -22,6 +26,7 @@ public class ProductFragment extends BaseFragment {
     public static String ARG_CODE = "Code";
     private ProductAcceptListener createFragmentListener;
     private JSONObject jsonObject;
+    private DrawableManager DManager;
 
     public static ProductFragment newInstance(String jcode)
     {
@@ -54,11 +59,15 @@ public class ProductFragment extends BaseFragment {
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
 
+        DManager = new DrawableManager();
         String code = getArguments().getString("Code");
         try {
             jsonObject = new JSONObject(code);
             ((TextView)rootView.findViewById(R.id.producto_descripcion)).setText("Descripción: " + jsonObject.getString("d"));
             ((TextView)rootView.findViewById(R.id.producto_precio)).setText("Precio: $ " + jsonObject.getString("p"));
+            DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
+                            rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_PRODUCTOS) + jsonObject.getString("f"),
+                    (ImageView) rootView.findViewById(R.id.producto_imagen));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -73,6 +82,16 @@ public class ProductFragment extends BaseFragment {
         rootView.findViewById(R.id.producto_eliminar).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                PedidoDetalle detalle = new PedidoDetalle();
+                try {
+                    detalle.setDescripcion(jsonObject.getString("d"));
+                    detalle.setValorUnitario(jsonObject.getDouble("p"));
+                    detalle.setIdProducto(jsonObject.getInt("id"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                createFragmentListener.onDeleteSuccess(detalle);
                 dismiss();
 
             }
@@ -87,6 +106,7 @@ public class ProductFragment extends BaseFragment {
                         detalle.setDescripcion(jsonObject.getString("d"));
                         detalle.setValorUnitario(jsonObject.getDouble("p"));
                         detalle.setIdProducto(jsonObject.getInt("id"));
+                        detalle.setUrlFoto(jsonObject.getString("f"));
                         detalle.setValorTotal(detalle.getValorUnitario() * detalle.getCantidad());
                     } catch (JSONException e) {
                         e.printStackTrace();

@@ -22,7 +22,8 @@
         Descripcion TEXT,
         ValorUnitario REAL,
         Cantidad INTEGER,
-        ValorTotal REAL
+        ValorTotal REAL,
+        URLFoto TEXT
         );
     </statement>
 </sql>

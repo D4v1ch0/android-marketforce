@@ -553,6 +553,7 @@ public final class Contract {
 		public static final String COLUMN_ESTADO = "Estado";
 		public static final String COLUMN_FECHA_CREACION = "FechaCreacion";
 
+
 	}
 
 	public static abstract class PedidoDetalle implements BaseColumns {
@@ -567,6 +568,7 @@ public final class Contract {
 		public static final String COLUMN_VALOR_UNITARIO = "ValorUnitario";
 		public static final String COLUMN_CANTIDAD = "Cantidad";
 		public static final String COLUMN_VALOR_TOTAL = "ValorTotal";
+		public static final String COLUMN_URL_FOTO = "URLFoto";
 
 	}
 }

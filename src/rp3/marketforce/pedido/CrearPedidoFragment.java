@@ -16,6 +16,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -85,7 +87,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             try {
                 productFragment = ProductFragment.newInstance(code);
                 productFragment.setCancelable(false);
-                showDialogFragment(productFragment, "Producto", "");
+                showDialogFragment(productFragment, "Producto", "Agregar Producto");
                 code = null;
             } catch (Exception ex) {
             }
@@ -242,6 +244,29 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             idCliente = getArguments().getLong(ARG_PEDIDO);
             setDatosPedidos();
         }
+
+        ((ListView) getRootView().findViewById(R.id.pedido_detalles)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("d", pedido.getPedidoDetalles().get(position).getDescripcion());
+                    jsonObject.put("p", pedido.getPedidoDetalles().get(position).getValorUnitario());
+                    jsonObject.put("id", pedido.getPedidoDetalles().get(position).getIdProducto());
+                    jsonObject.put("f", pedido.getPedidoDetalles().get(position).getUrlFoto());
+
+                    productFragment = ProductFragment.newInstance(jsonObject.toString());
+                    productFragment.setCancelable(false);
+                    showDialogFragment(productFragment, "Producto", "Editar Producto");
+                    code = null;
+                }
+                catch (Exception ex)
+                {
+
+                }
+
+            }
+        });
     }
 
     public void scanQR() {
