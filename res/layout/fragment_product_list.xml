@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_backgroun_list"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/label_sin_productos"
+        android:id="@+id/list_productos_ninguno"
+        android:textColor="@color/color_text_sky_blue"
+        android:textSize="@dimen/text_large_size"
+        android:gravity="center"
+        android:padding="5dp" />
+
+        <ListView
+            android:id="@+id/list_productos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+        </ListView>
+
+
+</LinearLayout>

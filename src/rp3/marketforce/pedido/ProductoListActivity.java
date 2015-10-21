@@ -12,28 +12,19 @@ import rp3.marketforce.R;
 import rp3.marketforce.cliente.CrearClienteFragment;
 
 /**
- * Created by magno_000 on 13/10/2015.
+ * Created by magno_000 on 20/10/2015.
  */
-public class CrearPedidoActivity extends BaseActivity {
+public class ProductoListActivity extends BaseActivity {
 
-    public static String ARG_IDPEDIDO = "idcliente";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        long id_pedido = 0;
-        int tipo = 0;
-        if(getIntent().getExtras() != null && getIntent().getExtras().containsKey(ARG_IDPEDIDO))
-        {
-            id_pedido = getIntent().getExtras().getLong(ARG_IDPEDIDO);
-            setTitle("Editar Pedido");
-        }
-        else
-            setTitle("Crear Pedido");
 
+        setTitle("Búsqueda de Productos");
         setHomeAsUpEnabled(true, true);
         setContentView(R.layout.layout_simple_content);
         if (!hasFragment(rp3.core.R.id.content)) {
-            CrearPedidoFragment newFragment = CrearPedidoFragment.newInstance(id_pedido);
+            ProductoListFragment newFragment = ProductoListFragment.newInstance();
             setFragment(rp3.core.R.id.content, newFragment);
         }
     }
@@ -45,6 +36,14 @@ public class CrearPedidoActivity extends BaseActivity {
             fr.onActivityResult(requestCode, resultCode, data);
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void finishOnResult(String code)
+    {
+        Intent intent = new Intent();
+        intent.putExtra(ProductoListFragment.ARG_PRODUCTO, code);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
 }

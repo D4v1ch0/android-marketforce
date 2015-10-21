@@ -279,7 +279,7 @@
         Email TEXT,
         Estado TEXT,
         FechaCreacion INTEGER
-        );
+        )
     </statement>
     <statement>
         CREATE TABLE tbPedidoDetalle(
@@ -293,6 +293,20 @@
         Cantidad INTEGER,
         ValorTotal REAL,
         URLFoto TEXT
-        );
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbProducto(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdProducto INTEGER,
+        ValorUnitario REAL,
+        URLFoto TEXT
+        )
+    </statement>
+    <statement>
+        CREATE VIRTUAL TABLE tbProductoExt USING fts4 (
+        Descripcion,
+        tokenize=porter
+        )
     </statement>
 </sql>

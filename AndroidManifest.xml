@@ -182,6 +182,16 @@
 
         <!-- Modulo Pedidos -->
         <activity android:name=".pedido.CrearPedidoActivity" android:configChanges="orientation|keyboardHidden|screenSize"></activity>
+        <activity android:name=".pedido.ProductoListActivity" android:configChanges="orientation|keyboardHidden|screenSize">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH"/>
+            </intent-filter>
+            <!-- enable the search dialog to send searches to SearchableActivity -->
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value="rp3.marketforce.SearchableActivity"
+                />
+        </activity>
     </application>
 
 </manifest>

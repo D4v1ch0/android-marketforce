@@ -201,6 +201,7 @@
     <string name="label_contactos_max">CONTACTOS</string>
     <!-- Modulo Pedidos -->
     <string name="action_crear_pedido">Crear Pedido</string>
+    <string name="action_sincronizar_productos">Sincronizar Productos</string>
     <string name="action_editar_pedido">Editar Pedido</string>
     <string name="label_sin_pedidos">No tiene pedidos</string>
     <string name="label_cantidad">Cantidad:</string>
@@ -214,5 +215,7 @@
     <string name="label_agregar_producto">Agregar Producto</string>
     <string name="message_guardar_pedido">Desea guardar los datos del pedido?</string>
     <string name="message_guardar_pedido_accept">Desea guardar los datos del pedido y darlo por cerrado?</string>
+    <string name="message_sin_productos">Debido a que no tiene ningun producto guardado en el dispositivo, este proceso tardará en terminarse. Desea continuar?</string>
+    <string name="label_sin_productos">No tiene productos</string>
 
 </resources>

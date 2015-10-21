@@ -63,6 +63,8 @@ public class ProductFragment extends BaseFragment {
         String code = getArguments().getString("Code");
         try {
             jsonObject = new JSONObject(code);
+            if(!jsonObject.isNull("c"))
+                ((EditText)rootView.findViewById(R.id.producto_cantidad)).setText(jsonObject.getString("c"));
             ((TextView)rootView.findViewById(R.id.producto_descripcion)).setText("Descripción: " + jsonObject.getString("d"));
             ((TextView)rootView.findViewById(R.id.producto_precio)).setText("Precio: $ " + jsonObject.getString("p"));
             DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +

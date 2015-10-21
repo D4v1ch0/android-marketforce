@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import rp3.app.BaseFragment;
 import rp3.configuration.PreferenceManager;
+import rp3.data.MessageCollection;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.cliente.ClientDetailFragment;
@@ -25,7 +26,9 @@ import rp3.marketforce.cliente.ClientListFragment;
 import rp3.marketforce.cliente.CrearClienteActivity;
 import rp3.marketforce.models.Cliente;
 import rp3.marketforce.models.pedido.Pedido;
+import rp3.marketforce.models.pedido.Producto;
 import rp3.marketforce.ruta.MapaActivity;
+import rp3.marketforce.sync.SyncAdapter;
 import rp3.util.ConnectionUtils;
 import rp3.widget.SlidingPaneLayout;
 
@@ -35,6 +38,7 @@ import rp3.widget.SlidingPaneLayout;
 public class PedidoFragment extends BaseFragment implements PedidoListFragment.PedidoListFragmentListener,PedidoDetailFragment.PedidoDetailFragmentListener {
 
     private static final int PARALLAX_SIZE = 0;
+    private static final int DIALOG_SYNC_PRODUCTOS = 1;
 
     private PedidoListFragment transactionListFragment;
     private PedidoDetailFragment transactionDetailFragment;
@@ -188,10 +192,38 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                 Intent intent = new Intent(this.getActivity(), CrearPedidoActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.action_sincronizar_productos:
+                if(!ConnectionUtils.isNetAvailable(this.getContext()))
+                {
+                    Toast.makeText(this.getContext(), "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    if(Producto.getProductos(getDataBase()).size() <= 0)
+                    {
+                        showDialogConfirmation(DIALOG_SYNC_PRODUCTOS, R.string.message_sin_productos, R.string.action_sincronizar_productos);
+                    }
+                    else
+                    {
+                        showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait);
+                        Bundle bundle = new Bundle();
+                        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_PRODUCTOS);
+                        requestSync(bundle);
+                    }
+                }
+                break;
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPositiveConfirmation(int id) {
+        super.onPositiveConfirmation(id);
+        showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait);
+        Bundle bundle = new Bundle();
+        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_PRODUCTOS);
+        requestSync(bundle);
     }
 
     @Override
@@ -217,6 +249,15 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
     @Override
     public void onFinalizaConsulta() {
 
+    }
+
+    @Override
+    public void onSyncComplete(Bundle data, MessageCollection messages) {
+        super.onSyncComplete(data, messages);
+        if(data != null && data.getString(SyncAdapter.ARG_SYNC_TYPE).equalsIgnoreCase(SyncAdapter.SYNC_TYPE_PRODUCTOS))
+        {
+            closeDialogProgress();
+        }
     }
 
     @Override

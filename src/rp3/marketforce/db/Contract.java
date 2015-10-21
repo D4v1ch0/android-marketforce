@@ -571,4 +571,29 @@ public final class Contract {
 		public static final String COLUMN_URL_FOTO = "URLFoto";
 
 	}
+
+	public static abstract class Producto implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbProducto";
+
+		public static final String COLUMN_ID_PRODUCTO = "IdProducto";
+		public static final String COLUMN_DESCRIPCION = "Descripcion";
+		public static final String COLUMN_VALOR_UNITARIO = "ValorUnitario";
+		public static final String COLUMN_URL_FOTO = "URLFoto";
+
+		public static final String FIELD_DESCRIPCION = Contract.ProductoExt.TABLE_NAME + "_" + Contract.ProductoExt.COLUMN_DESCRIPCION;
+
+		public static final String QUERY_PRODUCTOS = "Productos";
+		public static final String QUERY_PRODUCTO_BY_ID = "ProductoByID";
+		public static final String QUERY_PRODUCTO_BY_ID_SERVER = "ProductoByIdServer";
+		public static final String QUERY_SEARCH = "SimpleProductoSearch";
+	}
+
+	public static abstract class ProductoExt implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbProductoExt";
+		public static final String COLUMN_ID = "docid";
+		public static final String COLUMN_DESCRIPCION = "Descripcion";
+
+	}
 }

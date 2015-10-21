@@ -8,6 +8,7 @@
         android:showAsAction="always|collapseActionView"
         />
 
+    <item android:id="@+id/action_sincronizar_productos" android:title="@string/action_sincronizar_productos" android:icon="@drawable/ic_sincronizar" android:showAsAction="ifRoom|collapseActionView"></item>
     <item android:id="@+id/action_crear_pedido" android:title="@string/action_crear_pedido" android:icon="@drawable/ic_action_new" android:showAsAction="ifRoom|collapseActionView"></item>
     <item android:id="@+id/action_editar_pedido" android:title="@string/action_editar_pedido" android:icon="@drawable/ic_action_edit_dark" android:showAsAction="ifRoom|collapseActionView"></item>
 </menu>

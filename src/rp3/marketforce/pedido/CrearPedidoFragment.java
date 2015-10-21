@@ -1,7 +1,9 @@
 package rp3.marketforce.pedido;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -43,6 +45,8 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     private List<Cliente> list_cliente;
 
     public static String ARG_PEDIDO = "cliente";
+    public static final int REQUEST_BUSQUEDA = 3;
+
     public static final int DIALOG_SAVE_CANCEL = 1;
     public static final int DIALOG_SAVE_ACCEPT = 2;
     static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
@@ -236,7 +240,33 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         ((Button) rootView.findViewById(R.id.pedido_agregar_producto)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                scanQR();
+                AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
+
+                final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                        getContext(),
+                        android.R.layout.select_dialog_item);
+                arrayAdapter.add("Desde Código QR");
+                arrayAdapter.add("Desde Búsqueda de Productos");
+
+                builderSingle.setAdapter(
+                        arrayAdapter,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case 0:
+                                        scanQR();
+                                        break;
+                                    case 1:
+                                        Intent intent = new Intent(getContext(), ProductoListActivity.class);
+                                        startActivityForResult(intent, REQUEST_BUSQUEDA);
+                                        break;
+                                }
+
+                            }
+                        });
+                builderSingle.show();
+
             }
         });
 
@@ -254,6 +284,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                     jsonObject.put("p", pedido.getPedidoDetalles().get(position).getValorUnitario());
                     jsonObject.put("id", pedido.getPedidoDetalles().get(position).getIdProducto());
                     jsonObject.put("f", pedido.getPedidoDetalles().get(position).getUrlFoto());
+                    jsonObject.put("c", pedido.getPedidoDetalles().get(position).getCantidad());
 
                     productFragment = ProductFragment.newInstance(jsonObject.toString());
                     productFragment.setCancelable(false);
@@ -300,16 +331,40 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 0) {
-            if (resultCode == RESULT_OK) {
-                //get the extras that are returned from the intent
-                String contents = data.getStringExtra("SCAN_RESULT");
-                code = contents;
+        switch (requestCode)
+        {
+            case 0:
+                if (resultCode == RESULT_OK) {
+                    //get the extras that are returned from the intent
+                    String contents = data.getStringExtra("SCAN_RESULT");
+                    code = contents;
+                }
+                break;
+            case REQUEST_BUSQUEDA:
+                if(resultCode == RESULT_OK)
+                {
+                    try {
+                        JSONObject jsonObject = new JSONObject(data.getExtras().getString(ProductoListFragment.ARG_PRODUCTO));
+                        PedidoDetalle detalle = new PedidoDetalle();
+                        detalle.setDescripcion(jsonObject.getString("d"));
+                        detalle.setValorUnitario(jsonObject.getDouble("p"));
+                        detalle.setIdProducto(jsonObject.getInt("id"));
+                        detalle.setUrlFoto(jsonObject.getString("f"));
+                        detalle.setCantidad(jsonObject.getInt("c"));
+                        detalle.setValorTotal(detalle.getValorUnitario() * detalle.getCantidad());
+                        onAcceptSuccess(detalle);
+                    }
+                    catch (Exception ex)
+                    {}
 
-            }
+                }
         }
     }
 
+    @Override
+    public void onFragmentResult(String tagName, int resultCode, Bundle data) {
+        super.onFragmentResult(tagName, resultCode, data);
+    }
 
     public boolean Validaciones()
     {

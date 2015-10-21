@@ -50,6 +50,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
     public static String SYNC_TYPE_SEND_NOTIFICATION = "send_notification";
 
     public static String SYNC_TYPE_UPDATE_PEDIDO = "update_pedido";
+    public static String SYNC_TYPE_PRODUCTOS = "get_productos";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -257,6 +258,10 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                 } else if (syncType.equals(SYNC_TYPE_REPROGRAMAR_AGENDA)) {
                     int id = extras.getInt(RutasDetailFragment.ARG_AGENDA_ID);
                     result = Agenda.executeSyncReschedule(db, id);
+                    addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_PRODUCTOS)) {
+
+                    result = Productos.executeSync(db);
                     addDefaultMessage(result);
                 } else if (syncType.equals(SYNC_TYPE_UPDATE_PEDIDO)) {
                     long id = extras.getLong(CrearPedidoFragment.ARG_PEDIDO);
