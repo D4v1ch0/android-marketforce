@@ -148,23 +148,28 @@ public class MarcacionFragment extends BaseFragment {
 
                                     try {
                                         ((BaseActivity) getActivity()).showDialogProgress("GPS", "Obteniendo Posición");
-                                        LocationUtils.getLocation(getContext(), new LocationUtils.OnLocationResultListener() {
+                                        LocationUtils.getLocationReference(getContext(), new LocationUtils.OnLocationResultListener() {
 
                                             @Override
                                             public void getLocationResult(Location location) {
                                                 if (location != null) {
-                                                    marc.setLatitud(location.getLatitude());
-                                                    marc.setLongitud(location.getLongitude());
                                                     LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
                                                     LatLng partida = new LatLng(Double.parseDouble(PreferenceManager.getString(Contants.KEY_LATITUD_PARTIDA)),
                                                             Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA)));
                                                     double distance = SphericalUtil.computeDistanceBetween(pos, partida);
+                                                    if (distance > DISTANCE) {
+                                                        location = getAproximatelyLocation(location, partida, distance);
+                                                    }
+                                                    marc.setLatitud(location.getLatitude());
+                                                    marc.setLongitud(location.getLongitude());
+                                                    pos = new LatLng(location.getLatitude(), location.getLongitude());
+                                                    partida = new LatLng(Double.parseDouble(PreferenceManager.getString(Contants.KEY_LATITUD_PARTIDA)),
+                                                            Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA)));
+                                                    distance = SphericalUtil.computeDistanceBetween(pos, partida);
                                                     marc.setEnUbicacion(distance < DISTANCE);
                                                     try {
                                                         Marcacion.insert(getDataBase(), marc);
-                                                    }
-                                                    catch(Exception ex)
-                                                    {
+                                                    } catch (Exception ex) {
                                                         DataBase db = DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class);
                                                         Marcacion.insert(db, marc);
                                                     }
@@ -413,47 +418,52 @@ public class MarcacionFragment extends BaseFragment {
 
                                     try {
                                         ((BaseActivity) getActivity()).showDialogProgress("GPS", "Obteniendo Posición");
-                                        LocationUtils.getLocation(getContext(), new LocationUtils.OnLocationResultListener() {
+                                        LocationUtils.getLocationReference(getContext(), new LocationUtils.OnLocationResultListener() {
 
                                             @Override
                                             public void getLocationResult(Location location) {
                                                 if (location != null) {
-                                                    marc.setLatitud(location.getLatitude());
-                                                    marc.setLongitud(location.getLongitude());
                                                     LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
                                                     LatLng partida = new LatLng(Double.parseDouble(PreferenceManager.getString(Contants.KEY_LATITUD_PARTIDA)),
                                                             Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA)));
                                                     double distance = SphericalUtil.computeDistanceBetween(pos, partida);
-                                                    marc.setEnUbicacion(distance < DISTANCE);
-                                                    try {
-                                                        Marcacion.insert(getDataBase(), marc);
+                                                    if (distance > DISTANCE) {
+                                                        location = getAproximatelyLocation(location, partida, distance);
                                                     }
-                                                    catch(Exception ex)
-                                                    {
-                                                        DataBase db = DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class);
-                                                        Marcacion.insert(db, marc);
-                                                    }
-                                                    Toast.makeText(getContext(), "Se ha iniciado el break.", Toast.LENGTH_LONG).show();
-                                                    if (distance < DISTANCE) {
-                                                        marcaciones.findViewById(R.id.layout_break).setVisibility(View.GONE);
-                                                        SetButtonFinBreak();
-                                                        marc.setPendiente(true);
-                                                        Marcacion.update(getDataBase(), marc);
-                                                        Bundle bundle = new Bundle();
-                                                        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
-                                                        requestSync(bundle);
-                                                    } else {
-                                                        fragment = new JustificacionFragment();
-                                                        fragment.idMarcacion = marc.getID();
-                                                        showDialogFragment(fragment, "Justificacion");
-                                                        Toast.makeText(getContext(), R.string.message_fuera_posicion, Toast.LENGTH_LONG).show();
-                                                    }
-                                                } else {
-                                                    Toast.makeText(getContext(), "Debe de activar su GPS.", Toast.LENGTH_SHORT).show();
-                                                }
-                                                ((BaseActivity) getActivity()).closeDialogProgress();
-                                            }
-                                        });
+                                                   marc.setLatitud(location.getLatitude());
+                                                   marc.setLongitud(location.getLongitude());
+                                                   pos = new LatLng(location.getLatitude(), location.getLongitude());
+                                                   partida = new LatLng(Double.parseDouble(PreferenceManager.getString(Contants.KEY_LATITUD_PARTIDA)),
+                                                           Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA)));
+                                                   distance = SphericalUtil.computeDistanceBetween(pos, partida);
+                                                   marc.setEnUbicacion(distance < DISTANCE);
+                                                   try {
+                                                       Marcacion.insert(getDataBase(), marc);
+                                                   } catch (Exception ex) {
+                                                       DataBase db = DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class);
+                                                       Marcacion.insert(db, marc);
+                                                   }
+                                                   Toast.makeText(getContext(), "Se ha iniciado el break.", Toast.LENGTH_LONG).show();
+                                                   if (distance < DISTANCE) {
+                                                       marcaciones.findViewById(R.id.layout_break).setVisibility(View.GONE);
+                                                       SetButtonFinBreak();
+                                                       marc.setPendiente(true);
+                                                       Marcacion.update(getDataBase(), marc);
+                                                       Bundle bundle = new Bundle();
+                                                       bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
+                                                       requestSync(bundle);
+                                                   } else {
+                                                       fragment = new JustificacionFragment();
+                                                       fragment.idMarcacion = marc.getID();
+                                                       showDialogFragment(fragment, "Justificacion");
+                                                       Toast.makeText(getContext(), R.string.message_fuera_posicion, Toast.LENGTH_LONG).show();
+                                                   }
+                                               } else {
+                                                   Toast.makeText(getContext(), "Debe de activar su GPS.", Toast.LENGTH_SHORT).show();
+                                               }
+                                               ((BaseActivity) getActivity()).closeDialogProgress();
+                                           }
+                                       });
                                     } catch (Exception ex) {
                                     }
 
@@ -503,23 +513,28 @@ public class MarcacionFragment extends BaseFragment {
 
                                     try {
                                         ((BaseActivity) getActivity()).showDialogProgress("GPS", "Obteniendo Posición");
-                                        LocationUtils.getLocation(getContext(), new LocationUtils.OnLocationResultListener() {
+                                        LocationUtils.getLocationReference(getContext(), new LocationUtils.OnLocationResultListener() {
 
                                             @Override
                                             public void getLocationResult(Location location) {
                                                 if (location != null) {
-                                                    marc.setLatitud(location.getLatitude());
-                                                    marc.setLongitud(location.getLongitude());
                                                     LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
                                                     LatLng partida = new LatLng(Double.parseDouble(PreferenceManager.getString(Contants.KEY_LATITUD_PARTIDA)),
                                                             Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA)));
                                                     double distance = SphericalUtil.computeDistanceBetween(pos, partida);
+                                                    if (distance > DISTANCE) {
+                                                        location = getAproximatelyLocation(location, partida, distance);
+                                                    }
+                                                    marc.setLatitud(location.getLatitude());
+                                                    marc.setLongitud(location.getLongitude());
+                                                    pos = new LatLng(location.getLatitude(), location.getLongitude());
+                                                    partida = new LatLng(Double.parseDouble(PreferenceManager.getString(Contants.KEY_LATITUD_PARTIDA)),
+                                                            Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA)));
+                                                    distance = SphericalUtil.computeDistanceBetween(pos, partida);
                                                     marc.setEnUbicacion(distance < DISTANCE);
                                                     try {
                                                         Marcacion.insert(getDataBase(), marc);
-                                                    }
-                                                    catch(Exception ex)
-                                                    {
+                                                    } catch (Exception ex) {
                                                         DataBase db = DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class);
                                                         Marcacion.insert(db, marc);
                                                     }
@@ -608,23 +623,28 @@ public class MarcacionFragment extends BaseFragment {
 
                                     try {
                                         ((BaseActivity) getActivity()).showDialogProgress("GPS", "Obteniendo Posición");
-                                        LocationUtils.getLocation(getContext(), new LocationUtils.OnLocationResultListener() {
+                                        LocationUtils.getLocationReference(getContext(), new LocationUtils.OnLocationResultListener() {
 
                                             @Override
                                             public void getLocationResult(Location location) {
                                                 if (location != null) {
-                                                    marc.setLatitud(location.getLatitude());
-                                                    marc.setLongitud(location.getLongitude());
                                                     LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
                                                     LatLng partida = new LatLng(Double.parseDouble(PreferenceManager.getString(Contants.KEY_LATITUD_PARTIDA)),
                                                             Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA)));
                                                     double distance = SphericalUtil.computeDistanceBetween(pos, partida);
+                                                    if (distance > DISTANCE) {
+                                                        location = getAproximatelyLocation(location, partida, distance);
+                                                    }
+                                                    marc.setLatitud(location.getLatitude());
+                                                    marc.setLongitud(location.getLongitude());
+                                                    pos = new LatLng(location.getLatitude(), location.getLongitude());
+                                                    partida = new LatLng(Double.parseDouble(PreferenceManager.getString(Contants.KEY_LATITUD_PARTIDA)),
+                                                            Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA)));
+                                                    distance = SphericalUtil.computeDistanceBetween(pos, partida);
                                                     marc.setEnUbicacion(distance < DISTANCE);
                                                     try {
                                                         Marcacion.insert(getDataBase(), marc);
-                                                    }
-                                                    catch(Exception ex)
-                                                    {
+                                                    } catch (Exception ex) {
                                                         DataBase db = DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class);
                                                         Marcacion.insert(db, marc);
                                                     }
@@ -759,5 +779,46 @@ public class MarcacionFragment extends BaseFragment {
                 return 0;
             }
         }
+    }
+
+    public Location getAproximatelyLocation(Location gpsLocation, LatLng reference, double distanceBetween)
+    {
+        if(distanceBetween > (gpsLocation.getAccuracy() + DISTANCE)) {
+            Location aproxLoc = new Location("");
+            LatLng midpoint = new LatLng(gpsLocation.getLatitude(), gpsLocation.getLongitude());
+            double pars = 0;
+            do {
+                midpoint = midPoint(midpoint.latitude, midpoint.longitude, reference.latitude, reference.longitude);
+                aproxLoc.setLatitude(midpoint.latitude);
+                aproxLoc.setLongitude(midpoint.longitude);
+                pars = SphericalUtil.computeDistanceBetween(midpoint, reference);
+            } while (SphericalUtil.computeDistanceBetween(reference, midpoint) > DISTANCE);
+            aproxLoc.setAccuracy((float) SphericalUtil.computeDistanceBetween(reference, midpoint));
+            return aproxLoc;
+        }
+        else
+        {
+            return gpsLocation;
+        }
+    }
+
+    public static LatLng midPoint(double lat1,double lon1,double lat2,double lon2){
+
+        double dLon = Math.toRadians(lon2 - lon1);
+
+        //convert to radians
+        lat1 = Math.toRadians(lat1);
+        lat2 = Math.toRadians(lat2);
+        lon1 = Math.toRadians(lon1);
+
+        double Bx = Math.cos(lat2) * Math.cos(dLon);
+        double By = Math.cos(lat2) * Math.sin(dLon);
+        double lat3 = Math.atan2(Math.sin(lat1) + Math.sin(lat2), Math.sqrt((Math.cos(lat1) + Bx) * (Math.cos(lat1) + Bx) + By * By));
+        double lon3 = lon1 + Math.atan2(By, Math.cos(lat1) + Bx);
+
+        //print out in degrees
+        System.out.println(Math.toDegrees(lat3) + " " + Math.toDegrees(lon3));
+        return new LatLng(Math.toDegrees(lat3), Math.toDegrees(lon3));
+
     }
 }
