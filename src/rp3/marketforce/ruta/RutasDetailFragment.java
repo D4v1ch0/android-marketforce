@@ -339,136 +339,141 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 
 			@Override
 			public void onClick(View v) {
-					setViewVisibility(R.id.detail_agenda_button_iniciar, View.GONE);
-					setViewVisibility(R.id.detail_agenda_button_fin, View.VISIBLE);
-					setViewVisibility(R.id.detail_agenda_button_cancelar, View.VISIBLE);
-                    getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(true);
-					agenda.setEstadoAgenda(Contants.ESTADO_GESTIONANDO);
-					agenda.setEstadoAgendaDescripcion(Contants.DESC_GESTIONANDO);
-					agenda.setFechaInicioReal(Calendar.getInstance().getTime());
-					Agenda.update(getDataBase(), agenda);
-					((ImageView) rootView.findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_in_process);
-					 setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());
-                    if (agenda.getObservaciones() == null || agenda.getObservaciones().length() <= 0)
-                        setTextViewText(R.id.detail_agenda_observacion, getString(R.string.label_agregue_observacion));
-				
-			}});
-		   
-		   setButtonClickListener(R.id.detail_agenda_button_modificar, new OnClickListener(){
+                setViewVisibility(R.id.detail_agenda_button_iniciar, View.GONE);
+                setViewVisibility(R.id.detail_agenda_button_fin, View.VISIBLE);
+                setViewVisibility(R.id.detail_agenda_button_cancelar, View.VISIBLE);
+                getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(true);
+                agenda.setEstadoAgenda(Contants.ESTADO_GESTIONANDO);
+                agenda.setEstadoAgendaDescripcion(Contants.DESC_GESTIONANDO);
+                agenda.setFechaInicioReal(Calendar.getInstance().getTime());
+                Agenda.update(getDataBase(), agenda);
+                ((ImageView) rootView.findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_in_process);
+                setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());
+                if (agenda.getObservaciones() == null || agenda.getObservaciones().length() <= 0)
+                    setTextViewText(R.id.detail_agenda_observacion, getString(R.string.label_agregue_observacion));
+                LocationUtils.getLocation(getContext(), new OnLocationResultListener() {
+                    @Override
+                    public void getLocationResult(Location location) {
 
-				@Override
-				public void onClick(View v) {
-					setViewVisibility(R.id.detail_agenda_button_iniciar, View.GONE);
-					setViewVisibility(R.id.detail_agenda_button_fin, View.VISIBLE);
-					setViewVisibility(R.id.detail_agenda_button_cancelar, View.VISIBLE);
-					setViewVisibility(R.id.detail_agenda_button_modificar, View.GONE);
-                    agenda = Agenda.getAgenda(getDataBase(), idAgenda);
-                    if(agenda == null)
-                        agenda = Agenda.getAgendaClienteNull(getDataBase(), idAgenda);
-					agenda.setEstadoAgenda(Contants.ESTADO_GESTIONANDO);
-					agenda.setEstadoAgendaDescripcion(Contants.DESC_GESTIONANDO);
-                    getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(true);
-					agenda.setFechaInicioReal(Calendar.getInstance().getTime());
-					Agenda.update(getDataBase(), agenda);
-					((ImageView) rootView.findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_in_process);
-					 setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());
-                    if (agenda.getObservaciones() == null || agenda.getObservaciones().length() <= 0)
-                        setTextViewText(R.id.detail_agenda_observacion, getString(R.string.label_agregue_observacion));
-					
-				}});
-		   
-		   setButtonClickListener(R.id.detail_agenda_button_cancelar, new OnClickListener(){
-
-				@Override
-				public void onClick(View v) {
-					setViewVisibility(R.id.detail_agenda_button_iniciar, View.VISIBLE);
-					setViewVisibility(R.id.detail_agenda_button_fin, View.GONE);
-					setViewVisibility(R.id.detail_agenda_button_cancelar, View.GONE);
-                    //getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(false);
-					if(agenda.getFechaFinReal() == null || agenda.getFechaFinReal().getTime() < 0)
-					{
-						agenda.setEstadoAgenda(Contants.ESTADO_PENDIENTE);
-						agenda.setEstadoAgendaDescripcion(Contants.DESC_PENDIENTE);
-						((ImageView) rootView.findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_pending);
-					}
-					else
-					{
-						agenda.setEstadoAgenda(Contants.ESTADO_VISITADO);
-						agenda.setEstadoAgendaDescripcion(Contants.DESC_VISITADO);
-						((ImageView) rootView.findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_visited);
-					}
-					Agenda.update(getDataBase(), agenda);
-					setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());
-                    if (agenda.getObservaciones() == null || agenda.getObservaciones().length() <= 0)
-                        setTextViewText(R.id.detail_agenda_observacion, getString(R.string.label_sin_observaciones));
-				}});
-		   
-		   setButtonClickListener(R.id.detail_agenda_button_fin, new OnClickListener(){
-
-				@Override
-				public void onClick(View v) {
-					setViewVisibility(R.id.detail_agenda_button_iniciar, View.GONE);
-					setViewVisibility(R.id.detail_agenda_button_fin, View.GONE);
-					setViewVisibility(R.id.detail_agenda_button_cancelar, View.GONE);
-					setViewVisibility(R.id.detail_agenda_button_modificar, View.VISIBLE);
-                    //getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(false);
-					agenda = Agenda.getAgenda(getDataBase(), idAgenda);
-                    if(agenda == null)
-                        agenda = Agenda.getAgendaClienteNull(getDataBase(), idAgenda);
-					agenda.setEstadoAgenda(Contants.ESTADO_VISITADO);
-					agenda.setEstadoAgendaDescripcion(Contants.DESC_VISITADO);
-					agenda.setFechaFinReal(Calendar.getInstance().getTime());
-                    final Context ctx = getContext();
-                    Location location = LocationUtils.getLastLocation(ctx);
-                    if(location != null) {
-                        agenda.setLatitud(location.getLatitude());
-                        agenda.setLongitud(location.getLongitude());
-                        LatLng pos = new LatLng(agenda.getLatitud(), agenda.getLongitud());
-                        LatLng cli = new LatLng(agenda.getClienteDireccion().getLatitud(), agenda.getClienteDireccion().getLongitud());
-                        agenda.setDistancia((long) SphericalUtil.computeDistanceBetween(pos, cli));
                     }
-					agenda.setEnviado(false);
-                    Agenda.update(getDataBase(), agenda);
-                    if (agenda.getObservaciones() == null || agenda.getObservaciones().length() <= 0)
-                        setTextViewText(R.id.detail_agenda_observacion, getString(R.string.label_sin_observaciones));
-                    Bundle bundle = new Bundle();
-                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ENVIAR_AGENDA);
-                    bundle.putInt(ARG_AGENDA_ID, (int) idAgenda);
-                    requestSync(bundle);
-                    //new AsyncUpdater.UpdateAgenda().execute((int) idAgenda);
-                    if(location == null) {
-                        try {
-                            LocationUtils.getLocation(ctx, new OnLocationResultListener() {
+                });
+            }});
+		   
+		   setButtonClickListener(R.id.detail_agenda_button_modificar, new OnClickListener() {
 
-                                @Override
-                                public void getLocationResult(Location location) {
-                                    if (location != null) {
-                                        agenda.setLatitud(location.getLatitude());
-                                        agenda.setLongitud(location.getLongitude());
-                                    }
-                                    agenda.setEnviado(false);
-                                    LatLng pos = new LatLng(agenda.getLatitud(), agenda.getLongitud());
-                                    LatLng cli = new LatLng(agenda.getClienteDireccion().getLatitud(), agenda.getClienteDireccion().getLongitud());
-                                    agenda.setDistancia((long) SphericalUtil.computeDistanceBetween(pos, cli));
-                                    BaseActivity act = (BaseActivity) ctx;
-                                    Agenda.update(act.getDataBase(), agenda);
-                                    Bundle bundle = new Bundle();
-                                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_AGENDA_GEOLOCATION);
-                                    bundle.putInt(ARG_AGENDA_ID, (int) idAgenda);
-                                    bundle.putDouble(ARG_LONGITUD, location.getLongitude());
-                                    bundle.putDouble(ARG_LATITUD, location.getLatitude());
-                                    act.requestSync(bundle);
+               @Override
+               public void onClick(View v) {
+                   setViewVisibility(R.id.detail_agenda_button_iniciar, View.GONE);
+                   setViewVisibility(R.id.detail_agenda_button_fin, View.VISIBLE);
+                   setViewVisibility(R.id.detail_agenda_button_cancelar, View.VISIBLE);
+                   setViewVisibility(R.id.detail_agenda_button_modificar, View.GONE);
+                   agenda = Agenda.getAgenda(getDataBase(), idAgenda);
+                   if (agenda == null)
+                       agenda = Agenda.getAgendaClienteNull(getDataBase(), idAgenda);
+                   agenda.setEstadoAgenda(Contants.ESTADO_GESTIONANDO);
+                   agenda.setEstadoAgendaDescripcion(Contants.DESC_GESTIONANDO);
+                   getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(true);
+                   agenda.setFechaInicioReal(Calendar.getInstance().getTime());
+                   Agenda.update(getDataBase(), agenda);
+                   ((ImageView) rootView.findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_in_process);
+                   setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());
+                   if (agenda.getObservaciones() == null || agenda.getObservaciones().length() <= 0)
+                       setTextViewText(R.id.detail_agenda_observacion, getString(R.string.label_agregue_observacion));
 
-                                }
-                            });
-                        } catch (Exception ex) {
-                        }
-                    }
+               }
+           });
+		   
+		   setButtonClickListener(R.id.detail_agenda_button_cancelar, new OnClickListener() {
+
+               @Override
+               public void onClick(View v) {
+                   setViewVisibility(R.id.detail_agenda_button_iniciar, View.VISIBLE);
+                   setViewVisibility(R.id.detail_agenda_button_fin, View.GONE);
+                   setViewVisibility(R.id.detail_agenda_button_cancelar, View.GONE);
+                   //getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(false);
+                   if (agenda.getFechaFinReal() == null || agenda.getFechaFinReal().getTime() < 0) {
+                       agenda.setEstadoAgenda(Contants.ESTADO_PENDIENTE);
+                       agenda.setEstadoAgendaDescripcion(Contants.DESC_PENDIENTE);
+                       ((ImageView) rootView.findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_pending);
+                   } else {
+                       agenda.setEstadoAgenda(Contants.ESTADO_VISITADO);
+                       agenda.setEstadoAgendaDescripcion(Contants.DESC_VISITADO);
+                       ((ImageView) rootView.findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_visited);
+                   }
+                   Agenda.update(getDataBase(), agenda);
+                   setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());
+                   if (agenda.getObservaciones() == null || agenda.getObservaciones().length() <= 0)
+                       setTextViewText(R.id.detail_agenda_observacion, getString(R.string.label_sin_observaciones));
+               }
+           });
+		   
+		   setButtonClickListener(R.id.detail_agenda_button_fin, new OnClickListener() {
+
+               @Override
+               public void onClick(View v) {
+                   setViewVisibility(R.id.detail_agenda_button_iniciar, View.GONE);
+                   setViewVisibility(R.id.detail_agenda_button_fin, View.GONE);
+                   setViewVisibility(R.id.detail_agenda_button_cancelar, View.GONE);
+                   setViewVisibility(R.id.detail_agenda_button_modificar, View.VISIBLE);
+                   //getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(false);
+                   agenda = Agenda.getAgenda(getDataBase(), idAgenda);
+                   if (agenda == null)
+                       agenda = Agenda.getAgendaClienteNull(getDataBase(), idAgenda);
+                   agenda.setEstadoAgenda(Contants.ESTADO_VISITADO);
+                   agenda.setEstadoAgendaDescripcion(Contants.DESC_VISITADO);
+                   agenda.setFechaFinReal(Calendar.getInstance().getTime());
+                   final Context ctx = getContext();
+                   Location location = LocationUtils.getLastLocation(ctx);
+                   if (location != null) {
+                       agenda.setLatitud(location.getLatitude());
+                       agenda.setLongitud(location.getLongitude());
+                       LatLng pos = new LatLng(agenda.getLatitud(), agenda.getLongitud());
+                       LatLng cli = new LatLng(agenda.getClienteDireccion().getLatitud(), agenda.getClienteDireccion().getLongitud());
+                       agenda.setDistancia((long) SphericalUtil.computeDistanceBetween(pos, cli));
+                   }
+                   agenda.setEnviado(false);
+                   Agenda.update(getDataBase(), agenda);
+                   if (agenda.getObservaciones() == null || agenda.getObservaciones().length() <= 0)
+                       setTextViewText(R.id.detail_agenda_observacion, getString(R.string.label_sin_observaciones));
+                   Bundle bundle = new Bundle();
+                   bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ENVIAR_AGENDA);
+                   bundle.putInt(ARG_AGENDA_ID, (int) idAgenda);
+                   requestSync(bundle);
+                   //new AsyncUpdater.UpdateAgenda().execute((int) idAgenda);
+                   if (location == null) {
+                       try {
+                           LocationUtils.getLocation(ctx, new OnLocationResultListener() {
+
+                               @Override
+                               public void getLocationResult(Location location) {
+                                   if (location != null) {
+                                       agenda.setLatitud(location.getLatitude());
+                                       agenda.setLongitud(location.getLongitude());
+                                   }
+                                   agenda.setEnviado(false);
+                                   LatLng pos = new LatLng(agenda.getLatitud(), agenda.getLongitud());
+                                   LatLng cli = new LatLng(agenda.getClienteDireccion().getLatitud(), agenda.getClienteDireccion().getLongitud());
+                                   agenda.setDistancia((long) SphericalUtil.computeDistanceBetween(pos, cli));
+                                   BaseActivity act = (BaseActivity) ctx;
+                                   Agenda.update(act.getDataBase(), agenda);
+                                   Bundle bundle = new Bundle();
+                                   bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_AGENDA_GEOLOCATION);
+                                   bundle.putInt(ARG_AGENDA_ID, (int) idAgenda);
+                                   bundle.putDouble(ARG_LONGITUD, location.getLongitude());
+                                   bundle.putDouble(ARG_LATITUD, location.getLatitude());
+                                   act.requestSync(bundle);
+
+                               }
+                           });
+                       } catch (Exception ex) {
+                       }
+                   }
 
 
-					((ImageView) rootView.findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_visited);
-					setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());	
-				}});
+                   ((ImageView) rootView.findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_visited);
+                   setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());
+               }
+           });
 		   
 		   if(agenda.getAgendaTareas() != null){
 			   adapter = new ListaTareasAdapter(getActivity(), agenda.getAgendaTareas());
