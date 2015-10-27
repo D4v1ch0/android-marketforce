@@ -44,7 +44,7 @@
     <string name="label_datos_personas">Contactos</string>
     <string name="label_direccion">Dirección</string>
     <string name="label_ciudad">Ciudad</string>
-    <string name="hint_search_transaction">Buscar Cliente</string>
+    <string name="hint_search_transaction">Buscar</string>
     <string name="hint_search_transaction_rutas">Buscar</string>
     <string name="title_activity_searchable">Búsqueda</string>
     <string name="label_recordarme">Recordarme</string>
