@@ -10,17 +10,22 @@ import android.speech.RecognizerIntent;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Locale;
 
 import rp3.app.BaseFragment;
+import rp3.configuration.PreferenceManager;
+import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agente;
 import rp3.marketforce.models.oportunidad.Oportunidad;
+import rp3.marketforce.models.oportunidad.OportunidadBitacora;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.Utils;
 import rp3.util.ConnectionUtils;
@@ -142,6 +147,18 @@ public class AgenteDetalleFragment extends BaseFragment {
                     if(es_oportunidad)
                     {
                         Oportunidad opt = Oportunidad.getOportunidadId(getDataBase(), id_oportunidad);
+                        if(id_oportunidad != 0)
+                        {
+                            OportunidadBitacora bitacora = new OportunidadBitacora();
+                            bitacora.setIdAgente(PreferenceManager.getInt(Contants.KEY_IDAGENTE));
+                            bitacora.setFecha(Calendar.getInstance().getTime());
+                            bitacora.setIdOportunidad(opt.getIdOportunidad());
+                            bitacora.set_idOportunidad((int) opt.getID());
+                            bitacora.setDetalle(((EditText) rootView.findViewById(R.id.obs_text)).getText().toString());
+                            OportunidadBitacora.insert(getDataBase(), bitacora);
+                            opt.setPendiente(true);
+                            Oportunidad.update(getDataBase(), opt);
+                        }
                         for (int i = 0; i < opt.getOportunidadResponsables().size(); i++) {
                             Bundle bundle = new Bundle();
                             bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SEND_NOTIFICATION);
@@ -154,6 +171,19 @@ public class AgenteDetalleFragment extends BaseFragment {
                         finish();
                     }
                     else {
+                        if(id_oportunidad != 0)
+                        {
+                            Oportunidad opt = Oportunidad.getOportunidadId(getDataBase(), id_oportunidad);
+                            OportunidadBitacora bitacora = new OportunidadBitacora();
+                            bitacora.setIdAgente(PreferenceManager.getInt(Contants.KEY_IDAGENTE));
+                            bitacora.setFecha(Calendar.getInstance().getTime());
+                            bitacora.setIdOportunidad(opt.getIdOportunidad());
+                            bitacora.set_idOportunidad((int) opt.getID());
+                            bitacora.setDetalle(((EditText) rootView.findViewById(R.id.obs_text)).getText().toString());
+                            OportunidadBitacora.insert(getDataBase(), bitacora);
+                            opt.setPendiente(true);
+                            Oportunidad.update(getDataBase(), opt);
+                        }
                         Bundle bundle = new Bundle();
                         bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SEND_NOTIFICATION);
                         bundle.putInt(ARG_AGENTE, idAgente);

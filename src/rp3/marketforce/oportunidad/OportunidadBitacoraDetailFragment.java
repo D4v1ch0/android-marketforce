@@ -27,6 +27,8 @@ import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.oportunidad.Oportunidad;
 import rp3.marketforce.models.oportunidad.OportunidadBitacora;
+import rp3.marketforce.resumen.AgenteDetalleFragment;
+import rp3.marketforce.sync.SyncAdapter;
 import rp3.util.StringUtils;
 
 /**
@@ -127,6 +129,17 @@ public class OportunidadBitacoraDetailFragment extends BaseFragment {
                         OportunidadBitacora.insert(getDataBase(), bitacora);
                         oportunidad.setPendiente(true);
                         Oportunidad.update(getDataBase(), oportunidad);
+                        //Se envia notificación a todos los agentes
+                        for (int i = 0; i < oportunidad.getOportunidadResponsables().size(); i++) {
+                            Bundle bundle = new Bundle();
+                            bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SEND_NOTIFICATION);
+                            bundle.putInt(AgenteDetalleFragment.ARG_AGENTE, oportunidad.getOportunidadResponsables().get(i).getIdAgente());
+                            bundle.putString(AgenteDetalleFragment.ARG_TITLE, oportunidad.getDescripcion());
+                            bundle.putString(AgenteDetalleFragment.ARG_MESSAGE, ((TextView) rootView.findViewById(R.id.actividad_texto_respuesta)).getText().toString());
+                            requestSync(bundle);
+                        }
+
+
                         Toast.makeText(getContext(), "Registro Ingresado.", Toast.LENGTH_LONG).show();
                         OportunidadBitacoraListCallback.Refresh();
                         finish();
