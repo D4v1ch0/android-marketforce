@@ -142,10 +142,12 @@ public class Marcaciones {
             try {
                 webService.invokeWebService();
                 JSONObject jObject = webService.getJSONObjectResponse();
-                if(jObject != null && !jObject.isNull(Contants.KEY_LONGITUD_PARTIDA)) {
+                if(jObject != null) {
                     PreferenceManager.setValue(Contants.KEY_APLICA_MARCACION, jObject.getBoolean(Contants.KEY_APLICA_MARCACION));
-                    PreferenceManager.setValue(Contants.KEY_LONGITUD_PARTIDA, jObject.getDouble(Contants.KEY_LONGITUD_PARTIDA) + "");
-                    PreferenceManager.setValue(Contants.KEY_LATITUD_PARTIDA, jObject.getDouble(Contants.KEY_LATITUD_PARTIDA) + "");
+                    if(!jObject.isNull(Contants.KEY_LONGITUD_PARTIDA))
+                        PreferenceManager.setValue(Contants.KEY_LONGITUD_PARTIDA, jObject.getDouble(Contants.KEY_LONGITUD_PARTIDA) + "");
+                    if(!jObject.isNull(Contants.KEY_LATITUD_PARTIDA))
+                        PreferenceManager.setValue(Contants.KEY_LATITUD_PARTIDA, jObject.getDouble(Contants.KEY_LATITUD_PARTIDA) + "");
                 }
             } catch (HttpResponseException e) {
                 if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
