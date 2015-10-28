@@ -273,6 +273,7 @@
         CREATE TABLE tbPedido(
         _id INTEGER PRIMARY KEY AUTOINCREMENT,
         IdPedido INTEGER,
+        _IdAgenda INTEGER,
         IdAgenda INTEGER,
         IdCliente INTEGER,
         ValorTotal REAL,
