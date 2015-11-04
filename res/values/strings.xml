@@ -204,7 +204,7 @@
     <string name="action_sincronizar_productos">Sincronizar Productos</string>
     <string name="action_editar_pedido">Editar Pedido</string>
     <string name="label_sin_pedidos">No tiene pedidos</string>
-    <string name="label_cantidad">Cantidad:</string>
+    <string name="label_cantidad2">Cantidad:</string>
     <string name="label_cliente_2">Cliente:</string>
     <string name="label_correo_2">Correo:</string>
     <string name="label_descripción">Descripción</string>

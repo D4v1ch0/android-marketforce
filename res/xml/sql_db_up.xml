@@ -32,13 +32,32 @@
         _id INTEGER PRIMARY KEY AUTOINCREMENT,
         IdProducto INTEGER,
         ValorUnitario REAL,
-        URLFoto TEXT
+        URLFoto TEXT,
+        IdSubCategoria INTEGER
         );
     </statement>
     <statement name="ToVersion6-4">
         CREATE VIRTUAL TABLE tbProductoExt USING fts4 (
         Descripcion,
         tokenize=porter
+        );
+    </statement>
+    <statement name="ToVersion6-5">
+        CREATE TABLE tbProducto(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdProducto INTEGER,
+        ValorUnitario REAL,
+        URLFoto TEXT,
+        IdSubCategoria INTEGER
+        );
+    </statement>
+    <statement name="ToVersion6-6">
+        CREATE TABLE tbProducto(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdProducto INTEGER,
+        ValorUnitario REAL,
+        URLFoto TEXT,
+        IdSubCategoria INTEGER
         );
     </statement>
 </sql>

@@ -78,7 +78,7 @@
             android:singleLine="true"
             android:textSize="@dimen/text_xsmall_size"
             android:textColor="@color/color_text_sky_blue"
-            android:text="@string/label_cantidad" />
+            android:text="@string/label_cantidad2" />
 
         <TextView
             style="@style/Widget.TextView.XSmall"

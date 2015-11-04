@@ -10,11 +10,12 @@
 
         <ImageView
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:id="@+id/producto_imagen"
             android:layout_gravity="center_vertical"
             android:layout_weight="0.35"
-            android:src="@drawable/ic_launcher" />
+            android:src="@drawable/ic_launcher"
+            android:scaleType="fitCenter" />
 
         <LinearLayout
             android:orientation="vertical"
@@ -54,7 +55,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/label_cantidad"
+            android:text="@string/label_cantidad2"
             android:id="@+id/textView19"
             android:layout_weight="0.35" />
 
