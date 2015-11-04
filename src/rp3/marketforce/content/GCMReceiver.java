@@ -6,9 +6,11 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 
+import rp3.db.sqlite.DataBase;
 import rp3.marketforce.R;
 import rp3.marketforce.marcaciones.MarcacionActivity;
 import rp3.marketforce.marcaciones.PermisoActivity;
+import rp3.marketforce.models.marcacion.Marcacion;
 import rp3.util.NotificationPusher;
 
 /**
@@ -37,8 +39,20 @@ public class GCMReceiver extends GcmListenerService {
                 NotificationPusher.pushNotification(1, getApplicationContext(), message, title, footer);
             else
             {
-                if(type.equalsIgnoreCase(NOTIFICATION_TYPE_MARCACION))
-                    NotificationPusher.pushNotification(1, getApplicationContext(), message, title, MarcacionActivity.class);
+                if(type.equalsIgnoreCase(NOTIFICATION_TYPE_MARCACION)) {
+                    try {
+                        DataBase db = DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class);
+                        Marcacion ultimaMarcacion = Marcacion.getUltimaMarcacion(db);
+                        if (ultimaMarcacion == null || rp3.marketforce.models.marcacion.Marcacion.getMarcacionesPendientes(db).size() == 0) {
+                            NotificationPusher.pushNotification(1, getApplicationContext(), message, title, MarcacionActivity.class);
+                        }
+
+                        rp3.marketforce.sync.Marcaciones.executeSync(db);
+                    }
+                    catch(Exception ex)
+                    {}
+
+                }
                 else if(type.equalsIgnoreCase(NOTIFICATION_TYPE_APROBAR_JUSTIFICACION))
                     NotificationPusher.pushNotification(1, getApplicationContext(), message, title, PermisoActivity.class);
                 else

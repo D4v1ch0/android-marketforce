@@ -438,7 +438,7 @@ public class MarcacionFragment extends BaseFragment {
                                                     LatLng partida = new LatLng(Double.parseDouble(PreferenceManager.getString(Contants.KEY_LATITUD_PARTIDA, "0")),
                                                             Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA, "0")));
                                                     double distance = SphericalUtil.computeDistanceBetween(pos, partida);
-                                                    if (partida.latitude != 0 || partida.longitude != 0) {
+                                                    if (PreferenceManager.getBoolean(Contants.KEY_APLICA_BREAK, true) || partida.latitude != 0 || partida.longitude != 0) {
                                                         if (distance > DISTANCE) {
                                                             location = getAproximatelyLocation(location, partida, distance);
                                                         }
@@ -535,7 +535,7 @@ public class MarcacionFragment extends BaseFragment {
                                                     LatLng partida = new LatLng(Double.parseDouble(PreferenceManager.getString(Contants.KEY_LATITUD_PARTIDA, "0")),
                                                             Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA, "0")));
                                                     double distance = SphericalUtil.computeDistanceBetween(pos, partida);
-                                                    if (partida.latitude != 0 || partida.longitude != 0) {
+                                                    if (PreferenceManager.getBoolean(Contants.KEY_APLICA_BREAK, true) || partida.latitude != 0 || partida.longitude != 0) {
                                                         if (distance > DISTANCE) {
                                                             location = getAproximatelyLocation(location, partida, distance);
                                                         }

@@ -144,6 +144,7 @@ public class Marcaciones {
                 JSONObject jObject = webService.getJSONObjectResponse();
                 if(jObject != null) {
                     PreferenceManager.setValue(Contants.KEY_APLICA_MARCACION, jObject.getBoolean(Contants.KEY_APLICA_MARCACION));
+                    PreferenceManager.setValue(Contants.KEY_APLICA_BREAK, jObject.getBoolean(Contants.KEY_APLICA_BREAK));
                     if(!jObject.isNull(Contants.KEY_LONGITUD_PARTIDA))
                         PreferenceManager.setValue(Contants.KEY_LONGITUD_PARTIDA, jObject.getDouble(Contants.KEY_LONGITUD_PARTIDA) + "");
                     if(!jObject.isNull(Contants.KEY_LATITUD_PARTIDA))

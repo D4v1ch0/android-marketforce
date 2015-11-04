@@ -32,6 +32,7 @@ public class Contants {
 	public final static String KEY_IDAGENTE = "IdAgente";
 	public final static String KEY_IDRUTA = "IdRuta";
     public final static String KEY_APLICA_MARCACION = "AplicaMarcacion";
+    public final static String KEY_APLICA_BREAK = "AplicaBreak";
     public final static String KEY_LONGITUD_PARTIDA = "LongitudPuntoPartida";
     public final static String KEY_LATITUD_PARTIDA = "LatitudPuntoPartida";
 	public final static String KEY_ES_SUPERVISOR = "EsSupervisor";
