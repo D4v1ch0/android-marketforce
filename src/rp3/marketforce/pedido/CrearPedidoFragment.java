@@ -27,6 +27,7 @@ import java.util.List;
 
 import rp3.app.BaseFragment;
 import rp3.marketforce.R;
+import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.Cliente;
 import rp3.marketforce.models.pedido.Pedido;
 import rp3.marketforce.models.pedido.PedidoDetalle;
@@ -45,6 +46,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     private List<Cliente> list_cliente;
 
     public static String ARG_PEDIDO = "cliente";
+    public static String ARG_AGENDA = "agenda";
     public static final int REQUEST_BUSQUEDA = 3;
 
     public static final int DIALOG_SAVE_CANCEL = 1;
@@ -52,17 +54,19 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
 
     private long idCliente = 0;
+    private long idAgenda = 0;
     private Pedido pedido;
     public ProductFragment productFragment;
     private String code;
     private PedidoDetalleAdapter adapter;
     private NumberFormat numberFormat;
 
-    public static CrearPedidoFragment newInstance(long id_pedido)
+    public static CrearPedidoFragment newInstance(long id_pedido, long id_agenda)
     {
         CrearPedidoFragment fragment = new CrearPedidoFragment();
         Bundle args = new Bundle();
         args.putLong(ARG_PEDIDO, id_pedido);
+        args.putLong(ARG_AGENDA, id_agenda);
         fragment.setArguments(args);
         return fragment;
     }
@@ -162,6 +166,8 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         for (PedidoDetalle detalle : pedido.getPedidoDetalles()) {
             valorTotal = valorTotal + detalle.getValorTotal();
         }
+
+        pedido.set_idAgenda((int) idAgenda);
 
         pedido.setValorTotal(valorTotal);
         if (pendiente)
@@ -278,6 +284,15 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         if (getArguments().containsKey(ARG_PEDIDO) && getArguments().getLong(ARG_PEDIDO) != 0 && !rotated) {
             idCliente = getArguments().getLong(ARG_PEDIDO);
             setDatosPedidos();
+        }
+
+        if (getArguments().containsKey(ARG_AGENDA) && getArguments().getLong(ARG_AGENDA) != 0 && !rotated) {
+            idAgenda = getArguments().getLong(ARG_AGENDA);
+
+            Agenda agd = Agenda.getAgenda(getDataBase(), idAgenda);
+            cliente_auto.setText(agd.getCliente().getNombreCompleto());
+            cliente_auto.setEnabled(false);
+            ((TextView) rootView.findViewById(R.id.pedido_email)).setText(agd.getCliente().getCorreoElectronico());
         }
 
         ((ListView) getRootView().findViewById(R.id.pedido_detalles)).setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -5,6 +5,7 @@ import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.db.DbOpenHelper;
 import rp3.marketforce.models.Agenda;
+import rp3.marketforce.pedido.CrearPedidoActivity;
 import rp3.marketforce.resumen.AgenteDetalleFragment;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.util.ConnectionUtils;
@@ -83,6 +84,13 @@ public class RutasDetailActivity extends rp3.app.BaseActivity implements Contact
     public boolean onOptionsItemSelected(MenuItem item) {
     	switch(item.getItemId())
     	{
+			case R.id.action_asignar_pedido:
+				Agenda agdPed = Agenda.getAgenda(getDataBase(), transactionId);
+				Intent intent5 = new Intent(this, CrearPedidoActivity.class);
+				intent5.putExtra(CrearPedidoActivity.ARG_IDAGENDA, transactionId);
+				intent5.putExtra(CrearPedidoActivity.ARG_IDPEDIDO, agdPed.getPedido().getID());
+				startActivity(intent5);
+				return true;
     		case R.id.action_ver_posicion:
                 if(!ConnectionUtils.isNetAvailable(this))
                 {

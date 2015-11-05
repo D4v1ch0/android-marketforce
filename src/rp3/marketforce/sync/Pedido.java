@@ -36,6 +36,8 @@ public class Pedido {
             jObject.put("Email", pedidoUpload.getEmail());
             jObject.put("Estado", pedidoUpload.getEstado());
             jObject.put("FechaCreacionTicks", Convert.getDotNetTicksFromDate(pedidoUpload.getFechaCreacion()));
+            if(pedidoUpload.get_idAgenda() != 0)
+                jObject.put("IdAgenda", rp3.marketforce.models.Agenda.getAgenda(db, pedidoUpload.get_idAgenda()).getIdAgenda());
 
             JSONArray jArrayDetalle = new JSONArray();
             for (PedidoDetalle det : pedidoUpload.getPedidoDetalles()) {

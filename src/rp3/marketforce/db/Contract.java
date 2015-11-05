@@ -552,6 +552,7 @@ public final class Contract {
 		public static final String COLUMN_EMAIL = "Email";
 		public static final String COLUMN_ESTADO = "Estado";
 		public static final String COLUMN_FECHA_CREACION = "FechaCreacion";
+		public static final String COLUMN_ID_AGENDA_INT = "_IdAgenda";
 
 
 	}

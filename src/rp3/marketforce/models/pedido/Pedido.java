@@ -21,6 +21,7 @@ public class Pedido extends EntityBase<Pedido> {
     private int idPedido;
     private int idCliente;
     private int idAgenda;
+    private int _idAgenda;
     private double valorTotal;
     private String email;
     private String estado;
@@ -121,10 +122,19 @@ public class Pedido extends EntityBase<Pedido> {
         this.pedidoDetalles = pedidoDetalles;
     }
 
+    public int get_idAgenda() {
+        return _idAgenda;
+    }
+
+    public void set_idAgenda(int _idAgenda) {
+        this._idAgenda = _idAgenda;
+    }
+
     @Override
     public void setValues() {
         setValue(Contract.Pedido.COLUMN_ID_PEDIDO, this.idPedido);
         setValue(Contract.Pedido.COLUMN_ID_AGENDA, this.idAgenda);
+        setValue(Contract.Pedido.COLUMN_ID_AGENDA_INT, this._idAgenda);
         setValue(Contract.Pedido.COLUMN_ID_CLIENTE, this.idCliente);
         setValue(Contract.Pedido.COLUMN_VALOR_TOTAL, this.valorTotal);
         setValue(Contract.Pedido.COLUMN_EMAIL, this.email);
@@ -143,7 +153,7 @@ public class Pedido extends EntityBase<Pedido> {
     }
 
     public static List<Pedido> getPedidos(DataBase db) {
-        Cursor c = db.query(Contract.Pedido.TABLE_NAME, new String[] {Contract.Pedido._ID, Contract.Pedido.COLUMN_ID_PEDIDO, Contract.Pedido.COLUMN_ID_AGENDA,
+        Cursor c = db.query(Contract.Pedido.TABLE_NAME, new String[] {Contract.Pedido._ID, Contract.Pedido.COLUMN_ID_PEDIDO, Contract.Pedido.COLUMN_ID_AGENDA, Contract.Pedido.COLUMN_ID_AGENDA_INT,
                 Contract.Pedido.COLUMN_ID_CLIENTE, Contract.Pedido.COLUMN_VALOR_TOTAL, Contract.Pedido.COLUMN_EMAIL, Contract.Pedido.COLUMN_ESTADO, Contract.Pedido.COLUMN_FECHA_CREACION}
                 ,null, null, null,null, Contract.Pedido.COLUMN_FECHA_CREACION);
 
@@ -152,6 +162,7 @@ public class Pedido extends EntityBase<Pedido> {
             Pedido pedido = new Pedido();
             pedido.setID(CursorUtils.getInt(c, Contract.Pedido._ID));
             pedido.setIdAgenda(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_AGENDA));
+            pedido.set_idAgenda(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_AGENDA_INT));
             pedido.setIdCliente(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_CLIENTE));
             pedido.setIdPedido(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_PEDIDO));
             pedido.setValorTotal(CursorUtils.getDouble(c, Contract.Pedido.COLUMN_VALOR_TOTAL));
@@ -170,7 +181,7 @@ public class Pedido extends EntityBase<Pedido> {
     }
 
     public static Pedido getPedido(DataBase db, long id) {
-        Cursor c = db.query(Contract.Pedido.TABLE_NAME, new String[] {Contract.Pedido._ID, Contract.Pedido.COLUMN_ID_PEDIDO, Contract.Pedido.COLUMN_ID_AGENDA,
+        Cursor c = db.query(Contract.Pedido.TABLE_NAME, new String[] {Contract.Pedido._ID, Contract.Pedido.COLUMN_ID_PEDIDO, Contract.Pedido.COLUMN_ID_AGENDA, Contract.Pedido.COLUMN_ID_AGENDA_INT,
                 Contract.Pedido.COLUMN_ID_CLIENTE, Contract.Pedido.COLUMN_VALOR_TOTAL, Contract.Pedido.COLUMN_EMAIL, Contract.Pedido.COLUMN_ESTADO, Contract.Pedido.COLUMN_FECHA_CREACION}
                 ,Contract.Pedido._ID + " = ? ", new String[]{id + ""}, null,null, Contract.Pedido.COLUMN_FECHA_CREACION);
 
@@ -179,6 +190,35 @@ public class Pedido extends EntityBase<Pedido> {
 
             pedido.setID(CursorUtils.getInt(c, Contract.Pedido._ID));
             pedido.setIdAgenda(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_AGENDA));
+            pedido.set_idAgenda(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_AGENDA_INT));
+            pedido.setIdCliente(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_CLIENTE));
+            pedido.setIdPedido(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_PEDIDO));
+            pedido.setValorTotal(CursorUtils.getDouble(c, Contract.Pedido.COLUMN_VALOR_TOTAL));
+            pedido.setEmail(CursorUtils.getString(c, Contract.Pedido.COLUMN_EMAIL));
+            pedido.setEstado(CursorUtils.getString(c, Contract.Pedido.COLUMN_ESTADO));
+            pedido.setFechaCreacion(CursorUtils.getDate(c, Contract.Pedido.COLUMN_FECHA_CREACION));
+            pedido.setCliente(Cliente.getClienteIDServer(db, pedido.getIdCliente(), false));
+            pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetalles(db, pedido.getIdPedido()));
+            if(pedido.getIdPedido() != 0)
+                pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetalles(db, pedido.getIdPedido()));
+            else
+                pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetallesInt(db, pedido.getID()));
+        }
+        c.close();
+        return pedido;
+    }
+
+    public static Pedido getPedidoByAgenda(DataBase db, long idAgenda) {
+        Cursor c = db.query(Contract.Pedido.TABLE_NAME, new String[] {Contract.Pedido._ID, Contract.Pedido.COLUMN_ID_PEDIDO, Contract.Pedido.COLUMN_ID_AGENDA, Contract.Pedido.COLUMN_ID_AGENDA_INT,
+                Contract.Pedido.COLUMN_ID_CLIENTE, Contract.Pedido.COLUMN_VALOR_TOTAL, Contract.Pedido.COLUMN_EMAIL, Contract.Pedido.COLUMN_ESTADO, Contract.Pedido.COLUMN_FECHA_CREACION}
+                ,Contract.Pedido.COLUMN_ID_AGENDA_INT + " = ? ", new String[]{idAgenda + ""}, null,null, Contract.Pedido.COLUMN_FECHA_CREACION);
+
+        Pedido pedido = new Pedido();
+        while(c.moveToNext()){
+
+            pedido.setID(CursorUtils.getInt(c, Contract.Pedido._ID));
+            pedido.setIdAgenda(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_AGENDA));
+            pedido.set_idAgenda(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_AGENDA_INT));
             pedido.setIdCliente(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_CLIENTE));
             pedido.setIdPedido(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_PEDIDO));
             pedido.setValorTotal(CursorUtils.getDouble(c, Contract.Pedido.COLUMN_VALOR_TOTAL));
