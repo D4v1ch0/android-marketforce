@@ -353,6 +353,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     result = EnviarUbicacion.executeSyncPendientes(db);
                     addDefaultMessage(result);
 
+                    result = Marcaciones.executeSyncPermisosRevisados(db);
+                    addDefaultMessage(result);
+                    result = Marcaciones.executeSyncPermisosPorAprobar(db);
+                    addDefaultMessage(result);
+
                     //result = Marcaciones.executeSync(db);
                     //addDefaultMessage(result);
 

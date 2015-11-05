@@ -75,19 +75,14 @@ public class PermisoListFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        ((BaseActivity) getActivity()).showDialogProgress(R.string.loading, R.string.message_cargando_justificaciones);
-        if(ConnectionUtils.isNetAvailable(getContext())) {
-            Bundle bundle = new Bundle();
-            bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_JUSTIFICACIONES);
-            requestSync(bundle);
+        if (currentTransactionBoolean) {
+            ejecutarConsulta();
+        } else {
+            Bundle args = new Bundle();
+            if(loaderPermiso == null)
+                loaderPermiso = new LoaderJustificacion();
+            getLoaderManager().initLoader(0, args, loaderPermiso);
         }
-        else
-        {
-            Toast.makeText(getContext(), R.string.message_error_sync_no_net_available, Toast.LENGTH_LONG).show();
-            refreshLayout.setRefreshing(false);
-            ((MainActivity) getActivity()).updateBadgeNavItem(MainActivity.NAV_JUSTIFICACIONES, Justificacion.getPermisosPendientesAprobarCount(getDataBase()));
-        }
-
     }
 
     @Override
