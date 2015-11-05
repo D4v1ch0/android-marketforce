@@ -23,7 +23,7 @@
       <item android:id="@+id/action_suspender_agenda" android:title="@string/action_suspender_agenda"></item>
       <item android:id="@+id/action_no_visita" android:title="@string/label_action_motivos_no_visita"></item>
       <item android:id="@+id/action_reprogramar" android:title="@string/menu_reprogramar_agenda"></item>
-      <!--item android:id="@+id/action_asignar_pedido" android:title="@string/menu_asignar_pedido"></item-->
+      <item android:id="@+id/action_asignar_pedido" android:title="@string/menu_asignar_pedido"></item>
         </menu>
     </item>
 </menu>
