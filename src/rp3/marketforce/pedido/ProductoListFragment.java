@@ -39,10 +39,14 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
     private ListView headerList;
     private String currentTransactionSearch;
     private ProductFragment productFragment;
+    private int idSubCategoria = -1;
 
-    public static ProductoListFragment newInstance()
+    public static ProductoListFragment newInstance(int idCategoria)
     {
+        Bundle bundle = new Bundle();
+        bundle.putInt(CategoriaFragment.ARG_IDCATEGORIA, idCategoria);
         ProductoListFragment fragment = new ProductoListFragment();
+        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -63,11 +67,11 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         if(savedInstanceState == null)
         {
             Bundle args = new Bundle();
             args.putString(LoaderProductos.STRING_SEARCH, currentTransactionSearch);
+
             loaderProductos = new LoaderProductos();
 
         }
@@ -75,6 +79,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
 
     public void ejecutarConsulta(){
         Bundle args = new Bundle();
+        args.putInt(LoaderProductos.INT_CATEGORIA, idSubCategoria);
         executeLoader(0, args, loaderProductos);
     }
 
@@ -83,6 +88,8 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
         super.onFragmentCreateView(rootView, savedInstanceState);
         headerList = (ListView) rootView.findViewById(R.id.list_productos);
         headerList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+
+        idSubCategoria = getArguments().getInt(CategoriaFragment.ARG_IDCATEGORIA, -1);
 
         if(adapter != null)
         {
@@ -129,6 +136,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
                 public boolean onQueryTextSubmit(String query) {
                     Bundle args = new Bundle();
                     args.putString(LoaderProductos.STRING_SEARCH, query);
+                    args.putInt(LoaderProductos.INT_CATEGORIA, idSubCategoria);
                     executeLoader(0, args, loaderProductos);
                     return true;
                 }
@@ -140,6 +148,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
                         try {
                             Bundle args = new Bundle();
                             args.putString(LoaderProductos.STRING_SEARCH, "");
+                            args.putInt(LoaderProductos.INT_CATEGORIA, idSubCategoria);
                             executeLoader(0, args, loaderProductos);
                         } catch (Exception ex) {
 
@@ -177,14 +186,17 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
     public class LoaderProductos implements LoaderManager.LoaderCallbacks<List<Producto>> {
 
         public static final String STRING_SEARCH = "string_search";
+        public static final String INT_CATEGORIA = "int_categoria";
         private String Search;
+        private int idSubCategoria;
 
         @Override
         public Loader<List<Producto>> onCreateLoader(int arg0,
                                                    Bundle bundle) {
 
             Search = bundle.getString(STRING_SEARCH);
-            return new ProductoLoader(getActivity(), getDataBase(), Search);
+            idSubCategoria = bundle.getInt(INT_CATEGORIA);
+            return new ProductoLoader(getActivity(), getDataBase(), Search, idSubCategoria);
 
         }
 

@@ -263,6 +263,13 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 
                     result = Productos.executeSync(db);
                     addDefaultMessage(result);
+
+                    result = Productos.executeSyncCategorias(db);
+                    addDefaultMessage(result);
+
+                    result = Productos.executeSyncSubCategorias(db);
+                    addDefaultMessage(result);
+
                 } else if (syncType.equals(SYNC_TYPE_UPDATE_PEDIDO)) {
                     long id = extras.getLong(CrearPedidoFragment.ARG_PEDIDO);
                     result = Pedido.executeSync(db, id);

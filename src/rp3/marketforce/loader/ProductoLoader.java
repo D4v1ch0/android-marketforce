@@ -16,11 +16,13 @@ public class ProductoLoader  extends
 
     private DataBase db;
     private String search;
+    private int idSubCategoria;
 
-    public ProductoLoader(Context context, DataBase db, String search) {
+    public ProductoLoader(Context context, DataBase db, String search, int idSubCategoria) {
         super(context);
         this.db = db;
         this.search = search;
+        this.idSubCategoria = idSubCategoria;
     }
 
     @Override
@@ -28,9 +30,15 @@ public class ProductoLoader  extends
         List<Producto> result = null;
 
         if(search == null || search.length() <= 0)
-            result = Producto.getProductos(db);
+            if(idSubCategoria == -1)
+                result = Producto.getProductos(db);
+            else
+                result = Producto.getProductos(db, idSubCategoria);
         else
-            result = Producto.getProductoSearch(db, search);
+            if(idSubCategoria == -1)
+                result = Producto.getProductoSearch(db, search);
+            else
+                result = Producto.getProductoSearch(db, search, idSubCategoria);
 
         return result;
     }

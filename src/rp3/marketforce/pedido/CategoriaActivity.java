@@ -7,30 +7,31 @@ import android.support.v4.app.Fragment;
 import java.util.List;
 
 import rp3.app.BaseActivity;
-import rp3.marketforce.Contants;
 import rp3.marketforce.R;
-import rp3.marketforce.cliente.CrearClienteFragment;
 
 /**
- * Created by magno_000 on 20/10/2015.
+ * Created by magno_000 on 04/11/2015.
  */
-public class ProductoListActivity extends BaseActivity {
+public class CategoriaActivity extends BaseActivity {
 
+    public static String ARG_IDCATEGORIA = "idcategoria";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        int idCategoria = 0;
+        int tipo = 0;
+        if(getIntent().getExtras() != null && getIntent().getExtras().containsKey(ARG_IDCATEGORIA))
+        {
+            idCategoria = getIntent().getExtras().getInt(ARG_IDCATEGORIA);
+            setTitle("Sub Categorías");
+        }
+        else
+            setTitle("Categorías");
 
-        setTitle("Búsqueda de Productos");
         setHomeAsUpEnabled(true, true);
-
-        int idCategoria = -1;
-        if(getIntent().getExtras() != null)
-            idCategoria = getIntent().getExtras().getInt(CategoriaFragment.ARG_IDCATEGORIA, -1);
-
-
         setContentView(R.layout.layout_simple_content);
         if (!hasFragment(rp3.core.R.id.content)) {
-            ProductoListFragment newFragment = ProductoListFragment.newInstance(idCategoria);
+            CategoriaFragment newFragment = CategoriaFragment.newInstance(idCategoria);
             setFragment(rp3.core.R.id.content, newFragment);
         }
     }
@@ -51,5 +52,4 @@ public class ProductoListActivity extends BaseActivity {
         setResult(RESULT_OK, intent);
         finish();
     }
-
 }

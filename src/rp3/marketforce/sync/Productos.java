@@ -56,6 +56,10 @@ public class Productos {
                     producto.setDescripcion(type.getString("Descripcion"));
                     producto.setUrlFoto(type.getString("URLFoto"));
                     producto.setValorUnitario(type.getDouble("Precio"));
+                    if(type.isNull("IdSubCategoria"))
+                        producto.setIdSubCategoria(0);
+                    else
+                        producto.setIdSubCategoria(type.getInt("IdSubCategoria"));
 
                     if(producto.getID() == 0)
                         rp3.marketforce.models.pedido.Producto.insert(db, producto);
@@ -65,6 +69,111 @@ public class Productos {
                 } catch (JSONException e) {
                     Log.e("Entro", "Error: " + e.toString());
                     return rp3.content.SyncAdapter.SYNC_EVENT_ERROR;
+                }
+            }
+        }finally{
+            webService.close();
+        }
+        return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
+    public static int executeSyncCategorias(DataBase db){
+        WebService webService = new WebService("MartketForce","GetCategorias");
+        Calendar fechaUlt = Calendar.getInstance();
+        fechaUlt.setTime(SyncAudit.getLastSyncDate(rp3.marketforce.sync.SyncAdapter.SYNC_TYPE_PRODUCTOS, rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS));
+        fechaUlt.add(Calendar.MINUTE, -30);
+        long fecha = rp3.util.Convert.getDotNetTicksFromDate(fechaUlt.getTime());
+        try
+        {
+            //webService.addParameter("@ultimaFechaActualizacion", fecha);
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return rp3.content.SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return rp3.content.SyncAdapter.SYNC_EVENT_ERROR;
+            }
+
+            JSONArray types = webService.getJSONArrayResponse();
+
+            //rp3.marketforce.models.pedido.Producto.deleteAll(db, Contract.Canal.TABLE_NAME);
+
+            for(int i=0; i < types.length(); i++){
+                try {
+
+                    JSONObject type = types.getJSONObject(i);
+
+                    rp3.marketforce.models.pedido.Categoria categoria = rp3.marketforce.models.pedido.Categoria.getCategoria(db, type.getInt("IdCategoria"));
+
+                    categoria.setIdCategoria(type.getInt("IdCategoria"));
+                    categoria.setDescripcion(type.getString("Descripcion"));
+
+                    if(categoria.getID() == 0)
+                        rp3.marketforce.models.pedido.Categoria.insert(db, categoria);
+                    else
+                        rp3.marketforce.models.pedido.Categoria.update(db, categoria);
+
+                } catch (JSONException e) {
+                    Log.e("Entro", "Error: " + e.toString());
+                    return rp3.content.SyncAdapter.SYNC_EVENT_ERROR;
+                }
+            }
+        }finally{
+            webService.close();
+        }
+        return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
+    public static int executeSyncSubCategorias(DataBase db){
+        WebService webService = new WebService("MartketForce","GetSubcategorias");
+        Calendar fechaUlt = Calendar.getInstance();
+        fechaUlt.setTime(SyncAudit.getLastSyncDate(rp3.marketforce.sync.SyncAdapter.SYNC_TYPE_PRODUCTOS, rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS));
+        fechaUlt.add(Calendar.MINUTE, -30);
+        long fecha = rp3.util.Convert.getDotNetTicksFromDate(fechaUlt.getTime());
+        try
+        {
+            //webService.addParameter("@ultimaFechaActualizacion", fecha);
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return rp3.content.SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return rp3.content.SyncAdapter.SYNC_EVENT_ERROR;
+            }
+
+            JSONArray types = webService.getJSONArrayResponse();
+
+            //rp3.marketforce.models.pedido.Producto.deleteAll(db, Contract.Canal.TABLE_NAME);
+
+            for(int i=0; i < types.length(); i++){
+                try {
+
+                    JSONObject type = types.getJSONObject(i);
+
+                    rp3.marketforce.models.pedido.SubCategoria categoria = rp3.marketforce.models.pedido.SubCategoria.getSubCategoria(db, type.getInt("IdSubCategoria"));
+
+                    categoria.setIdSubCategoria(type.getInt("IdSubCategoria"));
+                    categoria.setIdCategoria(type.getInt("IdCategoria"));
+                    categoria.setDescripcion(type.getString("Descripcion"));
+
+                    if(categoria.getID() == 0)
+                        rp3.marketforce.models.pedido.SubCategoria.insert(db, categoria);
+                    else
+                        rp3.marketforce.models.pedido.SubCategoria.update(db, categoria);
+
+                } catch (JSONException e) {
+                    Log.e("Entro", "Error: " + e.toString());
+                    return rp3.content.SyncAdapter.SYNC_EVENT_ERROR;
+                } catch (Exception ex){
+                    ex.printStackTrace();
                 }
             }
         }finally{

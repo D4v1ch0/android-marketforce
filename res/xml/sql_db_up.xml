@@ -43,21 +43,18 @@
         );
     </statement>
     <statement name="ToVersion6-5">
-        CREATE TABLE tbProducto(
+        CREATE TABLE tbCategoria(
         _id INTEGER PRIMARY KEY AUTOINCREMENT,
-        IdProducto INTEGER,
-        ValorUnitario REAL,
-        URLFoto TEXT,
-        IdSubCategoria INTEGER
+        IdCategoria INTEGER,
+        Descripcion TEXT
         );
     </statement>
     <statement name="ToVersion6-6">
-        CREATE TABLE tbProducto(
+        CREATE TABLE tbSubCategoria(
         _id INTEGER PRIMARY KEY AUTOINCREMENT,
-        IdProducto INTEGER,
-        ValorUnitario REAL,
-        URLFoto TEXT,
-        IdSubCategoria INTEGER
+        IdSubCategoria INTEGER,
+        IdCategoria INTEGER,
+        Descripcion TEXT
         );
     </statement>
 </sql>

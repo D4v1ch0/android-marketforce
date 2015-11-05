@@ -21,6 +21,7 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
 
     private long id;
     private int idProducto;
+    private int idSubCategoria;
     private double valorUnitario;
     private String descripcion;
     private String urlFoto;
@@ -49,6 +50,7 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
     @Override
     public void setValues() {
         setValue(Contract.Producto.COLUMN_ID_PRODUCTO, this.idProducto);
+        setValue(Contract.Producto.COLUMN_ID_SUBCATEGORIA, this.idSubCategoria);
         setValue(Contract.Producto.COLUMN_VALOR_UNITARIO, this.valorUnitario);
         setValue(Contract.Producto.COLUMN_URL_FOTO, this.urlFoto);
     }
@@ -95,6 +97,14 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
         this.urlFoto = urlFoto;
     }
 
+    public int getIdSubCategoria() {
+        return idSubCategoria;
+    }
+
+    public void setIdSubCategoria(int idSubCategoria) {
+        this.idSubCategoria = idSubCategoria;
+    }
+
     public static List<Producto> getProductos(DataBase db){
 
         String query = QueryDir.getQuery(Contract.Producto.QUERY_PRODUCTOS);
@@ -106,7 +116,28 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
             Producto prod = new Producto();
             prod.setID(CursorUtils.getInt(c, Contract.Producto._ID));
             prod.setIdProducto(CursorUtils.getInt(c, Contract.Producto.COLUMN_ID_PRODUCTO));
-            //cl.setIdentificationTypeId(CursorUtils.getInt(c, Contract.Cliente.FIELD_IDENTIFICATION_TYPE_ID));
+            prod.setIdSubCategoria(CursorUtils.getInt(c, Contract.Producto.COLUMN_ID_SUBCATEGORIA));
+            prod.setValorUnitario(CursorUtils.getDouble(c, Contract.Producto.COLUMN_VALOR_UNITARIO));
+            prod.setUrlFoto(CursorUtils.getString(c, Contract.Producto.COLUMN_URL_FOTO));
+            prod.setDescripcion(CursorUtils.getString(c, Contract.Producto.FIELD_DESCRIPCION));
+            list.add(prod);
+        }
+        c.close();
+        return list;
+    }
+
+    public static List<Producto> getProductos(DataBase db, int idSubCategoria){
+
+        String query = QueryDir.getQuery(Contract.Producto.QUERY_PRODUCTOS_BY_CATEGORIA);
+
+        Cursor c = db.rawQuery(query, new String[]{ idSubCategoria + ""});
+
+        List<Producto> list = new ArrayList<Producto>();
+        while(c.moveToNext()){
+            Producto prod = new Producto();
+            prod.setID(CursorUtils.getInt(c, Contract.Producto._ID));
+            prod.setIdProducto(CursorUtils.getInt(c, Contract.Producto.COLUMN_ID_PRODUCTO));
+            prod.setIdSubCategoria(CursorUtils.getInt(c, Contract.Producto.COLUMN_ID_SUBCATEGORIA));
             prod.setValorUnitario(CursorUtils.getDouble(c, Contract.Producto.COLUMN_VALOR_UNITARIO));
             prod.setUrlFoto(CursorUtils.getString(c, Contract.Producto.COLUMN_URL_FOTO));
             prod.setDescripcion(CursorUtils.getString(c, Contract.Producto.FIELD_DESCRIPCION));
@@ -127,6 +158,7 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
 
             prod.setID(CursorUtils.getInt(c, Contract.Producto._ID));
             prod.setIdProducto(CursorUtils.getInt(c, Contract.Producto.COLUMN_ID_PRODUCTO));
+            prod.setIdSubCategoria(CursorUtils.getInt(c, Contract.Producto.COLUMN_ID_SUBCATEGORIA));
             prod.setValorUnitario(CursorUtils.getDouble(c, Contract.Producto.COLUMN_VALOR_UNITARIO));
             prod.setUrlFoto(CursorUtils.getString(c, Contract.Producto.COLUMN_URL_FOTO));
             prod.setDescripcion(CursorUtils.getString(c, Contract.Producto.FIELD_DESCRIPCION));
@@ -146,6 +178,7 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
 
             prod.setID(CursorUtils.getInt(c, Contract.Producto._ID));
             prod.setIdProducto(CursorUtils.getInt(c, Contract.Producto.COLUMN_ID_PRODUCTO));
+            prod.setIdSubCategoria(CursorUtils.getInt(c, Contract.Producto.COLUMN_ID_SUBCATEGORIA));
             prod.setValorUnitario(CursorUtils.getDouble(c, Contract.Producto.COLUMN_VALOR_UNITARIO));
             prod.setUrlFoto(CursorUtils.getString(c, Contract.Producto.COLUMN_URL_FOTO));
             prod.setDescripcion(CursorUtils.getString(c, Contract.Producto.FIELD_DESCRIPCION));
@@ -248,6 +281,32 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
             Producto prod = new Producto();
             prod.setID(c.getInt(0));
             prod.setDescripcion(CursorUtils.getString(c, Contract.Producto.FIELD_DESCRIPCION));
+            prod.setIdSubCategoria(CursorUtils.getInt(c, Contract.Producto.COLUMN_ID_SUBCATEGORIA));
+            prod.setIdProducto(CursorUtils.getInt(c, Contract.Producto.COLUMN_ID_PRODUCTO));
+            prod.setValorUnitario(CursorUtils.getDouble(c, Contract.Producto.COLUMN_VALOR_UNITARIO));
+            prod.setUrlFoto(CursorUtils.getString(c, Contract.Producto.COLUMN_URL_FOTO));
+            list.add(prod);
+        }
+        c.close();
+        return list;
+    }
+
+    public static List<Producto> getProductoSearch(DataBase db, String termSearch, int idSubCategoria)
+    {
+        String query = QueryDir.getQuery( Contract.Producto.QUERY_SEARCH_BY_CATEGORIA );
+        //String version = db.getSQLiteVersion();
+        //int compare = Convert.versionCompare(version, Contants.SQLITE_VERSION_SEARCH);
+        Cursor c = null;
+
+        c = db.rawQuery(query, new String[]{termSearch + "*", idSubCategoria + ""});
+
+
+        List<Producto> list = new ArrayList<Producto>();
+        while(c.moveToNext()){
+            Producto prod = new Producto();
+            prod.setID(c.getInt(0));
+            prod.setDescripcion(CursorUtils.getString(c, Contract.Producto.FIELD_DESCRIPCION));
+            prod.setIdSubCategoria(CursorUtils.getInt(c, Contract.Producto.COLUMN_ID_SUBCATEGORIA));
             prod.setIdProducto(CursorUtils.getInt(c, Contract.Producto.COLUMN_ID_PRODUCTO));
             prod.setValorUnitario(CursorUtils.getDouble(c, Contract.Producto.COLUMN_VALOR_UNITARIO));
             prod.setUrlFoto(CursorUtils.getString(c, Contract.Producto.COLUMN_URL_FOTO));

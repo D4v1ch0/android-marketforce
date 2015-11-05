@@ -247,6 +247,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                         android.R.layout.select_dialog_item);
                 arrayAdapter.add("Desde Código QR");
                 arrayAdapter.add("Desde Búsqueda de Productos");
+                arrayAdapter.add("Desde Categorías");
 
                 builderSingle.setAdapter(
                         arrayAdapter,
@@ -260,6 +261,10 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                                     case 1:
                                         Intent intent = new Intent(getContext(), ProductoListActivity.class);
                                         startActivityForResult(intent, REQUEST_BUSQUEDA);
+                                        break;
+                                    case 2:
+                                        Intent intent2 = new Intent(getContext(), CategoriaActivity.class);
+                                        startActivityForResult(intent2, REQUEST_BUSQUEDA);
                                         break;
                                 }
 
