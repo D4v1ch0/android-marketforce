@@ -63,7 +63,8 @@ public class PedidoDetalleAdapter extends BaseAdapter {
 
         PedidoDetalle detalle = detalles.get(position);
 
-        ((TextView) convertView.findViewById(R.id.pedido_detalle_descripcion)).setText(detalle.getDescripcion() + " x " + detalle.getCantidad());
+        ((TextView) convertView.findViewById(R.id.pedido_detalle_descripcion)).setText(detalle.getDescripcion());
+        ((TextView) convertView.findViewById(R.id.pedido_detalle_cantidad)).setText(detalle.getCantidad()+"");
         ((TextView) convertView.findViewById(R.id.pedido_detalle_unitario)).setText("$ " + numberFormat.format(detalle.getValorUnitario()));
         ((TextView) convertView.findViewById(R.id.pedido_detalle_valor_total)).setText("$ " + numberFormat.format(detalle.getValorTotal()));
 

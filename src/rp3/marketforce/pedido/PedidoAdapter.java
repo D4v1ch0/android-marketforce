@@ -65,7 +65,7 @@ public class PedidoAdapter extends BaseAdapter {
         }
 
         ((TextView) convertView.findViewById(R.id.pedido_cliente)).setText(pedido.getCliente().getNombreCompleto());
-        ((TextView) convertView.findViewById(R.id.pedido_items)).setText(pedido.getPedidoDetalles().size() + "");
+        ((TextView) convertView.findViewById(R.id.pedido_items)).setText(CrearPedidoFragment.getPedidoCantidad(pedido.getPedidoDetalles()) + "");
         ((TextView) convertView.findViewById(R.id.pedido_valor)).setText("$ " + numberFormat.format(pedido.getValorTotal()));
 
         return convertView;

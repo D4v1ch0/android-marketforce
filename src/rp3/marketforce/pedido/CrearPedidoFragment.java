@@ -337,7 +337,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         adapter = new PedidoDetalleAdapter(this.getContext(), pedido.getPedidoDetalles());
         ((ListView) getRootView().findViewById(R.id.pedido_detalles)).setAdapter(adapter);
 
-        ((TextView) getRootView().findViewById(R.id.pedido_cantidad)).setText(pedido.getPedidoDetalles().size() + "");
+        ((TextView) getRootView().findViewById(R.id.pedido_cantidad)).setText(getPedidoCantidad(pedido.getPedidoDetalles()) + "");
         ((TextView) getRootView().findViewById(R.id.pedido_total)).setText("$ " + numberFormat.format(pedido.getValorTotal()));
         ((TextView) getRootView().findViewById(R.id.pedido_cliente)).setText(pedido.getCliente().getNombreCompleto());
         ((TextView) getRootView().findViewById(R.id.pedido_email)).setText(pedido.getEmail());
@@ -423,7 +423,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
         adapter.notifyDataSetChanged();
 
-        ((TextView) getRootView().findViewById(R.id.pedido_cantidad)).setText(pedido.getPedidoDetalles().size() + "");
+        ((TextView) getRootView().findViewById(R.id.pedido_cantidad)).setText(getPedidoCantidad(pedido.getPedidoDetalles()) + "");
 
         double valorTotal = 0;
         for(PedidoDetalle detalle : pedido.getPedidoDetalles())
@@ -461,7 +461,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
         adapter.notifyDataSetChanged();
 
-        ((TextView) getRootView().findViewById(R.id.pedido_cantidad)).setText(pedido.getPedidoDetalles().size() + "");
+        ((TextView) getRootView().findViewById(R.id.pedido_cantidad)).setText(getPedidoCantidad(pedido.getPedidoDetalles()) + "");
 
         double valorTotal = 0;
         for(PedidoDetalle detalle : pedido.getPedidoDetalles())
@@ -471,5 +471,15 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
         ((TextView) getRootView().findViewById(R.id.pedido_total)).setText("$ " + numberFormat.format(valorTotal));
 
+    }
+
+    public static int getPedidoCantidad(List<PedidoDetalle> detalles)
+    {
+        int cant = 0;
+        for(PedidoDetalle detalle : detalles)
+        {
+            cant = cant + detalle.getCantidad();
+        }
+        return cant;
     }
 }

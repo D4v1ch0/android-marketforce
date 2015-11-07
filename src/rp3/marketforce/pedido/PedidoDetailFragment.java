@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 import rp3.app.BaseFragment;
 import rp3.marketforce.R;
@@ -25,7 +26,7 @@ public class PedidoDetailFragment extends BaseFragment {
     private long clientId;
     private Pedido pedido;
     private PedidoDetailFragmentListener detailFragmentListener;
-    private DecimalFormat df;
+    private NumberFormat numberFormat;
 
     public static PedidoDetailFragment newInstance(Pedido pedido) {
         Bundle arguments = new Bundle();
@@ -42,8 +43,9 @@ public class PedidoDetailFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        df = new DecimalFormat("#.##");
-        df.setRoundingMode(RoundingMode.CEILING);
+        numberFormat = NumberFormat.getInstance();
+        numberFormat.setMaximumFractionDigits(2);
+        numberFormat.setMinimumFractionDigits(2);
 
         if (getParentFragment() == null)
             setRetainInstance(true);
@@ -74,8 +76,8 @@ public class PedidoDetailFragment extends BaseFragment {
         PedidoDetalleAdapter adapter = new PedidoDetalleAdapter(this.getContext(), pedido.getPedidoDetalles());
         ((ListView) getRootView().findViewById(R.id.pedido_detalles)).setAdapter(adapter);
 
-        ((TextView) getRootView().findViewById(R.id.pedido_cantidad)).setText(pedido.getPedidoDetalles().size() + "");
-        ((TextView) getRootView().findViewById(R.id.pedido_total)).setText("$ " + df.format(pedido.getValorTotal()));
+        ((TextView) getRootView().findViewById(R.id.pedido_cantidad)).setText(CrearPedidoFragment.getPedidoCantidad(pedido.getPedidoDetalles()) + "");
+        ((TextView) getRootView().findViewById(R.id.pedido_total)).setText("$ " + numberFormat.format(pedido.getValorTotal()));
 
     }
 

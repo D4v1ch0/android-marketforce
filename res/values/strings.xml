@@ -218,5 +218,6 @@
     <string name="message_sin_productos">Debido a que no tiene ningun producto guardado en el dispositivo, este proceso tardará en terminarse. Desea continuar?</string>
     <string name="label_sin_productos">No tiene productos</string>
     <string name="menu_asignar_pedido">Asignar Pedido</string>
+    <string name="label_cant_short">Cant.</string>
 
 </resources>

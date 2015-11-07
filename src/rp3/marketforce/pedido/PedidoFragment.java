@@ -167,15 +167,18 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
     }
 
     private void RefreshMenu(){
+        Pedido ped = Pedido.getPedido(getDataBase(), selectedClientId);
         if(!mTwoPane){
             menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_crear_pedido).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_editar_pedido).setVisible(!isActiveListFragment);
+            menu.findItem(R.id.action_editar_pedido).setVisible(selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("P"));
         }
         else{
+
             menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_crear_pedido).setVisible(isActiveListFragment);
-            menu.findItem(R.id.action_editar_pedido).setVisible(selectedClientId!=0);
+            menu.findItem(R.id.action_editar_pedido).setVisible(selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("P"));
 
         }
     }

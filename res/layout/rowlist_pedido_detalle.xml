@@ -6,30 +6,45 @@
 
     <TextView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/pedido_detalle_cantidad"
+        android:layout_weight="0.15"
+        android:textSize="@dimen/text_xsmall_size"
+        android:lines="2"
+        android:maxLines="2"
+        android:gravity="center" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Medium Text"
         android:id="@+id/pedido_detalle_descripcion"
         android:layout_weight="0.5"
         android:textSize="@dimen/text_xsmall_size"
         android:lines="2"
-        android:maxLines="2" />
+        android:maxLines="2"
+        android:gravity="center_vertical" />
 
     <TextView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Medium Text"
         android:id="@+id/pedido_detalle_unitario"
         android:layout_weight="0.25"
-        android:textSize="@dimen/text_xsmall_size" />
+        android:textSize="@dimen/text_xsmall_size"
+        android:gravity="center_vertical|right" />
 
     <TextView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Medium Text"
         android:id="@+id/pedido_detalle_valor_total"
         android:layout_weight="0.25"
-        android:textSize="@dimen/text_xsmall_size" />
+        android:textSize="@dimen/text_xsmall_size"
+        android:gravity="center_vertical|right" />
 </LinearLayout>

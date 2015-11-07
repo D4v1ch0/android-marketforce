@@ -66,6 +66,17 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_cant_short"
+            android:id="@+id/textView83"
+            android:layout_weight="0.15"
+            android:textColor="@color/color_text_sky_blue"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_small_size" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/label_descripción"
             android:id="@+id/textView56"
             android:layout_weight="0.5"
@@ -82,7 +93,8 @@
             android:layout_weight="0.25"
             android:textColor="@color/color_text_sky_blue"
             android:textStyle="bold"
-            android:textSize="@dimen/text_small_size" />
+            android:textSize="@dimen/text_small_size"
+            android:gravity="right" />
 
         <TextView
             android:layout_width="0dp"
@@ -93,7 +105,8 @@
             android:layout_weight="0.25"
             android:textColor="@color/color_text_sky_blue"
             android:textStyle="bold"
-            android:textSize="@dimen/text_small_size" />
+            android:textSize="@dimen/text_small_size"
+            android:gravity="right" />
 
     </LinearLayout>
 
@@ -137,7 +150,8 @@
             android:text="0"
             android:id="@+id/pedido_cantidad"
             android:layout_weight="0.25"
-            android:textSize="@dimen/text_medium_small_size" />
+            android:textSize="@dimen/text_medium_small_size"
+            android:gravity="right" />
     </LinearLayout>
 
     <LinearLayout
@@ -165,7 +179,8 @@
             android:text="$ 0.00"
             android:id="@+id/pedido_total"
             android:layout_weight="0.25"
-            android:textSize="@dimen/text_medium_small_size" />
+            android:textSize="@dimen/text_medium_small_size"
+            android:gravity="right" />
     </LinearLayout>
 
 </LinearLayout>
