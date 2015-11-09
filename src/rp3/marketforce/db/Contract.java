@@ -617,5 +617,6 @@ public final class Contract {
         public static final String QUERY_PERMISOS_POR_APROBAR = "PermisosAgentes";
 		public static final String QUERY_PERMISOS_POR_APROBAR_COUNT = "PermisosAgentesCount";
         public static final String QUERY_PERMISO_POR_AGENTE = "PermisoPorAgente";
+		public static final String QUERY_PERMISO_POR_AGENTE_SERVER = "PermisoPorAgenteServer";
     }
 }

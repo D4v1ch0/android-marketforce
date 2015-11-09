@@ -372,12 +372,13 @@ public class Marcaciones {
 
             try {
                 webService.invokeWebService();
-                Justificacion.deleteAll(db, Contract.Justificaciones.TABLE_NAME);
+                //Justificacion.deleteAll(db, Contract.Justificaciones.TABLE_NAME);
                 JSONArray jsonArray = webService.getJSONArrayResponse();
                 for(int i = 0; i < jsonArray.length(); i ++)
                 {
                     JSONObject jObject = jsonArray.getJSONObject(i);
                     Justificacion justificacion = new Justificacion();
+                    justificacion = Justificacion.getPermisoByIdServer(db, jObject.getInt("IdPermiso"));
                     justificacion.setIdPermiso(jObject.getInt("IdPermiso"));
                     justificacion.setIdAgente(jObject.getInt("IdAgente"));
                     justificacion.setFecha(Convert.getDateFromDotNetTicks(jObject.getLong("FechaInicioTicks")));
@@ -386,7 +387,10 @@ public class Marcaciones {
                     justificacion.setAusencia(jObject.getString("Tipo").equalsIgnoreCase("F"));
                     justificacion.setObservacion(jObject.getString("Observacion"));
                     justificacion.setEstado("P");
-                    Justificacion.insert(db, justificacion);
+                    if(justificacion.getID() == 0)
+                        Justificacion.insert(db, justificacion);
+                    else
+                        Justificacion.update(db, justificacion);
                 }
 
             } catch (HttpResponseException e) {

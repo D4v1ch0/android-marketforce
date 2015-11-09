@@ -272,7 +272,7 @@ public class Justificacion extends EntityBase<Justificacion>
                         Contract.Justificaciones.COLUMN_TIPO, Contract.Justificaciones.COLUMN_OBSERVACION, Contract.Justificaciones.COLUMN_AUSENCIA, Contract.Justificaciones.COLUMN_ESTADO, Contract.Justificaciones.COLUMN_OBSERVACION_SUPERVISOR,
                         Contract.Justificaciones.COLUMN_PENDIENTE, Contract.Justificaciones.COLUMN_PROPIA, Contract.Justificaciones.COLUMN_ID_AGENTE, Contract.Justificaciones.COLUMN_JORNADA}, Contract.Justificaciones.COLUMN_PROPIA + " = ? AND "
                         + Contract.Justificaciones.COLUMN_PENDIENTE + " = ?",
-                new String[]{ 0 + "" , 1 + ""});
+                new String[]{0 + "", 1 + ""});
         List<Justificacion> permisos = new ArrayList<Justificacion>();
 
         if (c.moveToFirst()) {
@@ -298,6 +298,37 @@ public class Justificacion extends EntityBase<Justificacion>
 
     public static Justificacion getPermisoById(DataBase db, long id) {
         String query = QueryDir.getQuery(Contract.Justificaciones.QUERY_PERMISO_POR_AGENTE);
+
+        Cursor c = db.rawQuery(query, new String[]{id + ""});
+        Justificacion permiso = new Justificacion();
+
+        if (c.moveToFirst()) {
+
+            permiso.setID(CursorUtils.getLong(c, Contract.Justificaciones._ID));
+            permiso.setIdPermiso(CursorUtils.getInt(c, Contract.Justificaciones.COLUMN_ID_PERMISO));
+            permiso.setIdAgente(CursorUtils.getInt(c, Contract.Justificaciones.COLUMN_ID_AGENTE));
+            permiso.setAusencia(CursorUtils.getBoolean(c, Contract.Justificaciones.COLUMN_AUSENCIA));
+            permiso.setTipo(CursorUtils.getString(c, Contract.Justificaciones.COLUMN_TIPO));
+            permiso.setFecha(CursorUtils.getDate(c, Contract.Justificaciones.COLUMN_FECHA));
+            permiso.setObservacion(CursorUtils.getString(c, Contract.Justificaciones.COLUMN_OBSERVACION));
+            permiso.setEstado(CursorUtils.getString(c, Contract.Justificaciones.COLUMN_ESTADO));
+            permiso.setPendiente(CursorUtils.getBoolean(c, Contract.Justificaciones.COLUMN_PENDIENTE));
+            permiso.setPropia(CursorUtils.getBoolean(c, Contract.Justificaciones.COLUMN_PROPIA));
+            permiso.setObservacionSupervisor(CursorUtils.getString(c, Contract.Justificaciones.COLUMN_OBSERVACION_SUPERVISOR));
+            GeneralValue tipo = GeneralValue.getGeneralValue(db, Contants.GENERAL_TABLE_MOTIVO_PERMISO, permiso.getTipo());
+            if(tipo != null)
+                permiso.setTipoDescripcion(tipo.getValue());
+            else
+                permiso.setTipoDescripcion("Sin Justificar");
+            permiso.setAgente(CursorUtils.getString(c, Contract.AgentesUbicacion.COLUMN_NOMBRES));
+            permiso.setJornada(CursorUtils.getString(c, Contract.Justificaciones.COLUMN_JORNADA));
+        }
+        c.close();
+        return permiso;
+    }
+
+    public static Justificacion getPermisoByIdServer(DataBase db, int id) {
+        String query = QueryDir.getQuery(Contract.Justificaciones.QUERY_PERMISO_POR_AGENTE_SERVER);
 
         Cursor c = db.rawQuery(query, new String[]{id+""});
         Justificacion permiso = new Justificacion();

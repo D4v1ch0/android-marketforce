@@ -1119,4 +1119,24 @@
         = tbJustificacion.IdAgente
         WHERE tbJustificacion._id = ?
     </statement>
+    <statement name="PermisoPorAgenteServer">
+        SELECT
+        tbJustificacion._id,
+        tbJustificacion.IdPermiso,
+        tbJustificacion.IdAgente,
+        tbJustificacion.Fecha,
+        tbJustificacion.Tipo,
+        tbJustificacion.Observacion,
+        tbJustificacion.Ausencia,
+        tbJustificacion.Estado,
+        tbJustificacion.ObservacionSupervisor,
+        tbJustificacion.Pendiente,
+        tbJustificacion.Propia,
+        tbJustificacion.Jornada,
+        tbAgente.Nombre AS Nombres
+        FROM  tbJustificacion
+        JOIN tbAgente ON tbAgente.IdAgente
+        = tbJustificacion.IdAgente
+        WHERE tbJustificacion.IdPermiso = ?
+    </statement>
 </sql>
