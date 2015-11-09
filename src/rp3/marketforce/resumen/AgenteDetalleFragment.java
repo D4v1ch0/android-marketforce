@@ -159,14 +159,14 @@ public class AgenteDetalleFragment extends BaseFragment {
                             opt.setPendiente(true);
                             Oportunidad.update(getDataBase(), opt);
                         }
-                        for (int i = 0; i < opt.getOportunidadResponsables().size(); i++) {
+
                             Bundle bundle = new Bundle();
-                            bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SEND_NOTIFICATION);
-                            bundle.putInt(ARG_AGENTE, opt.getOportunidadResponsables().get(i).getIdAgente());
+                            bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_NOTIFICATION_OPORTUNIDAD);
+                            bundle.putInt(ARG_AGENTE, opt.getIdOportunidad());
                             bundle.putString(ARG_TITLE, ((TextView) rootView.findViewById(R.id.agente_titulo)).getText().toString());
                             bundle.putString(ARG_MESSAGE, ((TextView) rootView.findViewById(R.id.obs_text)).getText().toString());
                             requestSync(bundle);
-                        }
+
                         Toast.makeText(getContext(), R.string.message_notificacion_enviada, Toast.LENGTH_LONG).show();
                         finish();
                     }

@@ -297,6 +297,12 @@
                     <webMethod>POST</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>
+                <method>
+                    <name>SendNotificationOportunidad</name>
+                    <action>oportunidad/NotificationEveryone</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
             </methods>     
         </webServiceData>
            <webServiceData>

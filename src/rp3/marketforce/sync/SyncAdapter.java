@@ -51,6 +51,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
     public static String SYNC_TYPE_UPLOAD_OPORTUNIDADES = "oportunidades_upload";
     public static String SYNC_TYPE_PENDIENTES_OPORTUNIDADES = "oportunidades_pendientes";
     public static String SYNC_TYPE_UPLOAD_OPORTUNIDAD = "oportunidad_upload";
+    public static String SYNC_TYPE_NOTIFICATION_OPORTUNIDAD = "oportunidad_notificacion";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -335,6 +336,12 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                             SyncAudit.insert(SYNC_TYPE_ACT_AGENDA, SYNC_EVENT_SUCCESS);
                         }
                     }
+                } else if (syncType.equals(SYNC_TYPE_NOTIFICATION_OPORTUNIDAD)) {
+                    int idOportunidad = extras.getInt(AgenteDetalleFragment.ARG_AGENTE);
+                    String title = extras.getString(AgenteDetalleFragment.ARG_TITLE);
+                    String message = extras.getString(AgenteDetalleFragment.ARG_MESSAGE);
+                    result = Oportunidad.executeSyncSendNotification(idOportunidad, title, message);
+                    addDefaultMessage(result);
                 } else if (syncType.equals(SYNC_TYPE_UPLOAD_OPORTUNIDAD)) {
                     result = Oportunidad.executeSyncInserts(db);
                     addDefaultMessage(result);
