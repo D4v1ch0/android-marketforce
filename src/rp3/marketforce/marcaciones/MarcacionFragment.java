@@ -79,8 +79,6 @@ public class MarcacionFragment extends BaseFragment {
         ((ImageView) getRootView().findViewById(R.id.point_hoy)).setImageResource(R.drawable.circle_reprogramed);
         ((ImageView) getRootView().findViewById(R.id.point_semana)).setImageResource(R.drawable.circle_shape);
 
-        LocationUtils.getLocation(getContext());
-
         List<DiaMarcacion> marcacionList = getDiasMarcaciones();
         Collections.sort(marcacionList);
         if (marcacionList.size() > 0) {
