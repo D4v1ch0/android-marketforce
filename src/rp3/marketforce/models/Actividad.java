@@ -20,6 +20,7 @@ public class Actividad extends EntityBase<Actividad>
 	private int idTareaActividadPadre;
 	private int IdTipoActividad;
 	private int orden;
+	private int limite;
 	private String tipo;
 	private List<Actividad> actividades_hijas;
 
@@ -111,6 +112,14 @@ public class Actividad extends EntityBase<Actividad>
 		this.idTareaActividadPadre = idTareaActividadPadre;
 	}
 
+	public int getLimite() {
+		return limite;
+	}
+
+	public void setLimite(int limite) {
+		this.limite = limite;
+	}
+
 	public int getIdTipoActividad() {
 		return IdTipoActividad;
 	}
@@ -154,14 +163,15 @@ public class Actividad extends EntityBase<Actividad>
 		{
 			Actividad act = new Actividad();
 			act.setId(CursorUtils.getLong(c,Contract.Actividades._ID));
-			act.setDescripcion(CursorUtils.getString(c,Contract.Actividades.COLUMN_DESCRIPCION));
-			act.setOrden(CursorUtils.getInt(c,Contract.Actividades.COLUMN_ORDEN));
-			act.setIdTareaActividad(CursorUtils.getInt(c,Contract.Actividades.COLUMN_TAREA_ACTIVIDAD_ID));
-			act.setIdTareaActividadPadre(CursorUtils.getInt(c,Contract.Actividades.COLUMN_TAREA_ACTIVIDAD_PADRE_ID));
-			act.setIdTarea(CursorUtils.getInt(c,Contract.Actividades.COLUMN_TAREA_ID));
-			act.setTipo(CursorUtils.getString(c,Contract.Actividades.COLUMN_TIPO));
-			act.setIdTipoActividad(CursorUtils.getInt(c,Contract.Actividades.COLUMN_TIPO_ACTIVIDAD_ID));
+			act.setDescripcion(CursorUtils.getString(c, Contract.Actividades.COLUMN_DESCRIPCION));
+			act.setOrden(CursorUtils.getInt(c, Contract.Actividades.COLUMN_ORDEN));
+			act.setIdTareaActividad(CursorUtils.getInt(c, Contract.Actividades.COLUMN_TAREA_ACTIVIDAD_ID));
+			act.setIdTareaActividadPadre(CursorUtils.getInt(c, Contract.Actividades.COLUMN_TAREA_ACTIVIDAD_PADRE_ID));
+			act.setIdTarea(CursorUtils.getInt(c, Contract.Actividades.COLUMN_TAREA_ID));
+			act.setTipo(CursorUtils.getString(c, Contract.Actividades.COLUMN_TIPO));
+			act.setIdTipoActividad(CursorUtils.getInt(c, Contract.Actividades.COLUMN_TIPO_ACTIVIDAD_ID));
 			act.setActividades_hijas(getActividadesHijas(db, idTarea, act.getIdTareaActividad()));
+			act.setLimite(CursorUtils.getInt(c, Contract.Actividades.COLUMN_LIMITE));
 			
 			actividades.add(act);
 		}
@@ -181,14 +191,15 @@ public class Actividad extends EntityBase<Actividad>
         {
             Actividad act = new Actividad();
             act.setId(CursorUtils.getLong(c,Contract.Actividades._ID));
-            act.setDescripcion(CursorUtils.getString(c,Contract.Actividades.COLUMN_DESCRIPCION));
-            act.setOrden(CursorUtils.getInt(c,Contract.Actividades.COLUMN_ORDEN));
-            act.setIdTareaActividad(CursorUtils.getInt(c,Contract.Actividades.COLUMN_TAREA_ACTIVIDAD_ID));
-            act.setIdTareaActividadPadre(CursorUtils.getInt(c,Contract.Actividades.COLUMN_TAREA_ACTIVIDAD_PADRE_ID));
-            act.setIdTarea(CursorUtils.getInt(c,Contract.Actividades.COLUMN_TAREA_ID));
-            act.setTipo(CursorUtils.getString(c,Contract.Actividades.COLUMN_TIPO));
-            act.setIdTipoActividad(CursorUtils.getInt(c,Contract.Actividades.COLUMN_TIPO_ACTIVIDAD_ID));
+            act.setDescripcion(CursorUtils.getString(c, Contract.Actividades.COLUMN_DESCRIPCION));
+            act.setOrden(CursorUtils.getInt(c, Contract.Actividades.COLUMN_ORDEN));
+            act.setIdTareaActividad(CursorUtils.getInt(c, Contract.Actividades.COLUMN_TAREA_ACTIVIDAD_ID));
+            act.setIdTareaActividadPadre(CursorUtils.getInt(c, Contract.Actividades.COLUMN_TAREA_ACTIVIDAD_PADRE_ID));
+            act.setIdTarea(CursorUtils.getInt(c, Contract.Actividades.COLUMN_TAREA_ID));
+            act.setTipo(CursorUtils.getString(c, Contract.Actividades.COLUMN_TIPO));
+            act.setIdTipoActividad(CursorUtils.getInt(c, Contract.Actividades.COLUMN_TIPO_ACTIVIDAD_ID));
             act.setActividades_hijas(getActividadesHijas(db, idTarea, act.getIdTareaActividad()));
+			act.setLimite(CursorUtils.getInt(c, Contract.Actividades.COLUMN_LIMITE));
 
             actividades.add(act);
         }
@@ -208,14 +219,15 @@ public class Actividad extends EntityBase<Actividad>
 		{
 			act = new Actividad();
 			act.setId(CursorUtils.getLong(c,Contract.Actividades._ID));
-			act.setDescripcion(CursorUtils.getString(c,Contract.Actividades.COLUMN_DESCRIPCION));
-			act.setOrden(CursorUtils.getInt(c,Contract.Actividades.COLUMN_ORDEN));
-			act.setIdTareaActividad(CursorUtils.getInt(c,Contract.Actividades.COLUMN_TAREA_ACTIVIDAD_ID));
-			act.setIdTareaActividadPadre(CursorUtils.getInt(c,Contract.Actividades.COLUMN_TAREA_ACTIVIDAD_PADRE_ID));
-			act.setIdTarea(CursorUtils.getInt(c,Contract.Actividades.COLUMN_TAREA_ID));
-			act.setTipo(CursorUtils.getString(c,Contract.Actividades.COLUMN_TIPO));
-			act.setIdTipoActividad(CursorUtils.getInt(c,Contract.Actividades.COLUMN_TIPO_ACTIVIDAD_ID));
+			act.setDescripcion(CursorUtils.getString(c, Contract.Actividades.COLUMN_DESCRIPCION));
+			act.setOrden(CursorUtils.getInt(c, Contract.Actividades.COLUMN_ORDEN));
+			act.setIdTareaActividad(CursorUtils.getInt(c, Contract.Actividades.COLUMN_TAREA_ACTIVIDAD_ID));
+			act.setIdTareaActividadPadre(CursorUtils.getInt(c, Contract.Actividades.COLUMN_TAREA_ACTIVIDAD_PADRE_ID));
+			act.setIdTarea(CursorUtils.getInt(c, Contract.Actividades.COLUMN_TAREA_ID));
+			act.setTipo(CursorUtils.getString(c, Contract.Actividades.COLUMN_TIPO));
+			act.setIdTipoActividad(CursorUtils.getInt(c, Contract.Actividades.COLUMN_TIPO_ACTIVIDAD_ID));
 			act.setActividades_hijas(getActividadesHijas(db, idTarea, act.getIdTareaActividad()));
+			act.setLimite(CursorUtils.getInt(c, Contract.Actividades.COLUMN_LIMITE));
 		}
         c.close();
 		
@@ -233,14 +245,15 @@ public class Actividad extends EntityBase<Actividad>
 		{
 			act = new Actividad();
 			act.setId(CursorUtils.getLong(c,Contract.Actividades._ID));
-			act.setDescripcion(CursorUtils.getString(c,Contract.Actividades.COLUMN_DESCRIPCION));
-			act.setOrden(CursorUtils.getInt(c,Contract.Actividades.COLUMN_ORDEN));
-			act.setIdTareaActividad(CursorUtils.getInt(c,Contract.Actividades.COLUMN_TAREA_ACTIVIDAD_ID));
-			act.setIdTareaActividadPadre(CursorUtils.getInt(c,Contract.Actividades.COLUMN_TAREA_ACTIVIDAD_PADRE_ID));
-			act.setIdTarea(CursorUtils.getInt(c,Contract.Actividades.COLUMN_TAREA_ID));
-			act.setTipo(CursorUtils.getString(c,Contract.Actividades.COLUMN_TIPO));
-			act.setIdTipoActividad(CursorUtils.getInt(c,Contract.Actividades.COLUMN_TIPO_ACTIVIDAD_ID));
+			act.setDescripcion(CursorUtils.getString(c, Contract.Actividades.COLUMN_DESCRIPCION));
+			act.setOrden(CursorUtils.getInt(c, Contract.Actividades.COLUMN_ORDEN));
+			act.setIdTareaActividad(CursorUtils.getInt(c, Contract.Actividades.COLUMN_TAREA_ACTIVIDAD_ID));
+			act.setIdTareaActividadPadre(CursorUtils.getInt(c, Contract.Actividades.COLUMN_TAREA_ACTIVIDAD_PADRE_ID));
+			act.setIdTarea(CursorUtils.getInt(c, Contract.Actividades.COLUMN_TAREA_ID));
+			act.setTipo(CursorUtils.getString(c, Contract.Actividades.COLUMN_TIPO));
+			act.setIdTipoActividad(CursorUtils.getInt(c, Contract.Actividades.COLUMN_TIPO_ACTIVIDAD_ID));
 			act.setActividades_hijas(getActividadesHijas(db, idTarea, act.getIdTareaActividad()));
+			act.setLimite(CursorUtils.getInt(c, Contract.Actividades.COLUMN_LIMITE));
 		}
         c.close();
 		
@@ -258,13 +271,14 @@ public class Actividad extends EntityBase<Actividad>
 		{
 			Actividad act = new Actividad();
 			act.setId(CursorUtils.getLong(c,Contract.Actividades._ID));
-			act.setDescripcion(CursorUtils.getString(c,Contract.Actividades.COLUMN_DESCRIPCION));
-			act.setOrden(CursorUtils.getInt(c,Contract.Actividades.COLUMN_ORDEN));
-			act.setIdTareaActividad(CursorUtils.getInt(c,Contract.Actividades.COLUMN_TAREA_ACTIVIDAD_ID));
-			act.setIdTareaActividadPadre(CursorUtils.getInt(c,Contract.Actividades.COLUMN_TAREA_ACTIVIDAD_PADRE_ID));
-			act.setIdTarea(CursorUtils.getInt(c,Contract.Actividades.COLUMN_TAREA_ID));
-			act.setTipo(CursorUtils.getString(c,Contract.Actividades.COLUMN_TIPO));
-			act.setIdTipoActividad(CursorUtils.getInt(c,Contract.Actividades.COLUMN_TIPO_ACTIVIDAD_ID));
+			act.setDescripcion(CursorUtils.getString(c, Contract.Actividades.COLUMN_DESCRIPCION));
+			act.setOrden(CursorUtils.getInt(c, Contract.Actividades.COLUMN_ORDEN));
+			act.setIdTareaActividad(CursorUtils.getInt(c, Contract.Actividades.COLUMN_TAREA_ACTIVIDAD_ID));
+			act.setIdTareaActividadPadre(CursorUtils.getInt(c, Contract.Actividades.COLUMN_TAREA_ACTIVIDAD_PADRE_ID));
+			act.setIdTarea(CursorUtils.getInt(c, Contract.Actividades.COLUMN_TAREA_ID));
+			act.setTipo(CursorUtils.getString(c, Contract.Actividades.COLUMN_TIPO));
+			act.setIdTipoActividad(CursorUtils.getInt(c, Contract.Actividades.COLUMN_TIPO_ACTIVIDAD_ID));
+			act.setLimite(CursorUtils.getInt(c, Contract.Actividades.COLUMN_LIMITE));
 			
 			actividades.add(act);
 		}
