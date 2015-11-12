@@ -23,6 +23,9 @@ public class DbOpenHelper extends rp3.db.sqlite.DataBaseOpenHelper {
 				case 2: UpgradeToVersion(db, i); break;
 				case 3: UpgradeToVersion3(db); break;
 				case 4: UpgradeToVersion4(db); break;
+				case 5: UpgradeToVersion(db, i); break;
+				case 6: UpgradeToVersion(db, i); break;
+				case 7: UpgradeToVersion(db, i); break;
 			}
 		}
 	}
