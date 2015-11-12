@@ -270,6 +270,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
                 OportunidadResponsable.deleteResponsable(getDataBase(), opt.getIdOportunidad(), listAgentesIdsDelete.get(ir));
         }
 
+        int posPhoto = 0;
         for(int i = 0; i < listViewContactos.size(); i ++)
         {
             OportunidadContacto cont = new OportunidadContacto();
@@ -277,20 +278,26 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
             {
                 cont = opt.getOportunidadContactos().get(i);
             }
-            cont.setIdOportunidadContacto(i+1);
+            cont.setIdOportunidadContacto(i + 1);
             cont.set_idOportunidad((int) opt.getID());
             cont.setIdOportunidad(opt.getIdOportunidad());
             cont.setNombre(((EditText) listViewContactos.get(i).findViewById(R.id.contacto_nombre)).getText().toString());
             cont.setCargo(((EditText) listViewContactos.get(i).findViewById(R.id.contacto_cargo)).getText().toString());
-            cont.setEmail(((EditText)listViewContactos.get(i).findViewById(R.id.contacto_email)).getText().toString());
+            cont.setEmail(((EditText) listViewContactos.get(i).findViewById(R.id.contacto_email)).getText().toString());
             cont.setMovil(((EditText)listViewContactos.get(i).findViewById(R.id.contacto_movil)).getText().toString());
-            if(contactPhotos.get(i).length() > 0)
+
+            while(contactPhotos.size() > posPhoto && contactPhotos.get(posPhoto) == null)
+                posPhoto++;
+
+            if(contactPhotos != null && contactPhotos.size() > posPhoto && contactPhotos.get(posPhoto).length() > 0)
                 cont.setURLFoto(contactPhotos.get(i));
 
             if(cont.getID() == 0)
                 OportunidadContacto.insert(getDataBase(), cont);
             else
                 OportunidadContacto.update(getDataBase(), cont);
+
+            posPhoto++;
         }
 
         if(id != 0)
