@@ -984,7 +984,8 @@
        tbActividad.IdTareaActividadPadre,
        tbActividad.IdTipoActividad,
        tbActividad.Orden,
-       tbActividad.Tipo
+       tbActividad.Tipo,
+         tbActividad.Limite
 	   FROM  tbActividad
 	   WHERE IdTarea = ?
 	   AND Tipo = 'G'
@@ -999,7 +1000,8 @@
         tbActividad.IdTareaActividadPadre,
         tbActividad.IdTipoActividad,
         tbActividad.Orden,
-        tbActividad.Tipo
+        tbActividad.Tipo,
+        tbActividad.Limite
         FROM  tbActividad
         WHERE IdTarea = ?
         AND Tipo &lt;&gt; 'G'
@@ -1015,7 +1017,8 @@
        tbActividad.IdTareaActividadPadre,
        tbActividad.IdTipoActividad,
        tbActividad.Orden,
-       tbActividad.Tipo
+       tbActividad.Tipo,
+         tbActividad.Limite
 	   FROM  tbActividad
 	   WHERE IdTarea = ? AND IdTareaActividadPadre = ?
      </statement>
@@ -1029,7 +1032,8 @@
        tbActividad.IdTareaActividadPadre,
        tbActividad.IdTipoActividad,
        tbActividad.Orden,
-       tbActividad.Tipo
+       tbActividad.Tipo,
+         tbActividad.Limite
 	   FROM  tbActividad
 	   WHERE IdTarea = ? AND IdTareaActividad = ?
      </statement>
@@ -1043,7 +1047,8 @@
        tbActividad.IdTareaActividadPadre,
        tbActividad.IdTipoActividad,
        tbActividad.Orden,
-       tbActividad.Tipo
+       tbActividad.Tipo,
+         tbActividad.Limite
 	   FROM  tbActividad
 	   WHERE IdTarea = ?
      </statement>

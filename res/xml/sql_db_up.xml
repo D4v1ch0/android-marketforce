@@ -33,4 +33,7 @@
     <statement name="ToVersion5-4">
         ALTER TABLE tbEtapa ADD COLUMN Dias INTEGER;
     </statement>
+    <statement name="ToVersion7">
+        ALTER TABLE tbActividad ADD COLUMN Limite INTEGER;
+    </statement>
 </sql>
