@@ -57,4 +57,7 @@
         Descripcion TEXT
         );
     </statement>
+    <statement name="ToVersion7">
+        ALTER TABLE tbActividad ADD COLUMN Limite INTEGER;
+    </statement>
 </sql>

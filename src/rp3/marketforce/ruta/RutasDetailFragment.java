@@ -499,7 +499,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 						Actividad ata = Actividad.getActividadSimple(getDataBase(), setter.getIdTarea());
 						if(ata.getTipo() != null)
 						{
-							if(ata.getTipo().equalsIgnoreCase("C"))
+							if(ata.getTipo().equalsIgnoreCase("C") || ata.getTipo().equalsIgnoreCase("V"))
 								showTareaCheckbox(ata, setter);	
 							if(ata.getTipo().equalsIgnoreCase("M"))
 								showTareaMultiSeleccion(ata, setter);
@@ -552,7 +552,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 
 	@Override
     public void onSaveInstanceState(Bundle outState) {
-    	outState.putLong(STATE_IDAGENDA, idAgenda);    	
+        outState.putLong(STATE_IDAGENDA, idAgenda);
     }
     
 	@Override
