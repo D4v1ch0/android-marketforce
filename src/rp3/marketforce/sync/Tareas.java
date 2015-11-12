@@ -100,6 +100,11 @@ public class Tareas {
                                 actividad.setTipo(str.getString("Tipo"));
                                 actividad.setOrden(str.getInt("Orden"));
                                 actividad.setIdTipoActividad(str.getInt("IdTipoActividad"));
+                                if(str.isNull("Limite"))
+                                    actividad.setLimite(0);
+                                else
+                                    actividad.setLimite(str.getInt("Limite"));
+
 
                                 rp3.marketforce.models.Actividad.insert(db, actividad);
 

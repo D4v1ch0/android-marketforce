@@ -406,6 +406,7 @@ public final class Contract {
 		public static final String COLUMN_TIPO_ACTIVIDAD_ID = "IdTipoActividad";
 		public static final String COLUMN_ORDEN = "Orden";
 		public static final String COLUMN_TIPO = "Tipo";
+	   	public static final String COLUMN_LIMITE = "Limite";
 		
 		public static final String FIELD_DESCRIPCION = COLUMN_DESCRIPCION;
 		public static final String FIELD_TAREA_ID = COLUMN_TAREA_ID;
@@ -414,6 +415,7 @@ public final class Contract {
 		public static final String FIELD_TIPO_ACTIVIDAD_ID = COLUMN_TIPO_ACTIVIDAD_ID;
 		public static final String FIELD_ORDEN = COLUMN_ORDEN;
 		public static final String FIELD_TIPO = COLUMN_TIPO;
+	   	public static final String FIELD_LIMITE = COLUMN_LIMITE;
 		
 		public static final String QUERY_ACTIVIDADES_GRUPALES = "ActividadesGrupales";
         public static final String QUERY_ACTIVIDADES_NO_GRUPALES = "ActividadesSinGrupo";

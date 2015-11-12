@@ -176,7 +176,8 @@
       IdTareaActividadPadre INTEGER,
       IdTipoActividad INTEGER,
       Orden INTEGER,
-      Tipo TEXT
+      Tipo TEXT,
+        Limite INTEGER
       )
 	</statement>
 	
