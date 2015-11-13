@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import rp3.app.BaseActivity;
 import rp3.app.BaseFragment;
@@ -65,6 +66,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Environment;
+import android.speech.tts.TextToSpeech;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
@@ -97,8 +99,10 @@ public class MainActivity extends rp3.app.NavActivity{
     public static final String TO_AGENDAS	 	= "toAgendas";
 	public String lastTitle;
 	private int selectedItem;
+	TextToSpeech t1;
     SimpleDateFormat format4= new SimpleDateFormat("dd/MM/yyy HH:mm");
     DrawableManager DManager;
+	String toSpeak = "";
 	
 	public static Intent newIntent(Context c){
 		Intent i = new Intent(c, MainActivity.class);
@@ -113,6 +117,32 @@ public class MainActivity extends rp3.app.NavActivity{
 		super.onCreate(savedInstanceState);		
 		Session.Start(this);
 		rp3.configuration.Configuration.TryInitializeConfiguration(this, DbOpenHelper.class);
+
+		t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+			@Override
+			public void onInit(int status) {
+				if(status != TextToSpeech.ERROR) {
+					try {
+						t1.setLanguage(new Locale("es", "ES"));
+						t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+					} catch (Exception ex)
+					{}
+				}
+			}
+		});
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		int numAgendas = Agenda.getRutaDiaDashboard(getDataBase(), cal).size();
+		//int numAgendas = 1;
+		if(numAgendas != 0)
+		{
+			if(numAgendas > 1)
+				toSpeak = "Usted tiene " + numAgendas + " agendas pendientes";
+			else
+				toSpeak = "Usted tiene una agenda pendiente";
+		}
 
 		//extractDatabase();
 

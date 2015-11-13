@@ -3,6 +3,7 @@ package rp3.marketforce.sync;
 import android.util.Log;
 
 import android.content.Context;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -13,6 +14,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.ksoap2.transport.HttpResponseException;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 import rp3.configuration.PreferenceManager;
 import rp3.connection.HttpConnection;
@@ -301,6 +306,48 @@ public class Agente {
                     return rp3.content.SyncAdapter.SYNC_EVENT_ERROR;
                 }
             }
+        } finally {
+            webService.close();
+        }
+
+        return rp3.marketforce.sync.SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
+    public static int executeSyncLog() {
+        WebService webService = new WebService("MartketForce", "SendLog");
+        try {
+            webService.addCurrentAuthToken();
+
+            try {
+                File file2 = new File(Environment.getExternalStorageDirectory() + "/test.log");
+                file2.setExecutable(true);
+                file2.setReadable(true);
+                file2.setWritable(true);
+
+                String logs = "";
+                InputStream in = new FileInputStream(file2);
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = in.read(buf)) > 0) {
+                    logs = logs + new String(buf);
+                }
+                in.close();
+
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("Logs",logs);
+                logs = null;
+
+                webService.addParameter("logs", jsonObject);
+                webService.invokeWebService();
+            } catch (HttpResponseException e) {
+                if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return rp3.content.SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return rp3.content.SyncAdapter.SYNC_EVENT_ERROR;
+            }
+
+
         } finally {
             webService.close();
         }
