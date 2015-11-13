@@ -125,7 +125,7 @@ public class MainActivity extends rp3.app.NavActivity{
 				if(status != TextToSpeech.ERROR) {
 					try {
 						t1.setLanguage(new Locale("es", "ES"));
-						t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null, null);
+						t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
 					} catch (Exception ex)
 					{}
 				}

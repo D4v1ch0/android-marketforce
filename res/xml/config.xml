@@ -247,6 +247,12 @@
                     <webMethod>POST</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>
+                <method>
+                    <name>SendLog</name>
+                    <action>agente/sendlog</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
                 <!-- Modulo Marcacion -->
                 <method>
                     <name>InsertMarcacion</name>

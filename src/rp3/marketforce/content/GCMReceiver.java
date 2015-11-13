@@ -30,7 +30,8 @@ public class GCMReceiver extends GcmListenerService {
         String message = data.getString("Message");
         String title = data.getString("Title");
         String footer = data.getString("Footer","");
-        String type = data.getString("Type");
+        String type = data.getString("Type", "");
+
         if(TextUtils.isEmpty(title))
         {
             title = getApplicationContext().getString(R.string.app_name);
@@ -74,6 +75,13 @@ public class GCMReceiver extends GcmListenerService {
                     toSpeech = "Mensaje de " + footer.substring(posPuntos, posGuion);
                     NotificationPusher.pushNotification(1, getApplicationContext(), message, title, footer);
                 }
+            }
+        }
+        else
+        {
+            if(type.equalsIgnoreCase("LOG"))
+            {
+                rp3.marketforce.sync.Agente.executeSyncLog();
             }
         }
         final String toSpeechFinal = toSpeech;
