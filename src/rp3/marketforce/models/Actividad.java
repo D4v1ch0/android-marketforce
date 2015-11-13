@@ -57,7 +57,7 @@ public class Actividad extends EntityBase<Actividad>
 		setValue(Contract.Actividades.COLUMN_TAREA_ID, this.idTarea);
 		setValue(Contract.Actividades.COLUMN_TIPO, this.tipo);
 		setValue(Contract.Actividades.COLUMN_TIPO_ACTIVIDAD_ID, this.IdTipoActividad);
-		
+		setValue(Contract.Actividades.COLUMN_LIMITE, this.limite);
 	}
 
 	@Override
