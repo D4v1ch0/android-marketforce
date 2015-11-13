@@ -54,6 +54,7 @@ public class GCMReceiver extends GcmListenerService {
                         DataBase db = DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class);
                         Marcacion ultimaMarcacion = Marcacion.getUltimaMarcacion(db);
                         if (ultimaMarcacion == null || rp3.marketforce.models.marcacion.Marcacion.getMarcacionesPendientes(db).size() == 0) {
+                            toSpeech = title;
                             NotificationPusher.pushNotification(1, getApplicationContext(), message, title, MarcacionActivity.class);
                         }
 
@@ -63,10 +64,16 @@ public class GCMReceiver extends GcmListenerService {
                     {}
 
                 }
-                else if(type.equalsIgnoreCase(NOTIFICATION_TYPE_APROBAR_JUSTIFICACION))
+                else if(type.equalsIgnoreCase(NOTIFICATION_TYPE_APROBAR_JUSTIFICACION)) {
+                    toSpeech = title;
                     NotificationPusher.pushNotification(1, getApplicationContext(), message, title, PermisoActivity.class);
-                else
+                }
+                else {
+                    int posPuntos = footer.indexOf(":");
+                    int posGuion = footer.indexOf("-");
+                    toSpeech = "Mensaje de " + footer.substring(posPuntos, posGuion);
                     NotificationPusher.pushNotification(1, getApplicationContext(), message, title, footer);
+                }
             }
         }
         final String toSpeechFinal = toSpeech;
