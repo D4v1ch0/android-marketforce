@@ -130,14 +130,16 @@ public class OportunidadBitacoraDetailFragment extends BaseFragment {
                         oportunidad.setPendiente(true);
                         Oportunidad.update(getDataBase(), oportunidad);
                         //Se envia notificación a todos los agentes
-                        for (int i = 0; i < oportunidad.getOportunidadResponsables().size(); i++) {
-                            Bundle bundle = new Bundle();
-                            bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SEND_NOTIFICATION);
-                            bundle.putInt(AgenteDetalleFragment.ARG_AGENTE, oportunidad.getOportunidadResponsables().get(i).getIdAgente());
-                            bundle.putString(AgenteDetalleFragment.ARG_TITLE, oportunidad.getDescripcion());
-                            bundle.putString(AgenteDetalleFragment.ARG_MESSAGE, ((TextView) rootView.findViewById(R.id.actividad_texto_respuesta)).getText().toString());
-                            requestSync(bundle);
-                        }
+                        Bundle bundle = new Bundle();
+                        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_NOTIFICATION_OPORTUNIDAD);
+                        bundle.putInt(AgenteDetalleFragment.ARG_AGENTE, oportunidad.getIdOportunidad());
+                        bundle.putString(AgenteDetalleFragment.ARG_TITLE, oportunidad.getDescripcion());
+                        bundle.putString(AgenteDetalleFragment.ARG_MESSAGE, ((TextView) rootView.findViewById(R.id.actividad_texto_respuesta)).getText().toString());
+                        requestSync(bundle);
+
+                        Bundle bundle2 = new Bundle();
+                        bundle2.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_PENDIENTES_OPORTUNIDADES);
+                        requestSync(bundle2);
 
 
                         Toast.makeText(getContext(), "Registro Ingresado.", Toast.LENGTH_LONG).show();

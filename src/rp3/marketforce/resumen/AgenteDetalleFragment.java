@@ -193,6 +193,12 @@ public class AgenteDetalleFragment extends BaseFragment {
                         Toast.makeText(getContext(), R.string.message_notificacion_enviada, Toast.LENGTH_LONG).show();
                         finish();
                     }
+                    if(id_oportunidad != 0)
+                    {
+                        Bundle bundle2 = new Bundle();
+                        bundle2.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_PENDIENTES_OPORTUNIDADES);
+                        requestSync(bundle2);
+                    }
                 }
                 else
                     Toast.makeText(getContext(), R.string.message_error_sync_no_net_available, Toast.LENGTH_LONG).show();
