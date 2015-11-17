@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="rp3.marketforce"
-    android:versionCode="39"
-    android:versionName="1.5">
+    android:versionCode="41"
+    android:versionName="1.4.6a">
 
     <uses-sdk
         android:minSdkVersion="13"
@@ -175,7 +175,7 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyC_7DHljEV8KjzrxpMnkwXDmsfeEjErLD0" />
         <activity android:name=".ruta.MapaActivity"></activity>
-        <activity android:name=".cliente.CrearClienteActivity"></activity>
+        <activity android:name=".cliente.CrearClienteActivity" android:configChanges="orientation|keyboardHidden|screenSize"></activity>
         <activity android:name="ServerActivity" android:theme="@style/AppTheme.NoTitleBar"></activity>
         <activity android:name=".ruta.ObservacionesActivity" android:theme="@style/MyAppPopupTheme"></activity>
         <activity android:name=".ruta.FotoActivity" android:theme="@style/MyAppPopupTheme"></activity>

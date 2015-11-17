@@ -546,10 +546,12 @@ public class CrearClienteFragment extends BaseFragment {
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
 
-
-        listViewDirecciones = new ArrayList<LinearLayout>();
-        listViewContactos = new ArrayList<LinearLayout>();
-        listCiudades = new ArrayList<GeopoliticalStructure>();
+        if(listViewDirecciones == null)
+            listViewDirecciones = new ArrayList<LinearLayout>();
+        if(listViewContactos == null)
+            listViewContactos = new ArrayList<LinearLayout>();
+        if(listCiudades == null)
+            listCiudades = new ArrayList<GeopoliticalStructure>();
         //ciudades = GeopoliticalStructure.getGeopoliticalStructureCities(getDataBase());
 
         adapter = new GeopoliticalStructureAdapter(getContext(), getDataBase());
@@ -648,6 +650,10 @@ public class CrearClienteFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+    }
 
     private void setDatosClientes() {
 		DrawableManager DManager = new DrawableManager();
@@ -706,23 +712,24 @@ public class CrearClienteFragment extends BaseFragment {
 			if(!cli.isNuevo())
 				((Spinner)listViewDirecciones.get(i).findViewById(R.id.cliente_tipo_direccion_spinner)).setEnabled(false);
 		}
-		
-		for(int i = 0; i < cli.getContactos().size(); i ++)
-		{
-			addContacto();
-			((Button)listViewContactos.get(i).findViewById(R.id.eliminar_contacto)).setVisibility(View.GONE);
-			((EditText)listViewContactos.get(i).findViewById(R.id.cliente_nombres)).setText(cli.getContactos().get(i).getNombre());
-			((EditText)listViewContactos.get(i).findViewById(R.id.cliente_apellidos)).setText(cli.getContactos().get(i).getApellido());
-			((EditText)listViewContactos.get(i).findViewById(R.id.cliente_cargo)).setText(cli.getContactos().get(i).getCargo());
-			((EditText)listViewContactos.get(i).findViewById(R.id.cliente_telefono1_contacto)).setText(cli.getContactos().get(i).getTelefono1());
-			((EditText)listViewContactos.get(i).findViewById(R.id.cliente_telefono2_contacto)).setText(cli.getContactos().get(i).getTelefono2());
-			((EditText)listViewContactos.get(i).findViewById(R.id.cliente_correo_contacto)).setText(cli.getContactos().get(i).getCorreo());
-			((Spinner)listViewContactos.get(i).findViewById(R.id.cliente_direccion_contacto)).setSelection(
-					getPosition(((Spinner)listViewContactos.get(i).findViewById(R.id.cliente_direccion_contacto)).getAdapter(), (int) cli.getContactos().get(i).getIdClienteDireccion()));
-			DManager.fetchDrawableOnThread(PreferenceManager.getString("server") + 
-					rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + Utils.getImageDPISufix(getActivity(), cli.getContactos().get(i).getURLFoto()), 
-					(ImageButton)listViewContactos.get(i).findViewById(R.id.cliente_contacto_foto));
-		}
+
+        if(listViewContactos.size() == 0) {
+            for (int i = 0; i < cli.getContactos().size(); i++) {
+                addContacto();
+                ((Button) listViewContactos.get(i).findViewById(R.id.eliminar_contacto)).setVisibility(View.GONE);
+                ((EditText) listViewContactos.get(i).findViewById(R.id.cliente_nombres)).setText(cli.getContactos().get(i).getNombre());
+                ((EditText) listViewContactos.get(i).findViewById(R.id.cliente_apellidos)).setText(cli.getContactos().get(i).getApellido());
+                ((EditText) listViewContactos.get(i).findViewById(R.id.cliente_cargo)).setText(cli.getContactos().get(i).getCargo());
+                ((EditText) listViewContactos.get(i).findViewById(R.id.cliente_telefono1_contacto)).setText(cli.getContactos().get(i).getTelefono1());
+                ((EditText) listViewContactos.get(i).findViewById(R.id.cliente_telefono2_contacto)).setText(cli.getContactos().get(i).getTelefono2());
+                ((EditText) listViewContactos.get(i).findViewById(R.id.cliente_correo_contacto)).setText(cli.getContactos().get(i).getCorreo());
+                ((Spinner) listViewContactos.get(i).findViewById(R.id.cliente_direccion_contacto)).setSelection(
+                        getPosition(((Spinner) listViewContactos.get(i).findViewById(R.id.cliente_direccion_contacto)).getAdapter(), (int) cli.getContactos().get(i).getIdClienteDireccion()));
+                DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
+                                rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + Utils.getImageDPISufix(getActivity(), cli.getContactos().get(i).getURLFoto()),
+                        (ImageButton) listViewContactos.get(i).findViewById(R.id.cliente_contacto_foto));
+            }
+        }
 		
 		
 	}
@@ -916,6 +923,7 @@ public class CrearClienteFragment extends BaseFragment {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+
     }
 
     @Override
