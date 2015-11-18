@@ -124,7 +124,7 @@ public class StartActivity extends rp3.app.StartActivity{
         PreferenceManager.setValue(Constants.KEY_LAST_PASS, Session.getUser().getPassword());
 
 		Long days = SyncAudit.getDaysOfLastSync(SyncAdapter.SYNC_TYPE_GENERAL, SyncAdapter.SYNC_EVENT_SUCCESS);
-		
+
 		if(days == null || days > 0){
 			Bundle bundle = new Bundle();
 			bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_GENERAL);
