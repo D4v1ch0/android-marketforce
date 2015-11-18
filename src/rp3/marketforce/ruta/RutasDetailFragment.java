@@ -676,42 +676,35 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
         menuRutas.findItem(R.id.action_search_ruta).setVisible(false);
         menuRutas.findItem(R.id.action_crear_visita).setVisible(false);
         Agenda agendaNoClient = Agenda.getAgenda(getDataBase(), idAgenda);
-        for(int i = 0; i < menuRutas.size(); i ++)
-        {
-            if(menuRutas.getItem(i).getItemId() == R.id.submenu_agenda)
-            {
-                menuRutas.getItem(i).getSubMenu().findItem(R.id.action_cambiar_contacto).setVisible(agendaNoClient != null);
-                menuRutas.getItem(i).getSubMenu().findItem(R.id.action_reprogramar).setVisible(agendaNoClient != null);
-                menuRutas.getItem(i).getSubMenu().findItem(R.id.action_suspender_agenda).setVisible(true);
-                menuRutas.getItem(i).getSubMenu().findItem(R.id.action_no_visita).setVisible(true);
-                menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setVisible(true);
-                if(agenda.getPedido().getID() != 0)
-                    menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setTitle("Editar Pedido");
+        if(idAgenda != 0) {
+            for (int i = 0; i < menuRutas.size(); i++) {
+                if (menuRutas.getItem(i).getItemId() == R.id.submenu_agenda) {
+                    menuRutas.getItem(i).getSubMenu().findItem(R.id.action_cambiar_contacto).setVisible(agendaNoClient != null);
+                    menuRutas.getItem(i).getSubMenu().findItem(R.id.action_reprogramar).setVisible(agendaNoClient != null);
+                    menuRutas.getItem(i).getSubMenu().findItem(R.id.action_suspender_agenda).setVisible(true);
+                    menuRutas.getItem(i).getSubMenu().findItem(R.id.action_no_visita).setVisible(true);
+                    if(agenda.getPedido().getID() != 0)
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setTitle("Editar Pedido");
+                }
             }
         }
         if(idAgenda != 0)
         {
             String estado = Agenda.getAgendaEstado(getDataBase(), idAgenda);
-            if(estado.equalsIgnoreCase(Contants.ESTADO_NO_VISITADO) || estado.equalsIgnoreCase(Contants.ESTADO_VISITADO)) {
-                for(int i = 0; i < menuRutas.size(); i ++)
-                {
-                    if(menuRutas.getItem(i).getItemId() == R.id.submenu_agenda)
-                    {
+            if (estado.equalsIgnoreCase(Contants.ESTADO_NO_VISITADO) || estado.equalsIgnoreCase(Contants.ESTADO_VISITADO)) {
+                for (int i = 0; i < menuRutas.size(); i++) {
+                    if (menuRutas.getItem(i).getItemId() == R.id.submenu_agenda) {
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_cambiar_contacto).setVisible(false);
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_no_visita).setVisible(false);
                         menuRutas.findItem(R.id.submenu_agenda).setVisible(false);
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setVisible(false);
                     }
                 }
-            }
-            else
+            } else
                 menuRutas.findItem(R.id.submenu_agenda).setVisible(true);
-            if(!estado.equalsIgnoreCase(Contants.ESTADO_PENDIENTE) && !estado.equalsIgnoreCase(Contants.ESTADO_REPROGRAMADO))
-            {
-                for(int i = 0; i < menuRutas.size(); i ++)
-                {
-                    if(menuRutas.getItem(i).getItemId() == R.id.submenu_agenda)
-                    {
+            if (!estado.equalsIgnoreCase(Contants.ESTADO_PENDIENTE) && !estado.equalsIgnoreCase(Contants.ESTADO_REPROGRAMADO)) {
+                for (int i = 0; i < menuRutas.size(); i++) {
+                    if (menuRutas.getItem(i).getItemId() == R.id.submenu_agenda) {
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_cambiar_contacto).setVisible(false);
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_reprogramar).setVisible(false);
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_suspender_agenda).setVisible(false);

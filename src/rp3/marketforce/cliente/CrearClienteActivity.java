@@ -9,12 +9,14 @@ import rp3.marketforce.R.layout;
 import rp3.marketforce.ruta.CrearVisitaFragment;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.widget.Toast;
 
 public class CrearClienteActivity extends BaseActivity {
 
 	public static String ARG_IDCLIENTE = "idcliente";
+	CrearClienteFragment newFragment;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
@@ -35,7 +37,7 @@ public class CrearClienteActivity extends BaseActivity {
         setHomeAsUpEnabled(true, true);
 	    setContentView(R.layout.layout_simple_content);
 	    if (!hasFragment(rp3.core.R.id.content)) {
-	    	CrearClienteFragment newFragment = CrearClienteFragment.newInstance(id_cliente, tipo);
+	    	newFragment = CrearClienteFragment.newInstance(id_cliente, tipo);
             setFragment(rp3.core.R.id.content, newFragment);    
         } 	
 	}
@@ -49,4 +51,9 @@ public class CrearClienteActivity extends BaseActivity {
     	super.onActivityResult(requestCode, resultCode, data);
     }
 
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		//newFragment.rotated = true;
+	}
 }
