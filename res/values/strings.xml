@@ -276,5 +276,6 @@
     <string name="label_tercera_etapa">Tercera Etapa</string>
     <string name="label_cuarta_etapa">Cuarta Etapa</string>
     <string name="label_quinta_etapa">Quinta Etapa</string>
+    <string name="label_todos">Todos</string>
 
 </resources>
