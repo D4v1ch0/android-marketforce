@@ -75,6 +75,7 @@ public class PermisoListFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        ((MainActivity) getActivity()).updateBadgeNavItem(MainActivity.NAV_JUSTIFICACIONES, Justificacion.getPermisosPendientesAprobarCount(getDataBase()));
         if (currentTransactionBoolean) {
             ejecutarConsulta();
         } else {
@@ -292,8 +293,7 @@ public class PermisoListFragment extends BaseFragment {
         super.onSyncComplete(data, messages);
 
         if(data != null && data.getString(SyncAdapter.ARG_SYNC_TYPE).equalsIgnoreCase(SyncAdapter.SYNC_TYPE_JUSTIFICACIONES)) {
-            ((BaseActivity) getActivity()).closeDialogProgress();
-            ((MainActivity) getActivity()).updateBadgeNavItem(MainActivity.NAV_JUSTIFICACIONES, Justificacion.getPermisosPendientesAprobarCount(getDataBase()));
+            //((BaseActivity) getActivity()).closeDialogProgress();
             refreshLayout.setRefreshing(false);
             refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
