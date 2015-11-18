@@ -448,12 +448,23 @@ public class Oportunidad extends EntityBase<Oportunidad> {
     }
 
     public static List<Oportunidad> getOportunidadesFiltro(DataBase db, Intent intent){
-        String condition = "", etapas_cond = "", estados_cond = "";
+        String condition = "", etapas_cond = "", tipos_cond = "", estados_cond = "";
 
         Bundle bundle = intent.getBundleExtra(FiltroOportunidadFragment.FILTRO);
 
         ArrayList<Integer> etapas_raw = bundle.getIntegerArrayList(FiltroOportunidadFragment.ETAPAS);
+        ArrayList<Integer> tipos_raw = bundle.getIntegerArrayList(FiltroOportunidadFragment.TIPOS);
         ArrayList<String> estados_raw = bundle.getStringArrayList(FiltroOportunidadFragment.ESTADOS);
+
+        for(int i = 0; i < tipos_raw.size(); i ++) {
+            if (tipos_cond.length() == 0)
+                tipos_cond = " AND (";
+            else
+                tipos_cond = tipos_cond + " OR ";
+            tipos_cond = tipos_cond + Contract.Oportunidad.COLUMN_ID_OPORTUNIDAD_TIPO + " = " + tipos_raw.get(i);
+        }
+        if(tipos_cond.length() > 0)
+            tipos_cond = tipos_cond + ")";
 
         for(int i = 0; i < etapas_raw.size(); i ++) {
             if (etapas_cond.length() == 0)
@@ -477,7 +488,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
         if(estados_cond.length() > 0)
             estados_cond = estados_cond + ")";
 
-        condition = estados_cond + etapas_cond;
+        condition = estados_cond + etapas_cond + tipos_cond;
 
         if(bundle.containsKey(FiltroOportunidadFragment.DESDE_CANTIDAD))
             condition = condition + " AND " + Contract.Oportunidad.COLUMN_IMPORTE + " >= " + bundle.getDouble(FiltroOportunidadFragment.DESDE_CANTIDAD);

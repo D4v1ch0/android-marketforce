@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,12 +24,13 @@ import rp3.marketforce.R;
 import rp3.marketforce.db.Contract;
 import rp3.marketforce.models.oportunidad.Etapa;
 import rp3.marketforce.models.oportunidad.Oportunidad;
+import rp3.marketforce.models.oportunidad.OportunidadTipo;
 import rp3.widget.RangeSeekBar;
 
 /**
  * Created by magno_000 on 15/05/2015.
  */
-public class FiltroOportunidadFragment extends BaseFragment {
+public class FiltroOportunidadFragment extends BaseFragment implements TipoOportunidadFragment.EditTiposDialogListener {
 
     private RangeSeekBar<Integer> seekBar, seekBarProb;
     private final static int DESDE_FECHA_CREACION = 1;
@@ -39,6 +41,7 @@ public class FiltroOportunidadFragment extends BaseFragment {
     public final static String FILTRO = "filtro";
     public final static String ETAPAS = "etapas";
     public final static String ESTADOS = "estados";
+    public final static String TIPOS = "tipos";
     public final static String IMPORTANCIA_MIN = "importancia_min";
     public final static String IMPORTANCIA_MAX = "importancia_max";
     public final static String PROBABILIDAD_MIN = "probabilidad_min";
@@ -50,6 +53,7 @@ public class FiltroOportunidadFragment extends BaseFragment {
     public final static String DESDE_CANTIDAD = "desde_cantidad";
     public final static String HASTA_CANTIDAD = "hasta_cantidad";
 
+    List<OportunidadTipo> tipos;
     SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy");
     NumberFormat numberFormat;
     OportunidadFiltroListener filtroListener;
@@ -59,6 +63,22 @@ public class FiltroOportunidadFragment extends BaseFragment {
 
     public static FiltroOportunidadFragment newInstance() {
         return new FiltroOportunidadFragment();
+    }
+
+    @Override
+    public void onFinishTiposDialog(List<OportunidadTipo> tipos) {
+        this.tipos = tipos;
+        String text_tipos = "";
+        if(tipos.size() != 0)
+        {
+            for (OportunidadTipo tipo : tipos)
+                text_tipos = text_tipos + tipo.getDescripcion() + ", ";
+
+            text_tipos = text_tipos.substring(0, text_tipos.length() - 2);
+        }else
+            text_tipos = getResources().getString(R.string.label_todos);
+
+        ((Button) getRootView().findViewById(R.id.filtro_tipos)).setText(text_tipos);
     }
 
     public interface OportunidadFiltroListener {
@@ -87,6 +107,8 @@ public class FiltroOportunidadFragment extends BaseFragment {
     @Override
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
+        if(tipos == null)
+            tipos = new ArrayList<>();
         numberFormat = NumberFormat.getInstance();
         numberFormat.setGroupingUsed(false);
         numberFormat.setMinimumFractionDigits(0);
@@ -98,6 +120,13 @@ public class FiltroOportunidadFragment extends BaseFragment {
             public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
                 ((TextView)rootView.findViewById(R.id.filtro_min)).setText(minValue + "");
                 ((TextView)rootView.findViewById(R.id.filtro_max)).setText(maxValue + "");
+            }
+        });
+
+        rootView.findViewById(R.id.filtro_tipos).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialogFragment(TipoOportunidadFragment.newInstance(tipos), "Tipos de Oportunidad");
             }
         });
 
@@ -236,6 +265,7 @@ public class FiltroOportunidadFragment extends BaseFragment {
                     Intent result = new Intent();
                     Bundle bundle = new Bundle();
                     ArrayList<Integer> etapas = new ArrayList<Integer>();
+                    ArrayList<Integer> tipos = new ArrayList<Integer>();
                     ArrayList<String> estados = new ArrayList<String>();
 
                     if (desde_creacion != null) {
@@ -294,7 +324,13 @@ public class FiltroOportunidadFragment extends BaseFragment {
                     if(((CheckBox) getRootView().findViewById(R.id.filtro_no_concretados)).isChecked())
                         estados.add("NC");
 
+                    for(OportunidadTipo tipo: this.tipos)
+                    {
+                        tipos.add(tipo.getIdOportunidadTipo());
+                    }
+
                     bundle.putIntegerArrayList(ETAPAS, etapas);
+                    bundle.putIntegerArrayList(TIPOS, tipos);
                     bundle.putStringArrayList(ESTADOS, estados);
 
                     result.putExtra(FILTRO, bundle);
