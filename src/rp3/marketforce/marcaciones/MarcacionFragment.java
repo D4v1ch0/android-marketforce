@@ -62,9 +62,16 @@ public class MarcacionFragment extends BaseFragment {
     private DetailsPageAdapter pagerAdapter;
     private FrameLayout marcaciones, historico;
     private int currentItem = 0;
+    private LocationUtils locationUtils;
 
     public static MarcacionFragment newInstance() {
         return new MarcacionFragment();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        locationUtils = new LocationUtils();
     }
 
     @Override
@@ -148,7 +155,7 @@ public class MarcacionFragment extends BaseFragment {
 
                                     try {
                                         ((BaseActivity) getActivity()).showDialogProgress("GPS", "Obteniendo Posición");
-                                        LocationUtils.getLocationReference(getContext(), new LocationUtils.OnLocationResultListener() {
+                                        locationUtils.getLocationReference(getContext(), new LocationUtils.OnLocationResultListener() {
 
                                             @Override
                                             public void getLocationResult(Location location) {
@@ -427,7 +434,7 @@ public class MarcacionFragment extends BaseFragment {
 
                                     try {
                                         ((BaseActivity) getActivity()).showDialogProgress("GPS", "Obteniendo Posición");
-                                        LocationUtils.getLocationReference(getContext(), new LocationUtils.OnLocationResultListener() {
+                                        locationUtils.getLocationReference(getContext(), new LocationUtils.OnLocationResultListener() {
 
                                             @Override
                                             public void getLocationResult(Location location) {
@@ -524,7 +531,7 @@ public class MarcacionFragment extends BaseFragment {
 
                                     try {
                                         ((BaseActivity) getActivity()).showDialogProgress("GPS", "Obteniendo Posición");
-                                        LocationUtils.getLocationReference(getContext(), new LocationUtils.OnLocationResultListener() {
+                                        locationUtils.getLocationReference(getContext(), new LocationUtils.OnLocationResultListener() {
 
                                             @Override
                                             public void getLocationResult(Location location) {
@@ -636,7 +643,7 @@ public class MarcacionFragment extends BaseFragment {
 
                                     try {
                                         ((BaseActivity) getActivity()).showDialogProgress("GPS", "Obteniendo Posición");
-                                        LocationUtils.getLocationReference(getContext(), new LocationUtils.OnLocationResultListener() {
+                                        locationUtils.getLocationReference(getContext(), new LocationUtils.OnLocationResultListener() {
 
                                             @Override
                                             public void getLocationResult(Location location) {
