@@ -10,8 +10,10 @@ import rp3.app.BaseActivity;
 import rp3.configuration.PreferenceManager;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
+import rp3.marketforce.R;
 import rp3.marketforce.models.DiaLaboral;
 import rp3.marketforce.models.Ubicacion;
+import rp3.marketforce.resumen.AgenteDetalleFragment;
 import rp3.marketforce.sync.EnviarUbicacion;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.Utils;
@@ -19,6 +21,8 @@ import rp3.runtime.Session;
 import rp3.util.ConnectionUtils;
 import rp3.util.LocationUtils;
 import rp3.util.LocationUtils.OnLocationResultListener;
+import rp3.util.NotificationPusher;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -31,6 +35,7 @@ import android.os.BatteryManager;
 import android.os.Bundle;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class EnviarUbicacionReceiver extends BroadcastReceiver    {
@@ -59,6 +64,13 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 					gps = "ON";
 				}else{
 					gps = "OFF";
+					NotificationPusher.pushNotification(1,context,"Por favor encienda su GPS", "GPS");
+					Bundle bundle = new Bundle();
+					bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SEND_NOTIFICATION);
+					bundle.putInt(AgenteDetalleFragment.ARG_AGENTE, PreferenceManager.getInt(Contants.KEY_ID_SUPERVISOR,0));
+					bundle.putString(AgenteDetalleFragment.ARG_TITLE, "GPS");
+					bundle.putString(AgenteDetalleFragment.ARG_MESSAGE, "El usuario " + Session.getUser().getFullName() + " tiene apagado su GPS.");
+					rp3.sync.SyncUtils.requestSync(bundle);
 				}
 				Utils.ErrorToFile("Context is ok - GPS: " + gps + " - NET: " + net + " - BATTERY: " + getBatteryLevel(context) + " - " + Calendar.getInstance().getTime().toString());
 			}
