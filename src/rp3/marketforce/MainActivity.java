@@ -308,28 +308,28 @@ public class MainActivity extends rp3.app.NavActivity{
             else {
                 showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait);
 
-                Bundle bundle = new Bundle();
-                bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_TODO);
-                requestSync(bundle);
-            }
-			
-			break;
-		case NAV_AJUSTES:	
-			setNavFragment(DefaultFragment.newInstance(0),
-				    item.getTitle());
-			lastTitle = item.getTitle();
-			break;
-        case NAV_INFORMATION:
-            setNavFragment(InformationFragment.newInstance(),
-                    item.getTitle());
-            lastTitle = item.getTitle();
-            break;
-		case NAV_CERRAR_SESION:
-            showDialogConfirmation(CERRAR_SESION_DIALOG, R.string.message_cerrar_sesion, R.string.title_option_setcerrar_sesion);
-			break;
-		default:
-			break;
-		}
+                    Bundle bundle = new Bundle();
+                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_TODO);
+                    requestSync(bundle);
+                }
+
+                break;
+            case NAV_AJUSTES:
+                setNavFragment(DefaultFragment.newInstance(0),
+                        item.getTitle());
+                lastTitle = item.getTitle();
+                break;
+            case NAV_INFORMATION:
+                setNavFragment(InformationFragment.newInstance(),
+                        item.getTitle());
+                lastTitle = item.getTitle();
+                break;
+            case NAV_CERRAR_SESION:
+                showDialogConfirmation(CERRAR_SESION_DIALOG, R.string.message_cerrar_sesion, R.string.title_option_setcerrar_sesion);
+                break;
+            default:
+                break;
+        }
 	}
 
     @Override
