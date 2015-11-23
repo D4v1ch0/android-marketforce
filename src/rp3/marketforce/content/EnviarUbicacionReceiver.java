@@ -64,13 +64,15 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 					gps = "ON";
 				}else{
 					gps = "OFF";
-					NotificationPusher.pushNotification(1,context,"Por favor encienda su GPS", "GPS");
-					Bundle bundle = new Bundle();
-					bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SEND_NOTIFICATION);
-					bundle.putInt(AgenteDetalleFragment.ARG_AGENTE, PreferenceManager.getInt(Contants.KEY_ID_SUPERVISOR,0));
-					bundle.putString(AgenteDetalleFragment.ARG_TITLE, "GPS");
-					bundle.putString(AgenteDetalleFragment.ARG_MESSAGE, "El usuario " + Session.getUser().getFullName() + " tiene apagado su GPS.");
-					rp3.sync.SyncUtils.requestSync(bundle);
+					if(PreferenceManager.getInt(Contants.KEY_ID_SUPERVISOR,0) != 0) {
+						NotificationPusher.pushNotification(1, context, "Por favor encienda su GPS", "GPS");
+						Bundle bundle = new Bundle();
+						bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SEND_NOTIFICATION);
+						bundle.putInt(AgenteDetalleFragment.ARG_AGENTE, PreferenceManager.getInt(Contants.KEY_ID_SUPERVISOR, 0));
+						bundle.putString(AgenteDetalleFragment.ARG_TITLE, "GPS");
+						bundle.putString(AgenteDetalleFragment.ARG_MESSAGE, "El usuario " + Session.getUser().getFullName() + " tiene apagado su GPS.");
+						rp3.sync.SyncUtils.requestSync(bundle);
+					}
 				}
 				Utils.ErrorToFile("Context is ok - GPS: " + gps + " - NET: " + net + " - BATTERY: " + getBatteryLevel(context) + " - " + Calendar.getInstance().getTime().toString());
 			}
