@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<LinearLayout android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_agente_cargo"
+            android:id="@+id/textView26"
+            android:layout_weight="0.25"
+            android:textStyle="bold"
+            android:textColor="@color/color_text_sky_blue" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/justificacion_agente"
+            android:layout_weight="0.75" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_margin="5dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_tipo"
+            android:id="@+id/textView28"
+            android:layout_weight="0.25"
+            android:textStyle="bold"
+            android:textColor="@color/color_text_sky_blue" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/justificacion_tipo"
+            android:layout_weight="0.75" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_motivo2"
+            android:id="@+id/textView29"
+            android:layout_weight="0.25"
+            android:textStyle="bold"
+            android:textColor="@color/color_text_sky_blue" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/justificacion_motivo"
+            android:layout_weight="0.75" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_fecha_just"
+            android:id="@+id/textView30"
+            android:layout_weight="0.25"
+            android:textStyle="bold"
+            android:textColor="@color/color_text_sky_blue" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/justificacion_fecha"
+            android:layout_weight="0.75" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:id="@+id/justificacion_layout_jornada">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/laber_jornada_sin"
+            android:id="@+id/textView76"
+            android:layout_weight="0.25"
+            android:textStyle="bold"
+            android:textColor="@color/color_text_sky_blue" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/justificacion_jornada"
+            android:layout_weight="0.75" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/action_observaciones"
+            android:id="@+id/textView31"
+            android:layout_weight="0.5"
+            android:textStyle="bold"
+            android:textColor="@color/color_text_sky_blue" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="5dp" >
+
+            <EditText
+                android:id="@+id/justificacion_obs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textMultiLine"
+                android:lines="3"
+                android:maxLines="3"
+                android:background="@drawable/observaciones_fondo"
+                android:padding="3dp"
+                android:scrollbars="vertical"
+                android:fadeScrollbars="false"
+                android:gravity="top"
+                android:enabled="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_observaciones_supervisor"
+            android:id="@+id/textView32"
+            android:layout_weight="0.5"
+            android:textStyle="bold"
+            android:textColor="@color/color_text_sky_blue" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="5dp" >
+
+            <EditText
+                android:id="@+id/justificacion_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textMultiLine|textCapSentences"
+                android:lines="3"
+                android:maxLines="3"
+                android:background="@drawable/observaciones_fondo"
+                android:padding="3dp"
+                android:scrollbars="vertical"
+                android:fadeScrollbars="false"
+                android:gravity="top" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/voice_to_text"
+                android:src="@drawable/ic_action_mic"
+                android:clickable="true"
+                android:layout_alignTop="@+id/justificacion_text"
+                android:layout_alignRight="@+id/justificacion_text"
+                android:layout_alignEnd="@+id/justificacion_text" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_estado"
+            android:id="@+id/textView33"
+            android:layout_weight="0.25"
+            android:textStyle="bold"
+            android:textColor="@color/color_text_sky_blue" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/justificacion_estado"
+            android:layout_weight="0.75" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/label_aprobar"
+            android:id="@+id/justificacion_aprobar"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            style="@style/Widget.Button.Theme" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/label_rechazar"
+            android:id="@+id/justificacion_rechazar"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            style="@style/Widget.Button.Theme" />
+    </LinearLayout>
+</LinearLayout>
+</ScrollView>

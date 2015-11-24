@@ -309,6 +309,61 @@
                     <webMethod>POST</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>
+                <!-- Modulo Marcacion -->
+                <method>
+                    <name>InsertMarcacion</name>
+                    <action>marcacion/create</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>InsertPermiso</name>
+                    <action>marcacion/insertpermiso</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>SetGCMId</name>
+                    <action>agente/setgcmid</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetGrupo</name>
+                    <action>marcacion/getgrupo</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetPermisoHoy</name>
+                    <action>marcacion/getpermisohoy</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>InsertPermisoPrevio</name>
+                    <action>marcacion/InsertPermisoPrevio</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GerPermisosAprobar</name>
+                    <action>marcacion/GetPermisoAprobar</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>InsertPermisoPorAprobar</name>
+                    <action>marcacion/AprobarPermiso</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetMarcacionesHoy</name>
+                    <action>marcacion/getmarcacioneshoy</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
             </methods>     
         </webServiceData>
            <webServiceData>

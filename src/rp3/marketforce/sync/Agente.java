@@ -5,6 +5,12 @@ import android.util.Log;
 import android.content.Context;
 import android.os.Environment;
 import android.text.TextUtils;
+
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.iid.InstanceID;
+
+import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -253,6 +259,8 @@ public class Agente {
                 PreferenceManager.setValue(Contants.KEY_AGENTE_UBICACION_1, jObject.getInt(Contants.KEY_AGENTE_UBICACION_1));
                 PreferenceManager.setValue(Contants.KEY_AGENTE_UBICACION_2, jObject.getInt(Contants.KEY_AGENTE_UBICACION_2));
                 PreferenceManager.setValue(Contants.KEY_AGENTE_UBICACION_3, jObject.getInt(Contants.KEY_AGENTE_UBICACION_3));
+                if(!jObject.isNull(Contants.KEY_MARACIONES_DISTANCIA))
+                    PreferenceManager.setValue(Contants.KEY_MARACIONES_DISTANCIA, jObject.getDouble(Contants.KEY_MARACIONES_DISTANCIA) + "");
 			} catch (HttpResponseException e) {
 				if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
 					return SyncAdapter.SYNC_EVENT_AUTH_ERROR;

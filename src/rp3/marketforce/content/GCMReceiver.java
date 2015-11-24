@@ -7,9 +7,13 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 
+import rp3.db.sqlite.DataBase;
 import java.util.Locale;
 
 import rp3.marketforce.R;
+import rp3.marketforce.marcaciones.MarcacionActivity;
+import rp3.marketforce.marcaciones.PermisoActivity;
+import rp3.marketforce.models.marcacion.Marcacion;
 import rp3.util.NotificationPusher;
 
 /**
@@ -17,6 +21,10 @@ import rp3.util.NotificationPusher;
  */
 public class GCMReceiver extends GcmListenerService {
     TextToSpeech t1;
+
+    public static final String NOTIFICATION_TYPE_MARCACION = "MARCACION";
+    public static final String NOTIFICATION_TYPE_APROBAR_JUSTIFICACION = "APROBAR_JUSTIFICACION";
+
     @Override
     public void onMessageReceived(String from, Bundle data) {
         String message = data.getString("Message");
@@ -32,12 +40,42 @@ public class GCMReceiver extends GcmListenerService {
         Log.d("Marketforce", "Message: " + message);
 
         String toSpeech = "";
-
+        
         if(!TextUtils.isEmpty(message)) {
-            int posPuntos = footer.indexOf(":");
-            int posGuion = footer.indexOf("-");
-            toSpeech = "Mensaje de " + footer.substring(posPuntos, posGuion);
-            NotificationPusher.pushNotification(1, getApplicationContext(), message, title, footer);
+            if(TextUtils.isEmpty(type)) {
+                int posPuntos = footer.indexOf(":");
+                int posGuion = footer.indexOf("-");
+                toSpeech = "Mensaje de " + footer.substring(posPuntos, posGuion);
+                NotificationPusher.pushNotification(1, getApplicationContext(), message, title, footer);
+            }
+            else
+            {
+                if(type.equalsIgnoreCase(NOTIFICATION_TYPE_MARCACION)) {
+                    try {
+                        DataBase db = DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class);
+                        Marcacion ultimaMarcacion = Marcacion.getUltimaMarcacion(db);
+                        if (ultimaMarcacion == null || rp3.marketforce.models.marcacion.Marcacion.getMarcacionesPendientes(db).size() == 0) {
+                            toSpeech = title;
+                            NotificationPusher.pushNotification(1, getApplicationContext(), message, title, MarcacionActivity.class);
+                        }
+
+                        rp3.marketforce.sync.Marcaciones.executeSync(db);
+                    }
+                    catch(Exception ex)
+                    {}
+
+                }
+                else if(type.equalsIgnoreCase(NOTIFICATION_TYPE_APROBAR_JUSTIFICACION)) {
+                    toSpeech = title;
+                    NotificationPusher.pushNotification(1, getApplicationContext(), message, title, PermisoActivity.class);
+                }
+                else {
+                    int posPuntos = footer.indexOf(":");
+                    int posGuion = footer.indexOf("-");
+                    toSpeech = "Mensaje de " + footer.substring(posPuntos, posGuion);
+                    NotificationPusher.pushNotification(1, getApplicationContext(), message, title, footer);
+                }
+            }
         }
         else
         {
@@ -46,7 +84,6 @@ public class GCMReceiver extends GcmListenerService {
                 rp3.marketforce.sync.Agente.executeSyncLog();
             }
         }
-
         final String toSpeechFinal = toSpeech;
         t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override

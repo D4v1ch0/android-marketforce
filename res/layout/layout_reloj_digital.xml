@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.6"
+        android:gravity="center">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/back_clock"
+            android:gravity="center"
+            android:paddingLeft="45dp"
+            android:paddingTop="45dp"
+            android:paddingRight="45dp"
+            android:paddingBottom="35dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Large Text"
+                android:id="@+id/marcacion_dia"
+                android:textSize="18sp"
+                android:textColor="@color/caldroid_white"
+                android:gravity="bottom"
+                android:layout_marginTop="5dp" />
+
+            <rp3.widget.DigitalClock
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/digitalClock"
+                android:layout_gravity="center_horizontal"
+                android:textSize="60sp"
+                android:textColor="@color/caldroid_white" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center|bottom"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Large Text"
+                    android:id="@+id/marcacion_fecha"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:textSize="16sp"
+                    android:textColor="@color/caldroid_white"
+                    android:gravity="bottom" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Large Text"
+                android:id="@+id/marcacion_hora_fin"
+                android:layout_gravity="center_horizontal|bottom"
+                android:textSize="16sp"
+                android:textColor="@color/color_text_blue"
+                android:gravity="bottom"
+                android:drawableLeft="@drawable/horadefin"
+                android:drawablePadding="5dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

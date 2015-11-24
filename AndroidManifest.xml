@@ -194,6 +194,13 @@
         <activity android:name=".oportunidad.FotoOportunidadActivity"></activity>
         <activity android:name=".oportunidad.CambiarEstadoActivity" android:theme="@style/MyAppPopupTheme"></activity>
         <activity android:name=".utils.MapActivity" android:theme="@style/AppDialogTheme"></activity>
+        <!-- Modulo Marcaciones -->
+        <activity android:name=".marcaciones.MarcacionActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" ></activity>
+        <activity android:name=".marcaciones.JustificacionPreviaActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"></activity>
+        <activity android:name=".marcaciones.PermisoActivity"></activity>
+        
     </application>
 
 </manifest>

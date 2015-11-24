@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="5dp"
+        android:minHeight="80dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_motivo"
+            android:id="@+id/textView22"
+            android:layout_weight="0.35"
+            android:textColor="@color/color_text_sky_blue"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/justificacion_motivos"
+            android:layout_weight="0.65"
+            android:spinnerMode="dialog" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="5dp" >
+
+            <EditText
+                android:id="@+id/justificacion_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textMultiLine|textCapSentences"
+                android:lines="3"
+                android:maxLines="3"
+                android:background="@drawable/observaciones_fondo"
+                android:padding="3dp"
+                android:scrollbars="vertical"
+                android:fadeScrollbars="false"
+                android:gravity="top" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/voice_to_text"
+                android:src="@drawable/ic_action_mic"
+                android:clickable="true"
+                android:layout_alignTop="@+id/justificacion_text"
+                android:layout_alignRight="@+id/justificacion_text"
+                android:layout_alignEnd="@+id/justificacion_text" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp" >
+
+        <Button
+            style="@style/Widget.Button.Theme"
+            android:id="@+id/cancelar_justificacion"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/label_button_cancelar_act" />
+
+        <Button
+            style="@style/Widget.Button.Theme"
+            android:id="@+id/aceptar_justificacion"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:text="@string/label_button_aceptar_act" />
+    </LinearLayout>
+
+</LinearLayout>

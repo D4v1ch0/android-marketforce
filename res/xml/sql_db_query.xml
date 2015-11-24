@@ -1297,4 +1297,68 @@
         ORDER BY tbOportunidadSearch.Rank DESC
     </statement>
 
+
+    <statement name="PermisosAgentes">
+        SELECT
+        tbJustificacion._id,
+        tbJustificacion.IdPermiso,
+        tbJustificacion.IdAgente,
+        tbJustificacion.Fecha,
+        tbJustificacion.Tipo,
+        tbJustificacion.Observacion,
+        tbJustificacion.Ausencia,
+        tbJustificacion.Estado,
+        tbJustificacion.Jornada,
+        tbAgente.Nombre AS Nombres
+        FROM  tbJustificacion
+        JOIN tbAgente ON tbAgente.IdAgente
+        = tbJustificacion.IdAgente
+        WHERE Estado = 'P' AND Propia = 0 AND Pendiente = 0 ORDER BY tbJustificacion.Fecha DESC
+    </statement>
+    <statement name="PermisosAgentesCount">
+        SELECT
+        COUNT(*)
+        FROM  tbJustificacion
+        WHERE Estado = 'P' AND Propia = 0 AND Pendiente = 0 ORDER BY tbJustificacion.Fecha DESC
+    </statement>
+    <statement name="PermisoPorAgente">
+        SELECT
+        tbJustificacion._id,
+        tbJustificacion.IdPermiso,
+        tbJustificacion.IdAgente,
+        tbJustificacion.Fecha,
+        tbJustificacion.Tipo,
+        tbJustificacion.Observacion,
+        tbJustificacion.Ausencia,
+        tbJustificacion.Estado,
+        tbJustificacion.ObservacionSupervisor,
+        tbJustificacion.Pendiente,
+        tbJustificacion.Propia,
+        tbJustificacion.Jornada,
+        tbAgente.Nombre AS Nombres
+        FROM  tbJustificacion
+        JOIN tbAgente ON tbAgente.IdAgente
+        = tbJustificacion.IdAgente
+        WHERE tbJustificacion._id = ?
+    </statement>
+    <statement name="PermisoPorAgenteServer">
+        SELECT
+        tbJustificacion._id,
+        tbJustificacion.IdPermiso,
+        tbJustificacion.IdAgente,
+        tbJustificacion.Fecha,
+        tbJustificacion.Tipo,
+        tbJustificacion.Observacion,
+        tbJustificacion.Ausencia,
+        tbJustificacion.Estado,
+        tbJustificacion.ObservacionSupervisor,
+        tbJustificacion.Pendiente,
+        tbJustificacion.Propia,
+        tbJustificacion.Jornada,
+        tbAgente.Nombre AS Nombres
+        FROM  tbJustificacion
+        JOIN tbAgente ON tbAgente.IdAgente
+        = tbJustificacion.IdAgente
+        WHERE tbJustificacion.IdPermiso = ?
+    </statement>
 </sql>

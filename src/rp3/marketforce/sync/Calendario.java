@@ -82,8 +82,10 @@ public class Calendario {
                     dia.setEsteAnio(type.getBoolean("EsteAño"));
                     if (!type.isNull("FechaTicks"))
                         dia.setFecha(Convert.getDateFromDotNetTicks(type.getLong("FechaTicks")));
-                    dia.setHoraInicio(type.getString("HoraInicio"));
-                    dia.setHoraFin(type.getString("HoraFin"));
+                    if (!type.isNull("HoraInicio"))
+                        dia.setHoraInicio(type.getString("HoraInicio"));
+                    if (!type.isNull("HoraFin"))
+                        dia.setHoraFin(type.getString("HoraFin"));
 
                     rp3.marketforce.models.DiaNoLaboral.insert(db, dia);
 
