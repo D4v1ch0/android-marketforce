@@ -138,7 +138,7 @@ public class MainActivity extends rp3.app.NavActivity{
 			if(numAgendas > 1)
 				toSpeak = "Usted tiene " + numAgendas + " visitas pendientes";
 			else
-				toSpeak = "Usted tiene una visitas pendiente";
+				toSpeak = "Usted tiene una visita pendiente";
 		}
 
 		//extractDatabase();
