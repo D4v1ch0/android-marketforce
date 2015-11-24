@@ -886,4 +886,85 @@ public final class Contract {
         public static final String QUERY_PERMISO_POR_AGENTE = "PermisoPorAgente";
 		public static final String QUERY_PERMISO_POR_AGENTE_SERVER = "PermisoPorAgenteServer";
     }
+
+	/* Modulo Pedidos */
+
+	public static abstract class Pedido implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbPedido";
+
+		public static final String COLUMN_ID_PEDIDO = "IdPedido";
+		public static final String COLUMN_ID_AGENDA = "IdAgenda";
+		public static final String COLUMN_ID_CLIENTE = "IdCliente";
+		public static final String COLUMN_VALOR_TOTAL = "ValorTotal";
+		public static final String COLUMN_EMAIL = "Email";
+		public static final String COLUMN_ESTADO = "Estado";
+		public static final String COLUMN_FECHA_CREACION = "FechaCreacion";
+		public static final String COLUMN_ID_AGENDA_INT = "_IdAgenda";
+
+
+	}
+
+	public static abstract class PedidoDetalle implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbPedidoDetalle";
+
+		public static final String COLUMN_ID_PEDIDO = "IdPedido";
+		public static final String COLUMN_ID_PEDIDO_INT = "_IdPedido";
+		public static final String COLUMN_ID_PEDIDO_DETALLE = "IdPedidoDetalle";
+		public static final String COLUMN_ID_PRODUCTO = "IdProducto";
+		public static final String COLUMN_DESCRIPCION = "Descripcion";
+		public static final String COLUMN_VALOR_UNITARIO = "ValorUnitario";
+		public static final String COLUMN_CANTIDAD = "Cantidad";
+		public static final String COLUMN_VALOR_TOTAL = "ValorTotal";
+		public static final String COLUMN_URL_FOTO = "URLFoto";
+
+	}
+
+	public static abstract class Producto implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbProducto";
+
+		public static final String COLUMN_ID_PRODUCTO = "IdProducto";
+		public static final String COLUMN_DESCRIPCION = "Descripcion";
+		public static final String COLUMN_VALOR_UNITARIO = "ValorUnitario";
+		public static final String COLUMN_URL_FOTO = "URLFoto";
+		public static final String COLUMN_ID_SUBCATEGORIA = "IdSubCategoria";
+
+		public static final String FIELD_DESCRIPCION = Contract.ProductoExt.TABLE_NAME + "_" + Contract.ProductoExt.COLUMN_DESCRIPCION;
+
+		public static final String QUERY_PRODUCTOS = "Productos";
+		public static final String QUERY_PRODUCTOS_BY_CATEGORIA = "ProductosByCategoria";
+		public static final String QUERY_PRODUCTO_BY_ID = "ProductoByID";
+		public static final String QUERY_PRODUCTO_BY_ID_SERVER = "ProductoByIdServer";
+		public static final String QUERY_SEARCH = "SimpleProductoSearch";
+		public static final String QUERY_SEARCH_BY_CATEGORIA = "SimpleProductoSearchByCategoria";
+	}
+
+	public static abstract class ProductoExt implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbProductoExt";
+		public static final String COLUMN_ID = "docid";
+		public static final String COLUMN_DESCRIPCION = "Descripcion";
+
+	}
+
+	public static abstract class Categoria implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbCategoria";
+
+		public static final String COLUMN_ID_CATEGORIA = "IdCategoria";
+		public static final String COLUMN_DESCRIPCION = "Descripcion";
+
+	}
+
+	public static abstract class SubCategoria implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbSubCategoria";
+
+		public static final String COLUMN_ID_SUBCATEGORIA = "IdSubCategoria";
+		public static final String COLUMN_ID_CATEGORIA = "IdCategoria";
+		public static final String COLUMN_DESCRIPCION = "Descripcion";
+
+	}
 }

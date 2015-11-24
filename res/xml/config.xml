@@ -5,6 +5,7 @@
         <allowHelpOnAut>TRUE</allowHelpOnAut>
         <imagesFolder>/Content/AgendaComercial/img/clientes/</imagesFolder>
         <imagesFolderOportunidad>/Content/AgendaComercial/img/oportunidades/</imagesFolderOportunidad>
+        <imagesFolderProducto>/Content/AgendaComercial/img/productos/</imagesFolderProducto>
         <cancelAlarmTime>22H00</cancelAlarmTime>
         <forgotPassword>/Security/Account/RequestingPasswordRecovery</forgotPassword>
         <help>/help/app/principal.html</help>
@@ -19,7 +20,7 @@
         <webServiceData>
             <name>Core</name>
             <url>[@server:http://www.rp3marketforce.com/Rp3MarketForce]/api</url>
-            <!--url>http://10.10.0.148/AgendaComercial/api</url-->
+            <!--url>http://192.168.0.11/AgendaComercial/api</url-->
             <type>REST</type>
             <oAuthClientId>android-app-marketforce</oAuthClientId>
             <oAuthClientSecret>rp3-marketforce2014</oAuthClientSecret>
@@ -65,7 +66,7 @@
            <webServiceData>
             <name>MartketForce</name>
             <url>[@server:http://www.rp3marketforce.com/Rp3MarketForce]/api</url>
-            <!--url>http://10.10.0.148/AgendaComercial/api</url-->
+            <!--url>http://192.168.0.11/AgendaComercial/api</url-->
             <type>REST</type>
             <oAuthClientId>android-app-marketforce</oAuthClientId>
             <oAuthClientSecret>rp3-marketforce2014</oAuthClientSecret>
@@ -295,6 +296,31 @@
                     <name>SendNotification</name>
                     <action>agente/sendnotification</action>
                     <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <!-- Modulo Pedido -->
+                <method>
+                    <name>UpdatePedido</name>
+                    <action>pedido/UpdateFull</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetProductos</name>
+                    <action>producto/GetProductos?ultimaFechaActualizacion=@ultimaFechaActualizacion</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetCategorias</name>
+                    <action>producto/GetCategorias?ultimaFechaActualizacion=@ultimaFechaActualizacion</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetSubcategorias</name>
+                    <action>producto/GetSubcategorias?ultimaFechaActualizacion=@ultimaFechaActualizacion</action>
+                    <webMethod>GET</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>

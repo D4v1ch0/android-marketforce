@@ -457,4 +457,62 @@
         Jornada TEXT
         )
     </statement>
+    <!-- Modulo Pedidos -->
+    <statement>
+        CREATE TABLE tbPedido(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdPedido INTEGER,
+        _IdAgenda INTEGER,
+        IdAgenda INTEGER,
+        IdCliente INTEGER,
+        ValorTotal REAL,
+        Email TEXT,
+        Estado TEXT,
+        FechaCreacion INTEGER
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbPedidoDetalle(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdPedidoDetalle INTEGER,
+        IdPedido INTEGER,
+        _IdPedido INTEGER,
+        IdProducto INTEGER,
+        Descripcion TEXT,
+        ValorUnitario REAL,
+        Cantidad INTEGER,
+        ValorTotal REAL,
+        URLFoto TEXT
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbProducto(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdProducto INTEGER,
+        ValorUnitario REAL,
+        URLFoto TEXT,
+        IdSubCategoria INTEGER
+        )
+    </statement>
+    <statement>
+        CREATE VIRTUAL TABLE tbProductoExt USING fts4 (
+        Descripcion,
+        tokenize=porter
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbCategoria(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdCategoria INTEGER,
+        Descripcion TEXT
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbSubCategoria(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdSubCategoria INTEGER,
+        IdCategoria INTEGER,
+        Descripcion TEXT
+        )
+    </statement>
 </sql>

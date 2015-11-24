@@ -5,6 +5,7 @@ import rp3.configuration.PreferenceManager;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
+import rp3.marketforce.pedido.CrearPedidoActivity;
 import rp3.marketforce.resumen.AgenteDetalleFragment;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.util.ConnectionUtils;
@@ -214,6 +215,14 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	    			startActivity(intent);
 	    			openPane = false;
 	    			return true;
+                case R.id.action_asignar_pedido:
+                    Agenda agdPed = Agenda.getAgenda(getDataBase(), selectedTransactionId);
+                    Intent intent5 = new Intent(getActivity(), CrearPedidoActivity.class);
+                    intent5.putExtra(CrearPedidoActivity.ARG_IDAGENDA, selectedTransactionId);
+                    intent5.putExtra(CrearPedidoActivity.ARG_IDPEDIDO, agdPed.getPedido().getID());
+                    startActivity(intent5);
+                    openPane = false;
+                    return true;
 	    		case R.id.action_ver_posicion:
                     if(!ConnectionUtils.isNetAvailable(getContext()))
                     {
@@ -392,6 +401,9 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_reprogramar).setVisible(agenda != null);
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_suspender_agenda).setVisible(true);
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_no_visita).setVisible(true);
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setVisible(true);
+                        if(agenda.getPedido().getID() != 0)
+                            menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setTitle("Editar Pedido");
                     }
                 }
                 if(selectedTransactionId != 0)
@@ -405,6 +417,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
                                 menuRutas.getItem(i).getSubMenu().findItem(R.id.action_cambiar_contacto).setVisible(false);
                                 menuRutas.getItem(i).getSubMenu().findItem(R.id.action_no_visita).setVisible(false);
                                 menuRutas.findItem(R.id.submenu_agenda).setVisible(false);
+                                menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setVisible(false);
                             }
                         }
                     }
@@ -419,6 +432,17 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
                                 menuRutas.getItem(i).getSubMenu().findItem(R.id.action_cambiar_contacto).setVisible(false);
                                 menuRutas.getItem(i).getSubMenu().findItem(R.id.action_reprogramar).setVisible(false);
                                 menuRutas.getItem(i).getSubMenu().findItem(R.id.action_suspender_agenda).setVisible(false);
+                                menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setVisible(false);
+                            }
+                        }
+                    }
+                    if(estado.equalsIgnoreCase(Contants.ESTADO_GESTIONANDO))
+                    {
+                        for(int i = 0; i < menuRutas.size(); i ++)
+                        {
+                            if(menuRutas.getItem(i).getItemId() == R.id.submenu_agenda)
+                            {
+                                menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setVisible(true);
                             }
                         }
                     }
@@ -445,6 +469,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_reprogramar).setVisible(false);
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_suspender_agenda).setVisible(false);
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_no_visita).setVisible(false);
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setVisible(false);
                     }
                 }
                 if(rutasDetailfragment != null)
@@ -467,6 +492,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
                     menuRutas.getItem(i).getSubMenu().findItem(R.id.action_cambiar_contacto).setVisible(agenda != null);
                     menuRutas.getItem(i).getSubMenu().findItem(R.id.action_reprogramar).setVisible(agenda != null);
                     menuRutas.getItem(i).getSubMenu().findItem(R.id.action_no_visita).setVisible(true);
+                    menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setVisible(agenda != null);
                 }
             }
             if(selectedTransactionId != 0)
@@ -480,6 +506,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
                             menuRutas.getItem(i).getSubMenu().findItem(R.id.action_cambiar_contacto).setVisible(false);
                             menuRutas.getItem(i).getSubMenu().findItem(R.id.action_no_visita).setVisible(false);
                             menuRutas.findItem(R.id.submenu_agenda).setVisible(false);
+                            menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setVisible(false);
                         }
                     }
                 }
@@ -494,6 +521,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
                             menuRutas.getItem(i).getSubMenu().findItem(R.id.action_cambiar_contacto).setVisible(false);
                             menuRutas.getItem(i).getSubMenu().findItem(R.id.action_reprogramar).setVisible(false);
                             menuRutas.getItem(i).getSubMenu().findItem(R.id.action_suspender_agenda).setVisible(false);
+                            menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setVisible(false);
                         }
                     }
                 }
@@ -513,6 +541,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_cambiar_contacto).setVisible(false);
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_reprogramar).setVisible(false);
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_no_visita).setVisible(false);
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setVisible(false);
                     }
                 }
             }

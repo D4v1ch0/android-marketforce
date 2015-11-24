@@ -18,6 +18,7 @@ public class Contants {
     public final static int GENERAL_TABLE_TIPO_MARCACION = 1044;
 	public final static String IMAGE_FOLDER = "imagesFolder";
     public final static String IMAGE_FOLDER_OPORTUNIDADES = "imagesFolderOportunidad";
+    public final static String IMAGE_FOLDER_PRODUCTOS = "imagesFolderProducto";
 	public final static String KEY_FIRST_TIME = "firstTime";
     public final static String KEY_SECOND_TIME = "secondTime";
 	
