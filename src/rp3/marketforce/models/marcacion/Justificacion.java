@@ -357,5 +357,9 @@ public class Justificacion extends EntityBase<Justificacion>
         c.close();
         return permiso;
     }
+
+    public static void deleteAprobados(DataBase db, String ids_notDelete) {
+        db.delete(Contract.Justificaciones.TABLE_NAME, Contract.Justificaciones.COLUMN_ID_PERMISO + " NOT IN (" + ids_notDelete + ",?)",0);
+    }
 }
 

@@ -367,6 +367,8 @@ public class Marcaciones {
         webService.setTimeOut(20000);
         webService.addCurrentAuthToken();
 
+        String ids_notDelete = "";
+
         try {
             webService.addCurrentAuthToken();
 
@@ -391,6 +393,12 @@ public class Marcaciones {
                         Justificacion.insert(db, justificacion);
                     else
                         Justificacion.update(db, justificacion);
+
+                    ids_notDelete = ids_notDelete + justificacion.getIdPermiso() + ",";
+                }
+                if(ids_notDelete.length() > 0) {
+                    ids_notDelete = ids_notDelete.substring(0, ids_notDelete.length() -1);
+                    Justificacion.deleteAprobados(db, ids_notDelete);
                 }
 
             } catch (HttpResponseException e) {

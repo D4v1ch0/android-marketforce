@@ -805,7 +805,7 @@ public class MarcacionFragment extends BaseFragment {
 
     public Location getAproximatelyLocation(Location gpsLocation, LatLng reference, double distanceBetween)
     {
-        if(distanceBetween > (gpsLocation.getAccuracy() + DISTANCE)) {
+        if(distanceBetween < (gpsLocation.getAccuracy() + DISTANCE)) {
             Location aproxLoc = new Location("");
             LatLng midpoint = new LatLng(gpsLocation.getLatitude(), gpsLocation.getLongitude());
             double pars = 0;

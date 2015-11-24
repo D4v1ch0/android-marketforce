@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -142,13 +143,20 @@ public class PermisoFragment extends BaseFragment implements PermisoListFragment
     public void onPermisoSelected(Justificacion permiso) {
         selectedClientId = permiso.getID();
 
-        if(!mTwoPane) {
-            slidingPane.closePane();
-            isActiveListFragment = false;
-        }
+        if(Justificacion.getPermisoById(getDataBase(), permiso.getID()) != null) {
 
-        transactionDetailFragment = PermisoDetailFragment.newInstance(permiso);
-        setFragment(R.id.content_transaction_detail, transactionDetailFragment);
+            if (!mTwoPane) {
+                slidingPane.closePane();
+                isActiveListFragment = false;
+            }
+
+            transactionDetailFragment = PermisoDetailFragment.newInstance(permiso);
+            setFragment(R.id.content_transaction_detail, transactionDetailFragment);
+        }
+        else
+        {
+            Toast.makeText(getContext(), "Permiso seleccionado ya fue aprobado", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
