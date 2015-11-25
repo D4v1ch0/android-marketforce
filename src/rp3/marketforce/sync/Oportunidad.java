@@ -613,8 +613,10 @@ public class Oportunidad {
 
                 try {
                     JSONObject type = types.getJSONObject(i);
-                    rp3.marketforce.models.oportunidad.Oportunidad.deleteOportunidadIdServer(db, type.getInt("IdOportunidad"));
-                    rp3.marketforce.models.oportunidad.Oportunidad opt = new rp3.marketforce.models.oportunidad.Oportunidad();
+                    //rp3.marketforce.models.oportunidad.Oportunidad.deleteOportunidadIdServer(db, type.getInt("IdOportunidad"));
+                    rp3.marketforce.models.oportunidad.Oportunidad opt = rp3.marketforce.models.oportunidad.Oportunidad.getOportunidadIdServer(db, type.getInt("IdOportunidad"));
+                    if(opt.getID() != 0)
+                        opt = rp3.marketforce.models.oportunidad.Oportunidad.getOportunidadId(db, opt.getID());
 
                     opt.setIdEtapa(type.getInt("IdEtapa"));
                     opt.setIdOportunidad(type.getInt("IdOportunidad"));
@@ -666,7 +668,10 @@ public class Oportunidad {
                     else
                         opt.setTipoEmpresa("");
 
-                    rp3.marketforce.models.oportunidad.Oportunidad.insert(db, opt);
+                    if(opt.getID() == 0)
+                        rp3.marketforce.models.oportunidad.Oportunidad.insert(db, opt);
+                    else
+                        rp3.marketforce.models.oportunidad.Oportunidad.update(db, opt);
 
 
                     JSONArray strs = type.getJSONArray("OportunidadContactos");
