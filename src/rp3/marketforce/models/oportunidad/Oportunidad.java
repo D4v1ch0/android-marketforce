@@ -703,7 +703,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
     }
 
     public static List<Oportunidad> getOportunidadesInserts(DataBase db) {
-        String query = QueryDir.getQuery( Contract.Oportunidad.QUERY_OPORTUNIDADES_INSERTS );
+        String query = QueryDir.getQuery(Contract.Oportunidad.QUERY_OPORTUNIDADES_INSERTS);
         Cursor c = db.rawQuery(query);
 
         List<Oportunidad> oportunidades = new ArrayList<Oportunidad>();
@@ -757,9 +757,22 @@ public class Oportunidad extends EntityBase<Oportunidad> {
             return false;
     }
 
+    public static Oportunidad getOportunidadIdServer(DataBase db, int idServer)
+    {
+        Cursor c = db.query(Contract.Oportunidad.TABLE_NAME, Contract.Oportunidad._ID, Contract.Oportunidad.COLUMN_ID_OPORTUNIDAD + " = ?", idServer + "");
+        Oportunidad opt = new Oportunidad();
+        if(c.moveToFirst())
+        {
+            opt.setID(CursorUtils.getInt(c, Contract.Oportunidad._ID));
+        }
+        return opt;
+
+    }
+
     public static void deleteOportunidadIdServer(DataBase db, int idServer)
     {
-        db.delete(Contract.Oportunidad.TABLE_NAME, Contract.Oportunidad.COLUMN_ID_OPORTUNIDAD + " = ?", idServer);
+        //Oportunidad opt = Oportunidad.getOportunidadIdServer(db, idServer);
+        //db.delete(Contract.Oportunidad.TABLE_NAME, Contract.Oportunidad.COLUMN_ID_OPORTUNIDAD + " = ?", idServer);
         db.delete(Contract.OportunidadResponsable.TABLE_NAME, Contract.Oportunidad.COLUMN_ID_OPORTUNIDAD + " = ?", idServer);
         db.delete(Contract.OportunidadTarea.TABLE_NAME, Contract.Oportunidad.COLUMN_ID_OPORTUNIDAD + " = ?", idServer);
         db.delete(Contract.OportunidadTareaActividad.TABLE_NAME, Contract.Oportunidad.COLUMN_ID_OPORTUNIDAD + " = ?", idServer);
@@ -767,6 +780,10 @@ public class Oportunidad extends EntityBase<Oportunidad> {
         db.delete(Contract.OportunidadContacto.TABLE_NAME, Contract.Oportunidad.COLUMN_ID_OPORTUNIDAD + " = ?", idServer);
         db.delete(Contract.OportunidadBitacora.TABLE_NAME, Contract.Oportunidad.COLUMN_ID_OPORTUNIDAD + " = ?", idServer);
         db.delete(Contract.OportunidadFoto.TABLE_NAME, Contract.Oportunidad.COLUMN_ID_OPORTUNIDAD + " = ?", idServer);
+        /*if(opt.getID() != 0)
+        {
+            db.delete(Contract.OportunidadExt.TABLE_NAME, Contract.OportunidadExt.COLUMN_ID + " = ?", opt.getID());
+        }*/
     }
 
     public class OportunidadExt extends EntityBase<OportunidadExt>{

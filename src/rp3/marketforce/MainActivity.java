@@ -144,7 +144,7 @@ public class MainActivity extends rp3.app.NavActivity{
 				toSpeak = "Usted tiene una visita pendiente";
 		}
 
-		//extractDatabase();
+		extractDatabase();
 
         DManager = new DrawableManager();
 
