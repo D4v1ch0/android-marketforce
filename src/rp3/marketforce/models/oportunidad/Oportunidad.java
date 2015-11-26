@@ -575,6 +575,10 @@ public class Oportunidad extends EntityBase<Oportunidad> {
         try
         {
             result = super.insertDb(db);
+            if(this.id == 0)
+            {
+                this.id = db.queryMaxLong(Contract.Oportunidad.TABLE_NAME, Contract.Oportunidad._ID);
+            }
 
             if(result){
                 if(result)
