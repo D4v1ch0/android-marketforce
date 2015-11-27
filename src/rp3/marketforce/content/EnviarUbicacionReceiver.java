@@ -62,16 +62,20 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 				LocationManager mlocManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 				if (mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
 					gps = "ON";
+					PreferenceManager.setValue(Contants.KEY_GPS_NOTIFICATION, true);
 				}else{
 					gps = "OFF";
+					NotificationPusher.pushNotification(1, context, "Por favor encienda su GPS", "GPS");
 					if(PreferenceManager.getInt(Contants.KEY_ID_SUPERVISOR,0) != 0) {
-						NotificationPusher.pushNotification(1, context, "Por favor encienda su GPS", "GPS");
-						Bundle bundle = new Bundle();
-						bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SEND_NOTIFICATION);
-						bundle.putInt(AgenteDetalleFragment.ARG_AGENTE, PreferenceManager.getInt(Contants.KEY_ID_SUPERVISOR, 0));
-						bundle.putString(AgenteDetalleFragment.ARG_TITLE, "GPS");
-						bundle.putString(AgenteDetalleFragment.ARG_MESSAGE, "El usuario " + Session.getUser().getFullName() + " tiene apagado su GPS.");
-						rp3.sync.SyncUtils.requestSync(bundle);
+						if(PreferenceManager.getBoolean(Contants.KEY_GPS_NOTIFICATION,true)) {
+							Bundle bundle = new Bundle();
+							bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SEND_NOTIFICATION);
+							bundle.putInt(AgenteDetalleFragment.ARG_AGENTE, PreferenceManager.getInt(Contants.KEY_ID_SUPERVISOR, 0));
+							bundle.putString(AgenteDetalleFragment.ARG_TITLE, "GPS");
+							bundle.putString(AgenteDetalleFragment.ARG_MESSAGE, "El usuario " + Session.getUser().getFullName() + " tiene apagado su GPS.");
+							rp3.sync.SyncUtils.requestSync(bundle);
+							PreferenceManager.setValue(Contants.KEY_GPS_NOTIFICATION, false);
+						}
 					}
 				}
 				Utils.ErrorToFile("Context is ok - GPS: " + gps + " - NET: " + net + " - BATTERY: " + getBatteryLevel(context) + " - " + Calendar.getInstance().getTime().toString());
