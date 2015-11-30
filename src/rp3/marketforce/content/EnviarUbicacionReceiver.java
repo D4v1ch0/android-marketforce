@@ -77,6 +77,7 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 				LocationManager mlocManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 				if (mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
 					gps = "ON";
+					PreferenceManager.setValue(Contants.KEY_GPS_NOTIFICATION, true);
 				}else{
 					gps = "OFF";
 					if(calendarCurrent.getTimeInMillis() < calendar.getTimeInMillis() && diaLaboral.isEsLaboral()) {
