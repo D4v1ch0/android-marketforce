@@ -50,6 +50,21 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 		{
 			Session.Start(context);
 			rp3.configuration.Configuration.TryInitializeConfiguration(context);
+
+			Calendar calendarCurrent = Calendar.getInstance();
+			calendarCurrent.setTimeInMillis(System.currentTimeMillis());
+			
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTimeInMillis(System.currentTimeMillis());
+			Calendar cal = Calendar.getInstance();
+			cal.setTimeInMillis(PreferenceManager.getLong(Contants.KEY_ALARMA_FIN));
+			calendar.set(Calendar.HOUR_OF_DAY, cal.get(Calendar.HOUR_OF_DAY));
+			calendar.set(Calendar.MINUTE, cal.get(Calendar.MINUTE));
+			
+			String prueba = cal.getTime().toString();
+			String prueba2 = calendar.getTime().toString();
+
+            DiaLaboral diaLaboral = DiaLaboral.getDia(DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class), Utils.getDayOfWeek(calendarCurrent));
 			if(context == null)
 				Utils.ErrorToFile("Context is null - " + Calendar.getInstance().getTime().toString());
 			else {
@@ -65,35 +80,23 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 					PreferenceManager.setValue(Contants.KEY_GPS_NOTIFICATION, true);
 				}else{
 					gps = "OFF";
-					NotificationPusher.pushNotification(1, context, "Por favor encienda su GPS", "GPS");
-					if(PreferenceManager.getInt(Contants.KEY_ID_SUPERVISOR,0) != 0) {
-						if(PreferenceManager.getBoolean(Contants.KEY_GPS_NOTIFICATION,true)) {
-							Bundle bundle = new Bundle();
-							bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SEND_NOTIFICATION);
-							bundle.putInt(AgenteDetalleFragment.ARG_AGENTE, PreferenceManager.getInt(Contants.KEY_ID_SUPERVISOR, 0));
-							bundle.putString(AgenteDetalleFragment.ARG_TITLE, "GPS");
-							bundle.putString(AgenteDetalleFragment.ARG_MESSAGE, "El usuario " + Session.getUser().getFullName() + " tiene apagado su GPS.");
-							rp3.sync.SyncUtils.requestSync(bundle);
-							PreferenceManager.setValue(Contants.KEY_GPS_NOTIFICATION, false);
+					if(calendarCurrent.getTimeInMillis() < calendar.getTimeInMillis() && diaLaboral.isEsLaboral()) {
+						NotificationPusher.pushNotification(1, context, "Por favor encienda su GPS", "GPS");
+						if (PreferenceManager.getInt(Contants.KEY_ID_SUPERVISOR, 0) != 0) {
+							if (PreferenceManager.getBoolean(Contants.KEY_GPS_NOTIFICATION, true)) {
+								Bundle bundle = new Bundle();
+								bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SEND_NOTIFICATION);
+								bundle.putInt(AgenteDetalleFragment.ARG_AGENTE, PreferenceManager.getInt(Contants.KEY_ID_SUPERVISOR, 0));
+								bundle.putString(AgenteDetalleFragment.ARG_TITLE, "GPS");
+								bundle.putString(AgenteDetalleFragment.ARG_MESSAGE, "El usuario " + Session.getUser().getFullName() + " tiene apagado su GPS.");
+								rp3.sync.SyncUtils.requestSync(bundle);
+								PreferenceManager.setValue(Contants.KEY_GPS_NOTIFICATION, false);
+							}
 						}
 					}
 				}
 				Utils.ErrorToFile("Context is ok - GPS: " + gps + " - NET: " + net + " - BATTERY: " + getBatteryLevel(context) + " - " + Calendar.getInstance().getTime().toString());
 			}
-			Calendar calendarCurrent = Calendar.getInstance();
-			calendarCurrent.setTimeInMillis(System.currentTimeMillis());
-			
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTimeInMillis(System.currentTimeMillis());
-			Calendar cal = Calendar.getInstance();
-			cal.setTimeInMillis(PreferenceManager.getLong(Contants.KEY_ALARMA_FIN));
-			calendar.set(Calendar.HOUR_OF_DAY, cal.get(Calendar.HOUR_OF_DAY));
-			calendar.set(Calendar.MINUTE, cal.get(Calendar.MINUTE));
-			
-			String prueba = cal.getTime().toString();
-			String prueba2 = calendar.getTime().toString();
-
-            DiaLaboral diaLaboral = DiaLaboral.getDia(DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class), Utils.getDayOfWeek(calendarCurrent));
 			if(calendarCurrent.getTimeInMillis() < calendar.getTimeInMillis() && diaLaboral.isEsLaboral())
 			{
 				LocationUtils.getLocation(context, new OnLocationResultListener() {
