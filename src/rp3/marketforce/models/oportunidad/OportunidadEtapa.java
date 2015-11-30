@@ -28,6 +28,7 @@ public class OportunidadEtapa extends EntityBase<OportunidadEtapa> {
     private String estado;
     private Etapa etapa;
     private List<OportunidadTarea> oportunidadTareas;
+    private Date fechaFinPlan;
 
     @Override
     public long getID() {
@@ -95,6 +96,14 @@ public class OportunidadEtapa extends EntityBase<OportunidadEtapa> {
         this.observacion = observacion;
     }
 
+    public Date getFechaFinPlan() {
+        return fechaFinPlan;
+    }
+
+    public void setFechaFinPlan(Date fechaFinPlan) {
+        this.fechaFinPlan = fechaFinPlan;
+    }
+
     public String getEstado() {
         return estado;
     }
@@ -139,6 +148,7 @@ public class OportunidadEtapa extends EntityBase<OportunidadEtapa> {
         setValue(Contract.OportunidadEtapa.COLUMN_FECHA_FIN, this.fechaFin);
         setValue(Contract.OportunidadEtapa.COLUMN_ESTADO, this.estado);
         setValue(Contract.OportunidadEtapa.COLUMN_ID_ETAPA_PADRE, this.idEtapaPadre);
+        setValue(Contract.OportunidadEtapa.COLUMN_FECHA_FIN_PLAN, this.fechaFinPlan);
     }
 
     @Override
@@ -152,7 +162,7 @@ public class OportunidadEtapa extends EntityBase<OportunidadEtapa> {
     }
 
     public static List<OportunidadEtapa> getEtapasOportunidad(DataBase db, int idOportunidad) {
-        Cursor c = db.query(Contract.OportunidadEtapa.TABLE_NAME, new String[]{Contract.OportunidadEtapa._ID, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD,
+        Cursor c = db.query(Contract.OportunidadEtapa.TABLE_NAME, new String[]{Contract.OportunidadEtapa._ID, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD, Contract.OportunidadEtapa.COLUMN_FECHA_FIN_PLAN,
                         Contract.OportunidadEtapa.COLUMN_ID_ETAPA, Contract.OportunidadEtapa.COLUMN_FECHA_INICIO, Contract.OportunidadEtapa.COLUMN_OBSERVACION,
                         Contract.OportunidadEtapa.COLUMN_FECHA_FIN, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD_INT, Contract.OportunidadEtapa.COLUMN_ESTADO,
                 Contract.OportunidadEtapa.COLUMN_ID_ETAPA_PADRE}
@@ -180,7 +190,7 @@ public class OportunidadEtapa extends EntityBase<OportunidadEtapa> {
     }
 
     public static List<OportunidadEtapa> getEtapasOportunidadInt(DataBase db, long id) {
-        Cursor c = db.query(Contract.OportunidadEtapa.TABLE_NAME, new String[]{Contract.OportunidadEtapa._ID, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD,
+        Cursor c = db.query(Contract.OportunidadEtapa.TABLE_NAME, new String[]{Contract.OportunidadEtapa._ID, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD, Contract.OportunidadEtapa.COLUMN_FECHA_FIN_PLAN,
                         Contract.OportunidadEtapa.COLUMN_ID_ETAPA, Contract.OportunidadEtapa.COLUMN_FECHA_INICIO, Contract.OportunidadEtapa.COLUMN_OBSERVACION,
                         Contract.OportunidadEtapa.COLUMN_FECHA_FIN, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD_INT, Contract.OportunidadEtapa.COLUMN_ESTADO,
                         Contract.OportunidadEtapa.COLUMN_ID_ETAPA_PADRE},
@@ -208,7 +218,7 @@ public class OportunidadEtapa extends EntityBase<OportunidadEtapa> {
     }
 
     public static OportunidadEtapa getEtapaOportunidad(DataBase db, int idOportunidad, int idEtapa) {
-        Cursor c = db.query(Contract.OportunidadEtapa.TABLE_NAME, new String[]{Contract.OportunidadEtapa._ID, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD,
+        Cursor c = db.query(Contract.OportunidadEtapa.TABLE_NAME, new String[]{Contract.OportunidadEtapa._ID, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD, Contract.OportunidadEtapa.COLUMN_FECHA_FIN_PLAN,
                         Contract.OportunidadEtapa.COLUMN_ID_ETAPA, Contract.OportunidadEtapa.COLUMN_FECHA_INICIO, Contract.OportunidadEtapa.COLUMN_OBSERVACION,
                         Contract.OportunidadEtapa.COLUMN_FECHA_FIN, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD_INT, Contract.OportunidadEtapa.COLUMN_ESTADO,
                         Contract.OportunidadEtapa.COLUMN_ID_ETAPA_PADRE},
@@ -237,7 +247,7 @@ public class OportunidadEtapa extends EntityBase<OportunidadEtapa> {
 
 
     public static OportunidadEtapa getEtapaOportunidadInt(DataBase db, long idOportunidad, int idEtapa) {
-        Cursor c = db.query(Contract.OportunidadEtapa.TABLE_NAME, new String[]{Contract.OportunidadEtapa._ID, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD,
+        Cursor c = db.query(Contract.OportunidadEtapa.TABLE_NAME, new String[]{Contract.OportunidadEtapa._ID, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD, Contract.OportunidadEtapa.COLUMN_FECHA_FIN_PLAN,
                         Contract.OportunidadEtapa.COLUMN_ID_ETAPA, Contract.OportunidadEtapa.COLUMN_FECHA_INICIO, Contract.OportunidadEtapa.COLUMN_OBSERVACION,
                         Contract.OportunidadEtapa.COLUMN_FECHA_FIN, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD_INT, Contract.OportunidadEtapa.COLUMN_ESTADO,
                         Contract.OportunidadEtapa.COLUMN_ID_ETAPA_PADRE},
@@ -264,7 +274,7 @@ public class OportunidadEtapa extends EntityBase<OportunidadEtapa> {
     }
 
     public static List<OportunidadEtapa> getEtapaOportunidadHijas(DataBase db, long idOportunidad, int idEtapa) {
-        Cursor c = db.query(Contract.OportunidadEtapa.TABLE_NAME, new String[]{Contract.OportunidadEtapa._ID, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD,
+        Cursor c = db.query(Contract.OportunidadEtapa.TABLE_NAME, new String[]{Contract.OportunidadEtapa._ID, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD, Contract.OportunidadEtapa.COLUMN_FECHA_FIN_PLAN,
                         Contract.OportunidadEtapa.COLUMN_ID_ETAPA, Contract.OportunidadEtapa.COLUMN_FECHA_INICIO, Contract.OportunidadEtapa.COLUMN_OBSERVACION,
                         Contract.OportunidadEtapa.COLUMN_FECHA_FIN, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD_INT, Contract.OportunidadEtapa.COLUMN_ESTADO,
                         Contract.OportunidadEtapa.COLUMN_ID_ETAPA_PADRE},
@@ -292,7 +302,7 @@ public class OportunidadEtapa extends EntityBase<OportunidadEtapa> {
     }
 
     public static List<OportunidadEtapa> getEtapaOportunidadHijasExt(DataBase db, int idOportunidad, int idEtapa) {
-        Cursor c = db.query(Contract.OportunidadEtapa.TABLE_NAME, new String[]{Contract.OportunidadEtapa._ID, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD,
+        Cursor c = db.query(Contract.OportunidadEtapa.TABLE_NAME, new String[]{Contract.OportunidadEtapa._ID, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD, Contract.OportunidadEtapa.COLUMN_FECHA_FIN_PLAN,
                         Contract.OportunidadEtapa.COLUMN_ID_ETAPA, Contract.OportunidadEtapa.COLUMN_FECHA_INICIO, Contract.OportunidadEtapa.COLUMN_OBSERVACION,
                         Contract.OportunidadEtapa.COLUMN_FECHA_FIN, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD_INT, Contract.OportunidadEtapa.COLUMN_ESTADO,
                         Contract.OportunidadEtapa.COLUMN_ID_ETAPA_PADRE},

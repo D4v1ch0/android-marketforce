@@ -65,6 +65,11 @@ public class Etapa {
                     else
                         etapa.setDias(0);
 
+                    if(!type.isNull("EsVariable"))
+                        etapa.setEsVariable(type.getBoolean("EsVariable"));
+                    else
+                        etapa.setEsVariable(false);
+
                     etapa.setDescripcion(type.getString("Descripcion"));
 
                     rp3.marketforce.models.oportunidad.Etapa.insert(db, etapa);

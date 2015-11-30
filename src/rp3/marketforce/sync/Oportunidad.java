@@ -167,6 +167,11 @@ public class Oportunidad {
                     ticks = etapa.getFechaInicio().getTime();
                     if(ticks != 0)
                         jObjectEtapa.put("FechaInicioTicks", Convert.getDotNetTicksFromDate(etapa.getFechaInicio()));
+                    if(etapa.getFechaFinPlan() != null) {
+                        ticks = etapa.getFechaFinPlan().getTime();
+                        if (ticks != 0)
+                            jObjectEtapa.put("FechaFinPlanTicks", Convert.getDotNetTicksFromDate(etapa.getFechaFinPlan()));
+                    }
 
                     jArrayEtapas.put(jObjectEtapa);
                 }
@@ -454,6 +459,11 @@ public class Oportunidad {
                     ticks = etapa.getFechaInicio().getTime();
                     if(ticks != 0)
                         jObjectEtapa.put("FechaInicioTicks", Convert.getDotNetTicksFromDate(etapa.getFechaInicio()));
+                    if(etapa.getFechaFinPlan() != null) {
+                        ticks = etapa.getFechaFinPlan().getTime();
+                        if (ticks != 0)
+                            jObjectEtapa.put("FechaFinPlanTicks", Convert.getDotNetTicksFromDate(etapa.getFechaFinPlan()));
+                    }
                     jObjectEtapa.put("EstadoTabla", Contants.GENERAL_TABLE_ESTADOS_OPORTUNIDAD_ETAPA);
 
                     jArrayEtapas.put(jObjectEtapa);
@@ -746,6 +756,8 @@ public class Oportunidad {
                             opEtapa.setIdEtapa(str.getInt("IdEtapa"));
                             if(!str.isNull("IdEtapaPadre"))
                                 opEtapa.setIdEtapaPadre(str.getInt("IdEtapaPadre"));
+                            if(!str.isNull("FechaFinPlanTicks"))
+                                opEtapa.setFechaFinPlan(Convert.getDateFromDotNetTicks(str.getLong("FechaFinPlanTicks")));
                             opEtapa.setObservacion(str.getString("Observacion"));
                             opEtapa.setEstado(str.getString("Estado"));
                             opEtapa.setFechaInicio(Convert.getDateFromDotNetTicks(str.getLong("FechaInicioTicks")));

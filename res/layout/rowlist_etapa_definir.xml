@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:padding="5dp" >
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/detail_tarea_num"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:text="2"
+            android:textColor="@color/caldroid_white"
+            android:textStyle="bold"
+            android:typeface="normal"
+            android:background="@color/color_etapa1"
+            android:gravity="center" />
+
+        <LinearLayout
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/bg_button_bg_main_pressed" >
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/detail_agenda_estado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:layout_marginRight="15dp"
+                />
+
+            <TextView
+                android:id="@+id/etapa_fecha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:layout_marginRight="15dp"
+                android:text="@string/label_sin_especificar" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

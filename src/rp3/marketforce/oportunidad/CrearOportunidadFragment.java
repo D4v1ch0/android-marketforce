@@ -79,7 +79,7 @@ import rp3.util.StringUtils;
 /**
  * Created by magno_000 on 19/05/2015.
  */
-public class CrearOportunidadFragment extends BaseFragment implements AgenteFragment.EditAgentesListener {
+public class CrearOportunidadFragment extends BaseFragment implements AgenteFragment.EditAgentesListener, EtapasDefinicionFragment.EtapasDefinicionListener {
 
     private View view;
     public final static int REQ_CODE_SPEECH_INPUT = 1200;
@@ -103,6 +103,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
     private List<LinearLayout> listViewResponsables, listViewContactos;
     private List<Integer> listAgentesIds, listAgentesIdsDelete, listContactosIdsDelete;
     private List<OportunidadContacto> listContactos;
+    private List<OportunidadEtapa> listEtapas;
     private List<OportunidadTipo> listTipos;
     private Location currentLoc;
     private long id = 0;
@@ -155,8 +156,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
             case R.id.action_save:
                 if(Validaciones())
                 {
-                    Grabar();
-                    finish();
+                    EvaluarEtapas();
                 }
                 break;
             case R.id.action_cancel:
@@ -166,6 +166,30 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void EvaluarEtapas()
+    {
+        boolean hayVariable = false;
+        List<Etapa> etapas = Etapa.getEtapasAll(getDataBase(), listTipos.get(((Spinner) view.findViewById(R.id.oportunidad_tipo_etapas)).getSelectedItemPosition() - 1).getIdOportunidadTipo());
+        for(Etapa etapa : etapas)
+        {
+            if(etapa.isEsVariable())
+                hayVariable = true;
+        }
+
+        if(hayVariable)
+        {
+            EtapasDefinicionFragment fragment = EtapasDefinicionFragment.newInstance(listTipos.get(((Spinner) view.findViewById(R.id.oportunidad_tipo_etapas)).getSelectedItemPosition() - 1).getIdOportunidadTipo());
+            showDialogFragment(fragment, "Etapas a Definir","Etapas a Definir");
+        }
+        else
+        {
+            listEtapas = null;
+            Grabar();
+            finish();
+        }
+
     }
 
     private void Grabar() {
@@ -338,20 +362,30 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
             }
 
             int etapaPadre = -1;
-            for(Etapa etapa : etapas)
-            {
-                OportunidadEtapa oportunidadEtapa = new OportunidadEtapa();
-                oportunidadEtapa.setEstado("P");
-                oportunidadEtapa.setIdEtapa(etapa.getIdEtapa());
-                if(etapa.getOrden() == 1 && (etapa.getIdEtapaPadre() == 0 || etapa.getIdEtapaPadre() == etapaPadre)) {
-                    oportunidadEtapa.setFechaInicio(Calendar.getInstance().getTime());
-                    if(etapa.getIdEtapaPadre() == 0)
-                        etapaPadre = etapa.getIdEtapa();
+            if(listEtapas == null) {
+                for (Etapa etapa : etapas) {
+                    OportunidadEtapa oportunidadEtapa = new OportunidadEtapa();
+                    oportunidadEtapa.setEstado("P");
+                    oportunidadEtapa.setIdEtapa(etapa.getIdEtapa());
+                    if (etapa.getOrden() == 1 && (etapa.getIdEtapaPadre() == 0 || etapa.getIdEtapaPadre() == etapaPadre)) {
+                        oportunidadEtapa.setFechaInicio(Calendar.getInstance().getTime());
+                        if (etapa.getIdEtapaPadre() == 0)
+                            etapaPadre = etapa.getIdEtapa();
+                    }
+                    oportunidadEtapa.setIdEtapaPadre(etapa.getIdEtapaPadre());
+                    oportunidadEtapa.set_idOportunidad((int) opt.getID());
+                    oportunidadEtapa.setObservacion("");
+                    OportunidadEtapa.insert(getDataBase(), oportunidadEtapa);
                 }
-                oportunidadEtapa.setIdEtapaPadre(etapa.getIdEtapaPadre());
-                oportunidadEtapa.set_idOportunidad((int) opt.getID());
-                oportunidadEtapa.setObservacion("");
-                OportunidadEtapa.insert(getDataBase(), oportunidadEtapa);
+            }
+            else
+            {
+                for (OportunidadEtapa oportunidadEtapa : listEtapas)
+                {
+                    oportunidadEtapa.set_idOportunidad((int) opt.getID());
+                    oportunidadEtapa.setObservacion("");
+                    OportunidadEtapa.insert(getDataBase(), oportunidadEtapa);
+                }
             }
         }
 
@@ -973,4 +1007,10 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
 
     }
 
+    @Override
+    public void onEtapasFinish(List<OportunidadEtapa> etapas) {
+        listEtapas = etapas;
+        Grabar();
+        finish();
+    }
 }
