@@ -394,7 +394,10 @@ public class Agenda {
 
             jObject.put("AgendaTareas", jArrayTareas);
         } catch (Exception ex) {
-
+            if(agenda != null) {
+                agenda.setEnviado(false);
+                rp3.marketforce.models.Agenda.update(db, agenda);
+            }
         }
 
         webService.addParameter("agenda", jObject);
@@ -432,6 +435,10 @@ public class Agenda {
             }
 
         } finally {
+            if(agenda != null) {
+                agenda.setEnviado(false);
+                rp3.marketforce.models.Agenda.update(db, agenda);
+            }
             webService.close();
         }
 
