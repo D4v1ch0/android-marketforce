@@ -31,6 +31,7 @@ import rp3.util.Convert;
 public class Marcaciones {
     public static int executeSync(DataBase db) {
         List<Marcacion> marcacionUploads = rp3.marketforce.models.marcacion.Marcacion.getMarcacionesPendientes(db);
+        boolean failed = false;
 
         for(Marcacion marc : marcacionUploads) {
 
@@ -113,19 +114,19 @@ public class Marcaciones {
                     webService.invokeWebService();
                     marc.setPendiente(false);
                     rp3.marketforce.models.marcacion.Marcacion.update(db, marc);
-                    if(marc.getPermiso() != null)
-                    {
-                        Permiso.delete(db, marc.getPermiso());
-                    }
                 } catch (HttpResponseException e) {
+                    failed = true;
                     if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
                         return rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR;
                     return rp3.content.SyncAdapter.SYNC_EVENT_HTTP_ERROR;
                 } catch (Exception e) {
+                    failed = true;
                     return rp3.content.SyncAdapter.SYNC_EVENT_ERROR;
                 }
 
             } finally {
+                if(!failed)
+                    Permiso.deleteAll(db, Contract.Permiso.TABLE_NAME);
                 webService.close();
             }
         }
