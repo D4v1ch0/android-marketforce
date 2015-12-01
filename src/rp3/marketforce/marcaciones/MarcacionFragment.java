@@ -188,6 +188,9 @@ public class MarcacionFragment extends BaseFragment {
                                                         DataBase db = DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class);
                                                         Marcacion.insert(db, marc);
                                                     }
+
+                                                    if(marc.getID() == 0)
+                                                        marc.setID(Marcacion.getUltimaMarcacion(getDataBase()).getID());
                                                     Toast.makeText(getContext(), "Se ha iniciado la Jornada.", Toast.LENGTH_LONG).show();
 
                                                     if (distance < DISTANCE) {
@@ -463,6 +466,8 @@ public class MarcacionFragment extends BaseFragment {
                                                         DataBase db = DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class);
                                                         Marcacion.insert(db, marc);
                                                     }
+                                                    if(marc.getID() == 0)
+                                                        marc.setID(Marcacion.getUltimaMarcacion(getDataBase()).getID());
                                                     Toast.makeText(getContext(), "Se ha iniciado el break.", Toast.LENGTH_LONG).show();
                                                     if (distance < DISTANCE) {
                                                         marcaciones.findViewById(R.id.layout_break).setVisibility(View.GONE);
@@ -560,6 +565,8 @@ public class MarcacionFragment extends BaseFragment {
                                                         DataBase db = DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class);
                                                         Marcacion.insert(db, marc);
                                                     }
+                                                    if(marc.getID() == 0)
+                                                        marc.setID(Marcacion.getUltimaMarcacion(getDataBase()).getID());
                                                     Toast.makeText(getContext(), "Se ha terminado el break.", Toast.LENGTH_LONG).show();
                                                     if (distance < DISTANCE) {
                                                         Marcacion ultimaMarcacion = Marcacion.getUltimaMarcacion(getDataBase(), "J2");
@@ -672,6 +679,8 @@ public class MarcacionFragment extends BaseFragment {
                                                         DataBase db = DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class);
                                                         Marcacion.insert(db, marc);
                                                     }
+                                                    if(marc.getID() == 0)
+                                                        marc.setID(Marcacion.getUltimaMarcacion(getDataBase()).getID());
                                                     Toast.makeText(getContext(), "Se ha finalizado la Jornada.", Toast.LENGTH_LONG).show();
                                                     if (distance < DISTANCE) {
                                                         DiaLaboral dia = DiaLaboral.getDia(getDataBase(), Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1);
