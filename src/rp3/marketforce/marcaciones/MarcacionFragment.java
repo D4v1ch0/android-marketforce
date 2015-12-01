@@ -179,6 +179,8 @@ public class MarcacionFragment extends BaseFragment {
                                                     }
                                                     else
                                                     {
+                                                        marc.setLatitud(location.getLatitude());
+                                                        marc.setLongitud(location.getLongitude());
                                                         distance = 0;
                                                     }
                                                     marc.setEnUbicacion(distance < DISTANCE);
@@ -457,6 +459,8 @@ public class MarcacionFragment extends BaseFragment {
                                                                 Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA, "0")));
                                                         distance = SphericalUtil.computeDistanceBetween(pos, partida);
                                                     } else {
+                                                        marc.setLatitud(location.getLatitude());
+                                                        marc.setLongitud(location.getLongitude());
                                                         distance = 0;
                                                     }
                                                     marc.setEnUbicacion(distance < DISTANCE);
@@ -556,6 +560,8 @@ public class MarcacionFragment extends BaseFragment {
                                                                 Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA, "0")));
                                                         distance = SphericalUtil.computeDistanceBetween(pos, partida);
                                                     } else {
+                                                        marc.setLatitud(location.getLatitude());
+                                                        marc.setLongitud(location.getLongitude());
                                                         distance = 0;
                                                     }
                                                     marc.setEnUbicacion(distance < DISTANCE);
@@ -670,6 +676,8 @@ public class MarcacionFragment extends BaseFragment {
                                                                 Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA, "0")));
                                                         distance = SphericalUtil.computeDistanceBetween(pos, partida);
                                                     } else {
+                                                        marc.setLatitud(location.getLatitude());
+                                                        marc.setLongitud(location.getLongitude());
                                                         distance = 0;
                                                     }
                                                     marc.setEnUbicacion(distance < DISTANCE);
