@@ -20,6 +20,7 @@ import rp3.content.SimpleGeneralValueAdapter;
 import rp3.data.models.GeneralValue;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
+import rp3.marketforce.db.Contract;
 import rp3.marketforce.models.marcacion.Marcacion;
 import rp3.marketforce.models.marcacion.Permiso;
 import rp3.marketforce.ruta.CrearVisitaFragment;
@@ -83,6 +84,8 @@ public class JustificacionFragment extends BaseFragment {
                             bundle.putLong(ARG_PERMISO, permiso.getID());
                             requestSync(bundle);
                         } else {
+                            if(permiso.getID() == 0)
+                                permiso.setID(getDataBase().queryMaxLong(Contract.Permiso.TABLE_NAME, Contract.Permiso._ID));
                             permiso.setIdMarcacion(idMarcacion);
                             Marcacion marc = Marcacion.getMarcacion(getDataBase(), idMarcacion);
                             marc.setPendiente(true);
