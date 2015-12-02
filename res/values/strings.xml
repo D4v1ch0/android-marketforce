@@ -277,5 +277,13 @@
     <string name="label_cuarta_etapa">Cuarta Etapa</string>
     <string name="label_quinta_etapa">Quinta Etapa</string>
     <string name="label_todos">Todos</string>
+    <string name="label_inicio">Inició</string>
+    <string name="label_debe_finalizar">Debe Finalizar</string>
+    <string name="label_finalizo">Finalizó</string>
+    <string name="label_no_inicia">Aún no inicia</string>
+    <string name="label_aun_finaliza">Aún no finaliza</string>
+    <string name="label_debe_iniciar">Debe Iniciar</string>
+    <string name="label_dias_programado">Dias Programado</string>
+    <string name="label_dias_reales">Días Reales</string>
 
 </resources>

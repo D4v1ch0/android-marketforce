@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="5dp" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_debe_iniciar"
+            android:id="@+id/textView86"
+            android:layout_weight="1"
+            android:textSize="@dimen/text_medium_small_size"
+            android:textColor="@color/color_text_sky_blue"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_sin_especificar"
+            android:id="@+id/etapa_fecha_ini_plan"
+            android:layout_weight="1"
+            android:textSize="@dimen/text_medium_small_size" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_grey_lines" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="5dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_inicio"
+            android:id="@+id/textView85"
+            android:layout_weight="1"
+            android:textSize="@dimen/text_medium_small_size"
+            android:textColor="@color/color_text_sky_blue"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_no_inicia"
+            android:id="@+id/etapa_fecha_inicio"
+            android:layout_weight="1"
+            android:textSize="@dimen/text_medium_small_size" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_grey_lines"></LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="5dp" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_debe_finalizar"
+            android:id="@+id/textView87"
+            android:layout_weight="1"
+            android:textSize="@dimen/text_medium_small_size"
+            android:textColor="@color/color_text_sky_blue"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_sin_especificar"
+            android:id="@+id/etapa_fecha_plan"
+            android:layout_weight="1"
+            android:textSize="@dimen/text_medium_small_size" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_grey_lines" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="5dp" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_finalizo"
+            android:id="@+id/textView89"
+            android:layout_weight="1"
+            android:textSize="@dimen/text_medium_small_size"
+            android:textColor="@color/color_text_sky_blue"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_aun_finaliza"
+            android:id="@+id/etapa_fecha_fin"
+            android:layout_weight="1"
+            android:textSize="@dimen/text_medium_small_size" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_grey_lines" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="5dp" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_dias_programado"
+            android:id="@+id/textView90"
+            android:layout_weight="1"
+            android:textSize="@dimen/text_medium_small_size"
+            android:textColor="@color/color_text_sky_blue"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_sin_especificar"
+            android:id="@+id/etapa_dias_programado"
+            android:layout_weight="1"
+            android:textSize="@dimen/text_medium_small_size" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_grey_lines" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="5dp" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_dias_reales"
+            android:id="@+id/textView92"
+            android:layout_weight="1"
+            android:textSize="@dimen/text_medium_small_size"
+            android:textColor="@color/color_text_sky_blue"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_no_inicia"
+            android:id="@+id/etapa_dias_real"
+            android:layout_weight="1"
+            android:textSize="@dimen/text_medium_small_size" />
+    </LinearLayout>
+
+</LinearLayout>

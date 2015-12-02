@@ -503,6 +503,15 @@ public class OportunidadDetailFragment extends BaseFragment {
                     ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setText(position + 1 + "");
                     if (position == 0) {
                         ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa1));
+                        final long idOptEtp = etp.getID();
+                        final String nameEtp = etp.getEtapa().getDescripcion();
+                        ((ImageView) view_timeline.findViewById(R.id.etapa1_indicator)).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                EtapaFechasFragment fragment = EtapaFechasFragment.newInstance(idOptEtp);
+                                showDialogFragment(fragment, "Etapa Fecha", nameEtp);
+                            }
+                        });
                         if (etp.getEstado().equalsIgnoreCase("R")) {
                             ((ImageView) view_timeline.findViewById(R.id.etapa1_indicator)).setImageResource(R.drawable.timeline1);
                         }
@@ -524,6 +533,15 @@ public class OportunidadDetailFragment extends BaseFragment {
                     }
                     if (position == 1) {
                         ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa2));
+                        final long idOptEtp = etp.getID();
+                        final String nameEtp = etp.getEtapa().getDescripcion();
+                        ((ImageView) view_timeline.findViewById(R.id.etapa2_indicator)).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                EtapaFechasFragment fragment = EtapaFechasFragment.newInstance(idOptEtp);
+                                showDialogFragment(fragment, "Etapa Fecha", nameEtp);
+                            }
+                        });
                         if (etp.getEstado().equalsIgnoreCase("R")) {
                             ((ImageView) view_timeline.findViewById(R.id.etapa2_indicator)).setImageResource(R.drawable.timeline2);
                         }
@@ -545,6 +563,15 @@ public class OportunidadDetailFragment extends BaseFragment {
                     }
                     if (position == 2) {
                         ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa3));
+                        final long idOptEtp = etp.getID();
+                        final String nameEtp = etp.getEtapa().getDescripcion();
+                        ((ImageView) view_timeline.findViewById(R.id.etapa3_indicator)).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                EtapaFechasFragment fragment = EtapaFechasFragment.newInstance(idOptEtp);
+                                showDialogFragment(fragment, "Etapa Fecha", nameEtp);
+                            }
+                        });
                         if (etp.getEstado().equalsIgnoreCase("R")) {
                             ((ImageView) view_timeline.findViewById(R.id.etapa3_indicator)).setImageResource(R.drawable.timeline3);
                         }
@@ -567,6 +594,15 @@ public class OportunidadDetailFragment extends BaseFragment {
                     }
                     if (position == 3) {
                         ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa4));
+                        final long idOptEtp = etp.getID();
+                        final String nameEtp = etp.getEtapa().getDescripcion();
+                        ((ImageView) view_timeline.findViewById(R.id.etapa4_indicator)).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                EtapaFechasFragment fragment = EtapaFechasFragment.newInstance(idOptEtp);
+                                showDialogFragment(fragment, "Etapa Fecha", nameEtp);
+                            }
+                        });
                         if (etp.getEstado().equalsIgnoreCase("R")) {
                             ((ImageView) view_timeline.findViewById(R.id.etapa4_indicator)).setImageResource(R.drawable.timeline4);
                         }
@@ -588,6 +624,15 @@ public class OportunidadDetailFragment extends BaseFragment {
                     }
                     if (position == 4) {
                         ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa5));
+                        final long idOptEtp = etp.getID();
+                        final String nameEtp = etp.getEtapa().getDescripcion();
+                        ((ImageView) view_timeline.findViewById(R.id.etapa5_indicator)).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                EtapaFechasFragment fragment = EtapaFechasFragment.newInstance(idOptEtp);
+                                showDialogFragment(fragment, "Etapa Fecha", nameEtp);
+                            }
+                        });
                         if (etp.getEstado().equalsIgnoreCase("R")) {
                             ((ImageView) view_timeline.findViewById(R.id.etapa5_indicator)).setImageResource(R.drawable.timeline5);
                         }
