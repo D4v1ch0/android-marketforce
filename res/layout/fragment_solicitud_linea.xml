@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.65"
+            android:padding="5dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="NOMBRE COMPLETO CLIENTE"
+                android:id="@+id/cliente_nombre"
+                android:lines="3"
+                android:maxLines="3"
+                android:textColor="@color/color_text_sky_blue"
+                android:textSize="@dimen/text_medium_size"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_monto"
+            android:id="@+id/textView106"
+            android:layout_weight="0.35"
+            android:textSize="@dimen/text_medium_small_size"
+            android:textColor="@color/color_text_sky_blue" />
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:ems="10"
+            android:id="@+id/editText9"
+            android:layout_weight="0.35" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/label_comentarios"
+        android:id="@+id/textView133"
+        android:textSize="@dimen/text_medium_small_size"
+        android:textColor="@color/color_text_sky_blue"
+        android:layout_marginLeft="5dp" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <EditText
+            android:id="@+id/editText10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textMultiLine|textCapSentences"
+            android:minWidth="@dimen/nav_drawer_width"
+            android:textAppearance="@style/EditTextAppTheme"
+            android:textSize="@dimen/text_input_size"
+            android:background="@drawable/observaciones_fondo"
+            android:gravity="top"
+            android:layout_margin="5dp"
+            android:scrollbars="vertical"
+            android:fadeScrollbars="false"
+            android:hint="@string/hint_escriba_aqui"
+            android:lines="8" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView3"
+            android:src="@drawable/ic_action_mic"
+            android:layout_alignTop="@+id/editText10"
+            android:layout_alignRight="@+id/editText10"
+            android:layout_alignEnd="@+id/editText10"
+            android:clickable="true" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/label_solicitar"
+            android:id="@+id/button"
+            style="@style/Widget.Button.Theme"
+            android:layout_margin="5dp"
+            android:layout_weight="1" />
+
+        <Button
+            style="@style/Widget.Button.Theme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/action_cancel"
+            android:id="@+id/button4"
+            android:layout_margin="5dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+</LinearLayout>

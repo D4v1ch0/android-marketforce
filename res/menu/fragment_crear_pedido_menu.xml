@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/action_save" android:title="@string/label_grabar" android:icon="@drawable/ic_action_accept_dark" android:showAsAction="ifRoom|collapseActionView"></item>
+    <item android:id="@+id/action_cancel" android:title="@string/label_cancelar" android:icon="@drawable/ic_action_cancel_dark" android:showAsAction="ifRoom|collapseActionView"></item>
+    <item android:id="@+id/submenu_pedido" android:showAsAction="ifRoom" android:title="Otras opciones" android:icon="@drawable/ic_action_overflow">
+        <menu>
+            <item android:id="@+id/action_datos_clientes" android:title="@string/action_cambiar_contacto"></item>
+            <item android:id="@+id/action_informacion_crediticia" android:title="@string/action_información_crediticia"></item>
+            <item android:id="@+id/action_lista_precios" android:title="@string/action_lista_de_precios"></item>
+        </menu>
+    </item>
+
+</menu>

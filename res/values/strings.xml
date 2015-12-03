@@ -288,7 +288,7 @@
     <string name="label_descripción">Descripción</string>
     <string name="label_valor_unitario">V. Unitario</string>
     <string name="label_valor_total">Total</string>
-    <string name="label_cantidad_items">Cantidad de Items:</string>
+    <string name="label_cantidad_items"># de Items:</string>
     <string name="label_total_pedido">Total Pedido:</string>
     <string name="label_agregar_producto">Agregar Producto</string>
     <string name="message_guardar_pedido">Desea guardar los datos del pedido?</string>
@@ -334,4 +334,28 @@
     <string name="label_no_permisos">No hay permisos por aprobar</string>
     <string name="laber_jornada_sin">Jornada</string>
     <string name="label_llegada">Llegada:</string>
+    <string name="label_plazo">Plazo:</string>
+    <string name="label_cuota">Cuota:</string>
+    <string name="label_SKU">SKU</string>
+    <string name="label_subtotal_pedidos">Sub-Total:</string>
+    <string name="label_base_impuestos">Base de Impuestos:</string>
+    <string name="label_impuestos">Impuestos:</string>
+    <string name="action_datos_cliente">Datos Del Cliente</string>
+    <string name="action_información_crediticia">Información Crediticia</string>
+    <string name="action_lista_de_precios">Lista de Precios</string>
+    <string name="label_descuento_manual">Descuento:</string>
+    <string name="label_exento_impuestos">Exento Impuestos?</string>
+    <string name="label_plazo_sin_puntos">Plazo</string>
+    <string name="label_cuota_sin_puntos">Cuota</string>
+    <string name="label_status_cuenta">Status de Cuenta</string>
+    <string name="label_cupo">Cupo</string>
+    <string name="label_disponible">Disponible</string>
+    <string name="label_saldo">Saldo</string>
+    <string name="label_documentos_vencidos">Documentos Vencidos</string>
+    <string name="label_dias_vencido">Días Vencido</string>
+    <string name="label_cheques_protestados">Cheques Protestados</string>
+    <string name="label_cheques_postfechados">Cheques Postfechados</string>
+    <string name="label_solicitud_incremento">Solicitar Incremento de Línea</string>
+    <string name="label_monto">Monto</string>
+    <string name="label_solicitar">Solicitar</string>
 </resources>

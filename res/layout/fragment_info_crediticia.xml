@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.65"
+            android:padding="5dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="NOMBRE COMPLETO CLIENTE"
+                android:id="@+id/cliente_nombre"
+                android:lines="3"
+                android:maxLines="3"
+                android:textColor="@color/color_text_sky_blue"
+                android:textSize="@dimen/text_medium_size"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_cupo"
+            android:id="@+id/textView106"
+            android:layout_weight="0.35"
+            android:textSize="@dimen/text_medium_small_size"
+            android:textColor="@color/color_text_sky_blue" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="$ 3000.00"
+            android:id="@+id/textView108"
+            android:layout_weight="0.35"
+            android:textSize="@dimen/text_medium_small_size"
+            android:gravity="right" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_disponible"
+            android:id="@+id/textView107"
+            android:layout_weight="0.35"
+            android:layout_marginLeft="5dp"
+            android:textSize="@dimen/text_medium_small_size"
+            android:textColor="@color/color_text_sky_blue" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="$ 2000.00"
+            android:id="@+id/textView109"
+            android:layout_weight="0.35"
+            android:textSize="@dimen/text_medium_small_size"
+            android:gravity="right" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_saldo"
+            android:id="@+id/textView120"
+            android:layout_weight="0.35"
+            android:textSize="@dimen/text_medium_small_size"
+            android:textColor="@color/color_text_sky_blue" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="$ 1200.00"
+            android:id="@+id/textView121"
+            android:layout_weight="0.35"
+            android:textSize="@dimen/text_medium_small_size"
+            android:drawableRight="@drawable/ic_action_search_light"
+            android:gravity="center_vertical|right" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.7"></LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:gravity="center_vertical" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_documentos_vencidos"
+            android:id="@+id/textView122"
+            android:layout_weight="0.35"
+            android:textSize="@dimen/text_medium_small_size"
+            android:textColor="@color/color_text_sky_blue" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="$ 500.00"
+            android:id="@+id/textView123"
+            android:layout_weight="0.35"
+            android:textSize="@dimen/text_medium_small_size"
+            android:drawableRight="@drawable/ic_action_search_light"
+            android:gravity="center_vertical|right" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_dias_vencido"
+            android:id="@+id/textView124"
+            android:layout_weight="0.35"
+            android:layout_marginLeft="5dp"
+            android:textSize="@dimen/text_medium_small_size"
+            android:textColor="@color/color_text_sky_blue" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="5"
+            android:id="@+id/textView124"
+            android:layout_weight="0.35"
+            android:textSize="@dimen/text_medium_small_size"
+            android:gravity="right" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:gravity="center_vertical" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_cheques_protestados"
+            android:id="@+id/textView125"
+            android:layout_weight="0.35"
+            android:textSize="@dimen/text_medium_small_size"
+            android:textColor="@color/color_text_sky_blue" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="$ 320.00"
+            android:id="@+id/textView126"
+            android:layout_weight="0.35"
+            android:textSize="@dimen/text_medium_small_size"
+            android:drawableRight="@drawable/ic_action_search_light"
+            android:gravity="center_vertical|right" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_cheques_postfechados"
+            android:id="@+id/textView127"
+            android:layout_weight="0.35"
+            android:textSize="@dimen/text_medium_small_size"
+            android:textColor="@color/color_text_sky_blue"
+            android:layout_marginLeft="5dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="$ 150.00"
+            android:id="@+id/textView127"
+            android:layout_weight="0.35"
+            android:textSize="@dimen/text_medium_small_size"
+            android:drawableRight="@drawable/ic_action_search_light"
+            android:gravity="center_vertical|right" />
+
+    </LinearLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/label_solicitud_incremento"
+        android:id="@+id/button"
+        style="@style/Widget.Button.Theme"
+        android:layout_margin="12dp" />
+
+</LinearLayout>

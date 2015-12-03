@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Medium Text"
+                android:text="Descripción"
                 android:id="@+id/producto_descripcion"
                 android:lines="3"
                 android:maxLines="3"
@@ -40,9 +40,110 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Medium Text"
+                android:text="Precio"
                 android:id="@+id/producto_precio" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Stock"
+                android:id="@+id/textView102" />
         </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_descuento_manual"
+            android:id="@+id/textView106"
+            android:layout_weight="0.35" />
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:id="@+id/editText7"
+            android:layout_weight="0.65"
+            android:inputType="number"
+            android:editable="false"
+            android:enabled="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:text="1%" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_descuento_manual"
+            android:id="@+id/textView107"
+            android:layout_weight="0.35"
+            android:layout_marginLeft="5dp" />
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:id="@+id/editText8"
+            android:layout_weight="0.65"
+            android:inputType="number"
+            android:text="3%"
+            android:enabled="false" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_descuento_manual"
+            android:id="@+id/textView104"
+            android:layout_weight="0.35" />
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:id="@+id/editText5"
+            android:layout_weight="0.65"
+            android:inputType="number"
+            android:editable="false"
+            android:enabled="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:text="0%" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_descuento_manual"
+            android:id="@+id/textView105"
+            android:layout_weight="0.35"
+            android:layout_marginLeft="5dp" />
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:id="@+id/editText6"
+            android:layout_weight="0.65"
+            android:inputType="number"
+            android:text="5%"
+            android:enabled="false" />
     </LinearLayout>
 
     <LinearLayout
@@ -55,9 +156,27 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_descuento_manual"
+            android:id="@+id/textView103"
+            android:layout_weight="0.35" />
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:id="@+id/editText4"
+            android:layout_weight="0.65"
+            android:inputType="number"
+            android:text="0%" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/label_cantidad2"
             android:id="@+id/textView19"
-            android:layout_weight="0.35" />
+            android:layout_weight="0.35"
+            android:layout_marginLeft="5dp" />
 
         <EditText
             android:layout_width="0dp"

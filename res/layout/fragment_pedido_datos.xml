@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.65"
+            android:padding="5dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="NOMBRE COMPLETO CLIENTE"
+                android:id="@+id/cliente_nombre"
+                android:lines="3"
+                android:maxLines="3"
+                android:textColor="@color/color_text_sky_blue"
+                android:textSize="@dimen/text_medium_size"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_tipo_identificacion"
+            android:id="@+id/textView106"
+            android:layout_weight="0.35"
+            android:textSize="@dimen/text_medium_small_size"
+            android:textColor="@color/color_text_sky_blue" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="0000000000"
+            android:id="@+id/textView108"
+            android:layout_weight="0.35"
+            android:textSize="@dimen/text_medium_small_size" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_identificacion"
+            android:id="@+id/textView107"
+            android:layout_weight="0.35"
+            android:layout_marginLeft="5dp"
+            android:textSize="@dimen/text_medium_small_size"
+            android:textColor="@color/color_text_sky_blue" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="DNI"
+            android:id="@+id/textView109"
+            android:layout_weight="0.35"
+            android:textSize="@dimen/text_medium_small_size" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_correo"
+            android:id="@+id/textView110"
+            android:layout_weight="0.35"
+            android:textSize="@dimen/text_medium_small_size"
+            android:textColor="@color/color_text_sky_blue" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="magno_zero@hotmail.com"
+            android:id="@+id/textView111"
+            android:layout_weight="0.35"
+            android:textSize="@dimen/text_medium_small_size"
+            android:ellipsize="end"
+            android:maxLines="1" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_exento_impuestos"
+            android:id="@+id/textView112"
+            android:layout_weight="0.35"
+            android:layout_marginLeft="5dp"
+            android:textSize="@dimen/text_medium_small_size"
+            android:textColor="@color/color_text_sky_blue" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Sí"
+            android:id="@+id/textView113"
+            android:layout_weight="0.35"
+            android:textSize="@dimen/text_medium_small_size" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_plazo_sin_puntos"
+            android:id="@+id/textView114"
+            android:layout_weight="0.35"
+            android:textSize="@dimen/text_medium_small_size"
+            android:textColor="@color/color_text_sky_blue" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="3"
+            android:id="@+id/textView115"
+            android:layout_weight="0.35"
+            android:textSize="@dimen/text_medium_small_size" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_cuota_sin_puntos"
+            android:id="@+id/textView116"
+            android:layout_weight="0.35"
+            android:layout_marginLeft="5dp"
+            android:textSize="@dimen/text_medium_small_size"
+            android:textColor="@color/color_text_sky_blue" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="1"
+            android:id="@+id/textView117"
+            android:layout_weight="0.35"
+            android:textSize="@dimen/text_medium_small_size" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_status_cuenta"
+            android:id="@+id/textView118"
+            android:layout_weight="0.25"
+            android:textSize="@dimen/text_medium_small_size"
+            android:textColor="@color/color_text_sky_blue" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Aprobado"
+            android:id="@+id/textView119"
+            android:layout_weight="0.75"
+            android:textSize="@dimen/text_medium_small_size" />
+
+    </LinearLayout>
+
+</LinearLayout>
