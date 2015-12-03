@@ -96,4 +96,10 @@
     <statement name="ToVersion7">
         ALTER TABLE tbActividad ADD COLUMN Limite INTEGER;
     </statement>
+    <statement name="ToVersion8-1">
+        ALTER TABLE tbOportunidadEtapa ADD COLUMN FechaFinPlan INTEGER;
+    </statement>
+    <statement name="ToVersion8-2">
+        ALTER TABLE tbEtapa ADD COLUMN EsVariable BOOLEAN;
+    </statement>
 </sql>

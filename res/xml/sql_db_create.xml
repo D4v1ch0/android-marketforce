@@ -334,7 +334,8 @@
         IdEtapaPadre INTEGER,
         Descripcion TEXT,
         IdOportunidadTipo INTEGER,
-        Dias INTEGER
+        Dias INTEGER,
+        EsVariable BOOLEAN
         )
     </statement>
     <statement>
@@ -355,7 +356,8 @@
         FechaInicio INTEGER,
         FechaFin INTEGER,
         Observacion TEXT,
-        Estado TEXT
+        Estado TEXT,
+        FechaFinPlan INTEGER
         )
     </statement>
     <statement>
