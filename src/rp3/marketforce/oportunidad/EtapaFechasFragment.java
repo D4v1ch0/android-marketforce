@@ -76,11 +76,9 @@ public class EtapaFechasFragment extends BaseFragment {
             ((TextView) rootView.findViewById(R.id.etapa_fecha_fin)).setText(format1.format(etp.getFechaFin()));
         if(etp.getFechaFinPlan() != null && etp.getFechaFinPlan().getTime() != 0)
             ((TextView) rootView.findViewById(R.id.etapa_fecha_plan)).setText(format1.format(etp.getFechaFinPlan()));
-        if(diasReal < 0)
-            ((TextView) rootView.findViewById(R.id.etapa_dias_real)).setText(diasReal + " Día(s)");
-        if(etp.getFechaFinPlan() != null && etp.getFechaFinPlan().getTime() != 0)
-            ((TextView) rootView.findViewById(R.id.etapa_fecha_plan)).setText(format1.format(etp.getFechaFinPlan()));
-        if(etp.getFechaFinPlan() != null && etp.getFechaFinPlan().getTime() != 0)
-            ((TextView) rootView.findViewById(R.id.etapa_fecha_plan)).setText(format1.format(etp.getFechaFinPlan()));
+        //if(diasReal < 0)
+        //    ((TextView) rootView.findViewById(R.id.etapa_dias_real)).setText(diasReal + " DÃ­a(s)");
+        //if(etp.getFechaFinPlan() != null && opt.getFechaUltimaGestion().getTime() != 0)
+        //    ((TextView) rootView.findViewById(R.id.etapa_fecha_ini_plan)).setText(format1.format(opt.getFechaUltimaGestion()));
     }
 }
