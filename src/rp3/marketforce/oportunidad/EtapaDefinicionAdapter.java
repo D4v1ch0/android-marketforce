@@ -64,14 +64,12 @@ public class EtapaDefinicionAdapter extends BaseAdapter {
 
         ((TextView) convertView.findViewById(R.id.detail_agenda_estado)).setText(oportunidadEtapa.getEtapa().getDescripcion());
         ((TextView) convertView.findViewById(R.id.detail_tarea_num)).setText(oportunidadEtapa.getEtapa().getOrden() + "");
-        if(oportunidadEtapa.getEtapa().isEsVariable())
+        if(oportunidadEtapa.getFechaFinPlan() !=  null)
+            ((TextView) convertView.findViewById(R.id.etapa_fecha)).setText(format1.format(oportunidadEtapa.getFechaFinPlan()));
+
+        if(!oportunidadEtapa.getEtapa().isEsVariable())
         {
-            if(oportunidadEtapa.getFechaFinPlan() !=  null)
-                ((TextView) convertView.findViewById(R.id.etapa_fecha)).setText(format1.format(oportunidadEtapa.getFechaFinPlan()));
-        }
-        else
-        {
-            ((TextView) convertView.findViewById(R.id.etapa_fecha)).setText("");
+            ((TextView) convertView.findViewById(R.id.etapa_fecha)).setTextColor(context.getResources().getColor(R.color.color_grey));
         }
             switch (oportunidadEtapa.getEtapa().getOrden()) {
                 case 1:

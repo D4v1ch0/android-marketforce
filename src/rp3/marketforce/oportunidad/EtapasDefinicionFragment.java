@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -77,6 +78,35 @@ public class EtapasDefinicionFragment extends BaseFragment {
     public void onDailogDatePickerChange(int id, Calendar c) {
         super.onDailogDatePickerChange(id, c);
         optEtapas.get(id).setFechaFinPlan(c.getTime());
+        List<OportunidadEtapa> etpList = new ArrayList<>();
+        long fechaUlt = -1; boolean aunSeCalcula = true;
+        for (OportunidadEtapa etps : optEtapas) {
+            if (etps.getEtapa().getIdEtapaPadre() == 0 && aunSeCalcula) {
+                if (fechaUlt == -1) {
+                    fechaUlt = Calendar.getInstance().getTimeInMillis();
+                }
+                if(!etps.getEtapa().isEsVariable())
+                {
+                    if(etps.getEtapa().getDias() == 0)
+                        aunSeCalcula = false;
+                    else
+                    {
+                        Calendar cl = Calendar.getInstance();
+                        cl.setTimeInMillis(fechaUlt);
+                        cl.add(Calendar.DATE, etps.getEtapa().getDias());
+                        etps.setFechaFinPlan(cl.getTime());
+                        fechaUlt = cl.getTimeInMillis();
+                    }
+                }
+                else
+                {
+                    if(etps.getFechaFinPlan() != null && etps.getFechaFinPlan().getTime() > 0)
+                        fechaUlt = etps.getFechaFinPlan().getTime();
+                }
+            }
+            etpList.add(etps);
+        }
+        optEtapas = etpList;
         adapter.changeList(optEtapas);
         adapter.notifyDataSetChanged();
     }
@@ -90,7 +120,7 @@ public class EtapasDefinicionFragment extends BaseFragment {
         ((ListView) rootView.findViewById(R.id.etapas_list)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(optEtapas.get(position).getEtapa().isEsVariable())
+                if (optEtapas.get(position).getEtapa().isEsVariable())
                     showDialogDatePicker(position, Calendar.getInstance());
             }
         });
@@ -98,6 +128,21 @@ public class EtapasDefinicionFragment extends BaseFragment {
         rootView.findViewById(R.id.button_aceptar).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                long fechaUlt = -1;
+                for (OportunidadEtapa etps : optEtapas) {
+                    if (etps.getFechaFinPlan() != null && etps.getFechaFinPlan().getTime() > 0 && etps.getEtapa().getIdEtapaPadre() == 0) {
+                        if (fechaUlt == -1) {
+                            fechaUlt = etps.getFechaFinPlan().getTime();
+                        } else {
+                            if (etps.getFechaFinPlan() != null && fechaUlt > etps.getFechaFinPlan().getTime() && etps.getFechaFinPlan().getTime() > 0) {
+                                Toast.makeText(getContext(), "La fecha de la etapa " + etps.getEtapa().getOrden() + " no puede ser menor a la de sus etapas anteriores.", Toast.LENGTH_LONG).show();
+                                return;
+                            } else {
+                                fechaUlt = etps.getFechaFinPlan().getTime();
+                            }
+                        }
+                    }
+                }
                 CrearOportunidadFragment activity = (CrearOportunidadFragment) getParentFragment();
                 activity.onEtapasFinish(optEtapas);
                 dismiss();

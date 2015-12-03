@@ -502,6 +502,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                     ((TextView) row_etapa.findViewById(R.id.detail_agenda_estado)).setText(etp.getEtapa().getDescripcion());
                     ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setText(position + 1 + "");
                     if (position == 0) {
+                        ((View)view_timeline.findViewById(R.id.etapa1_fecha).getParent()).setVisibility(View.VISIBLE);
                         ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa1));
                         final long idOptEtp = etp.getID();
                         final String nameEtp = etp.getEtapa().getDescripcion();
@@ -532,6 +533,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                         }
                     }
                     if (position == 1) {
+                        ((View)view_timeline.findViewById(R.id.etapa2_fecha).getParent()).setVisibility(View.VISIBLE);
                         ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa2));
                         final long idOptEtp = etp.getID();
                         final String nameEtp = etp.getEtapa().getDescripcion();
@@ -562,6 +564,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                         }
                     }
                     if (position == 2) {
+                        ((View)view_timeline.findViewById(R.id.etapa3_fecha).getParent()).setVisibility(View.VISIBLE);
                         ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa3));
                         final long idOptEtp = etp.getID();
                         final String nameEtp = etp.getEtapa().getDescripcion();
@@ -593,6 +596,7 @@ public class OportunidadDetailFragment extends BaseFragment {
 
                     }
                     if (position == 3) {
+                        ((View)view_timeline.findViewById(R.id.etapa4_fecha).getParent()).setVisibility(View.VISIBLE);
                         ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa4));
                         final long idOptEtp = etp.getID();
                         final String nameEtp = etp.getEtapa().getDescripcion();
@@ -623,6 +627,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                         }
                     }
                     if (position == 4) {
+                        ((View)view_timeline.findViewById(R.id.etapa5_fecha).getParent()).setVisibility(View.VISIBLE);
                         ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa5));
                         final long idOptEtp = etp.getID();
                         final String nameEtp = etp.getEtapa().getDescripcion();
