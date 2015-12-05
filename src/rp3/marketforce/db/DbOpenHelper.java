@@ -27,12 +27,12 @@ public class DbOpenHelper extends rp3.db.sqlite.DataBaseOpenHelper {
 				case 5: UpgradeToVersion5(db); break;
 				case 6: UpgradeToVersion(db, i); break;
 				case 7: UpgradeToVersion(db, i); break;
+				case 8: UpgradeToVersion8(db); break;
 			}
 		}
 	}
 
-	public void UpgradeToVersion(SQLiteDatabase database, int version)
-	{
+	public void UpgradeToVersion(SQLiteDatabase database, int version) {
 		database.execSQL(QueryDir.getQuery(TO_VERSION + version));
 	}
 
@@ -56,5 +56,20 @@ public class DbOpenHelper extends rp3.db.sqlite.DataBaseOpenHelper {
 		database.execSQL(QueryDir.getQuery(TO_VERSION + "5-3"));
 		database.execSQL(QueryDir.getQuery(TO_VERSION + "5-4"));
 		SyncAudit.clearAudit();
+	}
+
+	public void UpgradeToVersion6(SQLiteDatabase database)
+	{
+		database.execSQL(QueryDir.getQuery(TO_VERSION + "6-1"));
+		database.execSQL(QueryDir.getQuery(TO_VERSION + "6-2"));
+		database.execSQL(QueryDir.getQuery(TO_VERSION + "6-3"));
+		database.execSQL(QueryDir.getQuery(TO_VERSION + "6-4"));
+		database.execSQL(QueryDir.getQuery(TO_VERSION + "6-5"));
+		database.execSQL(QueryDir.getQuery(TO_VERSION + "6-6"));
+	}
+
+	private void UpgradeToVersion8(SQLiteDatabase database) {
+		database.execSQL(QueryDir.getQuery(TO_VERSION + "8-1"));
+		database.execSQL(QueryDir.getQuery(TO_VERSION + "8-2"));
 	}
 }
