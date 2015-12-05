@@ -140,6 +140,19 @@ public class Etapa extends EntityBase<Etapa> {
         return null;
     }
 
+    public static int getEtapasPadres(DataBase db, int tipo){
+
+        Cursor c = db.query(Contract.Etapa.TABLE_NAME, new String[] {Contract.Etapa._ID},
+                Contract.Etapa.COLUMN_ID_OPORTUNIDAD_TIPO + " = ? AND " + Contract.Etapa.COLUMN_ID_ETAPA_PADRE + " = 0", new String[] {tipo + ""});
+
+        int conteo = 0;
+        while(c.moveToNext()){
+            conteo++;
+        }
+        c.close();
+        return conteo;
+    }
+
     public static List<Etapa> getEtapasAll(DataBase db, int tipo){
 
         Cursor c = db.query(Contract.Etapa.TABLE_NAME, new String[] {Contract.Etapa._ID, Contract.Etapa.COLUMN_ID_ETAPA, Contract.Etapa.COLUMN_ID_ETAPA_PADRE, Contract.Etapa.COLUMN_ES_VARIABLE,

@@ -121,7 +121,7 @@ public class EtapasDefinicionFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (optEtapas.get(position).getEtapa().isEsVariable())
-                    showDialogDatePicker(position, Calendar.getInstance());
+                    showDialogDatePicker(position, Calendar.getInstance(), false);
             }
         });
 

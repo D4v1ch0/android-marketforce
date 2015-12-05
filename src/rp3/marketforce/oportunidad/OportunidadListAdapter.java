@@ -22,6 +22,7 @@ import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.oportunidad.Etapa;
 import rp3.marketforce.models.oportunidad.Oportunidad;
+import rp3.marketforce.models.oportunidad.OportunidadEtapa;
 import rp3.marketforce.ruta.RutasListFragment;
 import rp3.util.CalendarUtils;
 
@@ -65,6 +66,7 @@ public class OportunidadListAdapter extends BaseAdapter {
         ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_number)).setText((position + 1)+ "");
         ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_importe)).setText(numberFormat.format(opt.getImporte()));
         ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_contactado)).setText("Contactado: " + format1.format(opt.getFechaCreacion()));
+
         if(opt.getEstado().equalsIgnoreCase("S"))
             ((ImageView) convertView.findViewById(R.id.rowlist_oportunidad_prioridad)).setImageResource(R.drawable.blue_flag);
         if(opt.getEstado().equalsIgnoreCase("C"))
@@ -79,6 +81,7 @@ public class OportunidadListAdapter extends BaseAdapter {
             dias = 1;
         ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_dias)).setText("Días transcurridos: " + dias);
         ((RatingBar) convertView.findViewById(R.id.rowlist_oportunidad_calificacion)).setRating(opt.getCalificacion());
+
         if(opt.getEtapa().getOrden() > 1)
             convertView.findViewById(R.id.rowlist_oportunidad_etapa1).setBackgroundColor(contex.getResources().getColor(R.color.color_etapa1));
         if(opt.getEtapa().getOrden() > 2)
@@ -87,8 +90,22 @@ public class OportunidadListAdapter extends BaseAdapter {
             convertView.findViewById(R.id.rowlist_oportunidad_etapa3).setBackgroundColor(contex.getResources().getColor(R.color.color_etapa3));
         if(opt.getEtapa().getOrden() > 4)
             convertView.findViewById(R.id.rowlist_oportunidad_etapa4).setBackgroundColor(contex.getResources().getColor(R.color.color_etapa4));
-        if(opt.getEstado().equalsIgnoreCase("C"))
+        if(opt.getEstado().equalsIgnoreCase("C")) {
+            convertView.findViewById(R.id.rowlist_oportunidad_etapa1).setBackgroundColor(contex.getResources().getColor(R.color.color_etapa1));
+            convertView.findViewById(R.id.rowlist_oportunidad_etapa2).setBackgroundColor(contex.getResources().getColor(R.color.color_etapa2));
+            convertView.findViewById(R.id.rowlist_oportunidad_etapa3).setBackgroundColor(contex.getResources().getColor(R.color.color_etapa3));
+            convertView.findViewById(R.id.rowlist_oportunidad_etapa4).setBackgroundColor(contex.getResources().getColor(R.color.color_etapa4));
             convertView.findViewById(R.id.rowlist_oportunidad_etapa5).setBackgroundColor(contex.getResources().getColor(R.color.color_etapa5));
+        }
+
+        if(opt.getMaxEtapas() < 5)
+            convertView.findViewById(R.id.rowlist_oportunidad_etapa5).setVisibility(View.INVISIBLE);
+        if(opt.getMaxEtapas() < 4)
+            convertView.findViewById(R.id.rowlist_oportunidad_etapa4).setVisibility(View.INVISIBLE);
+        if(opt.getMaxEtapas() < 3)
+            convertView.findViewById(R.id.rowlist_oportunidad_etapa3).setVisibility(View.INVISIBLE);
+        if(opt.getMaxEtapas() < 2)
+            convertView.findViewById(R.id.rowlist_oportunidad_etapa2).setVisibility(View.INVISIBLE);
 
         return convertView;
     }
