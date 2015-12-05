@@ -62,6 +62,8 @@ public class Oportunidad extends EntityBase<Oportunidad> {
     private Etapa etapa;
     private Agente agente;
 
+    private int maxEtapas;
+
 
     @Override
     public long getID() {
@@ -167,6 +169,14 @@ public class Oportunidad extends EntityBase<Oportunidad> {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public int getMaxEtapas() {
+        return maxEtapas;
+    }
+
+    public void setMaxEtapas(int maxEtapas) {
+        this.maxEtapas = maxEtapas;
     }
 
     public Date getFechaCreacion() {
@@ -394,6 +404,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
             opt.setIdOportunidadTipo(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_ID_OPORTUNIDAD_TIPO));
             opt.setEtapa(Etapa.getEtapaById(db, opt.getIdEtapa()));
             opt.setAgente(Agente.getAgente(db, opt.getIdAgente()));
+            opt.setMaxEtapas(Etapa.getEtapasPadres(db, opt.getIdOportunidadTipo()));
             list.add(opt);
         }
         c.close();
@@ -441,6 +452,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
             opt.setIdOportunidadTipo(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_ID_OPORTUNIDAD_TIPO));
             opt.setEtapa(Etapa.getEtapaById(db, opt.getIdEtapa()));
             opt.setAgente(Agente.getAgente(db, opt.getIdAgente()));
+            opt.setMaxEtapas(Etapa.getEtapasPadres(db, opt.getIdOportunidadTipo()));
             list.add(opt);
         }
         c.close();

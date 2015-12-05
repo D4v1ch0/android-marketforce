@@ -80,7 +80,7 @@ public class OportunidadDetailFragment extends BaseFragment {
     private boolean flag = false;
     private DrawableManager DManager;
     private int curentPage = -1;
-    SimpleDateFormat format1 = new SimpleDateFormat("dd");
+    SimpleDateFormat format1 = new SimpleDateFormat("EE dd");
     SimpleDateFormat format2 = new SimpleDateFormat("MM");
     SimpleDateFormat format3 = new SimpleDateFormat("yyyy");
 
@@ -534,6 +534,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                     }
                     if (position == 1) {
                         ((View)view_timeline.findViewById(R.id.etapa2_fecha).getParent()).setVisibility(View.VISIBLE);
+                        view_timeline.findViewById(R.id.conector1_2).setVisibility(View.VISIBLE);
                         ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa2));
                         final long idOptEtp = etp.getID();
                         final String nameEtp = etp.getEtapa().getDescripcion();
@@ -565,6 +566,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                     }
                     if (position == 2) {
                         ((View)view_timeline.findViewById(R.id.etapa3_fecha).getParent()).setVisibility(View.VISIBLE);
+                        view_timeline.findViewById(R.id.conector2_3).setVisibility(View.VISIBLE);
                         ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa3));
                         final long idOptEtp = etp.getID();
                         final String nameEtp = etp.getEtapa().getDescripcion();
@@ -597,6 +599,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                     }
                     if (position == 3) {
                         ((View)view_timeline.findViewById(R.id.etapa4_fecha).getParent()).setVisibility(View.VISIBLE);
+                        view_timeline.findViewById(R.id.conector3_4).setVisibility(View.VISIBLE);
                         ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa4));
                         final long idOptEtp = etp.getID();
                         final String nameEtp = etp.getEtapa().getDescripcion();
@@ -628,6 +631,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                     }
                     if (position == 4) {
                         ((View)view_timeline.findViewById(R.id.etapa5_fecha).getParent()).setVisibility(View.VISIBLE);
+                        view_timeline.findViewById(R.id.conector4_5).setVisibility(View.VISIBLE);
                         ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa5));
                         final long idOptEtp = etp.getID();
                         final String nameEtp = etp.getEtapa().getDescripcion();

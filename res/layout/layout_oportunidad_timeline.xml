@@ -103,7 +103,9 @@
                         android:orientation="vertical"
                         android:layout_width="3dp"
                         android:layout_height="fill_parent"
-                        android:background="@color/caldroid_gray"></LinearLayout>
+                        android:background="@color/caldroid_gray"
+                        android:id="@+id/conector1_2"
+                        android:visibility="invisible"></LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -178,7 +180,9 @@
                         android:orientation="vertical"
                         android:layout_width="3dp"
                         android:layout_height="fill_parent"
-                        android:background="@color/caldroid_gray" />
+                        android:background="@color/caldroid_gray"
+                        android:id="@+id/conector2_3"
+                        android:visibility="invisible" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -253,7 +257,9 @@
                         android:orientation="vertical"
                         android:layout_width="3dp"
                         android:layout_height="fill_parent"
-                        android:background="@color/caldroid_gray" />
+                        android:background="@color/caldroid_gray"
+                        android:id="@+id/conector3_4"
+                        android:visibility="invisible" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -298,7 +304,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:gravity="center|top"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -328,7 +334,9 @@
                         android:orientation="vertical"
                         android:layout_width="3dp"
                         android:layout_height="fill_parent"
-                        android:background="@color/caldroid_gray" />
+                        android:background="@color/caldroid_gray"
+                        android:id="@+id/conector4_5"
+                        android:visibility="invisible" />
                 </LinearLayout>
 
                 <LinearLayout

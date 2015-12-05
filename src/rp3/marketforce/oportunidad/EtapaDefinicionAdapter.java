@@ -31,7 +31,7 @@ public class EtapaDefinicionAdapter extends BaseAdapter {
         this.context = context;
         this.inflater = LayoutInflater.from(context);
         this.oportunidadEtapas = oportunidadEtapas;
-        format1 = new SimpleDateFormat("dd/MM/yy");
+        format1 = new SimpleDateFormat("EE dd/MM/yy");
     }
 
     @Override
