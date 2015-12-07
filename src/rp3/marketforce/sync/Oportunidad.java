@@ -624,6 +624,11 @@ public class Oportunidad {
                 try {
                     JSONObject type = types.getJSONObject(i);
                     rp3.marketforce.models.oportunidad.Oportunidad.deleteOportunidadIdServer(db, type.getInt("IdOportunidad"));
+                    if(type.getString("Estado").equalsIgnoreCase("ELIM"))
+                    {
+                        db.delete(Contract.Oportunidad.TABLE_NAME, Contract.Oportunidad.COLUMN_ID_OPORTUNIDAD + " = ?", type.getInt("IdOportunidad"));
+                        continue;
+                    }
                     rp3.marketforce.models.oportunidad.Oportunidad opt = rp3.marketforce.models.oportunidad.Oportunidad.getOportunidadIdServer(db, type.getInt("IdOportunidad"));
                     if(opt.getID() != 0)
                         opt = rp3.marketforce.models.oportunidad.Oportunidad.getOportunidadId(db, opt.getID());
