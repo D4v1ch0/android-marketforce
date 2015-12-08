@@ -27,6 +27,7 @@ import java.util.List;
 
 import rp3.app.BaseFragment;
 import rp3.marketforce.R;
+import rp3.marketforce.db.Contract;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.Cliente;
 import rp3.marketforce.models.pedido.Pedido;
@@ -179,6 +180,9 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             Pedido.insert(getDataBase(), pedido);
         else
             Pedido.update(getDataBase(), pedido);
+
+        if(pedido.getID() == 0)
+            pedido.setID(getDataBase().queryMaxInt(Contract.Pedido.TABLE_NAME, Contract.Pedido._ID));
 
         if (pedido.getIdPedido() != 0)
             PedidoDetalle.deleteDetallesByIdPedido(getDataBase(), pedido.getIdPedido());
