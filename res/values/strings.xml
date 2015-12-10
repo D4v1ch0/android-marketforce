@@ -210,7 +210,7 @@
     <string name="label_descripción">Descripción</string>
     <string name="label_valor_unitario">V. Unitario</string>
     <string name="label_valor_total">Total</string>
-    <string name="label_cantidad_items">Cantidad de Items:</string>
+    <string name="label_cantidad_items"># de Items:</string>
     <string name="label_total_pedido">Total Pedido:</string>
     <string name="label_agregar_producto">Agregar Producto</string>
     <string name="message_guardar_pedido">Desea guardar los datos del pedido?</string>
@@ -219,5 +219,19 @@
     <string name="label_sin_productos">No tiene productos</string>
     <string name="menu_asignar_pedido">Asignar Pedido</string>
     <string name="label_cant_short">Cant.</string>
+    <string name="label_sku">SKU</string>
+    <string name="label_descuento">Descuento</string>
+    <string name="label_impuesto">Impuesto</string>
+    <string name="label_subtotal_points">Subtotal:</string>
+    <string name="label_total_descuentos">Total Descuentos:</string>
+    <string name="label_total_impuestos">Total Impuestos:</string>
+    <string name="label_saldo">Saldo:</string>
+    <string name="label_descuento_points">Descuento:</string>
+    <string name="label_agregar_nueva_forma_pago">Agregar Nueva Forma de Pago</string>
+    <string name="label_tipo_pago">Tipo de Pago:</string>
+    <string name="label_valor">Valor:</string>
+    <string name="label_tipo_de_pago">Tipo de Pago</string>
+    <string name="label_transacciones">Transacciones</string>
+    <string name="label_redondeo">Redondeo:</string>
 
 </resources>

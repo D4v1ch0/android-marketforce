@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
+            android:text="Pantaloneta de Lino Marca Acme"
             android:id="@+id/producto_descripcion"
             android:textSize="@dimen/text_medium_size"
             android:textStyle="bold"
@@ -30,7 +30,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
+            android:text="₡ 120.000"
             android:id="@+id/producto_precio"
             android:layout_weight="1"
             android:textSize="@dimen/text_medium_small_size" />
@@ -39,7 +39,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
+            android:text="1234567"
             android:id="@+id/producto_codigo"
             android:layout_weight="1"
             android:textSize="@dimen/text_medium_small_size" />

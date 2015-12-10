@@ -26,7 +26,16 @@
             android:ems="10"
             android:hint="@string/hint_search_transaction"
             android:textSize="@dimen/text_input_size"
-            android:layout_weight="0.75" />
+            android:layout_weight="0.70" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="+"
+            android:id="@+id/button"
+            android:layout_gravity="right"
+            style="@style/Widget.Button.Theme"
+            android:layout_weight="0.05" />
 
     </LinearLayout>
 
@@ -66,8 +75,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/label_cant_short"
-            android:id="@+id/textView83"
+            android:text="@string/label_sku"
+            android:id="@+id/textView108"
             android:layout_weight="0.15"
             android:textColor="@color/color_text_sky_blue"
             android:textStyle="bold"
@@ -77,8 +86,19 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_cant_short"
+            android:id="@+id/textView109"
+            android:layout_weight="0.1"
+            android:textColor="@color/color_text_sky_blue"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_small_size" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/label_descripción"
-            android:id="@+id/textView56"
+            android:id="@+id/textView110"
             android:layout_weight="0.5"
             android:textColor="@color/color_text_sky_blue"
             android:textStyle="bold"
@@ -89,8 +109,32 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/label_valor_unitario"
-            android:id="@+id/textView78"
-            android:layout_weight="0.25"
+            android:id="@+id/textView111"
+            android:layout_weight="0.2"
+            android:textColor="@color/color_text_sky_blue"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_small_size"
+            android:gravity="right" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_descuento"
+            android:id="@+id/textView112"
+            android:layout_weight="0.2"
+            android:textColor="@color/color_text_sky_blue"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_small_size"
+            android:gravity="right" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_impuesto"
+            android:id="@+id/textView113"
+            android:layout_weight="0.2"
             android:textColor="@color/color_text_sky_blue"
             android:textStyle="bold"
             android:textSize="@dimen/text_small_size"
@@ -101,13 +145,12 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/label_valor_total"
-            android:id="@+id/textView79"
-            android:layout_weight="0.25"
+            android:id="@+id/textView114"
+            android:layout_weight="0.2"
             android:textColor="@color/color_text_sky_blue"
             android:textStyle="bold"
             android:textSize="@dimen/text_small_size"
             android:gravity="right" />
-
     </LinearLayout>
 
     <ListView
@@ -135,8 +178,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/label_cantidad_items"
-            android:id="@+id/textView80"
+            android:text="@string/label_subtotal_points"
+            android:id="@+id/textView115"
             android:layout_weight="0.75"
             android:textColor="@color/color_text_sky_blue"
             android:textStyle="bold"
@@ -147,8 +190,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="0"
-            android:id="@+id/pedido_cantidad"
+            android:text="Medium Text"
+            android:id="@+id/textView116"
             android:layout_weight="0.25"
             android:textSize="@dimen/text_medium_small_size"
             android:gravity="right" />
@@ -164,9 +207,140 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_total_descuentos"
+            android:id="@+id/textView115"
+            android:layout_weight="0.75"
+            android:textColor="@color/color_text_sky_blue"
+            android:textStyle="bold"
+            android:gravity="right"
+            android:paddingRight="5dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/textView116"
+            android:layout_weight="0.25"
+            android:textSize="@dimen/text_medium_small_size"
+            android:gravity="right" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_total_impuestos"
+            android:id="@+id/textView115"
+            android:layout_weight="0.75"
+            android:textColor="@color/color_text_sky_blue"
+            android:textStyle="bold"
+            android:gravity="right"
+            android:paddingRight="5dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/textView116"
+            android:layout_weight="0.25"
+            android:textSize="@dimen/text_medium_small_size"
+            android:gravity="right" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_redondeo"
+            android:id="@+id/textView133"
+            android:layout_weight="1"
+            android:textColor="@color/color_text_sky_blue"
+            android:textStyle="bold"
+            android:gravity="right"
+            android:paddingRight="5dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="$ 0.00"
+            android:id="@+id/textView133"
+            android:layout_weight="1"
+            android:textSize="@dimen/text_medium_small_size"
+            android:gravity="right" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_cantidad_items"
+            android:id="@+id/textView80"
+            android:layout_weight="1"
+            android:textColor="@color/color_text_sky_blue"
+            android:textStyle="bold"
+            android:gravity="right"
+            android:paddingRight="5dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="0"
+            android:id="@+id/pedido_cantidad"
+            android:layout_weight="1"
+            android:textSize="@dimen/text_medium_small_size"
+            android:gravity="right" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_saldo"
+            android:id="@+id/textView117"
+            android:layout_weight="1"
+            android:textColor="@color/color_text_sky_blue"
+            android:textStyle="bold"
+            android:gravity="right"
+            android:paddingRight="5dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="$ 0.00"
+            android:id="@+id/textView117"
+            android:layout_weight="1"
+            android:textSize="@dimen/text_medium_small_size"
+            android:gravity="right" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/label_total_pedido"
             android:id="@+id/textView82"
-            android:layout_weight="0.75"
+            android:layout_weight="1"
             android:textColor="@color/color_text_sky_blue"
             android:textStyle="bold"
             android:gravity="right"
@@ -178,7 +352,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="$ 0.00"
             android:id="@+id/pedido_total"
-            android:layout_weight="0.25"
+            android:layout_weight="1"
             android:textSize="@dimen/text_medium_small_size"
             android:gravity="right" />
     </LinearLayout>
