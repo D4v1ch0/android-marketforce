@@ -401,6 +401,10 @@ public class Marcaciones {
                     ids_notDelete = ids_notDelete.substring(0, ids_notDelete.length() -1);
                     Justificacion.deleteAprobados(db, ids_notDelete);
                 }
+                else
+                {
+                    Justificacion.deleteAll(db, Contract.Justificaciones.TABLE_NAME);
+                }
 
             } catch (HttpResponseException e) {
                 if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
