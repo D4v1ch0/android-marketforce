@@ -314,9 +314,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                     productFragment.setCancelable(false);
                     showDialogFragment(productFragment, "Producto", "Editar Producto");
                     code = null;
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
 
                 }
 
@@ -360,8 +358,17 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             case 0:
                 if (resultCode == RESULT_OK) {
                     //get the extras that are returned from the intent
-                    String contents = data.getStringExtra("SCAN_RESULT");
-                    code = contents;
+                    try {
+                        String contents = data.getStringExtra("SCAN_RESULT");
+                        JSONObject jsonObject = new JSONObject(contents);
+                        jsonObject.getString("d");
+                        code = contents;
+                    }
+                    catch (Exception ex)
+                    {
+                        Toast.makeText(this.getContext(), "Código Inválido.", Toast.LENGTH_LONG).show();
+                    }
+
                 }
                 break;
             case REQUEST_BUSQUEDA:

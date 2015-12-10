@@ -60,8 +60,8 @@ public class ProductFragment extends BaseFragment {
         super.onFragmentCreateView(rootView, savedInstanceState);
 
         DManager = new DrawableManager();
-        String code = getArguments().getString("Code");
         try {
+        String code = getArguments().getString("Code");
             jsonObject = new JSONObject(code);
             if(!jsonObject.isNull("c"))
                 ((EditText)rootView.findViewById(R.id.producto_cantidad)).setText(jsonObject.getString("c"));
@@ -72,6 +72,8 @@ public class ProductFragment extends BaseFragment {
                     (ImageView) rootView.findViewById(R.id.producto_imagen));
         } catch (JSONException e) {
             e.printStackTrace();
+            Toast.makeText(this.getContext(), "Código Inválido.", Toast.LENGTH_LONG).show();
+            dismiss();
         }
 
         rootView.findViewById(R.id.producto_cancelar).setOnClickListener(new View.OnClickListener() {
