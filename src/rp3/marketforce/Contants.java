@@ -34,6 +34,7 @@ public class Contants {
     public final static String KEY_ID_SUPERVISOR = "IdSupervisor";
 	public final static String KEY_CARGO = "Cargo";
     public final static String KEY_FOTO = "Foto";
+    public final static String KEY_GPS_NOTIFICATION = "NotificationGPS";
 	public final static String KEY_ALARMA_INICIO = "HoraInicioTrackingPositionTicks";
 	public final static String KEY_ALARMA_FIN = "HoraFinTrackingPositionTicks";
 	public final static String KEY_ALARMA_INTERVALO = "MinutosIntervaloTrackingPosition";
