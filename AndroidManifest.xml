@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="rp3.marketforce"
-    android:versionCode="45"
-    android:versionName="1.4.6d">
+    android:versionCode="46"
+    android:versionName="1.4.6e">
 
     <uses-sdk
         android:minSdkVersion="13"
@@ -190,6 +190,7 @@
         <activity android:name=".oportunidad.actividades.SeleccionActivity"></activity>
         <activity android:name=".oportunidad.actividades.GrupoActivity"></activity>
         <activity android:name=".oportunidad.actividades.TextoActivity" android:theme="@style/ActivityPopupTheme"></activity>
+        <activity android:name=".oportunidad.actividades.NumericoActivity" android:theme="@style/ActivityPopupTheme"></activity>
         <activity android:name=".oportunidad.CrearOportunidadActivity" android:configChanges="orientation"></activity>
         <activity android:name=".oportunidad.FotoOportunidadActivity"></activity>
         <activity android:name=".oportunidad.CambiarEstadoActivity" android:theme="@style/MyAppPopupTheme"></activity>

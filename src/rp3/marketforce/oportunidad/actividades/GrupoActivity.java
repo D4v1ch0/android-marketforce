@@ -22,10 +22,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import rp3.marketforce.R;
+import rp3.marketforce.actividades.*;
 import rp3.marketforce.models.Actividad;
 import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.AgendaTareaActividades;
@@ -44,6 +47,7 @@ public class GrupoActivity extends ActividadActivity {
     List<Spinner> combos;
     List<TextView> multiples;
     boolean sinGrupos;
+	OportunidadTareaActividad actFecha;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -80,6 +84,10 @@ public class GrupoActivity extends ActividadActivity {
                 agregarSeleccion(actividad);
             if(actividad.getTipo().equalsIgnoreCase("T"))
                 agregarTexto(actividad);
+			if(actividad.getTipo().equalsIgnoreCase("F"))
+				agregarFecha(actividad);
+			if(actividad.getTipo().equalsIgnoreCase("N"))
+				agregarNumerico(actividad);
         }
 
         sinGrupos = false;
@@ -98,6 +106,10 @@ public class GrupoActivity extends ActividadActivity {
 					agregarSeleccion(actividad_hija);
 				if(actividad_hija.getTipo().equalsIgnoreCase("T"))
 					agregarTexto(actividad_hija);
+				if(actividad.getTipo().equalsIgnoreCase("F"))
+					agregarFecha(actividad_hija);
+				if(actividad.getTipo().equalsIgnoreCase("N"))
+					agregarNumerico(actividad_hija);
 	    	}
 	    }
 
@@ -301,6 +313,186 @@ public class GrupoActivity extends ActividadActivity {
 			Container.addView(getLinea());
 		}
 	}
+
+	public void agregarFecha(final Actividad actividad_hija)
+	{
+		LinearLayout layout = new LinearLayout(this);
+		TextView texto = new TextView(this);
+		TextView textoResp = new TextView(this);
+		LinearLayout innerContainer = new LinearLayout(this);
+		contador ++;
+
+		texto.setText(actividad_hija.getDescripcion());
+		texto.setTypeface(Typeface.DEFAULT_BOLD);
+		if(getResources().getString(R.string.is_tablet).equalsIgnoreCase("true"))
+		{
+			layout.setOrientation(LinearLayout.HORIZONTAL);
+
+		}
+		else
+		{
+			layout.setOrientation(LinearLayout.VERTICAL);
+		}
+		textoResp.setFocusable(false);
+		textoResp.setFocusableInTouchMode(false);
+		textoResp.setMaxLines(1);
+		textoResp.setHint("Ingrese una fecha");
+		final int posicion = contador;
+		OportunidadTareaActividad act = OportunidadTareaActividad.getActividadSimple(getDataBase(), id_etapa, id_oportunidad, id_actividad, actividad_hija.getIdTareaActividad());
+		if(act != null)
+		{
+			if(act.getResultado() != null && !act.getResultado().equalsIgnoreCase("null"))
+				textoResp.setText(act.getResultado());
+		}
+		else
+		{
+			act = initActividadInsert(actividad_hija.getIdTareaActividad());
+		}
+
+		final OportunidadTareaActividad resp = act;
+
+		layout.setClickable(true);
+		final boolean actSinGrupos = sinGrupos;
+		textoResp.setClickable(true);
+		textoResp.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				Calendar cal = Calendar.getInstance();
+				if(resp.getIdsResultado() != null && resp.getIdsResultado().length() > 0)
+				{
+					long time = Long.parseLong(resp.getIdsResultado());
+					cal.setTimeInMillis(time);
+				}
+				actFecha = resp;
+				showDialogDatePicker((int) resp.getID(), cal);
+
+			}});
+
+		//se coloca validacion para que la actividad no sea modificable
+		if(soloVista)
+		{
+			textoResp.setEnabled(false);
+		}
+
+		layout.addView(texto);
+		innerContainer = getNumero();
+		innerContainer.addView(layout);
+		if(getResources().getString(R.string.is_tablet).equalsIgnoreCase("true"))
+		{
+			LinearLayout pack = new LinearLayout(this);
+			pack.addView(innerContainer);
+			innerContainer.setLayoutParams(getParamsMitad());
+			textoResp.setLayoutParams(getParamsMitad2());
+			pack.addView(getLineaHorizontalSinMargen());
+			pack.addView(textoResp);
+			Container.addView(pack);
+			Container.addView(getLineaSinMargen());
+		}
+		else
+		{
+			layout.addView(textoResp);
+			Container.addView(innerContainer);
+			Container.addView(getLinea());
+		}
+	}
+
+	@Override
+	public void onDailogDatePickerChange(int id, Calendar c) {
+		super.onDailogDatePickerChange(id, c);
+		SimpleDateFormat format2 = new SimpleDateFormat("dd");
+		SimpleDateFormat format3 = new SimpleDateFormat("MMMM");
+		SimpleDateFormat format5 = new SimpleDateFormat("yyyy");
+		String mes = format3.format(c.getTime());
+		mes = mes.substring(0,1).toUpperCase() + mes.substring(1);
+		actFecha.setResultado(format2.format(c.getTime()) + " de " + mes + " de " + format5.format(c.getTime()));
+		actFecha.setIdsResultado("" + c.getTimeInMillis());
+		OportunidadTareaActividad.update(getDataBase(), actFecha);
+		onResume();
+	}
+
+	public void agregarNumerico(final Actividad actividad_hija)
+	{
+		LinearLayout layout = new LinearLayout(this);
+		TextView texto = new TextView(this);
+		TextView textoResp = new TextView(this);
+		LinearLayout innerContainer = new LinearLayout(this);
+		contador ++;
+
+		texto.setText(actividad_hija.getDescripcion());
+		texto.setTypeface(Typeface.DEFAULT_BOLD);
+		if(getResources().getString(R.string.is_tablet).equalsIgnoreCase("true"))
+		{
+			layout.setOrientation(LinearLayout.HORIZONTAL);
+
+		}
+		else
+		{
+			layout.setOrientation(LinearLayout.VERTICAL);
+		}
+		textoResp.setFocusable(false);
+		textoResp.setFocusableInTouchMode(false);
+		textoResp.setMaxLines(1);
+		textoResp.setHint("Escriba su respuesta");
+		final int posicion = contador;
+		OportunidadTareaActividad act = OportunidadTareaActividad.getActividadSimple(getDataBase(), id_etapa, id_oportunidad, id_actividad, actividad_hija.getIdTareaActividad());
+		if(act != null)
+		{
+			if(act.getResultado() != null && !act.getResultado().equalsIgnoreCase("null"))
+				textoResp.setText(act.getResultado());
+		}
+		else
+		{
+			act = initActividadInsert(actividad_hija.getIdTareaActividad());
+		}
+		final OportunidadTareaActividad resp = act;
+
+		layout.setClickable(true);
+		final boolean actSinGrupos = sinGrupos;
+		textoResp.setClickable(true);
+		textoResp.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getApplication(), rp3.marketforce.oportunidad.actividades.NumericoActivity.class);
+				intent.putExtra(EtapaTareasFragment.ARG_ITEM_ID, (int)actividad_hija.getIdTareaActividad());
+				intent.putExtra(EtapaTareasFragment.ARG_OPORTUNIDAD, resp.getIdOportunidad());
+				intent.putExtra(EtapaTareasFragment.ARG_ETAPA, resp.getIdEtapa());
+				intent.putExtra(ARG_PADRE_ID, (int) actividad_hija.getIdTareaActividadPadre());
+				intent.putExtra(ARG_TAREA, (int) actividad_hija.getIdTarea());
+				intent.putExtra(ARG_THEME, R.style.AppDialogTheme);
+				intent.putExtra(ARG_NUMERO, posicion);
+				intent.putExtra(ARG_SIN_GRUPO, actSinGrupos);
+				startActivity(intent);
+			}});
+
+		//se coloca validacion para que la actividad no sea modificable
+		if(soloVista)
+		{
+			textoResp.setEnabled(false);
+		}
+
+		layout.addView(texto);
+		innerContainer = getNumero();
+		innerContainer.addView(layout);
+		if(getResources().getString(R.string.is_tablet).equalsIgnoreCase("true"))
+		{
+			LinearLayout pack = new LinearLayout(this);
+			pack.addView(innerContainer);
+			innerContainer.setLayoutParams(getParamsMitad());
+			textoResp.setLayoutParams(getParamsMitad2());
+			pack.addView(getLineaHorizontalSinMargen());
+			pack.addView(textoResp);
+			Container.addView(pack);
+			Container.addView(getLineaSinMargen());
+		}
+		else
+		{
+			layout.addView(textoResp);
+			Container.addView(innerContainer);
+			Container.addView(getLinea());
+		}
+	}
 	
 	public void agregarSeleccion(final Actividad actividad_hija)
 	{
@@ -370,7 +562,7 @@ public class GrupoActivity extends ActividadActivity {
                             resp.setIdsResultado(opc.getOrden() + "");
                     }
                 }
-                AgendaTareaActividades.update(getDataBase(), resp);
+				OportunidadTareaActividad.update(getDataBase(), resp);
 				
 			}
 
@@ -625,6 +817,10 @@ public class GrupoActivity extends ActividadActivity {
                 agregarSeleccion(actividad);
             if(actividad.getTipo().equalsIgnoreCase("T"))
                 agregarTexto(actividad);
+			if(actividad.getTipo().equalsIgnoreCase("F"))
+				agregarFecha(actividad);
+			if(actividad.getTipo().equalsIgnoreCase("N"))
+				agregarNumerico(actividad);
         }
 
         sinGrupos = false;
@@ -643,6 +839,10 @@ public class GrupoActivity extends ActividadActivity {
 					agregarSeleccion(actividad_hija);
 				if(actividad_hija.getTipo().equalsIgnoreCase("T"))
 					agregarTexto(actividad_hija);
+				if (actividad_hija.getTipo().equalsIgnoreCase("F"))
+					agregarFecha(actividad_hija);
+				if(actividad_hija.getTipo().equalsIgnoreCase("N"))
+					agregarNumerico(actividad_hija);
 	    	}
 	    }
         ((Button) findViewById(R.id.actividad_aceptar)).setVisibility(View.GONE);
