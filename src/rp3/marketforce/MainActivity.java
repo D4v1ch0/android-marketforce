@@ -26,6 +26,7 @@ import rp3.marketforce.dashboard.DashboardFragment;
 import rp3.marketforce.db.Contract;
 import rp3.marketforce.db.DbOpenHelper;
 import rp3.marketforce.information.InformationFragment;
+import rp3.marketforce.marcaciones.MarcacionActivity;
 import rp3.marketforce.marcaciones.PermisoActivity;
 import rp3.marketforce.marcaciones.PermisoFragment;
 import rp3.marketforce.models.Actividad;
@@ -191,7 +192,7 @@ public class MainActivity extends rp3.app.NavActivity{
 			bundle2.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SOLO_RESUMEN);
 			requestSync(bundle2);
 		}
-
+		NotificationPusher.pushNotification(1,this,"Fin de Jornada","Fin de Jornada", MarcacionActivity.class);
 	}
 
     @Override
