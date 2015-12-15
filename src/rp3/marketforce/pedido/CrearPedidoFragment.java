@@ -26,6 +26,8 @@ import java.util.Calendar;
 import java.util.List;
 
 import rp3.app.BaseFragment;
+import rp3.configuration.PreferenceManager;
+import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.db.Contract;
 import rp3.marketforce.models.Agenda;
@@ -48,6 +50,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
     public static String ARG_PEDIDO = "cliente";
     public static String ARG_AGENDA = "agenda";
+    public static String ARG_TIPO_DOCUMENTO = "tipo_documento";
     public static final int REQUEST_BUSQUEDA = 3;
 
     public static final int DIALOG_SAVE_CANCEL = 1;
@@ -56,18 +59,20 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
     private long idCliente = 0;
     private long idAgenda = 0;
+    private String tipo = "FA";
     private Pedido pedido;
     public ProductFragment productFragment;
     private String code;
     private PedidoDetalleAdapter adapter;
     private NumberFormat numberFormat;
 
-    public static CrearPedidoFragment newInstance(long id_pedido, long id_agenda)
+    public static CrearPedidoFragment newInstance(long id_pedido, long id_agenda, String tipo)
     {
         CrearPedidoFragment fragment = new CrearPedidoFragment();
         Bundle args = new Bundle();
         args.putLong(ARG_PEDIDO, id_pedido);
         args.putLong(ARG_AGENDA, id_agenda);
+        args.putString(ARG_TIPO_DOCUMENTO, tipo);
         fragment.setArguments(args);
         return fragment;
     }
@@ -258,6 +263,8 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                 arrayAdapter.add("Desde Código QR");
                 arrayAdapter.add("Desde Búsqueda de Productos");
                 arrayAdapter.add("Desde Categorías");
+                arrayAdapter.add("Desde SKU");
+                arrayAdapter.add("Desde Código de Barras");
 
                 builderSingle.setAdapter(
                         arrayAdapter,
@@ -275,6 +282,10 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                                     case 2:
                                         Intent intent2 = new Intent(getContext(), CategoriaActivity.class);
                                         startActivityForResult(intent2, REQUEST_BUSQUEDA);
+                                        break;
+                                    case 3:
+                                        Intent intent3 = new Intent(getContext(), ProductoListActivity.class);
+                                        startActivityForResult(intent3, REQUEST_BUSQUEDA);
                                         break;
                                 }
 
@@ -320,6 +331,26 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
             }
         });
+
+        if (getArguments().containsKey(ARG_TIPO_DOCUMENTO) && !rotated) {
+            tipo = getArguments().getString(ARG_TIPO_DOCUMENTO);
+            if(tipo.equalsIgnoreCase("FA"))
+                this.getActivity().setTitle("Factura No. " + PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO) + "-" + PreferenceManager.getString(Contants.KEY_SERIE) +
+                        "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA)));
+            if(tipo.equalsIgnoreCase("NC"))
+                this.getActivity().setTitle("Nota de Crédito No. " + PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO) + "-" + PreferenceManager.getString(Contants.KEY_SERIE) +
+                        "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_NOTA_CREDITO)));
+        }
+    }
+
+    private String getSecuencia(int numero) {
+        String numText = numero + "";
+        int faltanCeros = 9 - numText.length();
+        for(int i = 1; i <= faltanCeros; i++)
+        {
+            numText = "0" + numText;
+        }
+        return numText;
     }
 
     public void scanQR() {
@@ -382,7 +413,20 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                         detalle.setIdProducto(jsonObject.getInt("id"));
                         detalle.setUrlFoto(jsonObject.getString("f"));
                         detalle.setCantidad(jsonObject.getInt("c"));
-                        detalle.setValorTotal(detalle.getValorUnitario() * detalle.getCantidad());
+                        detalle.setValorTotal(jsonObject.getDouble("v"));
+                        detalle.setBaseImponible(jsonObject.getDouble("bi"));
+                        detalle.setBaseImponibleCero(jsonObject.getDouble("bic"));
+                        detalle.setPorcentajeDescuentoManual(jsonObject.getDouble("pdm"));
+                        detalle.setPorcentajeDescuentoAutomatico(jsonObject.getDouble("pda"));
+                        detalle.setValorDescuentoAutomatico(jsonObject.getDouble("vda"));
+                        detalle.setValorDescuentoManual(jsonObject.getDouble("vdm"));
+                        detalle.setValorDescuentoAutomaticoTotal(jsonObject.getDouble("vdat"));
+                        detalle.setValorDescuentoManualTotal(jsonObject.getDouble("vdmt"));
+                        detalle.setPorcentajeImpuesto(jsonObject.getDouble("pi"));
+                        detalle.setValorImpuesto(jsonObject.getDouble("vi"));
+                        detalle.setValorImpuestoTotal(jsonObject.getDouble("vit"));
+                        detalle.setSubtotal(jsonObject.getDouble("s"));
+                        detalle.setCodigoExterno(jsonObject.getString("cod"));
                         onAcceptSuccess(detalle);
                     }
                     catch (Exception ex)
@@ -436,13 +480,23 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
         ((TextView) getRootView().findViewById(R.id.pedido_cantidad)).setText(getPedidoCantidad(pedido.getPedidoDetalles()) + "");
 
-        double valorTotal = 0;
+        double descuentos = 0, subtotal = 0, valorTotal = 0, impuestos = 0, base0 = 0, baseImponible = 0, redondeo = 0;
         for(PedidoDetalle detalle : pedido.getPedidoDetalles())
         {
             valorTotal = valorTotal + detalle.getValorTotal();
+            subtotal = subtotal + detalle.getSubtotal();
+            descuentos = descuentos + detalle.getValorDescuentoManualTotal() + detalle.getValorDescuentoAutomaticoTotal();
+            impuestos = impuestos + detalle.getValorImpuesto();
+            base0 = base0 + detalle.getBaseImponibleCero();
+            baseImponible = baseImponible + detalle.getBaseImponible();
         }
 
-        ((TextView) getRootView().findViewById(R.id.pedido_total)).setText("$ " + numberFormat.format(valorTotal));
+        ((TextView) getRootView().findViewById(R.id.pedido_total)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(valorTotal));
+        ((TextView) getRootView().findViewById(R.id.pedido_descuentos)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(descuentos));
+        ((TextView) getRootView().findViewById(R.id.pedido_impuestos)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(impuestos));
+        ((TextView) getRootView().findViewById(R.id.pedido_base_cero)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(base0));
+        ((TextView) getRootView().findViewById(R.id.pedido_base_imponible)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(baseImponible));
+        ((TextView) getRootView().findViewById(R.id.pedido_subtotal)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(subtotal));
     }
 
     @Override
@@ -474,13 +528,23 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
         ((TextView) getRootView().findViewById(R.id.pedido_cantidad)).setText(getPedidoCantidad(pedido.getPedidoDetalles()) + "");
 
-        double valorTotal = 0;
+        double descuentos = 0, subtotal = 0, valorTotal = 0, impuestos = 0, base0 = 0, baseImponible = 0, redondeo = 0;
         for(PedidoDetalle detalle : pedido.getPedidoDetalles())
         {
             valorTotal = valorTotal + detalle.getValorTotal();
+            subtotal = subtotal + detalle.getSubtotal();
+            descuentos = descuentos + detalle.getValorDescuentoManualTotal() + detalle.getValorDescuentoAutomaticoTotal();
+            impuestos = impuestos + detalle.getValorImpuestoTotal();
+            base0 = base0 + detalle.getBaseImponibleCero();
+            baseImponible = baseImponible + detalle.getBaseImponible();
         }
 
-        ((TextView) getRootView().findViewById(R.id.pedido_total)).setText("$ " + numberFormat.format(valorTotal));
+        ((TextView) getRootView().findViewById(R.id.pedido_total)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(valorTotal));
+        ((TextView) getRootView().findViewById(R.id.pedido_descuentos)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(descuentos));
+        ((TextView) getRootView().findViewById(R.id.pedido_impuestos)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(impuestos));
+        ((TextView) getRootView().findViewById(R.id.pedido_base_cero)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(base0));
+        ((TextView) getRootView().findViewById(R.id.pedido_base_imponible)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(baseImponible));
+        ((TextView) getRootView().findViewById(R.id.pedido_subtotal)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(subtotal));
 
     }
 

@@ -177,6 +177,20 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
             jsonObject.put("f", transaction.getUrlFoto());
             jsonObject.put("c", transaction.getCantidad());
             jsonObject.put("v", transaction.getValorTotal());
+            jsonObject.put("pdm", transaction.getPorcentajeDescuentoManual());
+            jsonObject.put("vdm", transaction.getValorDescuentoManual());
+            jsonObject.put("vdmt", transaction.getValorDescuentoManualTotal());
+            jsonObject.put("pda", transaction.getPorcentajeDescuentoAutomatico());
+            jsonObject.put("vda", transaction.getValorDescuentoAutomatico());
+            jsonObject.put("vdat", transaction.getValorDescuentoAutomaticoTotal());
+            jsonObject.put("pi", transaction.getPorcentajeImpuesto());
+            jsonObject.put("vi", transaction.getValorImpuesto());
+            jsonObject.put("vit", transaction.getValorImpuestoTotal());
+            jsonObject.put("bi", transaction.getBaseImponible());
+            jsonObject.put("bic", transaction.getBaseImponibleCero());
+            jsonObject.put("s", transaction.getSubtotal());
+            jsonObject.put("cod", transaction.getProducto().getCodigoExterno());
+
         }
         catch (Exception ex) {
         }
@@ -223,6 +237,12 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
                         jsonObject.put("p", prod.getValorUnitario());
                         jsonObject.put("id", prod.getIdProducto());
                         jsonObject.put("f", prod.getUrlFoto());
+                        jsonObject.put("ce", prod.getCodigoExterno());
+                        jsonObject.put("b", prod.getIdBeneficio());
+                        jsonObject.put("pd", prod.getPorcentajeDescuento());
+                        jsonObject.put("pi", prod.getPorcentajeImpuesto());
+                        jsonObject.put("vd", prod.getPrecioDescuento());
+                        jsonObject.put("vi", prod.getPrecioImpuesto());
 
                         productFragment = ProductFragment.newInstance(jsonObject.toString());
                         productFragment.setCancelable(false);

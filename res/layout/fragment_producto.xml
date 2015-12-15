@@ -42,6 +42,7 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Precio: ₡ 120.000"
                 android:id="@+id/producto_precio" />
+
         </LinearLayout>
     </LinearLayout>
 
@@ -63,9 +64,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:id="@+id/editText"
+            android:id="@+id/producto_descuento_manual"
             android:layout_weight="0.65"
-            android:inputType="number" />
+            android:inputType="number"
+            android:enabled="false" />
 
         <TextView
             android:layout_width="0dp"
@@ -89,7 +91,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Precio Total: ₡ 120.000"
-        android:id="@+id/textView119"
+        android:id="@+id/producto_precio_final"
         android:layout_margin="5dp"
         android:textStyle="bold" />
 

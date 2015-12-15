@@ -1,6 +1,8 @@
 package rp3.marketforce.pedido;
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -15,6 +17,7 @@ import rp3.configuration.PreferenceManager;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.pedido.PedidoDetalle;
+import rp3.marketforce.models.pedido.Producto;
 import rp3.marketforce.utils.DrawableManager;
 
 /**
@@ -66,10 +69,46 @@ public class ProductFragment extends BaseFragment {
             if(!jsonObject.isNull("c"))
                 ((EditText)rootView.findViewById(R.id.producto_cantidad)).setText(jsonObject.getString("c"));
             ((TextView)rootView.findViewById(R.id.producto_descripcion)).setText("Descripción: " + jsonObject.getString("d"));
-            ((TextView)rootView.findViewById(R.id.producto_precio)).setText("Precio: $ " + jsonObject.getString("p"));
+            ((TextView)rootView.findViewById(R.id.producto_precio)).setText("Precio: "+PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO)+" " + jsonObject.getString("vi"));
+            ((TextView)rootView.findViewById(R.id.producto_precio_final)).setText("Precio Total: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " 0");
             DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
                             rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_PRODUCTOS) + jsonObject.getString("f"),
                     (ImageView) rootView.findViewById(R.id.producto_imagen));
+            ((EditText)rootView.findViewById(R.id.producto_descuento_manual)).setText(jsonObject.getString("pd") + "%");
+            ((EditText)rootView.findViewById(R.id.producto_cantidad)).addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if(s.length() == 0)
+                        ((TextView)rootView.findViewById(R.id.producto_precio_final)).setText("Precio Total: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " 0");
+                    else
+                    {
+                        int cantidad = Integer.parseInt(((EditText) rootView.findViewById(R.id.producto_cantidad)).getText().toString());
+                        try {
+                            double precio_total = cantidad * jsonObject.getDouble("vi");
+                            ((TextView)rootView.findViewById(R.id.producto_precio_final)).setText("Precio Total: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + precio_total);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+            //jsonObject.put("c", prod.getCodigoExterno());
+            //jsonObject.put("b", prod.getIdBeneficio());
+            //jsonObject.put("pd", prod.getPorcentajeDescuento());
+            //jsonObject.put("pi", prod.getPorcentajeImpuesto());
+            //jsonObject.put("vd", prod.getPrecioDescuento());
+            //jsonObject.put("vi", prod.getPrecioImpuesto());
         } catch (JSONException e) {
             e.printStackTrace();
             Toast.makeText(this.getContext(), "Código Inválido.", Toast.LENGTH_LONG).show();
@@ -111,7 +150,20 @@ public class ProductFragment extends BaseFragment {
                         detalle.setValorUnitario(jsonObject.getDouble("p"));
                         detalle.setIdProducto(jsonObject.getInt("id"));
                         detalle.setUrlFoto(jsonObject.getString("f"));
-                        detalle.setValorTotal(detalle.getValorUnitario() * detalle.getCantidad());
+                        detalle.setValorTotal(detalle.getCantidad() * Float.parseFloat(jsonObject.getString("vi")));
+                        detalle.setSubtotal(detalle.getValorUnitario() * detalle.getCantidad());
+                        detalle.setPorcentajeDescuentoManual(0);
+                        detalle.setValorDescuentoManual(0);
+                        detalle.setValorDescuentoAutomatico(Float.parseFloat(jsonObject.getString("vd")) - Float.parseFloat(jsonObject.getString("vi")));
+                        detalle.setValorDescuentoAutomaticoTotal(detalle.getValorDescuentoAutomatico() * detalle.getCantidad());
+                        detalle.setValorDescuentoManualTotal(0);
+                        detalle.setPorcentajeDescuentoAutomatico(Float.parseFloat(jsonObject.getString("pd")));
+                        detalle.setPorcentajeImpuesto(Float.parseFloat(jsonObject.getString("pi")));
+                        detalle.setValorImpuesto(Float.parseFloat(jsonObject.getString("vi")) - Float.parseFloat(jsonObject.getString("p")));
+                        detalle.setValorImpuestoTotal(detalle.getValorImpuesto() * detalle.getCantidad());
+                        detalle.setBaseImponible(jsonObject.getDouble("pi") == 0 ? 0 : detalle.getValorTotal());
+                        detalle.setBaseImponibleCero(jsonObject.getDouble("pi") == 0 ? detalle.getValorTotal() : 0);
+                        detalle.setProducto(Producto.getProductoIdServer(getDataBase(), detalle.getIdProducto()));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

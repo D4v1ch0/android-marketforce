@@ -280,7 +280,18 @@
         ValorTotal REAL,
         Email TEXT,
         Estado TEXT,
-        FechaCreacion INTEGER
+        FechaCreacion INTEGER,
+        NumeroDocumento TEXT,
+        TotalDescuentos REAL,
+        TotalImpuestos REAL,
+        Redondeo REAL,
+        Subtotal REAL,
+        SubtotalSinDescuento REAL,
+        Excedente REAL,
+        TipoDocumento TEXT,
+        BaseImponible REAL,
+        BaseImponibleCero REAL,
+        Observaciones TEXT
         )
     </statement>
     <statement>
@@ -294,7 +305,21 @@
         ValorUnitario REAL,
         Cantidad INTEGER,
         ValorTotal REAL,
-        URLFoto TEXT
+        URLFoto TEXT,
+        Subtotal REAL,
+        SubtotalSinDescuento REAL,
+        SubtotalSinImpuesto REAL,
+        BaseImponible REAL,
+        BaseImponibleCero REAL,
+        PorcDescManual REAL,
+        ValorDescManual REAL,
+        ValorDescManualTotal REAL,
+        ValorDescAutomatico REAL,
+        ValorDescAutomaticoTotal REAL,
+        PorcDescAutomatico REAL,
+        PorcImpuestoIvaVenta REAL,
+        ValorImpuestoIvaVenta REAL,
+        ValorImpuestoIvaVentaTotal REAL
         )
     </statement>
     <statement>

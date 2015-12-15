@@ -223,8 +223,8 @@
     <string name="label_descuento">Descuento</string>
     <string name="label_impuesto">Impuesto</string>
     <string name="label_subtotal_points">Subtotal:</string>
-    <string name="label_total_descuentos">Total Descuentos:</string>
-    <string name="label_total_impuestos">Total Impuestos:</string>
+    <string name="label_total_descuentos">Descuentos:</string>
+    <string name="label_total_impuestos">Impuestos:</string>
     <string name="label_saldo">Saldo:</string>
     <string name="label_descuento_points">Descuento:</string>
     <string name="label_agregar_nueva_forma_pago">Agregar Nueva Forma de Pago</string>
@@ -234,5 +234,7 @@
     <string name="label_transacciones">Transacciones</string>
     <string name="label_redondeo">Redondeo:</string>
     <string name="action_arqueo_caja">Arqueo de Caja</string>
+    <string name="label_base_imponible">Base Imponible:</string>
+    <string name="label_base_imponible_cero">Base 0:</string>
 
 </resources>

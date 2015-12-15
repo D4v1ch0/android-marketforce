@@ -26,6 +26,17 @@ public class Pedido extends EntityBase<Pedido> {
     private String email;
     private String estado;
     private Date fechaCreacion;
+    private String numeroDocumento;
+    private String observaciones;
+    private String tipoDocumento;
+    private double totalDescuentos;
+    private double totalImpuestos;
+    private double redondeo;
+    private double subtotal;
+    private double subtotalSinDescuento;
+    private double excedente;
+    private double baseImponible;
+    private double baseImponibleCero;
 
     private List<PedidoDetalle> pedidoDetalles;
     private Cliente cliente;
@@ -130,6 +141,94 @@ public class Pedido extends EntityBase<Pedido> {
         this._idAgenda = _idAgenda;
     }
 
+    public String getNumeroDocumento() {
+        return numeroDocumento;
+    }
+
+    public void setNumeroDocumento(String numeroDocumento) {
+        this.numeroDocumento = numeroDocumento;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
+    }
+
+    public String getTipoDocumento() {
+        return tipoDocumento;
+    }
+
+    public void setTipoDocumento(String tipoDocumento) {
+        this.tipoDocumento = tipoDocumento;
+    }
+
+    public double getTotalDescuentos() {
+        return totalDescuentos;
+    }
+
+    public void setTotalDescuentos(double totalDescuentos) {
+        this.totalDescuentos = totalDescuentos;
+    }
+
+    public double getTotalImpuestos() {
+        return totalImpuestos;
+    }
+
+    public void setTotalImpuestos(double totalImpuestos) {
+        this.totalImpuestos = totalImpuestos;
+    }
+
+    public double getRedondeo() {
+        return redondeo;
+    }
+
+    public void setRedondeo(double redondeo) {
+        this.redondeo = redondeo;
+    }
+
+    public double getSubtotal() {
+        return subtotal;
+    }
+
+    public void setSubtotal(double subtotal) {
+        this.subtotal = subtotal;
+    }
+
+    public double getSubtotalSinDescuento() {
+        return subtotalSinDescuento;
+    }
+
+    public void setSubtotalSinDescuento(double subtotalSinDescuento) {
+        this.subtotalSinDescuento = subtotalSinDescuento;
+    }
+
+    public double getExcedente() {
+        return excedente;
+    }
+
+    public void setExcedente(double excedente) {
+        this.excedente = excedente;
+    }
+
+    public double getBaseImponible() {
+        return baseImponible;
+    }
+
+    public void setBaseImponible(double baseImponible) {
+        this.baseImponible = baseImponible;
+    }
+
+    public double getBaseImponibleCero() {
+        return baseImponibleCero;
+    }
+
+    public void setBaseImponibleCero(double baseImponibleCero) {
+        this.baseImponibleCero = baseImponibleCero;
+    }
+
     @Override
     public void setValues() {
         setValue(Contract.Pedido.COLUMN_ID_PEDIDO, this.idPedido);
@@ -140,6 +239,17 @@ public class Pedido extends EntityBase<Pedido> {
         setValue(Contract.Pedido.COLUMN_EMAIL, this.email);
         setValue(Contract.Pedido.COLUMN_ESTADO, this.estado);
         setValue(Contract.Pedido.COLUMN_FECHA_CREACION, this.fechaCreacion);
+        setValue(Contract.Pedido.COLUMN_NUMERO_DOCUMENTO, this.numeroDocumento);
+        setValue(Contract.Pedido.COLUMN_TIPO_DOCUMENTO, this.tipoDocumento);
+        setValue(Contract.Pedido.COLUMN_OBSERVACIONES, this.observaciones);
+        setValue(Contract.Pedido.COLUMN_TOTAL_DESCUENTOS, this.totalDescuentos);
+        setValue(Contract.Pedido.COLUMN_TOTAL_IMPUESTOS, this.totalImpuestos);
+        setValue(Contract.Pedido.COLUMN_SUBTOTAL, this.subtotal);
+        setValue(Contract.Pedido.COLUMN_SUBTOTAL_SIN_DESCUENTO, this.subtotalSinDescuento);
+        setValue(Contract.Pedido.COLUMN_REDONDEO, this.redondeo);
+        setValue(Contract.Pedido.COLUMN_EXCEDENTE, this.excedente);
+        setValue(Contract.Pedido.COLUMN_BASE_IMPONIBLE, this.baseImponible);
+        setValue(Contract.Pedido.COLUMN_BASE_IMPONIBLE_CERO, this.baseImponibleCero);
     }
 
     @Override

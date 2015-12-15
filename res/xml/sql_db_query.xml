@@ -1087,6 +1087,12 @@
         tbProducto.ValorUnitario,
         tbProducto.URLFoto,
         tbProducto.IdSubCategoria,
+        tbProducto.CodigoExterno,
+        tbProducto.PorcentajeDescuento,
+        tbProducto.PrecioConDescuento,
+        tbProducto.PorcentajeImpuesto,
+        tbProducto.PrecioConImpuesto,
+        tbProducto.IdBeneficio,
         tbProductoExt.Descripcion AS tbProductoExt_Descripcion
         FROM tbProducto
         LEFT JOIN tbProductoExt
@@ -1099,6 +1105,12 @@
         tbProducto.ValorUnitario,
         tbProducto.URLFoto,
         tbProducto.IdSubCategoria,
+        tbProducto.CodigoExterno,
+        tbProducto.PorcentajeDescuento,
+        tbProducto.PrecioConDescuento,
+        tbProducto.PorcentajeImpuesto,
+        tbProducto.PrecioConImpuesto,
+        tbProducto.IdBeneficio,
         tbProductoExt.Descripcion AS tbProductoExt_Descripcion
         FROM tbProducto
         LEFT JOIN tbProductoExt
@@ -1112,6 +1124,12 @@
         tbProducto.ValorUnitario,
         tbProducto.URLFoto,
         tbProducto.IdSubCategoria,
+        tbProducto.CodigoExterno,
+        tbProducto.PorcentajeDescuento,
+        tbProducto.PrecioConDescuento,
+        tbProducto.PorcentajeImpuesto,
+        tbProducto.PrecioConImpuesto,
+        tbProducto.IdBeneficio,
         tbProductoExt.Descripcion AS tbProductoExt_Descripcion
         FROM tbProducto
         LEFT JOIN tbProductoExt
@@ -1125,6 +1143,12 @@
         tbProducto.ValorUnitario,
         tbProducto.URLFoto,
         tbProducto.IdSubCategoria,
+        tbProducto.CodigoExterno,
+        tbProducto.PorcentajeDescuento,
+        tbProducto.PrecioConDescuento,
+        tbProducto.PorcentajeImpuesto,
+        tbProducto.PrecioConImpuesto,
+        tbProducto.IdBeneficio,
         tbProductoExt.Descripcion AS tbProductoExt_Descripcion
         FROM tbProducto
         LEFT JOIN tbProductoExt
@@ -1138,6 +1162,12 @@
         tbProducto.ValorUnitario,
         tbProducto.URLFoto,
         tbProducto.IdSubCategoria,
+        tbProducto.CodigoExterno,
+        tbProducto.PorcentajeDescuento,
+        tbProducto.PrecioConDescuento,
+        tbProducto.PorcentajeImpuesto,
+        tbProducto.PrecioConImpuesto,
+        tbProducto.IdBeneficio,
         tbProductoExt.Descripcion AS tbProductoExt_Descripcion
         FROM tbProductoExt
         INNER JOIN tbProducto
@@ -1162,6 +1192,12 @@
         tbProducto.ValorUnitario,
         tbProducto.URLFoto,
         tbProducto.IdSubCategoria,
+        tbProducto.CodigoExterno,
+        tbProducto.PorcentajeDescuento,
+        tbProducto.PrecioConDescuento,
+        tbProducto.PorcentajeImpuesto,
+        tbProducto.PrecioConImpuesto,
+        tbProducto.IdBeneficio,
         tbProductoExt.Descripcion AS tbProductoExt_Descripcion
         FROM tbProductoExt
         INNER JOIN tbProducto

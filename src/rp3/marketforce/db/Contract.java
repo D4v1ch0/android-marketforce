@@ -555,6 +555,17 @@ public final class Contract {
 		public static final String COLUMN_ESTADO = "Estado";
 		public static final String COLUMN_FECHA_CREACION = "FechaCreacion";
 		public static final String COLUMN_ID_AGENDA_INT = "_IdAgenda";
+		public static final String COLUMN_NUMERO_DOCUMENTO = "NumeroDocumento";
+		public static final String COLUMN_TOTAL_DESCUENTOS = "TotalDescuentos";
+		public static final String COLUMN_TOTAL_IMPUESTOS = "TotalImpuestos";
+		public static final String COLUMN_REDONDEO = "Redondeo";
+		public static final String COLUMN_SUBTOTAL = "Subtotal";
+		public static final String COLUMN_SUBTOTAL_SIN_DESCUENTO = "SubtotalSinDescuento";
+		public static final String COLUMN_EXCEDENTE = "Excedente";
+		public static final String COLUMN_TIPO_DOCUMENTO = "TipoDocumento";
+		public static final String COLUMN_BASE_IMPONIBLE = "BaseImponible";
+		public static final String COLUMN_BASE_IMPONIBLE_CERO = "BaseImponibleCero";
+		public static final String COLUMN_OBSERVACIONES = "Observaciones";
 
 
 	}
@@ -572,6 +583,20 @@ public final class Contract {
 		public static final String COLUMN_CANTIDAD = "Cantidad";
 		public static final String COLUMN_VALOR_TOTAL = "ValorTotal";
 		public static final String COLUMN_URL_FOTO = "URLFoto";
+		public static final String COLUMN_SUBTOTAL = "Subtotal";
+		public static final String COLUMN_SUBTOTAL_SIN_DESCUENTO = "SubtotalSinDescuento";
+		public static final String COLUMN_SUBTOTAL_SIN_IMPUESTO = "SubtotalSinImpuesto";
+		public static final String COLUMN_BASE_IMPONIBLE = "BaseImponible";
+		public static final String COLUMN_BASE_IMPONIBLE_CERO= "BaseImponibleCero";
+		public static final String COLUMN_PORCENTAJE_DESCUENTO_MANUAL = "PorcDescManual";
+		public static final String COLUMN_VALOR_DESCUENTO_MANUAL = "ValorDescManual";
+		public static final String COLUMN_VALOR_DESCUENTO_MANUAL_TOTAL = "ValorDescManualTotal";
+		public static final String COLUMN_VALOR_DESC_AUTOMATICO = "ValorDescAutomatico";
+		public static final String COLUMN_VALOR_DESC_AUTOMATICO_TOTAL = "ValorDescAutomaticoTotal";
+		public static final String COLUMN_PORCENTAJE_DESCUENTO_AUTOMATICO = "PorcDescAutomatico";
+		public static final String COLUMN_PORCENTAJE_IMPUESTO = "PorcImpuestoIvaVenta";
+		public static final String COLUMN_VALOR_IMPUESTO = "ValorImpuestoIvaVenta";
+		public static final String COLUMN_VALOR_IMPUESTO_TOTAL = "ValorImpuestoIvaVentaTotal";
 
 	}
 

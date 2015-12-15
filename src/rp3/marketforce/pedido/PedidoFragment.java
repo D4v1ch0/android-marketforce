@@ -2,8 +2,10 @@ package rp3.marketforce.pedido;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
@@ -11,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SearchView;
@@ -176,8 +179,36 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                 break;*/
             case R.id.action_crear_pedido:
                 if(PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA, 0) != 0) {
-                    Intent intent = new Intent(this.getActivity(), CrearPedidoActivity.class);
-                    startActivity(intent);
+                    AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
+
+                    final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                            getContext(),
+                            android.R.layout.select_dialog_item);
+                    arrayAdapter.add("Factura");
+                    arrayAdapter.add("Nota de Crédito");
+
+                    builderSingle.setAdapter(
+                            arrayAdapter,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    switch (which) {
+                                        case 0:
+                                            Intent intent = new Intent(getContext(), CrearPedidoActivity.class);
+                                            intent.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, "FA");
+                                            startActivity(intent);
+                                            break;
+                                        case 1:
+                                            Intent intent2 = new Intent(getContext(), CrearPedidoActivity.class);
+                                            intent2.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, "NC");
+                                            startActivity(intent2);
+                                            break;
+                                    }
+
+                                }
+                            });
+                    builderSingle.show();
+
                 }
                 else
                 {

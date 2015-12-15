@@ -26,6 +26,24 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
     private int cantidad;
     private double valorTotal;
     private String urlFoto;
+    private double subtotal;
+    private double subtotalSinDescuento;
+    private double subtotalSinImpuesto;
+    private double baseImponible;
+    private double baseImponibleCero;
+    private double porcentajeDescuentoManual;
+    private double valorDescuentoManual;
+    private double valorDescuentoManualTotal;
+    private double porcentajeDescuentoAutomatico;
+    private double valorDescuentoAutomatico;
+    private double valorDescuentoAutomaticoTotal;
+    private double porcentajeImpuesto;
+    private double valorImpuesto;
+    private double valorImpuestoTotal;
+
+    private Producto producto;
+    private String codigoExterno;
+
 
     @Override
     public long getID() {
@@ -119,6 +137,134 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
         this.urlFoto = urlFoto;
     }
 
+    public double getSubtotal() {
+        return subtotal;
+    }
+
+    public void setSubtotal(double subtotal) {
+        this.subtotal = subtotal;
+    }
+
+    public double getSubtotalSinDescuento() {
+        return subtotalSinDescuento;
+    }
+
+    public void setSubtotalSinDescuento(double subtotalSinDescuento) {
+        this.subtotalSinDescuento = subtotalSinDescuento;
+    }
+
+    public double getSubtotalSinImpuesto() {
+        return subtotalSinImpuesto;
+    }
+
+    public void setSubtotalSinImpuesto(double subtotalSinImpuesto) {
+        this.subtotalSinImpuesto = subtotalSinImpuesto;
+    }
+
+    public double getBaseImponible() {
+        return baseImponible;
+    }
+
+    public void setBaseImponible(double baseImponible) {
+        this.baseImponible = baseImponible;
+    }
+
+    public double getBaseImponibleCero() {
+        return baseImponibleCero;
+    }
+
+    public void setBaseImponibleCero(double baseImponibleCero) {
+        this.baseImponibleCero = baseImponibleCero;
+    }
+
+    public double getPorcentajeDescuentoManual() {
+        return porcentajeDescuentoManual;
+    }
+
+    public void setPorcentajeDescuentoManual(double porcentajeDescuentoManual) {
+        this.porcentajeDescuentoManual = porcentajeDescuentoManual;
+    }
+
+    public double getValorDescuentoManual() {
+        return valorDescuentoManual;
+    }
+
+    public void setValorDescuentoManual(double valorDescuentoManual) {
+        this.valorDescuentoManual = valorDescuentoManual;
+    }
+
+    public double getValorDescuentoManualTotal() {
+        return valorDescuentoManualTotal;
+    }
+
+    public void setValorDescuentoManualTotal(double valorDescuentoManualTotal) {
+        this.valorDescuentoManualTotal = valorDescuentoManualTotal;
+    }
+
+    public double getPorcentajeDescuentoAutomatico() {
+        return porcentajeDescuentoAutomatico;
+    }
+
+    public void setPorcentajeDescuentoAutomatico(double porcentajeDescuentoAutomatico) {
+        this.porcentajeDescuentoAutomatico = porcentajeDescuentoAutomatico;
+    }
+
+    public double getValorDescuentoAutomatico() {
+        return valorDescuentoAutomatico;
+    }
+
+    public void setValorDescuentoAutomatico(double valorDescuentoAutomatico) {
+        this.valorDescuentoAutomatico = valorDescuentoAutomatico;
+    }
+
+    public double getValorDescuentoAutomaticoTotal() {
+        return valorDescuentoAutomaticoTotal;
+    }
+
+    public void setValorDescuentoAutomaticoTotal(double valorDescuentoAutomaticoTotal) {
+        this.valorDescuentoAutomaticoTotal = valorDescuentoAutomaticoTotal;
+    }
+
+    public double getPorcentajeImpuesto() {
+        return porcentajeImpuesto;
+    }
+
+    public void setPorcentajeImpuesto(double porcentajeImpuesto) {
+        this.porcentajeImpuesto = porcentajeImpuesto;
+    }
+
+    public double getValorImpuesto() {
+        return valorImpuesto;
+    }
+
+    public void setValorImpuesto(double valorImpuesto) {
+        this.valorImpuesto = valorImpuesto;
+    }
+
+    public double getValorImpuestoTotal() {
+        return valorImpuestoTotal;
+    }
+
+    public void setValorImpuestoTotal(double valorImpuestoTotal) {
+        this.valorImpuestoTotal = valorImpuestoTotal;
+    }
+
+    public Producto getProducto() {
+        return producto;
+    }
+
+    public void setProducto(Producto producto) {
+        this.producto = producto;
+    }
+
+    public String getCodigoExterno() {
+        return codigoExterno;
+    }
+
+    public void setCodigoExterno(String codigoExterno) {
+        this.codigoExterno = codigoExterno;
+    }
+
     @Override
     public void setValues() {
         setValue(Contract.PedidoDetalle.COLUMN_ID_PEDIDO, this.idPedido);
@@ -130,6 +276,20 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
         setValue(Contract.PedidoDetalle.COLUMN_CANTIDAD, this.cantidad);
         setValue(Contract.PedidoDetalle.COLUMN_VALOR_TOTAL, this.valorTotal);
         setValue(Contract.PedidoDetalle.COLUMN_URL_FOTO, this.urlFoto);
+        setValue(Contract.PedidoDetalle.COLUMN_SUBTOTAL, this.subtotal);
+        setValue(Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_DESCUENTO, this.subtotalSinDescuento);
+        setValue(Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_IMPUESTO, this.subtotalSinImpuesto);
+        setValue(Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE, this.baseImponible);
+        setValue(Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE_CERO, this.baseImponibleCero);
+        setValue(Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_MANUAL, this.porcentajeDescuentoManual);
+        setValue(Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_MANUAL, this.valorDescuentoManual);
+        setValue(Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_MANUAL_TOTAL, this.valorDescuentoManualTotal);
+        setValue(Contract.PedidoDetalle.COLUMN_VALOR_DESC_AUTOMATICO, this.valorDescuentoAutomatico);
+        setValue(Contract.PedidoDetalle.COLUMN_VALOR_DESC_AUTOMATICO_TOTAL, this.valorDescuentoAutomaticoTotal);
+        setValue(Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_AUTOMATICO, this.porcentajeDescuentoAutomatico);
+        setValue(Contract.PedidoDetalle.COLUMN_PORCENTAJE_IMPUESTO, this.porcentajeImpuesto);
+        setValue(Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO, this.valorImpuesto);
+        setValue(Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO_TOTAL, this.valorImpuestoTotal);
     }
 
     @Override
@@ -145,7 +305,10 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
     public static List<PedidoDetalle> getPedidoDetalles(DataBase db, int idPedido) {
         Cursor c = db.query(Contract.PedidoDetalle.TABLE_NAME, new String[] {Contract.PedidoDetalle._ID, Contract.PedidoDetalle.COLUMN_ID_PEDIDO, Contract.PedidoDetalle.COLUMN_ID_PEDIDO_DETALLE,
                 Contract.PedidoDetalle.COLUMN_ID_PEDIDO_INT, Contract.PedidoDetalle.COLUMN_ID_PRODUCTO, Contract.PedidoDetalle.COLUMN_VALOR_UNITARIO, Contract.PedidoDetalle.COLUMN_CANTIDAD,
-                Contract.PedidoDetalle.COLUMN_VALOR_TOTAL, Contract.PedidoDetalle.COLUMN_DESCRIPCION, Contract.PedidoDetalle.COLUMN_URL_FOTO}
+                Contract.PedidoDetalle.COLUMN_VALOR_TOTAL, Contract.PedidoDetalle.COLUMN_DESCRIPCION, Contract.PedidoDetalle.COLUMN_URL_FOTO, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE_CERO,
+                Contract.PedidoDetalle.COLUMN_SUBTOTAL, Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_DESCUENTO, Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_IMPUESTO, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_AUTOMATICO, Contract.PedidoDetalle.COLUMN_VALOR_DESC_AUTOMATICO,
+                Contract.PedidoDetalle.COLUMN_VALOR_DESC_AUTOMATICO_TOTAL, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_MANUAL, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_MANUAL, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_MANUAL_TOTAL, Contract.PedidoDetalle.COLUMN_PORCENTAJE_IMPUESTO,
+                Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO, Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO_TOTAL}
                 ,Contract.PedidoDetalle.COLUMN_ID_PEDIDO + " = ? ", new String[]{idPedido + ""});
 
         List<PedidoDetalle> list = new ArrayList<PedidoDetalle>();
@@ -161,6 +324,21 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
             detalle.setValorTotal(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_TOTAL));
             detalle.setDescripcion(CursorUtils.getString(c, Contract.PedidoDetalle.COLUMN_DESCRIPCION));
             detalle.setUrlFoto(CursorUtils.getString(c, Contract.PedidoDetalle.COLUMN_URL_FOTO));
+            detalle.setPorcentajeDescuentoManual(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_MANUAL));
+            detalle.setValorDescuentoManual(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_MANUAL));
+            detalle.setValorDescuentoManualTotal(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_MANUAL_TOTAL));
+            detalle.setPorcentajeDescuentoAutomatico(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_AUTOMATICO));
+            detalle.setValorDescuentoAutomatico(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_DESC_AUTOMATICO));
+            detalle.setValorDescuentoAutomaticoTotal(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_DESC_AUTOMATICO_TOTAL));
+            detalle.setPorcentajeImpuesto(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_PORCENTAJE_IMPUESTO));
+            detalle.setValorImpuesto(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO));
+            detalle.setValorImpuestoTotal(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO_TOTAL));
+            detalle.setSubtotal(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_SUBTOTAL));
+            detalle.setSubtotalSinDescuento(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_DESCUENTO));
+            detalle.setSubtotalSinImpuesto(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_IMPUESTO));
+            detalle.setBaseImponible(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE));
+            detalle.setBaseImponibleCero(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE_CERO));
+            //detalle.setProducto(Producto.getProductoIdServer(db, detalle.getIdProducto()));
             list.add(detalle);
         }
         c.close();
@@ -170,7 +348,10 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
     public static List<PedidoDetalle> getPedidoDetallesInt(DataBase db, long idPedido) {
         Cursor c = db.query(Contract.PedidoDetalle.TABLE_NAME, new String[] {Contract.PedidoDetalle._ID, Contract.PedidoDetalle.COLUMN_ID_PEDIDO, Contract.PedidoDetalle.COLUMN_ID_PEDIDO_DETALLE,
                 Contract.PedidoDetalle.COLUMN_ID_PEDIDO_INT, Contract.PedidoDetalle.COLUMN_ID_PRODUCTO, Contract.PedidoDetalle.COLUMN_VALOR_UNITARIO, Contract.PedidoDetalle.COLUMN_CANTIDAD,
-                Contract.PedidoDetalle.COLUMN_VALOR_TOTAL, Contract.PedidoDetalle.COLUMN_DESCRIPCION, Contract.PedidoDetalle.COLUMN_URL_FOTO}
+                Contract.PedidoDetalle.COLUMN_VALOR_TOTAL, Contract.PedidoDetalle.COLUMN_DESCRIPCION, Contract.PedidoDetalle.COLUMN_URL_FOTO, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE_CERO,
+                Contract.PedidoDetalle.COLUMN_SUBTOTAL, Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_DESCUENTO, Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_IMPUESTO, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_AUTOMATICO, Contract.PedidoDetalle.COLUMN_VALOR_DESC_AUTOMATICO,
+                Contract.PedidoDetalle.COLUMN_VALOR_DESC_AUTOMATICO_TOTAL, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_MANUAL, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_MANUAL, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_MANUAL_TOTAL, Contract.PedidoDetalle.COLUMN_PORCENTAJE_IMPUESTO,
+                Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO, Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO_TOTAL}
                 ,Contract.PedidoDetalle.COLUMN_ID_PEDIDO_INT + " = ? ", new String[]{idPedido + ""});
 
         List<PedidoDetalle> list = new ArrayList<PedidoDetalle>();
@@ -186,6 +367,22 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
             detalle.setValorTotal(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_TOTAL));
             detalle.setDescripcion(CursorUtils.getString(c, Contract.PedidoDetalle.COLUMN_DESCRIPCION));
             detalle.setUrlFoto(CursorUtils.getString(c, Contract.PedidoDetalle.COLUMN_URL_FOTO));
+            detalle.setPorcentajeDescuentoManual(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_MANUAL));
+            detalle.setValorDescuentoManual(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_MANUAL));
+            detalle.setValorDescuentoManualTotal(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_MANUAL_TOTAL));
+            detalle.setPorcentajeDescuentoAutomatico(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_AUTOMATICO));
+            detalle.setValorDescuentoAutomatico(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_DESC_AUTOMATICO));
+            detalle.setValorDescuentoAutomaticoTotal(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_DESC_AUTOMATICO_TOTAL));
+            detalle.setPorcentajeImpuesto(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_PORCENTAJE_IMPUESTO));
+            detalle.setValorImpuesto(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO));
+            detalle.setValorImpuestoTotal(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO_TOTAL));
+            detalle.setSubtotal(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_SUBTOTAL));
+            detalle.setSubtotalSinDescuento(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_DESCUENTO));
+            detalle.setSubtotalSinImpuesto(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_IMPUESTO));
+            detalle.setBaseImponible(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE));
+            detalle.setBaseImponibleCero(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE_CERO));
+            //detalle.setProducto(Producto.getProductoIdServer(db, detalle.getIdProducto()));
+
             list.add(detalle);
         }
         c.close();

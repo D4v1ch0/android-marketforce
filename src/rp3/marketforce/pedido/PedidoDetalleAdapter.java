@@ -14,6 +14,8 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
 
+import rp3.configuration.PreferenceManager;
+import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.pedido.Pedido;
 import rp3.marketforce.models.pedido.PedidoDetalle;
@@ -63,10 +65,13 @@ public class PedidoDetalleAdapter extends BaseAdapter {
 
         PedidoDetalle detalle = detalles.get(position);
 
+        ((TextView) convertView.findViewById(R.id.pedido_detalle_sku)).setText(detalle.getCodigoExterno());
+        ((TextView) convertView.findViewById(R.id.pedido_detalle_descuento)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(detalle.getValorDescuentoAutomaticoTotal()));
+        ((TextView) convertView.findViewById(R.id.pedido_detalle_impuesto)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(detalle.getValorImpuestoTotal()));
         ((TextView) convertView.findViewById(R.id.pedido_detalle_descripcion)).setText(detalle.getDescripcion());
         ((TextView) convertView.findViewById(R.id.pedido_detalle_cantidad)).setText(detalle.getCantidad()+"");
-        ((TextView) convertView.findViewById(R.id.pedido_detalle_unitario)).setText("$ " + numberFormat.format(detalle.getValorUnitario()));
-        ((TextView) convertView.findViewById(R.id.pedido_detalle_valor_total)).setText("$ " + numberFormat.format(detalle.getValorTotal()));
+        ((TextView) convertView.findViewById(R.id.pedido_detalle_unitario)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(detalle.getValorUnitario()));
+        ((TextView) convertView.findViewById(R.id.pedido_detalle_valor_total)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(detalle.getValorTotal()));
 
         return convertView;
     }

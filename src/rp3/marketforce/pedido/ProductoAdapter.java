@@ -11,6 +11,8 @@ import android.widget.TextView;
 import java.text.NumberFormat;
 import java.util.List;
 
+import rp3.configuration.PreferenceManager;
+import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.pedido.Pedido;
@@ -60,8 +62,8 @@ public class ProductoAdapter extends BaseAdapter {
         Producto producto = productos.get(position);
 
         ((TextView) convertView.findViewById(R.id.producto_descripcion)).setText(producto.getDescripcion());
-        ((TextView) convertView.findViewById(R.id.producto_precio)).setText("$ " + numberFormat.format(producto.getValorUnitario()));
-        ((TextView) convertView.findViewById(R.id.producto_codigo)).setText("Código: " + producto.getIdProducto());
+        ((TextView) convertView.findViewById(R.id.producto_precio)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(producto.getValorUnitario()));
+        ((TextView) convertView.findViewById(R.id.producto_codigo)).setText("SKU: " + producto.getCodigoExterno());
 
         return convertView;
     }
