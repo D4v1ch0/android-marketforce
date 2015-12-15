@@ -59,9 +59,11 @@ public class InformationFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                        "mailto",rp3.configuration.Configuration.getAppConfiguration().getMail(), null));
+                        "mailto", rp3.configuration.Configuration.getAppConfiguration().getMail(), null));
                 startActivity(Intent.createChooser(intent, "Send Email"));
             }
         });
+
+        ((TextView) rootView.findViewById(R.id.info_android_id)).setText("Android ID: " + PreferenceManager.getString(Contants.KEY_ANDROID_ID,""));
     }
 }

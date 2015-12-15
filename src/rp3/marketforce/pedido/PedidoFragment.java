@@ -145,40 +145,23 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
     @Override
     public void onAfterCreateOptionsMenu(Menu menu) {
         this.menu = menu;
-        SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
-        //SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
 
-
-        int searchicon = searchView.getContext().getResources().getIdentifier("android:id/search_mag_icon", null, null);
-        ImageView searchIcon = (ImageView)searchView.findViewById(searchicon);
-        searchIcon.setImageResource(R.drawable.ic_action_search);
-        int searchPlateId = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
-        EditText searchPlate = (EditText) searchView.findViewById(searchPlateId);
-        searchPlate.setHintTextColor(getResources().getColor(R.color.color_hint));
-        searchPlate.setTextColor(getResources().getColor(R.color.apptheme_color));
-        searchPlate.setBackgroundResource(R.drawable.apptheme_edit_text_holo_light);
-
-        if(null!=searchManager ) {
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-        }
-        searchView.setIconifiedByDefault(false);
         RefreshMenu();
     }
 
     private void RefreshMenu(){
         Pedido ped = Pedido.getPedido(getDataBase(), selectedClientId);
         if(!mTwoPane){
-            menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
+            menu.findItem(R.id.action_arqueo_caja).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_crear_pedido).setVisible(isActiveListFragment);
-            menu.findItem(R.id.action_editar_pedido).setVisible(!isActiveListFragment);
-            menu.findItem(R.id.action_editar_pedido).setVisible(selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("P"));
+            menu.findItem(R.id.action_anular_pedido).setVisible(!isActiveListFragment);
+            menu.findItem(R.id.action_anular_pedido).setVisible(selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("P"));
         }
         else{
 
-            menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
+            menu.findItem(R.id.action_arqueo_caja).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_crear_pedido).setVisible(isActiveListFragment);
-            menu.findItem(R.id.action_editar_pedido).setVisible(selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("P"));
+            menu.findItem(R.id.action_anular_pedido).setVisible(selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("P"));
 
         }
     }
@@ -186,14 +169,20 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
-            case R.id.action_editar_pedido:
+            /*case R.id.action_editar_pedido:
                 Intent intent2 = new Intent(getActivity(), CrearPedidoActivity.class);
                 intent2.putExtra(CrearPedidoActivity.ARG_IDPEDIDO, selectedClientId);
                 startActivity(intent2);
-                break;
+                break;*/
             case R.id.action_crear_pedido:
-                Intent intent = new Intent(this.getActivity(), CrearPedidoActivity.class);
-                startActivity(intent);
+                if(PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA, 0) != 0) {
+                    Intent intent = new Intent(this.getActivity(), CrearPedidoActivity.class);
+                    startActivity(intent);
+                }
+                else
+                {
+                    Toast.makeText(this.getContext(), "Su usuario no tiene asignado una caja.", Toast.LENGTH_LONG).show();
+                }
                 break;
             case R.id.action_sincronizar_productos:
                 if(!ConnectionUtils.isNetAvailable(this.getContext()))

@@ -25,6 +25,12 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
     private double valorUnitario;
     private String descripcion;
     private String urlFoto;
+    private String codigoExterno;
+    private float precioImpuesto;
+    private float precioDescuento;
+    private float porcentajeImpuesto;
+    private float porcentajeDescuento;
+    private int idBeneficio;
 
 
     @Override
@@ -53,6 +59,12 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
         setValue(Contract.Producto.COLUMN_ID_SUBCATEGORIA, this.idSubCategoria);
         setValue(Contract.Producto.COLUMN_VALOR_UNITARIO, this.valorUnitario);
         setValue(Contract.Producto.COLUMN_URL_FOTO, this.urlFoto);
+        setValue(Contract.Producto.COLUMN_CODIGO_EXTERNO, this.codigoExterno);
+        setValue(Contract.Producto.COLUMN_PRECIO_IMPUESTO, this.precioImpuesto);
+        setValue(Contract.Producto.COLUMN_PRECIO_DESCUENTO, this.precioDescuento);
+        setValue(Contract.Producto.COLUMN_PORCENTAJE_IMPUESTO, this.porcentajeImpuesto);
+        setValue(Contract.Producto.COLUMN_PORCENTAJE_DESCUENTO, this.porcentajeDescuento);
+        setValue(Contract.Producto.COLUMN_ID_BENEFICIO, this.idBeneficio);
     }
 
     @Override
@@ -79,6 +91,54 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
 
     public void setValorUnitario(double valorUnitario) {
         this.valorUnitario = valorUnitario;
+    }
+
+    public String getCodigoExterno() {
+        return codigoExterno;
+    }
+
+    public void setCodigoExterno(String codigoExterno) {
+        this.codigoExterno = codigoExterno;
+    }
+
+    public float getPrecioImpuesto() {
+        return precioImpuesto;
+    }
+
+    public void setPrecioImpuesto(float precioImpuesto) {
+        this.precioImpuesto = precioImpuesto;
+    }
+
+    public float getPrecioDescuento() {
+        return precioDescuento;
+    }
+
+    public void setPrecioDescuento(float precioDescuento) {
+        this.precioDescuento = precioDescuento;
+    }
+
+    public float getPorcentajeImpuesto() {
+        return porcentajeImpuesto;
+    }
+
+    public void setPorcentajeImpuesto(float porcentajeImpuesto) {
+        this.porcentajeImpuesto = porcentajeImpuesto;
+    }
+
+    public float getPorcentajeDescuento() {
+        return porcentajeDescuento;
+    }
+
+    public void setPorcentajeDescuento(float porcentajeDescuento) {
+        this.porcentajeDescuento = porcentajeDescuento;
+    }
+
+    public int getIdBeneficio() {
+        return idBeneficio;
+    }
+
+    public void setIdBeneficio(int idBeneficio) {
+        this.idBeneficio = idBeneficio;
     }
 
     public String getDescripcion() {

@@ -303,7 +303,13 @@
         IdProducto INTEGER,
         ValorUnitario REAL,
         URLFoto TEXT,
-        IdSubCategoria INTEGER
+        IdSubCategoria INTEGER,
+        CodigoExterno TEXT,
+        PorcentajeDescuento REAL,
+        PrecioConDescuento REAL,
+        PorcentajeImpuesto REAL,
+        PrecioConImpuesto REAL,
+        IdBeneficio INTEGER
         )
     </statement>
     <statement>

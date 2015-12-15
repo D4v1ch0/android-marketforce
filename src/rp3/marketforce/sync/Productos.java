@@ -56,6 +56,12 @@ public class Productos {
                     producto.setDescripcion(type.getString("Descripcion"));
                     producto.setUrlFoto(type.getString("URLFoto"));
                     producto.setValorUnitario(type.getDouble("Precio"));
+                    producto.setCodigoExterno(type.getString("IdExterno"));
+                    producto.setPrecioDescuento(Float.parseFloat(type.getString("PrecioConDescuento")));
+                    producto.setPrecioImpuesto(Float.parseFloat(type.getString("PrecioConImpuesto")));
+                    producto.setPorcentajeDescuento(Float.parseFloat(type.getString("PorcentajeDescuento")));
+                    producto.setPorcentajeImpuesto(Float.parseFloat(type.getString("PorcentajeImpuesto")));
+                    producto.setIdBeneficio(type.getInt("IdBeneficio"));
                     if(type.isNull("IdSubCategoria"))
                         producto.setIdSubCategoria(0);
                     else

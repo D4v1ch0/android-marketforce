@@ -584,6 +584,12 @@ public final class Contract {
 		public static final String COLUMN_VALOR_UNITARIO = "ValorUnitario";
 		public static final String COLUMN_URL_FOTO = "URLFoto";
 		public static final String COLUMN_ID_SUBCATEGORIA = "IdSubCategoria";
+		public static final String COLUMN_CODIGO_EXTERNO = "CodigoExterno";
+		public static final String COLUMN_PRECIO_IMPUESTO = "PrecioConImpuesto";
+		public static final String COLUMN_PRECIO_DESCUENTO = "PrecioConDescuento";
+		public static final String COLUMN_PORCENTAJE_IMPUESTO = "PorcentajeImpuesto";
+		public static final String COLUMN_PORCENTAJE_DESCUENTO = "PorcentajeDescuento";
+		public static final String COLUMN_ID_BENEFICIO = "IdBeneficio";
 
 		public static final String FIELD_DESCRIPCION = Contract.ProductoExt.TABLE_NAME + "_" + Contract.ProductoExt.COLUMN_DESCRIPCION;
 

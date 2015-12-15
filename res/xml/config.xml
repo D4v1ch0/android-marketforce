@@ -13,13 +13,13 @@
     </appConfiguration>
     <dataBaseConfiguration>       
        <name>Rp3MarketForce.db</name>
-       <version>7</version>
+       <version>9</version>
     </dataBaseConfiguration>        
     <webServiceConfiguration>                
         <webServiceData>
             <name>Core</name>
-            <url>[@server:http://www.rp3marketforce.com/Rp3MarketForce]/api</url>
-            <!--url>http://192.168.0.11/AgendaComercial/api</url-->
+            <!--url>[@server:http://www.rp3marketforce.com/Rp3MarketForce]/api</url-->
+            <url>http://10.10.0.148/AgendaComercial/api</url>
             <type>REST</type>
             <oAuthClientId>android-app-marketforce</oAuthClientId>
             <oAuthClientSecret>rp3-marketforce2014</oAuthClientSecret>
@@ -64,8 +64,8 @@
         </webServiceData>
            <webServiceData>
             <name>MartketForce</name>
-            <url>[@server:http://www.rp3marketforce.com/Rp3MarketForce]/api</url>
-            <!--url>http://192.168.0.11/AgendaComercial/api</url-->
+            <!--url>[@server:http://www.rp3marketforce.com/Rp3MarketForce]/api</url-->
+            <url>http://10.10.0.148/AgendaComercial/api</url>
             <type>REST</type>
             <oAuthClientId>android-app-marketforce</oAuthClientId>
             <oAuthClientSecret>rp3-marketforce2014</oAuthClientSecret>
@@ -270,6 +270,24 @@
                 <method>
                     <name>GetSubcategorias</name>
                     <action>producto/GetSubcategorias?ultimaFechaActualizacion=@ultimaFechaActualizacion</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetMoneda</name>
+                    <action>caja/GetMoneda</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetCaja</name>
+                    <action>caja/GetCaja?androidID=@androidID</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetGrupo</name>
+                    <action>marcacion/GetGrupo</action>
                     <webMethod>GET</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>

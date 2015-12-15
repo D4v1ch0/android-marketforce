@@ -60,4 +60,12 @@
     <statement name="ToVersion7">
         ALTER TABLE tbActividad ADD COLUMN Limite INTEGER;
     </statement>
+    <statement name="ToVersion9-1">
+        ALTER TABLE tbProducto ADD COLUMN PorcentajeDescuento REAL,
+        ADD COLUMN PrecioConDescuento REAL,
+        ADD COLUMN PorcentajeImpuesto REAL,
+        ADD COLUMN PrecioConImpuesto REAL,
+        ADD COLUMN CodigoExterno TEXT,
+        ADD COLUMN IdBeneficio REAL;
+    </statement>
 </sql>

@@ -28,6 +28,10 @@ public class Contants {
 	
 	public final static String KEY_IDAGENTE = "IdAgente";
 	public final static String KEY_IDRUTA = "IdRuta";
+    public final static String KEY_APLICA_MARCACION = "AplicaMarcacion";
+    public final static String KEY_APLICA_BREAK = "AplicaBreak";
+    public final static String KEY_LONGITUD_PARTIDA = "LongitudPuntoPartida";
+    public final static String KEY_LATITUD_PARTIDA = "LatitudPuntoPartida";
 	public final static String KEY_ES_SUPERVISOR = "EsSupervisor";
 	public final static String KEY_ES_AGENTE = "EsAgente";
 	public final static String KEY_ES_ADMINISTRADOR = "EsAdministrador";
@@ -49,6 +53,20 @@ public class Contants {
 	public final static String KEY_SERVER = "server";
 	public final static String KEY_CLIENT = "ClientName";
     public final static String KEY_APP_INSTANCE_ID = "TokenId";
+    public final static String KEY_MONEDA_SIMBOLO = "Simbolo";
+    public final static String KEY_AUTORIZACION_SRI = "AutorizacionSRI";
+    public final static String KEY_VIGENCIA_AUTORIZACION_SRI_INICIO = "VigenciaAutorizacionSRIInicio";
+    public final static String KEY_VIGENCIA_AUTORIZACION_SRI_FIN = "VigenciaAutorizacionSRIFin";
+    public final static String KEY_SECUENCIA_FACTURA = "SecuenciaFactura";
+    public final static String KEY_SECUENCIA_NOTA_CREDITO = "SecuenciaNotaCredito";
+    public final static String KEY_EMPRESA = "Empresa";
+    public final static String KEY_RUC = "RUC";
+    public final static String KEY_DIRECCION = "Dirección";
+    public final static String KEY_TELEFONO = "Telefono";
+    public final static String KEY_ESTABLECIMIENTO = "Establecimiento";
+    public final static String KEY_SERIE = "Serie";
+    public final static String KEY_NOMBRE_PUNTO_OPERACION = "NombrePuntoOperacion";
+    public final static String KEY_ANDROID_ID = "AndroidID";
 
     public final static String CAMPO_FECHA_NACIMIENTO = "FecNac";
     public final static String CAMPO_GENERO = "Gen";

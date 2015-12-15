@@ -32,6 +32,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.widget.Toast;
 
 public class StartActivity extends rp3.app.StartActivity{
@@ -52,7 +53,13 @@ public class StartActivity extends rp3.app.StartActivity{
 		}
 		else
 			Configuration.reinitializeConfiguration(context, DbOpenHelper.class);
-		Configuration.TryInitializeConfiguration(this, DbOpenHelper.class);	
+		Configuration.TryInitializeConfiguration(this, DbOpenHelper.class);
+
+        if(PreferenceManager.getString(Contants.KEY_ANDROID_ID, "").equalsIgnoreCase(""))
+        {
+            PreferenceManager.setValue(Contants.KEY_ANDROID_ID, Settings.Secure.getString(getContentResolver(),
+                    Settings.Secure.ANDROID_ID));
+        }
 		
 	}
 	

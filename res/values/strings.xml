@@ -233,5 +233,6 @@
     <string name="label_tipo_de_pago">Tipo de Pago</string>
     <string name="label_transacciones">Transacciones</string>
     <string name="label_redondeo">Redondeo:</string>
+    <string name="action_arqueo_caja">Arqueo de Caja</string>
 
 </resources>
