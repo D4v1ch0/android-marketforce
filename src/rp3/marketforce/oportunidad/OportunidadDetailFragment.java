@@ -31,6 +31,7 @@ import java.util.List;
 
 import rp3.app.BaseFragment;
 import rp3.configuration.PreferenceManager;
+import rp3.data.models.GeneralValue;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.cliente.ClienteEditActivity;
@@ -380,6 +381,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                     final Agente agt = Agente.getAgente(getDataBase(), opt.getOportunidadResponsables().get(i).getIdAgente());
                     ((TextView) view_responsable.findViewById(R.id.responsable_number)).setText(i + 1 + "");
                     ((TextView) view_responsable.findViewById(R.id.responsable_nombre)).setText(agt.getNombre());
+                    ((TextView) view_responsable.findViewById(R.id.responsable_rol)).setText(GeneralValue.getGeneralValue(getDataBase(), Contants.GENERAL_TABLE_TIPO_RESPONSABLES, opt.getOportunidadResponsables().get(i).getTipo()).getValue());
                     ((TextView) view_responsable.findViewById(R.id.responsable_nombre)).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

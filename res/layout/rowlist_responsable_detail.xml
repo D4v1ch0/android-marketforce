@@ -53,6 +53,15 @@
                     android:textColor="@drawable/text_feedback"
                     android:clickable="true" />
 
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/label_oportunidad_venta"
+                    android:id="@+id/responsable_rol"
+                    android:textColor="@drawable/text_feedback"
+                    android:clickable="true" />
+
             </LinearLayout>
 
         </LinearLayout>
