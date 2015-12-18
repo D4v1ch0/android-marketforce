@@ -271,6 +271,8 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
                         responsable.setTipo("I");
                     if(((TextView) listViewResponsables.get(i).findViewById(R.id.responsable_tipo)).getText().toString().equalsIgnoreCase("Creador"))
                         responsable.setTipo("C");
+                    if(((TextView) listViewResponsables.get(i).findViewById(R.id.responsable_tipo)).getText().toString().equalsIgnoreCase("Responsable"))
+                        responsable.setTipo("R");
                 }
                 catch (Exception ex)
                 {
@@ -784,9 +786,10 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
                 {
                     if(((TextView) responsable.findViewById(R.id.responsable_tipo)).getText().toString().equalsIgnoreCase("Gestor"))
                         ((TextView) responsable.findViewById(R.id.responsable_tipo)).setText(GeneralValue.getGeneralValue(getDataBase(), Contants.GENERAL_TABLE_TIPO_RESPONSABLES, "I").getValue());
+                    else if(((TextView) responsable.findViewById(R.id.responsable_tipo)).getText().toString().equalsIgnoreCase("Interesado"))
+                        ((TextView) responsable.findViewById(R.id.responsable_tipo)).setText(GeneralValue.getGeneralValue(getDataBase(), Contants.GENERAL_TABLE_TIPO_RESPONSABLES, "R").getValue());
                     else
-                        ((TextView) responsable.findViewById(R.id.responsable_tipo)).setText(GeneralValue.getGeneralValue(getDataBase(), Contants.GENERAL_TABLE_TIPO_RESPONSABLES, "G").getValue());
-                }
+                        ((TextView) responsable.findViewById(R.id.responsable_tipo)).setText(GeneralValue.getGeneralValue(getDataBase(), Contants.GENERAL_TABLE_TIPO_RESPONSABLES, "G").getValue());                }
             }
         });
         listAgentesIds.add(agt.getIdAgente());
@@ -991,6 +994,8 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
                 {
                     if(((TextView) responsable.findViewById(R.id.responsable_tipo)).getText().toString().equalsIgnoreCase("Gestor"))
                         ((TextView) responsable.findViewById(R.id.responsable_tipo)).setText(GeneralValue.getGeneralValue(getDataBase(), Contants.GENERAL_TABLE_TIPO_RESPONSABLES, "I").getValue());
+                    else if(((TextView) responsable.findViewById(R.id.responsable_tipo)).getText().toString().equalsIgnoreCase("Interesado"))
+                        ((TextView) responsable.findViewById(R.id.responsable_tipo)).setText(GeneralValue.getGeneralValue(getDataBase(), Contants.GENERAL_TABLE_TIPO_RESPONSABLES, "R").getValue());
                     else
                         ((TextView) responsable.findViewById(R.id.responsable_tipo)).setText(GeneralValue.getGeneralValue(getDataBase(), Contants.GENERAL_TABLE_TIPO_RESPONSABLES, "G").getValue());
                 }
