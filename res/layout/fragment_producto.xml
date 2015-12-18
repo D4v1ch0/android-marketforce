@@ -56,23 +56,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/label_descuento_points"
-            android:id="@+id/textView118"
-            android:layout_weight="0.35" />
-
-        <EditText
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:id="@+id/producto_descuento_manual"
-            android:layout_weight="0.65"
-            android:inputType="number"
-            android:enabled="false" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/label_cantidad2"
             android:id="@+id/textView19"
             android:layout_weight="0.35" />
@@ -84,6 +67,35 @@
             android:id="@+id/producto_cantidad"
             android:layout_weight="0.65"
             android:inputType="number" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_descuento_points"
+            android:id="@+id/textView118"
+            android:layout_weight="0.35" />
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:id="@+id/producto_descuento_manual"
+            android:layout_weight="0.65"
+            android:inputType="number"
+            android:enabled="true"
+            android:editable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="%"
+            android:id="@+id/textView83"
+            android:layout_marginRight="5dp" />
+
     </LinearLayout>
 
     <TextView

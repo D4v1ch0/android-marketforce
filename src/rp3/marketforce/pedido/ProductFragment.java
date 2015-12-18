@@ -12,6 +12,10 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 import rp3.app.BaseFragment;
 import rp3.configuration.PreferenceManager;
 import rp3.marketforce.Contants;
@@ -30,6 +34,9 @@ public class ProductFragment extends BaseFragment {
     private ProductAcceptListener createFragmentListener;
     private JSONObject jsonObject;
     private DrawableManager DManager;
+    private double porcentajeDescManual = 0, valorDescManual = 0, valorDescManualTotal = 0;
+    private DecimalFormat df;
+    private NumberFormat numberFormat;
 
     public static ProductFragment newInstance(String jcode)
     {
@@ -62,6 +69,12 @@ public class ProductFragment extends BaseFragment {
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
 
+        df = new DecimalFormat("#.##");
+        df.setRoundingMode(RoundingMode.CEILING);
+        numberFormat = NumberFormat.getInstance();
+        numberFormat.setMaximumFractionDigits(2);
+        numberFormat.setMinimumFractionDigits(2);
+
         DManager = new DrawableManager();
         try {
         String code = getArguments().getString("Code");
@@ -69,12 +82,45 @@ public class ProductFragment extends BaseFragment {
             if(!jsonObject.isNull("c"))
                 ((EditText)rootView.findViewById(R.id.producto_cantidad)).setText(jsonObject.getString("c"));
             ((TextView)rootView.findViewById(R.id.producto_descripcion)).setText("Descripción: " + jsonObject.getString("d"));
-            ((TextView)rootView.findViewById(R.id.producto_precio)).setText("Precio: "+PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO)+" " + jsonObject.getString("vi"));
+            ((TextView)rootView.findViewById(R.id.producto_precio)).setText("Precio: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(jsonObject.getDouble("vi")));
             ((TextView)rootView.findViewById(R.id.producto_precio_final)).setText("Precio Total: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " 0");
             DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
                             rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_PRODUCTOS) + jsonObject.getString("f"),
                     (ImageView) rootView.findViewById(R.id.producto_imagen));
-            ((EditText)rootView.findViewById(R.id.producto_descuento_manual)).setText(jsonObject.getString("pd") + "%");
+            //((EditText)rootView.findViewById(R.id.producto_descuento_manual)).setText(jsonObject.getString("pd") + "%");
+            ((EditText)rootView.findViewById(R.id.producto_descuento_manual)).addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (s.length() == 0)
+                        porcentajeDescManual = 0;
+                    else {
+                        porcentajeDescManual = Float.parseFloat(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).getText().toString()) / 100;
+                    }
+                    int cantidad = 0;
+                    if(((EditText) rootView.findViewById(R.id.producto_cantidad)).length() > 0)
+                        cantidad = Integer.parseInt(((EditText) rootView.findViewById(R.id.producto_cantidad)).getText().toString());
+
+                    try {
+                        valorDescManual = jsonObject.getDouble("vi") * porcentajeDescManual;
+                        double precio_total = cantidad * jsonObject.getDouble("vi");
+                        valorDescManualTotal = valorDescManual * cantidad;
+                        precio_total = precio_total - valorDescManualTotal;
+                        ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("Precio Total: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(precio_total));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
             ((EditText)rootView.findViewById(R.id.producto_cantidad)).addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -83,19 +129,22 @@ public class ProductFragment extends BaseFragment {
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    if(s.length() == 0)
-                        ((TextView)rootView.findViewById(R.id.producto_precio_final)).setText("Precio Total: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " 0");
-                    else
-                    {
+                    if (s.length() == 0)
+                        ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("Precio Total: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " 0");
+                    else {
                         int cantidad = Integer.parseInt(((EditText) rootView.findViewById(R.id.producto_cantidad)).getText().toString());
+                        if(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).length() > 0)
+                            porcentajeDescManual = Float.parseFloat(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).getText().toString()) / 100;
                         try {
+                            valorDescManual = jsonObject.getDouble("vi") * porcentajeDescManual;
                             double precio_total = cantidad * jsonObject.getDouble("vi");
-                            ((TextView)rootView.findViewById(R.id.producto_precio_final)).setText("Precio Total: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + precio_total);
+                            valorDescManualTotal = valorDescManual * cantidad;
+                            precio_total = precio_total - valorDescManualTotal;
+                            ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("Precio Total: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(precio_total));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
-
                 }
 
                 @Override
@@ -150,13 +199,13 @@ public class ProductFragment extends BaseFragment {
                         detalle.setValorUnitario(jsonObject.getDouble("p"));
                         detalle.setIdProducto(jsonObject.getInt("id"));
                         detalle.setUrlFoto(jsonObject.getString("f"));
-                        detalle.setValorTotal(detalle.getCantidad() * Float.parseFloat(jsonObject.getString("vi")));
+                        detalle.setValorTotal((detalle.getCantidad() * Float.parseFloat(jsonObject.getString("vi"))) - valorDescManualTotal);
                         detalle.setSubtotal(detalle.getValorUnitario() * detalle.getCantidad());
-                        detalle.setPorcentajeDescuentoManual(0);
-                        detalle.setValorDescuentoManual(0);
+                        detalle.setPorcentajeDescuentoManual(porcentajeDescManual);
+                        detalle.setValorDescuentoManual(valorDescManual);
                         detalle.setValorDescuentoAutomatico(Float.parseFloat(jsonObject.getString("vd")) - Float.parseFloat(jsonObject.getString("vi")));
                         detalle.setValorDescuentoAutomaticoTotal(detalle.getValorDescuentoAutomatico() * detalle.getCantidad());
-                        detalle.setValorDescuentoManualTotal(0);
+                        detalle.setValorDescuentoManualTotal(valorDescManualTotal);
                         detalle.setPorcentajeDescuentoAutomatico(Float.parseFloat(jsonObject.getString("pd")));
                         detalle.setPorcentajeImpuesto(Float.parseFloat(jsonObject.getString("pi")));
                         detalle.setValorImpuesto(Float.parseFloat(jsonObject.getString("vi")) - Float.parseFloat(jsonObject.getString("p")));

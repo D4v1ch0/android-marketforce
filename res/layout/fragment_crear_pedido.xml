@@ -32,7 +32,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:text="+"
-            android:id="@+id/button"
+            android:id="@+id/pedido_crear_cliente"
             style="@style/Widget.Button.Theme"
             android:layout_weight="0.05"
             android:gravity="center"
@@ -84,7 +84,8 @@
             android:layout_weight="0.15"
             android:textColor="@color/color_text_sky_blue"
             android:textStyle="bold"
-            android:textSize="@dimen/text_small_size" />
+            android:textSize="@dimen/text_small_size"
+            android:gravity="center" />
 
         <TextView
             android:layout_width="0dp"
@@ -95,7 +96,8 @@
             android:layout_weight="0.5"
             android:textColor="@color/color_text_sky_blue"
             android:textStyle="bold"
-            android:textSize="@dimen/text_small_size" />
+            android:textSize="@dimen/text_small_size"
+            android:gravity="center" />
 
         <TextView
             android:layout_width="0dp"
@@ -404,5 +406,39 @@
             android:textSize="@dimen/text_medium_small_size"
             android:gravity="right" />
     </LinearLayout>
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/actividad_texto_respuesta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textMultiLine|textCapSentences"
+            android:minWidth="@dimen/nav_drawer_width"
+            android:textAppearance="@style/EditTextAppTheme"
+            android:textSize="@dimen/text_input_size"
+            android:background="@drawable/observaciones_fondo"
+            android:gravity="top"
+            android:layout_margin="5dp"
+            android:scrollbars="vertical"
+            android:fadeScrollbars="false"
+            android:hint="@string/hint_escriba_aqui"
+            android:lines="3">
+
+            <requestFocus />
+        </EditText>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/actividad_voice_to_text"
+            android:src="@drawable/ic_action_mic"
+            android:layout_alignTop="@+id/actividad_texto_respuesta"
+            android:layout_alignRight="@+id/actividad_texto_respuesta"
+            android:layout_alignEnd="@+id/actividad_texto_respuesta"
+            android:clickable="true" />
+    </RelativeLayout>
 
 </LinearLayout>

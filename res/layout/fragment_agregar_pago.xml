@@ -22,13 +22,13 @@
                 android:text="@string/label_tipo_pago"
                 android:textStyle="bold"
                 android:textColor="@color/color_text_sky_blue"
-                android:layout_weight="0.25" />
+                android:layout_weight="0.3" />
 
             <Spinner
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/spinner"
-                android:layout_weight="1" />
+                android:id="@+id/pago_tipo"
+                android:layout_weight="0.7" />
 
         </LinearLayout>
 
@@ -46,15 +46,15 @@
             android:text="@string/label_valor"
             android:textStyle="bold"
             android:textColor="@color/color_text_sky_blue"
-            android:layout_weight="0.25" />
+            android:layout_weight="0.3" />
 
         <EditText
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
             android:ems="10"
-            android:id="@+id/editText2"
-            android:layout_weight="1" />
+            android:id="@+id/pago_valor"
+            android:layout_weight="0.7" />
 
     </LinearLayout>
 

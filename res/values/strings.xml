@@ -211,7 +211,7 @@
     <string name="label_valor_unitario">V. Unitario</string>
     <string name="label_valor_total">Total</string>
     <string name="label_cantidad_items"># de Items:</string>
-    <string name="label_total_pedido">Total Pedido:</string>
+    <string name="label_total_pedido">Total:</string>
     <string name="label_agregar_producto">Agregar Producto</string>
     <string name="message_guardar_pedido">Desea guardar los datos del pedido?</string>
     <string name="message_guardar_pedido_accept">Desea guardar los datos del pedido y darlo por cerrado?</string>
@@ -227,14 +227,19 @@
     <string name="label_total_impuestos">Impuestos:</string>
     <string name="label_saldo">Saldo:</string>
     <string name="label_descuento_points">Descuento:</string>
-    <string name="label_agregar_nueva_forma_pago">Agregar Nueva Forma de Pago</string>
-    <string name="label_tipo_pago">Tipo de Pago:</string>
+    <string name="label_agregar_nueva_forma_pago">Agregar Pago</string>
+    <string name="label_tipo_pago">Forma de Pago:</string>
     <string name="label_valor">Valor:</string>
     <string name="label_tipo_de_pago">Tipo de Pago</string>
     <string name="label_transacciones">Transacciones</string>
     <string name="label_redondeo">Redondeo:</string>
     <string name="action_arqueo_caja">Arqueo de Caja</string>
     <string name="label_base_imponible">Base Imponible:</string>
-    <string name="label_base_imponible_cero">Base 0:</string>
+    <string name="label_base_imponible_cero">Base Cero:</string>
+    <string name="label_forma_pago">Formas de Pago</string>
+    <string name="action_anular_agenda">Anular Transacción</string>
+    <string name="label_nuevo_arqueo">Nuevo Arqueo</string>
+    <string name="imprimir_arqueo">Imprimir Arqueo</string>
+    <string name="message_anulacion">Desea anular esta transacción?</string>
 
 </resources>

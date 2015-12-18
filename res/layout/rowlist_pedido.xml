@@ -19,7 +19,7 @@
 
             <TextView
                 style="@style/Widget.TextView.XSmall"
-                android:id="@+id/textView91"
+                android:id="@+id/pedido_tipo_documento"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="3dp"
@@ -37,7 +37,7 @@
 
             <TextView
                 style="@style/Widget.TextView.XSmall"
-                android:id="@+id/textView88"
+                android:id="@+id/pedido_numero_documento"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="3dp"
@@ -145,7 +145,7 @@
 
         <TextView
             style="@style/Widget.TextView.XSmall"
-            android:id="@+id/textView95"
+            android:id="@+id/pedido_fecha"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="3dp"

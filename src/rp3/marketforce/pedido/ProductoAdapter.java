@@ -60,8 +60,11 @@ public class ProductoAdapter extends BaseAdapter {
         convertView = (View) inflater.inflate(this.context.getApplicationContext().getResources().getLayout(R.layout.rowlist_producto), null);
 
         Producto producto = productos.get(position);
+        String impuesto = "";
+        if(producto.getPorcentajeImpuesto() != 0)
+            impuesto = "*";
 
-        ((TextView) convertView.findViewById(R.id.producto_descripcion)).setText(producto.getDescripcion());
+        ((TextView) convertView.findViewById(R.id.producto_descripcion)).setText(producto.getDescripcion() + impuesto);
         ((TextView) convertView.findViewById(R.id.producto_precio)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(producto.getValorUnitario()));
         ((TextView) convertView.findViewById(R.id.producto_codigo)).setText("SKU: " + producto.getCodigoExterno());
 

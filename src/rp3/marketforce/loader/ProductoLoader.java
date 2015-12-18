@@ -17,28 +17,35 @@ public class ProductoLoader  extends
     private DataBase db;
     private String search;
     private int idSubCategoria;
+    private String tipo;
 
-    public ProductoLoader(Context context, DataBase db, String search, int idSubCategoria) {
+    public ProductoLoader(Context context, DataBase db, String search, int idSubCategoria, String tipo) {
         super(context);
         this.db = db;
         this.search = search;
         this.idSubCategoria = idSubCategoria;
+        this.tipo = tipo;
     }
 
     @Override
     public List<Producto> loadInBackground() {
         List<Producto> result = null;
 
-        if(search == null || search.length() <= 0)
-            if(idSubCategoria == -1)
-                result = Producto.getProductos(db);
-            else
-                result = Producto.getProductos(db, idSubCategoria);
-        else
-            if(idSubCategoria == -1)
+        if(tipo.equalsIgnoreCase("sku") && search != null)
+        {
+            result = Producto.getProductoByCodigoExterno(db, search);
+        }
+        else {
+            if (search == null || search.length() <= 0)
+                if (idSubCategoria == -1)
+                    result = Producto.getProductos(db);
+                else
+                    result = Producto.getProductos(db, idSubCategoria);
+            else if (idSubCategoria == -1)
                 result = Producto.getProductoSearch(db, search);
             else
                 result = Producto.getProductoSearch(db, search, idSubCategoria);
+        }
 
         return result;
     }

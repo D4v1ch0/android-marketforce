@@ -29,9 +29,11 @@ import rp3.app.BaseFragment;
 import rp3.configuration.PreferenceManager;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
+import rp3.marketforce.cliente.CrearClienteActivity;
 import rp3.marketforce.db.Contract;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.Cliente;
+import rp3.marketforce.models.pedido.Pago;
 import rp3.marketforce.models.pedido.Pedido;
 import rp3.marketforce.models.pedido.PedidoDetalle;
 import rp3.marketforce.sync.SyncAdapter;
@@ -41,7 +43,7 @@ import rp3.util.ConnectionUtils;
 /**
  * Created by magno_000 on 13/10/2015.
  */
-public class CrearPedidoFragment extends BaseFragment implements ProductFragment.ProductAcceptListener{
+public class CrearPedidoFragment extends BaseFragment implements ProductFragment.ProductAcceptListener, PagosListFragment.PagosAcceptListener{
 
     boolean rotated = false;
     private AutoCompleteTextView cliente_auto;
@@ -52,6 +54,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     public static String ARG_AGENDA = "agenda";
     public static String ARG_TIPO_DOCUMENTO = "tipo_documento";
     public static final int REQUEST_BUSQUEDA = 3;
+    public static final int REQUEST_CLIENTE = 4;
 
     public static final int DIALOG_SAVE_CANCEL = 1;
     public static final int DIALOG_SAVE_ACCEPT = 2;
@@ -65,6 +68,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     private String code;
     private PedidoDetalleAdapter adapter;
     private NumberFormat numberFormat;
+    double descuentos = 0, subtotal = 0, valorTotal = 0, impuestos = 0, base0 = 0, baseImponible = 0, redondeo = 0;
 
     public static CrearPedidoFragment newInstance(long id_pedido, long id_agenda, String tipo)
     {
@@ -90,7 +94,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         tryEnableGooglePlayServices(true);
-        setContentView(R.layout.fragment_crear_pedido, R.menu.fragment_crear_cliente);
+        setContentView(R.layout.fragment_crear_pedido, R.menu.fragment_crear_pedido);
         setRetainInstance(true);
     }
 
@@ -112,6 +116,11 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId())
         {
+            case R.id.action_forma_pago:
+                PagosListFragment fragment = PagosListFragment.newInstance(valorTotal);
+                fragment.pagos = pedido.getPagos();
+                showDialogFragment(fragment, "Pagos", "Pagos");
+                break;
             case R.id.action_save:
                 if(Validaciones())
                 {
@@ -148,6 +157,9 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             case DIALOG_SAVE_ACCEPT:
                 Grabar(false);
                 finish();
+                Intent intent = new Intent(getContext(), CrearPedidoActivity.class);
+                intent.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, "FA");
+                startActivity(intent);
                 break;
             case DIALOG_SAVE_CANCEL:
                 if(Validaciones())
@@ -165,17 +177,39 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
         Cliente cli = list_cliente.get(list_nombres.indexOf(cliente_auto.getText().toString()));
         pedido.setIdCliente((int) cli.getIdCliente());
+        pedido.set_idCliente((int) cli.getID());
         if (((EditText) getRootView().findViewById(R.id.pedido_email)).length() > 0)
             pedido.setEmail(((EditText) getRootView().findViewById(R.id.pedido_email)).getText().toString());
 
-        double valorTotal = 0;
-        for (PedidoDetalle detalle : pedido.getPedidoDetalles()) {
-            valorTotal = valorTotal + detalle.getValorTotal();
-        }
-
         pedido.set_idAgenda((int) idAgenda);
 
+        pedido.setTipoDocumento(tipo);
+        if (tipo.equalsIgnoreCase("FA")) {
+            pedido.setNumeroDocumento(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO) + "-" + PreferenceManager.getString(Contants.KEY_SERIE) +
+                    "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA)));
+        }
+        if (tipo.equalsIgnoreCase("NC")) {
+            pedido.setNumeroDocumento(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO) + "-" + PreferenceManager.getString(Contants.KEY_SERIE) +
+                    "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_NOTA_CREDITO)));
+        }
+
+
+        pedido.setObservaciones(((EditText) getRootView().findViewById(R.id.actividad_texto_respuesta)).getText().toString());
         pedido.setValorTotal(valorTotal);
+        pedido.setSubtotal(subtotal);
+        pedido.setTotalDescuentos(descuentos);
+        pedido.setTotalImpuestos(impuestos);
+        pedido.setBaseImponible(baseImponible);
+        pedido.setBaseImponibleCero(base0);
+        pedido.setRedondeo(redondeo);
+        float pagado = 0;
+        if (pedido.getPagos() != null)
+            for (Pago pago : pedido.getPagos()) {
+                pagado = pagado + pago.getValor();
+            }
+        pedido.setExcedente(valorTotal - pagado);
+        pedido.setSubtotalSinDescuento(subtotal + pedido.getTotalImpuestos());
+
         if (pendiente)
             pedido.setEstado("P");
         else
@@ -186,18 +220,29 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         else
             Pedido.update(getDataBase(), pedido);
 
-        if(pedido.getID() == 0)
+        if (pedido.getID() == 0)
             pedido.setID(getDataBase().queryMaxInt(Contract.Pedido.TABLE_NAME, Contract.Pedido._ID));
 
-        if (pedido.getIdPedido() != 0)
+        if (pedido.getIdPedido() != 0) {
             PedidoDetalle.deleteDetallesByIdPedido(getDataBase(), pedido.getIdPedido());
-        else
+            Pago.deletePagosByIdPedido(getDataBase(), pedido.getIdPedido());
+        } else {
             PedidoDetalle.deleteDetallesByIdPedidoInt(getDataBase(), (int) pedido.getID());
+            Pago.deletePagosByIdPedidoInt(getDataBase(), (int) pedido.getID());
+        }
 
         for (PedidoDetalle detalle : pedido.getPedidoDetalles()) {
             detalle.setIdPedido(pedido.getIdPedido());
             detalle.set_idPedido((int) pedido.getID());
             PedidoDetalle.insert(getDataBase(), detalle);
+        }
+
+        for (Pago pago : pedido.getPagos()) {
+            if(pago.getFormaPago().getDescripcion().equalsIgnoreCase("Efectivo"))
+                pago.setValor(pago.getValor() + ((float)pedido.getExcedente()));
+            pago.setIdPedido(pedido.getIdPedido());
+            pago.set_idPedido((int) pedido.getID());
+            Pago.insert(getDataBase(), pago);
         }
 
 
@@ -207,6 +252,12 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             bundle.putLong(ARG_PEDIDO, pedido.getID());
             requestSync(bundle);
         }
+
+        if (pedido.getTipoDocumento().equalsIgnoreCase("FA"))
+            PreferenceManager.setValue(Contants.KEY_SECUENCIA_FACTURA, PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA) + 1);
+        if (pedido.getTipoDocumento().equalsIgnoreCase("NC"))
+            PreferenceManager.setValue(Contants.KEY_SECUENCIA_NOTA_CREDITO, PreferenceManager.getInt(Contants.KEY_SECUENCIA_NOTA_CREDITO) + 1);
+
     }
 
     @Override
@@ -252,6 +303,15 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             });
         }
 
+        rootView.findViewById(R.id.pedido_crear_cliente).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), CrearClienteActivity.class);
+                startActivityForResult(intent, REQUEST_CLIENTE);
+            }
+        });
+
+
         ((Button) rootView.findViewById(R.id.pedido_agregar_producto)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -285,6 +345,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                                         break;
                                     case 3:
                                         Intent intent3 = new Intent(getContext(), ProductoListActivity.class);
+                                        intent3.putExtra(ProductoListFragment.ARG_BUSQUEDA, "sku");
                                         startActivityForResult(intent3, REQUEST_BUSQUEDA);
                                         break;
                                 }
@@ -433,6 +494,20 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                     {}
 
                 }
+                break;
+            case REQUEST_CLIENTE:
+                if(resultCode == RESULT_OK)
+                {
+                    Cliente cl = Cliente.getClienteID(getDataBase(), data.getExtras().getLong(CrearClienteActivity.ARG_IDCLIENTE), false);
+                    cliente_auto.setText(cl.getNombreCompleto());
+                    cliente_auto.setEnabled(false);
+                    ((TextView) getRootView().findViewById(R.id.pedido_email)).setText(cl.getCorreoElectronico());
+                    list_cliente = Cliente.getCliente(getDataBase());
+                    list_nombres = new ArrayList<String>();
+                    for (Cliente cli : list_cliente) {
+                        list_nombres.add(cli.getNombreCompleto().trim());
+                    }
+                }
         }
     }
 
@@ -465,13 +540,12 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     @Override
     public void onDeleteSuccess(PedidoDetalle transaction) {
         int exists = -1;
-        for(int i = 0; i < pedido.getPedidoDetalles().size(); i++)
-        {
-            if(pedido.getPedidoDetalles().get(i).getIdProducto() == transaction.getIdProducto())
+        for (int i = 0; i < pedido.getPedidoDetalles().size(); i++) {
+            if (pedido.getPedidoDetalles().get(i).getIdProducto() == transaction.getIdProducto())
                 exists = i;
         }
 
-        if(exists != -1)
+        if (exists != -1)
             pedido.getPedidoDetalles().remove(exists);
 
         adapter.setList(pedido.getPedidoDetalles());
@@ -480,9 +554,8 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
         ((TextView) getRootView().findViewById(R.id.pedido_cantidad)).setText(getPedidoCantidad(pedido.getPedidoDetalles()) + "");
 
-        double descuentos = 0, subtotal = 0, valorTotal = 0, impuestos = 0, base0 = 0, baseImponible = 0, redondeo = 0;
-        for(PedidoDetalle detalle : pedido.getPedidoDetalles())
-        {
+        descuentos = 0; subtotal = 0; valorTotal = 0; impuestos = 0; base0 = 0; baseImponible = 0; redondeo = 0;
+        for (PedidoDetalle detalle : pedido.getPedidoDetalles()) {
             valorTotal = valorTotal + detalle.getValorTotal();
             subtotal = subtotal + detalle.getSubtotal();
             descuentos = descuentos + detalle.getValorDescuentoManualTotal() + detalle.getValorDescuentoAutomaticoTotal();
@@ -490,6 +563,14 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             base0 = base0 + detalle.getBaseImponibleCero();
             baseImponible = baseImponible + detalle.getBaseImponible();
         }
+        double residuo = valorTotal % 100;
+        if(residuo >= 50)
+            redondeo = (100 - residuo);
+        else
+            redondeo = - residuo;
+
+        valorTotal = valorTotal + redondeo;
+
 
         ((TextView) getRootView().findViewById(R.id.pedido_total)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(valorTotal));
         ((TextView) getRootView().findViewById(R.id.pedido_descuentos)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(descuentos));
@@ -497,40 +578,46 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         ((TextView) getRootView().findViewById(R.id.pedido_base_cero)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(base0));
         ((TextView) getRootView().findViewById(R.id.pedido_base_imponible)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(baseImponible));
         ((TextView) getRootView().findViewById(R.id.pedido_subtotal)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(subtotal));
+        ((TextView) getRootView().findViewById(R.id.pedido_redondeo)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(redondeo));
+
+        float pagado = 0;
+        if (pedido.getPagos() != null)
+            for (Pago pago : pedido.getPagos()) {
+                pagado = pagado + pago.getValor();
+            }
+
+        ((TextView) getRootView().findViewById(R.id.pedido_saldo)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(valorTotal - pagado));
     }
 
     @Override
     public void onAcceptSuccess(PedidoDetalle transaction) {
         int exists = -1;
 
-        if(pedido.getPedidoDetalles() == null)
+        if (pedido.getPedidoDetalles() == null)
             pedido.setPedidoDetalles(new ArrayList<PedidoDetalle>());
 
-        for(int i = 0; i < pedido.getPedidoDetalles().size(); i++)
-        {
-            if(pedido.getPedidoDetalles().get(i).getIdProducto() == transaction.getIdProducto())
+        for (int i = 0; i < pedido.getPedidoDetalles().size(); i++) {
+            if (pedido.getPedidoDetalles().get(i).getIdProducto() == transaction.getIdProducto())
                 exists = i;
         }
 
-        if(exists == -1)
+        if (exists == -1)
             pedido.getPedidoDetalles().add(transaction);
         else
             pedido.getPedidoDetalles().set(exists, transaction);
 
-        if(adapter == null) {
+        if (adapter == null) {
             adapter = new PedidoDetalleAdapter(this.getContext(), pedido.getPedidoDetalles());
             ((ListView) getRootView().findViewById(R.id.pedido_detalles)).setAdapter(adapter);
-        }
-        else
+        } else
             adapter.setList(pedido.getPedidoDetalles());
 
         adapter.notifyDataSetChanged();
 
         ((TextView) getRootView().findViewById(R.id.pedido_cantidad)).setText(getPedidoCantidad(pedido.getPedidoDetalles()) + "");
 
-        double descuentos = 0, subtotal = 0, valorTotal = 0, impuestos = 0, base0 = 0, baseImponible = 0, redondeo = 0;
-        for(PedidoDetalle detalle : pedido.getPedidoDetalles())
-        {
+        descuentos = 0; subtotal = 0; valorTotal = 0; impuestos = 0; base0 = 0; baseImponible = 0; redondeo = 0;
+        for (PedidoDetalle detalle : pedido.getPedidoDetalles()) {
             valorTotal = valorTotal + detalle.getValorTotal();
             subtotal = subtotal + detalle.getSubtotal();
             descuentos = descuentos + detalle.getValorDescuentoManualTotal() + detalle.getValorDescuentoAutomaticoTotal();
@@ -538,6 +625,13 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             base0 = base0 + detalle.getBaseImponibleCero();
             baseImponible = baseImponible + detalle.getBaseImponible();
         }
+        double residuo = valorTotal % 100;
+        if(residuo >= 50)
+            redondeo = (100 - residuo);
+        else
+            redondeo = - residuo;
+
+        valorTotal = valorTotal + redondeo;
 
         ((TextView) getRootView().findViewById(R.id.pedido_total)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(valorTotal));
         ((TextView) getRootView().findViewById(R.id.pedido_descuentos)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(descuentos));
@@ -545,7 +639,15 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         ((TextView) getRootView().findViewById(R.id.pedido_base_cero)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(base0));
         ((TextView) getRootView().findViewById(R.id.pedido_base_imponible)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(baseImponible));
         ((TextView) getRootView().findViewById(R.id.pedido_subtotal)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(subtotal));
+        ((TextView) getRootView().findViewById(R.id.pedido_redondeo)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(redondeo));
 
+        float pagado = 0;
+        if (pedido.getPagos() != null)
+            for (Pago pago : pedido.getPagos()) {
+                pagado = pagado + pago.getValor();
+            }
+
+        ((TextView) getRootView().findViewById(R.id.pedido_saldo)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(valorTotal - pagado));
     }
 
     public static int getPedidoCantidad(List<PedidoDetalle> detalles)
@@ -556,5 +658,21 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             cant = cant + detalle.getCantidad();
         }
         return cant;
+    }
+
+    @Override
+    public void onAcceptSuccess(List<Pago> pagos) {
+        if(pedido.getPagos() == null)
+            pedido.setPagos(new ArrayList<Pago>());
+
+        pedido.setPagos(pagos);
+
+        float pagado = 0;
+        for(Pago pago : pedido.getPagos())
+        {
+            pagado = pagado + pago.getValor();
+        }
+
+        ((TextView) getRootView().findViewById(R.id.pedido_saldo)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(valorTotal - pagado));
     }
 }

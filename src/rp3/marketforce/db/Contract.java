@@ -555,6 +555,7 @@ public final class Contract {
 		public static final String COLUMN_ESTADO = "Estado";
 		public static final String COLUMN_FECHA_CREACION = "FechaCreacion";
 		public static final String COLUMN_ID_AGENDA_INT = "_IdAgenda";
+		public static final String COLUMN_ID_CLIENTE_INT = "_IdCliente";
 		public static final String COLUMN_NUMERO_DOCUMENTO = "NumeroDocumento";
 		public static final String COLUMN_TOTAL_DESCUENTOS = "TotalDescuentos";
 		public static final String COLUMN_TOTAL_IMPUESTOS = "TotalImpuestos";
@@ -624,6 +625,7 @@ public final class Contract {
 		public static final String QUERY_PRODUCTO_BY_ID_SERVER = "ProductoByIdServer";
 		public static final String QUERY_SEARCH = "SimpleProductoSearch";
 		public static final String QUERY_SEARCH_BY_CATEGORIA = "SimpleProductoSearchByCategoria";
+		public static final String QUERY_SEARCH_BY_CODIGO_EXTERNO = "ProductoSearchCodigo";
 	}
 
 	public static abstract class ProductoExt implements BaseColumns {
@@ -650,6 +652,30 @@ public final class Contract {
 		public static final String COLUMN_ID_SUBCATEGORIA = "IdSubCategoria";
 		public static final String COLUMN_ID_CATEGORIA = "IdCategoria";
 		public static final String COLUMN_DESCRIPCION = "Descripcion";
+
+	}
+
+	public static abstract class FormaPago implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbFormaPago";
+
+		public static final String COLUMN_ID_FORMA_PAGO = "IdFormaPago";
+		public static final String COLUMN_DESCRIPCION = "Descripcion";
+
+	}
+
+	public static abstract class Pago implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbPago";
+
+		public static final String COLUMN_ID_PAGO = "IdPago";
+		public static final String COLUMN_ID_PEDIDO = "IdPedido";
+		public static final String COLUMN_ID_PEDIDO_INT = "_IdPedido";
+		public static final String COLUMN_ID_FORMA_PAGO = "IdFormaPago";
+		public static final String COLUMN_OBSERVACION = "Observacion";
+		public static final String COLUMN_VALOR = "Valor";
+
+		public static final String QUERY_ARQUEO = "ArqueoCajaQuery";
 
 	}
 }

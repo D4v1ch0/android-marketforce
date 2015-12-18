@@ -6,6 +6,7 @@ import rp3.app.BaseActivity;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.R.layout;
+import rp3.marketforce.pedido.ProductoListFragment;
 import rp3.marketforce.ruta.CrearVisitaFragment;
 import android.app.Activity;
 import android.content.Intent;
@@ -55,5 +56,13 @@ public class CrearClienteActivity extends BaseActivity {
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		//newFragment.rotated = true;
+	}
+
+	public void finishOnResult(long code)
+	{
+		Intent intent = new Intent();
+		intent.putExtra(ARG_IDCLIENTE, code);
+		setResult(RESULT_OK, intent);
+		finish();
 	}
 }

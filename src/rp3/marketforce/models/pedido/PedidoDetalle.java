@@ -338,7 +338,8 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
             detalle.setSubtotalSinImpuesto(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_IMPUESTO));
             detalle.setBaseImponible(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE));
             detalle.setBaseImponibleCero(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE_CERO));
-            //detalle.setProducto(Producto.getProductoIdServer(db, detalle.getIdProducto()));
+            detalle.setCodigoExterno(Producto.getProductoIdServer(db, detalle.getIdProducto()).getCodigoExterno());
+            detalle.setProducto(Producto.getProductoIdServer(db, detalle.getIdProducto()));
             list.add(detalle);
         }
         c.close();
@@ -381,7 +382,8 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
             detalle.setSubtotalSinImpuesto(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_IMPUESTO));
             detalle.setBaseImponible(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE));
             detalle.setBaseImponibleCero(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE_CERO));
-            //detalle.setProducto(Producto.getProductoIdServer(db, detalle.getIdProducto()));
+            detalle.setCodigoExterno(Producto.getProductoIdServer(db, detalle.getIdProducto()).getCodigoExterno());
+            detalle.setProducto(Producto.getProductoIdServer(db, detalle.getIdProducto()));
 
             list.add(detalle);
         }

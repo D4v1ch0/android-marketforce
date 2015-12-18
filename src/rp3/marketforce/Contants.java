@@ -54,6 +54,11 @@ public class Contants {
 	public final static String KEY_CLIENT = "ClientName";
     public final static String KEY_APP_INSTANCE_ID = "TokenId";
     public final static String KEY_MONEDA_SIMBOLO = "Simbolo";
+    public final static String KEY_ID_MONEDA = "IdMoneda";
+    public final static String KEY_ID_CAJA = "IdCaja";
+    public final static String KEY_ID_EMPRESA = "IdEmpresa";
+    public final static String KEY_ID_ESTABLECIMIENTO = "IdEstablecimiento";
+    public final static String KEY_ID_PUNTO_OPERACION = "IdPuntoOperacion";
     public final static String KEY_AUTORIZACION_SRI = "AutorizacionSRI";
     public final static String KEY_VIGENCIA_AUTORIZACION_SRI_INICIO = "VigenciaAutorizacionSRIInicio";
     public final static String KEY_VIGENCIA_AUTORIZACION_SRI_FIN = "VigenciaAutorizacionSRIFin";

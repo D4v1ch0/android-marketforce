@@ -67,6 +67,7 @@ import rp3.data.models.IdentificationType;
 import rp3.maps.utils.SphericalUtil;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
+import rp3.marketforce.db.Contract;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.Campo;
 import rp3.marketforce.models.Canal;
@@ -152,7 +153,7 @@ public class CrearClienteFragment extends BaseFragment {
 			{
 				Grabar();
                 if(tipo == Contants.IS_MODIFICACION)
-				    finish();
+                    ((CrearClienteActivity)getActivity()).finishOnResult(idCliente);
 			}
 			break;
 		case R.id.action_cancel:
@@ -413,6 +414,9 @@ public class CrearClienteFragment extends BaseFragment {
 			else
 				Cliente.update(getDataBase(), cli);
 
+            if(cli.getID() == 0)
+                cli.setID(getDataBase().queryMaxInt(Contract.Cliente.TABLE_NAME, Contract.Cliente._ID));
+
 			for(int i = 0; i < listViewDirecciones.size(); i ++)
 			{
 				ClienteDireccion cliDir = new ClienteDireccion();
@@ -497,6 +501,7 @@ public class CrearClienteFragment extends BaseFragment {
 				bundle.putLong(ARG_CLIENTE, cli.getID());
 				requestSync(bundle);
 			}
+        idCliente = cli.getID();
 	}
 
     @Override
@@ -509,7 +514,7 @@ public class CrearClienteFragment extends BaseFragment {
                 intent2.putExtra(CrearVisitaFragment.ARG_IDAGENDA,(int) cliente.getID());
                 intent2.putExtra(CrearVisitaFragment.ARG_FROM, "Cliente");
                 startActivity(intent2);
-                finish();
+                ((CrearClienteActivity)getActivity()).finishOnResult(idCliente);
                 break;
             case DIALOG_GPS:
                 SaveAddress();
@@ -537,7 +542,7 @@ public class CrearClienteFragment extends BaseFragment {
         switch (id)
         {
             case DIALOG_VISITA:
-                finish();
+                ((CrearClienteActivity)getActivity()).finishOnResult(idCliente);
         }
 
     }

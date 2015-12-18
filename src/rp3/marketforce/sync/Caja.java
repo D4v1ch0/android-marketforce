@@ -2,6 +2,7 @@ package rp3.marketforce.sync;
 
 import android.provider.Settings;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.ksoap2.transport.HttpResponseException;
 
@@ -10,6 +11,8 @@ import rp3.connection.HttpConnection;
 import rp3.connection.WebService;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
+import rp3.marketforce.db.Contract;
+import rp3.marketforce.models.pedido.FormaPago;
 
 /**
  * Created by magno_000 on 14/12/2015.
@@ -37,6 +40,10 @@ public class Caja {
                     PreferenceManager.setValue(Contants.KEY_ESTABLECIMIENTO, jObject.getString(Contants.KEY_ESTABLECIMIENTO));
                     PreferenceManager.setValue(Contants.KEY_NOMBRE_PUNTO_OPERACION, jObject.getString(Contants.KEY_NOMBRE_PUNTO_OPERACION));
                     PreferenceManager.setValue(Contants.KEY_SERIE, jObject.getString(Contants.KEY_SERIE));
+                    PreferenceManager.setValue(Contants.KEY_ID_ESTABLECIMIENTO, jObject.getInt(Contants.KEY_ID_ESTABLECIMIENTO));
+                    PreferenceManager.setValue(Contants.KEY_ID_CAJA, jObject.getInt(Contants.KEY_ID_CAJA));
+                    PreferenceManager.setValue(Contants.KEY_ID_PUNTO_OPERACION, jObject.getInt(Contants.KEY_ID_PUNTO_OPERACION));
+                    PreferenceManager.setValue(Contants.KEY_ID_EMPRESA, jObject.getInt(Contants.KEY_ID_EMPRESA));
 
                 }
             } catch (HttpResponseException e) {
@@ -66,6 +73,43 @@ public class Caja {
                 JSONObject jObject = webService.getJSONObjectResponse();
                 if(jObject != null) {
                     PreferenceManager.setValue(Contants.KEY_MONEDA_SIMBOLO, jObject.getString(Contants.KEY_MONEDA_SIMBOLO));
+                    PreferenceManager.setValue(Contants.KEY_ID_MONEDA, jObject.getInt(Contants.KEY_ID_MONEDA));
+                }
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return SyncAdapter.SYNC_EVENT_ERROR;
+            }
+
+        }finally{
+            webService.close();
+        }
+
+        return SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
+    public static int executeSyncFormasPago(DataBase db){
+        WebService webService = new WebService("MartketForce","GetFormasPago");
+
+        try
+        {
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+                JSONArray jsonArray = webService.getJSONArrayResponse();
+                if(jsonArray != null) {
+                    FormaPago.deleteAll(db, Contract.FormaPago.TABLE_NAME);
+                    for(int i = 0; i < jsonArray.length(); i++)
+                    {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        FormaPago formaPago = new FormaPago();
+                        formaPago.setIdFormaPago(jsonObject.getInt("IdFormaPago"));
+                        formaPago.setDescripcion(jsonObject.getString("Descripcion"));
+                        FormaPago.insert(db, formaPago);
+                    }
                 }
             } catch (HttpResponseException e) {
                 if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)

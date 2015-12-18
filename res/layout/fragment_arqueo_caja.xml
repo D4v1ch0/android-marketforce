@@ -47,7 +47,7 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:id="@+id/listView3" />
+        android:id="@+id/arqueo_list" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="35"
-            android:id="@+id/textView131"
+            android:id="@+id/arqueo_total_transacciones"
             android:layout_weight="1"
             android:textStyle="bold"
             android:textSize="@dimen/text_small_size" />
@@ -81,7 +81,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="₡ 970.000"
-            android:id="@+id/textView132"
+            android:id="@+id/arqueo_total"
             android:layout_weight="1"
             android:textStyle="bold"
             android:textSize="@dimen/text_small_size" />

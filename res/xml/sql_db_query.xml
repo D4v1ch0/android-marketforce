@@ -1216,4 +1216,36 @@
         WHERE tbProducto.IdSubCategoria = ?
         ORDER BY tbProductoSearch.Rank DESC
     </statement>
+    <statement name="ProductoSearchCodigo">
+        SELECT
+        tbProducto._id AS _id,
+        tbProducto.IdProducto,
+        tbProducto.ValorUnitario,
+        tbProducto.URLFoto,
+        tbProducto.IdSubCategoria,
+        tbProducto.CodigoExterno,
+        tbProducto.PorcentajeDescuento,
+        tbProducto.PrecioConDescuento,
+        tbProducto.PorcentajeImpuesto,
+        tbProducto.PrecioConImpuesto,
+        tbProducto.IdBeneficio,
+        tbProductoExt.Descripcion AS tbProductoExt_Descripcion
+        FROM tbProducto
+        LEFT JOIN tbProductoExt
+        ON tbProducto._id = tbProductoExt.docid
+        WHERE tbProducto.CodigoExterno = ?
+    </statement>
+    <statement name="ArqueoCajaQuery">
+        SELECT
+        COUNT(*) as _count,
+        SUM(tbPago.Valor) AS Valor,
+        tbPago.IdFormaPago
+        FROM tbPago
+        INNER JOIN tbPedido
+        ON tbPedido._id = tbPago._IdPedido
+        WHERE tbPedido.Estado = 'C'
+        AND tbPedido.FechaCreacion &gt;= ?
+        AND tbPedido.FechaCreacion &lt;= ?
+        GROUP BY tbPago.IdFormaPago
+    </statement>
 </sql>

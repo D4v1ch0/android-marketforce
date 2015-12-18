@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Efectivo"
-            android:id="@+id/textView121"
+            android:id="@+id/pago_forma"
             android:layout_marginLeft="10dp" />
     </LinearLayout>
 
@@ -37,14 +37,15 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Pago hecho en efectivo - Referencia"
-            android:id="@+id/textView124" />
+            android:id="@+id/pago_referencia" />
     </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp">
+        android:layout_margin="5dp"
+        android:id="@+id/layout">
 
         <TextView
             android:layout_width="wrap_content"
@@ -59,7 +60,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="₡ 500.000"
-            android:id="@+id/textView125"
+            android:id="@+id/pago_valor"
             android:layout_marginLeft="10dp" />
     </LinearLayout>
 </LinearLayout>

@@ -276,6 +276,7 @@
         IdPedido INTEGER,
         _IdAgenda INTEGER,
         IdAgenda INTEGER,
+        _IdCliente INTEGER,
         IdCliente INTEGER,
         ValorTotal REAL,
         Email TEXT,
@@ -356,6 +357,24 @@
         IdSubCategoria INTEGER,
         IdCategoria INTEGER,
         Descripcion TEXT
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbFormaPago(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdFormaPago INTEGER,
+        Descripcion TEXT
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbPago(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdPago INTEGER,
+        IdPedido INTEGER,
+        _IdPedido INTEGER,
+        IdFormaPago INTEGER,
+        Observacion TEXT,
+        Valor REAL
         )
     </statement>
 </sql>

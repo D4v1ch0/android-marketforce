@@ -42,6 +42,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
 
     private static final int PARALLAX_SIZE = 0;
     private static final int DIALOG_SYNC_PRODUCTOS = 1;
+    private static final int DIALOG_ANULACION = 2;
 
     private PedidoListFragment transactionListFragment;
     private PedidoDetailFragment transactionDetailFragment;
@@ -117,6 +118,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                 isActiveListFragment = true;
                 //getActivity().getActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
                 RefreshMenu();
+                getActivity().setTitle("Pedidos");
             }
 
             @Override
@@ -158,13 +160,14 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
             menu.findItem(R.id.action_arqueo_caja).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_crear_pedido).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_anular_pedido).setVisible(!isActiveListFragment);
-            menu.findItem(R.id.action_anular_pedido).setVisible(selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("P"));
+            menu.findItem(R.id.action_sincronizar_productos).setVisible(isActiveListFragment);
+            menu.findItem(R.id.action_anular_pedido).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C"));
         }
         else{
 
             menu.findItem(R.id.action_arqueo_caja).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_crear_pedido).setVisible(isActiveListFragment);
-            menu.findItem(R.id.action_anular_pedido).setVisible(selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("P"));
+            menu.findItem(R.id.action_anular_pedido).setVisible(selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C"));
 
         }
     }
@@ -172,11 +175,16 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
-            /*case R.id.action_editar_pedido:
-                Intent intent2 = new Intent(getActivity(), CrearPedidoActivity.class);
-                intent2.putExtra(CrearPedidoActivity.ARG_IDPEDIDO, selectedClientId);
-                startActivity(intent2);
-                break;*/
+            case R.id.action_arqueo_caja:
+                Intent intent = new Intent(getContext(), ArqueoCajaActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.action_anular_pedido:
+                if(transactionDetailFragment != null)
+                {
+                    showDialogConfirmation(DIALOG_ANULACION, R.string.message_anulacion, R.string.action_anular_agenda);
+                }
+                break;
             case R.id.action_crear_pedido:
                 if(PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA, 0) != 0) {
                     AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
@@ -243,10 +251,28 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
     @Override
     public void onPositiveConfirmation(int id) {
         super.onPositiveConfirmation(id);
-        showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait);
-        Bundle bundle = new Bundle();
-        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_PRODUCTOS);
-        requestSync(bundle);
+        switch (id) {
+            case DIALOG_ANULACION:
+                Pedido anular = Pedido.getPedido(getDataBase(), selectedClientId);
+                anular.setEstado("A");
+                Pedido.update(getDataBase(), anular);
+                Toast.makeText(this.getContext(), "Transacción ha sido anulada.", Toast.LENGTH_LONG).show();
+                RefreshMenu();
+                Bundle bundle2 = new Bundle();
+                bundle2.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ANULAR_PEDIDO);
+                bundle2.putLong(CrearPedidoFragment.ARG_PEDIDO, anular.getID());
+                requestSync(bundle2);
+                transactionListFragment.ejecutarConsulta();
+                break;
+            case DIALOG_SYNC_PRODUCTOS:
+                showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait);
+                Bundle bundle = new Bundle();
+                bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_PRODUCTOS);
+                requestSync(bundle);
+                break;
+
+        }
+
     }
 
     @Override
