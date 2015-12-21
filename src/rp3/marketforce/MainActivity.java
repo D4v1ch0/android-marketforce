@@ -192,7 +192,7 @@ public class MainActivity extends rp3.app.NavActivity{
 			bundle2.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SOLO_RESUMEN);
 			requestSync(bundle2);
 		}
-		NotificationPusher.pushNotification(1,this,"Fin de Jornada","Fin de Jornada", MarcacionActivity.class);
+
 	}
 
     @Override
