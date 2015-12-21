@@ -7,6 +7,7 @@ import java.util.List;
 
 import rp3.data.entity.EntityBase;
 import rp3.db.sqlite.DataBase;
+import rp3.marketforce.Contants;
 import rp3.marketforce.db.Contract;
 import rp3.util.CursorUtils;
 
@@ -87,4 +88,18 @@ public class OportunidadTipo extends EntityBase<OportunidadTipo> {
         return list;
     }
 
+    public static OportunidadTipo getTipoOportunidad(DataBase db, int idOportunidadTipo) {
+        Cursor c = db.query(Contract.OportunidadTipo.TABLE_NAME, new String[] {Contract.OportunidadTipo._ID, Contract.OportunidadTipo.COLUMN_ID_OPORTUNIDAD_TIPO, Contract.OportunidadTipo.COLUMN_DESCRIPCION},
+                Contract.OportunidadTipo.COLUMN_ID_OPORTUNIDAD_TIPO + " = ?", new String[] {idOportunidadTipo + ""});
+
+        OportunidadTipo etp = new OportunidadTipo();
+        while(c.moveToNext()){
+
+            etp.setID(CursorUtils.getInt(c, Contract.OportunidadTipo._ID));
+            etp.setIdOportunidadTipo(CursorUtils.getInt(c, Contract.OportunidadTipo.COLUMN_ID_OPORTUNIDAD_TIPO));
+            etp.setDescripcion(CursorUtils.getString(c, Contract.OportunidadTipo.COLUMN_DESCRIPCION));
+        }
+        c.close();
+        return etp;
+    }
 }

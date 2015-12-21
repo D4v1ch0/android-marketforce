@@ -1112,7 +1112,7 @@
         JOIN tbOportunidadExt
         ON tbOportunidad._id = tbOportunidadExt.docid
         WHERE tbOportunidad.Estado = 'A'
-        ORDER BY tbOportunidad.FechaCreacion DESC, tbOportunidad.Calificacion DESC, tbOportunidad.Importe DESC
+        ORDER BY tbOportunidad.IdOportunidadTipo, tbOportunidad.FechaCreacion DESC, tbOportunidad.Calificacion DESC, tbOportunidad.Importe DESC
     </statement>
 
     <statement name="OportunidadesByIds">
@@ -1145,7 +1145,7 @@
         JOIN tbOportunidadExt
         ON tbOportunidad._id = tbOportunidadExt.docid
         WHERE tbOportunidad._id IN ( ? )
-        ORDER BY tbOportunidad.FechaCreacion DESC, tbOportunidad.Calificacion DESC, tbOportunidad.Importe DESC
+        ORDER BY tbOportunidad.IdOportunidadTipo, tbOportunidad.FechaCreacion DESC, tbOportunidad.Calificacion DESC, tbOportunidad.Importe DESC
     </statement>
 
     <statement name="OportunidadById">
@@ -1178,7 +1178,7 @@
         JOIN tbOportunidadExt
         ON tbOportunidad._id = tbOportunidadExt.docid
         WHERE tbOportunidad._id = ?
-        ORDER BY tbOportunidad.Calificacion, tbOportunidad.Importe
+        ORDER BY tbOportunidad.IdOportunidadTipo, tbOportunidad.Calificacion, tbOportunidad.Importe
     </statement>
     <statement name="OportunidadPendientes">
         SELECT
@@ -1295,7 +1295,7 @@
 
         ) AS tbOportunidadSearch
         ON tbOportunidadExt.docid = tbOportunidadSearch.docid
-        ORDER BY tbOportunidadSearch.Rank DESC
+        ORDER BY tbOportunidad.IdOportunidadTipo, tbOportunidadSearch.Rank DESC
     </statement>
 
 </sql>
