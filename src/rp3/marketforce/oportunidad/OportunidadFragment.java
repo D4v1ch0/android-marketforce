@@ -258,7 +258,7 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
                 break;
             case R.id.action_ver_bitacora:
                 subFragment = OportunidadBitacoraListFragment.newInstance((int) selectedOportunidadId);
-                showDialogFragment(subFragment, "Bitácora", "Bitácora");
+                showDialogFragment(subFragment, "Bitácora", selectedOportunidad.getDescripcion());
                 break;
             case R.id.action_quitar_filtro:
                 filtroData.setClass(getContext(), FiltroOportunidadActivity.class);

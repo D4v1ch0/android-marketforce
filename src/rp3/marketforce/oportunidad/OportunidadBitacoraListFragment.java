@@ -83,7 +83,7 @@ public class OportunidadBitacoraListFragment extends BaseFragment implements Opo
             @Override
             public void onClick(View v) {
                 subFragment = OportunidadBitacoraDetailFragment.newInstance(idOportunidad);
-                showDialogFragment(subFragment, "Bitácora", "Agregar Bitácora");
+                showDialogFragment(subFragment, "Bitácora", oportunidad.getDescripcion());
             }
         });
 
@@ -91,7 +91,7 @@ public class OportunidadBitacoraListFragment extends BaseFragment implements Opo
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 subFragment = OportunidadBitacoraDetailFragment.newInstance(idOportunidad, (int) list.get(position).getID());
-                showDialogFragment(subFragment, "Bitácora", "Ver Bitácora");
+                showDialogFragment(subFragment, "Bitácora", oportunidad.getDescripcion());
             }
         });
     }

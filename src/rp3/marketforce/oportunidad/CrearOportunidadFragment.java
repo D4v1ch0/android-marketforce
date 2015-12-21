@@ -156,7 +156,13 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
             case R.id.action_save:
                 if(Validaciones())
                 {
-                    EvaluarEtapas();
+                    if(id == 0)
+                        EvaluarEtapas();
+                    else
+                    {
+                        Grabar();
+                        finish();
+                    }
                 }
                 break;
             case R.id.action_cancel:
