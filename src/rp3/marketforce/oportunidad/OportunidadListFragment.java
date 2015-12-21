@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import rp3.app.BaseFragment;
@@ -32,6 +34,7 @@ import rp3.marketforce.loader.ClientLoader;
 import rp3.marketforce.loader.OportunidadLoader;
 import rp3.marketforce.models.Cliente;
 import rp3.marketforce.models.oportunidad.Oportunidad;
+import rp3.marketforce.models.oportunidad.OportunidadTipo;
 import rp3.marketforce.ruta.CrearVisitaActivity;
 import rp3.marketforce.ruta.CrearVisitaFragment;
 import rp3.marketforce.sync.SyncAdapter;
@@ -47,13 +50,15 @@ public class OportunidadListFragment extends BaseFragment {
     private OportunidadListFragmentListener oportunidadListFragmentCallback;
     private boolean currentTransactionBoolean;
     private String currentTransactionSearch;
-    private ListView list;
-    private List<Oportunidad> lista;
+    private ExpandableListView list;
+    private List<String> tipos;
+    private HashMap<String, List<Oportunidad>> lista;
     private OportunidadListAdapter adapter;
     private LoaderOportunidad loaderOportunidad;
     private SwipeRefreshLayout pullRefresher;
     public boolean filtro = false;
     private NumberFormat numberFormat;
+    private double monto = 0;
 
     public static OportunidadListFragment newInstance(boolean flag , String transactionTypeId) {
         OportunidadListFragment fragment = new OportunidadListFragment();
@@ -128,7 +133,7 @@ public class OportunidadListFragment extends BaseFragment {
     public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
 
-        list = (ListView) rootView.findViewById(R.id.oportunidad_list);
+        list = (ExpandableListView) rootView.findViewById(R.id.oportunidad_list);
         pullRefresher = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
     }
 
@@ -243,12 +248,12 @@ public class OportunidadListFragment extends BaseFragment {
                     }
                 }
             });
-            ((TextView) getRootView().findViewById(R.id.oportunidad_numero)).setText("Oportunidades: " + lista.size());
-            double monto = 0;
-            for (Oportunidad op : lista) {
-                if(op.getEstado().equalsIgnoreCase("A"))
-                    monto = monto + op.getImporte();
-            }
+            int optSize = 0;
+            for(List<Oportunidad> optList : lista.values())
+                optSize = optSize + optList.size();
+
+            ((TextView) getRootView().findViewById(R.id.oportunidad_numero)).setText("Oportunidades: " + optSize);
+
             ((TextView) getRootView().findViewById(R.id.oportunidad_meta)).setText("Meta: $ " + numberFormat.format(monto));
             list.setSelector(getActivity().getResources().getDrawable(R.drawable.bkg));
             list.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -272,7 +277,7 @@ public class OportunidadListFragment extends BaseFragment {
             });
 
             if(adapter == null) {
-                adapter = new OportunidadListAdapter(this.getActivity(), lista, oportunidadListFragmentCallback);
+                adapter = new OportunidadListAdapter(this.getActivity(), lista, tipos, oportunidadListFragmentCallback);
                 list.setAdapter(adapter);
             }
             else {
@@ -283,19 +288,16 @@ public class OportunidadListFragment extends BaseFragment {
                 adapter.notifyDataSetChanged();
             }
 
-            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                @SuppressLint("ResourceAsColor")
+            list.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
                 @Override
-                public void onItemClick(AdapterView<?> parent,
-                                        View view, int position, long id) {
-
-                    oportunidadListFragmentCallback.onOportunidadSelected(lista.get(position));
+                public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                    oportunidadListFragmentCallback.onOportunidadSelected(lista.get(tipos.get(groupPosition)).get(childPosition));
+                    return false;
                 }
             });
 
             if (oportunidadListFragmentCallback.allowSelectedItem() && lista.size() != 0)
-                oportunidadListFragmentCallback.onOportunidadSelected(lista.get(0));
+                oportunidadListFragmentCallback.onOportunidadSelected(lista.get(0).get(0));
         }
         catch (Exception ex)
         {
@@ -327,7 +329,7 @@ public class OportunidadListFragment extends BaseFragment {
         public void onLoadFinished(Loader<List<Oportunidad>> arg0,
                                    List<Oportunidad> data)
         {
-            lista = data;
+            lista = toExpandableList(data);
             oportunidadListFragmentCallback.onFinalizaConsulta();
             OrderBy();
             if(adapter != null)
@@ -366,7 +368,30 @@ public class OportunidadListFragment extends BaseFragment {
     public void aplicarFiltro(Intent intent)
     {
         filtro = true;
-        lista = Oportunidad.getOportunidadesFiltro(getDataBase(), intent);
+        lista = toExpandableList(Oportunidad.getOportunidadesFiltro(getDataBase(), intent));
         OrderBy();
+    }
+
+    public HashMap<String, List<Oportunidad>> toExpandableList(List<Oportunidad> lista)
+    {
+        tipos = new ArrayList<>();
+        HashMap<String, List<Oportunidad>> listDataChild = new HashMap<String, List<Oportunidad>>();
+        List<OportunidadTipo> oportunidadTipos = OportunidadTipo.getOportunidadTipoAll(getDataBase());
+
+        for(OportunidadTipo optTipo : oportunidadTipos)
+        {
+            tipos.add(optTipo.getDescripcion());
+            listDataChild.put(optTipo.getDescripcion(), new ArrayList<Oportunidad>());
+        }
+
+        monto = 0;
+        for(Oportunidad opt : lista)
+        {
+            listDataChild.get(opt.getOportunidadTipo().getDescripcion()).add(opt);
+            if(opt.getEstado().equalsIgnoreCase("A"))
+                monto = monto + opt.getImporte();
+        }
+
+        return listDataChild;
     }
 }

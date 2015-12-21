@@ -61,6 +61,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
     private List<OportunidadBitacora> oportunidadBitacoras;
     private Etapa etapa;
     private Agente agente;
+    private OportunidadTipo oportunidadTipo;
 
     private int maxEtapas;
 
@@ -113,6 +114,14 @@ public class Oportunidad extends EntityBase<Oportunidad> {
 
     public void setFechaUltimaGestion(Date fechaUltimaGestion) {
         this.fechaUltimaGestion = fechaUltimaGestion;
+    }
+
+    public OportunidadTipo getOportunidadTipo() {
+        return oportunidadTipo;
+    }
+
+    public void setOportunidadTipo(OportunidadTipo oportunidadTipo) {
+        this.oportunidadTipo = oportunidadTipo;
     }
 
     public Etapa getEtapa() {
@@ -405,6 +414,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
             opt.setEtapa(Etapa.getEtapaById(db, opt.getIdEtapa()));
             opt.setAgente(Agente.getAgente(db, opt.getIdAgente()));
             opt.setMaxEtapas(Etapa.getEtapasPadres(db, opt.getIdOportunidadTipo()));
+            opt.setOportunidadTipo(OportunidadTipo.getTipoOportunidad(db, opt.getIdOportunidadTipo()));
             list.add(opt);
         }
         c.close();
@@ -453,6 +463,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
             opt.setEtapa(Etapa.getEtapaById(db, opt.getIdEtapa()));
             opt.setAgente(Agente.getAgente(db, opt.getIdAgente()));
             opt.setMaxEtapas(Etapa.getEtapasPadres(db, opt.getIdOportunidadTipo()));
+            opt.setOportunidadTipo(OportunidadTipo.getTipoOportunidad(db, opt.getIdOportunidadTipo()));
             list.add(opt);
         }
         c.close();
@@ -575,6 +586,8 @@ public class Oportunidad extends EntityBase<Oportunidad> {
             opt.setIdOportunidadTipo(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_ID_OPORTUNIDAD_TIPO));
             opt.setEtapa(Etapa.getEtapaById(db, opt.getIdEtapa()));
             opt.setAgente(Agente.getAgente(db, opt.getIdAgente()));
+            opt.setMaxEtapas(Etapa.getEtapasPadres(db, opt.getIdOportunidadTipo()));
+            opt.setOportunidadTipo(OportunidadTipo.getTipoOportunidad(db, opt.getIdOportunidadTipo()));
             list.add(opt);
         }
         c.close();
