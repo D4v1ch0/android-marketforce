@@ -523,7 +523,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                         Calendar thisDay = Calendar.getInstance();
                         if(etp.getFechaFin().getTime() > 0)
                             thisDay.setTime(etp.getFechaFin());
-                        long dias = CalendarUtils.DayDiffTruncate(thisDay, ant);
+                        long dias = CalendarUtils.DayDiff(thisDay, ant);
                         dias = etp.getEtapa().getDias() - dias;
                         if(ant.getTime().getTime() > 0) {
                             if (dias < 0) {
@@ -531,7 +531,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                                 dias = dias * -1;
                             }
                             ((TextView) view_timeline.findViewById(R.id.etapa1_dias)).setText(dias + " Días");
-                            totalDias = totalDias + CalendarUtils.DayDiffTruncate(thisDay, ant);
+                            totalDias = totalDias + CalendarUtils.DayDiff(thisDay, ant);
                         }
                     }
                     if (position == 1) {
@@ -555,7 +555,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                         Calendar thisDay = Calendar.getInstance();
                         if (etp.getFechaFin().getTime() > 0)
                             thisDay.setTime(etp.getFechaFin());
-                        long dias = CalendarUtils.DayDiffTruncate(thisDay, ant);
+                        long dias = CalendarUtils.DayDiff(thisDay, ant);
                         dias = etp.getEtapa().getDias() - dias;
                         if(ant.getTime().getTime() > 0) {
                             if (dias < 0) {
@@ -563,7 +563,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                                 dias = dias * -1;
                             }
                             ((TextView) view_timeline.findViewById(R.id.etapa2_dias)).setText(dias + " Días");
-                            totalDias = totalDias + CalendarUtils.DayDiffTruncate(thisDay, ant);
+                            totalDias = totalDias + CalendarUtils.DayDiff(thisDay, ant);
                         }
                     }
                     if (position == 2) {
@@ -587,7 +587,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                         Calendar thisDay = Calendar.getInstance();
                         if (etp.getFechaFin().getTime() > 0)
                             thisDay.setTime(etp.getFechaFin());
-                        long dias = CalendarUtils.DayDiffTruncate(thisDay, ant);
+                        long dias = CalendarUtils.DayDiff(thisDay, ant);
                         dias = etp.getEtapa().getDias() - dias;
                         if(ant.getTime().getTime() > 0) {
                             if (dias < 0) {
@@ -595,7 +595,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                                 dias = dias * -1;
                             }
                             ((TextView) view_timeline.findViewById(R.id.etapa3_dias)).setText(dias + " Días");
-                            totalDias = totalDias + CalendarUtils.DayDiffTruncate(thisDay, ant);
+                            totalDias = totalDias + CalendarUtils.DayDiff(thisDay, ant);
                         }
 
                     }
@@ -620,7 +620,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                         Calendar thisDay = Calendar.getInstance();
                         if (etp.getFechaFin().getTime() > 0)
                             thisDay.setTime(etp.getFechaFin());
-                        long dias = CalendarUtils.DayDiffTruncate(thisDay, ant);
+                        long dias = CalendarUtils.DayDiff(thisDay, ant);
                         dias = etp.getEtapa().getDias() - dias;
                         if(ant.getTime().getTime() > 0) {
                             if (dias < 0) {
@@ -628,7 +628,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                                 dias = dias * -1;
                             }
                             ((TextView) view_timeline.findViewById(R.id.etapa4_dias)).setText(dias + " Días");
-                            totalDias = totalDias + CalendarUtils.DayDiffTruncate(thisDay, ant);
+                            totalDias = totalDias + CalendarUtils.DayDiff(thisDay, ant);
                         }
                     }
                     if (position == 4) {
@@ -652,7 +652,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                         Calendar thisDay = Calendar.getInstance();
                         if (etp.getFechaFin().getTime() > 0)
                             thisDay.setTime(etp.getFechaFin());
-                        long dias = CalendarUtils.DayDiffTruncate(thisDay, ant);
+                        long dias = CalendarUtils.DayDiff(thisDay, ant);
                         dias = etp.getEtapa().getDias() - dias;
                         if(ant.getTime().getTime() > 0) {
                             if (dias < 0) {
@@ -660,7 +660,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                                 dias = dias * -1;
                             }
                             ((TextView) view_timeline.findViewById(R.id.etapa5_dias)).setText(dias + " Días");
-                            totalDias = totalDias + CalendarUtils.DayDiffTruncate(thisDay, ant);
+                            totalDias = totalDias + CalendarUtils.DayDiff(thisDay, ant);
                         }
 
                         row_etapa.findViewById(R.id.grey_line).setVisibility(View.GONE);
