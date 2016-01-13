@@ -11,6 +11,7 @@ import rp3.configuration.PreferenceManager;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
+import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.DiaLaboral;
 import rp3.marketforce.models.Ubicacion;
 import rp3.marketforce.resumen.AgenteDetalleFragment;
@@ -138,6 +139,11 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 			}
 			else
 			{
+				DataBase db = DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class);
+				if(Agenda.getCountVisitados(db, Contants.ESTADO_GESTIONANDO, 0, Agenda.getLastAgenda(db)) > 0)
+				{
+					NotificationPusher.pushNotification(2, context, "Aun tiene una agenda en estado Gestionando. Por favor no olvidar cerrarla.", "Agenda Pendiente");
+				}
 				cancelAlarm(context);
 			}
 		}
