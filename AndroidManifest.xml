@@ -156,6 +156,11 @@
             android:name="rp3.marketforce.content.EnviarUbicacionReceiver"
             android:enabled="true" >
         </receiver>
+        <receiver android:name="rp3.marketforce.content.TimeChangedReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.TIME_SET" />
+            </intent-filter>
+        </receiver>
         <provider
             android:name="rp3.content.StubProvider"
             android:authorities="rp3.marketforce.provider"
