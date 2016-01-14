@@ -11,6 +11,7 @@ import rp3.configuration.PreferenceManager;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
+import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.DiaLaboral;
 import rp3.marketforce.models.Ubicacion;
 import rp3.marketforce.resumen.AgenteDetalleFragment;
@@ -50,32 +51,7 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 		{
 			Session.Start(context);
 			rp3.configuration.Configuration.TryInitializeConfiguration(context);
-			if(context == null)
-				Utils.ErrorToFile("Context is null - " + Calendar.getInstance().getTime().toString());
-			else {
-				String gps = "";
-				String net = "";
-				if (ConnectionUtils.isNetAvailable(context))
-					net = "ON";
-				else
-					net = "OFF";
-				LocationManager mlocManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-				if (mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-					gps = "ON";
-				}else{
-					gps = "OFF";
-					if(PreferenceManager.getInt(Contants.KEY_ID_SUPERVISOR,0) != 0) {
-						NotificationPusher.pushNotification(1, context, "Por favor encienda su GPS", "GPS");
-						Bundle bundle = new Bundle();
-						bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SEND_NOTIFICATION);
-						bundle.putInt(AgenteDetalleFragment.ARG_AGENTE, PreferenceManager.getInt(Contants.KEY_ID_SUPERVISOR, 0));
-						bundle.putString(AgenteDetalleFragment.ARG_TITLE, "GPS");
-						bundle.putString(AgenteDetalleFragment.ARG_MESSAGE, "El usuario " + Session.getUser().getFullName() + " tiene apagado su GPS.");
-						rp3.sync.SyncUtils.requestSync(bundle);
-					}
-				}
-				Utils.ErrorToFile("Context is ok - GPS: " + gps + " - NET: " + net + " - BATTERY: " + getBatteryLevel(context) + " - " + Calendar.getInstance().getTime().toString());
-			}
+
 			Calendar calendarCurrent = Calendar.getInstance();
 			calendarCurrent.setTimeInMillis(System.currentTimeMillis());
 			
@@ -90,6 +66,38 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 			String prueba2 = calendar.getTime().toString();
 
             DiaLaboral diaLaboral = DiaLaboral.getDia(DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class), Utils.getDayOfWeek(calendarCurrent));
+			if(context == null)
+				Utils.ErrorToFile("Context is null - " + Calendar.getInstance().getTime().toString());
+			else {
+				String gps = "";
+				String net = "";
+				if (ConnectionUtils.isNetAvailable(context))
+					net = "ON";
+				else
+					net = "OFF";
+				LocationManager mlocManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+				if (mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+					gps = "ON";
+					PreferenceManager.setValue(Contants.KEY_GPS_NOTIFICATION, true);
+				}else{
+					gps = "OFF";
+					if(calendarCurrent.getTimeInMillis() < calendar.getTimeInMillis() && diaLaboral.isEsLaboral()) {
+						NotificationPusher.pushNotification(1, context, "Por favor encienda su GPS", "GPS");
+						if (PreferenceManager.getInt(Contants.KEY_ID_SUPERVISOR, 0) != 0) {
+							if (PreferenceManager.getBoolean(Contants.KEY_GPS_NOTIFICATION, true)) {
+								Bundle bundle = new Bundle();
+								bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SEND_NOTIFICATION);
+								bundle.putInt(AgenteDetalleFragment.ARG_AGENTE, PreferenceManager.getInt(Contants.KEY_ID_SUPERVISOR, 0));
+								bundle.putString(AgenteDetalleFragment.ARG_TITLE, "GPS");
+								bundle.putString(AgenteDetalleFragment.ARG_MESSAGE, "El usuario " + Session.getUser().getFullName() + " tiene apagado su GPS.");
+								rp3.sync.SyncUtils.requestSync(bundle);
+								PreferenceManager.setValue(Contants.KEY_GPS_NOTIFICATION, false);
+							}
+						}
+					}
+				}
+				Utils.ErrorToFile("Context is ok - GPS: " + gps + " - NET: " + net + " - BATTERY: " + getBatteryLevel(context) + " - " + Calendar.getInstance().getTime().toString());
+			}
 			if(calendarCurrent.getTimeInMillis() < calendar.getTimeInMillis() && diaLaboral.isEsLaboral())
 			{
 				LocationUtils.getLocation(context, new OnLocationResultListener() {
@@ -131,6 +139,11 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 			}
 			else
 			{
+				DataBase db = DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class);
+				if(Agenda.getCountVisitados(db, Contants.ESTADO_GESTIONANDO, 0, Agenda.getLastAgenda(db)) > 0)
+				{
+					NotificationPusher.pushNotification(2, context, "Aun tiene una agenda en estado Gestionando. Por favor no olvidar cerrarla.", "Agenda Pendiente");
+				}
 				cancelAlarm(context);
 			}
 		}

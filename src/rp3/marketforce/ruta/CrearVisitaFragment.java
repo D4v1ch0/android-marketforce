@@ -51,6 +51,7 @@ import rp3.marketforce.models.Contacto;
 import rp3.marketforce.models.Tarea;
 import rp3.marketforce.ruta.TareasFragment.EditTareasDialogListener;
 import rp3.marketforce.sync.SyncAdapter;
+import rp3.util.ConnectionUtils;
 import rp3.util.Convert;
 
 @SuppressLint("NewApi")
@@ -429,7 +430,12 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
                 agenda.setNombreCompleto(agenda.getCliente().getNombreCompleto().trim());
                 //agenda.setID(0);
                 agenda.setIdAgenda(0);
-                agenda.setEnviado(false);
+
+                if(ConnectionUtils.isNetAvailable(this.getContext()))
+                    agenda.setEnviado(true);
+                else
+                    agenda.setEnviado(false);
+
                 Agenda.insert(getDataBase(), agenda);
                 int last = getDataBase().getIntLastInsertRowId();
                 long last2 = getDataBase().getLongLastInsertRowId();
