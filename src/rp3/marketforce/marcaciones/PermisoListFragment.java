@@ -238,6 +238,9 @@ public class PermisoListFragment extends BaseFragment {
                     }
                 }
             });
+            if(headerList == null)
+                headerList = (ListView) getRootView().findViewById(R.id.linearLayout_headerlist_ruta_list);
+
             headerList.setSelector(getActivity().getResources().getDrawable(R.drawable.bkg));
             headerList.setOnScrollListener(new AbsListView.OnScrollListener() {
 

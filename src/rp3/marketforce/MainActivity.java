@@ -26,6 +26,7 @@ import rp3.marketforce.dashboard.DashboardFragment;
 import rp3.marketforce.db.Contract;
 import rp3.marketforce.db.DbOpenHelper;
 import rp3.marketforce.information.InformationFragment;
+import rp3.marketforce.marcaciones.MarcacionActivity;
 import rp3.marketforce.marcaciones.PermisoActivity;
 import rp3.marketforce.marcaciones.PermisoFragment;
 import rp3.marketforce.models.Actividad;
