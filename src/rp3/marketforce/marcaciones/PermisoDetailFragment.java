@@ -111,6 +111,8 @@ public class PermisoDetailFragment extends BaseFragment {
             ((TextView) getRootView().findViewById(R.id.justificacion_estado)).setText("Aprobado");
         }
         ((TextView) getRootView().findViewById(R.id.justificacion_obs)).setText(justificacion.getObservacion());
+        ((TextView) getRootView().findViewById(R.id.justificacion_obs)).setKeyListener(null);
+        ((TextView) getRootView().findViewById(R.id.justificacion_obs)).setTextIsSelectable(true);
         ((TextView) getRootView().findViewById(R.id.justificacion_fecha)).setText(StringUtils.getStringCapSentence(format5.format(justificacion.getFecha())));
         if(justificacion.getObservacionSupervisor() != null)
             ((TextView) getRootView().findViewById(R.id.justificacion_text)).setText(justificacion.getObservacionSupervisor());
