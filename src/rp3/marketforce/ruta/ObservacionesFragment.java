@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -167,8 +168,8 @@ public class ObservacionesFragment extends BaseFragment {
         }
         else
         {
-            rootView.findViewById(R.id.obs_text).setFocusable(false);
-            rootView.findViewById(R.id.obs_text).setFocusableInTouchMode(false);
+            ((EditText) rootView.findViewById(R.id.obs_text)).setKeyListener(null);
+            ((EditText) rootView.findViewById(R.id.obs_text)).setTextIsSelectable(true);
             rootView.findViewById(R.id.observaciones_voice_to_text).setVisibility(View.GONE);
         }
 	}
