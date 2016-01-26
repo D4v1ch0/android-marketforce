@@ -435,10 +435,6 @@ public class Agenda {
             }
 
         } finally {
-            if(agenda != null) {
-                agenda.setEnviado(false);
-                rp3.marketforce.models.Agenda.update(db, agenda);
-            }
             webService.close();
         }
 
