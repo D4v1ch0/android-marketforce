@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.text.InputType;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -106,9 +107,8 @@ public class OportunidadBitacoraDetailFragment extends BaseFragment {
             ((TextView) rootView.findViewById(R.id.bitacora_agente)).setText(bitacora.getAgente().getNombre());
             ((TextView) rootView.findViewById(R.id.bitacora_fecha)).setText(format1.format(bitacora.getFecha()));
 
-            ((EditText) rootView.findViewById(R.id.actividad_texto_respuesta)).setClickable(false);
-            ((EditText) rootView.findViewById(R.id.actividad_texto_respuesta)).setFocusable(false);
-            ((EditText) rootView.findViewById(R.id.actividad_texto_respuesta)).setFocusableInTouchMode(false);
+            ((EditText) rootView.findViewById(R.id.actividad_texto_respuesta)).setKeyListener(null);
+            ((EditText) rootView.findViewById(R.id.actividad_texto_respuesta)).setTextIsSelectable(true);
             rootView.findViewById(R.id.actividad_voice_to_text).setVisibility(View.GONE);
             rootView.findViewById(R.id.actividad_aceptar).setVisibility(View.GONE);
         }

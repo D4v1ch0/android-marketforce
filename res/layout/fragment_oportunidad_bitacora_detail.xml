@@ -50,7 +50,8 @@
             android:scrollbars="vertical"
             android:fadeScrollbars="false"
             android:hint="@string/hint_escriba_aqui"
-            android:lines="8">
+            android:lines="8"
+            android:minLines="8">
 
             <requestFocus />
         </EditText>
