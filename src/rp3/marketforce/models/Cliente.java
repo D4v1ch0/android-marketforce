@@ -735,10 +735,14 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 		{
 //			db.beginTransaction();
 			result = super.insertDb(db);
+			if(this.id == 0)
+			{
+				this.id = db.queryMaxLong(Contract.Cliente.TABLE_NAME, Contract.Cliente._ID);
+			}
 			
 			if(result){
 				for(ClienteDireccion d : this.getClienteDirecciones()){
-					d.setIdCliente(this.id);
+					d.set_idCliente(this.id);
 					if(d.getID() == 0)
 						result = ClienteDireccion.insert(db, d);
 					else
