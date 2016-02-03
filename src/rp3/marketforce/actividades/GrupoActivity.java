@@ -173,7 +173,11 @@ public class GrupoActivity extends ActividadActivity {
 		
 		texto.setText(actividad_hija.getDescripcion());
 		texto.setTypeface(Typeface.DEFAULT_BOLD);
-		AgendaTareaActividades act = AgendaTareaActividades.getActividadSimple(getDataBase(), id_ruta, id_agenda, id_actividad, actividad_hija.getIdTareaActividad());
+		AgendaTareaActividades act = null;
+		if(id_agenda != 0)
+			act = AgendaTareaActividades.getActividadSimple(getDataBase(), id_ruta, id_agenda, id_actividad, actividad_hija.getIdTareaActividad());
+		else
+			act = AgendaTareaActividades.getActividadSimpleIdIntern(getDataBase(), id_agenda_int, id_actividad, actividad_hija.getIdTareaActividad());
 		if(act != null)
 		{
 			if(act.getResultado() != null && act.getResultado().equalsIgnoreCase("true"))
@@ -251,7 +255,11 @@ public class GrupoActivity extends ActividadActivity {
 		textoResp.setMaxLines(1);
         textoResp.setHint("Escriba su respuesta");
 		final int posicion = contador;
-		AgendaTareaActividades act = AgendaTareaActividades.getActividadSimple(getDataBase(), id_ruta, id_agenda, id_actividad, actividad_hija.getIdTareaActividad());
+		AgendaTareaActividades act = null;
+		if(id_agenda != 0)
+			act = AgendaTareaActividades.getActividadSimple(getDataBase(), id_ruta, id_agenda, id_actividad, actividad_hija.getIdTareaActividad());
+		else
+			act = AgendaTareaActividades.getActividadSimpleIdIntern(getDataBase(), id_agenda_int, id_actividad, actividad_hija.getIdTareaActividad());
 		if(act != null)
 		{
 			if(act.getResultado() != null && !act.getResultado().equalsIgnoreCase("null"))
@@ -274,6 +282,7 @@ public class GrupoActivity extends ActividadActivity {
 				intent.putExtra(RutasDetailFragment.ARG_ITEM_ID, (int) actividad_hija.getIdTareaActividad());
 				intent.putExtra(RutasDetailFragment.ARG_AGENDA_ID, (long) resp.getIdAgenda());
 				intent.putExtra(RutasDetailFragment.ARG_RUTA_ID, (int) resp.getIdRuta());
+				intent.putExtra(ARG_AGENDA_INT, id_agenda_int);
 				intent.putExtra(ARG_PADRE_ID, (int) actividad_hija.getIdTareaActividadPadre());
 				intent.putExtra(ARG_TAREA, (int) actividad_hija.getIdTarea());
 				intent.putExtra(ARG_THEME, R.style.AppDialogTheme);
@@ -335,7 +344,11 @@ public class GrupoActivity extends ActividadActivity {
 		textoResp.setMaxLines(1);
 		textoResp.setHint("Ingrese una fecha");
 		final int posicion = contador;
-		AgendaTareaActividades act = AgendaTareaActividades.getActividadSimple(getDataBase(), id_ruta, id_agenda, id_actividad, actividad_hija.getIdTareaActividad());
+		AgendaTareaActividades act = null;
+		if(id_agenda != 0)
+			act = AgendaTareaActividades.getActividadSimple(getDataBase(), id_ruta, id_agenda, id_actividad, actividad_hija.getIdTareaActividad());
+		else
+			act = AgendaTareaActividades.getActividadSimpleIdIntern(getDataBase(), id_agenda_int, id_actividad, actividad_hija.getIdTareaActividad());
 		if(act != null)
 		{
 			if(act.getResultado() != null && !act.getResultado().equalsIgnoreCase("null"))
@@ -431,7 +444,11 @@ public class GrupoActivity extends ActividadActivity {
 		textoResp.setMaxLines(1);
 		textoResp.setHint("Escriba su respuesta");
 		final int posicion = contador;
-		AgendaTareaActividades act = AgendaTareaActividades.getActividadSimple(getDataBase(), id_ruta, id_agenda, id_actividad, actividad_hija.getIdTareaActividad());
+		AgendaTareaActividades act = null;
+		if(id_agenda != 0)
+			act = AgendaTareaActividades.getActividadSimple(getDataBase(), id_ruta, id_agenda, id_actividad, actividad_hija.getIdTareaActividad());
+		else
+			act = AgendaTareaActividades.getActividadSimpleIdIntern(getDataBase(), id_agenda_int, id_actividad, actividad_hija.getIdTareaActividad());
 		if(act != null)
 		{
 			if(act.getResultado() != null && !act.getResultado().equalsIgnoreCase("null"))
@@ -531,8 +548,12 @@ public class GrupoActivity extends ActividadActivity {
                 this));
         combo.setPrompt("Seleccione una opción");
         combos.add(combo);
-		
-		AgendaTareaActividades act = AgendaTareaActividades.getActividadSimple(getDataBase(), id_ruta, id_agenda, id_actividad, actividad_hija.getIdTareaActividad());
+
+		AgendaTareaActividades act = null;
+		if(id_agenda != 0)
+			act = AgendaTareaActividades.getActividadSimple(getDataBase(), id_ruta, id_agenda, id_actividad, actividad_hija.getIdTareaActividad());
+		else
+			act = AgendaTareaActividades.getActividadSimpleIdIntern(getDataBase(), id_agenda_int, id_actividad, actividad_hija.getIdTareaActividad());
 		if(act != null)
 		{
             if(act.getResultado() != null && !act.getResultado().equalsIgnoreCase(""))
@@ -620,8 +641,12 @@ public class GrupoActivity extends ActividadActivity {
         textoResp.setHint("Seleccione las opciones...");
         multiples.add(textoResp);
 		final int posicion = contador;
-		
-		AgendaTareaActividades act = AgendaTareaActividades.getActividadSimple(getDataBase(), id_ruta, id_agenda, id_actividad, actividad_hija.getIdTareaActividad());
+
+		AgendaTareaActividades act = null;
+		if(id_agenda != 0)
+			act = AgendaTareaActividades.getActividadSimple(getDataBase(), id_ruta, id_agenda, id_actividad, actividad_hija.getIdTareaActividad());
+		else
+			act = AgendaTareaActividades.getActividadSimpleIdIntern(getDataBase(), id_agenda_int, id_actividad, actividad_hija.getIdTareaActividad());
 		if(act != null)
 		{
 			if(act.getResultado() != null && !act.getResultado().equalsIgnoreCase("null"))
