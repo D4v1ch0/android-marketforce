@@ -10,7 +10,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Efectivo"
         android:id="@+id/arqueo_descripcion"
-        android:layout_weight="0.5"
+        android:layout_weight="1"
         android:textSize="@dimen/text_xsmall_size"
         android:lines="2"
         android:maxLines="2"
@@ -22,7 +22,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="5"
         android:id="@+id/arqueo_cantidad"
-        android:layout_weight="0.1"
+        android:layout_weight="1"
         android:textSize="@dimen/text_xsmall_size"
         android:lines="2"
         android:maxLines="2"
@@ -34,7 +34,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="₡ 120.000"
         android:id="@+id/arqueo_valor"
-        android:layout_weight="0.2"
+        android:layout_weight="1"
         android:textSize="@dimen/text_xsmall_size"
         android:gravity="center_vertical|right" />
 </LinearLayout>

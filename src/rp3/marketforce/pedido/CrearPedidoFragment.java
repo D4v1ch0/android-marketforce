@@ -36,6 +36,7 @@ import rp3.marketforce.models.Cliente;
 import rp3.marketforce.models.pedido.Pago;
 import rp3.marketforce.models.pedido.Pedido;
 import rp3.marketforce.models.pedido.PedidoDetalle;
+import rp3.marketforce.models.pedido.Producto;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.util.ConnectionUtils;
 
@@ -357,6 +358,16 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             }
         });
 
+        if (getArguments().containsKey(ARG_TIPO_DOCUMENTO) && !rotated) {
+            tipo = getArguments().getString(ARG_TIPO_DOCUMENTO);
+            if(tipo.equalsIgnoreCase("FA"))
+                this.getActivity().setTitle("Factura No. " + PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO) + "-" + PreferenceManager.getString(Contants.KEY_SERIE) +
+                        "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA)));
+            if(tipo.equalsIgnoreCase("NC"))
+                this.getActivity().setTitle("Nota de Crédito No. " + PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO) + "-" + PreferenceManager.getString(Contants.KEY_SERIE) +
+                        "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_NOTA_CREDITO)));
+        }
+
         if (getArguments().containsKey(ARG_PEDIDO) && getArguments().getLong(ARG_PEDIDO) != 0 && !rotated) {
             idCliente = getArguments().getLong(ARG_PEDIDO);
             setDatosPedidos();
@@ -376,11 +387,28 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 try {
                     JSONObject jsonObject = new JSONObject();
+                    Producto prod = Producto.getProductoIdServer(getDataBase(), pedido.getPedidoDetalles().get(position).getIdProducto());
+                    jsonObject.put("v", pedido.getPedidoDetalles().get(position).getValorTotal());
+                    jsonObject.put("pdm", pedido.getPedidoDetalles().get(position).getPorcentajeDescuentoManual());
+                    jsonObject.put("vdm", pedido.getPedidoDetalles().get(position).getValorDescuentoManual());
+                    jsonObject.put("vdmt", pedido.getPedidoDetalles().get(position).getValorDescuentoManualTotal());
+                    jsonObject.put("pda", pedido.getPedidoDetalles().get(position).getPorcentajeDescuentoAutomatico());
+                    jsonObject.put("vda", pedido.getPedidoDetalles().get(position).getValorDescuentoAutomatico());
+                    jsonObject.put("vdat", pedido.getPedidoDetalles().get(position).getValorDescuentoAutomaticoTotal());
+                    jsonObject.put("pi", pedido.getPedidoDetalles().get(position).getPorcentajeImpuesto());
+                    jsonObject.put("vi", pedido.getPedidoDetalles().get(position).getValorImpuesto() + pedido.getPedidoDetalles().get(position).getValorUnitario());
+                    jsonObject.put("vit", pedido.getPedidoDetalles().get(position).getValorImpuestoTotal());
+                    jsonObject.put("bi", pedido.getPedidoDetalles().get(position).getBaseImponible());
+                    jsonObject.put("bic", pedido.getPedidoDetalles().get(position).getBaseImponibleCero());
+                    jsonObject.put("s", pedido.getPedidoDetalles().get(position).getSubtotal());
+                    jsonObject.put("cod", pedido.getPedidoDetalles().get(position).getCodigoExterno());
                     jsonObject.put("d", pedido.getPedidoDetalles().get(position).getDescripcion());
                     jsonObject.put("p", pedido.getPedidoDetalles().get(position).getValorUnitario());
                     jsonObject.put("id", pedido.getPedidoDetalles().get(position).getIdProducto());
                     jsonObject.put("f", pedido.getPedidoDetalles().get(position).getUrlFoto());
                     jsonObject.put("c", pedido.getPedidoDetalles().get(position).getCantidad());
+                    jsonObject.put("vd", prod.getPrecioDescuento());
+                    jsonObject.put("pd", prod.getPorcentajeDescuento());
 
                     productFragment = ProductFragment.newInstance(jsonObject.toString());
                     productFragment.setCancelable(false);
@@ -393,15 +421,6 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             }
         });
 
-        if (getArguments().containsKey(ARG_TIPO_DOCUMENTO) && !rotated) {
-            tipo = getArguments().getString(ARG_TIPO_DOCUMENTO);
-            if(tipo.equalsIgnoreCase("FA"))
-                this.getActivity().setTitle("Factura No. " + PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO) + "-" + PreferenceManager.getString(Contants.KEY_SERIE) +
-                        "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA)));
-            if(tipo.equalsIgnoreCase("NC"))
-                this.getActivity().setTitle("Nota de Crédito No. " + PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO) + "-" + PreferenceManager.getString(Contants.KEY_SERIE) +
-                        "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_NOTA_CREDITO)));
-        }
     }
 
     private String getSecuencia(int numero) {
@@ -428,13 +447,60 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
     private void setDatosPedidos() {
         pedido = Pedido.getPedido(getDataBase(), idCliente);
+        Cliente cl = Cliente.getClienteID(getDataBase(), pedido.get_idCliente(), false);
+        cliente_auto.setText(cl.getNombreCompleto());
+        cliente_auto.setEnabled(false);
+        ((TextView) getRootView().findViewById(R.id.pedido_email)).setText(cl.getCorreoElectronico());
+        list_cliente = Cliente.getCliente(getDataBase());
+        list_nombres = new ArrayList<String>();
+        for (Cliente cli : list_cliente) {
+            list_nombres.add(cli.getNombreCompleto().trim());
+        }
         adapter = new PedidoDetalleAdapter(this.getContext(), pedido.getPedidoDetalles());
         ((ListView) getRootView().findViewById(R.id.pedido_detalles)).setAdapter(adapter);
 
         ((TextView) getRootView().findViewById(R.id.pedido_cantidad)).setText(getPedidoCantidad(pedido.getPedidoDetalles()) + "");
-        ((TextView) getRootView().findViewById(R.id.pedido_total)).setText("$ " + numberFormat.format(pedido.getValorTotal()));
-        ((TextView) getRootView().findViewById(R.id.pedido_cliente)).setText(pedido.getCliente().getNombreCompleto());
-        ((TextView) getRootView().findViewById(R.id.pedido_email)).setText(pedido.getEmail());
+
+        descuentos = 0; subtotal = 0; valorTotal = 0; impuestos = 0; base0 = 0; baseImponible = 0; redondeo = 0;
+        for (PedidoDetalle detalle : pedido.getPedidoDetalles()) {
+            valorTotal = valorTotal + detalle.getValorTotal();
+            subtotal = subtotal + detalle.getSubtotal();
+            descuentos = descuentos + detalle.getValorDescuentoManualTotal() + detalle.getValorDescuentoAutomaticoTotal();
+            impuestos = impuestos + detalle.getValorImpuestoTotal();
+            base0 = base0 + detalle.getBaseImponibleCero();
+            baseImponible = baseImponible + detalle.getBaseImponible();
+        }
+        double residuo = valorTotal % 100;
+        if(residuo >= 50)
+            redondeo = (100 - residuo);
+        else
+            redondeo = - residuo;
+
+        valorTotal = valorTotal + redondeo;
+
+        ((TextView) getRootView().findViewById(R.id.pedido_total)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(valorTotal));
+        ((TextView) getRootView().findViewById(R.id.pedido_descuentos)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(descuentos));
+        ((TextView) getRootView().findViewById(R.id.pedido_impuestos)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(impuestos));
+        ((TextView) getRootView().findViewById(R.id.pedido_base_cero)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(base0));
+        ((TextView) getRootView().findViewById(R.id.pedido_base_imponible)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(baseImponible));
+        ((TextView) getRootView().findViewById(R.id.pedido_subtotal)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(subtotal));
+        ((TextView) getRootView().findViewById(R.id.pedido_redondeo)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(redondeo));
+
+        float pagado = 0;
+        if (pedido.getPagos() != null)
+            for (Pago pago : pedido.getPagos()) {
+                pagado = pagado + pago.getValor();
+            }
+
+        ((TextView) getRootView().findViewById(R.id.pedido_saldo)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(valorTotal - pagado));
+
+        if(tipo.equalsIgnoreCase("NC"))
+        {
+            getRootView().findViewById(R.id.pedido_agregar_producto).setVisibility(View.GONE);
+            idCliente = 0;
+            pedido.setID(0);
+        }
+
 
     }
 
@@ -532,6 +598,22 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             Toast.makeText(getContext(), "Nombre de Cliente o Contacto incorrecto.", Toast.LENGTH_LONG).show();
             return false;
         }
+        if(tipo.equalsIgnoreCase("FA")) {
+            if (pedido.getPagos() == null) {
+                Toast.makeText(getContext(), "Debe de ingresar pago.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+            float pagado = 0;
+            if (pedido.getPagos() != null)
+                for (Pago pago : pedido.getPagos()) {
+                    pagado = pagado + pago.getValor();
+                }
+
+            if ((valorTotal - pagado) > 0) {
+                Toast.makeText(getContext(), "Saldo insuficiente. Debe de ingresar pagos.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        }
 
         return true;
     }
@@ -592,6 +674,9 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     @Override
     public void onAcceptSuccess(PedidoDetalle transaction) {
         int exists = -1;
+
+        if(transaction.getCodigoExterno() == null && transaction.getProducto() != null)
+            transaction.setCodigoExterno(transaction.getProducto().getCodigoExterno());
 
         if (pedido.getPedidoDetalles() == null)
             pedido.setPedidoDetalles(new ArrayList<PedidoDetalle>());

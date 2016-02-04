@@ -162,12 +162,16 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
             menu.findItem(R.id.action_anular_pedido).setVisible(!isActiveListFragment);
             menu.findItem(R.id.action_sincronizar_productos).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_anular_pedido).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C"));
+            menu.findItem(R.id.action_nota_credito).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && ped.getTipoDocumento().equalsIgnoreCase("FA"));
+            //menu.findItem(R.id.action_nota_credito).setVisible(false);
         }
         else{
 
             menu.findItem(R.id.action_arqueo_caja).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_crear_pedido).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_anular_pedido).setVisible(selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C"));
+            menu.findItem(R.id.action_nota_credito).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && ped.getTipoDocumento().equalsIgnoreCase("FA"));
+            //menu.findItem(R.id.action_nota_credito).setVisible(false);
 
         }
     }
@@ -185,6 +189,19 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                     showDialogConfirmation(DIALOG_ANULACION, R.string.message_anulacion, R.string.action_anular_agenda);
                 }
                 break;
+            case R.id.action_nota_credito:
+                if(PreferenceManager.getInt(Contants.KEY_SECUENCIA_NOTA_CREDITO, 0) != 0) {
+                    Intent intent2 = new Intent(getContext(), CrearPedidoActivity.class);
+                    intent2.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, "NC");
+                    intent2.putExtra(CrearPedidoActivity.ARG_IDPEDIDO, selectedClientId);
+                    startActivity(intent2);
+                    break;
+                }
+                else
+                {
+                    Toast.makeText(this.getContext(), "Su usuario no tiene asignado una caja.", Toast.LENGTH_LONG).show();
+                }
+                break;
             case R.id.action_crear_pedido:
                 if(PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA, 0) != 0) {
                     AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
@@ -193,7 +210,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                             getContext(),
                             android.R.layout.select_dialog_item);
                     arrayAdapter.add("Factura");
-                    arrayAdapter.add("Nota de Crédito");
+                    //arrayAdapter.add("Nota de Crédito");
 
                     builderSingle.setAdapter(
                             arrayAdapter,

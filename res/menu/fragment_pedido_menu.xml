@@ -10,4 +10,5 @@
     <item android:id="@+id/action_sincronizar_productos" android:title="@string/action_sincronizar_productos" android:icon="@drawable/ic_sincronizar" android:showAsAction="ifRoom|collapseActionView"></item>
     <item android:id="@+id/action_crear_pedido" android:title="@string/action_crear_pedido" android:icon="@drawable/ic_action_new" android:showAsAction="ifRoom|collapseActionView"></item>
     <item android:id="@+id/action_anular_pedido" android:title="@string/action_anular_agenda" android:icon="@drawable/ic_action_cancel_dark" android:showAsAction="ifRoom|collapseActionView"></item>
+    <item android:id="@+id/action_nota_credito" android:title="@string/action_nota_credito" android:icon="@drawable/ic_action_edit_dark" android:showAsAction="ifRoom|collapseActionView"></item>
 </menu>

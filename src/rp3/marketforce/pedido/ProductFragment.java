@@ -36,7 +36,7 @@ public class ProductFragment extends BaseFragment {
     private DrawableManager DManager;
     private double porcentajeDescManual = 0, valorDescManual = 0, valorDescManualTotal = 0;
     private DecimalFormat df;
-    private NumberFormat numberFormat;
+    private NumberFormat numberFormat, numberFormatInteger;
 
     public static ProductFragment newInstance(String jcode)
     {
@@ -75,6 +75,10 @@ public class ProductFragment extends BaseFragment {
         numberFormat.setMaximumFractionDigits(2);
         numberFormat.setMinimumFractionDigits(2);
 
+        numberFormatInteger = NumberFormat.getInstance();
+        numberFormatInteger.setMaximumFractionDigits(0);
+        numberFormatInteger.setMinimumFractionDigits(0);
+
         DManager = new DrawableManager();
         try {
         String code = getArguments().getString("Code");
@@ -87,7 +91,8 @@ public class ProductFragment extends BaseFragment {
             DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
                             rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_PRODUCTOS) + jsonObject.getString("f"),
                     (ImageView) rootView.findViewById(R.id.producto_imagen));
-            //((EditText)rootView.findViewById(R.id.producto_descuento_manual)).setText(jsonObject.getString("pd") + "%");
+            if(!jsonObject.isNull("pdm"))
+                ((EditText)rootView.findViewById(R.id.producto_descuento_manual)).setText(numberFormatInteger.format(jsonObject.getDouble("pdm") * 100));
             ((EditText)rootView.findViewById(R.id.producto_descuento_manual)).addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -102,7 +107,7 @@ public class ProductFragment extends BaseFragment {
                         porcentajeDescManual = Float.parseFloat(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).getText().toString()) / 100;
                     }
                     int cantidad = 0;
-                    if(((EditText) rootView.findViewById(R.id.producto_cantidad)).length() > 0)
+                    if (((EditText) rootView.findViewById(R.id.producto_cantidad)).length() > 0)
                         cantidad = Integer.parseInt(((EditText) rootView.findViewById(R.id.producto_cantidad)).getText().toString());
 
                     try {
@@ -158,6 +163,23 @@ public class ProductFragment extends BaseFragment {
             //jsonObject.put("pi", prod.getPorcentajeImpuesto());
             //jsonObject.put("vd", prod.getPrecioDescuento());
             //jsonObject.put("vi", prod.getPrecioImpuesto());
+
+            if(jsonObject.isNull("c"))
+                ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("Precio Total: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " 0");
+            else {
+                int cantidad = Integer.parseInt(((EditText) rootView.findViewById(R.id.producto_cantidad)).getText().toString());
+                if(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).length() > 0)
+                    porcentajeDescManual = Float.parseFloat(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).getText().toString()) / 100;
+                try {
+                    valorDescManual = jsonObject.getDouble("vi") * porcentajeDescManual;
+                    double precio_total = cantidad * jsonObject.getDouble("vi");
+                    valorDescManualTotal = valorDescManual * cantidad;
+                    precio_total = precio_total - valorDescManualTotal;
+                    ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("Precio Total: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(precio_total));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
         } catch (JSONException e) {
             e.printStackTrace();
             Toast.makeText(this.getContext(), "Código Inválido.", Toast.LENGTH_LONG).show();
