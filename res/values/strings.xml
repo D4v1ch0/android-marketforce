@@ -242,5 +242,6 @@
     <string name="imprimir_arqueo">Imprimir Arqueo</string>
     <string name="message_anulacion">Desea anular esta transacción?</string>
     <string name="action_nota_credito">Crear Nota de Crédito</string>
+    <string name="label_motivo_anulacion">Motivo de Anulación:</string>
 
 </resources>

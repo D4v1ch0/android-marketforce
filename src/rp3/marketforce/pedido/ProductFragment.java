@@ -180,6 +180,12 @@ public class ProductFragment extends BaseFragment {
                     e.printStackTrace();
                 }
             }
+
+            //Validaciones si es que tipo de documento es nota de credito
+            if(!jsonObject.isNull("tipo") && jsonObject.getString("tipo").equalsIgnoreCase("NC"))
+            {
+                ((EditText)rootView.findViewById(R.id.producto_descuento_manual)).setEnabled(false);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
             Toast.makeText(this.getContext(), "Código Inválido.", Toast.LENGTH_LONG).show();
@@ -214,6 +220,12 @@ public class ProductFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 if(((EditText) rootView.findViewById(R.id.producto_cantidad)).length() > 0) {
+                    if(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).length() > 0 &&
+                            Integer.parseInt(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).getText().toString()) > PreferenceManager.getInt(Contants.KEY_DESCUENTO_MAXIMO))
+                    {
+                        Toast.makeText(getContext(), "Su máximo descuento permitido es del " + PreferenceManager.getInt(Contants.KEY_DESCUENTO_MAXIMO) + "%.", Toast.LENGTH_LONG).show();
+                        return;
+                    }
                     PedidoDetalle detalle = new PedidoDetalle();
                     detalle.setCantidad(Integer.parseInt(((EditText) rootView.findViewById(R.id.producto_cantidad)).getText().toString()));
                     try {
@@ -235,6 +247,16 @@ public class ProductFragment extends BaseFragment {
                         detalle.setBaseImponible(jsonObject.getDouble("pi") == 0 ? 0 : detalle.getValorTotal());
                         detalle.setBaseImponibleCero(jsonObject.getDouble("pi") == 0 ? detalle.getValorTotal() : 0);
                         detalle.setProducto(Producto.getProductoIdServer(getDataBase(), detalle.getIdProducto()));
+
+                        //Validaciones si es que tipo de documento es nota de credito
+                        if(!jsonObject.isNull("tipo") && jsonObject.getString("tipo").equalsIgnoreCase("NC"))
+                        {
+                            if(detalle.getCantidad() > jsonObject.getInt("c"))
+                            {
+                                Toast.makeText(getContext(), "No puede devolver mas unidades de lo que se facturó.", Toast.LENGTH_LONG).show();
+                                return;
+                            }
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

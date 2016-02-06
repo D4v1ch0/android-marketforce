@@ -8,6 +8,7 @@ public class Contants {
 	public final static int GENERAL_TABLE_TIPO_PERSONA = 1022;
 	public final static int GENERAL_TABLE_MOTIVOS_NO_VISITA = 1030;
     public final static int GENERAL_TABLE_MOTIVOS_REPROGRAMACION = 1031;
+    public final static int GENERAL_TABLE_MOTIVOS_ANULACION = 1706;
 	public final static String IMAGE_FOLDER = "imagesFolder";
     public final static String IMAGE_FOLDER_PRODUCTOS = "imagesFolderProducto";
 	public final static String KEY_FIRST_TIME = "firstTime";
@@ -72,6 +73,7 @@ public class Contants {
     public final static String KEY_SERIE = "Serie";
     public final static String KEY_NOMBRE_PUNTO_OPERACION = "NombrePuntoOperacion";
     public final static String KEY_ANDROID_ID = "AndroidID";
+    public final static String KEY_DESCUENTO_MAXIMO = "DescuentoMaximo";
 
     public final static String CAMPO_FECHA_NACIMIENTO = "FecNac";
     public final static String CAMPO_GENERO = "Gen";

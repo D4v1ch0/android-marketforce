@@ -567,7 +567,8 @@ public final class Contract {
 		public static final String COLUMN_BASE_IMPONIBLE = "BaseImponible";
 		public static final String COLUMN_BASE_IMPONIBLE_CERO = "BaseImponibleCero";
 		public static final String COLUMN_OBSERVACIONES = "Observaciones";
-
+		public static final String COLUMN_MOTIVO_ANULACION = "MotivoAnulacion";
+		public static final String COLUMN_OBSERVACION_ANULACION = "ObservacionAnulacion";
 
 	}
 

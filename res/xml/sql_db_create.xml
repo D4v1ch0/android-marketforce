@@ -292,7 +292,9 @@
         TipoDocumento TEXT,
         BaseImponible REAL,
         BaseImponibleCero REAL,
-        Observaciones TEXT
+        Observaciones TEXT,
+        MotivoAnulacion TEXT,
+        ObservacionAnulacion TEXT
         )
     </statement>
     <statement>

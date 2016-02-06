@@ -38,6 +38,8 @@ public class Pedido extends EntityBase<Pedido> {
     private double excedente;
     private double baseImponible;
     private double baseImponibleCero;
+    private String motivoAnulacion;
+    private String observacionAnulacion;
 
     private List<PedidoDetalle> pedidoDetalles;
     private List<Pago> pagos;
@@ -85,6 +87,22 @@ public class Pedido extends EntityBase<Pedido> {
 
     public void setIdAgenda(int idAgenda) {
         this.idAgenda = idAgenda;
+    }
+
+    public String getMotivoAnulacion() {
+        return motivoAnulacion;
+    }
+
+    public void setMotivoAnulacion(String motivoAnulacion) {
+        this.motivoAnulacion = motivoAnulacion;
+    }
+
+    public String getObservacionAnulacion() {
+        return observacionAnulacion;
+    }
+
+    public void setObservacionAnulacion(String observacionAnulacion) {
+        this.observacionAnulacion = observacionAnulacion;
     }
 
     public double getValorTotal() {
@@ -269,6 +287,8 @@ public class Pedido extends EntityBase<Pedido> {
         setValue(Contract.Pedido.COLUMN_BASE_IMPONIBLE, this.baseImponible);
         setValue(Contract.Pedido.COLUMN_BASE_IMPONIBLE_CERO, this.baseImponibleCero);
         setValue(Contract.Pedido.COLUMN_ID_CLIENTE_INT, this._idCliente);
+        setValue(Contract.Pedido.COLUMN_MOTIVO_ANULACION, this.motivoAnulacion);
+        setValue(Contract.Pedido.COLUMN_OBSERVACION_ANULACION, this.observacionAnulacion);
     }
 
     @Override
@@ -334,7 +354,8 @@ public class Pedido extends EntityBase<Pedido> {
         Cursor c = db.query(Contract.Pedido.TABLE_NAME, new String[] {Contract.Pedido._ID, Contract.Pedido.COLUMN_ID_PEDIDO, Contract.Pedido.COLUMN_ID_AGENDA, Contract.Pedido.COLUMN_ID_AGENDA_INT,
                 Contract.Pedido.COLUMN_ID_CLIENTE, Contract.Pedido.COLUMN_VALOR_TOTAL, Contract.Pedido.COLUMN_EMAIL, Contract.Pedido.COLUMN_ESTADO, Contract.Pedido.COLUMN_FECHA_CREACION, Contract.Pedido.COLUMN_ID_CLIENTE_INT,
                 Contract.Pedido.COLUMN_NUMERO_DOCUMENTO, Contract.Pedido.COLUMN_TIPO_DOCUMENTO, Contract.Pedido.COLUMN_OBSERVACIONES, Contract.Pedido.COLUMN_TOTAL_DESCUENTOS, Contract.Pedido.COLUMN_TOTAL_IMPUESTOS, Contract.Pedido.COLUMN_SUBTOTAL,
-                Contract.Pedido.COLUMN_SUBTOTAL_SIN_DESCUENTO, Contract.Pedido.COLUMN_REDONDEO, Contract.Pedido.COLUMN_EXCEDENTE, Contract.Pedido.COLUMN_BASE_IMPONIBLE, Contract.Pedido.COLUMN_BASE_IMPONIBLE_CERO}
+                Contract.Pedido.COLUMN_SUBTOTAL_SIN_DESCUENTO, Contract.Pedido.COLUMN_REDONDEO, Contract.Pedido.COLUMN_EXCEDENTE, Contract.Pedido.COLUMN_BASE_IMPONIBLE, Contract.Pedido.COLUMN_BASE_IMPONIBLE_CERO,
+                Contract.Pedido.COLUMN_MOTIVO_ANULACION, Contract.Pedido.COLUMN_OBSERVACION_ANULACION}
                 ,Contract.Pedido._ID + " = ? ", new String[]{id + ""}, null,null, Contract.Pedido.COLUMN_FECHA_CREACION);
 
         Pedido pedido = new Pedido();
@@ -371,6 +392,8 @@ public class Pedido extends EntityBase<Pedido> {
             pedido.setRedondeo(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_REDONDEO));
             pedido.setBaseImponible(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_BASE_IMPONIBLE));
             pedido.setBaseImponibleCero(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_BASE_IMPONIBLE_CERO));
+            pedido.setMotivoAnulacion(CursorUtils.getString(c, Contract.Pedido.COLUMN_MOTIVO_ANULACION));
+            pedido.setObservacionAnulacion(CursorUtils.getString(c, Contract.Pedido.COLUMN_OBSERVACION_ANULACION));
             if(pedido.getIdCliente() != 0)
                 pedido.setCliente(Cliente.getClienteIDServer(db, pedido.getIdCliente(), false));
             else

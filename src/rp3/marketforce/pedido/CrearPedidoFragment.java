@@ -224,26 +224,62 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         if (pedido.getID() == 0)
             pedido.setID(getDataBase().queryMaxInt(Contract.Pedido.TABLE_NAME, Contract.Pedido._ID));
 
-        if (pedido.getIdPedido() != 0) {
-            PedidoDetalle.deleteDetallesByIdPedido(getDataBase(), pedido.getIdPedido());
-            Pago.deletePagosByIdPedido(getDataBase(), pedido.getIdPedido());
-        } else {
-            PedidoDetalle.deleteDetallesByIdPedidoInt(getDataBase(), (int) pedido.getID());
-            Pago.deletePagosByIdPedidoInt(getDataBase(), (int) pedido.getID());
+        if(!tipo.equalsIgnoreCase("NC")) {
+            if (pedido.getIdPedido() != 0) {
+                PedidoDetalle.deleteDetallesByIdPedido(getDataBase(), pedido.getIdPedido());
+                Pago.deletePagosByIdPedido(getDataBase(), pedido.getIdPedido());
+            } else {
+                PedidoDetalle.deleteDetallesByIdPedidoInt(getDataBase(), (int) pedido.getID());
+                Pago.deletePagosByIdPedidoInt(getDataBase(), (int) pedido.getID());
+            }
         }
 
         for (PedidoDetalle detalle : pedido.getPedidoDetalles()) {
-            detalle.setIdPedido(pedido.getIdPedido());
-            detalle.set_idPedido((int) pedido.getID());
-            PedidoDetalle.insert(getDataBase(), detalle);
+            if((tipo.equalsIgnoreCase("NC"))) {
+                PedidoDetalle detalle_nc = new PedidoDetalle();
+                detalle_nc.setPorcentajeDescuentoManual(detalle.getPorcentajeDescuentoManual());
+                detalle_nc.setBaseImponible(detalle.getBaseImponible());
+                detalle_nc.setCodigoExterno(detalle.getCodigoExterno());
+                detalle_nc.setBaseImponibleCero(detalle.getBaseImponibleCero());
+                detalle_nc.setCantidad(detalle.getCantidad());
+                detalle_nc.setDescripcion(detalle.getDescripcion());
+                detalle_nc.setIdPedidoDetalle(detalle.getIdPedidoDetalle());
+                detalle_nc.setIdProducto(detalle.getIdProducto());
+                detalle_nc.setPorcentajeDescuentoAutomatico(detalle.getPorcentajeDescuentoAutomatico());
+                detalle_nc.setPorcentajeImpuesto(detalle.getPorcentajeImpuesto());
+                detalle_nc.setSubtotal(detalle.getSubtotal());
+                detalle_nc.setSubtotalSinDescuento(detalle.getSubtotalSinDescuento());
+                detalle_nc.setSubtotalSinImpuesto(detalle.getSubtotalSinImpuesto());
+                detalle_nc.setUrlFoto(detalle.getUrlFoto());
+                detalle_nc.setValorDescuentoAutomatico(detalle.getValorDescuentoAutomatico());
+                detalle_nc.setValorDescuentoAutomaticoTotal(detalle.getValorDescuentoAutomaticoTotal());
+                detalle_nc.setValorDescuentoManual(detalle.getValorDescuentoManual());
+                detalle_nc.setValorDescuentoManualTotal(detalle.getValorDescuentoManualTotal());
+                detalle_nc.setValorImpuesto(detalle.getValorImpuesto());
+                detalle_nc.setValorImpuestoTotal(detalle.getValorImpuestoTotal());
+                detalle_nc.setValorUnitario(detalle.getValorUnitario());
+                detalle_nc.setValorTotal(detalle.getValorTotal());
+
+                detalle_nc.set_idPedido((int) pedido.getID());
+                detalle_nc.setIdPedido(0);
+                PedidoDetalle.insert(getDataBase(), detalle_nc);
+
+            }
+            else {
+                detalle.setIdPedido(pedido.getIdPedido());
+                detalle.set_idPedido((int) pedido.getID());
+                PedidoDetalle.insert(getDataBase(), detalle);
+            }
         }
 
-        for (Pago pago : pedido.getPagos()) {
-            if(pago.getFormaPago().getDescripcion().equalsIgnoreCase("Efectivo"))
-                pago.setValor(pago.getValor() + ((float)pedido.getExcedente()));
-            pago.setIdPedido(pedido.getIdPedido());
-            pago.set_idPedido((int) pedido.getID());
-            Pago.insert(getDataBase(), pago);
+        if(!tipo.equalsIgnoreCase("NC")) {
+            for (Pago pago : pedido.getPagos()) {
+                if (pago.getFormaPago().getDescripcion().equalsIgnoreCase("Efectivo"))
+                    pago.setValor(pago.getValor() + ((float) pedido.getExcedente()));
+                pago.setIdPedido(pedido.getIdPedido());
+                pago.set_idPedido((int) pedido.getID());
+                Pago.insert(getDataBase(), pago);
+            }
         }
 
 
@@ -409,6 +445,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                     jsonObject.put("c", pedido.getPedidoDetalles().get(position).getCantidad());
                     jsonObject.put("vd", prod.getPrecioDescuento());
                     jsonObject.put("pd", prod.getPorcentajeDescuento());
+                    jsonObject.put("tipo", tipo);
 
                     productFragment = ProductFragment.newInstance(jsonObject.toString());
                     productFragment.setCancelable(false);
@@ -499,6 +536,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             getRootView().findViewById(R.id.pedido_agregar_producto).setVisibility(View.GONE);
             idCliente = 0;
             pedido.setID(0);
+            pedido.setIdPedido(0);
         }
 
 

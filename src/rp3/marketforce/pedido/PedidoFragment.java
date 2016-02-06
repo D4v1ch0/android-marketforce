@@ -186,7 +186,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
             case R.id.action_anular_pedido:
                 if(transactionDetailFragment != null)
                 {
-                    showDialogConfirmation(DIALOG_ANULACION, R.string.message_anulacion, R.string.action_anular_agenda);
+                    showDialogFragment(AnularTransaccionFragment.newInstance(selectedClientId), "Anular", "Anular Transacción");
                 }
                 break;
             case R.id.action_nota_credito:
@@ -269,18 +269,6 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
     public void onPositiveConfirmation(int id) {
         super.onPositiveConfirmation(id);
         switch (id) {
-            case DIALOG_ANULACION:
-                Pedido anular = Pedido.getPedido(getDataBase(), selectedClientId);
-                anular.setEstado("A");
-                Pedido.update(getDataBase(), anular);
-                Toast.makeText(this.getContext(), "Transacción ha sido anulada.", Toast.LENGTH_LONG).show();
-                RefreshMenu();
-                Bundle bundle2 = new Bundle();
-                bundle2.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ANULAR_PEDIDO);
-                bundle2.putLong(CrearPedidoFragment.ARG_PEDIDO, anular.getID());
-                requestSync(bundle2);
-                transactionListFragment.ejecutarConsulta();
-                break;
             case DIALOG_SYNC_PRODUCTOS:
                 showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait);
                 Bundle bundle = new Bundle();

@@ -70,6 +70,11 @@ public class Pedido {
             jObject.put("TipoTransaccion", pedidoUpload.getTipoDocumento());
             jObject.put("ValorDescAutomatico", df.format(pedidoUpload.getTotalDescuentos()));
             jObject.put("ValorImpuestoIvaVenta", df.format(pedidoUpload.getTotalImpuestos()));
+            if(pedidoUpload.getTipoDocumento().equalsIgnoreCase("FA"))
+                jObject.put("Secuencia", PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA));
+            if(pedidoUpload.getTipoDocumento().equalsIgnoreCase("NC"))
+                jObject.put("Secuencia", PreferenceManager.getInt(Contants.KEY_SECUENCIA_NOTA_CREDITO));
+
 
             JSONArray jArrayDetalle = new JSONArray();
             for (PedidoDetalle det : pedidoUpload.getPedidoDetalles()) {
@@ -83,7 +88,7 @@ public class Pedido {
                 jObjectDetalle.put("ValorTotal", df.format(det.getValorTotal()));
                 jObjectDetalle.put("BaseImponible", df.format(det.getBaseImponible()));
                 jObjectDetalle.put("BaseImponibleCero", df.format(det.getBaseImponibleCero()));
-                jObjectDetalle.put("IdBeneficio", det.getProducto().getIdBeneficio());
+                //jObjectDetalle.put("IdBeneficio", det.getProducto().getIdBeneficio());
                 jObjectDetalle.put("PorcDescAutomatico", df.format(det.getPorcentajeDescuentoAutomatico()));
                 jObjectDetalle.put("PorcDescManual", df.format(det.getPorcentajeDescuentoManual()));
                 jObjectDetalle.put("PorcImpuestoIvaVenta", df.format(det.getPorcentajeImpuesto()));
@@ -157,8 +162,19 @@ public class Pedido {
         rp3.marketforce.models.pedido.Pedido pedidoUpload = rp3.marketforce.models.pedido.Pedido.getPedido(db, idPedido);
 
         JSONObject jObject = new JSONObject();
+        try {
+            DecimalFormat df = new DecimalFormat("#.##");
+            df.setRoundingMode(RoundingMode.CEILING);
 
-        webService.addLongParameter("idPedido", pedidoUpload.getIdPedido());
+            jObject.put("IdPedido", pedidoUpload.getIdPedido());
+            jObject.put("MotivoAnulacion", pedidoUpload.getMotivoAnulacion());
+            jObject.put("ObservacionAnulacion", pedidoUpload.getObservacionAnulacion());
+
+        } catch (Exception ex) {
+
+        }
+
+        webService.addParameter("pedido", jObject);
 
         try {
             webService.addCurrentAuthToken();
