@@ -547,6 +547,12 @@ public class Agenda {
                                 agdTarea.setIdAgenda(jObjResp.getInt("IdAgendaServer"));
                                 agdTarea.setIdRuta(jObjResp.getInt("IdRutaServer"));
                                 AgendaTarea.update(db, agdTarea);
+                                for(AgendaTareaActividades agdActividad : agdTarea.getActividades())
+                                {
+                                    agdActividad.setIdAgenda(jObjResp.getInt("IdAgendaServer"));
+                                    agdActividad.setIdRuta(jObjResp.getInt("IdRutaServer"));
+                                    AgendaTareaActividades.update(db, agdActividad);
+                                }
                             }
                         }
                     }
