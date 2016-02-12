@@ -357,11 +357,11 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                 final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                         getContext(),
                         android.R.layout.select_dialog_item);
-                arrayAdapter.add("Desde Código QR");
+                //arrayAdapter.add("Desde Código QR");
                 arrayAdapter.add("Desde Búsqueda de Productos");
                 arrayAdapter.add("Desde Categorías");
                 arrayAdapter.add("Desde SKU");
-                arrayAdapter.add("Desde Código de Barras");
+                //arrayAdapter.add("Desde Código de Barras");
 
                 builderSingle.setAdapter(
                         arrayAdapter,
@@ -369,18 +369,18 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 switch (which) {
-                                    case 0:
+                                    /*case 0:
                                         scanQR();
-                                        break;
-                                    case 1:
+                                        break;*/
+                                    case 0:
                                         Intent intent = new Intent(getContext(), ProductoListActivity.class);
                                         startActivityForResult(intent, REQUEST_BUSQUEDA);
                                         break;
-                                    case 2:
+                                    case 1:
                                         Intent intent2 = new Intent(getContext(), CategoriaActivity.class);
                                         startActivityForResult(intent2, REQUEST_BUSQUEDA);
                                         break;
-                                    case 3:
+                                    case 2:
                                         Intent intent3 = new Intent(getContext(), ProductoListActivity.class);
                                         intent3.putExtra(ProductoListFragment.ARG_BUSQUEDA, "sku");
                                         startActivityForResult(intent3, REQUEST_BUSQUEDA);

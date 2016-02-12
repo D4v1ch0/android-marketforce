@@ -1247,5 +1247,14 @@
         AND tbPedido.FechaCreacion &gt;= ?
         AND tbPedido.FechaCreacion &lt;= ?
         GROUP BY tbPago.IdFormaPago
+        UNION ALL
+        SELECT COUNT(*) as _count,
+        -SUM(tbPedido.ValorTotal) AS Valor,
+        0 AS IdFormaPago
+        FROM tbPedido
+        WHERE tbPedido.TipoDocumento = 'NC'
+        AND tbPedido.FechaCreacion &gt;= ?
+        AND tbPedido.FechaCreacion &lt;= ?
+        GROUP BY tbPedido.TipoDocumento
     </statement>
 </sql>

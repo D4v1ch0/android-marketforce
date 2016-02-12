@@ -122,7 +122,7 @@ public class Agente {
         catch(Exception ex)
         {
             ex.printStackTrace();
-            return SyncAdapter.SYNC_EVENT_ERROR;
+            //return SyncAdapter.SYNC_EVENT_ERROR;
         }
 
         return SyncAdapter.SYNC_EVENT_SUCCESS;

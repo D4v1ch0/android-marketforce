@@ -124,8 +124,8 @@ public class Pago extends EntityBase<Pago> {
     }
 
     public static List<Pago> getPagos(DataBase db, int idPedido) {
-        Cursor c = db.query(Contract.Pago.TABLE_NAME, new String[] {Contract.Pago._ID, Contract.Pago.COLUMN_ID_FORMA_PAGO, Contract.Pago.COLUMN_ID_PAGO, Contract.Pago.COLUMN_ID_PEDIDO,
-                Contract.Pago.COLUMN_ID_PEDIDO_INT, Contract.Pago.COLUMN_OBSERVACION, Contract.Pago.COLUMN_VALOR,}, Contract.Pago.COLUMN_ID_PEDIDO + " = ?" , new String[] {idPedido + ""});
+        Cursor c = db.query(Contract.Pago.TABLE_NAME, new String[]{Contract.Pago._ID, Contract.Pago.COLUMN_ID_FORMA_PAGO, Contract.Pago.COLUMN_ID_PAGO, Contract.Pago.COLUMN_ID_PEDIDO,
+                Contract.Pago.COLUMN_ID_PEDIDO_INT, Contract.Pago.COLUMN_OBSERVACION, Contract.Pago.COLUMN_VALOR,}, Contract.Pago.COLUMN_ID_PEDIDO + " = ?", new String[]{idPedido + ""});
 
         List<Pago> list = new ArrayList<Pago>();
         while(c.moveToNext()){
@@ -145,8 +145,8 @@ public class Pago extends EntityBase<Pago> {
     }
 
     public static List<Pago> getPagosInt(DataBase db, long idPedido) {
-        Cursor c = db.query(Contract.Pago.TABLE_NAME, new String[] {Contract.Pago._ID, Contract.Pago.COLUMN_ID_FORMA_PAGO, Contract.Pago.COLUMN_ID_PAGO, Contract.Pago.COLUMN_ID_PEDIDO,
-                Contract.Pago.COLUMN_ID_PEDIDO_INT, Contract.Pago.COLUMN_OBSERVACION, Contract.Pago.COLUMN_VALOR,}, Contract.Pago.COLUMN_ID_PEDIDO_INT + " = ?" , new String[] {idPedido + ""});
+        Cursor c = db.query(Contract.Pago.TABLE_NAME, new String[]{Contract.Pago._ID, Contract.Pago.COLUMN_ID_FORMA_PAGO, Contract.Pago.COLUMN_ID_PAGO, Contract.Pago.COLUMN_ID_PEDIDO,
+                Contract.Pago.COLUMN_ID_PEDIDO_INT, Contract.Pago.COLUMN_OBSERVACION, Contract.Pago.COLUMN_VALOR,}, Contract.Pago.COLUMN_ID_PEDIDO_INT + " = ?", new String[]{idPedido + ""});
 
         List<Pago> list = new ArrayList<Pago>();
         while(c.moveToNext()){
@@ -166,7 +166,7 @@ public class Pago extends EntityBase<Pago> {
     }
 
     public static List<Pago> getArqueoCaja(DataBase db, long inicio, long fin) {
-        Cursor c = db.rawQuery(QueryDir.getQuery(Contract.Pago.QUERY_ARQUEO), new String[] {inicio + "", fin + ""});
+        Cursor c = db.rawQuery(QueryDir.getQuery(Contract.Pago.QUERY_ARQUEO), new String[] {inicio + "", fin + "", inicio + "", fin + ""});
 
         List<Pago> list = new ArrayList<Pago>();
         while(c.moveToNext()){
@@ -174,7 +174,8 @@ public class Pago extends EntityBase<Pago> {
             pago.setIdPago(CursorUtils.getInt(c, Contract.Pago._COUNT));
             pago.setIdFormaPago(CursorUtils.getInt(c, Contract.Pago.COLUMN_ID_FORMA_PAGO));
             pago.setValor(CursorUtils.getFloat(c, Contract.Pago.COLUMN_VALOR));
-            pago.setFormaPago(FormaPago.getFormaPago(db, pago.getIdFormaPago()));
+            if(pago.getIdFormaPago() != 0)
+                pago.setFormaPago(FormaPago.getFormaPago(db, pago.getIdFormaPago()));
             list.add(pago);
         }
         c.close();

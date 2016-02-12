@@ -460,6 +460,21 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         result = rp3.marketforce.sync.Marcaciones.executeSyncGrupo(db);
                         addDefaultMessage(result);
                     }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Caja.executeSync(db);
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Caja.executeSyncMoneda(db);
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Caja.executeSyncFormasPago(db);
+                        addDefaultMessage(result);
+                    }
                 }
 
                 SyncAudit.insert(syncType, result);

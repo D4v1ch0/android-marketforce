@@ -79,6 +79,7 @@ public class FormaPago extends EntityBase<FormaPago> {
         while(c.moveToNext()){
             FormaPago formaPago = new FormaPago();
             formaPago.setID(CursorUtils.getInt(c, Contract.FormaPago._ID));
+            formaPago.setIdFormaPago(CursorUtils.getInt(c, Contract.FormaPago.COLUMN_ID_FORMA_PAGO));
             formaPago.setDescripcion(CursorUtils.getString(c, Contract.FormaPago.COLUMN_DESCRIPCION));
             list.add(formaPago);
         }
@@ -93,6 +94,21 @@ public class FormaPago extends EntityBase<FormaPago> {
         FormaPago formaPago = new FormaPago();
         while(c.moveToNext()){
             formaPago.setID(CursorUtils.getInt(c, Contract.FormaPago._ID));
+            formaPago.setIdFormaPago(CursorUtils.getInt(c, Contract.FormaPago.COLUMN_ID_FORMA_PAGO));
+            formaPago.setDescripcion(CursorUtils.getString(c, Contract.FormaPago.COLUMN_DESCRIPCION));
+        }
+        c.close();
+        return formaPago;
+    }
+
+    public static FormaPago getFormaPagoInt(DataBase db, int idFormaPago) {
+        Cursor c = db.query(Contract.FormaPago.TABLE_NAME, new String[] {Contract.FormaPago._ID, Contract.FormaPago.COLUMN_ID_FORMA_PAGO, Contract.FormaPago.COLUMN_DESCRIPCION},
+                Contract.FormaPago._ID + " = ?", new String[]{idFormaPago + ""} );
+
+        FormaPago formaPago = new FormaPago();
+        while(c.moveToNext()){
+            formaPago.setID(CursorUtils.getInt(c, Contract.FormaPago._ID));
+            formaPago.setIdFormaPago(CursorUtils.getInt(c, Contract.FormaPago.COLUMN_ID_FORMA_PAGO));
             formaPago.setDescripcion(CursorUtils.getString(c, Contract.FormaPago.COLUMN_DESCRIPCION));
         }
         c.close();
