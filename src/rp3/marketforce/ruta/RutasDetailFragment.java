@@ -377,7 +377,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                    agenda.setEstadoAgenda(Contants.ESTADO_GESTIONANDO);
                    agenda.setEstadoAgendaDescripcion(Contants.DESC_GESTIONANDO);
                    getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(true);
-                   agenda.setFechaInicioReal(Calendar.getInstance().getTime());
+                   //agenda.setFechaInicioReal(Calendar.getInstance().getTime());
                    Agenda.update(getDataBase(), agenda);
                    ((ImageView) rootView.findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_in_process);
                    setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());
