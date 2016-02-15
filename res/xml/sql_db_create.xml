@@ -294,7 +294,9 @@
         BaseImponibleCero REAL,
         Observaciones TEXT,
         MotivoAnulacion TEXT,
-        ObservacionAnulacion TEXT
+        ObservacionAnulacion TEXT,
+        _IdDocumentoRef INTEGER,
+        IdDocumentoRef INTEGER
         )
     </statement>
     <statement>
