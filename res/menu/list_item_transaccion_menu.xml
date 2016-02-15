@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/item_menu_modificar_transaccion" android:title="@string/label_modificar_pago"></item>
+    <item android:id="@+id/item_menu_eliminar_transaccion" android:title="@string/label_eliminar_pago"></item>
+
+
+</menu>

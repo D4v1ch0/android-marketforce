@@ -69,7 +69,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     private String code;
     private PedidoDetalleAdapter adapter;
     private NumberFormat numberFormat;
-    double descuentos = 0, subtotal = 0, valorTotal = 0, impuestos = 0, base0 = 0, baseImponible = 0, redondeo = 0;
+    double descuentos = 0, subtotal = 0, valorTotal = 0, impuestos = 0, base0 = 0, baseImponible = 0, redondeo = 0, neto = 0;
 
     public static CrearPedidoFragment newInstance(long id_pedido, long id_agenda, String tipo)
     {
@@ -674,7 +674,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
         ((TextView) getRootView().findViewById(R.id.pedido_cantidad)).setText(getPedidoCantidad(pedido.getPedidoDetalles()) + "");
 
-        descuentos = 0; subtotal = 0; valorTotal = 0; impuestos = 0; base0 = 0; baseImponible = 0; redondeo = 0;
+        descuentos = 0; subtotal = 0; valorTotal = 0; impuestos = 0; base0 = 0; baseImponible = 0; redondeo = 0; neto = 0;
         for (PedidoDetalle detalle : pedido.getPedidoDetalles()) {
             valorTotal = valorTotal + detalle.getValorTotal();
             subtotal = subtotal + detalle.getSubtotal();
@@ -682,6 +682,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             impuestos = impuestos + detalle.getValorImpuesto();
             base0 = base0 + detalle.getBaseImponibleCero();
             baseImponible = baseImponible + detalle.getBaseImponible();
+            neto = neto + (detalle.getSubtotal() - (detalle.getValorDescuentoManualTotal() + detalle.getValorDescuentoAutomaticoTotal()));
         }
         double residuo = valorTotal % 100;
         if(residuo >= 50)
@@ -699,6 +700,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         ((TextView) getRootView().findViewById(R.id.pedido_base_imponible)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(baseImponible));
         ((TextView) getRootView().findViewById(R.id.pedido_subtotal)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(subtotal));
         ((TextView) getRootView().findViewById(R.id.pedido_redondeo)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(redondeo));
+        ((TextView) getRootView().findViewById(R.id.pedido_neto)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(neto));
 
         float pagado = 0;
         if (pedido.getPagos() != null)
@@ -739,7 +741,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
         ((TextView) getRootView().findViewById(R.id.pedido_cantidad)).setText(getPedidoCantidad(pedido.getPedidoDetalles()) + "");
 
-        descuentos = 0; subtotal = 0; valorTotal = 0; impuestos = 0; base0 = 0; baseImponible = 0; redondeo = 0;
+        descuentos = 0; subtotal = 0; valorTotal = 0; impuestos = 0; base0 = 0; baseImponible = 0; redondeo = 0; neto = 0;
         for (PedidoDetalle detalle : pedido.getPedidoDetalles()) {
             valorTotal = valorTotal + detalle.getValorTotal();
             subtotal = subtotal + detalle.getSubtotal();
@@ -747,6 +749,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             impuestos = impuestos + detalle.getValorImpuestoTotal();
             base0 = base0 + detalle.getBaseImponibleCero();
             baseImponible = baseImponible + detalle.getBaseImponible();
+            neto = neto + (detalle.getSubtotal() - (detalle.getValorDescuentoManualTotal() + detalle.getValorDescuentoAutomaticoTotal()));
         }
         double residuo = valorTotal % 100;
         if(residuo >= 50)
@@ -763,6 +766,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         ((TextView) getRootView().findViewById(R.id.pedido_base_imponible)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(baseImponible));
         ((TextView) getRootView().findViewById(R.id.pedido_subtotal)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(subtotal));
         ((TextView) getRootView().findViewById(R.id.pedido_redondeo)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(redondeo));
+        ((TextView) getRootView().findViewById(R.id.pedido_neto)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(neto));
 
         float pagado = 0;
         if (pedido.getPagos() != null)

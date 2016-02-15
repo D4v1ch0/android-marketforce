@@ -29,17 +29,43 @@ import rp3.marketforce.utils.NothingSelectedSpinnerAdapter;
 public class AgregarPagoFragment extends BaseFragment {
 
     public static final String ARG_SALDO = "saldo";
+    public static final String ARG_IDPAGO = "idpago";
+    public static final String ARG_EFECTIVO = "efectivo";
+    public static final String ARG_PAGO = "pago";
+    public static final String ARG_FORMA = "forma";
+    public static final String ARG_OBS = "obs";
 
     private PagoAgregarListener createFragmentListener;
     private PagoAdapter adapter;
     private NumberFormat numberFormat;
-    private double saldo;
+    private double saldo, pago;
+    private int idpago, idFormaPago;
+    private boolean efectivo;
+    private String obs;
 
-    public static AgregarPagoFragment newInstance(double saldo)
+    public static AgregarPagoFragment newInstance(double saldo, boolean efectivo)
     {
         AgregarPagoFragment fragment = new AgregarPagoFragment();
         Bundle args = new Bundle();
         args.putDouble(ARG_SALDO, saldo);
+        args.putBoolean(ARG_EFECTIVO, efectivo);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static AgregarPagoFragment newInstance(int idpago, double saldo, boolean efectivo, Pago pago)
+    {
+        AgregarPagoFragment fragment = new AgregarPagoFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_IDPAGO, idpago);
+        if(saldo > 0)
+            args.putDouble(ARG_SALDO, saldo + pago.getValor());
+        else
+            args.putDouble(ARG_SALDO, pago.getValor());
+        args.putBoolean(ARG_EFECTIVO, efectivo);
+        args.putDouble(ARG_PAGO, pago.getValor());
+        args.putInt(ARG_FORMA, pago.getIdFormaPago());
+        args.putString(ARG_OBS, pago.getObservacion());
         fragment.setArguments(args);
         return fragment;
     }
@@ -70,10 +96,29 @@ public class AgregarPagoFragment extends BaseFragment {
         super.onFragmentCreateView(rootView, savedInstanceState);
 
         saldo = getArguments().getDouble(ARG_SALDO);
+        idpago = getArguments().getInt(ARG_IDPAGO, -1);
+        efectivo = getArguments().getBoolean(ARG_EFECTIVO);
 
         SimpleIdentifiableAdapter formasPago = new SimpleIdentifiableAdapter(getContext(), FormaPago.getFormasPago(getDataBase()));
         ((Spinner) rootView.findViewById(R.id.pago_tipo)).setAdapter(formasPago);
         ((EditText) getRootView().findViewById(R.id.pago_valor)).setText(saldo + "");
+
+        if(idpago != -1)
+        {
+            obs = getArguments().getString(ARG_OBS);
+            pago = getArguments().getDouble(ARG_PAGO);
+            idFormaPago = getArguments().getInt(ARG_FORMA);
+
+            List<FormaPago> lista_formas = FormaPago.getFormasPago(getDataBase());
+            for(int i = 0; i < lista_formas.size(); i++)
+            {
+                if(lista_formas.get(i).getIdFormaPago() == idFormaPago)
+                    ((Spinner) rootView.findViewById(R.id.pago_tipo)).setSelection(i);
+            }
+            ((EditText) getRootView().findViewById(R.id.pago_valor)).setText(pago + "");
+            ((EditText) getRootView().findViewById(R.id.actividad_texto_respuesta)).setText(obs);
+
+        }
 
         rootView.findViewById(R.id.actividad_cancelar).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,24 +130,26 @@ public class AgregarPagoFragment extends BaseFragment {
         rootView.findViewById(R.id.actividad_aceptar).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(((Spinner) getRootView().findViewById(R.id.pago_tipo)).getSelectedItemPosition() == -1)
-                {
+                if (((Spinner) getRootView().findViewById(R.id.pago_tipo)).getSelectedItemPosition() == -1) {
                     Toast.makeText(getContext(), "Falta especificar la forma de pago.", Toast.LENGTH_LONG).show();
                     return;
                 }
-                if(((EditText) getRootView().findViewById(R.id.pago_valor)).length() == 0 || Float.parseFloat(((EditText) getRootView().findViewById(R.id.pago_valor)).getText().toString()) == 0)
-                {
+                if (((EditText) getRootView().findViewById(R.id.pago_valor)).length() == 0 || Float.parseFloat(((EditText) getRootView().findViewById(R.id.pago_valor)).getText().toString()) <= 0) {
                     Toast.makeText(getContext(), "Ingrese el valor del pago.", Toast.LENGTH_LONG).show();
                     return;
                 }
                 Pago pago = new Pago();
+                pago.setIdPago(idpago);
                 pago.setValor(Float.parseFloat(((EditText) getRootView().findViewById(R.id.pago_valor)).getText().toString()));
                 int idFormaPago = ((int) ((Spinner) getRootView().findViewById(R.id.pago_tipo)).getAdapter().getItemId(((Spinner) getRootView().findViewById(R.id.pago_tipo)).getSelectedItemPosition()));
                 pago.setFormaPago(FormaPago.getFormaPagoInt(getDataBase(), idFormaPago));
                 pago.setIdFormaPago(pago.getFormaPago().getIdFormaPago());
-                if(!pago.getFormaPago().getDescripcion().equalsIgnoreCase("Efectivo") && pago.getValor() > saldo)
-                {
+                if (!pago.getFormaPago().getDescripcion().equalsIgnoreCase("Efectivo") && pago.getValor() > saldo) {
                     Toast.makeText(getContext(), "Solo debe de existir excedente con efectivo.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if (pago.getFormaPago().getDescripcion().equalsIgnoreCase("Efectivo") && efectivo) {
+                    Toast.makeText(getContext(), "Ya existe un pago con efectivo. Solo se puede ingresar uno.", Toast.LENGTH_LONG).show();
                     return;
                 }
                 pago.setObservacion(((EditText) getRootView().findViewById(R.id.actividad_texto_respuesta)).getText().toString());

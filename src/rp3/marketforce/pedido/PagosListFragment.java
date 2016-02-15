@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -75,7 +78,11 @@ public class PagosListFragment extends BaseFragment implements AgregarPagoFragme
 
     @Override
     public void onAcceptSuccess(Pago pago) {
-        pagos.add(pago);
+        if(pago.getIdPago() == -1)
+            pagos.add(pago);
+        else
+            pagos.set(pago.getIdPago(), pago);
+
         saldo = valorTotal;
 
         for(Pago pag : pagos)
@@ -83,6 +90,7 @@ public class PagosListFragment extends BaseFragment implements AgregarPagoFragme
             saldo = saldo - pag.getValor();
         }
 
+        adapter.notifyDataSetChanged();
         ((TextView) getRootView().findViewById(R.id.forma_pago_saldo)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(saldo));
     }
 
@@ -99,6 +107,50 @@ public class PagosListFragment extends BaseFragment implements AgregarPagoFragme
 
         adapter = new PagoAdapter(this.getContext(), pagos);
         ((ListView) rootView.findViewById(R.id.forma_pago_list)).setAdapter(adapter);
+        ((ListView) rootView.findViewById(R.id.forma_pago_list)).setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                PopupMenu popup = new PopupMenu(getContext(), view);
+
+                popup.getMenuInflater()
+                        .inflate(R.menu.list_item_transaccion_menu, popup.getMenu());
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch(item.getItemId())
+                        {
+                            case R.id.item_menu_modificar_transaccion:
+                                boolean efectivo = false;
+                                if(!pagos.get(position).getFormaPago().getDescripcion().equalsIgnoreCase("Efectivo")) {
+                                    for (Pago pago : pagos) {
+                                        if (pago.getFormaPago().getDescripcion().equalsIgnoreCase("Efectivo"))
+                                            efectivo = true;
+                                    }
+                                }
+                                AgregarPagoFragment fragment = AgregarPagoFragment.newInstance(position, saldo, efectivo, pagos.get(position));
+                                showDialogFragment(fragment, "Pago", "Pago # " + (position + 1));
+                                break;
+                            case R.id.item_menu_eliminar_transaccion:
+                                pagos.remove(position);
+                                adapter = new PagoAdapter(getContext(), pagos);
+                                ((ListView) rootView.findViewById(R.id.forma_pago_list)).setAdapter(adapter);
+                                saldo = valorTotal;
+
+                                for(Pago pag : pagos)
+                                {
+                                    saldo = saldo - pag.getValor();
+                                }
+
+                                ((TextView) getRootView().findViewById(R.id.forma_pago_saldo)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(saldo));
+                                break;
+                        }
+                        return true;
+                    }
+                });
+                popup.show();
+                return false;
+            }
+        });
 
         saldo = getArguments().getDouble(ARG_VALOR);
         valorTotal = saldo;
@@ -113,7 +165,13 @@ public class PagosListFragment extends BaseFragment implements AgregarPagoFragme
         rootView.findViewById(R.id.forma_pago_agregar).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AgregarPagoFragment fragment = AgregarPagoFragment.newInstance(saldo);
+                boolean efectivo = false;
+                for(Pago pago : pagos)
+                {
+                    if(pago.getFormaPago().getDescripcion().equalsIgnoreCase("Efectivo"))
+                        efectivo = true;
+                }
+                AgregarPagoFragment fragment = AgregarPagoFragment.newInstance(saldo, efectivo);
                 showDialogFragment(fragment, "Pago", "Pago # " + (pagos.size() + 1));
             }
         });
@@ -128,7 +186,7 @@ public class PagosListFragment extends BaseFragment implements AgregarPagoFragme
 
         if(pagos.size() == 0)
         {
-            AgregarPagoFragment fragment = AgregarPagoFragment.newInstance(saldo);
+            AgregarPagoFragment fragment = AgregarPagoFragment.newInstance(saldo, false);
             showDialogFragment(fragment, "Pago", "Pago # " + (pagos.size() + 1));
         }
 

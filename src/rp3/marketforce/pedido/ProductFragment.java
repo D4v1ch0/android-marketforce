@@ -111,10 +111,11 @@ public class ProductFragment extends BaseFragment {
                         cantidad = Integer.parseInt(((EditText) rootView.findViewById(R.id.producto_cantidad)).getText().toString());
 
                     try {
-                        valorDescManual = jsonObject.getDouble("vi") * porcentajeDescManual;
-                        double precio_total = cantidad * jsonObject.getDouble("vi");
+                        valorDescManual = jsonObject.getDouble("p") * porcentajeDescManual;
+                        double precio_total = cantidad * jsonObject.getDouble("p");
                         valorDescManualTotal = valorDescManual * cantidad;
                         precio_total = precio_total - valorDescManualTotal;
+                        precio_total = precio_total * (1 + Float.parseFloat(jsonObject.getString("pi")));
                         ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("Precio Total: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(precio_total));
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -141,10 +142,11 @@ public class ProductFragment extends BaseFragment {
                         if(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).length() > 0)
                             porcentajeDescManual = Float.parseFloat(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).getText().toString()) / 100;
                         try {
-                            valorDescManual = jsonObject.getDouble("vi") * porcentajeDescManual;
-                            double precio_total = cantidad * jsonObject.getDouble("vi");
+                            valorDescManual = jsonObject.getDouble("p") * porcentajeDescManual;
+                            double precio_total = cantidad * jsonObject.getDouble("p");
                             valorDescManualTotal = valorDescManual * cantidad;
                             precio_total = precio_total - valorDescManualTotal;
+                            precio_total = precio_total * (1 + Float.parseFloat(jsonObject.getString("pi")));
                             ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("Precio Total: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(precio_total));
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -171,10 +173,11 @@ public class ProductFragment extends BaseFragment {
                 if(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).length() > 0)
                     porcentajeDescManual = Float.parseFloat(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).getText().toString()) / 100;
                 try {
-                    valorDescManual = jsonObject.getDouble("vi") * porcentajeDescManual;
-                    double precio_total = cantidad * jsonObject.getDouble("vi");
+                    valorDescManual = jsonObject.getDouble("p") * porcentajeDescManual;
+                    double precio_total = cantidad * jsonObject.getDouble("p");
                     valorDescManualTotal = valorDescManual * cantidad;
                     precio_total = precio_total - valorDescManualTotal;
+                    precio_total = precio_total * (1 + Float.parseFloat(jsonObject.getString("pi")));
                     ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("Precio Total: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(precio_total));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -233,20 +236,20 @@ public class ProductFragment extends BaseFragment {
                         detalle.setValorUnitario(jsonObject.getDouble("p"));
                         detalle.setIdProducto(jsonObject.getInt("id"));
                         detalle.setUrlFoto(jsonObject.getString("f"));
-                        detalle.setValorTotal((detalle.getCantidad() * Float.parseFloat(jsonObject.getString("vi"))) - valorDescManualTotal);
                         detalle.setSubtotal(detalle.getValorUnitario() * detalle.getCantidad());
                         detalle.setPorcentajeDescuentoManual(porcentajeDescManual);
                         detalle.setValorDescuentoManual(valorDescManual);
-                        detalle.setValorDescuentoAutomatico(Float.parseFloat(jsonObject.getString("vd")) - Float.parseFloat(jsonObject.getString("vi")));
-                        detalle.setValorDescuentoAutomaticoTotal(detalle.getValorDescuentoAutomatico() * detalle.getCantidad());
+                        detalle.setValorDescuentoAutomatico(0);
+                        detalle.setValorDescuentoAutomaticoTotal(0);
                         detalle.setValorDescuentoManualTotal(valorDescManualTotal);
                         detalle.setPorcentajeDescuentoAutomatico(Float.parseFloat(jsonObject.getString("pd")));
                         detalle.setPorcentajeImpuesto(Float.parseFloat(jsonObject.getString("pi")));
-                        detalle.setValorImpuesto(Float.parseFloat(jsonObject.getString("vi")) - Float.parseFloat(jsonObject.getString("p")));
+                        detalle.setValorImpuesto(Float.parseFloat(jsonObject.getString("pi")) * (Float.parseFloat(jsonObject.getString("p")) - valorDescManual));
                         detalle.setValorImpuestoTotal(detalle.getValorImpuesto() * detalle.getCantidad());
-                        detalle.setBaseImponible(jsonObject.getDouble("pi") == 0 ? 0 : detalle.getValorTotal());
-                        detalle.setBaseImponibleCero(jsonObject.getDouble("pi") == 0 ? detalle.getValorTotal() : 0);
                         detalle.setProducto(Producto.getProductoIdServer(getDataBase(), detalle.getIdProducto()));
+                        detalle.setValorTotal(detalle.getSubtotal() - detalle.getValorDescuentoAutomaticoTotal() - detalle.getValorDescuentoManualTotal() + detalle.getValorImpuestoTotal());
+                        detalle.setBaseImponible(jsonObject.getDouble("pi") == 0 ? 0 : detalle.getSubtotal() - detalle.getValorDescuentoAutomaticoTotal() - detalle.getValorDescuentoManualTotal() );
+                        detalle.setBaseImponibleCero(jsonObject.getDouble("pi") == 0 ? detalle.getSubtotal() - detalle.getValorDescuentoAutomaticoTotal() - detalle.getValorDescuentoManualTotal(): 0);
 
                         //Validaciones si es que tipo de documento es nota de credito
                         if(!jsonObject.isNull("tipo") && jsonObject.getString("tipo").equalsIgnoreCase("NC"))

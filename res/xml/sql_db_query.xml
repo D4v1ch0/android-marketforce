@@ -1097,6 +1097,7 @@
         FROM tbProducto
         LEFT JOIN tbProductoExt
         ON tbProducto._id = tbProductoExt.docid
+        ORDER BY tbProductoExt.Descripcion
     </statement>
     <statement name="ProductosByCategoria">
         SELECT
@@ -1183,7 +1184,7 @@
 
         ) AS tbProductoSearch
         ON tbProductoExt.docid = tbProductoSearch.docid
-        ORDER BY tbProductoSearch.Rank DESC
+        ORDER BY tbProductoExt.Descripcion, tbProductoSearch.Rank DESC
     </statement>
     <statement name="SimpleProductoSearchByCategoria">
         SELECT
@@ -1214,7 +1215,7 @@
         ) AS tbProductoSearch
         ON tbProductoExt.docid = tbProductoSearch.docid
         WHERE tbProducto.IdSubCategoria = ?
-        ORDER BY tbProductoSearch.Rank DESC
+        ORDER BY tbProductoExt.Descripcion, tbProductoSearch.Rank DESC
     </statement>
     <statement name="ProductoSearchCodigo">
         SELECT
