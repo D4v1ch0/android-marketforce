@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="rp3.marketforce"
-    android:versionCode="46"
-    android:versionName="1.4.6e">
+    android:versionCode="49"
+    android:versionName="1.4.6h">
 
     <uses-sdk
         android:minSdkVersion="13"
@@ -155,6 +155,11 @@
         <receiver
             android:name="rp3.marketforce.content.EnviarUbicacionReceiver"
             android:enabled="true" >
+        </receiver>
+        <receiver android:name="rp3.marketforce.content.TimeChangedReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.TIME_SET" />
+            </intent-filter>
         </receiver>
         <provider
             android:name="rp3.content.StubProvider"

@@ -368,51 +368,48 @@ public class CrearClienteFragment extends BaseFragment {
     }
 	
 	private void Grabar() {
-		Cliente cli = new Cliente();
-			if(idCliente != 0)
-				cli = Cliente.getClienteID(getDataBase(), idCliente, true);
-			cli.setIdCanal((int) ((Spinner)getRootView().findViewById(R.id.cliente_canal)).getAdapter().getItemId(((Spinner)getRootView().findViewById(R.id.cliente_canal)).getSelectedItemPosition()));
-			cli.setIdTipoIdentificacion((int) ((Spinner)getRootView().findViewById(R.id.cliente_tipo_identificacion)).getAdapter().getItemId(((Spinner)getRootView().findViewById(R.id.cliente_tipo_identificacion)).getSelectedItemPosition()));
-			cli.setIdentificacion(((EditText)getRootView().findViewById(R.id.cliente_identificacion)).getText().toString());
-			cli.setTipoPersona(((GeneralValue)((Spinner)getRootView().findViewById(R.id.crear_cliente_tipo_persona)).getSelectedItem()).getCode());
-			cli.setIdTipoCliente((int) ((Spinner)getRootView().findViewById(R.id.cliente_tipo_cliente)).getAdapter().getItemId(((Spinner)getRootView().findViewById(R.id.cliente_tipo_cliente)).getSelectedItemPosition()));
-			if(cliente.getURLFoto() != null && !cliente.getURLFoto().trim().equals(""))
-				cli.setURLFoto(cliente.getURLFoto());
-			if(((Spinner) getRootView().findViewById(R.id.crear_cliente_tipo_persona)).getSelectedItemPosition() == 1)
-			{
-				cli.setNombre1(((EditText)getRootView().findViewById(R.id.cliente_primer_nombre)).getText().toString());
-				cli.setNombre2(((EditText)getRootView().findViewById(R.id.cliente_segundo_nombre)).getText().toString());
-				cli.setApellido1(((EditText)getRootView().findViewById(R.id.cliente_primer_apellido)).getText().toString());
-				cli.setApellido2(((EditText)getRootView().findViewById(R.id.cliente_segundo_apellido)).getText().toString());
-				cli.setCorreoElectronico(((EditText)getRootView().findViewById(R.id.cliente_correo)).getText().toString());
-				cli.setGenero(((GeneralValue)((Spinner)getRootView().findViewById(R.id.cliente_genero)).getSelectedItem()).getCode());
-				cli.setEstadoCivil(((GeneralValue)((Spinner)getRootView().findViewById(R.id.cliente_estado_civil)).getSelectedItem()).getCode());
-				cli.setNombreCompleto(cli.getNombre1() + " " + cli.getNombre2() + " " + cli.getApellido1() + " " + cli.getApellido2());
-				cli.setFechaNacimiento(cliente.getFechaNacimiento());
-			}
-			else
-			{
-				cli.setApellido1("");
-				cli.setApellido2("");
-				cli.setNombre2("");
-				cli.setNombre1(((EditText)getRootView().findViewById(R.id.cliente_nombre)).getText().toString());
-				cli.setActividadEconomica(((EditText)getRootView().findViewById(R.id.cliente_actividad_economica)).getText().toString());
-				cli.setCorreoElectronico(((EditText)getRootView().findViewById(R.id.cliente_correo_juridico)).getText().toString());
-				cli.setRazonSocial(((EditText)getRootView().findViewById(R.id.cliente_razon_social)).getText().toString());
-				cli.setPaginaWeb(((EditText)getRootView().findViewById(R.id.cliente_pagina_web)).getText().toString());
-				cli.setGenero(((GeneralValue)((Spinner)getRootView().findViewById(R.id.cliente_genero)).getSelectedItem()).getCode());
-				cli.setEstadoCivil(((GeneralValue)((Spinner)getRootView().findViewById(R.id.cliente_estado_civil)).getSelectedItem()).getCode());
-				cli.setNombreCompleto(cli.getNombre1());
-			}
-			cli.setPendiente(true);
-			List<Contacto> cliContactos = cli.getContactos();
-			cli.setContactos(null);
-			List<ClienteDireccion> cliDirecciones = cli.getClienteDirecciones();
-			cli.setClienteDirecciones(null);
-			if(cli.getID() == 0 )
-				Cliente.insert(getDataBase(), cli);
-			else
-				Cliente.update(getDataBase(), cli);
+        Cliente cli = new Cliente();
+        if (idCliente != 0)
+            cli = Cliente.getClienteID(getDataBase(), idCliente, true);
+        cli.setIdCanal((int) ((Spinner) getRootView().findViewById(R.id.cliente_canal)).getAdapter().getItemId(((Spinner) getRootView().findViewById(R.id.cliente_canal)).getSelectedItemPosition()));
+        cli.setIdTipoIdentificacion((int) ((Spinner) getRootView().findViewById(R.id.cliente_tipo_identificacion)).getAdapter().getItemId(((Spinner) getRootView().findViewById(R.id.cliente_tipo_identificacion)).getSelectedItemPosition()));
+        cli.setIdentificacion(((EditText) getRootView().findViewById(R.id.cliente_identificacion)).getText().toString());
+        cli.setTipoPersona(((GeneralValue) ((Spinner) getRootView().findViewById(R.id.crear_cliente_tipo_persona)).getSelectedItem()).getCode());
+        cli.setIdTipoCliente((int) ((Spinner) getRootView().findViewById(R.id.cliente_tipo_cliente)).getAdapter().getItemId(((Spinner) getRootView().findViewById(R.id.cliente_tipo_cliente)).getSelectedItemPosition()));
+        if (cliente.getURLFoto() != null && !cliente.getURLFoto().trim().equals(""))
+            cli.setURLFoto(cliente.getURLFoto());
+        if (((Spinner) getRootView().findViewById(R.id.crear_cliente_tipo_persona)).getSelectedItemPosition() == 1) {
+            cli.setNombre1(((EditText) getRootView().findViewById(R.id.cliente_primer_nombre)).getText().toString());
+            cli.setNombre2(((EditText) getRootView().findViewById(R.id.cliente_segundo_nombre)).getText().toString());
+            cli.setApellido1(((EditText) getRootView().findViewById(R.id.cliente_primer_apellido)).getText().toString());
+            cli.setApellido2(((EditText) getRootView().findViewById(R.id.cliente_segundo_apellido)).getText().toString());
+            cli.setCorreoElectronico(((EditText) getRootView().findViewById(R.id.cliente_correo)).getText().toString());
+            cli.setGenero(((GeneralValue) ((Spinner) getRootView().findViewById(R.id.cliente_genero)).getSelectedItem()).getCode());
+            cli.setEstadoCivil(((GeneralValue) ((Spinner) getRootView().findViewById(R.id.cliente_estado_civil)).getSelectedItem()).getCode());
+            cli.setNombreCompleto(cli.getNombre1() + " " + cli.getNombre2() + " " + cli.getApellido1() + " " + cli.getApellido2());
+            cli.setFechaNacimiento(cliente.getFechaNacimiento());
+        } else {
+            cli.setApellido1("");
+            cli.setApellido2("");
+            cli.setNombre2("");
+            cli.setNombre1(((EditText) getRootView().findViewById(R.id.cliente_nombre)).getText().toString());
+            cli.setActividadEconomica(((EditText) getRootView().findViewById(R.id.cliente_actividad_economica)).getText().toString());
+            cli.setCorreoElectronico(((EditText) getRootView().findViewById(R.id.cliente_correo_juridico)).getText().toString());
+            cli.setRazonSocial(((EditText) getRootView().findViewById(R.id.cliente_razon_social)).getText().toString());
+            cli.setPaginaWeb(((EditText) getRootView().findViewById(R.id.cliente_pagina_web)).getText().toString());
+            cli.setGenero(((GeneralValue) ((Spinner) getRootView().findViewById(R.id.cliente_genero)).getSelectedItem()).getCode());
+            cli.setEstadoCivil(((GeneralValue) ((Spinner) getRootView().findViewById(R.id.cliente_estado_civil)).getSelectedItem()).getCode());
+            cli.setNombreCompleto(cli.getNombre1());
+        }
+        cli.setPendiente(true);
+        List<Contacto> cliContactos = cli.getContactos();
+        cli.setContactos(null);
+        List<ClienteDireccion> cliDirecciones = cli.getClienteDirecciones();
+        cli.setClienteDirecciones(null);
+        if (cli.getID() == 0)
+            Cliente.insert(getDataBase(), cli);
+        else
+            Cliente.update(getDataBase(), cli);
 
             if(cli.getID() == 0)
                 cli.setID(getDataBase().queryMaxInt(Contract.Cliente.TABLE_NAME, Contract.Cliente._ID));
