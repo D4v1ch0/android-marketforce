@@ -353,10 +353,14 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     result = EnviarUbicacion.executeSyncPendientes(db);
                     addDefaultMessage(result);
 
-                    result = Marcaciones.executeSyncPermisosRevisados(db);
-                    addDefaultMessage(result);
-                    result = Marcaciones.executeSyncPermisosPorAprobar(db);
-                    addDefaultMessage(result);
+                    if (PreferenceManager.getBoolean(Contants.KEY_ES_SUPERVISOR)) {
+                        result = rp3.marketforce.sync.Agente.executeSyncAgentes(db);
+                        addDefaultMessage(result);
+                        result = Marcaciones.executeSyncPermisosRevisados(db);
+                        addDefaultMessage(result);
+                        result = Marcaciones.executeSyncPermisosPorAprobar(db);
+                        addDefaultMessage(result);
+                    }
 
                     //result = Marcaciones.executeSync(db);
                     //addDefaultMessage(result);
@@ -459,6 +463,9 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 
                     if (result == SYNC_EVENT_SUCCESS && PreferenceManager.getBoolean(Contants.KEY_ES_SUPERVISOR)) {
                         result = rp3.marketforce.sync.Agente.executeSyncGetAgente(db);
+                        addDefaultMessage(result);
+
+                        result = rp3.marketforce.sync.Agente.executeSyncAgentes(db);
                         addDefaultMessage(result);
 
                         result = rp3.marketforce.sync.Marcaciones.executeSyncPermisosPorAprobar(db);
