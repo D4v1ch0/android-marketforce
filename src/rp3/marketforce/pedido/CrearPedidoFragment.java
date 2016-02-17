@@ -3,10 +3,14 @@ package rp3.marketforce.pedido;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.print.PrintManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,7 +24,11 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -38,13 +46,17 @@ import rp3.marketforce.models.pedido.Pedido;
 import rp3.marketforce.models.pedido.PedidoDetalle;
 import rp3.marketforce.models.pedido.Producto;
 import rp3.marketforce.sync.SyncAdapter;
+import rp3.runtime.Session;
 import rp3.util.ConnectionUtils;
+import rp3.util.StringUtils;
 
 
 /**
  * Created by magno_000 on 13/10/2015.
  */
 public class CrearPedidoFragment extends BaseFragment implements ProductFragment.ProductAcceptListener, PagosListFragment.PagosAcceptListener{
+
+    public final static int SPACES = 36;
 
     boolean rotated = false;
     private AutoCompleteTextView cliente_auto;
@@ -69,6 +81,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     private String code;
     private PedidoDetalleAdapter adapter;
     private NumberFormat numberFormat;
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     double descuentos = 0, subtotal = 0, valorTotal = 0, impuestos = 0, base0 = 0, baseImponible = 0, redondeo = 0, neto = 0;
 
     public static CrearPedidoFragment newInstance(long id_pedido, long id_agenda, String tipo)
@@ -157,10 +170,12 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         {
             case DIALOG_SAVE_ACCEPT:
                 Grabar(false);
-                finish();
+
+                generarFacturaFísica();
+                /*finish();
                 Intent intent = new Intent(getContext(), CrearPedidoActivity.class);
                 intent.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, "FA");
-                startActivity(intent);
+                startActivity(intent);*/
                 break;
             case DIALOG_SAVE_CANCEL:
                 if(Validaciones())
@@ -801,5 +816,102 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         }
 
         ((TextView) getRootView().findViewById(R.id.pedido_saldo)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(valorTotal - pagado));
+    }
+
+    public void generarFacturaFísica() {
+        String toPrint = "";
+        pedido = Pedido.getPedido(getDataBase(), pedido.getID());
+        toPrint = StringUtils.centerStringInLine(PreferenceManager.getString(Contants.KEY_EMPRESA), SPACES);
+        toPrint = toPrint + StringUtils.centerStringInLine("Ced. Jur.:" + PreferenceManager.getString(Contants.KEY_RUC), SPACES);
+        toPrint = toPrint + StringUtils.centerStringInLine("Tel:" + PreferenceManager.getString(Contants.KEY_TELEFONO), SPACES);
+        toPrint = toPrint + StringUtils.centerStringInLine("Dir:" + PreferenceManager.getString(Contants.KEY_DIRECCION), SPACES);
+        toPrint = toPrint + StringUtils.centerStringInLine("GUAYAQUIL - ECUADOR", SPACES);
+        toPrint = toPrint + '\n';
+        if(tipo.equalsIgnoreCase("FA"))
+            toPrint = toPrint + StringUtils.centerStringInLine("FACTURA", SPACES);
+
+        toPrint = toPrint + StringUtils.centerStringInLine("No." + pedido.getNumeroDocumento(), SPACES);
+        toPrint = toPrint + '\n';
+        toPrint = toPrint + StringUtils.centerStringInLine("Sr.(ES): " + pedido.getCliente().getNombreCompleto(), SPACES);
+        toPrint = toPrint + StringUtils.centerStringInLine("Identif.: " + pedido.getCliente().getIdentificacion(), SPACES);
+        toPrint = toPrint + StringUtils.centerStringInLine("Fecha: " + dateFormat.format(pedido.getFechaCreacion()), SPACES);
+        toPrint = toPrint + '\n';
+
+        for(int i = 1; i <= SPACES; i++)
+            toPrint = toPrint + "=";
+        toPrint = toPrint + '\n';
+        toPrint = toPrint + "SKU               Descripción" + '\n';
+        toPrint = toPrint + " P.Unit   Cant.  P.Desc    Subtotal" + '\n';
+        for(int i = 1; i <= SPACES; i++)
+            toPrint = toPrint + "=";
+        toPrint = toPrint + '\n';
+
+        for(PedidoDetalle detalle : pedido.getPedidoDetalles())
+        {
+            toPrint = toPrint + StringUtils.leftStringInSpace(detalle.getCodigoExterno(), 6) + " ";
+            toPrint = toPrint + StringUtils.leftStringInSpace(detalle.getDescripcion().substring(0,28), 28);
+            toPrint = toPrint + '\n';
+            toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(detalle.getValorUnitario()), 10) + " ";
+            toPrint = toPrint + StringUtils.rightStringInSpace(detalle.getCantidad() + "", 5) + " ";
+            toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(detalle.getPorcentajeDescuentoManual())+ "%", 8) + " ";
+            toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(detalle.getSubtotal()), 10) + " ";
+            if(detalle.getValorImpuesto() == 0)
+                toPrint = toPrint + "*";
+            toPrint = toPrint + '\n';
+        }
+
+        for(int i = 1; i <= SPACES; i++)
+            toPrint = toPrint + "=";
+        toPrint = toPrint + '\n';
+        toPrint = toPrint + StringUtils.rightStringInSpace("TOTAL A PAGAR :", 20) + " ";
+        toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(pedido.getValorTotal()), 16) + '\n';
+
+        toPrint = toPrint + StringUtils.centerStringInLine("RESUMEN DE TRANSACCION", SPACES);
+        toPrint = toPrint + StringUtils.rightStringInSpace("Subtotal :", 20) + " ";
+        toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(pedido.getSubtotal()), 16) + '\n';
+        toPrint = toPrint + StringUtils.rightStringInSpace("Descuento :", 20) + " ";
+        toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(pedido.getTotalDescuentos()), 16) + '\n';
+        toPrint = toPrint + StringUtils.rightStringInSpace("Subtotal :", 20) + " ";
+        toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(pedido.getSubtotal() - pedido.getTotalDescuentos()), 16) + '\n';
+        toPrint = toPrint + StringUtils.rightStringInSpace("IVA 0% :", 20) + " ";
+        toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(pedido.getBaseImponibleCero()), 16) + '\n';
+        toPrint = toPrint + StringUtils.rightStringInSpace("13% IVA :", 20) + " ";
+        toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(pedido.getTotalImpuestos()), 16) + '\n';
+        toPrint = toPrint + StringUtils.rightStringInSpace("0% IVA :", 20) + " ";
+        toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(0), 16) + '\n';
+        toPrint = toPrint + StringUtils.rightStringInSpace("-------------------------", 36) + '\n';
+
+        toPrint = toPrint + StringUtils.rightStringInSpace("Total :", 20) + " ";
+        toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(pedido.getBaseImponibleCero()), 16) + '\n';
+
+        for(int i = 1; i <= SPACES; i++)
+            toPrint = toPrint + "=";
+        toPrint = toPrint + '\n';
+        toPrint = toPrint + '\n';
+
+        toPrint = toPrint + StringUtils.leftStringInSpace("Total artículos : " + getPedidoCantidad(pedido.getPedidoDetalles()) + "" , 35) + " ";
+        toPrint = toPrint + '\n';
+
+        double pagoEfectivo = 0;
+        for (Pago pago : pedido.getPagos()) {
+            toPrint = toPrint + StringUtils.leftStringInSpace(pago.getFormaPago().getDescripcion() + ":", 20) + " ";
+            toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(pago.getValor()), 16) + '\n';
+            if(pago.getFormaPago().getDescripcion().equalsIgnoreCase("Efectivo"))
+                pagoEfectivo = pagoEfectivo + pago.getValor();
+        }
+
+        toPrint = toPrint + '\n';
+        toPrint = toPrint + StringUtils.leftStringInSpace("Efectivo recibido: " + numberFormat.format(pagoEfectivo), SPACES) + '\n';
+        toPrint = toPrint + StringUtils.leftStringInSpace("Su cambio: " + numberFormat.format(pedido.getExcedente()), SPACES) + '\n' + '\n';
+
+        toPrint = toPrint + StringUtils.leftStringInSpace("Lo atendió: " + Session.getUser().getFullName(), SPACES) + '\n';
+
+        toPrint = toPrint + StringUtils.centerStringInLine("*** GRACIAS POR SU VISITA ***", SPACES);
+
+        Intent print = new Intent(Intent.ACTION_SEND);
+        print.addCategory(Intent.CATEGORY_DEFAULT);
+        print.putExtra(Intent.EXTRA_TEXT, toPrint);
+        print.setType("text/plain");
+        startActivity(Intent.createChooser(print, "Imprimir"));
     }
 }
