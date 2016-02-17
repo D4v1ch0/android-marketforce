@@ -124,7 +124,7 @@ public class Agenda {
             try {
                 jObject.put("IdAgenda", agendaUpload.getIdAgenda());
                 jObject.put("IdRuta", PreferenceManager.getInt(Contants.KEY_IDRUTA));
-                jObject.put("IdMedia", agendaUpload.getEstadoAgenda());
+                jObject.put("IdMedia", 1);
                 jObject.put("Nombre", agendaUpload.getIdAgenda() + "_Foto1.jpg");
                 jObject.put("Contenido", Utils.BitmapToBase64(agendaUpload.getFoto1Int()));
             } catch (Exception ex) {
@@ -160,7 +160,7 @@ public class Agenda {
             try {
                 jObject.put("IdAgenda", agendaUpload.getIdAgenda());
                 jObject.put("IdRuta", PreferenceManager.getInt(Contants.KEY_IDRUTA));
-                jObject.put("IdMedia", agendaUpload.getEstadoAgenda());
+                jObject.put("IdMedia", 2);
                 jObject.put("Nombre", agendaUpload.getIdAgenda() + "_Foto2.jpg");
                 jObject.put("Contenido", Utils.BitmapToBase64(agendaUpload.getFoto2Int()));
             } catch (Exception ex) {
@@ -195,7 +195,7 @@ public class Agenda {
             try {
                 jObject.put("IdAgenda", agendaUpload.getIdAgenda());
                 jObject.put("IdRuta", PreferenceManager.getInt(Contants.KEY_IDRUTA));
-                jObject.put("IdMedia", agendaUpload.getEstadoAgenda());
+                jObject.put("IdMedia", 3);
                 jObject.put("Nombre", agendaUpload.getIdAgenda() + "_Foto3.jpg");
                 jObject.put("Contenido", Utils.BitmapToBase64(agendaUpload.getFoto3Int()));
             } catch (Exception ex) {
@@ -579,7 +579,7 @@ public class Agenda {
                 try {
                     jObject.put("IdAgenda", agendaUpload.getIdAgenda());
                     jObject.put("IdRuta", agendaUpload.getIdRuta());
-                    jObject.put("IdMedia", agendaUpload.getEstadoAgenda());
+                    jObject.put("IdMedia", 1);
                     jObject.put("Nombre", agendaUpload.getIdAgenda() + "_Foto1.jpg");
                     jObject.put("Contenido", Utils.BitmapToBase64(agendaUpload.getFoto1Int()));
                 } catch (Exception ex) {
@@ -614,7 +614,7 @@ public class Agenda {
                 try {
                     jObject.put("IdAgenda", agendaUpload.getIdAgenda());
                     jObject.put("IdRuta", agendaUpload.getIdRuta());
-                    jObject.put("IdMedia", agendaUpload.getEstadoAgenda());
+                    jObject.put("IdMedia", 2);
                     jObject.put("Nombre", agendaUpload.getIdAgenda() + "_Foto2.jpg");
                     jObject.put("Contenido", Utils.BitmapToBase64(agendaUpload.getFoto2Int()));
                 } catch (Exception ex) {
@@ -649,7 +649,7 @@ public class Agenda {
                 try {
                     jObject.put("IdAgenda", agendaUpload.getIdAgenda());
                     jObject.put("IdRuta", agendaUpload.getIdRuta());
-                    jObject.put("IdMedia", agendaUpload.getEstadoAgenda());
+                    jObject.put("IdMedia", 3);
                     jObject.put("Nombre", agendaUpload.getIdAgenda() + "_Foto3.jpg");
                     jObject.put("Contenido", Utils.BitmapToBase64(agendaUpload.getFoto3Int()));
                 } catch (Exception ex) {
@@ -798,7 +798,7 @@ public class Agenda {
                 try {
                     jObject.put("IdAgenda", agendaUpload.getIdAgenda());
                     jObject.put("IdRuta", agendaUpload.getIdRuta());
-                    jObject.put("IdMedia", agendaUpload.getEstadoAgenda());
+                    jObject.put("IdMedia", 1);
                     jObject.put("Nombre", agendaUpload.getIdAgenda() + "_Foto1.jpg");
                     jObject.put("Contenido", Utils.BitmapToBase64(agendaUpload.getFoto1Int()));
                 } catch (Exception ex) {
@@ -836,7 +836,7 @@ public class Agenda {
                 try {
                     jObject.put("IdAgenda", agendaUpload.getIdAgenda());
                     jObject.put("IdRuta", agendaUpload.getIdRuta());
-                    jObject.put("IdMedia", agendaUpload.getEstadoAgenda());
+                    jObject.put("IdMedia", 2);
                     jObject.put("Nombre", agendaUpload.getIdAgenda() + "_Foto2.jpg");
                     jObject.put("Contenido", Utils.BitmapToBase64(agendaUpload.getFoto2Int()));
                 } catch (Exception ex) {
@@ -874,7 +874,7 @@ public class Agenda {
                 try {
                     jObject.put("IdAgenda", agendaUpload.getIdAgenda());
                     jObject.put("IdRuta", agendaUpload.getIdRuta());
-                    jObject.put("IdMedia", agendaUpload.getEstadoAgenda());
+                    jObject.put("IdMedia", 3);
                     jObject.put("Nombre", agendaUpload.getIdAgenda() + "_Foto3.jpg");
                     jObject.put("Contenido", Utils.BitmapToBase64(agendaUpload.getFoto3Int()));
                 } catch (Exception ex) {
