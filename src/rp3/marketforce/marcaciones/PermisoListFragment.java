@@ -75,7 +75,10 @@ public class PermisoListFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        ((MainActivity) getActivity()).updateBadgeNavItem(MainActivity.NAV_JUSTIFICACIONES, Justificacion.getPermisosPendientesAprobarCount(getDataBase()));
+        try {
+            ((MainActivity) getActivity()).updateBadgeNavItem(MainActivity.NAV_JUSTIFICACIONES, Justificacion.getPermisosPendientesAprobarCount(getDataBase()));
+        }catch (Exception ex){}
+
         if (currentTransactionBoolean) {
             ejecutarConsulta();
         } else {
