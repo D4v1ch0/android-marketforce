@@ -1,6 +1,7 @@
 package rp3.marketforce.ruta;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import rp3.app.BaseActivity;
@@ -233,9 +234,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                     startActivity(intent);
                 }
             });
-            adapter = new ListaTareasAdapter(getActivity(), agenda.getAgendaTareas());
-            lista_tarea.setAdapter(adapter);
-            adapter.notifyDataSetChanged();
+            ValidateTareas();
 
     }
 
@@ -323,41 +322,46 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 		   }
 		   
 		   rootView.findViewById(R.id.detail_agenda_observacion).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(getContext(), ObservacionesActivity.class);
-				intent.putExtra(ARG_ITEM_ID, agenda.getID());
-                intent.putExtra(ARG_SOLO_VISTA, !agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO));
-				startActivity(intent);
-			}
-            		   });
+               @Override
+               public void onClick(View v) {
+                   Intent intent = new Intent(getContext(), ObservacionesActivity.class);
+                   intent.putExtra(ARG_ITEM_ID, agenda.getID());
+                   intent.putExtra(ARG_SOLO_VISTA, !agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO));
+                   startActivity(intent);
+               }
+           });
 			
 			
 		   setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());
 
-		   setButtonClickListener(R.id.detail_agenda_button_iniciar, new OnClickListener(){
+		   setButtonClickListener(R.id.detail_agenda_button_iniciar, new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-                setViewVisibility(R.id.detail_agenda_button_iniciar, View.GONE);
-                setViewVisibility(R.id.detail_agenda_button_fin, View.VISIBLE);
-                setViewVisibility(R.id.detail_agenda_button_cancelar, View.VISIBLE);
-                getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(true);
-                agenda.setEstadoAgenda(Contants.ESTADO_GESTIONANDO);
-                agenda.setEstadoAgendaDescripcion(Contants.DESC_GESTIONANDO);
-                agenda.setFechaInicioReal(Calendar.getInstance().getTime());
-                Agenda.update(getDataBase(), agenda);
-                ((ImageView) rootView.findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_in_process);
-                setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());
-                if (agenda.getObservaciones() == null || agenda.getObservaciones().length() <= 0)
-                    setTextViewText(R.id.detail_agenda_observacion, getString(R.string.label_agregue_observacion));
-                LocationUtils.getLocation(getContext(), new OnLocationResultListener() {
-                    @Override
-                    public void getLocationResult(Location location) {
+               @Override
+               public void onClick(View v) {
+                   setViewVisibility(R.id.detail_agenda_button_iniciar, View.GONE);
+                   setViewVisibility(R.id.detail_agenda_button_fin, View.VISIBLE);
+                   setViewVisibility(R.id.detail_agenda_button_cancelar, View.VISIBLE);
+                   getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(true);
+                   agenda.setEstadoAgenda(Contants.ESTADO_GESTIONANDO);
+                   agenda.setEstadoAgendaDescripcion(Contants.DESC_GESTIONANDO);
+                   agenda.setFechaInicioReal(Calendar.getInstance().getTime());
+                   Agenda.update(getDataBase(), agenda);
+                   agenda = Agenda.getAgenda(getDataBase(), idAgenda);
+                   if (agenda == null)
+                       agenda = Agenda.getAgendaClienteNull(getDataBase(), idAgenda);
+                   ((ImageView) rootView.findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_in_process);
+                   setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());
+                   if (agenda.getObservaciones() == null || agenda.getObservaciones().length() <= 0)
+                       setTextViewText(R.id.detail_agenda_observacion, getString(R.string.label_agregue_observacion));
+                   LocationUtils.getLocation(getContext(), new OnLocationResultListener() {
+                       @Override
+                       public void getLocationResult(Location location) {
 
-                    }
-                });
-            }});
+                       }
+                   });
+                   ValidateTareas();
+               }
+           });
 		   
 		   setButtonClickListener(R.id.detail_agenda_button_modificar, new OnClickListener() {
 
@@ -373,12 +377,14 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                    agenda.setEstadoAgenda(Contants.ESTADO_GESTIONANDO);
                    agenda.setEstadoAgendaDescripcion(Contants.DESC_GESTIONANDO);
                    getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(true);
-                   agenda.setFechaInicioReal(Calendar.getInstance().getTime());
+                   //agenda.setFechaInicioReal(Calendar.getInstance().getTime());
                    Agenda.update(getDataBase(), agenda);
                    ((ImageView) rootView.findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_in_process);
                    setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());
                    if (agenda.getObservaciones() == null || agenda.getObservaciones().length() <= 0)
                        setTextViewText(R.id.detail_agenda_observacion, getString(R.string.label_agregue_observacion));
+
+                   ValidateTareas();
 
                }
            });
@@ -404,6 +410,12 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                    setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());
                    if (agenda.getObservaciones() == null || agenda.getObservaciones().length() <= 0)
                        setTextViewText(R.id.detail_agenda_observacion, getString(R.string.label_sin_observaciones));
+
+                   agenda = Agenda.getAgenda(getDataBase(), idAgenda);
+                   if (agenda == null)
+                       agenda = Agenda.getAgendaClienteNull(getDataBase(), idAgenda);
+
+                   ValidateTareas();
                }
            });
 		   
@@ -472,60 +484,12 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 
                    ((ImageView) rootView.findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_visited);
                    setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());
+
+                   ValidateTareas();
                }
            });
-		   
-		   if(agenda.getAgendaTareas() != null){
-			   adapter = new ListaTareasAdapter(getActivity(), agenda.getAgendaTareas());
-			   lista_tarea = (ListView) rootView.findViewById(R.id.listView_tareas);
-			   lista_tarea.setAdapter(adapter);
-			   lista_tarea.setOnItemClickListener(new OnItemClickListener(){
 
-				@Override
-				public void onItemClick(AdapterView<?> parent, View view,
-						int position, long id) {
-					
-					if(agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO))
-						soloVista = false;
-					else
-						soloVista = true;
-
-                    if(soloVista)
-                        Toast.makeText(getContext(), R.string.message_solo_vista_tarea, Toast.LENGTH_LONG).show();
-
-					AgendaTarea setter = adapter.getItem(position);
-					if(setter.getTipoTarea().equalsIgnoreCase("A") || setter.getTipoTarea().equalsIgnoreCase("R"))
-					{
-						Actividad ata = Actividad.getActividadSimple(getDataBase(), setter.getIdTarea());
-						if(ata.getTipo() != null)
-						{
-							if(ata.getTipo().equalsIgnoreCase("C") || ata.getTipo().equalsIgnoreCase("V"))
-								showTareaCheckbox(ata, setter);	
-							if(ata.getTipo().equalsIgnoreCase("M"))
-								showTareaMultiSeleccion(ata, setter);
-							if(ata.getTipo().equalsIgnoreCase("S"))
-								showTareaSeleccion(ata, setter);
-							if(ata.getTipo().equalsIgnoreCase("T"))
-								showTareaTexto(ata, setter);
-						}
-					}
-					if(setter.getTipoTarea().equalsIgnoreCase("E"))
-						showTareaGrupo(setter);
-                    if(setter.getTipoTarea().equalsIgnoreCase("ADC") && !soloVista)
-                        showTareaActualizacion(setter);
-                }});
-			   
-			   if(agenda.getAgendaTareas().size() == 0)
-			   {
-				   rootView.findViewById(R.id.listView_tareas).setVisibility(View.GONE);
-				   rootView.findViewById(R.id.detail_agenda_empty_tareas).setVisibility(View.VISIBLE);
-			   }
-		   }
-		   else
-		   {
-			   rootView.findViewById(R.id.listView_tareas).setVisibility(View.GONE);
-			   rootView.findViewById(R.id.detail_agenda_empty_tareas).setVisibility(View.VISIBLE);
-		   }
+            ValidateTareas();
 		   
 		}
     }
@@ -644,6 +608,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 		intent.putExtra(ARG_ITEM_ID, agt.getIdTarea());
 		intent.putExtra(ARG_AGENDA_ID, agt.getIdAgenda());
 		intent.putExtra(ARG_RUTA_ID, agt.getIdRuta());
+        intent.putExtra(ActividadActivity.ARG_AGENDA_INT, agt.get_idAgenda());
 		intent.putExtra(ActividadActivity.ARG_VISTA, soloVista);
 		intent.putExtra(ActividadActivity.ARG_TITULO, agt.getNombreTarea());
 		startActivity(intent);
@@ -722,6 +687,79 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                     }
                 }
             }
+        }
+    }
+
+    public void ValidateTareas()
+    {
+        if(agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO) || agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_PENDIENTE) || agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_REPROGRAMADO))
+        {
+            if(agenda.getAgendaTareas() == null)
+                agenda.setAgendaTareaList(new ArrayList<AgendaTarea>());
+
+            AgendaTarea agregarTareas = new AgendaTarea();
+            agregarTareas.setIdAgenda(agenda.getIdAgenda());
+            agregarTareas.set_idAgenda(agenda.getID());
+            agregarTareas.setEstadoTarea("A");
+            agregarTareas.setIdRuta(0);
+            agregarTareas.setIdTarea(0);
+            agenda.getAgendaTareas().add(agregarTareas);
+        }
+
+        if(agenda.getAgendaTareas() != null){
+            adapter = new ListaTareasAdapter(getActivity(), agenda.getAgendaTareas());
+            lista_tarea = (ListView) getRootView().findViewById(R.id.listView_tareas);
+            lista_tarea.setAdapter(adapter);
+            lista_tarea.setOnItemClickListener(new OnItemClickListener(){
+
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view,
+                                        int position, long id) {
+
+                    if(agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO))
+                        soloVista = false;
+                    else
+                        soloVista = true;
+
+                    if(soloVista)
+                        Toast.makeText(getContext(), R.string.message_solo_vista_tarea, Toast.LENGTH_LONG).show();
+
+                    AgendaTarea setter = adapter.getItem(position);
+                    if(setter.getIdTarea() == 0)
+                    {
+                        showDialogFragment(TareasFragment.newInstance(agenda.getAgendaTareas(), agenda.getID()), "Tareas");
+                    }
+                    else {
+                        if (setter.getTipoTarea().equalsIgnoreCase("A") || setter.getTipoTarea().equalsIgnoreCase("R")) {
+                            Actividad ata = Actividad.getActividadSimple(getDataBase(), setter.getIdTarea());
+                            if (ata.getTipo() != null) {
+                                if (ata.getTipo().equalsIgnoreCase("C") || ata.getTipo().equalsIgnoreCase("V"))
+                                    showTareaCheckbox(ata, setter);
+                                if (ata.getTipo().equalsIgnoreCase("M"))
+                                    showTareaMultiSeleccion(ata, setter);
+                                if (ata.getTipo().equalsIgnoreCase("S"))
+                                    showTareaSeleccion(ata, setter);
+                                if (ata.getTipo().equalsIgnoreCase("T"))
+                                    showTareaTexto(ata, setter);
+                            }
+                        }
+                        if (setter.getTipoTarea().equalsIgnoreCase("E"))
+                            showTareaGrupo(setter);
+                        if (setter.getTipoTarea().equalsIgnoreCase("ADC") && !soloVista)
+                            showTareaActualizacion(setter);
+                    }
+                }});
+
+            if(agenda.getAgendaTareas().size() == 0)
+            {
+                getRootView().findViewById(R.id.listView_tareas).setVisibility(View.GONE);
+                getRootView().findViewById(R.id.detail_agenda_empty_tareas).setVisibility(View.VISIBLE);
+            }
+        }
+        else
+        {
+            getRootView().findViewById(R.id.listView_tareas).setVisibility(View.GONE);
+            getRootView().findViewById(R.id.detail_agenda_empty_tareas).setVisibility(View.VISIBLE);
         }
     }
 }

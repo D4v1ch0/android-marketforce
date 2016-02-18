@@ -228,14 +228,17 @@ public class ObservacionesFragment extends BaseFragment {
                             case PHOTO_1:
                                 ((ImageButton) getRootView().findViewById(R.id.obs_foto1)).setImageBitmap(Utils.resizeBitMapImage(path, 500, 500, rotation));
                                 agenda.setFoto1Int(path);
+                                agenda.setFoto1Ext(null);
                                 break;
                             case PHOTO_2:
                                 ((ImageButton) getRootView().findViewById(R.id.obs_foto2)).setImageBitmap(Utils.resizeBitMapImage(path, 500, 500, rotation));
                                 agenda.setFoto2Int(path);
+                                agenda.setFoto2Ext(null);
                                 break;
                             case PHOTO_3:
                                 ((ImageButton) getRootView().findViewById(R.id.obs_foto3)).setImageBitmap(Utils.resizeBitMapImage(path, 500, 500, rotation));
                                 agenda.setFoto3Int(path);
+                                agenda.setFoto3Ext(null);
                                 break;
                             default:
                                 break;
