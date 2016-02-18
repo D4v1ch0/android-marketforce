@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import java.util.List;
 import rp3.app.BaseFragment;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agente;
+import rp3.marketforce.radar.RadarFragment;
 
 /**
  * Created by magno_000 on 28/05/2015.
@@ -22,9 +25,10 @@ public class AgenteFragment extends BaseFragment {
     private ArrayList<Integer> respuestas;
     private ListView Grupo;
     private List<Agente> agentes;
+    private AgenteOportunidadAdapter adapter;
 
     public interface EditAgentesListener {
-        void onFinishAgentesDialog(Agente agente);
+        void onFinishAgentesDialog(ArrayList<Integer> agentes);
     }
 
     public static String ARG_AGENTES = "agentes";
@@ -40,41 +44,37 @@ public class AgenteFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        super.setContentView(R.layout.fragment_agente_radar);
+    }
+
+    @Override
+    public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
         respuestas = getArguments().getIntegerArrayList(ARG_AGENTES);
 
-        View view = inflater.inflate(R.layout.fragment_agentes, container);
+        List<Agente> agentes = Agente.getAgentes(getDataBase());
 
-        Grupo = (ListView) view.findViewById(R.id.list_agentes);
+        adapter = new AgenteOportunidadAdapter(this.getContext(), agentes, respuestas);
 
-        getDialog().setTitle("Agentes");
+        ((ListView) getRootView().findViewById(R.id.agentes_list)).setAdapter(adapter);
+        ((View)getRootView().findViewById(R.id.import_seleccionar_todos).getParent()).setVisibility(View.GONE);
 
-        final List<String> agentesString = new ArrayList<String>();
-        agentes = Agente.getAgentes(getDataBase());
-        List<Agente> realAgentes = new ArrayList<Agente>();
-        for(Agente agente: agentes)
-        {
-            if(respuestas.indexOf(agente.getIdAgente()) <= -1)
-            {
-                realAgentes.add(agente);
-                agentesString.add(agente.getNombre());
-            }
-        }
-
-        agentes = realAgentes;
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_list_item_1, agentesString.toArray(new String[agentesString.size()]));
-        Grupo.setAdapter(adapter);
-        Grupo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        getRootView().findViewById(R.id.agente_aceptar).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onClick(View v) {
                 CrearOportunidadFragment activity = (CrearOportunidadFragment) getParentFragment();
-                activity.onFinishAgentesDialog(agentes.get(i));
+                activity.onFinishAgentesDialog(adapter.getListNotShowed());
                 dismiss();
             }
         });
 
-        return view;
+        getRootView().findViewById(R.id.agente_cancelar).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
     }
 }

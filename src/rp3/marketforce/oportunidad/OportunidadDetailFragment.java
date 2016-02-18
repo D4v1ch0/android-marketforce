@@ -490,6 +490,7 @@ public class OportunidadDetailFragment extends BaseFragment {
 
             int position = 0;
             Calendar ant = Calendar.getInstance();
+            OportunidadEtapa antEtapa = null;
             ant.setTime(opt.getFechaCreacion());
             etapas_layout.removeAllViews();
             for (OportunidadEtapa etp : etapas) {
@@ -518,8 +519,10 @@ public class OportunidadDetailFragment extends BaseFragment {
                         if (etp.getEstado().equalsIgnoreCase("R")) {
                             ((ImageView) view_timeline.findViewById(R.id.etapa1_indicator)).setImageResource(R.drawable.timeline1);
                         }
-                        if(etp.getFechaInicio().getTime() > 0)
+                        if(etp.getFechaInicio().getTime() > 0) {
                             ((TextView) view_timeline.findViewById(R.id.etapa1_fecha)).setText(format1.format(etp.getFechaInicio()) + "/" + format2.format(etp.getFechaInicio()) + "/" + format3.format(etp.getFechaInicio()));
+                            ((TextView) view_timeline.findViewById(R.id.etapa1_fecha)).setTextColor(getResources().getColor(R.color.color_etapa4));
+                        }
                         Calendar thisDay = Calendar.getInstance();
                         if(etp.getFechaFin().getTime() > 0)
                             thisDay.setTime(etp.getFechaFin());
@@ -550,8 +553,37 @@ public class OportunidadDetailFragment extends BaseFragment {
                         if (etp.getEstado().equalsIgnoreCase("R")) {
                             ((ImageView) view_timeline.findViewById(R.id.etapa2_indicator)).setImageResource(R.drawable.timeline2);
                         }
-                        if(etp.getFechaInicio().getTime() > 0)
+                        if(etp.getFechaInicio().getTime() > 0) {
                             ((TextView) view_timeline.findViewById(R.id.etapa2_fecha)).setText(format1.format(etp.getFechaInicio()) + "/" + format2.format(etp.getFechaInicio()) + "/" + format3.format(etp.getFechaInicio()));
+                            if(antEtapa.getFechaFinPlan().getTime() > 0) {
+                                Calendar inicioReal = Calendar.getInstance();
+                                Calendar finPlan = Calendar.getInstance();
+                                inicioReal.setTime(etp.getFechaInicio());
+                                finPlan.setTime(antEtapa.getFechaFinPlan());
+                                long diff = CalendarUtils.DayDiff(inicioReal, finPlan);
+                                if(diff < 0)
+                                    ((TextView) view_timeline.findViewById(R.id.etapa2_fecha)).setTextColor(getResources().getColor(R.color.color_visited));
+                                else if(diff == 0)
+                                    ((TextView) view_timeline.findViewById(R.id.etapa2_fecha)).setTextColor(getResources().getColor(R.color.color_etapa4));
+                                else
+                                    ((TextView) view_timeline.findViewById(R.id.etapa2_fecha)).setTextColor(getResources().getColor(R.color.color_unvisited));
+                            }
+                            else
+                                ((TextView) view_timeline.findViewById(R.id.etapa2_fecha)).setTextColor(getResources().getColor(R.color.color_visited));
+                        }
+                        else if(antEtapa.getFechaFinPlan().getTime() > 0) {
+                            ((TextView) view_timeline.findViewById(R.id.etapa2_fecha)).setText(format1.format(antEtapa.getFechaFinPlan()) + "/" + format2.format(antEtapa.getFechaFinPlan()) + "/" + format3.format(antEtapa.getFechaFinPlan()));
+                            Calendar finPlan = Calendar.getInstance();
+                            finPlan.setTime(antEtapa.getFechaFinPlan());
+                            long diff = CalendarUtils.DayDiff(Calendar.getInstance(), finPlan);
+                            if(diff < 0)
+                                ((TextView) view_timeline.findViewById(R.id.etapa2_fecha)).setTextColor(getResources().getColor(R.color.color_visited));
+                            else if(diff == 0)
+                                ((TextView) view_timeline.findViewById(R.id.etapa2_fecha)).setTextColor(getResources().getColor(R.color.color_etapa4));
+                            else
+                                ((TextView) view_timeline.findViewById(R.id.etapa2_fecha)).setTextColor(getResources().getColor(R.color.color_unvisited));
+                        }
+
                         Calendar thisDay = Calendar.getInstance();
                         if (etp.getFechaFin().getTime() > 0)
                             thisDay.setTime(etp.getFechaFin());
@@ -582,8 +614,36 @@ public class OportunidadDetailFragment extends BaseFragment {
                         if (etp.getEstado().equalsIgnoreCase("R")) {
                             ((ImageView) view_timeline.findViewById(R.id.etapa3_indicator)).setImageResource(R.drawable.timeline3);
                         }
-                        if(etp.getFechaInicio().getTime() > 0)
+                        if(etp.getFechaInicio().getTime() > 0) {
                             ((TextView) view_timeline.findViewById(R.id.etapa3_fecha)).setText(format1.format(etp.getFechaInicio()) + "/" + format2.format(etp.getFechaInicio()) + "/" + format3.format(etp.getFechaInicio()));
+                            if(antEtapa.getFechaFinPlan().getTime() > 0) {
+                                Calendar inicioReal = Calendar.getInstance();
+                                Calendar finPlan = Calendar.getInstance();
+                                inicioReal.setTime(etp.getFechaInicio());
+                                finPlan.setTime(antEtapa.getFechaFinPlan());
+                                long diff = CalendarUtils.DayDiff(inicioReal, finPlan);
+                                if(diff < 0)
+                                    ((TextView) view_timeline.findViewById(R.id.etapa3_fecha)).setTextColor(getResources().getColor(R.color.color_visited));
+                                else if(diff == 0)
+                                    ((TextView) view_timeline.findViewById(R.id.etapa3_fecha)).setTextColor(getResources().getColor(R.color.color_etapa4));
+                                else
+                                    ((TextView) view_timeline.findViewById(R.id.etapa3_fecha)).setTextColor(getResources().getColor(R.color.color_unvisited));
+                            }
+                            else
+                                ((TextView) view_timeline.findViewById(R.id.etapa3_fecha)).setTextColor(getResources().getColor(R.color.color_visited));
+                        }
+                        else if(antEtapa.getFechaFinPlan().getTime() > 0) {
+                            ((TextView) view_timeline.findViewById(R.id.etapa3_fecha)).setText(format1.format(antEtapa.getFechaFinPlan()) + "/" + format2.format(antEtapa.getFechaFinPlan()) + "/" + format3.format(antEtapa.getFechaFinPlan()));
+                            Calendar finPlan = Calendar.getInstance();
+                            finPlan.setTime(antEtapa.getFechaFinPlan());
+                            long diff = CalendarUtils.DayDiff(Calendar.getInstance(), finPlan);
+                            if(diff < 0)
+                                ((TextView) view_timeline.findViewById(R.id.etapa3_fecha)).setTextColor(getResources().getColor(R.color.color_visited));
+                            else if(diff == 0)
+                                ((TextView) view_timeline.findViewById(R.id.etapa3_fecha)).setTextColor(getResources().getColor(R.color.color_etapa4));
+                            else
+                                ((TextView) view_timeline.findViewById(R.id.etapa3_fecha)).setTextColor(getResources().getColor(R.color.color_unvisited));
+                        }
                         Calendar thisDay = Calendar.getInstance();
                         if (etp.getFechaFin().getTime() > 0)
                             thisDay.setTime(etp.getFechaFin());
@@ -615,8 +675,36 @@ public class OportunidadDetailFragment extends BaseFragment {
                         if (etp.getEstado().equalsIgnoreCase("R")) {
                             ((ImageView) view_timeline.findViewById(R.id.etapa4_indicator)).setImageResource(R.drawable.timeline4);
                         }
-                        if(etp.getFechaInicio().getTime() > 0)
+                        if(etp.getFechaInicio().getTime() > 0) {
                             ((TextView) view_timeline.findViewById(R.id.etapa4_fecha)).setText(format1.format(etp.getFechaInicio()) + "/" + format2.format(etp.getFechaInicio()) + "/" + format3.format(etp.getFechaInicio()));
+                            if(antEtapa.getFechaFinPlan().getTime() > 0) {
+                                Calendar inicioReal = Calendar.getInstance();
+                                Calendar finPlan = Calendar.getInstance();
+                                inicioReal.setTime(etp.getFechaInicio());
+                                finPlan.setTime(antEtapa.getFechaFinPlan());
+                                long diff = CalendarUtils.DayDiff(inicioReal, finPlan);
+                                if(diff < 0)
+                                    ((TextView) view_timeline.findViewById(R.id.etapa4_fecha)).setTextColor(getResources().getColor(R.color.color_visited));
+                                else if(diff == 0)
+                                    ((TextView) view_timeline.findViewById(R.id.etapa4_fecha)).setTextColor(getResources().getColor(R.color.color_etapa4));
+                                else
+                                    ((TextView) view_timeline.findViewById(R.id.etapa4_fecha)).setTextColor(getResources().getColor(R.color.color_unvisited));
+                            }
+                            else
+                                ((TextView) view_timeline.findViewById(R.id.etapa4_fecha)).setTextColor(getResources().getColor(R.color.color_visited));
+                        }
+                        else if(antEtapa.getFechaFinPlan().getTime() > 0) {
+                            ((TextView) view_timeline.findViewById(R.id.etapa4_fecha)).setText(format1.format(antEtapa.getFechaFinPlan()) + "/" + format2.format(antEtapa.getFechaFinPlan()) + "/" + format3.format(antEtapa.getFechaFinPlan()));
+                            Calendar finPlan = Calendar.getInstance();
+                            finPlan.setTime(antEtapa.getFechaFinPlan());
+                            long diff = CalendarUtils.DayDiff(Calendar.getInstance(), finPlan);
+                            if(diff < 0)
+                                ((TextView) view_timeline.findViewById(R.id.etapa4_fecha)).setTextColor(getResources().getColor(R.color.color_visited));
+                            else if(diff == 0)
+                                ((TextView) view_timeline.findViewById(R.id.etapa4_fecha)).setTextColor(getResources().getColor(R.color.color_etapa4));
+                            else
+                                ((TextView) view_timeline.findViewById(R.id.etapa4_fecha)).setTextColor(getResources().getColor(R.color.color_unvisited));
+                        }
                         Calendar thisDay = Calendar.getInstance();
                         if (etp.getFechaFin().getTime() > 0)
                             thisDay.setTime(etp.getFechaFin());
@@ -647,8 +735,36 @@ public class OportunidadDetailFragment extends BaseFragment {
                         if (etp.getEstado().equalsIgnoreCase("R")) {
                             ((ImageView) view_timeline.findViewById(R.id.etapa5_indicator)).setImageResource(R.drawable.timeline5);
                         }
-                        if(etp.getFechaInicio().getTime() > 0)
+                        if(etp.getFechaInicio().getTime() > 0) {
                             ((TextView) view_timeline.findViewById(R.id.etapa5_fecha)).setText(format1.format(etp.getFechaInicio()) + "/" + format2.format(etp.getFechaInicio()) + "/" + format3.format(etp.getFechaInicio()));
+                            if(antEtapa.getFechaFinPlan().getTime() > 0) {
+                                Calendar inicioReal = Calendar.getInstance();
+                                Calendar finPlan = Calendar.getInstance();
+                                inicioReal.setTime(etp.getFechaInicio());
+                                finPlan.setTime(antEtapa.getFechaFinPlan());
+                                long diff = CalendarUtils.DayDiff(inicioReal, finPlan);
+                                if(diff < 0)
+                                    ((TextView) view_timeline.findViewById(R.id.etapa5_fecha)).setTextColor(getResources().getColor(R.color.color_visited));
+                                else if(diff == 0)
+                                    ((TextView) view_timeline.findViewById(R.id.etapa5_fecha)).setTextColor(getResources().getColor(R.color.color_etapa4));
+                                else
+                                    ((TextView) view_timeline.findViewById(R.id.etapa5_fecha)).setTextColor(getResources().getColor(R.color.color_unvisited));
+                            }
+                            else
+                                ((TextView) view_timeline.findViewById(R.id.etapa5_fecha)).setTextColor(getResources().getColor(R.color.color_visited));
+                        }
+                        else if(antEtapa.getFechaFinPlan().getTime() > 0) {
+                            ((TextView) view_timeline.findViewById(R.id.etapa5_fecha)).setText(format1.format(antEtapa.getFechaFinPlan()) + "/" + format2.format(antEtapa.getFechaFinPlan()) + "/" + format3.format(antEtapa.getFechaFinPlan()));
+                            Calendar finPlan = Calendar.getInstance();
+                            finPlan.setTime(antEtapa.getFechaFinPlan());
+                            long diff = CalendarUtils.DayDiff(Calendar.getInstance(), finPlan);
+                            if(diff < 0)
+                                ((TextView) view_timeline.findViewById(R.id.etapa5_fecha)).setTextColor(getResources().getColor(R.color.color_visited));
+                            else if(diff == 0)
+                                ((TextView) view_timeline.findViewById(R.id.etapa5_fecha)).setTextColor(getResources().getColor(R.color.color_etapa4));
+                            else
+                                ((TextView) view_timeline.findViewById(R.id.etapa5_fecha)).setTextColor(getResources().getColor(R.color.color_unvisited));
+                        }
                         Calendar thisDay = Calendar.getInstance();
                         if (etp.getFechaFin().getTime() > 0)
                             thisDay.setTime(etp.getFechaFin());
@@ -680,6 +796,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                     etapas_layout.addView(row_etapa);
                     position++;
                     ant.setTime(etp.getFechaFin());
+                    antEtapa = etp;
                 }
             }
 
