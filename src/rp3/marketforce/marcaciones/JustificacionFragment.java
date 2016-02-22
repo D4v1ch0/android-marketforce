@@ -93,7 +93,7 @@ public class JustificacionFragment extends BaseFragment {
                             Permiso.update(getDataBase(), permiso);
                             Bundle bundle = new Bundle();
                             bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
-                            requestSync(bundle);
+                            //requestSync(bundle);
                         }
 
                         getParentFragment().onResume();
@@ -126,8 +126,20 @@ public class JustificacionFragment extends BaseFragment {
                 this.getContext()));
 
         permiso = Permiso.getPermisoMarcacion(getDataBase(), 0);
-        if(permiso == null)
+        if(permiso == null) {
             permiso = new Permiso();
+            if(idMarcacion != 0) {
+                permiso.setObservacion("(Sin Justificación)");
+                permiso.setFecha(Calendar.getInstance().getTime());
+                permiso.setTipo("0");
+
+                Permiso.insert(getDataBase(), permiso);
+                if (permiso.getID() == 0)
+                    permiso.setID(getDataBase().queryMaxLong(Contract.Permiso.TABLE_NAME, Contract.Permiso._ID));
+                permiso.setIdMarcacion(idMarcacion);
+                Permiso.update(getDataBase(), permiso);
+            }
+        }
         else
         {
             try {
