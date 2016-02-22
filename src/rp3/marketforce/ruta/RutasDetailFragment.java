@@ -435,13 +435,15 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                    agenda.setEstadoAgendaDescripcion(Contants.DESC_VISITADO);
                    agenda.setFechaFinReal(Calendar.getInstance().getTime());
                    final Context ctx = getContext();
-                   Location location = LocationUtils.getLastLocation(ctx);
-                   if (location != null) {
-                       agenda.setLatitud(location.getLatitude());
-                       agenda.setLongitud(location.getLongitude());
-                       LatLng pos = new LatLng(agenda.getLatitud(), agenda.getLongitud());
-                       LatLng cli = new LatLng(agenda.getClienteDireccion().getLatitud(), agenda.getClienteDireccion().getLongitud());
-                       agenda.setDistancia((long) SphericalUtil.computeDistanceBetween(pos, cli));
+                   if (agenda.getLatitud() == 0 && agenda.getLongitud() == 0) {
+                       Location location = LocationUtils.getLastLocation(ctx);
+                       if (location != null) {
+                           agenda.setLatitud(location.getLatitude());
+                           agenda.setLongitud(location.getLongitude());
+                           LatLng pos = new LatLng(agenda.getLatitud(), agenda.getLongitud());
+                           LatLng cli = new LatLng(agenda.getClienteDireccion().getLatitud(), agenda.getClienteDireccion().getLongitud());
+                           agenda.setDistancia((long) SphericalUtil.computeDistanceBetween(pos, cli));
+                       }
                    }
                    agenda.setEnviado(false);
                    Agenda.update(getDataBase(), agenda);
@@ -452,7 +454,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                    bundle.putInt(ARG_AGENDA_ID, (int) idAgenda);
                    requestSync(bundle);
                    //new AsyncUpdater.UpdateAgenda().execute((int) idAgenda);
-                   if (location == null) {
+                   if (agenda.getLatitud() == 0 && agenda.getLongitud() == 0) {
                        try {
                            LocationUtils.getLocation(ctx, new OnLocationResultListener() {
 
