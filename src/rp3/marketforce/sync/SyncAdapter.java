@@ -8,6 +8,7 @@ import rp3.marketforce.Contants;
 import rp3.marketforce.ServerActivity;
 import rp3.marketforce.cliente.CrearClienteFragment;
 import rp3.marketforce.models.Tarea;
+import rp3.marketforce.pedido.ControlCajaFragment;
 import rp3.marketforce.pedido.CrearPedidoFragment;
 import rp3.marketforce.resumen.AgenteDetalleFragment;
 import rp3.marketforce.ruta.CrearVisitaFragment;
@@ -52,6 +53,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
     public static String SYNC_TYPE_UPDATE_PEDIDO = "update_pedido";
     public static String SYNC_TYPE_PRODUCTOS = "get_productos";
     public static String SYNC_TYPE_ANULAR_PEDIDO = "anular_pedido";
+    public static String SYNC_TYPE_UPDATE_CAJA = "update_caja";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -299,6 +301,10 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     long id = extras.getLong(CrearPedidoFragment.ARG_PEDIDO);
                     result = Pedido.executeSyncAnular(db, id);
                     addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_UPDATE_CAJA)) {
+                    long id = extras.getLong(ControlCajaFragment.ARG_CONTROL);
+                    result = Caja.executeSyncInsertControl(db, id);
+                    addDefaultMessage(result);
                 } else if (syncType.equals(SYNC_TYPE_INSERTAR_AGENDA)) {
                     long agenda = extras.getLong(CrearVisitaFragment.ARG_AGENDA);
                     result = Agenda.executeSyncInsert(db, agenda);
@@ -473,6 +479,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 
                     if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.marketforce.sync.Caja.executeSyncFormasPago(db);
+                        addDefaultMessage(result);
+                    }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Caja.executeSyncGetControl(db);
                         addDefaultMessage(result);
                     }
                 }

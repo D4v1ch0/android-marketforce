@@ -88,6 +88,12 @@ public class PedidoListFragment extends BaseFragment {
         }
     }
 
+    public void searchTransactions(String termSearch){
+        Bundle args = new Bundle();
+        args.putString(LoaderPedidos.STRING_SEARCH, termSearch);
+        executeLoader(0, args, loaderPedidos);
+    }
+
     public void ejecutarConsulta(){
         Bundle args = new Bundle();
         executeLoader(0, args, loaderPedidos);

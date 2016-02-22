@@ -19,6 +19,7 @@ import rp3.configuration.PreferenceManager;
 import rp3.content.SimpleIdentifiableAdapter;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
+import rp3.marketforce.models.pedido.ControlCaja;
 import rp3.marketforce.models.pedido.FormaPago;
 import rp3.marketforce.models.pedido.Pago;
 import rp3.util.Convert;
@@ -26,7 +27,7 @@ import rp3.util.Convert;
 /**
  * Created by magno_000 on 17/12/2015.
  */
-public class ArqueoCajaFragment extends BaseFragment {
+public class ArqueoCajaFragment extends BaseFragment implements ArqueoControlFragment.ControlCajaListener {
 
     private static final int DIALOG_FECHA = 1;
 
@@ -51,7 +52,8 @@ public class ArqueoCajaFragment extends BaseFragment {
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
 
-        showDialogDatePicker(DIALOG_FECHA);
+        //showDialogDatePicker(DIALOG_FECHA);
+        showDialogFragment(new ArqueoControlFragment(), "Cajas Aperturadas", "Cajas Aperturadas");
 
     }
 
@@ -60,7 +62,7 @@ public class ArqueoCajaFragment extends BaseFragment {
         switch (item.getItemId())
         {
             case R.id.action_nuevo_arqueo:
-                showDialogDatePicker(DIALOG_FECHA);
+                showDialogFragment(new ArqueoControlFragment(), "Cajas Aperturadas", "Cajas Aperturadas");
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -69,17 +71,11 @@ public class ArqueoCajaFragment extends BaseFragment {
     @Override
     public void onDailogDatePickerChange(int id, Calendar c) {
         super.onDailogDatePickerChange(id, c);
+    }
 
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        long inicio = Convert.getTicksFromDate(c.getTime());
-        c.set(Calendar.HOUR_OF_DAY, 23);
-        c.set(Calendar.MINUTE, 59);
-        c.set(Calendar.SECOND, 59);
-        long fin = Convert.getTicksFromDate(c.getTime());
-
-        List<Pago> pagos = Pago.getArqueoCaja(getDataBase(), inicio, fin);
+    @Override
+    public void onControlCajaSelected(ControlCaja transaction) {
+        List<Pago> pagos = Pago.getArqueoCaja(getDataBase(), transaction.getID());
 
         int cantidad = 0;
         double valor = 0;

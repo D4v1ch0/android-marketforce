@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,7 +43,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
 
     private static final int PARALLAX_SIZE = 0;
     private static final int DIALOG_SYNC_PRODUCTOS = 1;
-    private static final int DIALOG_ANULACION = 2;
+    private static final int DIALOG_CIERRE = 2;
 
     private PedidoListFragment transactionListFragment;
     private PedidoDetailFragment transactionDetailFragment;
@@ -53,6 +54,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
     public boolean isActiveListFragment = true;
     private long selectedClientId;
     private boolean isContact = false;
+    private String textSearch;
 
     public static PedidoFragment newInstance(int transactionTypeId) {
         PedidoFragment fragment = new PedidoFragment();
@@ -150,8 +152,44 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
     @Override
     public void onAfterCreateOptionsMenu(Menu menu) {
         this.menu = menu;
+        SearchView searchView = null;
+        MenuItem prob = menu.findItem(R.id.action_search);
+        if(prob != null)
+            searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
 
-        RefreshMenu();
+        if(searchView != null) {
+            int searchPlateId = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+            EditText searchPlate = (EditText) searchView.findViewById(searchPlateId);
+            searchPlate.setHintTextColor(getResources().getColor(R.color.color_hint));
+            searchPlate.setHint(getActivity().getResources().getString(R.string.hint_search_transaction_rutas));
+            searchPlate.setTextColor(getResources().getColor(R.color.apptheme_color));
+            searchPlate.setBackgroundResource(R.drawable.apptheme_edit_text_holo_light);
+
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    if (transactionListFragment != null)
+                        transactionListFragment.searchTransactions(query);
+                    return true;
+                }
+
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    if (TextUtils.isEmpty(newText) && !TextUtils.isEmpty(textSearch)) {
+                        try {
+                            transactionListFragment.searchTransactions("");
+                        } catch (Exception ex) {
+
+                        }
+                    }
+                    textSearch = newText;
+
+                    return true;
+
+                }
+            });
+        }
     }
 
     private void RefreshMenu(){
@@ -182,6 +220,12 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
             case R.id.action_arqueo_caja:
                 Intent intent = new Intent(getContext(), ArqueoCajaActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.action_aperturar_caja:
+                showDialogFragment(new ControlCajaFragment(), "Aperturar Caja", "Aperturar Caja");
+                break;
+            case R.id.action_cerrar_caja:
+                showDialogConfirmation(DIALOG_CIERRE, R.string.message_cierre_caja);
                 break;
             case R.id.action_anular_pedido:
                 if(transactionDetailFragment != null)
@@ -274,6 +318,9 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                 Bundle bundle = new Bundle();
                 bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_PRODUCTOS);
                 requestSync(bundle);
+                break;
+            case DIALOG_CIERRE:
+                //Aqui realizar el cierre de caja
                 break;
 
         }

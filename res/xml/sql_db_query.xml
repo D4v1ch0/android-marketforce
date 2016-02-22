@@ -1245,8 +1245,7 @@
         INNER JOIN tbPedido
         ON tbPedido._id = tbPago._IdPedido
         WHERE tbPedido.Estado = 'C'
-        AND tbPedido.FechaCreacion &gt;= ?
-        AND tbPedido.FechaCreacion &lt;= ?
+        AND tbPedido._IdControlCaja = ?
         GROUP BY tbPago.IdFormaPago
         UNION ALL
         SELECT COUNT(*) as _count,
@@ -1254,9 +1253,14 @@
         0 AS IdFormaPago
         FROM tbPedido
         WHERE tbPedido.TipoDocumento = 'NC'
-        AND tbPedido.FechaCreacion &gt;= ?
-        AND tbPedido.FechaCreacion &lt;= ?
+        AND tbPedido._IdControlCaja = ?
         GROUP BY tbPedido.TipoDocumento
+        UNION ALL
+        SELECT 1 as _count,
+        tbControlCaja.ValorApertura as Valor,
+        0 AS IdFormaPago
+        FROM tbControlCaja
+        WHERE tbControlCaja._id = ?
     </statement>
     <statement name="SimplePedidoSearch">
         SELECT

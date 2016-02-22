@@ -122,4 +122,42 @@ public class ControlCaja extends EntityBase<Pago> {
         c.close();
         return list;
     }
+
+    public static ControlCaja getControlCaja(DataBase db, long id) {
+        Cursor c = db.query(Contract.ControlCaja.TABLE_NAME, new String[]{Contract.ControlCaja._ID, Contract.ControlCaja.COLUMN_ID_CONTROL_CAJA, Contract.ControlCaja.COLUMN_ID_AGENTE, Contract.ControlCaja.COLUMN_ID_FECHA_APERTURA,
+                Contract.ControlCaja.COLUMN_ID_FECHA_CIERRE, Contract.ControlCaja.COLUMN_VALOR_APERTURA}, Contract.ControlCaja._ID + " = ?", new String[]{id + ""});
+
+        ControlCaja controlCaja = new ControlCaja();
+        while(c.moveToNext()){
+
+            controlCaja.setID(CursorUtils.getInt(c, Contract.ControlCaja._ID));
+            controlCaja.setIdControlCaja(CursorUtils.getInt(c, Contract.ControlCaja.COLUMN_ID_CONTROL_CAJA));
+            controlCaja.setFechaApertura(CursorUtils.getDate(c, Contract.ControlCaja.COLUMN_ID_FECHA_APERTURA));
+            controlCaja.setFechaCierre(CursorUtils.getDate(c, Contract.ControlCaja.COLUMN_ID_FECHA_CIERRE));
+            controlCaja.setIdAgente(CursorUtils.getInt(c, Contract.ControlCaja.COLUMN_ID_AGENTE));
+            controlCaja.setValorApertura(CursorUtils.getFloat(c, Contract.ControlCaja.COLUMN_VALOR_APERTURA));
+
+        }
+        c.close();
+        return controlCaja;
+    }
+
+    public static ControlCaja getControlCajaActiva(DataBase db) {
+        Cursor c = db.query(Contract.ControlCaja.TABLE_NAME, new String[]{Contract.ControlCaja._ID, Contract.ControlCaja.COLUMN_ID_CONTROL_CAJA, Contract.ControlCaja.COLUMN_ID_AGENTE, Contract.ControlCaja.COLUMN_ID_FECHA_APERTURA,
+                Contract.ControlCaja.COLUMN_ID_FECHA_CIERRE, Contract.ControlCaja.COLUMN_VALOR_APERTURA}, Contract.ControlCaja.COLUMN_ID_FECHA_CIERRE + " <= 0", new String[]{});
+
+        ControlCaja controlCaja = new ControlCaja();
+        while(c.moveToNext()){
+
+            controlCaja.setID(CursorUtils.getInt(c, Contract.ControlCaja._ID));
+            controlCaja.setIdControlCaja(CursorUtils.getInt(c, Contract.ControlCaja.COLUMN_ID_CONTROL_CAJA));
+            controlCaja.setFechaApertura(CursorUtils.getDate(c, Contract.ControlCaja.COLUMN_ID_FECHA_APERTURA));
+            controlCaja.setFechaCierre(CursorUtils.getDate(c, Contract.ControlCaja.COLUMN_ID_FECHA_CIERRE));
+            controlCaja.setIdAgente(CursorUtils.getInt(c, Contract.ControlCaja.COLUMN_ID_AGENTE));
+            controlCaja.setValorApertura(CursorUtils.getFloat(c, Contract.ControlCaja.COLUMN_VALOR_APERTURA));
+
+        }
+        c.close();
+        return controlCaja;
+    }
 }

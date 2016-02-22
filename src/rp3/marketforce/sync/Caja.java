@@ -6,13 +6,21 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.ksoap2.transport.HttpResponseException;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+
 import rp3.configuration.PreferenceManager;
 import rp3.connection.HttpConnection;
 import rp3.connection.WebService;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
 import rp3.marketforce.db.Contract;
+import rp3.marketforce.models.pedido.ControlCaja;
 import rp3.marketforce.models.pedido.FormaPago;
+import rp3.marketforce.models.pedido.Pago;
+import rp3.marketforce.models.pedido.PedidoDetalle;
+import rp3.runtime.Session;
+import rp3.util.Convert;
 
 /**
  * Created by magno_000 on 14/12/2015.
@@ -112,6 +120,92 @@ public class Caja {
                         formaPago.setDescripcion(jsonObject.getString("Descripcion"));
                         FormaPago.insert(db, formaPago);
                     }
+                }
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return SyncAdapter.SYNC_EVENT_ERROR;
+            }
+
+        }finally{
+            webService.close();
+        }
+
+        return SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
+    public static int executeSyncInsertControl(DataBase db, long idCaja){
+        WebService webService = new WebService("MartketForce","GuardarCaja");
+
+        ControlCaja controlUpload = rp3.marketforce.models.pedido.ControlCaja.getControlCaja(db, idCaja);
+
+        JSONObject jObject = new JSONObject();
+        try {
+
+            jObject.put("IdCaja", PreferenceManager.getInt(Contants.KEY_ID_CAJA));
+            jObject.put("IdEstablecimiento", PreferenceManager.getInt(Contants.KEY_ID_ESTABLECIMIENTO));
+            jObject.put("IdPuntoOperacion", PreferenceManager.getInt(Contants.KEY_ID_PUNTO_OPERACION));
+            jObject.put("IdEmpresa", PreferenceManager.getInt(Contants.KEY_ID_EMPRESA));
+            jObject.put("IdControlCaja", controlUpload.getIdControlCaja());
+            jObject.put("MontoApertura", controlUpload.getValorApertura());
+            jObject.put("FechaCierre", Convert.getDotNetTicksFromDate(controlUpload.getFechaCierre()));
+            jObject.put("MontoCierre", 0);
+            jObject.put("FechaApertura", Convert.getDotNetTicksFromDate(controlUpload.getFechaApertura()));
+            jObject.put("UsrApertura", Session.getUser().getLogonName());
+            jObject.put("UsrCierre", Session.getUser().getLogonName());
+
+        } catch (Exception ex) {
+
+        }
+
+        webService.addParameter("controlCaja", jObject);
+
+        try {
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+                controlUpload.setIdControlCaja(webService.getIntegerResponse());
+                ControlCaja.update(db, controlUpload);
+            } catch (HttpResponseException e) {
+                if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return rp3.content.SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return rp3.content.SyncAdapter.SYNC_EVENT_ERROR;
+            }
+
+        } finally {
+            webService.close();
+        }
+
+        return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
+    public static int executeSyncGetControl(DataBase db){
+        WebService webService = new WebService("MartketForce","GetControl");
+
+        try
+        {
+            webService.addStringParameter("@idCaja", PreferenceManager.getString(Contants.KEY_ID_CAJA));
+            webService.addStringParameter("@idEmpresa", PreferenceManager.getString(Contants.KEY_ID_EMPRESA));
+            webService.addStringParameter("@idEstablecimiento", PreferenceManager.getString(Contants.KEY_ID_ESTABLECIMIENTO));
+            webService.addStringParameter("@idPuntoOperacion", PreferenceManager.getString(Contants.KEY_ID_PUNTO_OPERACION));
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+                JSONObject jObject = webService.getJSONObjectResponse();
+                if(jObject != null && !jObject.isNull(Contants.KEY_SECUENCIA_FACTURA)) {
+                    ControlCaja control = new ControlCaja();
+                    control.setIdAgente(jObject.getInt("IdAgente"));
+                    control.setValorApertura(Float.parseFloat(jObject.getString("MontoApertura")));
+                    control.setFechaApertura(Convert.getDateFromDotNetTicks(jObject.getLong("FechaAperturaTicks")));
+
+                    ControlCaja.insert(db, control);
+
                 }
             } catch (HttpResponseException e) {
                 if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)

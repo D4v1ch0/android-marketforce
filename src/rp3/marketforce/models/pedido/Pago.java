@@ -165,8 +165,8 @@ public class Pago extends EntityBase<Pago> {
         return list;
     }
 
-    public static List<Pago> getArqueoCaja(DataBase db, long inicio, long fin) {
-        Cursor c = db.rawQuery(QueryDir.getQuery(Contract.Pago.QUERY_ARQUEO), new String[] {inicio + "", fin + "", inicio + "", fin + ""});
+    public static List<Pago> getArqueoCaja(DataBase db, long idControlCaja) {
+        Cursor c = db.rawQuery(QueryDir.getQuery(Contract.Pago.QUERY_ARQUEO), new String[] {idControlCaja + "", idControlCaja + "", idControlCaja + ""});
 
         List<Pago> list = new ArrayList<Pago>();
         while(c.moveToNext()){

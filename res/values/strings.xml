@@ -241,6 +241,7 @@
     <string name="label_nuevo_arqueo">Nuevo Arqueo</string>
     <string name="imprimir_arqueo">Imprimir Arqueo</string>
     <string name="message_anulacion">Desea anular esta transacción?</string>
+    <string name="message_cierre_caja">Desea cerrar caja?</string>
     <string name="action_nota_credito">Crear Nota de Crédito</string>
     <string name="label_motivo_anulacion">Motivo de Anulación:</string>
     <string name="label_eliminar_pago">Eliminar Pago</string>
