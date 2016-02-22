@@ -28,9 +28,9 @@ public class PedidoLoader extends
         List<Pedido> result = null;
 
         if(search == null || search.length() <= 0)
-            result = Pedido.getPedidos(db);
+            result = Pedido.getPedidos(db, search);
         else
-            result = Pedido.getPedidos(db);
+            result = Pedido.getPedidos(db, search);
 
 
         return result;

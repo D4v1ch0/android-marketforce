@@ -8,6 +8,7 @@ import java.util.List;
 
 import rp3.data.entity.EntityBase;
 import rp3.db.sqlite.DataBase;
+import rp3.marketforce.Contants;
 import rp3.marketforce.db.Contract;
 import rp3.util.CursorUtils;
 
@@ -40,6 +41,8 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
     private double porcentajeImpuesto;
     private double valorImpuesto;
     private double valorImpuestoTotal;
+    private int cantidadDevolucion;
+    private double baseICE;
 
     private Producto producto;
     private String codigoExterno;
@@ -265,6 +268,22 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
         this.codigoExterno = codigoExterno;
     }
 
+    public int getCantidadDevolucion() {
+        return cantidadDevolucion;
+    }
+
+    public void setCantidadDevolucion(int cantidadDevolucion) {
+        this.cantidadDevolucion = cantidadDevolucion;
+    }
+
+    public double getBaseICE() {
+        return baseICE;
+    }
+
+    public void setBaseICE(double baseICE) {
+        this.baseICE = baseICE;
+    }
+
     @Override
     public void setValues() {
         setValue(Contract.PedidoDetalle.COLUMN_ID_PEDIDO, this.idPedido);
@@ -290,6 +309,8 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
         setValue(Contract.PedidoDetalle.COLUMN_PORCENTAJE_IMPUESTO, this.porcentajeImpuesto);
         setValue(Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO, this.valorImpuesto);
         setValue(Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO_TOTAL, this.valorImpuestoTotal);
+        setValue(Contract.PedidoDetalle.COLUMN_CANTIDAD_DEVOLUCION, this.cantidadDevolucion);
+        setValue(Contract.PedidoDetalle.COLUMN_BASE_ICE, this.baseICE);
     }
 
     @Override
@@ -308,7 +329,7 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
                 Contract.PedidoDetalle.COLUMN_VALOR_TOTAL, Contract.PedidoDetalle.COLUMN_DESCRIPCION, Contract.PedidoDetalle.COLUMN_URL_FOTO, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE_CERO,
                 Contract.PedidoDetalle.COLUMN_SUBTOTAL, Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_DESCUENTO, Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_IMPUESTO, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_AUTOMATICO, Contract.PedidoDetalle.COLUMN_VALOR_DESC_AUTOMATICO,
                 Contract.PedidoDetalle.COLUMN_VALOR_DESC_AUTOMATICO_TOTAL, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_MANUAL, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_MANUAL, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_MANUAL_TOTAL, Contract.PedidoDetalle.COLUMN_PORCENTAJE_IMPUESTO,
-                Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO, Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO_TOTAL}
+                Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO, Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO_TOTAL, Contract.PedidoDetalle.COLUMN_BASE_ICE, Contract.PedidoDetalle.COLUMN_CANTIDAD_DEVOLUCION}
                 ,Contract.PedidoDetalle.COLUMN_ID_PEDIDO + " = ? ", new String[]{idPedido + ""});
 
         List<PedidoDetalle> list = new ArrayList<PedidoDetalle>();
@@ -352,7 +373,7 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
                 Contract.PedidoDetalle.COLUMN_VALOR_TOTAL, Contract.PedidoDetalle.COLUMN_DESCRIPCION, Contract.PedidoDetalle.COLUMN_URL_FOTO, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE_CERO,
                 Contract.PedidoDetalle.COLUMN_SUBTOTAL, Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_DESCUENTO, Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_IMPUESTO, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_AUTOMATICO, Contract.PedidoDetalle.COLUMN_VALOR_DESC_AUTOMATICO,
                 Contract.PedidoDetalle.COLUMN_VALOR_DESC_AUTOMATICO_TOTAL, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_MANUAL, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_MANUAL, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_MANUAL_TOTAL, Contract.PedidoDetalle.COLUMN_PORCENTAJE_IMPUESTO,
-                Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO, Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO_TOTAL}
+                Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO, Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO_TOTAL,  Contract.PedidoDetalle.COLUMN_BASE_ICE, Contract.PedidoDetalle.COLUMN_CANTIDAD_DEVOLUCION}
                 ,Contract.PedidoDetalle.COLUMN_ID_PEDIDO_INT + " = ? ", new String[]{idPedido + ""});
 
         List<PedidoDetalle> list = new ArrayList<PedidoDetalle>();

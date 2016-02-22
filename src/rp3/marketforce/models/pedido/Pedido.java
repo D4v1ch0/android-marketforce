@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import rp3.data.entity.EntityBase;
+import rp3.db.QueryDir;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.db.Contract;
 import rp3.marketforce.models.Cliente;
@@ -40,6 +41,14 @@ public class Pedido extends EntityBase<Pedido> {
     private double baseImponibleCero;
     private String motivoAnulacion;
     private String observacionAnulacion;
+    private String nombre;
+    private long _idDocumentoRef;
+    private int idDocumentoRef;
+    private Date fechaAnulacion;
+    private double totalImpuesto2;
+    private double totalImpuesto3;
+    private double totalImpuesto4;
+    private long _idControlCaja;
 
     private List<PedidoDetalle> pedidoDetalles;
     private List<Pago> pagos;
@@ -177,6 +186,70 @@ public class Pedido extends EntityBase<Pedido> {
         this.numeroDocumento = numeroDocumento;
     }
 
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public long get_idDocumentoRef() {
+        return _idDocumentoRef;
+    }
+
+    public void set_idDocumentoRef(long _idDocumentoRef) {
+        this._idDocumentoRef = _idDocumentoRef;
+    }
+
+    public int getIdDocumentoRef() {
+        return idDocumentoRef;
+    }
+
+    public void setIdDocumentoRef(int idDocumentoRef) {
+        this.idDocumentoRef = idDocumentoRef;
+    }
+
+    public Date getFechaAnulacion() {
+        return fechaAnulacion;
+    }
+
+    public void setFechaAnulacion(Date fechaAnulacion) {
+        this.fechaAnulacion = fechaAnulacion;
+    }
+
+    public double getTotalImpuesto2() {
+        return totalImpuesto2;
+    }
+
+    public void setTotalImpuesto2(double totalImpuesto2) {
+        this.totalImpuesto2 = totalImpuesto2;
+    }
+
+    public double getTotalImpuesto3() {
+        return totalImpuesto3;
+    }
+
+    public void setTotalImpuesto3(double totalImpuesto3) {
+        this.totalImpuesto3 = totalImpuesto3;
+    }
+
+    public double getTotalImpuesto4() {
+        return totalImpuesto4;
+    }
+
+    public void setTotalImpuesto4(double totalImpuesto4) {
+        this.totalImpuesto4 = totalImpuesto4;
+    }
+
+    public long get_idControlCaja() {
+        return _idControlCaja;
+    }
+
+    public void set_idControlCaja(long _idControlCaja) {
+        this._idControlCaja = _idControlCaja;
+    }
+
     public String getObservaciones() {
         return observaciones;
     }
@@ -275,7 +348,7 @@ public class Pedido extends EntityBase<Pedido> {
         setValue(Contract.Pedido.COLUMN_EMAIL, this.email);
         setValue(Contract.Pedido.COLUMN_ESTADO, this.estado);
         setValue(Contract.Pedido.COLUMN_FECHA_CREACION, this.fechaCreacion);
-        setValue(Contract.Pedido.COLUMN_NUMERO_DOCUMENTO, this.numeroDocumento);
+        //setValue(Contract.Pedido.COLUMN_NUMERO_DOCUMENTO, this.numeroDocumento);
         setValue(Contract.Pedido.COLUMN_TIPO_DOCUMENTO, this.tipoDocumento);
         setValue(Contract.Pedido.COLUMN_OBSERVACIONES, this.observaciones);
         setValue(Contract.Pedido.COLUMN_TOTAL_DESCUENTOS, this.totalDescuentos);
@@ -301,12 +374,11 @@ public class Pedido extends EntityBase<Pedido> {
         return null;
     }
 
-    public static List<Pedido> getPedidos(DataBase db) {
-        Cursor c = db.query(Contract.Pedido.TABLE_NAME, new String[] {Contract.Pedido._ID, Contract.Pedido.COLUMN_ID_PEDIDO, Contract.Pedido.COLUMN_ID_AGENDA, Contract.Pedido.COLUMN_ID_AGENDA_INT,
-                Contract.Pedido.COLUMN_ID_CLIENTE, Contract.Pedido.COLUMN_VALOR_TOTAL, Contract.Pedido.COLUMN_EMAIL, Contract.Pedido.COLUMN_ESTADO, Contract.Pedido.COLUMN_FECHA_CREACION, Contract.Pedido.COLUMN_ID_CLIENTE_INT,
-                Contract.Pedido.COLUMN_NUMERO_DOCUMENTO, Contract.Pedido.COLUMN_TIPO_DOCUMENTO, Contract.Pedido.COLUMN_OBSERVACIONES, Contract.Pedido.COLUMN_TOTAL_DESCUENTOS, Contract.Pedido.COLUMN_TOTAL_IMPUESTOS, Contract.Pedido.COLUMN_SUBTOTAL,
-                Contract.Pedido.COLUMN_SUBTOTAL_SIN_DESCUENTO, Contract.Pedido.COLUMN_REDONDEO, Contract.Pedido.COLUMN_EXCEDENTE, Contract.Pedido.COLUMN_BASE_IMPONIBLE, Contract.Pedido.COLUMN_BASE_IMPONIBLE_CERO}
-                ,null, null, null,null, Contract.Pedido.COLUMN_FECHA_CREACION);
+    public static List<Pedido> getPedidos(DataBase db, String termSearch) {
+        String query = QueryDir.getQuery( Contract.Pedido.QUERY_PEDIDOS );
+        Cursor c = null;
+
+        c = db.rawQuery(query, new String[]{termSearch + "*"});
 
         List<Pedido> list = new ArrayList<Pedido>();
         while(c.moveToNext()){
@@ -329,7 +401,7 @@ public class Pedido extends EntityBase<Pedido> {
                 pedido.setPagos(Pago.getPagosInt(db, pedido.getID()));
             }
             pedido.setTipoDocumento(CursorUtils.getString(c, Contract.Pedido.COLUMN_TIPO_DOCUMENTO));
-            pedido.setNumeroDocumento(CursorUtils.getString(c, Contract.Pedido.COLUMN_NUMERO_DOCUMENTO));
+            pedido.setNumeroDocumento(CursorUtils.getString(c, Contract.Pedido.FIELD_NUMERO_DOCUMENTO));
             pedido.set_idCliente(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_CLIENTE_INT));
             pedido.setObservaciones(CursorUtils.getString(c, Contract.Pedido.COLUMN_OBSERVACIONES));
             pedido.setTotalDescuentos(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_TOTAL_DESCUENTOS));
@@ -351,12 +423,10 @@ public class Pedido extends EntityBase<Pedido> {
     }
 
     public static Pedido getPedido(DataBase db, long id) {
-        Cursor c = db.query(Contract.Pedido.TABLE_NAME, new String[] {Contract.Pedido._ID, Contract.Pedido.COLUMN_ID_PEDIDO, Contract.Pedido.COLUMN_ID_AGENDA, Contract.Pedido.COLUMN_ID_AGENDA_INT,
-                Contract.Pedido.COLUMN_ID_CLIENTE, Contract.Pedido.COLUMN_VALOR_TOTAL, Contract.Pedido.COLUMN_EMAIL, Contract.Pedido.COLUMN_ESTADO, Contract.Pedido.COLUMN_FECHA_CREACION, Contract.Pedido.COLUMN_ID_CLIENTE_INT,
-                Contract.Pedido.COLUMN_NUMERO_DOCUMENTO, Contract.Pedido.COLUMN_TIPO_DOCUMENTO, Contract.Pedido.COLUMN_OBSERVACIONES, Contract.Pedido.COLUMN_TOTAL_DESCUENTOS, Contract.Pedido.COLUMN_TOTAL_IMPUESTOS, Contract.Pedido.COLUMN_SUBTOTAL,
-                Contract.Pedido.COLUMN_SUBTOTAL_SIN_DESCUENTO, Contract.Pedido.COLUMN_REDONDEO, Contract.Pedido.COLUMN_EXCEDENTE, Contract.Pedido.COLUMN_BASE_IMPONIBLE, Contract.Pedido.COLUMN_BASE_IMPONIBLE_CERO,
-                Contract.Pedido.COLUMN_MOTIVO_ANULACION, Contract.Pedido.COLUMN_OBSERVACION_ANULACION}
-                ,Contract.Pedido._ID + " = ? ", new String[]{id + ""}, null,null, Contract.Pedido.COLUMN_FECHA_CREACION);
+        String query = QueryDir.getQuery( Contract.Pedido.QUERY_PEDIDOS_BY_ID );
+        Cursor c = null;
+
+        c = db.rawQuery(query, new String[] {id + ""});
 
         Pedido pedido = new Pedido();
         while(c.moveToNext()){
@@ -381,7 +451,7 @@ public class Pedido extends EntityBase<Pedido> {
                 pedido.setPagos(Pago.getPagosInt(db, pedido.getID()));
             }
             pedido.setTipoDocumento(CursorUtils.getString(c, Contract.Pedido.COLUMN_TIPO_DOCUMENTO));
-            pedido.setNumeroDocumento(CursorUtils.getString(c, Contract.Pedido.COLUMN_NUMERO_DOCUMENTO));
+            pedido.setNumeroDocumento(CursorUtils.getString(c, Contract.Pedido.FIELD_NUMERO_DOCUMENTO));
             pedido.set_idCliente(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_CLIENTE_INT));
             pedido.setObservaciones(CursorUtils.getString(c, Contract.Pedido.COLUMN_OBSERVACIONES));
             pedido.setTotalDescuentos(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_TOTAL_DESCUENTOS));
@@ -404,7 +474,7 @@ public class Pedido extends EntityBase<Pedido> {
         return pedido;
     }
 
-    public static Pedido getPedidoByAgenda(DataBase db, long idAgenda) {
+    /*public static Pedido getPedidoByAgenda(DataBase db, long idAgenda) {
         Cursor c = db.query(Contract.Pedido.TABLE_NAME, new String[] {Contract.Pedido._ID, Contract.Pedido.COLUMN_ID_PEDIDO, Contract.Pedido.COLUMN_ID_AGENDA, Contract.Pedido.COLUMN_ID_AGENDA_INT,
                 Contract.Pedido.COLUMN_ID_CLIENTE, Contract.Pedido.COLUMN_VALOR_TOTAL, Contract.Pedido.COLUMN_EMAIL, Contract.Pedido.COLUMN_ESTADO, Contract.Pedido.COLUMN_FECHA_CREACION, Contract.Pedido.COLUMN_ID_CLIENTE_INT,
                 Contract.Pedido.COLUMN_NUMERO_DOCUMENTO, Contract.Pedido.COLUMN_TIPO_DOCUMENTO, Contract.Pedido.COLUMN_OBSERVACIONES, Contract.Pedido.COLUMN_TOTAL_DESCUENTOS, Contract.Pedido.COLUMN_TOTAL_IMPUESTOS, Contract.Pedido.COLUMN_SUBTOTAL,
@@ -432,5 +502,179 @@ public class Pedido extends EntityBase<Pedido> {
         }
         c.close();
         return pedido;
+    }*/
+
+    @Override
+    protected boolean insertDb(DataBase db) {
+        boolean result = false;
+        try
+        {
+            result = super.insertDb(db);
+            if(result)
+            {
+                PedidoExt cl_ex = new PedidoExt();
+                result = PedidoExt.insert(db, cl_ex);
+            }
+        }catch(Exception ex){
+            result = false;
+        }finally{
+        }
+        return result;
     }
+
+
+    @Override
+    protected boolean updateDb(DataBase db) {
+        boolean result = false;
+        try
+        {
+            result = super.updateDb(db);
+            if(result){
+                PedidoExt cl_ex = new PedidoExt();
+                result = PedidoExt.update(db, cl_ex);
+            }
+        }catch(Exception ex){
+            result = false;
+        }finally{
+        }
+        return result;
+    }
+
+    public class PedidoExt extends EntityBase<PedidoExt>{
+
+        @Override
+        public long getID() {
+            return id;
+        }
+
+        @Override
+        public void setID(long idext) {
+            id = idext;
+        }
+
+        @Override
+        public boolean isAutoGeneratedId() {
+            return false;
+        }
+
+        @Override
+        public String getTableName() {
+            return Contract.ProductoExt.TABLE_NAME;
+        }
+
+        @Override
+        public void setValues() {
+            setValue(Contract.PedidoExt.COLUMN_NOMBRE, nombre);
+            setValue(Contract.PedidoExt.COLUMN_NUMERO_DOCUMENTO, numeroDocumento);
+        }
+
+        @Override
+        public String getWhere() {
+            return Contract.ProductoExt.COLUMN_ID + " = ?";
+        }
+
+        @Override
+        public Object getValue(String key) {
+            return null;
+        }
+
+        @Override
+        public String getDescription() {
+            return null;
+        }
+    }
+
+    public static List<Producto> getProductoSearch(DataBase db, String termSearch)
+    {
+        String query = QueryDir.getQuery(Contract.Producto.QUERY_SEARCH);
+        //String version = db.getSQLiteVersion();
+        //int compare = Convert.versionCompare(version, Contants.SQLITE_VERSION_SEARCH);
+        Cursor c = null;
+
+        c = db.rawQuery(query, new String[]{termSearch + "*"});
+
+
+        List<Producto> list = new ArrayList<Producto>();
+        while(c.moveToNext()){
+            Producto prod = new Producto();
+            prod.setID(c.getInt(0));
+            prod.setDescripcion(CursorUtils.getString(c, Contract.Producto.FIELD_DESCRIPCION));
+            prod.setIdSubCategoria(CursorUtils.getInt(c, Contract.Producto.COLUMN_ID_SUBCATEGORIA));
+            prod.setIdProducto(CursorUtils.getInt(c, Contract.Producto.COLUMN_ID_PRODUCTO));
+            prod.setValorUnitario(CursorUtils.getDouble(c, Contract.Producto.COLUMN_VALOR_UNITARIO));
+            prod.setUrlFoto(CursorUtils.getString(c, Contract.Producto.COLUMN_URL_FOTO));
+            prod.setIdBeneficio(CursorUtils.getInt(c, Contract.Producto.COLUMN_ID_BENEFICIO));
+            prod.setCodigoExterno(CursorUtils.getString(c, Contract.Producto.COLUMN_CODIGO_EXTERNO));
+            prod.setPorcentajeImpuesto(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_IMPUESTO));
+            prod.setPorcentajeDescuento(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_DESCUENTO));
+            prod.setPrecioDescuento(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_DESCUENTO));
+            prod.setPrecioImpuesto(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_IMPUESTO));
+            list.add(prod);
+        }
+        c.close();
+        return list;
+    }
+
+    public static List<Producto> getProductoSearch(DataBase db, String termSearch, int idSubCategoria)
+    {
+        String query = QueryDir.getQuery( Contract.Producto.QUERY_SEARCH_BY_CATEGORIA );
+        //String version = db.getSQLiteVersion();
+        //int compare = Convert.versionCompare(version, Contants.SQLITE_VERSION_SEARCH);
+        Cursor c = null;
+
+        c = db.rawQuery(query, new String[]{termSearch + "*", idSubCategoria + ""});
+
+
+        List<Producto> list = new ArrayList<Producto>();
+        while(c.moveToNext()){
+            Producto prod = new Producto();
+            prod.setID(c.getInt(0));
+            prod.setDescripcion(CursorUtils.getString(c, Contract.Producto.FIELD_DESCRIPCION));
+            prod.setIdSubCategoria(CursorUtils.getInt(c, Contract.Producto.COLUMN_ID_SUBCATEGORIA));
+            prod.setIdProducto(CursorUtils.getInt(c, Contract.Producto.COLUMN_ID_PRODUCTO));
+            prod.setValorUnitario(CursorUtils.getDouble(c, Contract.Producto.COLUMN_VALOR_UNITARIO));
+            prod.setUrlFoto(CursorUtils.getString(c, Contract.Producto.COLUMN_URL_FOTO));
+            prod.setIdBeneficio(CursorUtils.getInt(c, Contract.Producto.COLUMN_ID_BENEFICIO));
+            prod.setCodigoExterno(CursorUtils.getString(c, Contract.Producto.COLUMN_CODIGO_EXTERNO));
+            prod.setPorcentajeImpuesto(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_IMPUESTO));
+            prod.setPorcentajeDescuento(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_DESCUENTO));
+            prod.setPrecioDescuento(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_DESCUENTO));
+            prod.setPrecioImpuesto(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_IMPUESTO));
+            list.add(prod);
+        }
+        c.close();
+        return list;
+    }
+
+    public static List<Producto> getProductoByCodigoExterno(DataBase db, String codigoExterno)
+    {
+        String query = QueryDir.getQuery( Contract.Producto.QUERY_SEARCH_BY_CODIGO_EXTERNO );
+        //String version = db.getSQLiteVersion();
+        //int compare = Convert.versionCompare(version, Contants.SQLITE_VERSION_SEARCH);
+        Cursor c = null;
+
+        c = db.rawQuery(query, new String[]{codigoExterno});
+
+
+        List<Producto> list = new ArrayList<Producto>();
+        while(c.moveToNext()){
+            Producto prod = new Producto();
+            prod.setID(c.getInt(0));
+            prod.setDescripcion(CursorUtils.getString(c, Contract.Producto.FIELD_DESCRIPCION));
+            prod.setIdSubCategoria(CursorUtils.getInt(c, Contract.Producto.COLUMN_ID_SUBCATEGORIA));
+            prod.setIdProducto(CursorUtils.getInt(c, Contract.Producto.COLUMN_ID_PRODUCTO));
+            prod.setValorUnitario(CursorUtils.getDouble(c, Contract.Producto.COLUMN_VALOR_UNITARIO));
+            prod.setUrlFoto(CursorUtils.getString(c, Contract.Producto.COLUMN_URL_FOTO));
+            prod.setIdBeneficio(CursorUtils.getInt(c, Contract.Producto.COLUMN_ID_BENEFICIO));
+            prod.setCodigoExterno(CursorUtils.getString(c, Contract.Producto.COLUMN_CODIGO_EXTERNO));
+            prod.setPorcentajeImpuesto(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_IMPUESTO));
+            prod.setPorcentajeDescuento(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_DESCUENTO));
+            prod.setPrecioDescuento(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_DESCUENTO));
+            prod.setPrecioImpuesto(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_IMPUESTO));
+            list.add(prod);
+        }
+        c.close();
+        return list;
+    }
+
 }

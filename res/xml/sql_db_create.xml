@@ -282,7 +282,6 @@
         Email TEXT,
         Estado TEXT,
         FechaCreacion INTEGER,
-        NumeroDocumento TEXT,
         TotalDescuentos REAL,
         TotalImpuestos REAL,
         Redondeo REAL,
@@ -296,7 +295,19 @@
         MotivoAnulacion TEXT,
         ObservacionAnulacion TEXT,
         _IdDocumentoRef INTEGER,
-        IdDocumentoRef INTEGER
+        IdDocumentoRef INTEGER,
+        FechaAnulacion INTEGER,
+        TotalImpuesto2 REAL,
+        TotalImpuesto3 REAL,
+        TotalImpuesto4 REAL,
+        _IdControlCaja INTEGER
+        )
+    </statement>
+    <statement>
+        CREATE VIRTUAL TABLE tbPedidoExt USING fts4 (
+        Nombre,
+        NumeroDocumento,
+        tokenize=porter
         )
     </statement>
     <statement>
@@ -324,7 +335,9 @@
         PorcDescAutomatico REAL,
         PorcImpuestoIvaVenta REAL,
         ValorImpuestoIvaVenta REAL,
-        ValorImpuestoIvaVentaTotal REAL
+        ValorImpuestoIvaVentaTotal REAL,
+        CantidadDevolucion INTEGER,
+        BaseICE REAL
         )
     </statement>
     <statement>
@@ -379,6 +392,16 @@
         IdFormaPago INTEGER,
         Observacion TEXT,
         Valor REAL
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbControlCaja(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdControlCaja INTEGER,
+        IdAgente INTEGER,
+        FechaApertura INTEGER,
+        FechaCierre INTEGER,
+        ValorApertura REAL
         )
     </statement>
 </sql>

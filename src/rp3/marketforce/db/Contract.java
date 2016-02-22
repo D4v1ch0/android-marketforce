@@ -556,7 +556,6 @@ public final class Contract {
 		public static final String COLUMN_FECHA_CREACION = "FechaCreacion";
 		public static final String COLUMN_ID_AGENDA_INT = "_IdAgenda";
 		public static final String COLUMN_ID_CLIENTE_INT = "_IdCliente";
-		public static final String COLUMN_NUMERO_DOCUMENTO = "NumeroDocumento";
 		public static final String COLUMN_TOTAL_DESCUENTOS = "TotalDescuentos";
 		public static final String COLUMN_TOTAL_IMPUESTOS = "TotalImpuestos";
 		public static final String COLUMN_REDONDEO = "Redondeo";
@@ -569,6 +568,28 @@ public final class Contract {
 		public static final String COLUMN_OBSERVACIONES = "Observaciones";
 		public static final String COLUMN_MOTIVO_ANULACION = "MotivoAnulacion";
 		public static final String COLUMN_OBSERVACION_ANULACION = "ObservacionAnulacion";
+		public static final String COLUMN_ID_DOCUMENTO_REF_INT = "_IdDocumentoRef";
+		public static final String COLUMN_ID_DOCUMENTO_REF = "IdDocumentoRef";
+		public static final String COLUMN_FECHA_ANULACION = "FechaAnulacion";
+		public static final String COLUMN_TOTAL_IMPUESTO2 = "TotalImpuesto2";
+		public static final String COLUMN_TOTAL_IMPUESTO3 = "TotalImpuesto3";
+		public static final String COLUMN_TOTAL_IMPUESTO4 = "TotalImpuesto4";
+		public static final String COLUMN_ID_CONTROL_CAJA_INT = "_IdControlCaja";
+
+		public static final String FIELD_NUMERO_DOCUMENTO = Contract.PedidoExt.TABLE_NAME + "_" + Contract.PedidoExt.COLUMN_NOMBRE;
+		public static final String FIELD_NOMBRE = Contract.PedidoExt.TABLE_NAME + "_" + Contract.PedidoExt.COLUMN_NUMERO_DOCUMENTO;
+
+		public static final String QUERY_PEDIDOS = "SimplePedidoSearch";
+		public static final String QUERY_PEDIDOS_BY_ID = "SimplePedidoSearch";
+
+	}
+
+	public static abstract class PedidoExt implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbPedidoExt";
+		public static final String COLUMN_ID = "docid";
+		public static final String COLUMN_NOMBRE = "Nombre";
+		public static final String COLUMN_NUMERO_DOCUMENTO = "NumeroDocumento";
 
 	}
 
@@ -599,6 +620,8 @@ public final class Contract {
 		public static final String COLUMN_PORCENTAJE_IMPUESTO = "PorcImpuestoIvaVenta";
 		public static final String COLUMN_VALOR_IMPUESTO = "ValorImpuestoIvaVenta";
 		public static final String COLUMN_VALOR_IMPUESTO_TOTAL = "ValorImpuestoIvaVentaTotal";
+		public static final String COLUMN_CANTIDAD_DEVOLUCION = "CantidadDevolucion";
+		public static final String COLUMN_BASE_ICE = "BaseICE";
 
 	}
 
@@ -677,6 +700,19 @@ public final class Contract {
 		public static final String COLUMN_VALOR = "Valor";
 
 		public static final String QUERY_ARQUEO = "ArqueoCajaQuery";
+
+	}
+
+	public static abstract class ControlCaja implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbControlCaja";
+
+		public static final String COLUMN_ID_CONTROL_CAJA = "IdControlCaja";
+		public static final String COLUMN_ID_AGENTE = "IdAgente";
+		public static final String COLUMN_ID_FECHA_APERTURA = "FechaApertura";
+		public static final String COLUMN_ID_FECHA_CIERRE = "FechaCierre";
+		public static final String COLUMN_VALOR_APERTURA = "ValorApertura";
+
 
 	}
 }

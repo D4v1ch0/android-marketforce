@@ -849,7 +849,10 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         for(PedidoDetalle detalle : pedido.getPedidoDetalles())
         {
             toPrint = toPrint + StringUtils.leftStringInSpace(detalle.getCodigoExterno(), 6) + " ";
-            toPrint = toPrint + StringUtils.leftStringInSpace(detalle.getDescripcion().substring(0,28), 28);
+            if(detalle.getDescripcion().length() > 28)
+                toPrint = toPrint + StringUtils.leftStringInSpace(detalle.getDescripcion().substring(0,28), 28);
+            else
+                toPrint = toPrint + StringUtils.leftStringInSpace(detalle.getDescripcion(), 28);
             toPrint = toPrint + '\n';
             toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(detalle.getValorUnitario()), 10) + " ";
             toPrint = toPrint + StringUtils.rightStringInSpace(detalle.getCantidad() + "", 5) + " ";

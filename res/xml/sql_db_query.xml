@@ -1258,4 +1258,91 @@
         AND tbPedido.FechaCreacion &lt;= ?
         GROUP BY tbPedido.TipoDocumento
     </statement>
+    <statement name="SimplePedidoSearch">
+        SELECT
+        tbPedido._id AS _id,
+        tbPedido.IdPedido,
+        tbPedido._IdAgenda,
+        tbPedido.IdAgenda,
+        tbPedido._IdCliente,
+        tbPedido.IdCliente,
+        tbPedido.ValorTotal,
+        tbPedido.Email,
+        tbPedido.Estado,
+        tbPedido.FechaCreacion,
+        tbPedido.TotalDescuentos,
+        tbPedido.TotalImpuestos,
+        tbPedido.Redondeo,
+        tbPedido.Subtotal,
+        tbPedido.SubtotalSinDescuento,
+        tbPedido.Excedente,
+        tbPedido.TipoDocumento,
+        tbPedido.BaseImponible,
+        tbPedido.BaseImponibleCero,
+        tbPedido.Observaciones,
+        tbPedido.MotivoAnulacion,
+        tbPedido.ObservacionAnulacion,
+        tbPedido._IdDocumentoRef,
+        tbPedido.IdDocumentoRef,
+        tbPedido.FechaAnulacion,
+        tbPedido.TotalImpuesto2,
+        tbPedido.TotalImpuesto3,
+        tbPedido.TotalImpuesto4,
+        tbPedido._IdControlCaja,
+        tbPedidoExt.Nombre AS tbPedidoExt_Nombre,
+        tbPedidoExt.NumeroDocumento AS tbPedidoExt_NumeroDocumento,
+        FROM tbPedidoExt
+        INNER JOIN tbPedido
+        ON tbPedido._id = tbPedidoExt.docid
+        INNER JOIN (
+
+        SELECT
+        tbPedidoExt.docid,
+        matchinfo( tbProductoExt ) AS Rank
+        FROM tbPedidoExt
+        WHERE tbPedidoExt MATCH ?
+        ORDER BY rank DESC LIMIT 30 OFFSET 0
+
+        ) AS tbPedidoSearch
+        ON tbPedidoExt.docid = tbPedidoSearch.docid
+        ORDER BY tbPedidoSearch.Descripcion, tbPedidoSearch.Rank DESC
+    </statement>
+    <statement name="PedidoById">
+        SELECT
+        tbPedido._id AS _id,
+        tbPedido.IdPedido,
+        tbPedido._IdAgenda,
+        tbPedido.IdAgenda,
+        tbPedido._IdCliente,
+        tbPedido.IdCliente,
+        tbPedido.ValorTotal,
+        tbPedido.Email,
+        tbPedido.Estado,
+        tbPedido.FechaCreacion,
+        tbPedido.TotalDescuentos,
+        tbPedido.TotalImpuestos,
+        tbPedido.Redondeo,
+        tbPedido.Subtotal,
+        tbPedido.SubtotalSinDescuento,
+        tbPedido.Excedente,
+        tbPedido.TipoDocumento,
+        tbPedido.BaseImponible,
+        tbPedido.BaseImponibleCero,
+        tbPedido.Observaciones,
+        tbPedido.MotivoAnulacion,
+        tbPedido.ObservacionAnulacion,
+        tbPedido._IdDocumentoRef,
+        tbPedido.IdDocumentoRef,
+        tbPedido.FechaAnulacion,
+        tbPedido.TotalImpuesto2,
+        tbPedido.TotalImpuesto3,
+        tbPedido.TotalImpuesto4,
+        tbPedido._IdControlCaja,
+        tbPedidoExt.Nombre AS tbPedidoExt_Nombre,
+        tbPedidoExt.NumeroDocumento AS tbPedidoExt_NumeroDocumento,
+        FROM tbPedidoExt
+        INNER JOIN tbPedido
+        ON tbPedido._id = tbPedidoExt.docid
+        WHERE tbPedido._id = ?
+    </statement>
 </sql>

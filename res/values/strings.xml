@@ -246,5 +246,7 @@
     <string name="label_eliminar_pago">Eliminar Pago</string>
     <string name="label_modificar_pago">Modificar Pago</string>
     <string name="label_neto">Neto:</string>
+    <string name="action_aperturar_caja">Aperturar Caja</string>
+    <string name="action_cerrar_caja">Cerrar Caja</string>
 
 </resources>
