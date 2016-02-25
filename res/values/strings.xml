@@ -249,5 +249,8 @@
     <string name="label_neto">Neto:</string>
     <string name="action_aperturar_caja">Aperturar Caja</string>
     <string name="action_cerrar_caja">Cerrar Caja</string>
+    <string name="title_cerrar_caja_activa">Cerrar Caja</string>
+    <string name="message_cerrar_caja_activa">Existe una caja abierta por otro usuario, desea cerrarla? (En el caso de no cerrarla, no podra transaccionar)</string>
+    <string name="title_guardar_transaccion">Guardar Transacción</string>
 
 </resources>

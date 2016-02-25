@@ -78,6 +78,7 @@ public final class Contract {
 		public static final String FIELD_TIPOIDENTIFICACION_NOMBRE = rp3.data.models.Contract.IdentificationType.TABLE_NAME + "_" + rp3.data.models.Contract.IdentificationType.COLUMN_NAME ;
 		
 		public static final String QUERY_CLIENTES = "Clientes";
+		public static final String QUERY_CLIENTES_BY_IDENTIFICATION = "ClienteByIdentificacion";
 		public static final String QUERY_CLIENTES_AND_CONTACTS = "ClientesAndContacts";
 		public static final String QUERY_CLIENTE_BY_ID = "ClienteById";
 		public static final String QUERY_CLIENTE_INSERTS = "ClienteInserts";
@@ -576,11 +577,13 @@ public final class Contract {
 		public static final String COLUMN_TOTAL_IMPUESTO4 = "TotalImpuesto4";
 		public static final String COLUMN_ID_CONTROL_CAJA_INT = "_IdControlCaja";
 
-		public static final String FIELD_NUMERO_DOCUMENTO = Contract.PedidoExt.TABLE_NAME + "_" + Contract.PedidoExt.COLUMN_NOMBRE;
-		public static final String FIELD_NOMBRE = Contract.PedidoExt.TABLE_NAME + "_" + Contract.PedidoExt.COLUMN_NUMERO_DOCUMENTO;
+		public static final String FIELD_NUMERO_DOCUMENTO = Contract.PedidoExt.TABLE_NAME + "_" + Contract.PedidoExt.COLUMN_NUMERO_DOCUMENTO;
+		public static final String FIELD_NOMBRE = Contract.PedidoExt.TABLE_NAME + "_" + Contract.PedidoExt.COLUMN_NOMBRE;
 
-		public static final String QUERY_PEDIDOS = "SimplePedidoSearch";
-		public static final String QUERY_PEDIDOS_BY_ID = "SimplePedidoSearch";
+		public static final String QUERY_PEDIDOS_SEARCH = "SimplePedidoSearch";
+		public static final String QUERY_PEDIDOS = "PedidosAll";
+		public static final String QUERY_PEDIDOS_BY_ID = "PedidoById";
+		public static final String QUERY_PEDIDOS_BY_DOCUMENTO = "PedidoByDocumento";
 
 	}
 
@@ -712,6 +715,7 @@ public final class Contract {
 		public static final String COLUMN_ID_FECHA_APERTURA = "FechaApertura";
 		public static final String COLUMN_ID_FECHA_CIERRE = "FechaCierre";
 		public static final String COLUMN_VALOR_APERTURA = "ValorApertura";
+		public static final String COLUMN_VALOR_CIERRE = "ValorCierre";
 
 
 	}

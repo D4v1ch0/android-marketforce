@@ -30,7 +30,7 @@ public class PedidoDetailFragment extends BaseFragment {
 
     private long clientId;
     private Pedido pedido;
-    private PedidoDetailFragmentListener detailFragmentListener;
+    private PedidoFragment detailFragmentListener;
     private NumberFormat numberFormat;
 
     public static PedidoDetailFragment newInstance(Pedido pedido) {
@@ -71,6 +71,7 @@ public class PedidoDetailFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        detailFragmentListener.RefreshMenu();
         if (clientId != 0) {
             pedido = Pedido.getPedido(getDataBase(), clientId);
         }
@@ -105,9 +106,9 @@ public class PedidoDetailFragment extends BaseFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         if(getParentFragment()!=null){
-            detailFragmentListener = (PedidoDetailFragmentListener)getParentFragment();
+            detailFragmentListener = (PedidoFragment)getParentFragment();
         }else{
-            detailFragmentListener = (PedidoDetailFragmentListener) activity;
+            //detailFragmentListener = (PedidoFragment) activity;
             setRetainInstance(true);
         }
     }

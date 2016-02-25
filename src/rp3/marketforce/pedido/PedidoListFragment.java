@@ -246,9 +246,14 @@ public class PedidoListFragment extends BaseFragment {
                 }
             });
 
-
-            adapter = new PedidoAdapter(getContext(), data);
-            headerList.setAdapter(adapter);
+            if(adapter == null) {
+                adapter = new PedidoAdapter(getContext(), data);
+                headerList.setAdapter(adapter);
+            }
+            else
+            {
+                adapter.setPedidos(data);
+            }
             adapter.notifyDataSetChanged();
             if (permisoListFragmentCallback.allowSelectedItem())
                 permisoListFragmentCallback.onPermisoSelected(data.get(0));

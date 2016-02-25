@@ -545,6 +545,57 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
         c.close();
 		return client;
 	}
+
+	public static Cliente getClienteByIdentificacion(DataBase db, String identificacion)
+	{
+		String query = QueryDir.getQuery(Contract.Cliente.QUERY_CLIENTES_BY_IDENTIFICATION);
+
+		Cursor c = db.rawQuery(query, identificacion );
+		Cliente client = null;
+
+		if(c.moveToFirst()){
+			client =  new Cliente();
+			client.setID(CursorUtils.getInt(c,Contract.Cliente._ID));
+			client.setIdCliente(CursorUtils.getInt(c,Contract.Cliente.FIELD_ID_CLIENTE));
+			client.setIdTipoIdentificacion(CursorUtils.getInt(c,Contract.Cliente.FIELD_ID_TIPO_IDENTIFICACION) );
+			client.setTipoIdentificacionDescripcion(CursorUtils.getString(c,Contract.Cliente.FIELD_TIPOIDENTIFICACION_NOMBRE) );
+			client.setIdentificacion( CursorUtils.getString(c,Contract.Cliente.FIELD_IDENTIFICACION) );
+			client.setNombre1(CursorUtils.getString(c,Contract.Cliente.FIELD_NOMBRE1) );
+			client.setNombre2(CursorUtils.getString(c,Contract.Cliente.FIELD_NOMBRE2) );
+			client.setApellido1(CursorUtils.getString(c,Contract.Cliente.FIELD_APELLIDO1) );
+			client.setApellido2(CursorUtils.getString(c,Contract.Cliente.FIELD_APELLIDO2) );
+			client.setNombreCompleto(CursorUtils.getString(c,Contract.Cliente.FIELD_NOMBRE_COMPLETO) );
+			client.setCorreoElectronico(CursorUtils.getString(c,Contract.Cliente.FIELD_CORREO_ELECTRONICO) );
+			client.setGenero(CursorUtils.getString(c,Contract.Cliente.FIELD_GENERO) );
+			client.setEstadoCivil(CursorUtils.getString(c,Contract.Cliente.FIELD_ESTADO_CIVIL) );
+			client.setFechaNacimiento(CursorUtils.getDate(c,Contract.Cliente.FIELD_FECHA_NACIMIENTO) );
+			client.setIdTipoCliente(CursorUtils.getInt(c,Contract.Cliente.FIELD_TIPO_CLIENTE_ID) );
+			client.setIdCanal(CursorUtils.getInt(c,Contract.Cliente.FIELD_CANAL_ID) );
+			client.setCalificacion(CursorUtils.getInt(c,Contract.Cliente.FIELD_CALIFICACION) );
+
+			client.setTelefono(CursorUtils.getString(c, Contract.Cliente.FIELD_TELEFONO));
+			client.setDireccion(CursorUtils.getString(c, Contract.Cliente.FIELD_DIRECCION));
+			client.setTelefono(CursorUtils.getString(c, Contract.Cliente.FIELD_TELEFONO));
+			client.setEstadoCivilDescripcion(CursorUtils.getString(c, Contract.Cliente.FIELD_ESTADO_CIVIL_DESCRIPCION));
+			client.setGeneroDescripcion(CursorUtils.getString(c, Contract.Cliente.FIELD_GENERO_DESCRIPCION));
+			client.setTipoClienteDescripcion(CursorUtils.getString(c, Contract.Cliente.FIELD_TIPO_CLIENTE_DESCRIPCION));
+			client.setCanalDescripcion(CursorUtils.getString(c, Contract.Cliente.FIELD_CANAL_DESCRIPCION));
+			client.setURLFoto(CursorUtils.getString(c, Contract.Cliente.FIELD_URL_FOTO));
+			client.setTipoPersona(CursorUtils.getString(c, Contract.Cliente.FIELD_TIPO_PERSONA));
+			client.setActividadEconomica(CursorUtils.getString(c, Contract.Cliente.FIELD_ACTIVIDAD_ECONOMICA));
+			client.setPaginaWeb(CursorUtils.getString(c, Contract.Cliente.FIELD_PAGINA_WEB));
+			client.setRazonSocial(CursorUtils.getString(c, Contract.Cliente.FIELD_RAZON_SOCIAL));
+			client.setNuevo(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_NUEVO));
+
+			if(client.getIdCliente() == 0)
+				client.setContactos(Contacto.getContactoIdCliente(db, client.getID(), true));
+			else
+				client.setContactos(Contacto.getContactoIdCliente(db, client.getIdCliente(), false));
+
+		}
+		c.close();
+		return client;
+	}
 	
 	public static Cliente getClienteIDServer(DataBase db, long clientId , boolean incluirDirecciones)
 	{		

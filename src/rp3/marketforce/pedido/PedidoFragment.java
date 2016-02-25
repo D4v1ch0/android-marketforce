@@ -20,6 +20,9 @@ import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import java.util.Calendar;
+import java.util.List;
+
 import rp3.app.BaseFragment;
 import rp3.configuration.PreferenceManager;
 import rp3.data.MessageCollection;
@@ -29,6 +32,8 @@ import rp3.marketforce.cliente.ClientDetailFragment;
 import rp3.marketforce.cliente.ClientListFragment;
 import rp3.marketforce.cliente.CrearClienteActivity;
 import rp3.marketforce.models.Cliente;
+import rp3.marketforce.models.pedido.ControlCaja;
+import rp3.marketforce.models.pedido.Pago;
 import rp3.marketforce.models.pedido.Pedido;
 import rp3.marketforce.models.pedido.Producto;
 import rp3.marketforce.ruta.MapaActivity;
@@ -120,7 +125,8 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                 isActiveListFragment = true;
                 //getActivity().getActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
                 RefreshMenu();
-                getActivity().setTitle("Pedidos");
+                getActivity().setTitle("Transacciones");
+                transactionListFragment.searchTransactions(textSearch);
             }
 
             @Override
@@ -190,25 +196,32 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                 }
             });
         }
+        RefreshMenu();
     }
 
-    private void RefreshMenu(){
+    public void RefreshMenu(){
         Pedido ped = Pedido.getPedido(getDataBase(), selectedClientId);
+        Pedido ref = Pedido.getPedidoRef(getDataBase(), selectedClientId);
+        ControlCaja control = ControlCaja.getControlCajaActiva(getDataBase());
         if(!mTwoPane){
             menu.findItem(R.id.action_arqueo_caja).setVisible(isActiveListFragment);
-            menu.findItem(R.id.action_crear_pedido).setVisible(isActiveListFragment);
-            menu.findItem(R.id.action_anular_pedido).setVisible(!isActiveListFragment);
+            menu.findItem(R.id.action_crear_pedido).setVisible(isActiveListFragment && control != null);
             menu.findItem(R.id.action_sincronizar_productos).setVisible(isActiveListFragment);
-            menu.findItem(R.id.action_anular_pedido).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C"));
-            menu.findItem(R.id.action_nota_credito).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && ped.getTipoDocumento().equalsIgnoreCase("FA"));
+            menu.findItem(R.id.action_anular_pedido).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && control != null && ref == null);
+            menu.findItem(R.id.action_nota_credito).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && ped.getTipoDocumento().equalsIgnoreCase("FA") && control != null);
+            menu.findItem(R.id.action_aperturar_caja).setVisible(isActiveListFragment && control == null);
+            menu.findItem(R.id.action_cerrar_caja).setVisible(isActiveListFragment && control != null);
+            menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
             //menu.findItem(R.id.action_nota_credito).setVisible(false);
         }
         else{
-
+            menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_arqueo_caja).setVisible(isActiveListFragment);
-            menu.findItem(R.id.action_crear_pedido).setVisible(isActiveListFragment);
-            menu.findItem(R.id.action_anular_pedido).setVisible(selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C"));
-            menu.findItem(R.id.action_nota_credito).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && ped.getTipoDocumento().equalsIgnoreCase("FA"));
+            menu.findItem(R.id.action_crear_pedido).setVisible(isActiveListFragment && control != null);
+            menu.findItem(R.id.action_anular_pedido).setVisible(selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && control != null && ref == null);
+            menu.findItem(R.id.action_nota_credito).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && ped.getTipoDocumento().equalsIgnoreCase("FA") && control != null);
+            menu.findItem(R.id.action_aperturar_caja).setVisible(isActiveListFragment && control == null);
+            menu.findItem(R.id.action_cerrar_caja).setVisible(isActiveListFragment && control != null);
             //menu.findItem(R.id.action_nota_credito).setVisible(false);
 
         }
@@ -225,7 +238,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                 showDialogFragment(new ControlCajaFragment(), "Aperturar Caja", "Aperturar Caja");
                 break;
             case R.id.action_cerrar_caja:
-                showDialogConfirmation(DIALOG_CIERRE, R.string.message_cierre_caja);
+                showDialogConfirmation(DIALOG_CIERRE, R.string.message_cierre_caja, R.string.title_cerrar_caja_activa);
                 break;
             case R.id.action_anular_pedido:
                 if(transactionDetailFragment != null)
@@ -254,6 +267,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                             getContext(),
                             android.R.layout.select_dialog_item);
                     arrayAdapter.add("Factura");
+                    builderSingle.setTitle("Seleccione tipo de transacción");
                     //arrayAdapter.add("Nota de Crédito");
 
                     builderSingle.setAdapter(
@@ -320,7 +334,24 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                 requestSync(bundle);
                 break;
             case DIALOG_CIERRE:
-                //Aqui realizar el cierre de caja
+                ControlCaja control = ControlCaja.getControlCajaActiva(getDataBase());
+                List<Pago> pagos = Pago.getArqueoCaja(getDataBase(), control.getID());
+
+                float valor = 0;
+                for(Pago pago: pagos)
+                {
+                    valor = valor + pago.getValor();
+                }
+                control.setFechaCierre(Calendar.getInstance().getTime());
+                control.setValorCierre(valor);
+                ControlCaja.update(getDataBase(), control);
+                if (ConnectionUtils.isNetAvailable(getActivity())) {
+                    Bundle bundle2 = new Bundle();
+                    bundle2.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPDATE_CAJA);
+                    bundle2.putLong(ControlCajaFragment.ARG_CONTROL, control.getID());
+                    requestSync(bundle2);
+                }
+                RefreshMenu();
                 break;
 
         }

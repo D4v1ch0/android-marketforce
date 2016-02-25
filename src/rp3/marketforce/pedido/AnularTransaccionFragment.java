@@ -8,6 +8,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.text.NumberFormat;
+import java.util.Calendar;
 
 import rp3.app.BaseFragment;
 import rp3.content.SimpleGeneralValueAdapter;
@@ -18,6 +19,7 @@ import rp3.marketforce.R;
 import rp3.marketforce.models.pedido.FormaPago;
 import rp3.marketforce.models.pedido.Pago;
 import rp3.marketforce.models.pedido.Pedido;
+import rp3.marketforce.models.pedido.PedidoDetalle;
 import rp3.marketforce.sync.SyncAdapter;
 
 /**
@@ -73,7 +75,19 @@ public class AnularTransaccionFragment extends BaseFragment {
                 pedido.setMotivoAnulacion(((GeneralValue)((Spinner)getRootView().findViewById(R.id.anulacion_motivo)).getSelectedItem()).getCode());
                 pedido.setObservacionAnulacion(((EditText) getRootView().findViewById(R.id.actividad_texto_respuesta)).getText().toString());
                 pedido.setEstado("A");
+                pedido.setFechaAnulacion(Calendar.getInstance().getTime());
                 Pedido.update(getDataBase(), pedido);
+                if(pedido.getTipoDocumento().equalsIgnoreCase("NC")) {
+                    Pedido toUpdate = Pedido.getPedido(getDataBase(), pedido.get_idDocumentoRef());
+                    for(PedidoDetalle detalle_nc : pedido.getPedidoDetalles()) {
+                        for (PedidoDetalle detalleRef : toUpdate.getPedidoDetalles()) {
+                            if (detalle_nc.getIdProducto() == detalleRef.getIdProducto()) {
+                                detalleRef.setCantidadDevolucion(detalleRef.getCantidadDevolucion() - detalle_nc.getCantidad());
+                                PedidoDetalle.update(getDataBase(), detalleRef);
+                            }
+                        }
+                    }
+                }
                 Bundle bundle2 = new Bundle();
                 bundle2.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ANULAR_PEDIDO);
                 bundle2.putLong(CrearPedidoFragment.ARG_PEDIDO, id);

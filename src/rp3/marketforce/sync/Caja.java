@@ -140,6 +140,8 @@ public class Caja {
         WebService webService = new WebService("MartketForce","GuardarCaja");
 
         ControlCaja controlUpload = rp3.marketforce.models.pedido.ControlCaja.getControlCaja(db, idCaja);
+        DecimalFormat df = new DecimalFormat("#.##");
+        df.setRoundingMode(RoundingMode.CEILING);
 
         JSONObject jObject = new JSONObject();
         try {
@@ -149,12 +151,14 @@ public class Caja {
             jObject.put("IdPuntoOperacion", PreferenceManager.getInt(Contants.KEY_ID_PUNTO_OPERACION));
             jObject.put("IdEmpresa", PreferenceManager.getInt(Contants.KEY_ID_EMPRESA));
             jObject.put("IdControlCaja", controlUpload.getIdControlCaja());
-            jObject.put("MontoApertura", controlUpload.getValorApertura());
-            jObject.put("FechaCierre", Convert.getDotNetTicksFromDate(controlUpload.getFechaCierre()));
-            jObject.put("MontoCierre", 0);
-            jObject.put("FechaApertura", Convert.getDotNetTicksFromDate(controlUpload.getFechaApertura()));
+            jObject.put("MontoApertura", df.format(controlUpload.getValorApertura()));
+            jObject.put("FechaAperturaTicks", Convert.getDotNetTicksFromDate(controlUpload.getFechaApertura()));
             jObject.put("UsrApertura", Session.getUser().getLogonName());
-            jObject.put("UsrCierre", Session.getUser().getLogonName());
+            if(controlUpload.getFechaCierre() != null && controlUpload.getFechaCierre().getTime() > 0) {
+                jObject.put("FechaCierreTicks", Convert.getDotNetTicksFromDate(controlUpload.getFechaCierre()));
+                jObject.put("MontoCierre", df.format(controlUpload.getValorCierre()));
+                jObject.put("UsrCierre", Session.getUser().getLogonName());
+            }
 
         } catch (Exception ex) {
 
@@ -186,20 +190,22 @@ public class Caja {
 
     public static int executeSyncGetControl(DataBase db){
         WebService webService = new WebService("MartketForce","GetControl");
-
+        if(ControlCaja.getControlCajaActiva(db) != null)
+            return SyncAdapter.SYNC_EVENT_SUCCESS;
         try
         {
-            webService.addStringParameter("@idCaja", PreferenceManager.getString(Contants.KEY_ID_CAJA));
-            webService.addStringParameter("@idEmpresa", PreferenceManager.getString(Contants.KEY_ID_EMPRESA));
-            webService.addStringParameter("@idEstablecimiento", PreferenceManager.getString(Contants.KEY_ID_ESTABLECIMIENTO));
-            webService.addStringParameter("@idPuntoOperacion", PreferenceManager.getString(Contants.KEY_ID_PUNTO_OPERACION));
+            webService.addIntParameter("@idCaja", PreferenceManager.getInt(Contants.KEY_ID_CAJA));
+            webService.addIntParameter("@idEmpresa", PreferenceManager.getInt(Contants.KEY_ID_EMPRESA));
+            webService.addIntParameter("@idEstablecimiento", PreferenceManager.getInt(Contants.KEY_ID_ESTABLECIMIENTO));
+            webService.addIntParameter("@idPuntoOperacion", PreferenceManager.getInt(Contants.KEY_ID_PUNTO_OPERACION));
             webService.addCurrentAuthToken();
 
             try {
                 webService.invokeWebService();
                 JSONObject jObject = webService.getJSONObjectResponse();
-                if(jObject != null && !jObject.isNull(Contants.KEY_SECUENCIA_FACTURA)) {
+                if(jObject != null && jObject.getInt("IdControlCaja") != 0) {
                     ControlCaja control = new ControlCaja();
+                    control.setIdControlCaja(jObject.getInt("IdControlCaja"));
                     control.setIdAgente(jObject.getInt("IdAgente"));
                     control.setValorApertura(Float.parseFloat(jObject.getString("MontoApertura")));
                     control.setFechaApertura(Convert.getDateFromDotNetTicks(jObject.getLong("FechaAperturaTicks")));
@@ -207,6 +213,33 @@ public class Caja {
                     ControlCaja.insert(db, control);
 
                 }
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return SyncAdapter.SYNC_EVENT_ERROR;
+            }
+
+        }finally{
+            webService.close();
+        }
+
+        return SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
+    public static int executeSyncCerrarCaja(DataBase db, long idCaja){
+        WebService webService = new WebService("MartketForce","CerrarCaja");
+        ControlCaja controlCaja = ControlCaja.getControlCaja(db, idCaja);
+
+        try
+        {
+            webService.addIntParameter("@idControlCaja", controlCaja.getIdControlCaja());
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+                ControlCaja.delete(db, controlCaja);
             } catch (HttpResponseException e) {
                 if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
                     return SyncAdapter.SYNC_EVENT_AUTH_ERROR;

@@ -401,7 +401,8 @@
         IdAgente INTEGER,
         FechaApertura INTEGER,
         FechaCierre INTEGER,
-        ValorApertura REAL
+        ValorApertura REAL,
+        ValorCierre REAL
         )
     </statement>
 </sql>

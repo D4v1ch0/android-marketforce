@@ -54,6 +54,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
     public static String SYNC_TYPE_PRODUCTOS = "get_productos";
     public static String SYNC_TYPE_ANULAR_PEDIDO = "anular_pedido";
     public static String SYNC_TYPE_UPDATE_CAJA = "update_caja";
+    public static String SYNC_TYPE_CERRAR_CAJA = "cerrar_caja";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -195,6 +196,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         result = rp3.marketforce.sync.Caja.executeSyncFormasPago(db);
                         addDefaultMessage(result);
                     }
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        result = rp3.marketforce.sync.Caja.executeSyncGetControl(db);
+                        addDefaultMessage(result);
+                    }
 				/*
 				 * Se comenta carga de fotos ya que se la hara mediante un lazy loader.
 				 * Para esto se cargara tambien en el modelo Cliente la url de la foto para poder cargarla
@@ -304,6 +310,10 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                 } else if (syncType.equals(SYNC_TYPE_UPDATE_CAJA)) {
                     long id = extras.getLong(ControlCajaFragment.ARG_CONTROL);
                     result = Caja.executeSyncInsertControl(db, id);
+                    addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_CERRAR_CAJA)) {
+                    long id = extras.getLong(ControlCajaFragment.ARG_CONTROL);
+                    result = Caja.executeSyncCerrarCaja(db, id);
                     addDefaultMessage(result);
                 } else if (syncType.equals(SYNC_TYPE_INSERTAR_AGENDA)) {
                     long agenda = extras.getLong(CrearVisitaFragment.ARG_AGENDA);

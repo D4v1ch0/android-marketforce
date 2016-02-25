@@ -41,6 +41,7 @@ import rp3.marketforce.cliente.CrearClienteActivity;
 import rp3.marketforce.db.Contract;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.Cliente;
+import rp3.marketforce.models.pedido.ControlCaja;
 import rp3.marketforce.models.pedido.Pago;
 import rp3.marketforce.models.pedido.Pedido;
 import rp3.marketforce.models.pedido.PedidoDetalle;
@@ -57,6 +58,7 @@ import rp3.util.StringUtils;
 public class CrearPedidoFragment extends BaseFragment implements ProductFragment.ProductAcceptListener, PagosListFragment.PagosAcceptListener{
 
     public final static int SPACES = 36;
+    public final static int CODE_PRINT = 1;
 
     boolean rotated = false;
     private AutoCompleteTextView cliente_auto;
@@ -138,7 +140,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             case R.id.action_save:
                 if(Validaciones())
                 {
-                    showDialogConfirmation(DIALOG_SAVE_ACCEPT, R.string.message_guardar_pedido_accept);
+                    showDialogConfirmation(DIALOG_SAVE_ACCEPT, R.string.message_guardar_pedido_accept, R.string.title_guardar_transaccion);
                 }
                 break;
             case R.id.action_cancel:
@@ -172,10 +174,6 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                 Grabar(false);
 
                 generarFacturaFísica();
-                /*finish();
-                Intent intent = new Intent(getContext(), CrearPedidoActivity.class);
-                intent.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, "FA");
-                startActivity(intent);*/
                 break;
             case DIALOG_SAVE_CANCEL:
                 if(Validaciones())
@@ -188,6 +186,10 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     }
 
     private void Grabar(boolean pendiente) {
+        Pedido docRef = null;
+        if(tipo.equalsIgnoreCase("NC"))
+            docRef = Pedido.getPedido(getDataBase(), pedido.get_idDocumentoRef());
+
         if (idCliente == 0)
             pedido.setFechaCreacion(Calendar.getInstance().getTime());
 
@@ -198,6 +200,10 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             pedido.setEmail(((EditText) getRootView().findViewById(R.id.pedido_email)).getText().toString());
 
         pedido.set_idAgenda((int) idAgenda);
+
+        ControlCaja control = ControlCaja.getControlCajaActiva(getDataBase());
+        pedido.set_idControlCaja(control.getID());
+        pedido.setNombre(cli.getNombreCompleto());
 
         pedido.setTipoDocumento(tipo);
         if (tipo.equalsIgnoreCase("FA")) {
@@ -278,6 +284,15 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                 detalle_nc.set_idPedido((int) pedido.getID());
                 detalle_nc.setIdPedido(0);
                 PedidoDetalle.insert(getDataBase(), detalle_nc);
+
+                for(PedidoDetalle detalleRef : docRef.getPedidoDetalles())
+                {
+                    if(detalle_nc.getIdProducto() == detalleRef.getIdProducto())
+                    {
+                        detalleRef.setCantidadDevolucion(detalle_nc.getCantidad());
+                        PedidoDetalle.update(getDataBase(), detalleRef);
+                    }
+                }
 
             }
             else {
@@ -428,7 +443,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             idAgenda = getArguments().getLong(ARG_AGENDA);
 
             Agenda agd = Agenda.getAgenda(getDataBase(), idAgenda);
-            cliente_auto.setText(agd.getCliente().getNombreCompleto());
+            cliente_auto.setText(agd.getCliente().getNombreCompleto().trim());
             cliente_auto.setEnabled(false);
             ((TextView) rootView.findViewById(R.id.pedido_email)).setText(agd.getCliente().getCorreoElectronico());
         }
@@ -500,7 +515,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     private void setDatosPedidos() {
         pedido = Pedido.getPedido(getDataBase(), idCliente);
         Cliente cl = Cliente.getClienteID(getDataBase(), pedido.get_idCliente(), false);
-        cliente_auto.setText(cl.getNombreCompleto());
+        cliente_auto.setText(cl.getNombreCompleto().trim());
         cliente_auto.setEnabled(false);
         ((TextView) getRootView().findViewById(R.id.pedido_email)).setText(cl.getCorreoElectronico());
         list_cliente = Cliente.getCliente(getDataBase());
@@ -508,12 +523,23 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         for (Cliente cli : list_cliente) {
             list_nombres.add(cli.getNombreCompleto().trim());
         }
+
+        //Validar Devoluciones
+        List<PedidoDetalle> detalleList = pedido.getPedidoDetalles();
+        for(int i = detalleList.size() - 1; i >= 0; i--)
+        {
+            if(detalleList.get(i).getCantidadDevolucion() == detalleList.get(i).getCantidad())
+                pedido.getPedidoDetalles().remove(i);
+        }
+
+
         adapter = new PedidoDetalleAdapter(this.getContext(), pedido.getPedidoDetalles());
+        adapter.setIsDetail(false);
         ((ListView) getRootView().findViewById(R.id.pedido_detalles)).setAdapter(adapter);
 
         ((TextView) getRootView().findViewById(R.id.pedido_cantidad)).setText(getPedidoCantidad(pedido.getPedidoDetalles()) + "");
 
-        descuentos = 0; subtotal = 0; valorTotal = 0; impuestos = 0; base0 = 0; baseImponible = 0; redondeo = 0;
+        descuentos = 0; subtotal = 0; valorTotal = 0; impuestos = 0; base0 = 0; baseImponible = 0; redondeo = 0; neto = 0;
         for (PedidoDetalle detalle : pedido.getPedidoDetalles()) {
             valorTotal = valorTotal + detalle.getValorTotal();
             subtotal = subtotal + detalle.getSubtotal();
@@ -521,6 +547,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             impuestos = impuestos + detalle.getValorImpuestoTotal();
             base0 = base0 + detalle.getBaseImponibleCero();
             baseImponible = baseImponible + detalle.getBaseImponible();
+            neto = neto + (detalle.getSubtotal() - (detalle.getValorDescuentoManualTotal() + detalle.getValorDescuentoAutomaticoTotal()));
         }
         double residuo = valorTotal % 100;
         if(residuo >= 50)
@@ -537,6 +564,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         ((TextView) getRootView().findViewById(R.id.pedido_base_imponible)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(baseImponible));
         ((TextView) getRootView().findViewById(R.id.pedido_subtotal)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(subtotal));
         ((TextView) getRootView().findViewById(R.id.pedido_redondeo)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(redondeo));
+        ((TextView) getRootView().findViewById(R.id.pedido_neto)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(neto));
 
         float pagado = 0;
         if (pedido.getPagos() != null)
@@ -549,6 +577,8 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         if(tipo.equalsIgnoreCase("NC"))
         {
             getRootView().findViewById(R.id.pedido_agregar_producto).setVisibility(View.GONE);
+            pedido.set_idDocumentoRef(idCliente);
+            pedido.setIdDocumentoRef(pedido.getIdPedido());
             idCliente = 0;
             pedido.setID(0);
             pedido.setIdPedido(0);
@@ -581,6 +611,12 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                     }
 
                 }
+                break;
+            case CODE_PRINT:
+                finish();
+                Intent intent = new Intent(getContext(), CrearPedidoActivity.class);
+                intent.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, "FA");
+                startActivity(intent);
                 break;
             case REQUEST_BUSQUEDA:
                 if(resultCode == RESULT_OK)
@@ -618,8 +654,8 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                 if(resultCode == RESULT_OK)
                 {
                     Cliente cl = Cliente.getClienteID(getDataBase(), data.getExtras().getLong(CrearClienteActivity.ARG_IDCLIENTE), false);
-                    cliente_auto.setText(cl.getNombreCompleto());
-                    cliente_auto.setEnabled(false);
+                    cliente_auto.setText(cl.getNombreCompleto().trim());
+                    //cliente_auto.setEnabled(false);
                     ((TextView) getRootView().findViewById(R.id.pedido_email)).setText(cl.getCorreoElectronico());
                     list_cliente = Cliente.getCliente(getDataBase());
                     list_nombres = new ArrayList<String>();
@@ -694,7 +730,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             valorTotal = valorTotal + detalle.getValorTotal();
             subtotal = subtotal + detalle.getSubtotal();
             descuentos = descuentos + detalle.getValorDescuentoManualTotal() + detalle.getValorDescuentoAutomaticoTotal();
-            impuestos = impuestos + detalle.getValorImpuesto();
+            impuestos = impuestos + detalle.getValorImpuestoTotal();
             base0 = base0 + detalle.getBaseImponibleCero();
             baseImponible = baseImponible + detalle.getBaseImponible();
             neto = neto + (detalle.getSubtotal() - (detalle.getValorDescuentoManualTotal() + detalle.getValorDescuentoAutomaticoTotal()));
@@ -876,6 +912,8 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(pedido.getTotalDescuentos()), 16) + '\n';
         toPrint = toPrint + StringUtils.rightStringInSpace("Subtotal :", 20) + " ";
         toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(pedido.getSubtotal() - pedido.getTotalDescuentos()), 16) + '\n';
+        toPrint = toPrint + StringUtils.rightStringInSpace("Base Imponible :", 20) + " ";
+        toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(pedido.getBaseImponible()), 16) + '\n';
         toPrint = toPrint + StringUtils.rightStringInSpace("IVA 0% :", 20) + " ";
         toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(pedido.getBaseImponibleCero()), 16) + '\n';
         toPrint = toPrint + StringUtils.rightStringInSpace("13% IVA :", 20) + " ";
@@ -885,7 +923,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         toPrint = toPrint + StringUtils.rightStringInSpace("-------------------------", 36) + '\n';
 
         toPrint = toPrint + StringUtils.rightStringInSpace("Total :", 20) + " ";
-        toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(pedido.getBaseImponibleCero()), 16) + '\n';
+        toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(pedido.getValorTotal()), 16) + '\n';
 
         for(int i = 1; i <= SPACES; i++)
             toPrint = toPrint + "=";
@@ -903,6 +941,9 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                 pagoEfectivo = pagoEfectivo + pago.getValor();
         }
 
+        if(pagoEfectivo > 0)
+            pagoEfectivo = pagoEfectivo - pedido.getExcedente();
+
         toPrint = toPrint + '\n';
         toPrint = toPrint + StringUtils.leftStringInSpace("Efectivo recibido: " + numberFormat.format(pagoEfectivo), SPACES) + '\n';
         toPrint = toPrint + StringUtils.leftStringInSpace("Su cambio: " + numberFormat.format(pedido.getExcedente()), SPACES) + '\n' + '\n';
@@ -915,6 +956,6 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         print.addCategory(Intent.CATEGORY_DEFAULT);
         print.putExtra(Intent.EXTRA_TEXT, toPrint);
         print.setType("text/plain");
-        startActivity(Intent.createChooser(print, "Imprimir"));
+        startActivityForResult(Intent.createChooser(print, "Imprimir"), CODE_PRINT);
     }
 }

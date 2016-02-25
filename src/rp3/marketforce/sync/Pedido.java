@@ -15,6 +15,7 @@ import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
 import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.AgendaTareaActividades;
+import rp3.marketforce.models.pedido.ControlCaja;
 import rp3.marketforce.models.pedido.Pago;
 import rp3.marketforce.models.pedido.PedidoDetalle;
 import rp3.marketforce.utils.Utils;
@@ -29,6 +30,14 @@ public class Pedido {
         webService.setTimeOut(20000);
 
         rp3.marketforce.models.pedido.Pedido pedidoUpload = rp3.marketforce.models.pedido.Pedido.getPedido(db, idPedido);
+        ControlCaja controlCaja = ControlCaja.getControlCajaActiva(db);
+        if(controlCaja.getIdControlCaja() == 0) {
+            Caja.executeSyncInsertControl(db, controlCaja.getID());
+            controlCaja = ControlCaja.getControlCajaActiva(db);
+        }
+
+        if(controlCaja.getIdControlCaja() == 0)
+            return SyncAdapter.SYNC_EVENT_ERROR;
 
         JSONObject jObject = new JSONObject();
         try {
@@ -70,6 +79,11 @@ public class Pedido {
             jObject.put("TipoTransaccion", pedidoUpload.getTipoDocumento());
             jObject.put("ValorDescAutomatico", df.format(pedidoUpload.getTotalDescuentos()));
             jObject.put("ValorImpuestoIvaVenta", df.format(pedidoUpload.getTotalImpuestos()));
+            jObject.put("IdControlCaja", controlCaja.getIdControlCaja());
+            jObject.put("IdDocumentoRef", pedidoUpload.getIdDocumentoRef());
+            jObject.put("TotalImpuesto2", df.format(pedidoUpload.getTotalImpuesto2()));
+            jObject.put("TotalImpuesto3", df.format(pedidoUpload.getTotalImpuesto3()));
+            jObject.put("TotalImpuesto4", df.format(pedidoUpload.getTotalImpuesto4()));
             if(pedidoUpload.getTipoDocumento().equalsIgnoreCase("FA"))
                 jObject.put("Secuencia", PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA));
             if(pedidoUpload.getTipoDocumento().equalsIgnoreCase("NC"))
@@ -101,6 +115,8 @@ public class Pedido {
                 jObjectDetalle.put("ValorDescManualTotal", df.format(det.getValorDescuentoManualTotal()));
                 jObjectDetalle.put("ValorImpuestoIvaVenta", df.format(det.getValorImpuesto()));
                 jObjectDetalle.put("ValorImpuestoIvaVentaTotal", df.format(det.getValorImpuestoTotal()));
+                jObjectDetalle.put("BaseICE", df.format(det.getBaseICE()));
+                jObjectDetalle.put("CantidadDevolucion", det.getCantidadDevolucion());
 
                 jArrayDetalle.put(jObjectDetalle);
             }
@@ -169,6 +185,7 @@ public class Pedido {
             jObject.put("IdPedido", pedidoUpload.getIdPedido());
             jObject.put("MotivoAnulacion", pedidoUpload.getMotivoAnulacion());
             jObject.put("ObservacionAnulacion", pedidoUpload.getObservacionAnulacion());
+            jObject.put("FecAnulaTicks",  Convert.getDotNetTicksFromDate(pedidoUpload.getFechaAnulacion()));
 
         } catch (Exception ex) {
 

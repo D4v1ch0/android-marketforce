@@ -19,7 +19,7 @@
         <webServiceData>
             <name>Core</name>
             <!--url>[@server:http://www.rp3marketforce.com/Rp3MarketForce]/api</url-->
-            <url>http://10.10.0.148/Rp3Retail/api</url>
+            <url>http://190.216.215.133/Rp3Retail/api</url>
             <type>REST</type>
             <oAuthClientId>android-app-marketforce</oAuthClientId>
             <oAuthClientSecret>rp3-marketforce2014</oAuthClientSecret>
@@ -65,7 +65,7 @@
            <webServiceData>
             <name>MartketForce</name>
             <!--url>[@server:http://www.rp3marketforce.com/Rp3MarketForce]/api</url-->
-            <url>http://10.10.0.148/Rp3Retail/api</url>
+            <url>http://190.216.215.133/Rp3Retail/api</url>
             <type>REST</type>
             <oAuthClientId>android-app-marketforce</oAuthClientId>
             <oAuthClientSecret>rp3-marketforce2014</oAuthClientSecret>
@@ -299,14 +299,20 @@
                 </method>
                 <method>
                     <name>GuardarCaja</name>
-                    <action>pedido/InsertControl</action>
+                    <action>caja/InsertControl</action>
                     <webMethod>POST</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
                     <name>GetControl</name>
-                    <action>pedido/GetControl?idCaja=@idCaja&amp;idEmpresa=@idEmpresa&amp;idEstablecimiento=@idEstablecimiento&amp;idPuntoOperacion=@idPuntoOperacion</action>
+                    <action>caja/GetControl?idCaja=@idCaja&amp;idEmpresa=@idEmpresa&amp;idEstablecimiento=@idEstablecimiento&amp;idPuntoOperacion=@idPuntoOperacion</action>
                     <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>CerrarCaja</name>
+                    <action>caja/CerrarCaja?idControlCaja=@idControlCaja</action>
+                    <webMethod>POST</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>

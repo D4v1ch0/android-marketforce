@@ -43,6 +43,9 @@ public class ControlCajaFragment extends BaseFragment {
         super.onAttach(activity);
 
         setContentView(R.layout.fragment_control_caja);
+        if(getParentFragment()!=null){
+            ((PedidoFragment)getParentFragment()).RefreshMenu();
+        }
 
     }
 

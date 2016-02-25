@@ -61,7 +61,7 @@ public class ProductoAdapter extends BaseAdapter {
 
         Producto producto = productos.get(position);
         String impuesto = "";
-        if(producto.getPorcentajeImpuesto() != 0)
+        if(producto.getPorcentajeImpuesto() == 0)
             impuesto = "*";
 
         ((TextView) convertView.findViewById(R.id.producto_descripcion)).setText(producto.getDescripcion() + impuesto);
