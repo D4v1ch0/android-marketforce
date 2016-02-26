@@ -38,6 +38,7 @@ import rp3.marketforce.models.pedido.Pedido;
 import rp3.marketforce.models.pedido.Producto;
 import rp3.marketforce.ruta.MapaActivity;
 import rp3.marketforce.sync.SyncAdapter;
+import rp3.marketforce.utils.PrintHelper;
 import rp3.util.ConnectionUtils;
 import rp3.widget.SlidingPaneLayout;
 
@@ -212,6 +213,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
             menu.findItem(R.id.action_aperturar_caja).setVisible(isActiveListFragment && control == null);
             menu.findItem(R.id.action_cerrar_caja).setVisible(isActiveListFragment && control != null);
             menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
+            menu.findItem(R.id.action_reimpresion).setVisible(!isActiveListFragment && selectedClientId!=0 && control != null);
             //menu.findItem(R.id.action_nota_credito).setVisible(false);
         }
         else{
@@ -222,6 +224,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
             menu.findItem(R.id.action_nota_credito).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && ped.getTipoDocumento().equalsIgnoreCase("FA") && control != null);
             menu.findItem(R.id.action_aperturar_caja).setVisible(isActiveListFragment && control == null);
             menu.findItem(R.id.action_cerrar_caja).setVisible(isActiveListFragment && control != null);
+            menu.findItem(R.id.action_reimpresion).setVisible(!isActiveListFragment && selectedClientId!=0 && control != null);
             //menu.findItem(R.id.action_nota_credito).setVisible(false);
 
         }
@@ -233,6 +236,16 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
             case R.id.action_arqueo_caja:
                 Intent intent = new Intent(getContext(), ArqueoCajaActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.action_reimpresion:
+                Pedido pedido = Pedido.getPedido(getDataBase(), selectedClientId);
+                String toPrint = PrintHelper.generarFacturaFísica(pedido, true);
+
+                Intent print = new Intent(Intent.ACTION_SEND);
+                print.addCategory(Intent.CATEGORY_DEFAULT);
+                print.putExtra(Intent.EXTRA_TEXT, toPrint);
+                print.setType("text/plain");
+                startActivityForResult(Intent.createChooser(print, "Imprimir"), 12);
                 break;
             case R.id.action_aperturar_caja:
                 showDialogFragment(new ControlCajaFragment(), "Aperturar Caja", "Aperturar Caja");
@@ -373,6 +386,11 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
         }
 
         RefreshMenu();
+
+        if(pedido.getTipoDocumento().equalsIgnoreCase("FA"))
+            this.getActivity().setTitle("Factura No. " + pedido.getNumeroDocumento());
+        if(pedido.getTipoDocumento().equalsIgnoreCase("NC"))
+            this.getActivity().setTitle("Nota de Crédito No. " + pedido.getNumeroDocumento());
 
         transactionDetailFragment = PedidoDetailFragment.newInstance(pedido);
         setFragment(R.id.content_transaction_detail, transactionDetailFragment);

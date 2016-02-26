@@ -9,15 +9,20 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import rp3.app.BaseActivity;
 import rp3.app.BaseFragment;
 import rp3.data.MessageCollection;
+import rp3.data.models.GeneralValue;
+import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.loader.PedidoLoader;
 import rp3.marketforce.models.pedido.Pedido;
@@ -35,10 +40,11 @@ public class PedidoListFragment extends BaseFragment {
     PedidoListFragmentListener permisoListFragmentCallback;
     private PedidoAdapter adapter;
     private boolean currentTransactionBoolean;
-    private ListView headerList;
+    private ExpandableListView headerList;
     public LinearLayout linearLayout_rootParent;
     public SwipeRefreshLayout refreshLayout;
     private String currentTransactionSearch;
+    private List<String> tipos, headers;
 
     private LoaderPedidos loaderPedidos;
     private boolean isContacts = false;
@@ -103,7 +109,7 @@ public class PedidoListFragment extends BaseFragment {
     public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
 
-        headerList = (ListView) rootView.findViewById(R.id.linearLayout_headerlist_ruta_list);
+        headerList = (ExpandableListView) rootView.findViewById(R.id.linearLayout_headerlist_ruta_list);
         headerList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         refreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
 
@@ -155,15 +161,15 @@ public class PedidoListFragment extends BaseFragment {
             }
         });
         headerList.setAdapter(adapter);
-        headerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-            @SuppressLint("ResourceAsColor")
+        headerList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent,
-                                    View view, int position, long id) {
-
-                permisoListFragmentCallback.onPermisoSelected(adapter.getItem(position));
-
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                permisoListFragmentCallback.onPermisoSelected(adapter.getChild(groupPosition, childPosition));
+                int index = parent.getFlatListPosition(ExpandableListView.getPackedPositionForChild(groupPosition, childPosition));
+                adapter.setChildAndGroup(groupPosition, childPosition);
+                parent.setItemChecked(index, true);
+                return true;
             }
         });
     }
@@ -192,7 +198,8 @@ public class PedidoListFragment extends BaseFragment {
                     }
                 }
             });
-            headerList.setSelector(getActivity().getResources().getDrawable(R.drawable.bkg));
+            //headerList.setSelector(getActivity().getResources().getDrawable(R.drawable.bkg));
+
             setListeners();
         }
     }
@@ -225,7 +232,7 @@ public class PedidoListFragment extends BaseFragment {
         public void onLoadFinished(Loader<List<Pedido>> arg0,
                                    List<Pedido> data) {
 
-            headerList.setSelector(getActivity().getResources().getDrawable(R.drawable.bkg));
+            //headerList.setSelector(getActivity().getResources().getDrawable(R.drawable.bkg));
             headerList.setOnScrollListener(new AbsListView.OnScrollListener() {
 
                 @Override
@@ -246,27 +253,27 @@ public class PedidoListFragment extends BaseFragment {
                 }
             });
 
+            HashMap<String, List<Pedido>> groupPedidos = toExpandableList(data);
             if(adapter == null) {
-                adapter = new PedidoAdapter(getContext(), data);
+                adapter = new PedidoAdapter(getContext(), groupPedidos, headers, tipos);
                 headerList.setAdapter(adapter);
             }
             else
             {
-                adapter.setPedidos(data);
+                adapter.setPedidos(groupPedidos);
             }
             adapter.notifyDataSetChanged();
             if (permisoListFragmentCallback.allowSelectedItem())
                 permisoListFragmentCallback.onPermisoSelected(data.get(0));
             permisoListFragmentCallback.onFinalizaConsulta();
-            headerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                @SuppressLint("ResourceAsColor")
+            headerList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
                 @Override
-                public void onItemClick(AdapterView<?> parent,
-                                        View view, int position, long id) {
-
-                    permisoListFragmentCallback.onPermisoSelected(adapter.getItem(position));
-
+                public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                    permisoListFragmentCallback.onPermisoSelected(adapter.getChild(groupPosition, childPosition));
+                    int index = parent.getFlatListPosition(ExpandableListView.getPackedPositionForChild(groupPosition, childPosition));
+                    parent.setItemChecked(index, true);
+                    adapter.setChildAndGroup(groupPosition, childPosition);
+                    return true;
                 }
             });
             if(data.size() == 0)
@@ -296,6 +303,28 @@ public class PedidoListFragment extends BaseFragment {
                 loaderPedidos = new LoaderPedidos();
             getLoaderManager().initLoader(0, args, loaderPedidos);
         }
+    }
+
+    public HashMap<String, List<Pedido>> toExpandableList(List<Pedido> lista)
+    {
+        tipos = new ArrayList<>();
+        headers = new ArrayList<>();
+        HashMap<String, List<Pedido>> listDataChild = new HashMap<String, List<Pedido>>();
+        List<GeneralValue> tiposTransaccion = GeneralValue.getGeneralValues(getDataBase(), Contants.GENERAL_TABLE_TIPOS_TRANSACCION);
+
+        for(GeneralValue tipo : tiposTransaccion)
+        {
+            tipos.add(tipo.getCode());
+            headers.add(tipo.getValue());
+            listDataChild.put(tipo.getCode(), new ArrayList<Pedido>());
+        }
+
+        for(Pedido ped : lista)
+        {
+            listDataChild.get(ped.getTipoDocumento()).add(ped);
+        }
+
+        return listDataChild;
     }
 
 }

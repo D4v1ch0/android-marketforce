@@ -156,6 +156,10 @@ public class Pedido {
                     det.setIdPedido(id);
                     PedidoDetalle.update(db, det);
                 }
+                for (Pago pag : pedidoUpload.getPagos()) {
+                    pag.setIdPedido(id);
+                    Pago.update(db, pag);
+                }
             } catch (HttpResponseException e) {
                 if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
                     return rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR;

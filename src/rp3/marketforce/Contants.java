@@ -9,6 +9,7 @@ public class Contants {
 	public final static int GENERAL_TABLE_MOTIVOS_NO_VISITA = 1030;
     public final static int GENERAL_TABLE_MOTIVOS_REPROGRAMACION = 1031;
     public final static int GENERAL_TABLE_MOTIVOS_ANULACION = 1706;
+    public final static int GENERAL_TABLE_TIPOS_TRANSACCION = 1621;
 	public final static String IMAGE_FOLDER = "imagesFolder";
     public final static String IMAGE_FOLDER_PRODUCTOS = "imagesFolderProducto";
 	public final static String KEY_FIRST_TIME = "firstTime";

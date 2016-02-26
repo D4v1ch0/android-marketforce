@@ -353,6 +353,7 @@ public class MainActivity extends rp3.app.NavActivity{
             default:
                 break;
         }
+		setTitle(lastTitle);
 	}
 
     @Override
@@ -423,7 +424,7 @@ public class MainActivity extends rp3.app.NavActivity{
 			{
 				int startNav = NAV_DASHBOARD;			
 				setNavigationSelection(startNav);
-				getActionBar().setTitle(getString(R.string.title_option_setinicio));
+				setTitle(getString(R.string.title_option_setinicio));
 				lastTitle = getString(R.string.title_option_setinicio);
 			}
 		}
@@ -435,7 +436,7 @@ public class MainActivity extends rp3.app.NavActivity{
 			{
 				int startNav = NAV_DASHBOARD;			
 				setNavigationSelection(startNav);
-				getActionBar().setTitle(getString(R.string.title_option_setinicio));
+				setTitle(getString(R.string.title_option_setinicio));
 				lastTitle = getString(R.string.title_option_setinicio);
 			}
 		}

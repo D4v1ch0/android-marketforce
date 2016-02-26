@@ -5,7 +5,8 @@
     android:baselineAligned="false"
     android:orientation="vertical"
     android:padding="10dp"
-    android:background="@drawable/list_selector">
+    android:background="@drawable/bkg"
+    android:id="@+id/pedido_bkg">
 
     <LinearLayout
         android:layout_width="match_parent"

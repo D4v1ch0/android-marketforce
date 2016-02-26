@@ -4,7 +4,7 @@
     <string name="title_option_setinicio">Dashboard</string>
     <string name="title_option_setrutas">Agenda</string>
     <string name="title_option_setclientes">Clientes</string>
-    <string name="title_option_setpedido">Transacción</string>
+    <string name="title_option_setpedido">Transacciones</string>
     <string name="title_option_setreuniones">Reuniones</string>
     <string name="title_option_setrecordatorios">Recordatorios</string>
     <string name="title_option_recorrido">Mi Recorrido</string>
@@ -252,5 +252,6 @@
     <string name="title_cerrar_caja_activa">Cerrar Caja</string>
     <string name="message_cerrar_caja_activa">Existe una caja abierta por otro usuario, desea cerrarla? (En el caso de no cerrarla, no podra transaccionar)</string>
     <string name="title_guardar_transaccion">Guardar Transacción</string>
+    <string name="action_reimpresion">Reimprimir Transacción</string>
 
 </resources>
