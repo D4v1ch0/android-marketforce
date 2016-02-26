@@ -984,7 +984,7 @@ public class CrearClienteFragment extends BaseFragment {
         if(((EditText)getRootView().findViewById(R.id.cliente_identificacion)).getText().toString().trim().length() >= 0 && getRootView().findViewById(R.id.cliente_identificacion).isEnabled())
         {
             Cliente proof = Cliente.getClienteByIdentificacion(getDataBase(), ((EditText)getRootView().findViewById(R.id.cliente_identificacion)).getText().toString().trim());
-            if(cliente != null) {
+            if(proof != null) {
                 Toast.makeText(getContext(), "Ya existe cliente con esta identificación.", Toast.LENGTH_LONG).show();
                 return false;
             }

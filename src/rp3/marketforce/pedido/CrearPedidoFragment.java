@@ -289,7 +289,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                 {
                     if(detalle_nc.getIdProducto() == detalleRef.getIdProducto())
                     {
-                        detalleRef.setCantidadDevolucion(detalle_nc.getCantidad());
+                        detalleRef.setCantidadDevolucion(detalle_nc.getCantidad() + detalleRef.getCantidadDevolucion());
                         PedidoDetalle.update(getDataBase(), detalleRef);
                     }
                 }
@@ -472,7 +472,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                     jsonObject.put("p", pedido.getPedidoDetalles().get(position).getValorUnitario());
                     jsonObject.put("id", pedido.getPedidoDetalles().get(position).getIdProducto());
                     jsonObject.put("f", pedido.getPedidoDetalles().get(position).getUrlFoto());
-                    jsonObject.put("c", pedido.getPedidoDetalles().get(position).getCantidad());
+                    jsonObject.put("c", pedido.getPedidoDetalles().get(position).getCantidad() - pedido.getPedidoDetalles().get(position).getCantidadDevolucion());
                     jsonObject.put("vd", prod.getPrecioDescuento());
                     jsonObject.put("pd", prod.getPorcentajeDescuento());
                     jsonObject.put("tipo", tipo);
@@ -865,6 +865,8 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         toPrint = toPrint + '\n';
         if(tipo.equalsIgnoreCase("FA"))
             toPrint = toPrint + StringUtils.centerStringInLine("FACTURA", SPACES);
+        if(tipo.equalsIgnoreCase("NC"))
+            toPrint = toPrint + StringUtils.centerStringInLine("NOTA DE CRÉDITO", SPACES);
 
         toPrint = toPrint + StringUtils.centerStringInLine("No." + pedido.getNumeroDocumento(), SPACES);
         toPrint = toPrint + '\n';
