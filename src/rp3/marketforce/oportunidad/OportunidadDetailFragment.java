@@ -521,7 +521,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                         }
                         if(etp.getFechaInicio().getTime() > 0) {
                             ((TextView) view_timeline.findViewById(R.id.etapa1_fecha)).setText(format1.format(etp.getFechaInicio()) + "/" + format2.format(etp.getFechaInicio()) + "/" + format3.format(etp.getFechaInicio()));
-                            ((TextView) view_timeline.findViewById(R.id.etapa1_fecha)).setTextColor(getResources().getColor(R.color.color_etapa4));
+                            ((TextView) view_timeline.findViewById(R.id.etapa1_fecha)).setTextColor(getResources().getColor(R.color.color_on_time));
                         }
                         Calendar thisDay = Calendar.getInstance();
                         if(etp.getFechaFin().getTime() > 0)
@@ -564,7 +564,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                                 if(diff < 0)
                                     ((TextView) view_timeline.findViewById(R.id.etapa2_fecha)).setTextColor(getResources().getColor(R.color.color_visited));
                                 else if(diff == 0)
-                                    ((TextView) view_timeline.findViewById(R.id.etapa2_fecha)).setTextColor(getResources().getColor(R.color.color_etapa4));
+                                    ((TextView) view_timeline.findViewById(R.id.etapa2_fecha)).setTextColor(getResources().getColor(R.color.color_on_time));
                                 else
                                     ((TextView) view_timeline.findViewById(R.id.etapa2_fecha)).setTextColor(getResources().getColor(R.color.color_unvisited));
                             }
@@ -579,7 +579,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                             if(diff < 0)
                                 ((TextView) view_timeline.findViewById(R.id.etapa2_fecha)).setTextColor(getResources().getColor(R.color.color_visited));
                             else if(diff == 0)
-                                ((TextView) view_timeline.findViewById(R.id.etapa2_fecha)).setTextColor(getResources().getColor(R.color.color_etapa4));
+                                ((TextView) view_timeline.findViewById(R.id.etapa2_fecha)).setTextColor(getResources().getColor(R.color.color_on_time));
                             else
                                 ((TextView) view_timeline.findViewById(R.id.etapa2_fecha)).setTextColor(getResources().getColor(R.color.color_unvisited));
                         }
@@ -625,7 +625,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                                 if(diff < 0)
                                     ((TextView) view_timeline.findViewById(R.id.etapa3_fecha)).setTextColor(getResources().getColor(R.color.color_visited));
                                 else if(diff == 0)
-                                    ((TextView) view_timeline.findViewById(R.id.etapa3_fecha)).setTextColor(getResources().getColor(R.color.color_etapa4));
+                                    ((TextView) view_timeline.findViewById(R.id.etapa3_fecha)).setTextColor(getResources().getColor(R.color.color_on_time));
                                 else
                                     ((TextView) view_timeline.findViewById(R.id.etapa3_fecha)).setTextColor(getResources().getColor(R.color.color_unvisited));
                             }
@@ -640,7 +640,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                             if(diff < 0)
                                 ((TextView) view_timeline.findViewById(R.id.etapa3_fecha)).setTextColor(getResources().getColor(R.color.color_visited));
                             else if(diff == 0)
-                                ((TextView) view_timeline.findViewById(R.id.etapa3_fecha)).setTextColor(getResources().getColor(R.color.color_etapa4));
+                                ((TextView) view_timeline.findViewById(R.id.etapa3_fecha)).setTextColor(getResources().getColor(R.color.color_on_time));
                             else
                                 ((TextView) view_timeline.findViewById(R.id.etapa3_fecha)).setTextColor(getResources().getColor(R.color.color_unvisited));
                         }
@@ -686,7 +686,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                                 if(diff < 0)
                                     ((TextView) view_timeline.findViewById(R.id.etapa4_fecha)).setTextColor(getResources().getColor(R.color.color_visited));
                                 else if(diff == 0)
-                                    ((TextView) view_timeline.findViewById(R.id.etapa4_fecha)).setTextColor(getResources().getColor(R.color.color_etapa4));
+                                    ((TextView) view_timeline.findViewById(R.id.etapa4_fecha)).setTextColor(getResources().getColor(R.color.color_on_time));
                                 else
                                     ((TextView) view_timeline.findViewById(R.id.etapa4_fecha)).setTextColor(getResources().getColor(R.color.color_unvisited));
                             }
@@ -701,7 +701,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                             if(diff < 0)
                                 ((TextView) view_timeline.findViewById(R.id.etapa4_fecha)).setTextColor(getResources().getColor(R.color.color_visited));
                             else if(diff == 0)
-                                ((TextView) view_timeline.findViewById(R.id.etapa4_fecha)).setTextColor(getResources().getColor(R.color.color_etapa4));
+                                ((TextView) view_timeline.findViewById(R.id.etapa4_fecha)).setTextColor(getResources().getColor(R.color.color_on_time));
                             else
                                 ((TextView) view_timeline.findViewById(R.id.etapa4_fecha)).setTextColor(getResources().getColor(R.color.color_unvisited));
                         }
@@ -746,7 +746,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                                 if(diff < 0)
                                     ((TextView) view_timeline.findViewById(R.id.etapa5_fecha)).setTextColor(getResources().getColor(R.color.color_visited));
                                 else if(diff == 0)
-                                    ((TextView) view_timeline.findViewById(R.id.etapa5_fecha)).setTextColor(getResources().getColor(R.color.color_etapa4));
+                                    ((TextView) view_timeline.findViewById(R.id.etapa5_fecha)).setTextColor(getResources().getColor(R.color.color_on_time));
                                 else
                                     ((TextView) view_timeline.findViewById(R.id.etapa5_fecha)).setTextColor(getResources().getColor(R.color.color_unvisited));
                             }
@@ -761,7 +761,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                             if(diff < 0)
                                 ((TextView) view_timeline.findViewById(R.id.etapa5_fecha)).setTextColor(getResources().getColor(R.color.color_visited));
                             else if(diff == 0)
-                                ((TextView) view_timeline.findViewById(R.id.etapa5_fecha)).setTextColor(getResources().getColor(R.color.color_etapa4));
+                                ((TextView) view_timeline.findViewById(R.id.etapa5_fecha)).setTextColor(getResources().getColor(R.color.color_on_time));
                             else
                                 ((TextView) view_timeline.findViewById(R.id.etapa5_fecha)).setTextColor(getResources().getColor(R.color.color_unvisited));
                         }
