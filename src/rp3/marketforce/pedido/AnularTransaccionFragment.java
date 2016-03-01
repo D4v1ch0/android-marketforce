@@ -30,6 +30,7 @@ public class AnularTransaccionFragment extends BaseFragment {
     public static final String ARG_TRANSACCION = "transaccion";
 
     private long id;
+    private PedidoDetailFragment.PedidoDetailFragmentListener createFragmentListener;
 
     public static AnularTransaccionFragment newInstance(long transaccion)
     {
@@ -48,6 +49,11 @@ public class AnularTransaccionFragment extends BaseFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
+        if(getParentFragment()!=null){
+            createFragmentListener = (PedidoDetailFragment.PedidoDetailFragmentListener)getParentFragment();
+        }else{
+            createFragmentListener = (PedidoDetailFragment.PedidoDetailFragmentListener) activity;
+        }
         setContentView(R.layout.fragment_anular_transaccion);
 
     }
@@ -92,6 +98,7 @@ public class AnularTransaccionFragment extends BaseFragment {
                 bundle2.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ANULAR_PEDIDO);
                 bundle2.putLong(CrearPedidoFragment.ARG_PEDIDO, id);
                 requestSync(bundle2);
+                createFragmentListener.onPermisoChanged(pedido);
                 dismiss();
             }
         });

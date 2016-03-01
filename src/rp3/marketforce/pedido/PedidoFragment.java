@@ -39,6 +39,7 @@ import rp3.marketforce.models.pedido.Producto;
 import rp3.marketforce.ruta.MapaActivity;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.PrintHelper;
+import rp3.util.CalendarUtils;
 import rp3.util.ConnectionUtils;
 import rp3.widget.SlidingPaneLayout;
 
@@ -204,12 +205,18 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
         Pedido ped = Pedido.getPedido(getDataBase(), selectedClientId);
         Pedido ref = Pedido.getPedidoRef(getDataBase(), selectedClientId);
         ControlCaja control = ControlCaja.getControlCajaActiva(getDataBase());
+        Calendar calPed = Calendar.getInstance();
+        Calendar calApe = Calendar.getInstance();
+        if(control != null)
+            calApe.setTime(control.getFechaApertura());
+        if(selectedClientId != 0)
+            calPed.setTime(ped.getFechaCreacion());
         if(!mTwoPane){
             menu.findItem(R.id.action_arqueo_caja).setVisible(isActiveListFragment);
-            menu.findItem(R.id.action_crear_pedido).setVisible(isActiveListFragment && control != null);
+            menu.findItem(R.id.action_crear_pedido).setVisible(isActiveListFragment && control != null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calApe) == 0);
             menu.findItem(R.id.action_sincronizar_productos).setVisible(isActiveListFragment);
-            menu.findItem(R.id.action_anular_pedido).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && control != null && ref == null);
-            menu.findItem(R.id.action_nota_credito).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && ped.getTipoDocumento().equalsIgnoreCase("FA") && control != null);
+            menu.findItem(R.id.action_anular_pedido).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && control != null && ref == null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calPed) == 0);
+            menu.findItem(R.id.action_nota_credito).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && ped.getTipoDocumento().equalsIgnoreCase("FA") && control != null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calApe) == 0);
             menu.findItem(R.id.action_aperturar_caja).setVisible(isActiveListFragment && control == null);
             menu.findItem(R.id.action_cerrar_caja).setVisible(isActiveListFragment && control != null);
             menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
@@ -220,7 +227,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
             menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_arqueo_caja).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_crear_pedido).setVisible(isActiveListFragment && control != null);
-            menu.findItem(R.id.action_anular_pedido).setVisible(selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && control != null && ref == null);
+            menu.findItem(R.id.action_anular_pedido).setVisible(selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && control != null && ref == null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calPed) == 0);
             menu.findItem(R.id.action_nota_credito).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && ped.getTipoDocumento().equalsIgnoreCase("FA") && control != null);
             menu.findItem(R.id.action_aperturar_caja).setVisible(isActiveListFragment && control == null);
             menu.findItem(R.id.action_cerrar_caja).setVisible(isActiveListFragment && control != null);
@@ -373,7 +380,8 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
 
     @Override
     public void onPermisoChanged(Pedido permiso) {
-
+        if(transactionDetailFragment != null)
+            transactionDetailFragment.onResume();
     }
 
     @Override

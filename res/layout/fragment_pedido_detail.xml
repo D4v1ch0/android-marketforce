@@ -28,6 +28,11 @@
             android:id="@+id/pedido_cliente"
             android:layout_weight="1"
             android:textSize="@dimen/text_medium_small_size" />
+        <ImageView
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:id="@+id/pedido_estado"
+            android:src="@drawable/circle_unvisited" />
     </LinearLayout>
 
     <LinearLayout

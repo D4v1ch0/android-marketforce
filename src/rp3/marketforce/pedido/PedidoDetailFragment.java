@@ -3,6 +3,7 @@ package rp3.marketforce.pedido;
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -86,6 +87,14 @@ public class PedidoDetailFragment extends BaseFragment {
             this.getActivity().setTitle("Factura No. " + pedido.getNumeroDocumento());
         if(pedido.getTipoDocumento().equalsIgnoreCase("NC"))
             this.getActivity().setTitle("Nota de Crédito No. " + pedido.getNumeroDocumento());
+
+        if (pedido.getEstado().equals("P")) {
+            ((ImageView) getRootView().findViewById(R.id.pedido_estado)).setImageDrawable(this.getResources().getDrawable(R.drawable.circle_pending));
+        } else if (pedido.getEstado().equals("C")) {
+            ((ImageView) getRootView().findViewById(R.id.pedido_estado)).setImageDrawable(this.getResources().getDrawable(R.drawable.circle_visited));
+        } else {
+            ((ImageView) getRootView().findViewById(R.id.pedido_estado)).setImageDrawable(this.getResources().getDrawable(R.drawable.circle_unvisited));
+        }
 
         ((TextView) getRootView().findViewById(R.id.pedido_cantidad)).setText(CrearPedidoFragment.getPedidoCantidad(pedido.getPedidoDetalles()) + "");
         ((TextView) getRootView().findViewById(R.id.pedido_total)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(pedido.getValorTotal()));
