@@ -8,12 +8,16 @@ import android.util.Log;
 import com.google.android.gms.gcm.GcmListenerService;
 
 import rp3.db.sqlite.DataBase;
+
+import java.util.Calendar;
 import java.util.Locale;
 
 import rp3.marketforce.R;
 import rp3.marketforce.marcaciones.MarcacionActivity;
 import rp3.marketforce.marcaciones.PermisoActivity;
 import rp3.marketforce.models.marcacion.Marcacion;
+import rp3.marketforce.utils.Utils;
+import rp3.runtime.Session;
 import rp3.util.NotificationPusher;
 
 /**
@@ -27,10 +31,22 @@ public class GCMReceiver extends GcmListenerService {
 
     @Override
     public void onMessageReceived(String from, Bundle data) {
+        try {
+            Session.Start(getBaseContext());
+            rp3.configuration.Configuration.TryInitializeConfiguration(getBaseContext());
+        }
+        catch (Exception ex)
+        {
+            Utils.ErrorToFile(ex);
+            ex.printStackTrace();
+        }
+
         String message = data.getString("Message");
         String title = data.getString("Title");
         String footer = data.getString("Footer","");
         String type = data.getString("Type", "");
+
+        Utils.ErrorToFile("Context is null - " + from + " - " + message + " - " + title + " - " + Calendar.getInstance().getTime().toString());
 
         if(TextUtils.isEmpty(title))
         {
@@ -46,6 +62,8 @@ public class GCMReceiver extends GcmListenerService {
                 int posPuntos = footer.indexOf(":");
                 int posGuion = footer.indexOf("-");
                 toSpeech = "Mensaje de " + footer.substring(posPuntos, posGuion);
+                if(getApplicationContext() == null)
+                    Utils.ErrorToFile("Context is null - " + Calendar.getInstance().getTime().toString());
                 NotificationPusher.pushNotification(1, getApplicationContext(), message, title, footer);
             }
             else
@@ -56,23 +74,32 @@ public class GCMReceiver extends GcmListenerService {
                         Marcacion ultimaMarcacion = Marcacion.getUltimaMarcacion(db);
                         if (ultimaMarcacion == null || rp3.marketforce.models.marcacion.Marcacion.getMarcacionesPendientes(db).size() == 0) {
                             toSpeech = title;
+                            if(getApplicationContext() == null)
+                                Utils.ErrorToFile("Context is null - " + Calendar.getInstance().getTime().toString());
                             NotificationPusher.pushNotification(1, getApplicationContext(), message, title, MarcacionActivity.class);
                         }
 
                         rp3.marketforce.sync.Marcaciones.executeSync(db);
                     }
                     catch(Exception ex)
-                    {}
+                    {
+                        Utils.ErrorToFile(ex);
+                        ex.printStackTrace();
+                    }
 
                 }
                 else if(type.equalsIgnoreCase(NOTIFICATION_TYPE_APROBAR_JUSTIFICACION)) {
                     toSpeech = title;
+                    if(getApplicationContext() == null)
+                        Utils.ErrorToFile("Context is null - " + Calendar.getInstance().getTime().toString());
                     NotificationPusher.pushNotification(1, getApplicationContext(), message, title, PermisoActivity.class);
                 }
                 else {
                     int posPuntos = footer.indexOf(":");
                     int posGuion = footer.indexOf("-");
                     toSpeech = "Mensaje de " + footer.substring(posPuntos, posGuion);
+                    if(getApplicationContext() == null)
+                        Utils.ErrorToFile("Context is null - " + Calendar.getInstance().getTime().toString());
                     NotificationPusher.pushNotification(1, getApplicationContext(), message, title, footer);
                 }
             }

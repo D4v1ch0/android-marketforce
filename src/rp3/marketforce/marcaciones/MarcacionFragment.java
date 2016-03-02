@@ -6,6 +6,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -28,18 +29,21 @@ import java.util.List;
 
 import rp3.app.BaseActivity;
 import rp3.app.BaseFragment;
+import rp3.configuration.Configuration;
 import rp3.configuration.PreferenceManager;
 import rp3.data.MessageCollection;
 import rp3.db.sqlite.DataBase;
 import rp3.maps.utils.SphericalUtil;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
+import rp3.marketforce.db.DbOpenHelper;
 import rp3.marketforce.models.DiaLaboral;
 import rp3.marketforce.models.marcacion.Marcacion;
 import rp3.marketforce.models.marcacion.Permiso;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.DetailsPageAdapter;
 import rp3.marketforce.utils.Utils;
+import rp3.runtime.Session;
 import rp3.util.CalendarUtils;
 import rp3.util.ConnectionUtils;
 import rp3.util.GooglePlayServicesUtils;
@@ -353,6 +357,17 @@ public class MarcacionFragment extends BaseFragment {
     @Override
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
+
+        if(getDataBase() == null) {
+            try {
+                Session.Start(this.getContext());
+                rp3.configuration.Configuration.TryInitializeConfiguration(this.getContext());
+                Configuration.reinitializeConfiguration(this.getContext(), DbOpenHelper.class);
+            } catch (Exception ex) {
+                Utils.ErrorToFile(ex);
+                ex.printStackTrace();
+            }
+        }
 
         format1 = new SimpleDateFormat("EEEE");
         format2 = new SimpleDateFormat("dd");
