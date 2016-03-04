@@ -108,7 +108,7 @@ public class Rutas {
 					
 					try {
 						JSONObject type = types.getJSONObject(i);
-						rp3.marketforce.models.Agenda agenda = new rp3.marketforce.models.Agenda();
+						rp3.marketforce.models.Agenda agenda = rp3.marketforce.models.Agenda.getAgendaServer(db, (int) type.getLong("IdAgenda"));
 
                         if(type.getString("EstadoAgenda").equalsIgnoreCase(Contants.ESTADO_ELIMINADO))
                         {
