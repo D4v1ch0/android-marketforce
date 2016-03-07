@@ -9,6 +9,7 @@ import rp3.marketforce.ServerActivity;
 import rp3.marketforce.cliente.CrearClienteFragment;
 import rp3.marketforce.marcaciones.JustificacionFragment;
 import rp3.marketforce.models.Tarea;
+import rp3.marketforce.pedido.CrearPedidoFragment;
 import rp3.marketforce.resumen.AgenteDetalleFragment;
 import rp3.marketforce.ruta.CrearVisitaFragment;
 import rp3.marketforce.ruta.MotivoNoVisitaFragment;
@@ -60,6 +61,9 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
     public static String SYNC_TYPE_PERMISO_PREVIO = "permiso_previo";
     public static String SYNC_TYPE_JUSTIFICACIONES = "justificaciones";
     public static String SYNC_TYPE_JUSTIFICACIONES_UPLOAD = "justificaciones_upload";
+
+    public static String SYNC_TYPE_UPDATE_PEDIDO = "update_pedido";
+    public static String SYNC_TYPE_PRODUCTOS = "get_productos";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -320,6 +324,21 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                 } else if (syncType.equals(SYNC_TYPE_REPROGRAMAR_AGENDA)) {
                     int id = extras.getInt(RutasDetailFragment.ARG_AGENDA_ID);
                     result = Agenda.executeSyncReschedule(db, id);
+                    addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_PRODUCTOS)) {
+
+                    result = Productos.executeSync(db);
+                    addDefaultMessage(result);
+
+                    result = Productos.executeSyncCategorias(db);
+                    addDefaultMessage(result);
+
+                    result = Productos.executeSyncSubCategorias(db);
+                    addDefaultMessage(result);
+
+                } else if (syncType.equals(SYNC_TYPE_UPDATE_PEDIDO)) {
+                    long id = extras.getLong(CrearPedidoFragment.ARG_PEDIDO);
+                    result = Pedido.executeSync(db, id);
                     addDefaultMessage(result);
                 } else if (syncType.equals(SYNC_TYPE_INSERTAR_AGENDA)) {
                     long agenda = extras.getLong(CrearVisitaFragment.ARG_AGENDA);
