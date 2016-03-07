@@ -14,6 +14,8 @@ import rp3.content.SyncAdapter;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
 import rp3.marketforce.db.Contract;
+import rp3.marketforce.models.*;
+import rp3.marketforce.models.Agenda;
 import rp3.sync.SyncAudit;
 import rp3.util.Convert;
 import rp3.util.CursorUtils;
@@ -109,6 +111,8 @@ public class Rutas {
 					try {
 						JSONObject type = types.getJSONObject(i);
 						rp3.marketforce.models.Agenda agenda = rp3.marketforce.models.Agenda.getAgendaServer(db, (int) type.getLong("IdAgenda"));
+						if(agenda == null)
+							agenda = new Agenda();
 
                         if(type.getString("EstadoAgenda").equalsIgnoreCase(Contants.ESTADO_ELIMINADO))
                         {
@@ -153,16 +157,28 @@ public class Rutas {
 
                             for (int j = 0; j < strs.length(); j++) {
                                 JSONObject str = strs.getJSONObject(j);
-                                rp3.marketforce.models.AgendaTarea agendaTarea = new rp3.marketforce.models.AgendaTarea();
 
-                                agendaTarea.setIdTarea(str.getInt("IdTarea"));
-                                agendaTarea.setIdRuta(str.getInt("IdRuta"));
-                                agendaTarea.setIdAgenda(str.getInt("IdAgenda"));
-                                //agendaTarea.setNombreTarea(str.getString("Nombre"));
-                                agendaTarea.setEstadoTarea(str.getString("EstadoTarea"));
-                                //agendaTarea.setTipoTarea(str.getString("TipoTarea"));
+								boolean existe = false;
 
-                                rp3.marketforce.models.AgendaTarea.insert(db, agendaTarea);
+								if(agenda.getAgendaTareas() != null) {
+									for (AgendaTarea tarea : agenda.getAgendaTareas()) {
+										if (tarea.getIdTarea() == str.getInt("IdTarea"))
+											existe = true;
+									}
+								}
+
+								if(!existe) {
+									rp3.marketforce.models.AgendaTarea agendaTarea = new rp3.marketforce.models.AgendaTarea();
+
+									agendaTarea.setIdTarea(str.getInt("IdTarea"));
+									agendaTarea.setIdRuta(str.getInt("IdRuta"));
+									agendaTarea.setIdAgenda(str.getInt("IdAgenda"));
+									//agendaTarea.setNombreTarea(str.getString("Nombre"));
+									agendaTarea.setEstadoTarea(str.getString("EstadoTarea"));
+									//agendaTarea.setTipoTarea(str.getString("TipoTarea"));
+
+									rp3.marketforce.models.AgendaTarea.insert(db, agendaTarea);
+								}
                             }
                         }
 						
