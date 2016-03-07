@@ -541,7 +541,7 @@ public class Agenda {
                             agdResp.setIdRuta(jObjResp.getInt("IdRutaServer"));
                             agdResp.setEnviado(true);
                             rp3.marketforce.models.Agenda.update(db, agdResp);
-                            rp3.marketforce.models.Agenda.delete(db, agdResp);
+                            //rp3.marketforce.models.Agenda.delete(db, agdResp);
                             agendasConId.add(agdResp);
                             for (AgendaTarea agdTarea : agdResp.getAgendaTareas()) {
                                 agdTarea.setIdAgenda(jObjResp.getInt("IdAgendaServer"));
