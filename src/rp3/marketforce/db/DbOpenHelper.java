@@ -6,6 +6,8 @@ import android.util.Log;
 
 import rp3.db.QueryDir;
 import rp3.sync.SyncAudit;
+import rp3.db.sqlite.DataBase;
+import rp3.marketforce.models.marcacion.Justificacion;
 
 public class DbOpenHelper extends rp3.db.sqlite.DataBaseOpenHelper {
 

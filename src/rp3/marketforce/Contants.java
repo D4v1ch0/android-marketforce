@@ -12,6 +12,10 @@ public class Contants {
     public final static int GENERAL_TABLE_ESTADOS_OPORTUNIDAD_ETAPA = 1038;
     public final static int GENERAL_TABLE_ESTADOS_OPORTUNIDAD_TAREA = 1014;
     public final static int GENERAL_TABLE_TIPO_RESPONSABLES = 1040;
+    public final static int GENERAL_TABLE_TIPOS_PERMISO = 1041;
+    public final static int GENERAL_TABLE_MOTIVO_PERMISO = 1042;
+    public final static int GENERAL_TABLE_ESTADO_PERMISO = 1043;
+    public final static int GENERAL_TABLE_TIPO_MARCACION = 1044;
 	public final static String IMAGE_FOLDER = "imagesFolder";
     public final static String IMAGE_FOLDER_OPORTUNIDADES = "imagesFolderOportunidad";
 	public final static String KEY_FIRST_TIME = "firstTime";
@@ -32,6 +36,10 @@ public class Contants {
 	
 	public final static String KEY_IDAGENTE = "IdAgente";
 	public final static String KEY_IDRUTA = "IdRuta";
+    public final static String KEY_APLICA_MARCACION = "AplicaMarcacion";
+    public final static String KEY_APLICA_BREAK = "AplicaBreak";
+    public final static String KEY_LONGITUD_PARTIDA = "LongitudPuntoPartida";
+    public final static String KEY_LATITUD_PARTIDA = "LatitudPuntoPartida";
 	public final static String KEY_ES_SUPERVISOR = "EsSupervisor";
 	public final static String KEY_ES_AGENTE = "EsAgente";
 	public final static String KEY_ES_ADMINISTRADOR = "EsAdministrador";
@@ -53,6 +61,7 @@ public class Contants {
 	public final static String KEY_SERVER = "server";
 	public final static String KEY_CLIENT = "ClientName";
     public final static String KEY_APP_INSTANCE_ID = "TokenId";
+    public final static String KEY_MARACIONES_DISTANCIA = "MarcacionDistance";
 
     public final static String CAMPO_FECHA_NACIMIENTO = "FecNac";
     public final static String CAMPO_GENERO = "Gen";

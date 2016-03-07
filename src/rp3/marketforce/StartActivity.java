@@ -8,6 +8,7 @@ import rp3.configuration.PreferenceManager;
 import rp3.content.SimpleCallback;
 import rp3.data.Constants;
 import rp3.data.MessageCollection;
+import rp3.db.sqlite.DataBase;
 import rp3.marketforce.content.EnviarUbicacionReceiver;
 import rp3.marketforce.db.Contract;
 import rp3.marketforce.db.DbOpenHelper;
@@ -33,7 +34,11 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.Toast;
+
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.iid.InstanceID;
 
 public class StartActivity extends rp3.app.StartActivity{
 
@@ -126,6 +131,7 @@ public class StartActivity extends rp3.app.StartActivity{
 		Long days = SyncAudit.getDaysOfLastSync(SyncAdapter.SYNC_TYPE_GENERAL, SyncAdapter.SYNC_EVENT_SUCCESS);
 
 		if(days == null || days > 0){
+
 			Bundle bundle = new Bundle();
 			bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_GENERAL);
 			requestSync(bundle);
@@ -177,7 +183,7 @@ public class StartActivity extends rp3.app.StartActivity{
 //	}
 	
 	private void callNextActivity(){
-		setServiceRecurring();		
+		setServiceRecurring();
 		startActivity(MainActivity.newIntent(this));
 		finish();
 		setServiceRecurring();
