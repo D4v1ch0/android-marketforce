@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="rp3.marketforce"
-    android:versionCode="49"
-    android:versionName="1.4.6h">
+    android:versionCode="50"
+    android:versionName="1.4.6i">
 
     <uses-sdk
         android:minSdkVersion="13"

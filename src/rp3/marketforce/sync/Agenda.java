@@ -24,7 +24,7 @@ import rp3.util.Convert;
 public class Agenda {
 
     public static int executeSync(DataBase db, int idAgenda) {
-        WebService webService = new WebService("MartketForce", "UpdateAgenda");
+        WebService webService = new WebService("MartketForce", "UpdateAgendaFull");
         webService.setTimeOut(20000);
 
         rp3.marketforce.models.Agenda agendaUpload = rp3.marketforce.models.Agenda.getAgendaUpload(db, idAgenda);
@@ -541,7 +541,7 @@ public class Agenda {
                             agdResp.setIdRuta(jObjResp.getInt("IdRutaServer"));
                             agdResp.setEnviado(true);
                             rp3.marketforce.models.Agenda.update(db, agdResp);
-                            rp3.marketforce.models.Agenda.delete(db, agdResp);
+                            //rp3.marketforce.models.Agenda.delete(db, agdResp);
                             agendasConId.add(agdResp);
                             for (AgendaTarea agdTarea : agdResp.getAgendaTareas()) {
                                 agdTarea.setIdAgenda(jObjResp.getInt("IdAgendaServer"));
