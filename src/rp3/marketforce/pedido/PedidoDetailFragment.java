@@ -78,7 +78,7 @@ public class PedidoDetailFragment extends BaseFragment {
         }
 
         if(pedido==null) return;
-        ((TextView) getRootView().findViewById(R.id.pedido_cliente)).setText(pedido.getCliente().getNombreCompleto());
+        ((TextView) getRootView().findViewById(R.id.pedido_cliente)).setText(pedido.getNombre());
         ((TextView) getRootView().findViewById(R.id.pedido_email)).setText(pedido.getEmail());
         PedidoDetalleAdapter adapter = new PedidoDetalleAdapter(this.getContext(), pedido.getPedidoDetalles());
         ((ListView) getRootView().findViewById(R.id.pedido_detalles)).setAdapter(adapter);

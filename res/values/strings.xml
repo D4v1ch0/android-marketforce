@@ -203,6 +203,7 @@
     <string name="action_crear_pedido">Crear Transacción</string>
     <string name="action_sincronizar_productos">Sincronizar Productos</string>
     <string name="action_editar_pedido">Editar Transaccipon</string>
+    <string name="action_cotizacion_a_factura">Facturar Cotización</string>
     <string name="label_sin_pedidos">No tiene transacciones</string>
     <string name="label_cantidad2">Cantidad:</string>
     <string name="label_cliente_2">Cliente:</string>
@@ -253,5 +254,15 @@
     <string name="message_cerrar_caja_activa">Existe una caja abierta por otro usuario, desea cerrarla? (En el caso de no cerrarla, no podra transaccionar)</string>
     <string name="title_guardar_transaccion">Guardar Transacción</string>
     <string name="action_reimpresion">Reimprimir Transacción</string>
+    <string name="warning_sin_papel">Impresora no tiene papel. Cargue la impresora de papel y haga touch en Reintentar.</string>
+    <string name="warning_impresora_no_vinculada">No existe impresora vinculada al dispositivo. Por favor vincule una impresora por medio de Bluetooth y haga touch en Reintentar.</string>
+    <string name="warning_error_desconocido">Error desconocido al imprimir. Si desea continuar, haga touch en Reintentar.</string>
+    <string name="warning_impresora_tapa_abierta">Impresora tiene la tapa abierta. Por favor cerrarla y hacer touch en Reintentar</string>
+    <string name="warning_impresora_papel_dañado">Impresora tiene el papel atascado. Por favor arreglar y hacer touch en Reintentar</string>
+    <string name="title_error_impresión">Error de Impresión</string>
+    <string name="title_cambio">Cambio</string>
+    <string name="action_reintentar">Reintentar</string>
+    <string name="label_no_existe_producto">Producto no existe</string>
+    <string name="message_reimprimir">Desea reimprimir esta transacción?</string>
 
 </resources>

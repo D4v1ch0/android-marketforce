@@ -1,6 +1,7 @@
 package rp3.marketforce.pedido;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -45,6 +46,7 @@ public class PagosListFragment extends BaseFragment implements AgregarPagoFragme
     private NumberFormat numberFormat;
     double valorTotal = 0;
     double saldo = 0;
+    private AgregarPagoFragment fragment;
 
     public static PagosListFragment newInstance(double valorTotal)
     {
@@ -171,7 +173,7 @@ public class PagosListFragment extends BaseFragment implements AgregarPagoFragme
                     if(pago.getFormaPago().getDescripcion().equalsIgnoreCase("Efectivo"))
                         efectivo = true;
                 }
-                AgregarPagoFragment fragment = AgregarPagoFragment.newInstance(saldo, efectivo);
+                fragment = AgregarPagoFragment.newInstance(saldo, efectivo);
                 showDialogFragment(fragment, "Pago", "Pago # " + (pagos.size() + 1));
             }
         });
@@ -186,8 +188,21 @@ public class PagosListFragment extends BaseFragment implements AgregarPagoFragme
 
         if(pagos.size() == 0)
         {
-            AgregarPagoFragment fragment = AgregarPagoFragment.newInstance(saldo, false);
+            fragment = AgregarPagoFragment.newInstance(saldo, false);
             showDialogFragment(fragment, "Pago", "Pago # " + (pagos.size() + 1));
+        }
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case AgregarPagoFragment.REQ_CODE_SPEECH_INPUT_PAGO:
+                if (resultCode == RESULT_OK && null != data) {
+                    if (fragment != null)
+                        fragment.onActivityResult(requestCode, resultCode, data);
+                }
+                break;
         }
 
     }

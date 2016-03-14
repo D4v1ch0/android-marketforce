@@ -1,14 +1,20 @@
 package rp3.marketforce.pedido;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 import rp3.app.BaseFragment;
 import rp3.content.SimpleGeneralValueAdapter;
@@ -21,6 +27,7 @@ import rp3.marketforce.models.pedido.Pago;
 import rp3.marketforce.models.pedido.Pedido;
 import rp3.marketforce.models.pedido.PedidoDetalle;
 import rp3.marketforce.sync.SyncAdapter;
+import rp3.util.StringUtils;
 
 /**
  * Created by magno_000 on 05/02/2016.
@@ -28,6 +35,8 @@ import rp3.marketforce.sync.SyncAdapter;
 public class AnularTransaccionFragment extends BaseFragment {
 
     public static final String ARG_TRANSACCION = "transaccion";
+
+    public static final int REQ_CODE_SPEECH_INPUT_ANUL = 101;
 
     private long id;
     private PedidoDetailFragment.PedidoDetailFragmentListener createFragmentListener;
@@ -59,6 +68,17 @@ public class AnularTransaccionFragment extends BaseFragment {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && null != data) {
+
+            ArrayList<String> result = data
+                    .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            setTextViewText(R.id.actividad_texto_respuesta, StringUtils.getStringCapSentence(result.get(0)));
+        }
+
+    }
+
+    @Override
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
 
@@ -66,6 +86,13 @@ public class AnularTransaccionFragment extends BaseFragment {
 
         SimpleGeneralValueAdapter motivoAnulacionAdapter = new SimpleGeneralValueAdapter(getContext(), getDataBase(), Contants.GENERAL_TABLE_MOTIVOS_ANULACION);
         ((Spinner) rootView.findViewById(R.id.anulacion_motivo)).setAdapter(motivoAnulacionAdapter);
+
+        ((ImageView) rootView.findViewById(R.id.actividad_voice_to_text)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                promptSpeechInput();
+            }
+        });
 
         rootView.findViewById(R.id.actividad_cancelar).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,14 +105,14 @@ public class AnularTransaccionFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Pedido pedido = Pedido.getPedido(getDataBase(), id);
-                pedido.setMotivoAnulacion(((GeneralValue)((Spinner)getRootView().findViewById(R.id.anulacion_motivo)).getSelectedItem()).getCode());
+                pedido.setMotivoAnulacion(((GeneralValue) ((Spinner) getRootView().findViewById(R.id.anulacion_motivo)).getSelectedItem()).getCode());
                 pedido.setObservacionAnulacion(((EditText) getRootView().findViewById(R.id.actividad_texto_respuesta)).getText().toString());
                 pedido.setEstado("A");
                 pedido.setFechaAnulacion(Calendar.getInstance().getTime());
                 Pedido.update(getDataBase(), pedido);
-                if(pedido.getTipoDocumento().equalsIgnoreCase("NC")) {
+                if (pedido.getTipoDocumento().equalsIgnoreCase("NC")) {
                     Pedido toUpdate = Pedido.getPedido(getDataBase(), pedido.get_idDocumentoRef());
-                    for(PedidoDetalle detalle_nc : pedido.getPedidoDetalles()) {
+                    for (PedidoDetalle detalle_nc : pedido.getPedidoDetalles()) {
                         for (PedidoDetalle detalleRef : toUpdate.getPedidoDetalles()) {
                             if (detalle_nc.getIdProducto() == detalleRef.getIdProducto()) {
                                 detalleRef.setCantidadDevolucion(detalleRef.getCantidadDevolucion() - detalle_nc.getCantidad());
@@ -102,5 +129,21 @@ public class AnularTransaccionFragment extends BaseFragment {
                 dismiss();
             }
         });
+    }
+
+    private void promptSpeechInput() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+                "Hable Ahora");
+        try {
+            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT_ANUL);
+        } catch (ActivityNotFoundException a) {
+            Toast.makeText(getContext(),
+                    "Dispositivo no soporta voz a texto.",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 }

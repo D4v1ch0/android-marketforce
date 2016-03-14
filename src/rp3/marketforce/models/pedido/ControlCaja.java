@@ -15,7 +15,7 @@ import rp3.util.CursorUtils;
 /**
  * Created by magno_000 on 22/02/2016.
  */
-public class ControlCaja extends EntityBase<Pago> {
+public class ControlCaja extends EntityBase<ControlCaja> {
 
     private long id;
     private int idControlCaja;

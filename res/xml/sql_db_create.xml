@@ -405,4 +405,11 @@
         ValorCierre REAL
         )
     </statement>
+    <statement>
+        CREATE TABLE tbProductoCodigo(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        CodigoExterno TEXT,
+        Codigo TEXT
+        )
+    </statement>
 </sql>

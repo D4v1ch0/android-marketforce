@@ -717,6 +717,14 @@ public final class Contract {
 		public static final String COLUMN_VALOR_APERTURA = "ValorApertura";
 		public static final String COLUMN_VALOR_CIERRE = "ValorCierre";
 
+	}
+
+	public static abstract class ProductoCodigo implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbProductoCodigo";
+
+		public static final String COLUMN_CODIGO_EXTERNO = "CodigoExterno";
+		public static final String COLUMN_CODIGO = "Codigo";
 
 	}
 }

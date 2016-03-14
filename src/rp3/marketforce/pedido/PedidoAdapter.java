@@ -117,13 +117,10 @@ public class PedidoAdapter extends BaseExpandableListAdapter {
             ((ImageView) convertView.findViewById(R.id.pedido_estado)).setImageDrawable(context.getResources().getDrawable(R.drawable.circle_visited));
         }
 
-        ((TextView) convertView.findViewById(R.id.pedido_cliente)).setText(pedido.getCliente().getNombreCompleto());
+        ((TextView) convertView.findViewById(R.id.pedido_cliente)).setText(pedido.getNombre());
         ((TextView) convertView.findViewById(R.id.pedido_fecha)).setText(format1.format(pedido.getFechaCreacion()) + ", " + format2.format(pedido.getFechaCreacion()) + " de " + format3.format(pedido.getFechaCreacion()) + " del " + format5.format(pedido.getFechaCreacion()));
         ((TextView) convertView.findViewById(R.id.pedido_numero_documento)).setText(pedido.getNumeroDocumento());
-        if(pedido.getTipoDocumento().equalsIgnoreCase("FA"))
-            ((TextView) convertView.findViewById(R.id.pedido_tipo_documento)).setText("Factura");
-        if(pedido.getTipoDocumento().equalsIgnoreCase("NC"))
-            ((TextView) convertView.findViewById(R.id.pedido_tipo_documento)).setText("Nota de Crédito");
+        ((TextView) convertView.findViewById(R.id.pedido_tipo_documento)).setText(pedido.getTransaccion().getValue());
         ((TextView) convertView.findViewById(R.id.pedido_items)).setText(CrearPedidoFragment.getPedidoCantidad(pedido.getPedidoDetalles()) + "");
         ((TextView) convertView.findViewById(R.id.pedido_valor)).setText("$ " + numberFormat.format(pedido.getValorTotal()));
 

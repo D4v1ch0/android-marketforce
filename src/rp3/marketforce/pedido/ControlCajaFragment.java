@@ -50,6 +50,16 @@ public class ControlCajaFragment extends BaseFragment {
     }
 
     @Override
+    public void onFragmentResult(String tagName, int resultCode, Bundle data) {
+        super.onFragmentResult(tagName, resultCode, data);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
 

@@ -7,8 +7,10 @@ import java.util.Date;
 import java.util.List;
 
 import rp3.data.entity.EntityBase;
+import rp3.data.models.GeneralValue;
 import rp3.db.QueryDir;
 import rp3.db.sqlite.DataBase;
+import rp3.marketforce.Contants;
 import rp3.marketforce.db.Contract;
 import rp3.marketforce.models.Cliente;
 import rp3.util.CursorUtils;
@@ -53,6 +55,7 @@ public class Pedido extends EntityBase<Pedido> {
     private List<PedidoDetalle> pedidoDetalles;
     private List<Pago> pagos;
     private Cliente cliente;
+    private GeneralValue transaccion;
 
     @Override
     public long getID() {
@@ -120,6 +123,14 @@ public class Pedido extends EntityBase<Pedido> {
 
     public void setValorTotal(double valorTotal) {
         this.valorTotal = valorTotal;
+    }
+
+    public GeneralValue getTransaccion() {
+        return transaccion;
+    }
+
+    public void setTransaccion(GeneralValue transaccion) {
+        this.transaccion = transaccion;
     }
 
     public String getEmail() {
@@ -423,6 +434,8 @@ public class Pedido extends EntityBase<Pedido> {
                 pedido.setCliente(Cliente.getClienteIDServer(db, pedido.getIdCliente(), false));
             else
                 pedido.setCliente(Cliente.getClienteID(db, pedido.get_idCliente(), false));
+            pedido.setNombre(CursorUtils.getString(c, Contract.Pedido.FIELD_NOMBRE));
+            pedido.setTransaccion(GeneralValue.getGeneralValue(db, Contants.GENERAL_TABLE_TIPOS_TRANSACCION, pedido.getTipoDocumento()));
             list.add(pedido);
         }
         c.close();
@@ -481,6 +494,8 @@ public class Pedido extends EntityBase<Pedido> {
                 pedido.setCliente(Cliente.getClienteIDServer(db, pedido.getIdCliente(), false));
             else
                 pedido.setCliente(Cliente.getClienteID(db, pedido.get_idCliente(), false));
+            pedido.setNombre(CursorUtils.getString(c, Contract.Pedido.FIELD_NOMBRE));
+            pedido.setTransaccion(GeneralValue.getGeneralValue(db, Contants.GENERAL_TABLE_TIPOS_TRANSACCION, pedido.getTipoDocumento()));
             list.add(pedido);
         }
         c.close();
@@ -571,6 +586,7 @@ public class Pedido extends EntityBase<Pedido> {
             pedido.setTotalImpuesto4(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_TOTAL_IMPUESTO4));
             pedido.set_idControlCaja(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_CONTROL_CAJA_INT));
             pedido.setNombre(CursorUtils.getString(c, Contract.Pedido.FIELD_NOMBRE));
+            pedido.setTransaccion(GeneralValue.getGeneralValue(db, Contants.GENERAL_TABLE_TIPOS_TRANSACCION, pedido.getTipoDocumento()));
 
         }
         c.close();

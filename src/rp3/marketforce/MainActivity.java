@@ -39,6 +39,7 @@ import rp3.marketforce.models.Contacto.ContactoExt;
 import rp3.marketforce.models.Tarea;
 import rp3.marketforce.models.Ubicacion;
 import rp3.marketforce.models.pedido.ControlCaja;
+import rp3.marketforce.models.pedido.ProductoCodigo;
 import rp3.marketforce.pedido.ControlCajaFragment;
 import rp3.marketforce.pedido.PedidoFragment;
 import rp3.marketforce.radar.RadarFragment;
@@ -196,7 +197,6 @@ public class MainActivity extends rp3.app.NavActivity{
 		{
 			showDialogConfirmation(CERRAR_CAJA_DIALOG, R.string.message_cerrar_caja_activa, R.string.title_cerrar_caja_activa);
 		}
-
 	}
 
     @Override

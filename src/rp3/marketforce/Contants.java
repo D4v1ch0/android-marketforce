@@ -66,6 +66,8 @@ public class Contants {
     public final static String KEY_VIGENCIA_AUTORIZACION_SRI_FIN = "VigenciaAutorizacionSRIFin";
     public final static String KEY_SECUENCIA_FACTURA = "SecuenciaFactura";
     public final static String KEY_SECUENCIA_NOTA_CREDITO = "SecuenciaNotaCredito";
+    public final static String KEY_SECUENCIA_PEDIDO = "SecuenciaPedido";
+    public final static String KEY_SECUENCIA_COTIZACION = "SecuenciaCotizacion";
     public final static String KEY_EMPRESA = "Empresa";
     public final static String KEY_RUC = "RUC";
     public final static String KEY_DIRECCION = "Dirección";

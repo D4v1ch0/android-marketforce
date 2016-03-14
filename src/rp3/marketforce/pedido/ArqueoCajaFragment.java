@@ -1,6 +1,8 @@
 package rp3.marketforce.pedido;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -11,6 +13,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.starmicronics.stario.PortInfo;
+import com.starmicronics.stario.StarIOPort;
+import com.starmicronics.stario.StarIOPortException;
+
+import java.nio.charset.Charset;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -26,6 +33,7 @@ import rp3.marketforce.models.pedido.FormaPago;
 import rp3.marketforce.models.pedido.Pago;
 import rp3.marketforce.models.pedido.Pedido;
 import rp3.marketforce.models.pedido.PedidoDetalle;
+import rp3.marketforce.utils.PrintHelper;
 import rp3.runtime.Session;
 import rp3.util.Convert;
 import rp3.util.StringUtils;
@@ -113,66 +121,71 @@ public class ArqueoCajaFragment extends BaseFragment implements ArqueoControlFra
 
     public void imprimirArqueo()
     {
-        String toPrint = "";
         List<Pago> pagos = Pago.getArqueoCaja(getDataBase(), control.getID());
+        String toPrint = PrintHelper.generarArqueo(pagos, control);
 
-        toPrint = toPrint + StringUtils.centerStringInLine("Fecha Apertura:", SPACES);
-        toPrint = toPrint + StringUtils.centerStringInLine(format1.format(control.getFechaApertura()) + ", " + format2.format(control.getFechaApertura()) + " de " +
-                format3.format(control.getFechaApertura()) + " del " + format5.format(control.getFechaApertura()) + " " + format6.format(control.getFechaApertura()), SPACES);
-        toPrint = toPrint + StringUtils.centerStringInLine("Aperturado por:" + Session.getUser().getLogonName(), SPACES);
-        toPrint = toPrint + '\n';
-        if(control.getFechaCierre() != null && control.getFechaCierre().getTime() > 0)
-        {
-            toPrint = toPrint + StringUtils.centerStringInLine("Fecha Cierre:", SPACES);
-            toPrint = toPrint + StringUtils.centerStringInLine(format1.format(control.getFechaCierre()) + ", " + format2.format(control.getFechaCierre()) + " de " +
-                    format3.format(control.getFechaCierre()) + " del " + format5.format(control.getFechaCierre()) + " " + format6.format(control.getFechaCierre()), SPACES);
-            toPrint = toPrint + StringUtils.centerStringInLine("Cerrado por:" + Session.getUser().getLogonName(), SPACES);
+        try {
+            PortInfo portInfo = null;
+            List<PortInfo> portList = StarIOPort.searchPrinter("BT:");
+            for (PortInfo port : portList) {
+                if (port.getPortName().contains("BT:STAR"))
+                    portInfo = port;
+            }
+
+            if (portInfo == null) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(getContext())
+                        .setTitle(R.string.title_error_impresión)
+                        .setMessage(R.string.warning_impresora_no_vinculada)
+                        .setPositiveButton(R.string.action_reintentar, new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                imprimirArqueo();
+                            }
+                        })
+                        .setCancelable(true);
+                dialog.show();
+                return;
+            } else {
+                StarIOPort port = StarIOPort.getPort(portInfo.getPortName(), "portable;", 10000);
+                if (PrintHelper.isPrinterReady(port.retreiveStatus()) != -1) {
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(getContext())
+                            .setTitle(R.string.title_error_impresión)
+                            .setMessage(PrintHelper.isPrinterReady(port.retreiveStatus()))
+                            .setPositiveButton(R.string.action_reintentar, new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface arg0, int arg1) {
+                                    imprimirArqueo();
+                                }
+                            })
+                            .setCancelable(true);
+                    dialog.show();
+                    return;
+                } else {
+                    byte[] command = toPrint.getBytes(Charset.forName("UTF-8"));
+                    port.writePort(command, 0, command.length);
+                    byte[] cut = {27, 100, 3};
+                    port.writePort(cut, 0, cut.length);
+                }
+
+            }
+
+        } catch (StarIOPortException e) {
+            e.printStackTrace();
+            AlertDialog.Builder dialog = new AlertDialog.Builder(getContext())
+                    .setTitle(R.string.title_error_impresión)
+                    .setMessage(R.string.warning_error_desconocido)
+                    .setPositiveButton(R.string.action_reintentar, new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            imprimirArqueo();
+                        }
+                    })
+                    .setCancelable(true);
+            dialog.show();
+            return;
         }
-
-        toPrint = toPrint + '\n';
-
-
-        for(int i = 1; i <= SPACES; i++)
-            toPrint = toPrint + "=";
-
-        toPrint = toPrint + '\n';
-        toPrint = toPrint + "Tipo de Pago   Transacciones   Total" + '\n';
-        for(int i = 1; i <= SPACES; i++)
-            toPrint = toPrint + "=";
-        toPrint = toPrint + '\n';
-
-        int cantidad = 0;
-        double valor = 0;
-        for(Pago pago: pagos) {
-            cantidad = cantidad + pago.getIdPago();
-            valor = valor + pago.getValor();
-
-            if(pago.getIdFormaPago() == 0)
-                toPrint = toPrint + StringUtils.leftStringInSpace("Nota Crédito", 12) + " ";
-            else if(pago.getIdFormaPago() == -1)
-                toPrint = toPrint + StringUtils.leftStringInSpace("Apertura", 12) + " ";
-            else if(pago.getFormaPago().getDescripcion().length() > 12)
-                toPrint = toPrint + StringUtils.leftStringInSpace(pago.getFormaPago().getDescripcion().substring(0,12), 12) + " ";
-            else
-                toPrint = toPrint + StringUtils.leftStringInSpace(pago.getFormaPago().getDescripcion(), 12) + " ";
-
-            toPrint = toPrint + StringUtils.rightStringInSpace(pago.getIdPago() + "" , 11) + " ";
-            toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(pago.getValor()), 11);
-            toPrint = toPrint + '\n';
-        }
-
-        for(int i = 1; i <= SPACES; i++)
-            toPrint = toPrint + "=";
-        toPrint = toPrint + '\n';
-        toPrint = toPrint + StringUtils.leftStringInSpace("Total", 12) + " ";
-        toPrint = toPrint + StringUtils.rightStringInSpace(cantidad + "" , 11) + " ";
-        toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(valor), 11);
-        toPrint = toPrint + '\n';
-
-        Intent print = new Intent(Intent.ACTION_SEND);
-        print.addCategory(Intent.CATEGORY_DEFAULT);
-        print.putExtra(Intent.EXTRA_TEXT, toPrint);
-        print.setType("text/plain");
-        startActivity(Intent.createChooser(print, "Imprimir"));
     }
 }

@@ -41,6 +41,8 @@ public class Caja {
                     PreferenceManager.setValue(Contants.KEY_AUTORIZACION_SRI, jObject.getString(Contants.KEY_AUTORIZACION_SRI));
                     PreferenceManager.setValue(Contants.KEY_SECUENCIA_FACTURA, jObject.getInt(Contants.KEY_SECUENCIA_FACTURA));
                     PreferenceManager.setValue(Contants.KEY_SECUENCIA_NOTA_CREDITO, jObject.getInt(Contants.KEY_SECUENCIA_NOTA_CREDITO));
+                    PreferenceManager.setValue(Contants.KEY_SECUENCIA_COTIZACION, jObject.getInt(Contants.KEY_SECUENCIA_COTIZACION));
+                    PreferenceManager.setValue(Contants.KEY_SECUENCIA_PEDIDO, jObject.getInt(Contants.KEY_SECUENCIA_PEDIDO));
                     PreferenceManager.setValue(Contants.KEY_EMPRESA, jObject.getString(Contants.KEY_EMPRESA));
                     PreferenceManager.setValue(Contants.KEY_RUC, jObject.getString(Contants.KEY_RUC));
                     PreferenceManager.setValue(Contants.KEY_DIRECCION, jObject.getString(Contants.KEY_DIRECCION));

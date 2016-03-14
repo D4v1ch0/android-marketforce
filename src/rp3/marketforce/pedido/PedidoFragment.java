@@ -8,8 +8,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.v4.view.MenuItemCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,12 +22,20 @@ import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.starmicronics.stario.PortInfo;
+import com.starmicronics.stario.StarIOPort;
+import com.starmicronics.stario.StarIOPortException;
+
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import rp3.app.BaseFragment;
 import rp3.configuration.PreferenceManager;
+import rp3.content.SimpleGeneralValueAdapter;
 import rp3.data.MessageCollection;
+import rp3.data.models.GeneralValue;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.cliente.ClientDetailFragment;
@@ -41,6 +51,7 @@ import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.PrintHelper;
 import rp3.util.CalendarUtils;
 import rp3.util.ConnectionUtils;
+import rp3.util.StringUtils;
 import rp3.widget.SlidingPaneLayout;
 
 /**
@@ -51,6 +62,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
     private static final int PARALLAX_SIZE = 0;
     private static final int DIALOG_SYNC_PRODUCTOS = 1;
     private static final int DIALOG_CIERRE = 2;
+    private static final int DIALOG_REPRINT = 3;
 
     private PedidoListFragment transactionListFragment;
     private PedidoDetailFragment transactionDetailFragment;
@@ -62,6 +74,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
     private long selectedClientId;
     private boolean isContact = false;
     private String textSearch;
+    private AnularTransaccionFragment anulaFragment;
 
     public static PedidoFragment newInstance(int transactionTypeId) {
         PedidoFragment fragment = new PedidoFragment();
@@ -221,6 +234,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
             menu.findItem(R.id.action_cerrar_caja).setVisible(isActiveListFragment && control != null);
             menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_reimpresion).setVisible(!isActiveListFragment && selectedClientId!=0 && control != null);
+            menu.findItem(R.id.action_cotización_a_factura).setVisible(!isActiveListFragment && selectedClientId!=0 && control != null && ped.getTipoDocumento().equalsIgnoreCase("CT"));
             //menu.findItem(R.id.action_nota_credito).setVisible(false);
         }
         else{
@@ -232,6 +246,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
             menu.findItem(R.id.action_aperturar_caja).setVisible(isActiveListFragment && control == null);
             menu.findItem(R.id.action_cerrar_caja).setVisible(isActiveListFragment && control != null);
             menu.findItem(R.id.action_reimpresion).setVisible(!isActiveListFragment && selectedClientId!=0 && control != null);
+            menu.findItem(R.id.action_cotización_a_factura).setVisible(!isActiveListFragment && selectedClientId!=0 && control != null && ped.getTipoDocumento().equalsIgnoreCase("CT"));
             //menu.findItem(R.id.action_nota_credito).setVisible(false);
 
         }
@@ -245,14 +260,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                 startActivity(intent);
                 break;
             case R.id.action_reimpresion:
-                Pedido pedido = Pedido.getPedido(getDataBase(), selectedClientId);
-                String toPrint = PrintHelper.generarFacturaFísica(pedido, true);
-
-                Intent print = new Intent(Intent.ACTION_SEND);
-                print.addCategory(Intent.CATEGORY_DEFAULT);
-                print.putExtra(Intent.EXTRA_TEXT, toPrint);
-                print.setType("text/plain");
-                startActivityForResult(Intent.createChooser(print, "Imprimir"), 12);
+                showDialogConfirmation(DIALOG_REPRINT, R.string.message_reimprimir, R.string.action_reimpresion);
                 break;
             case R.id.action_aperturar_caja:
                 showDialogFragment(new ControlCajaFragment(), "Aperturar Caja", "Aperturar Caja");
@@ -263,7 +271,21 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
             case R.id.action_anular_pedido:
                 if(transactionDetailFragment != null)
                 {
-                    showDialogFragment(AnularTransaccionFragment.newInstance(selectedClientId), "Anular", "Anular Transacción");
+                    anulaFragment = AnularTransaccionFragment.newInstance(selectedClientId);
+                    showDialogFragment(anulaFragment, "Anular", "Anular Transacción");
+                }
+                break;
+            case R.id.action_cotización_a_factura:
+                if(PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA, 0) != 0) {
+                    Intent intent2 = new Intent(getContext(), CrearPedidoActivity.class);
+                    intent2.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, "FA");
+                    intent2.putExtra(CrearPedidoActivity.ARG_IDPEDIDO, selectedClientId);
+                    startActivity(intent2);
+                    break;
+                }
+                else
+                {
+                    Toast.makeText(this.getContext(), "Su usuario no tiene asignado una caja.", Toast.LENGTH_LONG).show();
                 }
                 break;
             case R.id.action_nota_credito:
@@ -283,31 +305,17 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                 if(PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA, 0) != 0) {
                     AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
 
-                    final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                            getContext(),
-                            android.R.layout.select_dialog_item);
-                    arrayAdapter.add("Factura");
+                    final SimpleGeneralValueAdapter adapter = new SimpleGeneralValueAdapter(this.getContext(), GeneralValue.getGeneralValues(getDataBase(), Contants.GENERAL_TABLE_TIPOS_TRANSACCION, "NC"));
                     builderSingle.setTitle("Seleccione tipo de transacción");
-                    //arrayAdapter.add("Nota de Crédito");
 
                     builderSingle.setAdapter(
-                            arrayAdapter,
+                            adapter,
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    switch (which) {
-                                        case 0:
-                                            Intent intent = new Intent(getContext(), CrearPedidoActivity.class);
-                                            intent.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, "FA");
-                                            startActivity(intent);
-                                            break;
-                                        case 1:
-                                            Intent intent2 = new Intent(getContext(), CrearPedidoActivity.class);
-                                            intent2.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, "NC");
-                                            startActivity(intent2);
-                                            break;
-                                    }
-
+                                    Intent intent = new Intent(getContext(), CrearPedidoActivity.class);
+                                    intent.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, adapter.getGeneralValue(which).getCode());
+                                    startActivity(intent);
                                 }
                             });
                     builderSingle.show();
@@ -353,6 +361,9 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                 bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_PRODUCTOS);
                 requestSync(bundle);
                 break;
+            case DIALOG_REPRINT:
+                generarFacturaFísica();
+                break;
             case DIALOG_CIERRE:
                 ControlCaja control = ControlCaja.getControlCajaActiva(getDataBase());
                 List<Pago> pagos = Pago.getArqueoCaja(getDataBase(), control.getID());
@@ -388,17 +399,14 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
     public void onPermisoSelected(Pedido pedido) {
         selectedClientId = pedido.getID();
 
-        if(!mTwoPane) {
+        if (!mTwoPane) {
             slidingPane.closePane();
             isActiveListFragment = false;
         }
 
         RefreshMenu();
 
-        if(pedido.getTipoDocumento().equalsIgnoreCase("FA"))
-            this.getActivity().setTitle("Factura No. " + pedido.getNumeroDocumento());
-        if(pedido.getTipoDocumento().equalsIgnoreCase("NC"))
-            this.getActivity().setTitle("Nota de Crédito No. " + pedido.getNumeroDocumento());
+        this.getActivity().setTitle(pedido.getTransaccion().getValue() + " No. " + pedido.getNumeroDocumento());
 
         transactionDetailFragment = PedidoDetailFragment.newInstance(pedido);
         setFragment(R.id.content_transaction_detail, transactionDetailFragment);
@@ -421,5 +429,82 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
     @Override
     public boolean allowSelectedItem() {
         return mTwoPane;
+    }
+
+    public void generarFacturaFísica() {
+
+        Pedido pedido = Pedido.getPedido(getDataBase(), selectedClientId);
+        String toPrint = PrintHelper.generarFacturaFísica(pedido, true);
+
+        try {
+            PortInfo portInfo = null;
+            List<PortInfo> portList = StarIOPort.searchPrinter("BT:");
+            for (PortInfo port : portList) {
+                if (port.getPortName().contains("BT:STAR"))
+                    portInfo = port;
+            }
+
+            if (portInfo == null) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(getContext())
+                        .setTitle(R.string.title_error_impresión)
+                        .setMessage(R.string.warning_impresora_no_vinculada)
+                        .setPositiveButton(R.string.action_reintentar, new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                generarFacturaFísica();
+                            }
+                        })
+                        .setCancelable(true);
+                dialog.show();
+                return;
+            } else {
+                StarIOPort port = StarIOPort.getPort(portInfo.getPortName(), "portable;", 10000);
+                if (PrintHelper.isPrinterReady(port.retreiveStatus()) != -1) {
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(getContext())
+                            .setTitle(R.string.title_error_impresión)
+                            .setMessage(PrintHelper.isPrinterReady(port.retreiveStatus()))
+                            .setPositiveButton(R.string.action_reintentar, new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface arg0, int arg1) {
+                                    generarFacturaFísica();
+                                }
+                            })
+                            .setCancelable(true);
+                    dialog.show();
+                    return;
+                } else {
+                    byte[] command = toPrint.getBytes(Charset.forName("UTF-8"));
+                    port.writePort(command, 0, command.length);
+                    byte[] cut = {27, 100, 3};
+                    port.writePort(cut, 0, cut.length);
+                }
+
+            }
+
+        } catch (StarIOPortException e) {
+            e.printStackTrace();
+            AlertDialog.Builder dialog = new AlertDialog.Builder(getContext())
+                    .setTitle(R.string.title_error_impresión)
+                    .setMessage(R.string.warning_error_desconocido)
+                    .setPositiveButton(R.string.action_reintentar, new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            generarFacturaFísica();
+                        }
+                    })
+                    .setCancelable(true);
+            dialog.show();
+            return;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+                anulaFragment.onActivityResult(requestCode, resultCode, data);
+
     }
 }
