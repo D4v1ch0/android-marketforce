@@ -873,7 +873,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         pedido = Pedido.getPedido(getDataBase(), pedido.getID());
         String toPrint = PrintHelper.generarFacturaFísica(pedido, false);
 
-        /*
+
         try {
             PortInfo portInfo = null;
             List<PortInfo> portList = StarIOPort.searchPrinter("BT:");
@@ -945,7 +945,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             AlertDialog.Builder dialog = new AlertDialog.Builder(getContext())
                     .setTitle(R.string.title_cambio)
                     .setMessage("Su cambio es de: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(-pedido.getExcedente()))
-                    .setPositiveButton(R.string.action_reintentar, new DialogInterface.OnClickListener() {
+                    .setPositiveButton(R.string.action_accept, new DialogInterface.OnClickListener() {
 
                         @Override
                         public void onClick(DialogInterface arg0, int arg1) {
@@ -958,14 +958,14 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                     .setCancelable(false);
             dialog.show();
         }
-        else {*/
+        else {
             finish();
             if(!tipo.equalsIgnoreCase("NC")) {
                 Intent intent = new Intent(getContext(), CrearPedidoActivity.class);
                 intent.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, tipo);
                 startActivity(intent);
             }
-        //}
+        }
 
         /*Intent print = new Intent(Intent.ACTION_SEND);
         print.addCategory(Intent.CATEGORY_DEFAULT);
