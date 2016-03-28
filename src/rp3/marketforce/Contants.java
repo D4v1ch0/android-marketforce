@@ -77,6 +77,10 @@ public class Contants {
     public final static String KEY_NOMBRE_PUNTO_OPERACION = "NombrePuntoOperacion";
     public final static String KEY_ANDROID_ID = "AndroidID";
     public final static String KEY_DESCUENTO_MAXIMO = "DescuentoMaximo";
+    public final static String KEY_TRANSACCION_FACTURA = "FA";
+    public final static String KEY_TRANSACCION_NOTA_CREDITO = "NC";
+    public final static String KEY_TRANSACCION_COTIZACION = "CT";
+    public final static String KEY_TRANSACCION_PEDIDO = "PD";
 
     public final static String CAMPO_FECHA_NACIMIENTO = "FecNac";
     public final static String CAMPO_GENERO = "Gen";

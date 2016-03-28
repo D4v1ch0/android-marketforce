@@ -229,24 +229,25 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
             menu.findItem(R.id.action_crear_pedido).setVisible(isActiveListFragment && control != null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calApe) == 0);
             menu.findItem(R.id.action_sincronizar_productos).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_anular_pedido).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && control != null && ref == null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calPed) == 0);
-            menu.findItem(R.id.action_nota_credito).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && ped.getTipoDocumento().equalsIgnoreCase("FA") && control != null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calApe) == 0);
+            menu.findItem(R.id.action_nota_credito).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && ped.getTipoDocumento().equalsIgnoreCase("FA") && control != null
+                    && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calApe) == 0 && PreferenceManager.getBoolean(Contants.KEY_TRANSACCION_NOTA_CREDITO, true));
             menu.findItem(R.id.action_aperturar_caja).setVisible(isActiveListFragment && control == null);
             menu.findItem(R.id.action_cerrar_caja).setVisible(isActiveListFragment && control != null);
             menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_reimpresion).setVisible(!isActiveListFragment && selectedClientId!=0 && control != null);
-            menu.findItem(R.id.action_cotización_a_factura).setVisible(!isActiveListFragment && selectedClientId!=0 && control != null && ped.getTipoDocumento().equalsIgnoreCase("CT"));
+            menu.findItem(R.id.action_cotización_a_factura).setVisible(!isActiveListFragment && selectedClientId!=0 && control != null && ped.getTipoDocumento().equalsIgnoreCase("CT") && ref == null && PreferenceManager.getBoolean(Contants.KEY_TRANSACCION_FACTURA, true));
             //menu.findItem(R.id.action_nota_credito).setVisible(false);
         }
         else{
             menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_arqueo_caja).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_crear_pedido).setVisible(isActiveListFragment && control != null);
-            menu.findItem(R.id.action_anular_pedido).setVisible(selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && control != null && ref == null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calPed) == 0);
+            menu.findItem(R.id.action_anular_pedido).setVisible(selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && control != null && ref == null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calPed) == 0 && PreferenceManager.getBoolean(Contants.KEY_TRANSACCION_NOTA_CREDITO, true));
             menu.findItem(R.id.action_nota_credito).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && ped.getTipoDocumento().equalsIgnoreCase("FA") && control != null);
             menu.findItem(R.id.action_aperturar_caja).setVisible(isActiveListFragment && control == null);
             menu.findItem(R.id.action_cerrar_caja).setVisible(isActiveListFragment && control != null);
             menu.findItem(R.id.action_reimpresion).setVisible(!isActiveListFragment && selectedClientId!=0 && control != null);
-            menu.findItem(R.id.action_cotización_a_factura).setVisible(!isActiveListFragment && selectedClientId!=0 && control != null && ped.getTipoDocumento().equalsIgnoreCase("CT"));
+            menu.findItem(R.id.action_cotización_a_factura).setVisible(!isActiveListFragment && selectedClientId!=0 && control != null && ped.getTipoDocumento().equalsIgnoreCase("CT") && PreferenceManager.getBoolean(Contants.KEY_TRANSACCION_FACTURA, true));
             //menu.findItem(R.id.action_nota_credito).setVisible(false);
 
         }
@@ -313,9 +314,15 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Intent intent = new Intent(getContext(), CrearPedidoActivity.class);
-                                    intent.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, adapter.getGeneralValue(which).getCode());
-                                    startActivity(intent);
+                                    if(PreferenceManager.getBoolean(adapter.getGeneralValue(which).getCode(), true)) {
+                                        Intent intent = new Intent(getContext(), CrearPedidoActivity.class);
+                                        intent.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, adapter.getGeneralValue(which).getCode());
+                                        startActivity(intent);
+                                    }
+                                    else
+                                    {
+                                        Toast.makeText(getContext(), "No tiene permisos para realizar esta transacción.", Toast.LENGTH_LONG).show();
+                                    }
                                 }
                             });
                     builderSingle.show();

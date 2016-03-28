@@ -631,12 +631,13 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
         ((TextView) getRootView().findViewById(R.id.pedido_saldo)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(valorTotal - pagado));
 
-        idCliente = 0;
+
         if(pedido != null)
         {
             pedido.set_idDocumentoRef(idCliente);
             pedido.setIdDocumentoRef(pedido.getIdPedido());
         }
+        idCliente = 0;
         pedido.setID(0);
         pedido.setIdPedido(0);
 

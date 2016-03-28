@@ -49,7 +49,7 @@ public class PrintHelper {
         if(pedido.getEstado().equalsIgnoreCase("A"))
             toPrint = toPrint + StringUtils.centerStringInLine("DOCUMENTO ANULADO", SPACES);
 
-        toPrint = toPrint + StringUtils.centerStringInLine(pedido.getTransaccion().getValue(), SPACES);
+        toPrint = toPrint + StringUtils.centerStringInLine(pedido.getTransaccion().getValue().toUpperCase(), SPACES);
 
         toPrint = toPrint + StringUtils.centerStringInLine("No." + pedido.getNumeroDocumento(), SPACES);
         toPrint = toPrint + '\n';
@@ -114,6 +114,8 @@ public class PrintHelper {
         toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(pedido.getTotalImpuestos()), 12) + '\n';
         toPrint = toPrint + StringUtils.rightStringInSpace("0% IVA :", 18) + " ";
         toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(0), 12) + '\n';
+        toPrint = toPrint + StringUtils.rightStringInSpace("Redondeo :", 18) + " ";
+        toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(pedido.getRedondeo()), 12) + '\n';
         toPrint = toPrint + StringUtils.rightStringInSpace("-------------------------", SPACES) + '\n';
 
         toPrint = toPrint + StringUtils.rightStringInSpace("Total :", 18) + " ";
@@ -147,8 +149,15 @@ public class PrintHelper {
             pedido.setExcedente(0);
 
         toPrint = toPrint + '\n';
-        toPrint = toPrint + StringUtils.leftStringInSpace("Efectivo recibido: " + numberFormat.format(pagoEfectivo), SPACES) + '\n';
-        toPrint = toPrint + StringUtils.leftStringInSpace("Su cambio: " + numberFormat.format(-pedido.getExcedente()), SPACES) + '\n' + '\n';
+        if(pedido.getTipoDocumento().equalsIgnoreCase("FA")) {
+            toPrint = toPrint + StringUtils.leftStringInSpace("Efectivo recibido: " + numberFormat.format(pagoEfectivo), SPACES) + '\n';
+            toPrint = toPrint + StringUtils.leftStringInSpace("Su cambio: " + numberFormat.format(-pedido.getExcedente()), SPACES) + '\n' + '\n';
+        }
+
+        if(pedido.getTipoDocumento().equalsIgnoreCase("CT"))
+        {
+            toPrint = toPrint + StringUtils.leftStringInSpace("Vigencia: 15 día(s)", SPACES) + '\n';
+        }
 
         toPrint = toPrint + StringUtils.leftStringInSpace("Lo atendió: " + Session.getUser().getFullName(), SPACES) + '\n';
 

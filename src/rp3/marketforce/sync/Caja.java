@@ -138,6 +138,42 @@ public class Caja {
         return SyncAdapter.SYNC_EVENT_SUCCESS;
     }
 
+    public static int executeSyncTransacciones(DataBase db){
+        WebService webService = new WebService("MartketForce","GetTransacciones");
+
+        try
+        {
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+                JSONArray jsonArray = webService.getJSONArrayResponse();
+                if(jsonArray != null) {
+                    PreferenceManager.setValue(Contants.KEY_TRANSACCION_COTIZACION, false);
+                    PreferenceManager.setValue(Contants.KEY_TRANSACCION_FACTURA, false);
+                    PreferenceManager.setValue(Contants.KEY_TRANSACCION_NOTA_CREDITO, false);
+                    PreferenceManager.setValue(Contants.KEY_TRANSACCION_PEDIDO, false);
+                    for(int i = 0; i < jsonArray.length(); i++)
+                    {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        PreferenceManager.setValue(jsonObject.getString("Transaccion"), true);
+                    }
+                }
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return SyncAdapter.SYNC_EVENT_ERROR;
+            }
+
+        }finally{
+            webService.close();
+        }
+
+        return SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
     public static int executeSyncInsertControl(DataBase db, long idCaja){
         WebService webService = new WebService("MartketForce","GuardarCaja");
 

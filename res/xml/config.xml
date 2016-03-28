@@ -292,6 +292,12 @@
                     <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
+                    <name>GetTransacciones</name>
+                    <action>caja/GetTransacciones</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
                     <name>AnularPedido</name>
                     <action>pedido/AnulaPedido</action>
                     <webMethod>POST</webMethod>
