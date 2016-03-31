@@ -144,7 +144,7 @@ public class Rutas {
                             agenda.setEstadoAgenda(type.getString("EstadoAgenda"));
                             agenda.setEnviado(true);
 
-                            rp3.marketforce.models.AgendaTarea.deleteTareas(db, agenda.getIdRuta(), agenda.getIdAgenda());
+                            //rp3.marketforce.models.AgendaTarea.deleteTareas(db, agenda.getIdRuta(), agenda.getIdAgenda());
 
 
                             if (!rp3.marketforce.models.Agenda.existAgendaServer(db, agenda.getIdAgenda())) {
