@@ -128,7 +128,7 @@ public class Contants {
     public final static String POS_FINALMOUNT = "FINALMOUNT"; //Monto máximo para facturación de consumidor final
     public final static String POS_GENERATENC = "GENERATENC"; //Hasta cuando días de hecho un documento puedes realizar la nota de crédito
     public final static String POS_NULLOTHDAY = "NULLOTHDAY"; //Permite anular facturas de días anteriores si no tiene cierre y no se ha sincronizado
-    public final static String POS_PRICE0 = "PRICE0"; //Permite productos con precio 0 siempre que la factura tenga un valor >0
+    public final static String POS_PRICE0 = "PRICE0"; //Permite productos con precio 0 siempre que la factura tenga un valor > 0
     public final static String POS_PRINTARQ = "PRINTARQ"; //Permite imprimir arqueo de caja
     public final static String POS_PRINTCOPY = "PRINTCOPY"; //Permite imprimir una copia seguida de la original
     public final static String POS_PRINTCTRAP = "PRINTCTRAP"; //Indica si imprime o no al aperturar caja
