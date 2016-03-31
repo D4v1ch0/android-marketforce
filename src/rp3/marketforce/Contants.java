@@ -121,8 +121,33 @@ public class Contants {
     public final static int IS_CREACION = 1;
     public final static int IS_MODIFICACION = 2;
     public final static int IS_GESTION = 3;
-	
-	public final static String APPLICATION_ID = "AGENDACOMERCial";
+
+    public final static String POS_ALLOWDECIM = "ALLOWDECIM"; //Permitir decimales en cantidades
+    public final static String POS_CHAPRICPRO = "CHAPRICPRO"; //Cambiar precio a productos solo que sea de tipo servicio = 2
+    public final static String POS_FINALCONSU = "FINALCONSU"; //Id del consumidor final
+    public final static String POS_FINALMOUNT = "FINALMOUNT"; //Monto máximo para facturación de consumidor final
+    public final static String POS_GENERATENC = "GENERATENC"; //Hasta cuando días de hecho un documento puedes realizar la nota de crédito
+    public final static String POS_NULLOTHDAY = "NULLOTHDAY"; //Permite anular facturas de días anteriores si no tiene cierre y no se ha sincronizado
+    public final static String POS_PRICE0 = "PRICE0"; //Permite productos con precio 0 siempre que la factura tenga un valor >0
+    public final static String POS_PRINTARQ = "PRINTARQ"; //Permite imprimir arqueo de caja
+    public final static String POS_PRINTCOPY = "PRINTCOPY"; //Permite imprimir una copia seguida de la original
+    public final static String POS_PRINTCTRAP = "PRINTCTRAP"; //Indica si imprime o no al aperturar caja
+    public final static String POS_PRINTCTRCC = "PRINTCTRCC"; //Indica si imprime o no al cerrar caja
+    public final static String POS_PRINTNULLI = "PRINTNULLI"; //Imprimir al anular
+    public final static String POS_REQUEMOTIV = "REQUEMOTIV"; //Requiere ingresar motivo anulación o nota de crédito
+    public final static String POS_ROUNDSPECI = "ROUNDSPECI"; //Bit que define el redondeo de Costa Rica
+    public final static String POS_ROUNDCAB = "ROUNDCAB"; //Redondeo en los valores de cabecera de transacción
+    public final static String POS_ROUNDDET = "ROUNDDET"; //Redondeo en los valores de detalle de la transacción
+    public final static String POS_USECASHFUN = "USECASHFUN"; //Usa fondo de caja (Para apertura de caja en 0)
+    public final static String POS_USENC = "USENC"; //Días de uso de la nota de crédito
+    public final static String POS_VALNCCUST = "VALNCCUST"; //Validar si la nota de crédito puede ser a consumidor final o no
+    public final static String POS_DIGITPOS = "DIGITPOS"; //Formato de impresión de la caja
+    public final static String POS_DIGISTORE = "DIGISTORE"; //Formato de impresión del establecimiento
+    public final static String POS_DIGITRANS = "DIGITRANS"; //Formato de impresión de la transacción
+    public final static String POS_IMPREDOC = "IMPREDOC"; //Si emite o no documento para impresión
+    public final static String POS_LENPAPER = "LENPAPER"; //Cantidad de letras de papel de factura
+
+    public final static String APPLICATION_ID = "AGENDACOMERCial";
 	
 	public final static double LATITUD = -2.1637531;
 	public final static double LONGITUD = -79.9623577;
