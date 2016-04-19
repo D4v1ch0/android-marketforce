@@ -256,6 +256,12 @@
                     <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
+                    <name>GetDocRef</name>
+                    <action>pedido/GetDocRef?ultimaFechaActualizacion=@ultimaFechaActualizacion</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
                     <name>GetProductos</name>
                     <action>producto/GetProductos?ultimaFechaActualizacion=@ultimaFechaActualizacion</action>
                     <webMethod>GET</webMethod>
@@ -319,6 +325,12 @@
                     <name>CerrarCaja</name>
                     <action>caja/CerrarCaja?idControlCaja=@idControlCaja</action>
                     <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetDescuento</name>
+                    <action>agente/getDescuento?user=@user</action>
+                    <webMethod>GET</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>

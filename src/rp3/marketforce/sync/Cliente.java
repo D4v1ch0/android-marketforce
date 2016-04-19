@@ -112,8 +112,9 @@ public class Cliente {
                                 cl.setNombre2("");
 
                             cl.setFechaNacimiento(Convert.getDateFromDotNetTicks(type.getLong("FechaNacimientoTicks")));
-                            cl.setNombreCompleto(type.getString("NombresCompletos").trim().replace("null",""));
+                            cl.setNombreCompleto(type.getString("NombresCompletos").trim().replace("null", ""));
                             cl.setURLFoto(type.getString("Foto"));
+							cl.setExentoImpuesto(type.getBoolean("ExentoImpuesto"));
                             cl.setTipoPersona(type.getString("TipoPersona"));
                             if(!type.isNull("ActividadEconomica"))
                                 cl.setActividadEconomica(type.getString("ActividadEconomica"));
@@ -321,6 +322,7 @@ public class Cliente {
 				jObject.put("ActividadEconomica", cl.getActividadEconomica());
 				jObject.put("PaginaWeb", cl.getPaginaWeb());
 				jObject.put("RazonSocial", cl.getRazonSocial());
+				jObject.put("ExentoImpuesto", cl.getExentoImpuesto());
 				
 				JSONArray jArrayDirecciones = new JSONArray();
 				for(int i = 0; i < cl.getClienteDirecciones().size(); i++)
@@ -508,6 +510,7 @@ public class Cliente {
 				jObject.put("ActividadEconomica", cl.getActividadEconomica());
 				jObject.put("PaginaWeb", cl.getPaginaWeb());
 				jObject.put("RazonSocial", cl.getRazonSocial());
+				jObject.put("ExentoImpuesto", cl.getExentoImpuesto());
 				
 				JSONArray jArrayDirecciones = new JSONArray();
 				for(int i = 0; i < cl.getClienteDirecciones().size(); i++)
@@ -702,6 +705,7 @@ public class Cliente {
 					jObject.put("ActividadEconomica", cl.getActividadEconomica());
 					jObject.put("PaginaWeb", cl.getPaginaWeb());
 					jObject.put("RazonSocial", cl.getRazonSocial());
+					jObject.put("ExentoImpuesto", cl.getExentoImpuesto());
 					
 					JSONArray jArrayDirecciones = new JSONArray();
 					for(int i = 0; i < cl.getClienteDirecciones().size(); i++)
@@ -905,6 +909,7 @@ public class Cliente {
 					jObject.put("ActividadEconomica", cl.getActividadEconomica());
 					jObject.put("PaginaWeb", cl.getPaginaWeb());
 					jObject.put("RazonSocial", cl.getRazonSocial());
+					jObject.put("ExentoImpuesto", cl.getExentoImpuesto());
 					
 					JSONArray jArrayDirecciones = new JSONArray();
 					for(int i = 0; i < cl.getClienteDirecciones().size(); i++)

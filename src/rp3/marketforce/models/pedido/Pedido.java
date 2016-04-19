@@ -51,6 +51,7 @@ public class Pedido extends EntityBase<Pedido> {
     private double totalImpuesto3;
     private double totalImpuesto4;
     private long _idControlCaja;
+    private boolean pendiente;
 
     private List<PedidoDetalle> pedidoDetalles;
     private List<Pago> pagos;
@@ -107,6 +108,14 @@ public class Pedido extends EntityBase<Pedido> {
 
     public void setMotivoAnulacion(String motivoAnulacion) {
         this.motivoAnulacion = motivoAnulacion;
+    }
+
+    public boolean isPendiente() {
+        return pendiente;
+    }
+
+    public void setPendiente(boolean pendiente) {
+        this.pendiente = pendiente;
     }
 
     public String getObservacionAnulacion() {
@@ -380,6 +389,7 @@ public class Pedido extends EntityBase<Pedido> {
         setValue(Contract.Pedido.COLUMN_TOTAL_IMPUESTO3, this.totalImpuesto3);
         setValue(Contract.Pedido.COLUMN_TOTAL_IMPUESTO4, this.totalImpuesto4);
         setValue(Contract.Pedido.COLUMN_ID_CONTROL_CAJA_INT, this._idControlCaja);
+        setValue(Contract.Pedido.COLUMN_PENDIENTE, this.pendiente);
     }
 
     @Override
@@ -430,6 +440,58 @@ public class Pedido extends EntityBase<Pedido> {
             pedido.setRedondeo(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_REDONDEO));
             pedido.setBaseImponible(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_BASE_IMPONIBLE));
             pedido.setBaseImponibleCero(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_BASE_IMPONIBLE_CERO));
+            pedido.setPendiente(CursorUtils.getBoolean(c, Contract.Pedido.COLUMN_PENDIENTE));
+            if(pedido.getIdCliente() != 0)
+                pedido.setCliente(Cliente.getClienteIDServer(db, pedido.getIdCliente(), false));
+            else
+                pedido.setCliente(Cliente.getClienteID(db, pedido.get_idCliente(), false));
+            pedido.setNombre(CursorUtils.getString(c, Contract.Pedido.FIELD_NOMBRE));
+            pedido.setTransaccion(GeneralValue.getGeneralValue(db, Contants.GENERAL_TABLE_TIPOS_TRANSACCION, pedido.getTipoDocumento()));
+            list.add(pedido);
+        }
+        c.close();
+        return list;
+    }
+
+    public static List<Pedido> getPedidosPendientes(DataBase db) {
+        String query = QueryDir.getQuery( Contract.Pedido.QUERY_PEDIDOS_PENDIENTES );
+        Cursor c = null;
+
+        c = db.rawQuery(query);
+
+        List<Pedido> list = new ArrayList<Pedido>();
+        while(c.moveToNext()){
+            Pedido pedido = new Pedido();
+            pedido.setID(CursorUtils.getInt(c, Contract.Pedido._ID));
+            pedido.setIdAgenda(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_AGENDA));
+            pedido.set_idAgenda(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_AGENDA_INT));
+            pedido.setIdCliente(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_CLIENTE));
+            pedido.setIdPedido(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_PEDIDO));
+            pedido.setValorTotal(CursorUtils.getDouble(c, Contract.Pedido.COLUMN_VALOR_TOTAL));
+            pedido.setEmail(CursorUtils.getString(c, Contract.Pedido.COLUMN_EMAIL));
+            pedido.setEstado(CursorUtils.getString(c, Contract.Pedido.COLUMN_ESTADO));
+            pedido.setFechaCreacion(CursorUtils.getDate(c, Contract.Pedido.COLUMN_FECHA_CREACION));
+            if(pedido.getIdPedido() != 0) {
+                pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetalles(db, pedido.getIdPedido()));
+                pedido.setPagos(Pago.getPagos(db, pedido.getIdPedido()));
+            }
+            else {
+                pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetallesInt(db, pedido.getID()));
+                pedido.setPagos(Pago.getPagosInt(db, pedido.getID()));
+            }
+            pedido.setTipoDocumento(CursorUtils.getString(c, Contract.Pedido.COLUMN_TIPO_DOCUMENTO));
+            pedido.setNumeroDocumento(CursorUtils.getString(c, Contract.Pedido.FIELD_NUMERO_DOCUMENTO));
+            pedido.set_idCliente(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_CLIENTE_INT));
+            pedido.setObservaciones(CursorUtils.getString(c, Contract.Pedido.COLUMN_OBSERVACIONES));
+            pedido.setTotalDescuentos(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_TOTAL_DESCUENTOS));
+            pedido.setTotalImpuestos(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_TOTAL_IMPUESTOS));
+            pedido.setSubtotal(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_SUBTOTAL));
+            pedido.setSubtotalSinDescuento(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_SUBTOTAL_SIN_DESCUENTO));
+            pedido.setExcedente(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_EXCEDENTE));
+            pedido.setRedondeo(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_REDONDEO));
+            pedido.setBaseImponible(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_BASE_IMPONIBLE));
+            pedido.setBaseImponibleCero(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_BASE_IMPONIBLE_CERO));
+            pedido.setPendiente(CursorUtils.getBoolean(c, Contract.Pedido.COLUMN_PENDIENTE));
             if(pedido.getIdCliente() != 0)
                 pedido.setCliente(Cliente.getClienteIDServer(db, pedido.getIdCliente(), false));
             else
@@ -490,6 +552,7 @@ public class Pedido extends EntityBase<Pedido> {
             pedido.setRedondeo(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_REDONDEO));
             pedido.setBaseImponible(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_BASE_IMPONIBLE));
             pedido.setBaseImponibleCero(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_BASE_IMPONIBLE_CERO));
+            pedido.setPendiente(CursorUtils.getBoolean(c, Contract.Pedido.COLUMN_PENDIENTE));
             if(pedido.getIdCliente() != 0)
                 pedido.setCliente(Cliente.getClienteIDServer(db, pedido.getIdCliente(), false));
             else
@@ -585,6 +648,69 @@ public class Pedido extends EntityBase<Pedido> {
             pedido.setTotalImpuesto3(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_TOTAL_IMPUESTO3));
             pedido.setTotalImpuesto4(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_TOTAL_IMPUESTO4));
             pedido.set_idControlCaja(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_CONTROL_CAJA_INT));
+            pedido.setPendiente(CursorUtils.getBoolean(c, Contract.Pedido.COLUMN_PENDIENTE));
+            pedido.setNombre(CursorUtils.getString(c, Contract.Pedido.FIELD_NOMBRE));
+            pedido.setTransaccion(GeneralValue.getGeneralValue(db, Contants.GENERAL_TABLE_TIPOS_TRANSACCION, pedido.getTipoDocumento()));
+
+        }
+        c.close();
+        return pedido;
+    }
+
+    public static Pedido getPedidoByIdServer(DataBase db, int id) {
+        String query = QueryDir.getQuery( Contract.Pedido.QUERY_PEDIDOS_BY_ID_SERVER );
+        Cursor c = null;
+
+        c = db.rawQuery(query, new String[] {id + ""});
+
+        Pedido pedido = new Pedido();
+        while(c.moveToNext()){
+
+            pedido.setID(CursorUtils.getInt(c, Contract.Pedido._ID));
+            pedido.setIdAgenda(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_AGENDA));
+            pedido.set_idAgenda(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_AGENDA_INT));
+            pedido.setIdCliente(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_CLIENTE));
+            pedido.setIdPedido(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_PEDIDO));
+            pedido.setValorTotal(CursorUtils.getDouble(c, Contract.Pedido.COLUMN_VALOR_TOTAL));
+            pedido.setEmail(CursorUtils.getString(c, Contract.Pedido.COLUMN_EMAIL));
+            pedido.setEstado(CursorUtils.getString(c, Contract.Pedido.COLUMN_ESTADO));
+            pedido.setFechaCreacion(CursorUtils.getDate(c, Contract.Pedido.COLUMN_FECHA_CREACION));
+            pedido.setCliente(Cliente.getClienteIDServer(db, pedido.getIdCliente(), false));
+            pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetalles(db, pedido.getIdPedido()));
+            if(pedido.getIdPedido() != 0) {
+                pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetalles(db, pedido.getIdPedido()));
+                pedido.setPagos(Pago.getPagos(db, pedido.getIdPedido()));
+            }
+            else {
+                pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetallesInt(db, pedido.getID()));
+                pedido.setPagos(Pago.getPagosInt(db, pedido.getID()));
+            }
+            pedido.setTipoDocumento(CursorUtils.getString(c, Contract.Pedido.COLUMN_TIPO_DOCUMENTO));
+            pedido.setNumeroDocumento(CursorUtils.getString(c, Contract.Pedido.FIELD_NUMERO_DOCUMENTO));
+            pedido.set_idCliente(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_CLIENTE_INT));
+            pedido.setObservaciones(CursorUtils.getString(c, Contract.Pedido.COLUMN_OBSERVACIONES));
+            pedido.setTotalDescuentos(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_TOTAL_DESCUENTOS));
+            pedido.setTotalImpuestos(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_TOTAL_IMPUESTOS));
+            pedido.setSubtotal(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_SUBTOTAL));
+            pedido.setSubtotalSinDescuento(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_SUBTOTAL_SIN_DESCUENTO));
+            pedido.setExcedente(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_EXCEDENTE));
+            pedido.setRedondeo(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_REDONDEO));
+            pedido.setBaseImponible(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_BASE_IMPONIBLE));
+            pedido.setBaseImponibleCero(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_BASE_IMPONIBLE_CERO));
+            pedido.setMotivoAnulacion(CursorUtils.getString(c, Contract.Pedido.COLUMN_MOTIVO_ANULACION));
+            pedido.setObservacionAnulacion(CursorUtils.getString(c, Contract.Pedido.COLUMN_OBSERVACION_ANULACION));
+            if(pedido.getIdCliente() != 0)
+                pedido.setCliente(Cliente.getClienteIDServer(db, pedido.getIdCliente(), false));
+            else
+                pedido.setCliente(Cliente.getClienteID(db, pedido.get_idCliente(), false));
+            pedido.set_idDocumentoRef(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_DOCUMENTO_REF_INT));
+            pedido.setIdDocumentoRef(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_DOCUMENTO_REF));
+            pedido.setFechaAnulacion(CursorUtils.getDate(c, Contract.Pedido.COLUMN_FECHA_ANULACION));
+            pedido.setTotalImpuesto2(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_TOTAL_IMPUESTO2));
+            pedido.setTotalImpuesto3(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_TOTAL_IMPUESTO3));
+            pedido.setTotalImpuesto4(CursorUtils.getFloat(c, Contract.Pedido.COLUMN_TOTAL_IMPUESTO4));
+            pedido.set_idControlCaja(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_CONTROL_CAJA_INT));
+            pedido.setPendiente(CursorUtils.getBoolean(c, Contract.Pedido.COLUMN_PENDIENTE));
             pedido.setNombre(CursorUtils.getString(c, Contract.Pedido.FIELD_NOMBRE));
             pedido.setTransaccion(GeneralValue.getGeneralValue(db, Contants.GENERAL_TABLE_TIPOS_TRANSACCION, pedido.getTipoDocumento()));
 

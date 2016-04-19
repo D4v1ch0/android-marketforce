@@ -14,6 +14,7 @@ import rp3.connection.WebService;
 import rp3.content.*;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.db.Contract;
+import rp3.marketforce.models.pedido.ProductoCodigo;
 import rp3.sync.SyncAudit;
 
 /**
@@ -71,6 +72,19 @@ public class Productos {
                         rp3.marketforce.models.pedido.Producto.insert(db, producto);
                     else
                         rp3.marketforce.models.pedido.Producto.update(db, producto);
+
+                    ProductoCodigo.deleteCodigos(db, producto.getCodigoExterno());
+                    JSONArray strs = type.getJSONArray("ProductoCodigo");
+
+                    for (int j = 0; j < strs.length(); j++) {
+                        JSONObject str = strs.getJSONObject(j);
+
+                        ProductoCodigo productoCodigo = new ProductoCodigo();
+                        productoCodigo.setCodigoExterno(str.getString("IdExterno"));
+                        productoCodigo.setCodigo(str.getString("Codigo"));
+                        ProductoCodigo.insert(db, productoCodigo);
+                    }
+
 
                 } catch (JSONException e) {
                     Log.e("Entro", "Error: " + e.toString());

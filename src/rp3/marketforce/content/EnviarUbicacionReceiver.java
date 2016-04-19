@@ -82,9 +82,9 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 				}else{
 					gps = "OFF";
 					if(calendarCurrent.getTimeInMillis() < calendar.getTimeInMillis() && diaLaboral.isEsLaboral()) {
-						NotificationPusher.pushNotification(1, context, "Por favor encienda su GPS", "GPS");
 						if (PreferenceManager.getInt(Contants.KEY_ID_SUPERVISOR, 0) != 0) {
 							if (PreferenceManager.getBoolean(Contants.KEY_GPS_NOTIFICATION, true)) {
+								NotificationPusher.pushNotification(1, context, "Por favor encienda su GPS", "GPS");
 								Bundle bundle = new Bundle();
 								bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SEND_NOTIFICATION);
 								bundle.putInt(AgenteDetalleFragment.ARG_AGENTE, PreferenceManager.getInt(Contants.KEY_ID_SUPERVISOR, 0));

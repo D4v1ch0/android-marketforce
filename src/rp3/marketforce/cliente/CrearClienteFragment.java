@@ -42,6 +42,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -88,7 +89,7 @@ import rp3.util.IdentificationValidator;
 import rp3.util.LocationUtils;
 import rp3.widget.ViewPager;
 
-public class CrearClienteFragment extends BaseFragment {
+public class CrearClienteFragment extends BaseFragment implements SignInFragment.SignConfirmListener {
 
     boolean rotated = false;
 
@@ -123,6 +124,7 @@ public class CrearClienteFragment extends BaseFragment {
 	public List<String> contactPhotos;
 	private List<GeopoliticalStructure> ciudades;
 	private GeopoliticalStructureAdapter adapter;
+    private SignInFragment signInFragment;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -376,6 +378,7 @@ public class CrearClienteFragment extends BaseFragment {
         cli.setIdentificacion(((EditText) getRootView().findViewById(R.id.cliente_identificacion)).getText().toString());
         cli.setTipoPersona(((GeneralValue) ((Spinner) getRootView().findViewById(R.id.crear_cliente_tipo_persona)).getSelectedItem()).getCode());
         cli.setIdTipoCliente((int) ((Spinner) getRootView().findViewById(R.id.cliente_tipo_cliente)).getAdapter().getItemId(((Spinner) getRootView().findViewById(R.id.cliente_tipo_cliente)).getSelectedItemPosition()));
+        cli.setExentoImpuesto(((CheckBox) getRootView().findViewById(R.id.cliente_oro)).isChecked());
         if (cliente.getURLFoto() != null && !cliente.getURLFoto().trim().equals(""))
             cli.setURLFoto(cliente.getURLFoto());
         if (((Spinner) getRootView().findViewById(R.id.crear_cliente_tipo_persona)).getSelectedItemPosition() == 1) {
@@ -650,6 +653,18 @@ public class CrearClienteFragment extends BaseFragment {
             idCliente = getArguments().getLong(ARG_CLIENTE);
             setDatosClientes();
         }
+        ((CheckBox) getRootView().findViewById(R.id.cliente_oro)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked)
+                {
+                    if(signInFragment == null)
+                        signInFragment = new SignInFragment();
+                    showDialogFragment(signInFragment, "Autorizar Usuario", "Autorizar Usuario");
+                }
+
+            }
+        });
     }
 
     @Override
@@ -1052,12 +1067,12 @@ public class CrearClienteFragment extends BaseFragment {
 
 		if(((EditText)getRootView().findViewById(R.id.cliente_identificacion)).getText().toString().trim().length() > 0 && getRootView().findViewById(R.id.cliente_identificacion).isEnabled())
 		{
-            if(!IdentificationValidator.ValidateIdentification(((EditText)getRootView().findViewById(R.id.cliente_identificacion)).getText().toString(),
+            /*if(!IdentificationValidator.ValidateIdentification(((EditText)getRootView().findViewById(R.id.cliente_identificacion)).getText().toString(),
                     (int) ((Spinner)getRootView().findViewById(R.id.cliente_tipo_identificacion)).getAdapter().getItemId(((Spinner)getRootView().findViewById(R.id.cliente_tipo_identificacion)).getSelectedItemPosition())))
             {
                 Toast.makeText(getContext(), "Número de identificación incorrecto.", Toast.LENGTH_LONG).show();
                 return false;
-            }
+            }*/
 		}
 
         boolean existsPrincipal = false;
@@ -1127,4 +1142,13 @@ public class CrearClienteFragment extends BaseFragment {
         view.setHint(wordtoSpan);
     }
 
+    @Override
+    public void onSignSuccess(Bundle bundle) {
+        Toast.makeText(getContext(), "Usuario Autorizado.", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onSignError(Bundle bundle) {
+        ((CheckBox) getRootView().findViewById(R.id.cliente_oro)).setChecked(false);
+    }
 }

@@ -64,6 +64,13 @@ public class InformationFragment extends BaseFragment {
             }
         });
 
-        ((TextView) rootView.findViewById(R.id.info_android_id)).setText("Android ID: " + PreferenceManager.getString(Contants.KEY_ANDROID_ID,""));
+        ((TextView) rootView.findViewById(R.id.info_android_id)).setText("Android ID: " + PreferenceManager.getString(Contants.KEY_ANDROID_ID, ""));
+        ((TextView) rootView.findViewById(R.id.info_punto_operacion)).setText("Punto de Operacion : " + PreferenceManager.getString(Contants.KEY_NOMBRE_PUNTO_OPERACION,""));
+        ((TextView) rootView.findViewById(R.id.info_caja)).setText("Caja: " + PreferenceManager.getInt(Contants.KEY_ID_CAJA, 0));
+
+        if(PreferenceManager.getString(Contants.KEY_NOMBRE_PUNTO_OPERACION, "").equalsIgnoreCase("") || PreferenceManager.getString(Contants.KEY_NOMBRE_PUNTO_OPERACION) == null)
+            ((TextView) rootView.findViewById(R.id.info_punto_operacion)).setVisibility(View.GONE);
+        if(PreferenceManager.getInt(Contants.KEY_ID_CAJA, 0) == 0)
+            ((TextView) rootView.findViewById(R.id.info_caja)).setVisibility(View.GONE);
     }
 }

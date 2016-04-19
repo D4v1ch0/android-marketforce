@@ -45,6 +45,7 @@ import java.util.Locale;
 
 import rp3.app.BaseFragment;
 import rp3.configuration.PreferenceManager;
+import rp3.data.models.GeneralValue;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.cliente.CrearClienteActivity;
@@ -226,20 +227,20 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
         pedido.setTipoDocumento(tipo);
         if (tipo.equalsIgnoreCase("FA")) {
-            pedido.setNumeroDocumento(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO) + "-" + PreferenceManager.getString(Contants.KEY_SERIE) +
-                    "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA)));
+            pedido.setNumeroDocumento(getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO)), 3) + "-" + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_SERIE)), 3) +
+                    "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA) + 1, 9));
         }
         if (tipo.equalsIgnoreCase("NC")) {
-            pedido.setNumeroDocumento(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO) + "-" + PreferenceManager.getString(Contants.KEY_SERIE) +
-                    "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_NOTA_CREDITO)));
+            pedido.setNumeroDocumento(getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO)), 3) + "-" + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_SERIE)), 3) +
+                    "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_NOTA_CREDITO) + 1, 9));
         }
         if (tipo.equalsIgnoreCase("PD")) {
-            pedido.setNumeroDocumento(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO) + "-" + PreferenceManager.getString(Contants.KEY_SERIE) +
-                    "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_PEDIDO)));
+            pedido.setNumeroDocumento(getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO)), 3) + "-" + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_SERIE)), 3) +
+                    "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_PEDIDO) + 1, 9));
         }
         if (tipo.equalsIgnoreCase("CT")) {
-            pedido.setNumeroDocumento(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO) + "-" + PreferenceManager.getString(Contants.KEY_SERIE) +
-                    "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_COTIZACION)));
+            pedido.setNumeroDocumento(getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO)), 3) + "-" + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_SERIE)), 3) +
+                    "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_COTIZACION) + 1, 9));
         }
 
 
@@ -257,7 +258,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                 pagado = pagado + pago.getValor();
             }
         pedido.setExcedente(valorTotal - pagado);
-        pedido.setSubtotalSinDescuento(subtotal + pedido.getTotalImpuestos());
+        pedido.setSubtotalSinDescuento(subtotal);
 
         if (pendiente)
             pedido.setEstado("P");
@@ -385,6 +386,8 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                     int position = list_nombres.indexOf(adapter.getItem(pos));
                     if (position != -1 && ((TextView) rootView.findViewById(R.id.pedido_email)).length() <= 0) {
                         ((TextView) rootView.findViewById(R.id.pedido_email)).setText(list_cliente.get(position).getCorreoElectronico());
+                        if(list_cliente.get(position).getExentoImpuesto())
+                            ValidarExentoImpuestos();
                     }
                 }
             });
@@ -398,6 +401,8 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                     int position = list_nombres.indexOf(cliente_auto.getText().toString());
                     if (position != -1 && ((TextView) rootView.findViewById(R.id.pedido_email)).length() <= 0) {
                         ((TextView) rootView.findViewById(R.id.pedido_email)).setText(list_cliente.get(position).getCorreoElectronico());
+                        if(list_cliente.get(position).getExentoImpuesto())
+                            ValidarExentoImpuestos();
                     }
                 }
             });
@@ -468,17 +473,17 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         if (getArguments().containsKey(ARG_TIPO_DOCUMENTO) && !rotated) {
             tipo = getArguments().getString(ARG_TIPO_DOCUMENTO);
             if(tipo.equalsIgnoreCase("FA"))
-                this.getActivity().setTitle("Factura No. " + PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO) + "-" + PreferenceManager.getString(Contants.KEY_SERIE) +
-                        "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA)));
+                this.getActivity().setTitle("Factura No. " + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO)), 3) + "-" + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_SERIE)),3) +
+                        "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA) + 1, 9));
             if(tipo.equalsIgnoreCase("NC"))
-                this.getActivity().setTitle("Nota de Crédito No. " + PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO) + "-" + PreferenceManager.getString(Contants.KEY_SERIE) +
-                        "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_NOTA_CREDITO)));
+                this.getActivity().setTitle("Nota de Crédito No. " + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO)), 3) + "-" + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_SERIE)), 3) +
+                        "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_NOTA_CREDITO) + 1, 9));
             if(tipo.equalsIgnoreCase("PD"))
-                this.getActivity().setTitle("Pedido No. " + PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO) + "-" + PreferenceManager.getString(Contants.KEY_SERIE) +
-                        "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_PEDIDO)));
+                this.getActivity().setTitle("Pedido No. " + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO)), 3) + "-" + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_SERIE)), 3) +
+                        "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_PEDIDO) + 1, 9));
             if(tipo.equalsIgnoreCase("CT"))
-                this.getActivity().setTitle("Cotización No. " + PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO) + "-" + PreferenceManager.getString(Contants.KEY_SERIE) +
-                        "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_COTIZACION)));
+                this.getActivity().setTitle("Cotización No. " + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO)), 3) + "-" + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_SERIE)), 3) +
+                        "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_COTIZACION) + 1, 9));
         }
 
         if (getArguments().containsKey(ARG_PEDIDO) && getArguments().getLong(ARG_PEDIDO) != 0 && !rotated) {
@@ -537,9 +542,9 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
     }
 
-    private String getSecuencia(int numero) {
+    private String getSecuencia(int numero, int spaces) {
         String numText = numero + "";
-        int faltanCeros = 9 - numText.length();
+        int faltanCeros = spaces - numText.length();
         for(int i = 1; i <= faltanCeros; i++)
         {
             numText = "0" + numText;
@@ -606,9 +611,9 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             baseImponible = baseImponible + detalle.getBaseImponible();
             neto = neto + (detalle.getSubtotal() - (detalle.getValorDescuentoManualTotal() + detalle.getValorDescuentoAutomaticoTotal()));
         }
-        double residuo = valorTotal % 100;
-        if(residuo >= 50)
-            redondeo = (100 - residuo);
+        double residuo = valorTotal % 1;
+        if(residuo >= 0.5)
+            redondeo = (1 - residuo);
         else
             redondeo = - residuo;
 
@@ -717,6 +722,8 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                         detalle.setValorImpuesto(jsonObject.getDouble("vi"));
                         detalle.setValorImpuestoTotal(jsonObject.getDouble("vit"));
                         detalle.setSubtotal(jsonObject.getDouble("s"));
+                        detalle.setSubtotalSinDescuento(jsonObject.getDouble("ssd"));
+                        detalle.setSubtotalSinImpuesto(jsonObject.getDouble("ssi"));
                         detalle.setCodigoExterno(jsonObject.getString("cod"));
                         onAcceptSuccess(detalle);
                     }
@@ -729,6 +736,8 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                 if(resultCode == RESULT_OK)
                 {
                     Cliente cl = Cliente.getClienteID(getDataBase(), data.getExtras().getLong(CrearClienteActivity.ARG_IDCLIENTE), false);
+                    if(cl.getExentoImpuesto())
+                        ValidarExentoImpuestos();
                     cliente_auto.setText(cl.getNombreCompleto().trim());
                     //cliente_auto.setEnabled(false);
                     ((TextView) getRootView().findViewById(R.id.pedido_email)).setText(cl.getCorreoElectronico());
@@ -870,40 +879,64 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     }
 
     public void generarFacturaFísica() {
-
         pedido = Pedido.getPedido(getDataBase(), pedido.getID());
         String toPrint = PrintHelper.generarFacturaFísica(pedido, false);
 
+        GeneralValue printParameter = GeneralValue.getGeneralValue(getDataBase(), Contants.POS_PRINTMODE);
+        if(printParameter != null) {
+            if (printParameter.getValue().equalsIgnoreCase("1")) {
+                try {
+                    PortInfo portInfo = null;
+                    List<PortInfo> portList = StarIOPort.searchPrinter("BT:");
+                    for (PortInfo port : portList) {
+                        if (port.getPortName().contains("BT:STAR"))
+                            portInfo = port;
+                    }
 
-        try {
-            PortInfo portInfo = null;
-            List<PortInfo> portList = StarIOPort.searchPrinter("BT:");
-            for (PortInfo port : portList) {
-                if (port.getPortName().contains("BT:STAR"))
-                    portInfo = port;
-            }
+                    if (portInfo == null) {
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(getContext())
+                                .setTitle(R.string.title_error_impresión)
+                                .setMessage(R.string.warning_impresora_no_vinculada)
+                                .setPositiveButton(R.string.action_reintentar, new DialogInterface.OnClickListener() {
 
-            if (portInfo == null) {
-                AlertDialog.Builder dialog = new AlertDialog.Builder(getContext())
-                        .setTitle(R.string.title_error_impresión)
-                        .setMessage(R.string.warning_impresora_no_vinculada)
-                        .setPositiveButton(R.string.action_reintentar, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface arg0, int arg1) {
+                                        generarFacturaFísica();
+                                    }
+                                })
+                                .setCancelable(false);
+                        dialog.show();
+                        return;
+                    } else {
+                        StarIOPort port = StarIOPort.getPort(portInfo.getPortName(), "portable;", 10000);
+                        if (PrintHelper.isPrinterReady(port.retreiveStatus()) != -1) {
+                            AlertDialog.Builder dialog = new AlertDialog.Builder(getContext())
+                                    .setTitle(R.string.title_error_impresión)
+                                    .setMessage(PrintHelper.isPrinterReady(port.retreiveStatus()))
+                                    .setPositiveButton(R.string.action_reintentar, new DialogInterface.OnClickListener() {
 
-                            @Override
-                            public void onClick(DialogInterface arg0, int arg1) {
-                                generarFacturaFísica();
-                            }
-                        })
-                        .setCancelable(false);
-                dialog.show();
-                return;
-            } else {
-                StarIOPort port = StarIOPort.getPort(portInfo.getPortName(), "portable;", 10000);
-                if(PrintHelper.isPrinterReady(port.retreiveStatus()) != -1)
-                {
+                                        @Override
+                                        public void onClick(DialogInterface arg0, int arg1) {
+                                            generarFacturaFísica();
+                                        }
+                                    })
+                                    .setCancelable(false);
+                            dialog.show();
+                            return;
+                        } else {
+                            byte[] command = toPrint.getBytes(Charset.forName("UTF-8"));
+                            port.writePort(command, 0, command.length);
+                            byte[] cut = {27, 100, 3};
+                            port.writePort(cut, 0, cut.length);
+                        }
+
+                    }
+
+                } catch (StarIOPortException e) {
+                    e.printStackTrace();
                     AlertDialog.Builder dialog = new AlertDialog.Builder(getContext())
                             .setTitle(R.string.title_error_impresión)
-                            .setMessage(PrintHelper.isPrinterReady(port.retreiveStatus()))
+                            .setMessage(R.string.warning_error_desconocido)
                             .setPositiveButton(R.string.action_reintentar, new DialogInterface.OnClickListener() {
 
                                 @Override
@@ -915,31 +948,13 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                     dialog.show();
                     return;
                 }
-                else
-                {
-                    byte[] command = toPrint.getBytes(Charset.forName("UTF-8"));
-                    port.writePort(command, 0, command.length);
-                    byte[] cut = {27, 100, 3};
-                    port.writePort(cut, 0, cut.length);
-                }
-
+            } else if (printParameter.getValue().equalsIgnoreCase("2")) {
+                Intent print = new Intent(Intent.ACTION_SEND);
+                print.addCategory(Intent.CATEGORY_DEFAULT);
+                print.putExtra(Intent.EXTRA_TEXT, toPrint);
+                print.setType("text/plain");
+                startActivityForResult(Intent.createChooser(print, "Imprimir"), CODE_PRINT);
             }
-
-        } catch (StarIOPortException e) {
-            e.printStackTrace();
-            AlertDialog.Builder dialog = new AlertDialog.Builder(getContext())
-                    .setTitle(R.string.title_error_impresión)
-                    .setMessage(R.string.warning_error_desconocido)
-                    .setPositiveButton(R.string.action_reintentar, new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface arg0, int arg1) {
-                            generarFacturaFísica();
-                        }
-                    })
-                    .setCancelable(false);
-            dialog.show();
-            return;
         }
 
         if(tipo.equalsIgnoreCase("FA")) {
@@ -967,12 +982,6 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                 startActivity(intent);
             }
         }
-
-        /*Intent print = new Intent(Intent.ACTION_SEND);
-        print.addCategory(Intent.CATEGORY_DEFAULT);
-        print.putExtra(Intent.EXTRA_TEXT, toPrint);
-        print.setType("text/plain");
-        startActivityForResult(Intent.createChooser(print, "Imprimir"), CODE_PRINT);*/
     }
 
     private void setTransaccionValues()
@@ -997,9 +1006,9 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             baseImponible = baseImponible + detalle.getBaseImponible();
             neto = neto + (detalle.getSubtotal() - (detalle.getValorDescuentoManualTotal() + detalle.getValorDescuentoAutomaticoTotal()));
         }
-        double residuo = valorTotal % 100;
-        if(residuo >= 50)
-            redondeo = (100 - residuo);
+        double residuo = valorTotal % 1;
+        if(residuo >= 0.5)
+            redondeo = (1 - residuo);
         else
             redondeo = - residuo;
 
@@ -1049,6 +1058,8 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             actual.setValorTotal(actual.getSubtotal() - actual.getValorDescuentoAutomaticoTotal() - actual.getValorDescuentoManualTotal() + actual.getValorImpuestoTotal());
             actual.setBaseImponible(actual.getPorcentajeImpuesto() == 0 ? 0 : actual.getSubtotal() - actual.getValorDescuentoAutomaticoTotal() - actual.getValorDescuentoManualTotal());
             actual.setBaseImponibleCero(actual.getPorcentajeImpuesto() == 0 ? actual.getSubtotal() - actual.getValorDescuentoAutomaticoTotal() - actual.getValorDescuentoManualTotal() : 0);
+            actual.setSubtotalSinDescuento(actual.getSubtotal());
+            actual.setSubtotalSinImpuesto(actual.getSubtotal() - actual.getValorDescuentoAutomaticoTotal() - actual.getValorDescuentoManualTotal());
             pedido.getPedidoDetalles().set(exists, actual);
         }
 
@@ -1069,5 +1080,10 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                     "Dispositivo no soporta voz a texto.",
                     Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void ValidarExentoImpuestos()
+    {
+
     }
 }

@@ -277,7 +277,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                 }
                 break;
             case R.id.action_cotización_a_factura:
-                if(PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA, 0) != 0) {
+                if(PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA, -1) != -1) {
                     Intent intent2 = new Intent(getContext(), CrearPedidoActivity.class);
                     intent2.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, "FA");
                     intent2.putExtra(CrearPedidoActivity.ARG_IDPEDIDO, selectedClientId);
@@ -290,7 +290,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                 }
                 break;
             case R.id.action_nota_credito:
-                if(PreferenceManager.getInt(Contants.KEY_SECUENCIA_NOTA_CREDITO, 0) != 0) {
+                if(PreferenceManager.getInt(Contants.KEY_SECUENCIA_NOTA_CREDITO, -1) != -1) {
                     Intent intent2 = new Intent(getContext(), CrearPedidoActivity.class);
                     intent2.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, "NC");
                     intent2.putExtra(CrearPedidoActivity.ARG_IDPEDIDO, selectedClientId);
@@ -303,7 +303,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                 }
                 break;
             case R.id.action_crear_pedido:
-                if(PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA, 0) != 0) {
+                if(PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA, -1) != -1) {
                     AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
 
                     final SimpleGeneralValueAdapter adapter = new SimpleGeneralValueAdapter(this.getContext(), GeneralValue.getGeneralValues(getDataBase(), Contants.GENERAL_TABLE_TIPOS_TRANSACCION, "NC"));

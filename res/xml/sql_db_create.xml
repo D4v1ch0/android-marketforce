@@ -28,7 +28,8 @@
 	  Pendiente BOOLEAN,
       FechaUltimaVisita INTEGER,
       AgenteUltimaVisita TEXT,
-      FechaProximaVisita INTEGER
+      FechaProximaVisita INTEGER,
+        ExentoImpuesto BOOLEAN
       )
 	</statement>
 	<statement>
@@ -300,7 +301,8 @@
         TotalImpuesto2 REAL,
         TotalImpuesto3 REAL,
         TotalImpuesto4 REAL,
-        _IdControlCaja INTEGER
+        _IdControlCaja INTEGER,
+        Pendiente BOOLEAN
         )
     </statement>
     <statement>

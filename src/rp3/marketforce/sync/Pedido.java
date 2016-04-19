@@ -1,11 +1,16 @@
 package rp3.marketforce.sync;
 
+import android.util.Log;
+
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.ksoap2.transport.HttpResponseException;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.Calendar;
+import java.util.List;
 
 import rp3.configuration.PreferenceManager;
 import rp3.connection.HttpConnection;
@@ -18,7 +23,9 @@ import rp3.marketforce.models.AgendaTareaActividades;
 import rp3.marketforce.models.pedido.ControlCaja;
 import rp3.marketforce.models.pedido.Pago;
 import rp3.marketforce.models.pedido.PedidoDetalle;
+import rp3.marketforce.models.pedido.ProductoCodigo;
 import rp3.marketforce.utils.Utils;
+import rp3.sync.SyncAudit;
 import rp3.util.Convert;
 
 /**
@@ -75,7 +82,7 @@ public class Pedido {
             jObject.put("Redondeo", df.format(pedidoUpload.getRedondeo()));
             jObject.put("Subtotal", df.format(pedidoUpload.getSubtotal()));
             jObject.put("SubtotalSinDescuento", df.format(pedidoUpload.getSubtotalSinDescuento()));
-            jObject.put("SubtotalSinImpuesto", df.format((pedidoUpload.getValorTotal() + pedidoUpload.getExcedente() - pedidoUpload.getTotalImpuestos())));
+            jObject.put("SubtotalSinImpuesto", df.format(pedidoUpload.getSubtotal() - pedidoUpload.getTotalDescuentos()));
             jObject.put("TipoTransaccion", pedidoUpload.getTipoDocumento());
             jObject.put("ValorDescAutomatico", df.format(pedidoUpload.getTotalDescuentos()));
             jObject.put("ValorImpuestoIvaVenta", df.format(pedidoUpload.getTotalImpuestos()));
@@ -84,6 +91,8 @@ public class Pedido {
             jObject.put("TotalImpuesto2", df.format(pedidoUpload.getTotalImpuesto2()));
             jObject.put("TotalImpuesto3", df.format(pedidoUpload.getTotalImpuesto3()));
             jObject.put("TotalImpuesto4", df.format(pedidoUpload.getTotalImpuesto4()));
+            jObject.put("IdNumeroLocalSRI", Integer.parseInt(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO)));
+            jObject.put("IdNumeroCajaSRI", Integer.parseInt(PreferenceManager.getString(Contants.KEY_SERIE)));
             if(pedidoUpload.getTipoDocumento().equalsIgnoreCase("FA"))
                 jObject.put("Secuencia", PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA));
             if(pedidoUpload.getTipoDocumento().equalsIgnoreCase("NC"))
@@ -175,6 +184,164 @@ public class Pedido {
         return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
     }
 
+    public static int executeSyncPendientes(DataBase db) {
+        WebService webService = new WebService("MartketForce", "UpdatePedido");
+        webService.setTimeOut(20000);
+
+        List<rp3.marketforce.models.pedido.Pedido> pedidos = rp3.marketforce.models.pedido.Pedido.getPedidosPendientes(db);
+        if(pedidos.size() == 0)
+            return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
+
+        for(rp3.marketforce.models.pedido.Pedido pedidoUpload : pedidos)
+        {
+            //rp3.marketforce.models.pedido.Pedido pedidoUpload = rp3.marketforce.models.pedido.Pedido.getPedido(db, idPedido);
+            ControlCaja controlCaja = ControlCaja.getControlCajaActiva(db);
+            if (controlCaja.getIdControlCaja() == 0) {
+                Caja.executeSyncInsertControl(db, controlCaja.getID());
+                controlCaja = ControlCaja.getControlCajaActiva(db);
+            }
+
+            if (controlCaja.getIdControlCaja() == 0)
+                return SyncAdapter.SYNC_EVENT_ERROR;
+
+            JSONObject jObject = new JSONObject();
+            try {
+                DecimalFormat df = new DecimalFormat("#.##");
+                df.setRoundingMode(RoundingMode.CEILING);
+
+                jObject.put("IdAgenda", pedidoUpload.getIdAgenda());
+                jObject.put("IdRuta", PreferenceManager.getInt(Contants.KEY_IDRUTA));
+                jObject.put("IdPedido", pedidoUpload.getIdPedido());
+                jObject.put("IdCliente", pedidoUpload.getIdCliente());
+                jObject.put("ValorTotal", df.format(pedidoUpload.getValorTotal()));
+                jObject.put("Email", pedidoUpload.getEmail());
+                jObject.put("Estado", pedidoUpload.getEstado());
+                jObject.put("FechaCreacionTicks", Convert.getDotNetTicksFromDate(pedidoUpload.getFechaCreacion()));
+                if (pedidoUpload.get_idAgenda() != 0)
+                    jObject.put("IdAgenda", rp3.marketforce.models.Agenda.getAgenda(db, pedidoUpload.get_idAgenda()).getIdAgenda());
+                if (pedidoUpload.getEstado().equalsIgnoreCase("A")) {
+                    jObject.put("Anulado", true);
+                    jObject.put("FecAnula", pedidoUpload.getEstado());
+                } else
+                    jObject.put("Anulado", false);
+
+                jObject.put("BaseImponible", df.format(pedidoUpload.getBaseImponible()));
+                jObject.put("BaseImponibleCero", df.format(pedidoUpload.getBaseImponibleCero()));
+                jObject.put("Cambio", df.format(pedidoUpload.getExcedente()));
+
+                jObject.put("IdEmpresa", PreferenceManager.getInt(Contants.KEY_ID_EMPRESA));
+                jObject.put("IdEstablecimiento", PreferenceManager.getInt(Contants.KEY_ID_ESTABLECIMIENTO));
+                jObject.put("IdMoneda", PreferenceManager.getInt(Contants.KEY_ID_MONEDA));
+                jObject.put("IdNumeroCaja", PreferenceManager.getInt(Contants.KEY_ID_CAJA));
+                jObject.put("IdPuntoOperacion", PreferenceManager.getInt(Contants.KEY_ID_PUNTO_OPERACION));
+                jObject.put("NumeroDocumento", pedidoUpload.getNumeroDocumento());
+                jObject.put("Observacion", pedidoUpload.getObservaciones());
+                jObject.put("Redondeo", df.format(pedidoUpload.getRedondeo()));
+                jObject.put("Subtotal", df.format(pedidoUpload.getSubtotal()));
+                jObject.put("SubtotalSinDescuento", df.format(pedidoUpload.getSubtotalSinDescuento()));
+                jObject.put("SubtotalSinImpuesto", df.format(pedidoUpload.getSubtotal() - pedidoUpload.getTotalDescuentos()));
+                jObject.put("TipoTransaccion", pedidoUpload.getTipoDocumento());
+                jObject.put("ValorDescAutomatico", df.format(pedidoUpload.getTotalDescuentos()));
+                jObject.put("ValorImpuestoIvaVenta", df.format(pedidoUpload.getTotalImpuestos()));
+                jObject.put("IdControlCaja", controlCaja.getIdControlCaja());
+                jObject.put("IdDocumentoRef", pedidoUpload.getIdDocumentoRef());
+                jObject.put("TotalImpuesto2", df.format(pedidoUpload.getTotalImpuesto2()));
+                jObject.put("TotalImpuesto3", df.format(pedidoUpload.getTotalImpuesto3()));
+                jObject.put("TotalImpuesto4", df.format(pedidoUpload.getTotalImpuesto4()));
+                jObject.put("IdNumeroLocalSRI", Integer.parseInt(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO)));
+                jObject.put("IdNumeroCajaSRI", Integer.parseInt(PreferenceManager.getString(Contants.KEY_SERIE)));
+                if (pedidoUpload.getTipoDocumento().equalsIgnoreCase("FA"))
+                    jObject.put("Secuencia", PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA));
+                if (pedidoUpload.getTipoDocumento().equalsIgnoreCase("NC"))
+                    jObject.put("Secuencia", PreferenceManager.getInt(Contants.KEY_SECUENCIA_NOTA_CREDITO));
+
+
+                JSONArray jArrayDetalle = new JSONArray();
+                for (PedidoDetalle det : pedidoUpload.getPedidoDetalles()) {
+                    JSONObject jObjectDetalle = new JSONObject();
+                    jObjectDetalle.put("IdProducto", det.getIdProducto());
+                    jObjectDetalle.put("Descripcion", det.getDescripcion());
+                    jObjectDetalle.put("IdPedido", det.getIdPedido());
+                    jObjectDetalle.put("IdPedidoDetalle", det.getIdPedidoDetalle());
+                    jObjectDetalle.put("ValorUnitario", df.format(det.getValorUnitario()));
+                    jObjectDetalle.put("Cantidad", det.getCantidad());
+                    jObjectDetalle.put("ValorTotal", df.format(det.getValorTotal()));
+                    jObjectDetalle.put("BaseImponible", df.format(det.getBaseImponible()));
+                    jObjectDetalle.put("BaseImponibleCero", df.format(det.getBaseImponibleCero()));
+                    //jObjectDetalle.put("IdBeneficio", det.getProducto().getIdBeneficio());
+                    jObjectDetalle.put("PorcDescAutomatico", df.format(det.getPorcentajeDescuentoAutomatico()));
+                    jObjectDetalle.put("PorcDescManual", df.format(det.getPorcentajeDescuentoManual()));
+                    jObjectDetalle.put("PorcImpuestoIvaVenta", df.format(det.getPorcentajeImpuesto()));
+                    jObjectDetalle.put("Subtotal", df.format(det.getSubtotal()));
+                    jObjectDetalle.put("SubtotalSinDescuento", df.format(det.getSubtotalSinDescuento()));
+                    jObjectDetalle.put("SubtotalSinImpuesto", df.format(det.getSubtotalSinImpuesto()));
+                    jObjectDetalle.put("ValorDescAutomatico", df.format(det.getValorDescuentoAutomatico()));
+                    jObjectDetalle.put("ValorDescAutomaticoTotal", df.format(det.getValorDescuentoAutomaticoTotal()));
+                    jObjectDetalle.put("ValorDescManual", df.format(det.getValorDescuentoManual()));
+                    jObjectDetalle.put("ValorDescManualTotal", df.format(det.getValorDescuentoManualTotal()));
+                    jObjectDetalle.put("ValorImpuestoIvaVenta", df.format(det.getValorImpuesto()));
+                    jObjectDetalle.put("ValorImpuestoIvaVentaTotal", df.format(det.getValorImpuestoTotal()));
+                    jObjectDetalle.put("BaseICE", df.format(det.getBaseICE()));
+                    jObjectDetalle.put("CantidadDevolucion", det.getCantidadDevolucion());
+
+                    jArrayDetalle.put(jObjectDetalle);
+                }
+
+                jObject.put("PedidoDetalles", jArrayDetalle);
+
+                JSONArray jArrayPago = new JSONArray();
+                for (Pago pago : pedidoUpload.getPagos()) {
+                    JSONObject jObjectPago = new JSONObject();
+                    jObjectPago.put("IdPedido", pago.getIdPedido());
+                    jObjectPago.put("FactorCambio", 1);
+                    jObjectPago.put("IdFormaPago", pago.getIdFormaPago());
+                    jObjectPago.put("IdMoneda", PreferenceManager.getInt(Contants.KEY_ID_MONEDA));
+                    jObjectPago.put("Observacion", pago.getObservacion());
+                    jObjectPago.put("Valor", df.format(pago.getValor()));
+                    jObjectPago.put("ValorMoneda", 1);
+
+                    jArrayPago.put(jObjectPago);
+                }
+
+                jObject.put("Pagos", jArrayPago);
+            } catch (Exception ex) {
+
+            }
+
+            webService.addParameter("pedido", jObject);
+
+            try {
+                webService.addCurrentAuthToken();
+
+                try {
+                    webService.invokeWebService();
+                    int id = webService.getIntegerResponse();
+                    pedidoUpload.setIdPedido(id);
+                    rp3.marketforce.models.pedido.Pedido.update(db, pedidoUpload);
+                    for (PedidoDetalle det : pedidoUpload.getPedidoDetalles()) {
+                        det.setIdPedido(id);
+                        PedidoDetalle.update(db, det);
+                    }
+                    for (Pago pag : pedidoUpload.getPagos()) {
+                        pag.setIdPedido(id);
+                        Pago.update(db, pag);
+                    }
+                } catch (HttpResponseException e) {
+                    if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                        return rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                    return rp3.content.SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+                } catch (Exception e) {
+                    return rp3.content.SyncAdapter.SYNC_EVENT_ERROR;
+                }
+
+            } finally {
+                webService.close();
+            }
+        }
+
+        return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
     public static int executeSyncAnular(DataBase db, long idPedido) {
         WebService webService = new WebService("MartketForce", "AnularPedido");
         webService.setTimeOut(20000);
@@ -214,6 +381,51 @@ public class Pedido {
             webService.close();
         }
 
+        return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
+    public static int executeSyncDocRef(DataBase db){
+        WebService webService = new WebService("MartketForce","GetDocRef");
+        Calendar fechaUlt = Calendar.getInstance();
+        fechaUlt.setTime(SyncAudit.getLastSyncDate(rp3.marketforce.sync.SyncAdapter.SYNC_TYPE_DOC_REF, rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS));
+        fechaUlt.add(Calendar.MINUTE, -30);
+        long fecha = rp3.util.Convert.getDotNetTicksFromDate(fechaUlt.getTime());
+        try
+        {
+            webService.addParameter("@ultimaFechaActualizacion", fecha);
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return rp3.content.SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return rp3.content.SyncAdapter.SYNC_EVENT_ERROR;
+            }
+
+            JSONArray types = webService.getJSONArrayResponse();
+
+            for(int i=0; i < types.length(); i++){
+                try {
+
+                    JSONObject type = types.getJSONObject(i);
+
+                    rp3.marketforce.models.pedido.Pedido pedido = rp3.marketforce.models.pedido.Pedido.getPedidoByIdServer(db, type.getInt("IdPedido"));
+
+                    pedido.setIdDocumentoRef(type.getInt("IdDocRef"));
+
+                    rp3.marketforce.models.pedido.Pedido.update(db, pedido);
+
+                } catch (JSONException e) {
+                    Log.e("Entro", "Error: " + e.toString());
+                    return rp3.content.SyncAdapter.SYNC_EVENT_ERROR;
+                }
+            }
+        }finally{
+            webService.close();
+        }
         return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
     }
 }

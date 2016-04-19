@@ -20,15 +20,17 @@ import rp3.app.BaseFragment;
 import rp3.configuration.PreferenceManager;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
+import rp3.marketforce.cliente.SignInFragment;
 import rp3.marketforce.models.pedido.PedidoDetalle;
 import rp3.marketforce.models.pedido.Producto;
+import rp3.marketforce.sync.Agente;
 import rp3.marketforce.utils.DrawableManager;
 
 /**
  * Created by magno_000 on 13/10/2015.
  */
 
-public class ProductFragment extends BaseFragment {
+public class ProductFragment extends BaseFragment implements SignInFragment.SignConfirmListener{
 
     public static String ARG_CODE = "Code";
     private ProductAcceptListener createFragmentListener;
@@ -37,6 +39,7 @@ public class ProductFragment extends BaseFragment {
     private double porcentajeDescManual = 0, valorDescManual = 0, valorDescManualTotal = 0;
     private DecimalFormat df;
     private NumberFormat numberFormat, numberFormatInteger;
+    private SignInFragment signInFragment;
 
     public static ProductFragment newInstance(String jcode)
     {
@@ -57,6 +60,23 @@ public class ProductFragment extends BaseFragment {
         }else{
             createFragmentListener = (ProductAcceptListener) activity;
         }
+
+    }
+
+    @Override
+    public void onSignSuccess(Bundle bundle) {
+        if(bundle.getInt(Agente.KEY_DESCUENTO) >= Integer.parseInt(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).getText().toString())) {
+            Toast.makeText(getContext(), "Usuario Autorizado.", Toast.LENGTH_LONG).show();
+            saveDetail();
+        }
+        else
+        {
+            Toast.makeText(getContext(), "Usuario No Autorizado.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onSignError(Bundle bundle) {
 
     }
 
@@ -104,7 +124,7 @@ public class ProductFragment extends BaseFragment {
                     if (s.length() == 0)
                         porcentajeDescManual = 0;
                     else {
-                        porcentajeDescManual = Float.parseFloat(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).getText().toString()) / 100;
+                        porcentajeDescManual = Double.parseDouble(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).getText().toString()) / 100;
                     }
                     int cantidad = 0;
                     if (((EditText) rootView.findViewById(R.id.producto_cantidad)).length() > 0)
@@ -140,7 +160,7 @@ public class ProductFragment extends BaseFragment {
                     else {
                         int cantidad = Integer.parseInt(((EditText) rootView.findViewById(R.id.producto_cantidad)).getText().toString());
                         if(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).length() > 0)
-                            porcentajeDescManual = Float.parseFloat(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).getText().toString()) / 100;
+                            porcentajeDescManual = Double.parseDouble(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).getText().toString()) / 100;
                         try {
                             valorDescManual = jsonObject.getDouble("p") * porcentajeDescManual;
                             double precio_total = cantidad * jsonObject.getDouble("p");
@@ -171,7 +191,7 @@ public class ProductFragment extends BaseFragment {
             else {
                 int cantidad = Integer.parseInt(((EditText) rootView.findViewById(R.id.producto_cantidad)).getText().toString());
                 if(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).length() > 0)
-                    porcentajeDescManual = Float.parseFloat(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).getText().toString()) / 100;
+                    porcentajeDescManual = Double.parseDouble(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).getText().toString()) / 100;
                 try {
                     valorDescManual = jsonObject.getDouble("p") * porcentajeDescManual;
                     double precio_total = cantidad * jsonObject.getDouble("p");
@@ -222,57 +242,67 @@ public class ProductFragment extends BaseFragment {
         rootView.findViewById(R.id.producto_aceptar).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(((EditText) rootView.findViewById(R.id.producto_cantidad)).length() > 0) {
-                    if(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).length() > 0 &&
+                if(((EditText) getRootView().findViewById(R.id.producto_cantidad)).length() > 0) {
+                    if(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).length() > 0 &&
                             Integer.parseInt(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).getText().toString()) > PreferenceManager.getInt(Contants.KEY_DESCUENTO_MAXIMO))
                     {
-                        Toast.makeText(getContext(), "Su máximo descuento permitido es del " + PreferenceManager.getInt(Contants.KEY_DESCUENTO_MAXIMO) + "%.", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getContext(), "Su máximo descuento permitido es del " + PreferenceManager.getInt(Contants.KEY_DESCUENTO_MAXIMO) + "%.", Toast.LENGTH_LONG).show();
+                        if(signInFragment == null)
+                            signInFragment = new SignInFragment();
+                        signInFragment.type = "AuthDesc";
+                        showDialogFragment(signInFragment, "Autorizar Descuento", "Autorizar Descuento");
                         return;
                     }
-                    PedidoDetalle detalle = new PedidoDetalle();
-                    detalle.setCantidad(Integer.parseInt(((EditText) rootView.findViewById(R.id.producto_cantidad)).getText().toString()));
-                    try {
-                        detalle.setDescripcion(jsonObject.getString("d"));
-                        detalle.setValorUnitario(jsonObject.getDouble("p"));
-                        detalle.setIdProducto(jsonObject.getInt("id"));
-                        detalle.setUrlFoto(jsonObject.getString("f"));
-                        detalle.setSubtotal(detalle.getValorUnitario() * detalle.getCantidad());
-                        detalle.setPorcentajeDescuentoManual(porcentajeDescManual);
-                        detalle.setValorDescuentoManual(valorDescManual);
-                        detalle.setValorDescuentoAutomatico(0);
-                        detalle.setValorDescuentoAutomaticoTotal(0);
-                        detalle.setValorDescuentoManualTotal(valorDescManualTotal);
-                        detalle.setPorcentajeDescuentoAutomatico(Float.parseFloat(jsonObject.getString("pd")));
-                        detalle.setPorcentajeImpuesto(Float.parseFloat(jsonObject.getString("pi")));
-                        detalle.setValorImpuesto(Float.parseFloat(jsonObject.getString("pi")) * (Float.parseFloat(jsonObject.getString("p")) - valorDescManual));
-                        detalle.setValorImpuestoTotal(detalle.getValorImpuesto() * detalle.getCantidad());
-                        detalle.setProducto(Producto.getProductoIdServer(getDataBase(), detalle.getIdProducto()));
-                        detalle.setValorTotal(detalle.getSubtotal() - detalle.getValorDescuentoAutomaticoTotal() - detalle.getValorDescuentoManualTotal() + detalle.getValorImpuestoTotal());
-                        detalle.setBaseImponible(jsonObject.getDouble("pi") == 0 ? 0 : detalle.getSubtotal() - detalle.getValorDescuentoAutomaticoTotal() - detalle.getValorDescuentoManualTotal() );
-                        detalle.setBaseImponibleCero(jsonObject.getDouble("pi") == 0 ? detalle.getSubtotal() - detalle.getValorDescuentoAutomaticoTotal() - detalle.getValorDescuentoManualTotal(): 0);
-
-                        //Validaciones si es que tipo de documento es nota de credito
-                        if(!jsonObject.isNull("tipo") && jsonObject.getString("tipo").equalsIgnoreCase("NC"))
-                        {
-                            if(detalle.getCantidad() > jsonObject.getInt("c"))
-                            {
-                                Toast.makeText(getContext(), "No puede devolver mas unidades de lo que se facturó.", Toast.LENGTH_LONG).show();
-                                return;
-                            }
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    createFragmentListener.onAcceptSuccess(detalle);
-                    dismiss();
+                    saveDetail();
                 }
                 else
                 {
                     Toast.makeText(getContext(), "Ingrese una cantidad", Toast.LENGTH_LONG).show();
                 }
-
             }
         });
+    }
+
+    private void saveDetail()
+    {
+        PedidoDetalle detalle = new PedidoDetalle();
+        detalle.setCantidad(Integer.parseInt(((EditText) getRootView().findViewById(R.id.producto_cantidad)).getText().toString()));
+        try {
+            detalle.setDescripcion(jsonObject.getString("d"));
+            detalle.setValorUnitario(jsonObject.getDouble("p"));
+            detalle.setIdProducto(jsonObject.getInt("id"));
+            detalle.setUrlFoto(jsonObject.getString("f"));
+            detalle.setSubtotal(detalle.getValorUnitario() * detalle.getCantidad());
+            detalle.setPorcentajeDescuentoManual(porcentajeDescManual);
+            detalle.setValorDescuentoManual(valorDescManual);
+            detalle.setValorDescuentoAutomatico(0);
+            detalle.setValorDescuentoAutomaticoTotal(0);
+            detalle.setValorDescuentoManualTotal(valorDescManualTotal);
+            detalle.setPorcentajeDescuentoAutomatico(Float.parseFloat(jsonObject.getString("pd")));
+            detalle.setPorcentajeImpuesto(Float.parseFloat(jsonObject.getString("pi")));
+            detalle.setValorImpuesto(Float.parseFloat(jsonObject.getString("pi")) * (Float.parseFloat(jsonObject.getString("p")) - valorDescManual));
+            detalle.setValorImpuestoTotal(detalle.getValorImpuesto() * detalle.getCantidad());
+            detalle.setProducto(Producto.getProductoIdServer(getDataBase(), detalle.getIdProducto()));
+            detalle.setValorTotal(detalle.getSubtotal() - detalle.getValorDescuentoAutomaticoTotal() - detalle.getValorDescuentoManualTotal() + detalle.getValorImpuestoTotal());
+            detalle.setBaseImponible(jsonObject.getDouble("pi") == 0 ? 0 : detalle.getSubtotal() - detalle.getValorDescuentoAutomaticoTotal() - detalle.getValorDescuentoManualTotal());
+            detalle.setBaseImponibleCero(jsonObject.getDouble("pi") == 0 ? detalle.getSubtotal() - detalle.getValorDescuentoAutomaticoTotal() - detalle.getValorDescuentoManualTotal() : 0);
+            detalle.setSubtotalSinDescuento(detalle.getSubtotal());
+            detalle.setSubtotalSinImpuesto(detalle.getSubtotal() - detalle.getValorDescuentoAutomaticoTotal() - detalle.getValorDescuentoManualTotal());
+
+            //Validaciones si es que tipo de documento es nota de credito
+            if(!jsonObject.isNull("tipo") && jsonObject.getString("tipo").equalsIgnoreCase("NC"))
+            {
+                if(detalle.getCantidad() > jsonObject.getInt("c"))
+                {
+                    Toast.makeText(getContext(), "No puede devolver mas unidades de lo que se facturó.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        createFragmentListener.onAcceptSuccess(detalle);
+        dismiss();
     }
 }

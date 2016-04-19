@@ -264,5 +264,6 @@
     <string name="action_reintentar">Reintentar</string>
     <string name="label_no_existe_producto">Producto no existe</string>
     <string name="message_reimprimir">Desea reimprimir esta transacción?</string>
+    <string name="label_ciudadano_oro">Está exento de impuestos?</string>
 
 </resources>

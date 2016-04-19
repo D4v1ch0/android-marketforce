@@ -204,6 +204,8 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
             jsonObject.put("bi", transaction.getBaseImponible());
             jsonObject.put("bic", transaction.getBaseImponibleCero());
             jsonObject.put("s", transaction.getSubtotal());
+            jsonObject.put("ssd", transaction.getSubtotalSinDescuento());
+            jsonObject.put("ssi", transaction.getSubtotalSinImpuesto());
             jsonObject.put("cod", transaction.getProducto().getCodigoExterno());
 
         }

@@ -87,4 +87,9 @@ public class ProductoCodigo  extends EntityBase<ProductoCodigo> {
         c.close();
         return productoCodigo;
     }
+
+    public static void deleteCodigos(DataBase db, String codigoExterno)
+    {
+        db.delete(Contract.ProductoCodigo.TABLE_NAME, Contract.ProductoCodigo.COLUMN_CODIGO_EXTERNO + " = ? ", new String[] { codigoExterno});
+    }
 }

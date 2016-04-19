@@ -42,6 +42,7 @@ public final class Contract {
         public static final String COLUMN_FECHA_ULTIMA_VISITA = "FechaUltimaVisita";
         public static final String COLUMN_AGENTE_ULTIMA_VISITA = "AgenteUltimaVisita";
         public static final String COLUMN_FECHA_PROXIMA_VISITA = "FechaProximaVisita";
+		public static final String COLUMN_EXENTO_IMPUESTO = "ExentoImpuesto";
 				
 		public static final String FIELD_ID_TIPO_IDENTIFICACION = COLUMN_ID_TIPO_IDENTIFICACION;	
 		public static final String FIELD_ID_CLIENTE = COLUMN_ID_CLIENTE;	
@@ -55,6 +56,7 @@ public final class Contract {
 		public static final String FIELD_TIPO_PERSONA = COLUMN_TIPO_PERSONA;
 		public static final String FIELD_NUEVO = COLUMN_NUEVO;
 		public static final String FIELD_PENDIENTE = COLUMN_PENDIENTE;
+		public static final String FIELD_EXENTO_IMPUESTO = COLUMN_EXENTO_IMPUESTO;
         public static final String FIELD_FECHA_ULTIMA_VISITA = COLUMN_FECHA_ULTIMA_VISITA;
         public static final String FIELD_AGENTE_ULTIMA_VISITA = COLUMN_AGENTE_ULTIMA_VISITA;
         public static final String FIELD_FECHA_PROXIMA_VISITA = COLUMN_FECHA_PROXIMA_VISITA;
@@ -576,6 +578,7 @@ public final class Contract {
 		public static final String COLUMN_TOTAL_IMPUESTO3 = "TotalImpuesto3";
 		public static final String COLUMN_TOTAL_IMPUESTO4 = "TotalImpuesto4";
 		public static final String COLUMN_ID_CONTROL_CAJA_INT = "_IdControlCaja";
+		public static final String COLUMN_PENDIENTE = "Pendiente";
 
 		public static final String FIELD_NUMERO_DOCUMENTO = Contract.PedidoExt.TABLE_NAME + "_" + Contract.PedidoExt.COLUMN_NUMERO_DOCUMENTO;
 		public static final String FIELD_NOMBRE = Contract.PedidoExt.TABLE_NAME + "_" + Contract.PedidoExt.COLUMN_NOMBRE;
@@ -583,7 +586,9 @@ public final class Contract {
 		public static final String QUERY_PEDIDOS_SEARCH = "SimplePedidoSearch";
 		public static final String QUERY_PEDIDOS = "PedidosAll";
 		public static final String QUERY_PEDIDOS_BY_ID = "PedidoById";
+		public static final String QUERY_PEDIDOS_BY_ID_SERVER = "PedidoByIdServer";
 		public static final String QUERY_PEDIDOS_BY_DOCUMENTO = "PedidoByDocumento";
+		public static final String QUERY_PEDIDOS_PENDIENTES = "PedidosPendientes";
 
 	}
 

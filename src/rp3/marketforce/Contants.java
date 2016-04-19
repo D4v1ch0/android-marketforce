@@ -38,6 +38,7 @@ public class Contants {
 	public final static String KEY_ES_AGENTE = "EsAgente";
 	public final static String KEY_ES_ADMINISTRADOR = "EsAdministrador";
     public final static String KEY_ID_SUPERVISOR = "IdSupervisor";
+    public final static String KEY_DESCUENTO_MAXIMO = "DescuentoMaximo";
 	public final static String KEY_CARGO = "Cargo";
     public final static String KEY_FOTO = "Foto";
     public final static String KEY_GPS_NOTIFICATION = "NotificationGPS";
@@ -76,7 +77,6 @@ public class Contants {
     public final static String KEY_SERIE = "Serie";
     public final static String KEY_NOMBRE_PUNTO_OPERACION = "NombrePuntoOperacion";
     public final static String KEY_ANDROID_ID = "AndroidID";
-    public final static String KEY_DESCUENTO_MAXIMO = "DescuentoMaximo";
     public final static String KEY_TRANSACCION_FACTURA = "FA";
     public final static String KEY_TRANSACCION_NOTA_CREDITO = "NC";
     public final static String KEY_TRANSACCION_COTIZACION = "CT";
@@ -146,6 +146,7 @@ public class Contants {
     public final static String POS_DIGITRANS = "DIGITRANS"; //Formato de impresión de la transacción
     public final static String POS_IMPREDOC = "IMPREDOC"; //Si emite o no documento para impresión
     public final static String POS_LENPAPER = "LENPAPER"; //Cantidad de letras de papel de factura
+    public final static String POS_PRINTMODE = "PRINTMODE"; //0 para no imprimir, 1 para impresora Bluetooth, 2 para impresora en red.
 
     public final static String APPLICATION_ID = "AGENDACOMERCial";
 	

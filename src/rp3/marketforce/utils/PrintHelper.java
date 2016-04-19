@@ -39,9 +39,9 @@ public class PrintHelper {
         String toPrint = "";
 
         toPrint = StringUtils.centerStringInLine(PreferenceManager.getString(Contants.KEY_EMPRESA), SPACES);
-        toPrint = toPrint + StringUtils.centerStringInLine("Ced. Jur.:" + PreferenceManager.getString(Contants.KEY_RUC), SPACES);
-        toPrint = toPrint + StringUtils.centerStringInLine("Tel:" + PreferenceManager.getString(Contants.KEY_TELEFONO), SPACES);
-        toPrint = toPrint + StringUtils.centerStringInLine("Dir:" + PreferenceManager.getString(Contants.KEY_DIRECCION), SPACES);
+        toPrint = toPrint + StringUtils.centerStringInLine("Ced. Jur.:" + PreferenceManager.getString(Contants.KEY_RUC).trim(), SPACES);
+        toPrint = toPrint + StringUtils.centerStringInLine("Tel:" + PreferenceManager.getString(Contants.KEY_TELEFONO).trim(), SPACES);
+        toPrint = toPrint + StringUtils.centerStringInLine("Dir:" + PreferenceManager.getString(Contants.KEY_DIRECCION).trim(), SPACES);
         toPrint = toPrint + StringUtils.centerStringInLine("GUAYAQUIL - ECUADOR", SPACES);
         toPrint = toPrint + '\n';
         if(reimpresion)
