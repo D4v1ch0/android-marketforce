@@ -76,6 +76,7 @@ import rp3.marketforce.models.Cliente;
 import rp3.marketforce.models.ClienteDireccion;
 import rp3.marketforce.models.Contacto;
 import rp3.marketforce.models.TipoCliente;
+import rp3.marketforce.models.pedido.Pedido;
 import rp3.marketforce.ruta.CrearVisitaActivity;
 import rp3.marketforce.ruta.CrearVisitaFragment;
 import rp3.marketforce.sync.SyncAdapter;
@@ -125,6 +126,7 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
 	private List<GeopoliticalStructure> ciudades;
 	private GeopoliticalStructureAdapter adapter;
     private SignInFragment signInFragment;
+    private int flagAuth = -1;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -154,7 +156,7 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
 			if(Validaciones() && CamposObligatorios())
 			{
 				Grabar();
-                if(tipo == Contants.IS_MODIFICACION)
+                if(tipo == Contants.IS_MODIFICACION || !ConnectionUtils.isNetAvailable(getActivity()))
                     ((CrearClienteActivity)getActivity()).finishOnResult(idCliente);
 			}
 			break;
@@ -379,6 +381,7 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
         cli.setTipoPersona(((GeneralValue) ((Spinner) getRootView().findViewById(R.id.crear_cliente_tipo_persona)).getSelectedItem()).getCode());
         cli.setIdTipoCliente((int) ((Spinner) getRootView().findViewById(R.id.cliente_tipo_cliente)).getAdapter().getItemId(((Spinner) getRootView().findViewById(R.id.cliente_tipo_cliente)).getSelectedItemPosition()));
         cli.setExentoImpuesto(((CheckBox) getRootView().findViewById(R.id.cliente_oro)).isChecked());
+        cli.setCiudadanoOro(((CheckBox) getRootView().findViewById(R.id.cliente_cd_oro)).isChecked());
         if (cliente.getURLFoto() != null && !cliente.getURLFoto().trim().equals(""))
             cli.setURLFoto(cliente.getURLFoto());
         if (((Spinner) getRootView().findViewById(R.id.crear_cliente_tipo_persona)).getSelectedItemPosition() == 1) {
@@ -658,8 +661,20 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked)
                 {
-                    if(signInFragment == null)
-                        signInFragment = new SignInFragment();
+                    flagAuth = 1;
+                    signInFragment = new SignInFragment();
+                    showDialogFragment(signInFragment, "Autorizar Usuario", "Autorizar Usuario");
+                }
+
+            }
+        });
+        ((CheckBox) getRootView().findViewById(R.id.cliente_cd_oro)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked)
+                {
+                    flagAuth = 2;
+                    signInFragment = new SignInFragment();
                     showDialogFragment(signInFragment, "Autorizar Usuario", "Autorizar Usuario");
                 }
 
@@ -681,6 +696,10 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
 		((EditText)getRootView().findViewById(R.id.cliente_identificacion)).setText(cli.getIdentificacion());
 		((Spinner)getRootView().findViewById(R.id.crear_cliente_tipo_persona)).setSelection(getPosition(((Spinner) getRootView().findViewById(R.id.crear_cliente_tipo_persona)).getAdapter(), cli.getTipoPersona()));
 		((Spinner)getRootView().findViewById(R.id.cliente_tipo_cliente)).setSelection(getPosition(((Spinner) getRootView().findViewById(R.id.cliente_tipo_cliente)).getAdapter(), cli.getIdTipoCliente()));
+        ((CheckBox)getRootView().findViewById(R.id.cliente_oro)).setChecked(cli.getExentoImpuesto());
+        ((CheckBox)getRootView().findViewById(R.id.cliente_cd_oro)).setChecked(cli.isCiudadanoOro());
+        if(Pedido.getPedidoCliente(getDataBase(), cli.getID()) != null)
+            ((CheckBox)getRootView().findViewById(R.id.cliente_oro)).setEnabled(false);
         if(cli.getFechaNacimiento() != null && cli.getFechaNacimiento().getTime() != 0) {
             ((EditText) getRootView().findViewById(R.id.cliente_fecha_nacimiento)).setText(format1.format(cli.getFechaNacimiento()));
             cliente.setFechaNacimiento(cli.getFechaNacimiento());
@@ -1067,12 +1086,12 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
 
 		if(((EditText)getRootView().findViewById(R.id.cliente_identificacion)).getText().toString().trim().length() > 0 && getRootView().findViewById(R.id.cliente_identificacion).isEnabled())
 		{
-            /*if(!IdentificationValidator.ValidateIdentification(((EditText)getRootView().findViewById(R.id.cliente_identificacion)).getText().toString(),
+            if(!IdentificationValidator.ValidateIdentification(((EditText)getRootView().findViewById(R.id.cliente_identificacion)).getText().toString(),
                     (int) ((Spinner)getRootView().findViewById(R.id.cliente_tipo_identificacion)).getAdapter().getItemId(((Spinner)getRootView().findViewById(R.id.cliente_tipo_identificacion)).getSelectedItemPosition())))
             {
                 Toast.makeText(getContext(), "Número de identificación incorrecto.", Toast.LENGTH_LONG).show();
                 return false;
-            }*/
+            }
 		}
 
         boolean existsPrincipal = false;
@@ -1149,6 +1168,9 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
 
     @Override
     public void onSignError(Bundle bundle) {
-        ((CheckBox) getRootView().findViewById(R.id.cliente_oro)).setChecked(false);
+        if(flagAuth == 1)
+            ((CheckBox) getRootView().findViewById(R.id.cliente_oro)).setChecked(false);
+        else if(flagAuth == 2)
+            ((CheckBox) getRootView().findViewById(R.id.cliente_cd_oro)).setChecked(false);
     }
 }

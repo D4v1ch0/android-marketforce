@@ -90,6 +90,7 @@ public class ControlCajaFragment extends BaseFragment {
                         Toast.makeText(getContext(), "El valor de apertura no puede ser menor a 0.", Toast.LENGTH_SHORT).show();
                         return;
                     }
+                    control.setIdCaja(PreferenceManager.getInt(Contants.KEY_ID_CAJA));
                     control.setIdControlCaja(0);
                     control.setFechaApertura(Calendar.getInstance().getTime());
                     control.setIdAgente(PreferenceManager.getInt(Contants.KEY_IDAGENTE));

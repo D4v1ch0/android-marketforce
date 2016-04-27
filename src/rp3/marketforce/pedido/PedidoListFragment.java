@@ -263,7 +263,7 @@ public class PedidoListFragment extends BaseFragment {
                 adapter.setPedidos(groupPedidos);
             }
             adapter.notifyDataSetChanged();
-            if (permisoListFragmentCallback.allowSelectedItem())
+            if (permisoListFragmentCallback.allowSelectedItem() && data.size() > 0)
                 permisoListFragmentCallback.onPermisoSelected(data.get(0));
             permisoListFragmentCallback.onFinalizaConsulta();
             headerList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {

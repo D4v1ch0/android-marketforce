@@ -254,6 +254,7 @@
     <string name="message_cerrar_caja_activa">Existe una caja abierta por otro usuario, desea cerrarla? (En el caso de no cerrarla, no podra transaccionar)</string>
     <string name="title_guardar_transaccion">Guardar Transacción</string>
     <string name="action_reimpresion">Reimprimir Transacción</string>
+    <string name="action_ver_pagos">Ver Formas de Pago</string>
     <string name="warning_sin_papel">Impresora no tiene papel. Cargue la impresora de papel y haga touch en Reintentar.</string>
     <string name="warning_impresora_no_vinculada">No existe impresora vinculada al dispositivo. Por favor vincule una impresora por medio de Bluetooth y haga touch en Reintentar.</string>
     <string name="warning_error_desconocido">Error desconocido al imprimir. Si desea continuar, haga touch en Reintentar.</string>
@@ -264,6 +265,21 @@
     <string name="action_reintentar">Reintentar</string>
     <string name="label_no_existe_producto">Producto no existe</string>
     <string name="message_reimprimir">Desea reimprimir esta transacción?</string>
+    <string name="message_descarga_productos">Descargando productos</string>
+    <string name="message_actualizar_productos">Actualizando productos</string>
+    <string name="message_descarga_categorias">Descargando categorías</string>
+    <string name="message_actualizar_categorias">Actualizando categorías</string>
+    <string name="message_descarga_subcategorias">Descargando subcategorías</string>
+    <string name="message_actualizar_subcategorias">Actualizando subcategorías</string>
     <string name="label_ciudadano_oro">Está exento de impuestos?</string>
+    <string name="label_descuento_cliente">Es ciudadano de oro?</string>
+    <string name="label_banco">Banco:</string>
+    <string name="label_tarjeta">Tarjeta:</string>
+    <string name="label_numero_cuenta">Número Cuenta:</string>
+    <string name="label_numero_documento">Número Documento:</string>
+    <string name="label_numero_autorizacion">Número de Autorización:</string>
+    <string name="label_numero_lote">Número de Lote:</string>
+    <string name="label_tipo_diferido">Tipo Diferido:</string>
+    <string name="label_formas_pago">Formas de Pago</string>
 
 </resources>

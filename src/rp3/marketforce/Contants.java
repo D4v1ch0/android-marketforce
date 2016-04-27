@@ -59,6 +59,7 @@ public class Contants {
     public final static String KEY_MONEDA_SIMBOLO = "Simbolo";
     public final static String KEY_ID_MONEDA = "IdMoneda";
     public final static String KEY_ID_CAJA = "IdCaja";
+    public final static String KEY_CAJA = "Descripcion";
     public final static String KEY_ID_EMPRESA = "IdEmpresa";
     public final static String KEY_ID_ESTABLECIMIENTO = "IdEstablecimiento";
     public final static String KEY_ID_PUNTO_OPERACION = "IdPuntoOperacion";
@@ -147,6 +148,15 @@ public class Contants {
     public final static String POS_IMPREDOC = "IMPREDOC"; //Si emite o no documento para impresión
     public final static String POS_LENPAPER = "LENPAPER"; //Cantidad de letras de papel de factura
     public final static String POS_PRINTMODE = "PRINTMODE"; //0 para no imprimir, 1 para impresora Bluetooth, 2 para impresora en red.
+    public final static String POS_USEAUTORTC = "USEAUTORTC"; //Si se debe de mostrar o no el codigo de autorización de tarjeta de crédito al pagar
+    public final static String POS_USEBANCOTC = "USEBANCOTC"; //Usa banco en el pago de tarjeta de crédito
+    public final static String POS_USEDIFERTC = "USEDIFERTC"; //Usa diferido en el pago de tarjeta de crédito
+    public final static String POS_USELOTETC = "USELOTETC"; //Usa el campo de lote de pago de tarjeta de crédito
+    public final static String POS_USEMARCATC = "USEMARCATC"; //Usa marca de tarjeta de crédito en pagos
+    public final static String POS_USENUMTC = "USENUMTC"; //Usa número de tarjeta de crédito
+    public final static String POS_USENUMCHEQ = "USENUMCHEQ"; //Usa número de cheque
+    public final static String POS_USEBANCHEQ = "USEBANCHEQ"; //Usa banco en forma de pago cheque
+    public final static String POS_USECUECHEQ = "USECUECHEQ"; //CUsa número de cuenta en forma de pago cheque
 
     public final static String APPLICATION_ID = "AGENDACOMERCial";
 	

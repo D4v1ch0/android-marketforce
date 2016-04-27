@@ -298,6 +298,36 @@
                     <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
+                    <name>GetTarjetaComisiones</name>
+                    <action>caja/GetTarjetaComisiones</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetTiposDiferidos</name>
+                    <action>caja/GetTiposDiferidos</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetTarjetas</name>
+                    <action>caja/GetTarjetas</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetMarcaTarjetas</name>
+                    <action>caja/GetMarcaTarjetas</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetBancos</name>
+                    <action>caja/GetBancos</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
                     <name>GetTransacciones</name>
                     <action>caja/GetTransacciones</action>
                     <webMethod>GET</webMethod>

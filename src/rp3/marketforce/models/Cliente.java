@@ -41,6 +41,8 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
     private Date fechaUltimaVisita;
     private Date fechaProximaVisita;
     private String agenteUltimaVisita;
+	private boolean exentoImpuesto;
+	private boolean ciudadanoOro;
 	
 	private String direccion;
 	private String telefono;
@@ -51,7 +53,6 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 	private String tipoIdentificacionDescripcion;
 	private String URLFoto;
 	private String tipoPersona;
-	private boolean exentoImpuesto;
 
 	private List<Contacto> contactos;
 	private List<ClienteDireccion> clienteDirecciones;
@@ -64,6 +65,14 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
     public void setFechaUltimaVisita(Date fechaUltimaVisita) {
         this.fechaUltimaVisita = fechaUltimaVisita;
     }
+
+	public boolean isCiudadanoOro() {
+		return ciudadanoOro;
+	}
+
+	public void setCiudadanoOro(boolean ciudadanoOro) {
+		this.ciudadanoOro = ciudadanoOro;
+	}
 
 	public boolean getExentoImpuesto() {
 		return exentoImpuesto;
@@ -133,6 +142,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
         setValue(Contract.Cliente.COLUMN_FECHA_PROXIMA_VISITA, this.fechaProximaVisita);
         setValue(Contract.Cliente.COLUMN_AGENTE_ULTIMA_VISITA, this.agenteUltimaVisita);
 		setValue(Contract.Cliente.COLUMN_EXENTO_IMPUESTO, this.exentoImpuesto);
+		setValue(Contract.Cliente.COLUMN_CIUDADANO_ORO, this.ciudadanoOro);
 	}
 
 	@Override
@@ -444,6 +454,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			cl.setURLFoto(CursorUtils.getString(c, Contract.Cliente.FIELD_URL_FOTO));
 			cl.setTipoPersona(CursorUtils.getString(c, Contract.Cliente.FIELD_TIPO_PERSONA));
 			cl.setExentoImpuesto(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_EXENTO_IMPUESTO));
+			cl.setCiudadanoOro(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_CIUDADANO_ORO));
 			cl.setClienteDirecciones(ClienteDireccion.getClienteDirecciones(db, cl.getIdCliente(), false));
 			if(cl.getIdCliente() == 0)
 				cl.setContactos(Contacto.getContactoIdCliente(db, cl.getID(), true));
@@ -541,6 +552,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			client.setRazonSocial(CursorUtils.getString(c, Contract.Cliente.FIELD_RAZON_SOCIAL));
 			client.setNuevo(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_NUEVO));
 			client.setExentoImpuesto(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_EXENTO_IMPUESTO));
+			client.setCiudadanoOro(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_CIUDADANO_ORO));
 			
 			if(client.getIdCliente() == 0)
 				client.setContactos(Contacto.getContactoIdCliente(db, client.getID(), true));
@@ -599,6 +611,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			client.setRazonSocial(CursorUtils.getString(c, Contract.Cliente.FIELD_RAZON_SOCIAL));
 			client.setNuevo(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_NUEVO));
 			client.setExentoImpuesto(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_EXENTO_IMPUESTO));
+			client.setCiudadanoOro(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_CIUDADANO_ORO));
 
 			if(client.getIdCliente() == 0)
 				client.setContactos(Contacto.getContactoIdCliente(db, client.getID(), true));
@@ -651,6 +664,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			client.setRazonSocial(CursorUtils.getString(c, Contract.Cliente.FIELD_RAZON_SOCIAL));
 			client.setNuevo(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_NUEVO));
 			client.setExentoImpuesto(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_EXENTO_IMPUESTO));
+			client.setCiudadanoOro(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_CIUDADANO_ORO));
 			
 			if(client.getIdCliente() == 0)
 				client.setContactos(Contacto.getContactoIdCliente(db, client.getID(), true));
@@ -712,6 +726,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 				client.setRazonSocial(CursorUtils.getString(c, Contract.Cliente.FIELD_RAZON_SOCIAL));
 				client.setNuevo(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_NUEVO));
 				client.setExentoImpuesto(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_EXENTO_IMPUESTO));
+				client.setCiudadanoOro(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_CIUDADANO_ORO));
 				
 				if(client.getIdCliente() == 0)
 					client.setContactos(Contacto.getContactoIdCliente(db, client.getID(), true));
@@ -775,6 +790,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 				client.setRazonSocial(CursorUtils.getString(c, Contract.Cliente.FIELD_RAZON_SOCIAL));
 				client.setNuevo(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_NUEVO));
 				client.setExentoImpuesto(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_EXENTO_IMPUESTO));
+				client.setCiudadanoOro(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_CIUDADANO_ORO));
 				
 				if(client.getIdCliente() == 0)
 					client.setContactos(Contacto.getContactoIdCliente(db, client.getID(), true));

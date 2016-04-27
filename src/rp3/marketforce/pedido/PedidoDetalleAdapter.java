@@ -78,10 +78,8 @@ public class PedidoDetalleAdapter extends BaseAdapter {
         ((TextView) convertView.findViewById(R.id.pedido_detalle_descuento)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(detalle.getValorDescuentoAutomaticoTotal() + detalle.getValorDescuentoManualTotal()));
         ((TextView) convertView.findViewById(R.id.pedido_detalle_impuesto)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(detalle.getValorImpuestoTotal()));
         ((TextView) convertView.findViewById(R.id.pedido_detalle_descripcion)).setText(detalle.getDescripcion());
-        if(isDetail)
-            ((TextView) convertView.findViewById(R.id.pedido_detalle_cantidad)).setText((detalle.getCantidad())+"");
-        else
-            ((TextView) convertView.findViewById(R.id.pedido_detalle_cantidad)).setText((detalle.getCantidad() - detalle.getCantidadDevolucion())+"");
+        ((TextView) convertView.findViewById(R.id.pedido_detalle_cantidad)).setText((detalle.getCantidad())+"");
+
         ((TextView) convertView.findViewById(R.id.pedido_detalle_unitario)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(detalle.getValorUnitario()));
         ((TextView) convertView.findViewById(R.id.pedido_detalle_valor_total)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(detalle.getValorTotal()));
 

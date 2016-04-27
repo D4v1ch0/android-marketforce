@@ -17,6 +17,7 @@
         tbCliente.AgenteUltimaVisita,
         tbCliente.FechaProximaVisita,
         tbCliente.ExentoImpuesto,
+        tbCliente.CiudadanoOro,
         tbClienteExt.Nombre1 AS tbClienteExt_Nombre1,
         tbClienteExt.Nombre2 AS tbClienteExt_Nombre2,
        	tbClienteExt.Apellido1 AS tbClienteExt_Apellido1,
@@ -66,6 +67,7 @@
         tbCliente.AgenteUltimaVisita,
         tbCliente.FechaProximaVisita,
         tbCliente.ExentoImpuesto,
+        tbCliente.CiudadanoOro,
         tbClienteExt.Nombre1 AS tbClienteExt_Nombre1,
         tbClienteExt.Nombre2 AS tbClienteExt_Nombre2,
         tbClienteExt.Apellido1 AS tbClienteExt_Apellido1,
@@ -119,6 +121,7 @@
         tbCliente.AgenteUltimaVisita,
         tbCliente.FechaProximaVisita,
         tbCliente.ExentoImpuesto,
+        tbCliente.CiudadanoOro,
         tbClienteExt.Nombre1 AS tbClienteExt_Nombre1,
         tbClienteExt.Nombre2 AS tbClienteExt_Nombre2,
        	tbClienteExt.Apellido1 AS tbClienteExt_Apellido1,
@@ -174,6 +177,7 @@
         tbCliente.AgenteUltimaVisita,
         tbCliente.FechaProximaVisita,
         tbCliente.ExentoImpuesto,
+        tbCliente.CiudadanoOro,
         tbClienteExt.Nombre1 AS tbClienteExt_Nombre1,
         tbClienteExt.Nombre2 AS tbClienteExt_Nombre2,
        	tbClienteExt.Apellido1 AS tbClienteExt_Apellido1,
@@ -228,6 +232,7 @@
         tbCliente.AgenteUltimaVisita,
         tbCliente.FechaProximaVisita,
         tbCliente.ExentoImpuesto,
+        tbCliente.CiudadanoOro,
         tbClienteExt.Nombre1 AS tbClienteExt_Nombre1,
         tbClienteExt.Nombre2 AS tbClienteExt_Nombre2,
        	tbClienteExt.Apellido1 AS tbClienteExt_Apellido1,
@@ -282,6 +287,7 @@
         tbCliente.AgenteUltimaVisita,
         tbCliente.FechaProximaVisita,
         tbCliente.ExentoImpuesto,
+        tbCliente.CiudadanoOro,
         tbClienteExt.Nombre1 AS tbClienteExt_Nombre1,
         tbClienteExt.Nombre2 AS tbClienteExt_Nombre2,
        	tbClienteExt.Apellido1 AS tbClienteExt_Apellido1,
@@ -1147,6 +1153,7 @@
         tbProducto.URLFoto,
         tbProducto.IdSubCategoria,
         tbProducto.CodigoExterno,
+        tbProducto.PorcentajeDescuentoOro,
         tbProducto.PorcentajeDescuento,
         tbProducto.PrecioConDescuento,
         tbProducto.PorcentajeImpuesto,
@@ -1156,6 +1163,7 @@
         FROM tbProducto
         LEFT JOIN tbProductoExt
         ON tbProducto._id = tbProductoExt.docid
+        WHERE tbProducto.IdBeneficio &lt;&gt; -1
         ORDER BY tbProductoExt.Descripcion
         LIMIT 200
     </statement>
@@ -1167,6 +1175,7 @@
         tbProducto.URLFoto,
         tbProducto.IdSubCategoria,
         tbProducto.CodigoExterno,
+        tbProducto.PorcentajeDescuentoOro,
         tbProducto.PorcentajeDescuento,
         tbProducto.PrecioConDescuento,
         tbProducto.PorcentajeImpuesto,
@@ -1177,6 +1186,7 @@
         LEFT JOIN tbProductoExt
         ON tbProducto._id = tbProductoExt.docid
         WHERE tbProducto.IdSubCategoria = ?
+        AND tbProducto.IdBeneficio &lt;&gt; -1
         LIMIT 200
     </statement>
     <statement name="ProductoByID">
@@ -1187,6 +1197,7 @@
         tbProducto.URLFoto,
         tbProducto.IdSubCategoria,
         tbProducto.CodigoExterno,
+        tbProducto.PorcentajeDescuentoOro,
         tbProducto.PorcentajeDescuento,
         tbProducto.PrecioConDescuento,
         tbProducto.PorcentajeImpuesto,
@@ -1206,6 +1217,7 @@
         tbProducto.URLFoto,
         tbProducto.IdSubCategoria,
         tbProducto.CodigoExterno,
+        tbProducto.PorcentajeDescuentoOro,
         tbProducto.PorcentajeDescuento,
         tbProducto.PrecioConDescuento,
         tbProducto.PorcentajeImpuesto,
@@ -1225,6 +1237,7 @@
         tbProducto.URLFoto,
         tbProducto.IdSubCategoria,
         tbProducto.CodigoExterno,
+        tbProducto.PorcentajeDescuentoOro,
         tbProducto.PorcentajeDescuento,
         tbProducto.PrecioConDescuento,
         tbProducto.PorcentajeImpuesto,
@@ -1245,6 +1258,7 @@
 
         ) AS tbProductoSearch
         ON tbProductoExt.docid = tbProductoSearch.docid
+        WHERE tbProducto.IdBeneficio &lt;&gt; -1
         ORDER BY tbProductoExt.Descripcion, tbProductoSearch.Rank DESC
         LIMIT 200
     </statement>
@@ -1256,6 +1270,7 @@
         tbProducto.URLFoto,
         tbProducto.IdSubCategoria,
         tbProducto.CodigoExterno,
+        tbProducto.PorcentajeDescuentoOro,
         tbProducto.PorcentajeDescuento,
         tbProducto.PrecioConDescuento,
         tbProducto.PorcentajeImpuesto,
@@ -1277,6 +1292,7 @@
         ) AS tbProductoSearch
         ON tbProductoExt.docid = tbProductoSearch.docid
         WHERE tbProducto.IdSubCategoria = ?
+        AND tbProducto.IdBeneficio &lt;&gt; -1
         ORDER BY tbProductoExt.Descripcion, tbProductoSearch.Rank DESC
         LIMIT 200
     </statement>
@@ -1288,6 +1304,7 @@
         tbProducto.URLFoto,
         tbProducto.IdSubCategoria,
         tbProducto.CodigoExterno,
+        tbProducto.PorcentajeDescuentoOro,
         tbProducto.PorcentajeDescuento,
         tbProducto.PrecioConDescuento,
         tbProducto.PorcentajeImpuesto,
@@ -1298,33 +1315,104 @@
         LEFT JOIN tbProductoExt
         ON tbProducto._id = tbProductoExt.docid
         WHERE tbProducto.CodigoExterno = ?
+        AND tbProducto.IdBeneficio &lt;&gt; -1
     </statement>
     <statement name="ArqueoCajaQuery">
         SELECT 1 as _count,
         tbControlCaja.ValorApertura as Valor,
-        -1 AS IdFormaPago
+        -1 AS IdFormaPago,
+        '' AS Banco,
+        '' AS MarcaTarjeta
         FROM tbControlCaja
         WHERE tbControlCaja._id = ?
         UNION ALL
         SELECT
         COUNT(*) as _count,
         SUM(tbPago.Valor) AS Valor,
-        tbPago.IdFormaPago
+        tbPago.IdFormaPago,
+        '' AS Banco,
+        '' AS MarcaTarjeta
         FROM tbPago
         INNER JOIN tbPedido
         ON tbPedido._id = tbPago._IdPedido
         WHERE tbPedido.Estado = 'C'
         AND tbPedido._IdControlCaja = ?
+        AND tbPago.IdFormaPago NOT IN (2,3)
         GROUP BY tbPago.IdFormaPago
         UNION ALL
         SELECT COUNT(*) as _count,
         -SUM(tbPedido.ValorTotal) AS Valor,
-        0 AS IdFormaPago
+        0 AS IdFormaPago,
+        '' AS Banco,
+        '' AS MarcaTarjeta
         FROM tbPedido
         WHERE tbPedido.TipoDocumento = 'NC'
         AND tbPedido.Estado = 'C'
         AND tbPedido._IdControlCaja = ?
         GROUP BY tbPedido.TipoDocumento
+        UNION ALL
+        SELECT
+        COUNT(*) as _count,
+        SUM(tbPago.Valor) AS Valor,
+        tbPago.IdFormaPago,
+        '' AS Banco,
+        '' AS MarcaTarjeta
+        FROM tbPago
+        INNER JOIN tbPedido
+        ON tbPedido._id = tbPago._IdPedido
+        WHERE tbPedido.Estado = 'C'
+        AND tbPedido._IdControlCaja = ?
+        AND tbPago.IdFormaPago = 2
+        GROUP BY tbPago.IdFormaPago
+        UNION ALL
+        SELECT
+        COUNT(*) as _count,
+        SUM(tbPago.Valor) AS Valor,
+        -2 AS IdFormaPago,
+        tbBanco.Descripcion AS Banco,
+        '' AS MarcaTarjeta
+        FROM tbPago
+        INNER JOIN tbPedido
+        ON tbPedido._id = tbPago._IdPedido
+        INNER JOIN tbBanco
+        ON tbBanco.IdBanco = tbPago.IdBanco
+        WHERE tbPedido.Estado = 'C'
+        AND tbPedido._IdControlCaja = ?
+        AND tbPago.IdFormaPago = 2
+        GROUP BY tbBanco.IdBanco
+        UNION ALL
+        SELECT
+        COUNT(*) as _count,
+        SUM(tbPago.Valor) AS Valor,
+        tbPago.IdFormaPago,
+        '' AS Banco,
+        '' AS MarcaTarjeta
+        FROM tbPago
+        INNER JOIN tbPedido
+        ON tbPedido._id = tbPago._IdPedido
+        WHERE tbPedido.Estado = 'C'
+        AND tbPedido._IdControlCaja = ?
+        AND tbPago.IdFormaPago = 3
+        GROUP BY tbPago.IdFormaPago
+        UNION ALL
+        SELECT
+        COUNT(*) as _count,
+        SUM(tbPago.Valor) AS Valor,
+        -3 AS IdFormaPago,
+        tbBanco.Descripcion AS Banco,
+        tbMarcaTarjeta.Descripcion AS MarcaTarjeta
+        FROM tbPago
+        INNER JOIN tbPedido
+        ON tbPedido._id = tbPago._IdPedido
+        INNER JOIN tbBanco
+        ON tbBanco.IdBanco = tbPago.IdBanco
+        INNER JOIN tbMarcaTarjeta
+        ON tbMarcaTarjeta.IdMarcaTarjeta = tbPago.IdMarcaTarjeta
+        WHERE tbPedido.Estado = 'C'
+        AND tbPedido._IdControlCaja = ?
+        AND tbPago.IdFormaPago = 3
+        GROUP BY tbBanco.IdBanco, tbMarcaTarjeta.IdMarcaTarjeta
+
     </statement>
     <statement name="SimplePedidoSearch">
         SELECT
@@ -1358,6 +1446,7 @@
         tbPedido.TotalImpuesto4,
         tbPedido._IdControlCaja,
         tbPedido.Pendiente,
+        tbPedido.TieneNotaCreditoPOSRP3,
         tbPedidoExt.Nombre AS tbPedidoExt_Nombre,
         tbPedidoExt.NumeroDocumento AS tbPedidoExt_NumeroDocumento
         FROM tbPedidoExt
@@ -1408,6 +1497,7 @@
         tbPedido.TotalImpuesto4,
         tbPedido._IdControlCaja,
         tbPedido.Pendiente,
+        tbPedido.TieneNotaCreditoPOSRP3,
         tbPedidoExt.Nombre AS tbPedidoExt_Nombre,
         tbPedidoExt.NumeroDocumento AS tbPedidoExt_NumeroDocumento
         FROM tbPedidoExt
@@ -1447,12 +1537,54 @@
         tbPedido.TotalImpuesto4,
         tbPedido._IdControlCaja,
         tbPedido.Pendiente,
+        tbPedido.TieneNotaCreditoPOSRP3,
         tbPedidoExt.Nombre AS tbPedidoExt_Nombre,
         tbPedidoExt.NumeroDocumento AS tbPedidoExt_NumeroDocumento
         FROM tbPedidoExt
         INNER JOIN tbPedido
         ON tbPedido._id = tbPedidoExt.docid
         WHERE tbPedidoExt.NumeroDocumento = ?
+    </statement>
+    <statement name="PedidoSecuenciaRepetida">
+        SELECT
+        tbPedido._id AS _id,
+        tbPedido.IdPedido,
+        tbPedido._IdAgenda,
+        tbPedido.IdAgenda,
+        tbPedido._IdCliente,
+        tbPedido.IdCliente,
+        tbPedido.ValorTotal,
+        tbPedido.Email,
+        tbPedido.Estado,
+        tbPedido.FechaCreacion,
+        tbPedido.TotalDescuentos,
+        tbPedido.TotalImpuestos,
+        tbPedido.Redondeo,
+        tbPedido.Subtotal,
+        tbPedido.SubtotalSinDescuento,
+        tbPedido.Excedente,
+        tbPedido.TipoDocumento,
+        tbPedido.BaseImponible,
+        tbPedido.BaseImponibleCero,
+        tbPedido.Observaciones,
+        tbPedido.MotivoAnulacion,
+        tbPedido.ObservacionAnulacion,
+        tbPedido._IdDocumentoRef,
+        tbPedido.IdDocumentoRef,
+        tbPedido.FechaAnulacion,
+        tbPedido.TotalImpuesto2,
+        tbPedido.TotalImpuesto3,
+        tbPedido.TotalImpuesto4,
+        tbPedido._IdControlCaja,
+        tbPedido.Pendiente,
+        tbPedido.TieneNotaCreditoPOSRP3,
+        tbPedidoExt.Nombre AS tbPedidoExt_Nombre,
+        tbPedidoExt.NumeroDocumento AS tbPedidoExt_NumeroDocumento
+        FROM tbPedidoExt
+        INNER JOIN tbPedido
+        ON tbPedido._id = tbPedidoExt.docid
+        WHERE tbPedidoExt.NumeroDocumento = ?
+        AND tbPedido.TipoDocumento = ?
     </statement>
     <statement name="PedidoById">
         SELECT
@@ -1486,6 +1618,7 @@
         tbPedido.TotalImpuesto4,
         tbPedido._IdControlCaja,
         tbPedido.Pendiente,
+        tbPedido.TieneNotaCreditoPOSRP3,
         tbPedidoExt.Nombre AS tbPedidoExt_Nombre,
         tbPedidoExt.NumeroDocumento AS tbPedidoExt_NumeroDocumento
         FROM tbPedidoExt
@@ -1525,6 +1658,7 @@
         tbPedido.TotalImpuesto4,
         tbPedido._IdControlCaja,
         tbPedido.Pendiente,
+        tbPedido.TieneNotaCreditoPOSRP3,
         tbPedidoExt.Nombre AS tbPedidoExt_Nombre,
         tbPedidoExt.NumeroDocumento AS tbPedidoExt_NumeroDocumento
         FROM tbPedidoExt
@@ -1564,12 +1698,33 @@
         tbPedido.TotalImpuesto4,
         tbPedido._IdControlCaja,
         tbPedido.Pendiente,
+        tbPedido.TieneNotaCreditoPOSRP3,
         tbPedidoExt.Nombre AS tbPedidoExt_Nombre,
         tbPedidoExt.NumeroDocumento AS tbPedidoExt_NumeroDocumento
         FROM tbPedidoExt
         INNER JOIN tbPedido
         ON tbPedido._id = tbPedidoExt.docid
         WHERE tbPedido.IdPedido = 0
-        ORDER BY tbPedido.FechaCreacion DESC
+        ORDER BY tbPedido.FechaCreacion
+    </statement>
+    <statement name="TarjetasPorBanco">
+        SELECT
+        tbMarcaTarjeta._id AS _id,
+        tbMarcaTarjeta.IdMarcaTarjeta,
+        tbMarcaTarjeta.Descripcion
+        FROM tbMarcaTarjeta
+        INNER JOIN tbTarjeta
+        ON tbTarjeta.IdMarcaTarjeta = tbMarcaTarjeta.IdMarcaTarjeta
+        WHERE tbTarjeta.IdBanco = ?
+    </statement>
+    <statement name="TiposDiferidosPorBancoTarjeta">
+        SELECT
+        tbTipoDiferido._id AS _id,
+        tbTipoDiferido.IdTipoDiferido,
+        tbTipoDiferido.Descripcion
+        FROM tbTipoDiferido
+        INNER JOIN tbTarjetaComision
+        ON tbTipoDiferido.IdTipoDiferido = tbTarjetaComision.IdTipoDiferido
+        WHERE tbTarjetaComision.IdBanco = ? AND tbTarjetaComision.IdMarcaTarjeta = ?
     </statement>
 </sql>

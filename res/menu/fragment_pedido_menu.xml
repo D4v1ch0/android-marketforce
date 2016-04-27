@@ -21,4 +21,5 @@
     <item android:id="@+id/action_aperturar_caja" android:title="@string/action_aperturar_caja" android:showAsAction="collapseActionView"></item>
     <item android:id="@+id/action_cerrar_caja" android:title="@string/action_cerrar_caja" android:showAsAction="collapseActionView"></item>
     <item android:id="@+id/action_reimpresion" android:title="@string/action_reimpresion" android:showAsAction="collapseActionView"></item>
+    <item android:id="@+id/action_ver_pagos" android:title="@string/action_ver_pagos" android:showAsAction="collapseActionView"></item>
 </menu>

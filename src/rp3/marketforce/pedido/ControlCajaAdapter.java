@@ -22,6 +22,7 @@ import rp3.marketforce.models.pedido.SubCategoria;
  */
 public class ControlCajaAdapter extends BaseAdapter {
 
+    private SimpleDateFormat format6;
     private Context context;
     private LayoutInflater inflater;
     private List<ControlCaja> controles;
@@ -36,6 +37,7 @@ public class ControlCajaAdapter extends BaseAdapter {
         format2 = new SimpleDateFormat("dd");
         format3 = new SimpleDateFormat("MMMM");
         format5 = new SimpleDateFormat("yyyy");
+        format6 = new SimpleDateFormat("HH:mm");
     }
 
     @Override
@@ -64,7 +66,7 @@ public class ControlCajaAdapter extends BaseAdapter {
         Calendar cal = Calendar.getInstance();
         cal.setTime(controlCaja.getFechaApertura());
         ((TextView) convertView.findViewById(R.id.control_list_fechas)).setText(format1.format(cal.getTime()) + ", " + format2.format(cal.getTime()) + " de " +
-                format3.format(cal.getTime()) + " del " + format5.format(cal.getTime()));
+                format3.format(cal.getTime()) + " del " + format5.format(cal.getTime()) + " - " + format6.format(cal.getTime()));
         if(controlCaja.getFechaCierre() != null && controlCaja.getFechaCierre().getTime() <= 0)
             ((TextView) convertView.findViewById(R.id.control_list_activo)).setText("Activo");
 

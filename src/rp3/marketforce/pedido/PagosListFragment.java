@@ -47,6 +47,7 @@ public class PagosListFragment extends BaseFragment implements AgregarPagoFragme
     double valorTotal = 0;
     double saldo = 0;
     private AgregarPagoFragment fragment;
+    public boolean isDetail = false;
 
     public static PagosListFragment newInstance(double valorTotal)
     {
@@ -69,12 +70,14 @@ public class PagosListFragment extends BaseFragment implements AgregarPagoFragme
         super.onAttach(activity);
 
         setContentView(R.layout.fragment_forma_pago);
-        if(getParentFragment()!=null){
-            createFragmentListener = (PagosAcceptListener)getParentFragment();
-        }else{
-            createFragmentListener = (PagosAcceptListener) activity;
+        if(!isDetail) {
+            if (getParentFragment() != null) {
+                createFragmentListener = (PagosAcceptListener) getParentFragment();
+            } else {
+                createFragmentListener = (PagosAcceptListener) activity;
+            }
         }
-        setCancelable(false);
+        setCancelable(isDetail);
 
     }
 
@@ -109,50 +112,50 @@ public class PagosListFragment extends BaseFragment implements AgregarPagoFragme
 
         adapter = new PagoAdapter(this.getContext(), pagos);
         ((ListView) rootView.findViewById(R.id.forma_pago_list)).setAdapter(adapter);
-        ((ListView) rootView.findViewById(R.id.forma_pago_list)).setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                PopupMenu popup = new PopupMenu(getContext(), view);
+        if(!isDetail) {
+            ((ListView) rootView.findViewById(R.id.forma_pago_list)).setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                    PopupMenu popup = new PopupMenu(getContext(), view);
 
-                popup.getMenuInflater()
-                        .inflate(R.menu.list_item_transaccion_menu, popup.getMenu());
+                    popup.getMenuInflater()
+                            .inflate(R.menu.list_item_transaccion_menu, popup.getMenu());
 
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch(item.getItemId())
-                        {
-                            case R.id.item_menu_modificar_transaccion:
-                                boolean efectivo = false;
-                                if(!pagos.get(position).getFormaPago().getDescripcion().equalsIgnoreCase("Efectivo")) {
-                                    for (Pago pago : pagos) {
-                                        if (pago.getFormaPago().getDescripcion().equalsIgnoreCase("Efectivo"))
-                                            efectivo = true;
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch (item.getItemId()) {
+                                case R.id.item_menu_modificar_transaccion:
+                                    boolean efectivo = false;
+                                    if (!pagos.get(position).getFormaPago().getDescripcion().equalsIgnoreCase("Efectivo")) {
+                                        for (Pago pago : pagos) {
+                                            if (pago.getFormaPago().getDescripcion().equalsIgnoreCase("Efectivo"))
+                                                efectivo = true;
+                                        }
                                     }
-                                }
-                                AgregarPagoFragment fragment = AgregarPagoFragment.newInstance(position, saldo, efectivo, pagos.get(position));
-                                showDialogFragment(fragment, "Pago", "Pago # " + (position + 1));
-                                break;
-                            case R.id.item_menu_eliminar_transaccion:
-                                pagos.remove(position);
-                                adapter = new PagoAdapter(getContext(), pagos);
-                                ((ListView) rootView.findViewById(R.id.forma_pago_list)).setAdapter(adapter);
-                                saldo = valorTotal;
+                                    AgregarPagoFragment fragment = AgregarPagoFragment.newInstance(position, saldo, efectivo, pagos.get(position));
+                                    showDialogFragment(fragment, "Pago", "Pago # " + (position + 1));
+                                    break;
+                                case R.id.item_menu_eliminar_transaccion:
+                                    pagos.remove(position);
+                                    adapter = new PagoAdapter(getContext(), pagos);
+                                    ((ListView) rootView.findViewById(R.id.forma_pago_list)).setAdapter(adapter);
+                                    saldo = valorTotal;
 
-                                for(Pago pag : pagos)
-                                {
-                                    saldo = saldo - pag.getValor();
-                                }
+                                    for (Pago pag : pagos) {
+                                        saldo = saldo - pag.getValor();
+                                    }
 
-                                ((TextView) getRootView().findViewById(R.id.forma_pago_saldo)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(saldo));
-                                break;
+                                    ((TextView) getRootView().findViewById(R.id.forma_pago_saldo)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(saldo));
+                                    break;
+                            }
+                            return true;
                         }
-                        return true;
-                    }
-                });
-                popup.show();
-                return false;
-            }
-        });
+                    });
+                    popup.show();
+                    return false;
+                }
+            });
+        }
 
         saldo = getArguments().getDouble(ARG_VALOR);
         valorTotal = saldo;
@@ -186,7 +189,13 @@ public class PagosListFragment extends BaseFragment implements AgregarPagoFragme
             }
         });
 
-        if(pagos.size() == 0)
+        if(isDetail)
+        {
+            rootView.findViewById(R.id.forma_pago_aceptar).setVisibility(View.GONE);
+            rootView.findViewById(R.id.forma_pago_agregar).setVisibility(View.GONE);
+        }
+
+        if(pagos.size() == 0 && !isDetail)
         {
             fragment = AgregarPagoFragment.newInstance(saldo, false);
             showDialogFragment(fragment, "Pago", "Pago # " + (pagos.size() + 1));

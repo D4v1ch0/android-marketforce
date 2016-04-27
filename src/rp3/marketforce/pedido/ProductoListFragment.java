@@ -192,6 +192,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
             jsonObject.put("f", transaction.getUrlFoto());
             jsonObject.put("c", transaction.getCantidad());
             jsonObject.put("v", transaction.getValorTotal());
+            jsonObject.put("pdo", transaction.getPorcentajeDescuentoOro());
             jsonObject.put("pdm", transaction.getPorcentajeDescuentoManual());
             jsonObject.put("vdm", transaction.getValorDescuentoManual());
             jsonObject.put("vdmt", transaction.getValorDescuentoManualTotal());
@@ -258,7 +259,8 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
                         jsonObject.put("f", prod.getUrlFoto());
                         jsonObject.put("ce", prod.getCodigoExterno());
                         jsonObject.put("b", prod.getIdBeneficio());
-                        jsonObject.put("pd", prod.getPorcentajeDescuento());
+                        jsonObject.put("pdo", prod.getPorcentajeDescuentoOro() + "");
+                        jsonObject.put("pd", prod.getPorcentajeDescuento() + "");
                         jsonObject.put("pi", prod.getPorcentajeImpuesto());
                         jsonObject.put("vd", prod.getPrecioDescuento());
                         jsonObject.put("vi", prod.getPrecioImpuesto());

@@ -36,7 +36,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
     private ProductAcceptListener createFragmentListener;
     private JSONObject jsonObject;
     private DrawableManager DManager;
-    private double porcentajeDescManual = 0, valorDescManual = 0, valorDescManualTotal = 0;
+    private double porcentajeDescManual = 0, valorDescManual = 0, valorDescManualTotal = 0, porcentajeDescAuto = 0, valorDescAuto = 0, valorDescAutoTotal = 0;
     private DecimalFormat df;
     private NumberFormat numberFormat, numberFormatInteger;
     private SignInFragment signInFragment;
@@ -131,10 +131,13 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
                         cantidad = Integer.parseInt(((EditText) rootView.findViewById(R.id.producto_cantidad)).getText().toString());
 
                     try {
-                        valorDescManual = jsonObject.getDouble("p") * porcentajeDescManual;
+                        porcentajeDescAuto = jsonObject.getDouble("pd");
+                        valorDescAuto = jsonObject.getDouble("p") * porcentajeDescAuto;
+                        valorDescAutoTotal = valorDescAuto * cantidad;
+                        valorDescManual = (jsonObject.getDouble("p") - valorDescAuto) * porcentajeDescManual;
                         double precio_total = cantidad * jsonObject.getDouble("p");
                         valorDescManualTotal = valorDescManual * cantidad;
-                        precio_total = precio_total - valorDescManualTotal;
+                        precio_total = precio_total - valorDescManualTotal - valorDescAutoTotal;
                         precio_total = precio_total * (1 + Float.parseFloat(jsonObject.getString("pi")));
                         ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("Precio Total: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(precio_total));
                     } catch (JSONException e) {
@@ -162,10 +165,13 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
                         if(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).length() > 0)
                             porcentajeDescManual = Double.parseDouble(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).getText().toString()) / 100;
                         try {
-                            valorDescManual = jsonObject.getDouble("p") * porcentajeDescManual;
+                            porcentajeDescAuto = jsonObject.getDouble("pd");
+                            valorDescAuto = jsonObject.getDouble("p") * porcentajeDescAuto;
+                            valorDescAutoTotal = valorDescAuto * cantidad;
+                            valorDescManual = (jsonObject.getDouble("p") - valorDescAuto) * porcentajeDescManual;
                             double precio_total = cantidad * jsonObject.getDouble("p");
                             valorDescManualTotal = valorDescManual * cantidad;
-                            precio_total = precio_total - valorDescManualTotal;
+                            precio_total = precio_total - valorDescManualTotal - valorDescAutoTotal;
                             precio_total = precio_total * (1 + Float.parseFloat(jsonObject.getString("pi")));
                             ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("Precio Total: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(precio_total));
                         } catch (JSONException e) {
@@ -193,10 +199,13 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
                 if(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).length() > 0)
                     porcentajeDescManual = Double.parseDouble(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).getText().toString()) / 100;
                 try {
-                    valorDescManual = jsonObject.getDouble("p") * porcentajeDescManual;
+                    porcentajeDescAuto = jsonObject.getDouble("pd");
+                    valorDescAuto = jsonObject.getDouble("p") * porcentajeDescAuto;
+                    valorDescAutoTotal = valorDescAuto * cantidad;
+                    valorDescManual = (jsonObject.getDouble("p") - valorDescAuto) * porcentajeDescManual;
                     double precio_total = cantidad * jsonObject.getDouble("p");
                     valorDescManualTotal = valorDescManual * cantidad;
-                    precio_total = precio_total - valorDescManualTotal;
+                    precio_total = precio_total - valorDescManualTotal - valorDescAutoTotal;
                     precio_total = precio_total * (1 + Float.parseFloat(jsonObject.getString("pi")));
                     ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("Precio Total: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(precio_total));
                 } catch (JSONException e) {
@@ -247,8 +256,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
                             Integer.parseInt(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).getText().toString()) > PreferenceManager.getInt(Contants.KEY_DESCUENTO_MAXIMO))
                     {
                         //Toast.makeText(getContext(), "Su máximo descuento permitido es del " + PreferenceManager.getInt(Contants.KEY_DESCUENTO_MAXIMO) + "%.", Toast.LENGTH_LONG).show();
-                        if(signInFragment == null)
-                            signInFragment = new SignInFragment();
+                        signInFragment = new SignInFragment();
                         signInFragment.type = "AuthDesc";
                         showDialogFragment(signInFragment, "Autorizar Descuento", "Autorizar Descuento");
                         return;
@@ -273,14 +281,15 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
             detalle.setIdProducto(jsonObject.getInt("id"));
             detalle.setUrlFoto(jsonObject.getString("f"));
             detalle.setSubtotal(detalle.getValorUnitario() * detalle.getCantidad());
+            detalle.setPorcentajeDescuentoOro(Double.parseDouble(jsonObject.getString("pdo")));
             detalle.setPorcentajeDescuentoManual(porcentajeDescManual);
             detalle.setValorDescuentoManual(valorDescManual);
-            detalle.setValorDescuentoAutomatico(0);
-            detalle.setValorDescuentoAutomaticoTotal(0);
+            detalle.setValorDescuentoAutomatico(valorDescAuto);
+            detalle.setValorDescuentoAutomaticoTotal(valorDescAutoTotal);
             detalle.setValorDescuentoManualTotal(valorDescManualTotal);
-            detalle.setPorcentajeDescuentoAutomatico(Float.parseFloat(jsonObject.getString("pd")));
+            detalle.setPorcentajeDescuentoAutomatico(porcentajeDescAuto);
             detalle.setPorcentajeImpuesto(Float.parseFloat(jsonObject.getString("pi")));
-            detalle.setValorImpuesto(Float.parseFloat(jsonObject.getString("pi")) * (Float.parseFloat(jsonObject.getString("p")) - valorDescManual));
+            detalle.setValorImpuesto(Float.parseFloat(jsonObject.getString("pi")) * (Float.parseFloat(jsonObject.getString("p")) - valorDescManual - valorDescAuto));
             detalle.setValorImpuestoTotal(detalle.getValorImpuesto() * detalle.getCantidad());
             detalle.setProducto(Producto.getProductoIdServer(getDataBase(), detalle.getIdProducto()));
             detalle.setValorTotal(detalle.getSubtotal() - detalle.getValorDescuentoAutomaticoTotal() - detalle.getValorDescuentoManualTotal() + detalle.getValorImpuestoTotal());

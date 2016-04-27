@@ -43,6 +43,7 @@ public final class Contract {
         public static final String COLUMN_AGENTE_ULTIMA_VISITA = "AgenteUltimaVisita";
         public static final String COLUMN_FECHA_PROXIMA_VISITA = "FechaProximaVisita";
 		public static final String COLUMN_EXENTO_IMPUESTO = "ExentoImpuesto";
+		public static final String COLUMN_CIUDADANO_ORO = "CiudadanoOro";
 				
 		public static final String FIELD_ID_TIPO_IDENTIFICACION = COLUMN_ID_TIPO_IDENTIFICACION;	
 		public static final String FIELD_ID_CLIENTE = COLUMN_ID_CLIENTE;	
@@ -57,6 +58,7 @@ public final class Contract {
 		public static final String FIELD_NUEVO = COLUMN_NUEVO;
 		public static final String FIELD_PENDIENTE = COLUMN_PENDIENTE;
 		public static final String FIELD_EXENTO_IMPUESTO = COLUMN_EXENTO_IMPUESTO;
+		public static final String FIELD_CIUDADANO_ORO = COLUMN_CIUDADANO_ORO;
         public static final String FIELD_FECHA_ULTIMA_VISITA = COLUMN_FECHA_ULTIMA_VISITA;
         public static final String FIELD_AGENTE_ULTIMA_VISITA = COLUMN_AGENTE_ULTIMA_VISITA;
         public static final String FIELD_FECHA_PROXIMA_VISITA = COLUMN_FECHA_PROXIMA_VISITA;
@@ -579,6 +581,7 @@ public final class Contract {
 		public static final String COLUMN_TOTAL_IMPUESTO4 = "TotalImpuesto4";
 		public static final String COLUMN_ID_CONTROL_CAJA_INT = "_IdControlCaja";
 		public static final String COLUMN_PENDIENTE = "Pendiente";
+		public static final String COLUMN_TIENE_NOTA_CREDITO_RP3 = "TieneNotaCreditoPOSRP3";
 
 		public static final String FIELD_NUMERO_DOCUMENTO = Contract.PedidoExt.TABLE_NAME + "_" + Contract.PedidoExt.COLUMN_NUMERO_DOCUMENTO;
 		public static final String FIELD_NOMBRE = Contract.PedidoExt.TABLE_NAME + "_" + Contract.PedidoExt.COLUMN_NOMBRE;
@@ -586,6 +589,7 @@ public final class Contract {
 		public static final String QUERY_PEDIDOS_SEARCH = "SimplePedidoSearch";
 		public static final String QUERY_PEDIDOS = "PedidosAll";
 		public static final String QUERY_PEDIDOS_BY_ID = "PedidoById";
+		public static final String QUERY_PEDIDOS_REPETIDO = "PedidoSecuenciaRepetida";
 		public static final String QUERY_PEDIDOS_BY_ID_SERVER = "PedidoByIdServer";
 		public static final String QUERY_PEDIDOS_BY_DOCUMENTO = "PedidoByDocumento";
 		public static final String QUERY_PEDIDOS_PENDIENTES = "PedidosPendientes";
@@ -619,6 +623,9 @@ public final class Contract {
 		public static final String COLUMN_SUBTOTAL_SIN_IMPUESTO = "SubtotalSinImpuesto";
 		public static final String COLUMN_BASE_IMPONIBLE = "BaseImponible";
 		public static final String COLUMN_BASE_IMPONIBLE_CERO= "BaseImponibleCero";
+		public static final String COLUMN_PORCENTAJE_DESCUENTO_ORO = "PorcDescOro";
+		public static final String COLUMN_VALOR_DESCUENTO_ORO = "ValorDescOro";
+		public static final String COLUMN_VALOR_DESCUENTO_ORO_TOTAL = "ValorDescOroTotal";
 		public static final String COLUMN_PORCENTAJE_DESCUENTO_MANUAL = "PorcDescManual";
 		public static final String COLUMN_VALOR_DESCUENTO_MANUAL = "ValorDescManual";
 		public static final String COLUMN_VALOR_DESCUENTO_MANUAL_TOTAL = "ValorDescManualTotal";
@@ -645,6 +652,7 @@ public final class Contract {
 		public static final String COLUMN_CODIGO_EXTERNO = "CodigoExterno";
 		public static final String COLUMN_PRECIO_IMPUESTO = "PrecioConImpuesto";
 		public static final String COLUMN_PRECIO_DESCUENTO = "PrecioConDescuento";
+		public static final String COLUMN_PORCENTAJE_DESCUENTO_ORO = "PorcentajeDescuentoOro";
 		public static final String COLUMN_PORCENTAJE_IMPUESTO = "PorcentajeImpuesto";
 		public static final String COLUMN_PORCENTAJE_DESCUENTO = "PorcentajeDescuento";
 		public static final String COLUMN_ID_BENEFICIO = "IdBeneficio";
@@ -706,6 +714,13 @@ public final class Contract {
 		public static final String COLUMN_ID_FORMA_PAGO = "IdFormaPago";
 		public static final String COLUMN_OBSERVACION = "Observacion";
 		public static final String COLUMN_VALOR = "Valor";
+		public static final String COLUMN_ID_BANCO = "IdBanco";
+		public static final String COLUMN_ID_MARCA_TARJETA = "IdMarcaTarjeta";
+		public static final String COLUMN_NUMERO_CUENTA = "NumeroCuenta";
+		public static final String COLUMN_NUMERO_DOCUMENTO = "NumeroDocumento";
+		public static final String COLUMN_AUTORIZADOR_TARJETA = "AutorizadorTarjeta";
+		public static final String COLUMN_ID_TIPO_DIFERIDO = "IdTipoDiferido";
+		public static final String COLUMN_CODIGO_SEGURIDAD = "CodigoSeguridad";
 
 		public static final String QUERY_ARQUEO = "ArqueoCajaQuery";
 
@@ -721,6 +736,7 @@ public final class Contract {
 		public static final String COLUMN_ID_FECHA_CIERRE = "FechaCierre";
 		public static final String COLUMN_VALOR_APERTURA = "ValorApertura";
 		public static final String COLUMN_VALOR_CIERRE = "ValorCierre";
+		public static final String COLUMN_ID_CAJA = "IdCaja";
 
 	}
 
@@ -730,6 +746,60 @@ public final class Contract {
 
 		public static final String COLUMN_CODIGO_EXTERNO = "CodigoExterno";
 		public static final String COLUMN_CODIGO = "Codigo";
+
+	}
+
+	public static abstract class Banco implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbBanco";
+
+		public static final String COLUMN_ID_BANCO = "IdBanco";
+		public static final String COLUMN_DESCRIPCION = "Descripcion";
+
+	}
+
+	public static abstract class MarcaTarjeta implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbMarcaTarjeta";
+
+		public static final String COLUMN_ID_MARCA_TARJETA = "IdMarcaTarjeta";
+		public static final String COLUMN_DESCRIPCION = "Descripcion";
+
+		public static final String QUERY_TARJETAS_POR_BANCO = "TarjetasPorBanco";
+
+	}
+
+	public static abstract class Tarjeta implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbTarjeta";
+
+		public static final String COLUMN_ID_BANCO = "IdBanco";
+		public static final String COLUMN_ID_MARCA_TARJETA = "IdMarcaTarjeta";
+		public static final String COLUMN_INTERNA = "Interna";
+
+	}
+
+	public static abstract class TipoDiferido implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbTipoDiferido";
+
+		public static final String COLUMN_ID_TIPO_DIFERIDO = "IdTipoDiferido";
+		public static final String COLUMN_DESCRIPCION = "Descripcion";
+		public static final String COLUMN_CUOTAS = "Cuotas";
+		public static final String COLUMN_TIPO_CREDITO = "TipoCredito";
+
+		public static final String QUERY_TIPOS_DIFERIDOS = "TiposDiferidosPorBancoTarjeta";
+
+	}
+
+	public static abstract class TarjetaComision implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbTarjetaComision";
+
+		public static final String COLUMN_ID_EMPRESA = "IdEmpresa";
+		public static final String COLUMN_ID_BANCO = "IdBanco";
+		public static final String COLUMN_ID_MARCA_TARJETA = "IdMarcaTarjeta";
+		public static final String COLUMN_ID_TIPO_DIFERIDO = "IdTipoDiferido";
 
 	}
 }

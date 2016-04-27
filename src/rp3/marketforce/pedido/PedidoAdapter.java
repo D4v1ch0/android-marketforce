@@ -15,6 +15,8 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 
+import rp3.configuration.PreferenceManager;
+import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.pedido.Pedido;
@@ -117,12 +119,17 @@ public class PedidoAdapter extends BaseExpandableListAdapter {
             ((ImageView) convertView.findViewById(R.id.pedido_estado)).setImageDrawable(context.getResources().getDrawable(R.drawable.circle_visited));
         }
 
+        if(pedido.getIdPedido() != 0)
+            convertView.findViewById(R.id.pedido_sincronizar).setVisibility(View.INVISIBLE);
         ((TextView) convertView.findViewById(R.id.pedido_cliente)).setText(pedido.getNombre());
         ((TextView) convertView.findViewById(R.id.pedido_fecha)).setText(format1.format(pedido.getFechaCreacion()) + ", " + format2.format(pedido.getFechaCreacion()) + " de " + format3.format(pedido.getFechaCreacion()) + " del " + format5.format(pedido.getFechaCreacion()));
-        ((TextView) convertView.findViewById(R.id.pedido_numero_documento)).setText(pedido.getNumeroDocumento());
+        if(pedido.get_idDocumentoRef() == 0)
+            ((TextView) convertView.findViewById(R.id.pedido_numero_documento)).setText(pedido.getNumeroDocumento());
+        else
+            ((TextView) convertView.findViewById(R.id.pedido_numero_documento)).setText(pedido.getNumeroDocumento() + "  ->  " + pedido.getDocRef().getTransaccion().getValue() + "  " + pedido.getDocRef().getNumeroDocumento());
         ((TextView) convertView.findViewById(R.id.pedido_tipo_documento)).setText(pedido.getTransaccion().getValue());
         ((TextView) convertView.findViewById(R.id.pedido_items)).setText(CrearPedidoFragment.getPedidoCantidad(pedido.getPedidoDetalles()) + "");
-        ((TextView) convertView.findViewById(R.id.pedido_valor)).setText("$ " + numberFormat.format(pedido.getValorTotal()));
+        ((TextView) convertView.findViewById(R.id.pedido_valor)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(pedido.getValorTotal()));
 
         if(childPosition == child && groupPosition == group)
         {

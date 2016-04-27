@@ -24,6 +24,7 @@ public class ControlCaja extends EntityBase<ControlCaja> {
     private Date fechaCierre;
     private float valorApertura;
     private float valorCierre;
+    private int idCaja;
 
 
     @Override
@@ -52,6 +53,14 @@ public class ControlCaja extends EntityBase<ControlCaja> {
 
     public void setIdControlCaja(int idControlCaja) {
         this.idControlCaja = idControlCaja;
+    }
+
+    public int getIdCaja() {
+        return idCaja;
+    }
+
+    public void setIdCaja(int idCaja) {
+        this.idCaja = idCaja;
     }
 
     public int getIdAgente() {
@@ -102,6 +111,7 @@ public class ControlCaja extends EntityBase<ControlCaja> {
         setValue(Contract.ControlCaja.COLUMN_ID_AGENTE, this.idAgente);
         setValue(Contract.ControlCaja.COLUMN_VALOR_APERTURA, this.valorApertura);
         setValue(Contract.ControlCaja.COLUMN_VALOR_CIERRE, this.valorCierre);
+        setValue(Contract.ControlCaja.COLUMN_ID_CAJA, this.idCaja);
     }
 
     @Override
@@ -116,7 +126,7 @@ public class ControlCaja extends EntityBase<ControlCaja> {
 
     public static List<ControlCaja> getControlCajas(DataBase db) {
         Cursor c = db.query(Contract.ControlCaja.TABLE_NAME, new String[]{Contract.ControlCaja._ID, Contract.ControlCaja.COLUMN_ID_CONTROL_CAJA, Contract.ControlCaja.COLUMN_ID_AGENTE, Contract.ControlCaja.COLUMN_ID_FECHA_APERTURA,
-                Contract.ControlCaja.COLUMN_ID_FECHA_CIERRE, Contract.ControlCaja.COLUMN_VALOR_APERTURA, Contract.ControlCaja.COLUMN_VALOR_CIERRE});
+                Contract.ControlCaja.COLUMN_ID_FECHA_CIERRE, Contract.ControlCaja.COLUMN_VALOR_APERTURA, Contract.ControlCaja.COLUMN_VALOR_CIERRE, Contract.ControlCaja.COLUMN_ID_CAJA});
 
         List<ControlCaja> list = new ArrayList<ControlCaja>();
         while(c.moveToNext()){
@@ -128,6 +138,7 @@ public class ControlCaja extends EntityBase<ControlCaja> {
             controlCaja.setIdAgente(CursorUtils.getInt(c, Contract.ControlCaja.COLUMN_ID_AGENTE));
             controlCaja.setValorApertura(CursorUtils.getFloat(c, Contract.ControlCaja.COLUMN_VALOR_APERTURA));
             controlCaja.setValorCierre(CursorUtils.getFloat(c, Contract.ControlCaja.COLUMN_VALOR_CIERRE));
+            controlCaja.setIdCaja(CursorUtils.getInt(c, Contract.ControlCaja.COLUMN_ID_CAJA));
             list.add(controlCaja);
         }
         c.close();
@@ -136,7 +147,7 @@ public class ControlCaja extends EntityBase<ControlCaja> {
 
     public static ControlCaja getControlCaja(DataBase db, long id) {
         Cursor c = db.query(Contract.ControlCaja.TABLE_NAME, new String[]{Contract.ControlCaja._ID, Contract.ControlCaja.COLUMN_ID_CONTROL_CAJA, Contract.ControlCaja.COLUMN_ID_AGENTE, Contract.ControlCaja.COLUMN_ID_FECHA_APERTURA,
-                Contract.ControlCaja.COLUMN_ID_FECHA_CIERRE, Contract.ControlCaja.COLUMN_VALOR_APERTURA, Contract.ControlCaja.COLUMN_VALOR_CIERRE}, Contract.ControlCaja._ID + " = ?", new String[]{id + ""});
+                Contract.ControlCaja.COLUMN_ID_FECHA_CIERRE, Contract.ControlCaja.COLUMN_VALOR_APERTURA, Contract.ControlCaja.COLUMN_VALOR_CIERRE, Contract.ControlCaja.COLUMN_ID_CAJA}, Contract.ControlCaja._ID + " = ?", new String[]{id + ""});
 
         ControlCaja controlCaja = new ControlCaja();
         while(c.moveToNext()){
@@ -148,6 +159,7 @@ public class ControlCaja extends EntityBase<ControlCaja> {
             controlCaja.setIdAgente(CursorUtils.getInt(c, Contract.ControlCaja.COLUMN_ID_AGENTE));
             controlCaja.setValorApertura(CursorUtils.getFloat(c, Contract.ControlCaja.COLUMN_VALOR_APERTURA));
             controlCaja.setValorCierre(CursorUtils.getFloat(c, Contract.ControlCaja.COLUMN_VALOR_CIERRE));
+            controlCaja.setIdCaja(CursorUtils.getInt(c, Contract.ControlCaja.COLUMN_ID_CAJA));
 
         }
         c.close();
@@ -156,7 +168,7 @@ public class ControlCaja extends EntityBase<ControlCaja> {
 
     public static ControlCaja getControlCajaActiva(DataBase db) {
         Cursor c = db.query(Contract.ControlCaja.TABLE_NAME, new String[]{Contract.ControlCaja._ID, Contract.ControlCaja.COLUMN_ID_CONTROL_CAJA, Contract.ControlCaja.COLUMN_ID_AGENTE, Contract.ControlCaja.COLUMN_ID_FECHA_APERTURA,
-                Contract.ControlCaja.COLUMN_ID_FECHA_CIERRE, Contract.ControlCaja.COLUMN_VALOR_APERTURA, Contract.ControlCaja.COLUMN_VALOR_CIERRE}, Contract.ControlCaja.COLUMN_ID_FECHA_CIERRE + " <= 0 OR FechaCierre IS NULL", new String[]{});
+                Contract.ControlCaja.COLUMN_ID_FECHA_CIERRE, Contract.ControlCaja.COLUMN_VALOR_APERTURA, Contract.ControlCaja.COLUMN_VALOR_CIERRE, Contract.ControlCaja.COLUMN_ID_CAJA}, Contract.ControlCaja.COLUMN_ID_FECHA_CIERRE + " <= 0 OR FechaCierre IS NULL", new String[]{});
 
         ControlCaja controlCaja = null;
         while(c.moveToNext()){
@@ -168,6 +180,7 @@ public class ControlCaja extends EntityBase<ControlCaja> {
             controlCaja.setIdAgente(CursorUtils.getInt(c, Contract.ControlCaja.COLUMN_ID_AGENTE));
             controlCaja.setValorApertura(CursorUtils.getFloat(c, Contract.ControlCaja.COLUMN_VALOR_APERTURA));
             controlCaja.setValorCierre(CursorUtils.getFloat(c, Contract.ControlCaja.COLUMN_VALOR_CIERRE));
+            controlCaja.setIdCaja(CursorUtils.getInt(c, Contract.ControlCaja.COLUMN_ID_CAJA));
 
         }
         c.close();

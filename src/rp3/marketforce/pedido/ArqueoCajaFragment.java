@@ -101,15 +101,17 @@ public class ArqueoCajaFragment extends BaseFragment implements ArqueoControlFra
 
     @Override
     public void onControlCajaSelected(ControlCaja transaction) {
-        List<Pago> pagos = Pago.getArqueoCaja(getDataBase(), transaction.getID());
+        List<Pago> pagos = Pago.getArqueoCaja(getDataBase(), transaction.getID(), true);
         control = transaction;
 
         int cantidad = 0;
         double valor = 0;
         for(Pago pago: pagos)
         {
-            cantidad = cantidad + pago.getIdPago();
-            valor = valor + pago.getValor();
+            if(pago.getIdFormaPago() > -2) {
+                cantidad = cantidad + pago.getIdPago();
+                valor = valor + pago.getValor();
+            }
         }
 
         ((TextView) getRootView().findViewById(R.id.arqueo_total_transacciones)).setText(cantidad + "");
@@ -121,7 +123,7 @@ public class ArqueoCajaFragment extends BaseFragment implements ArqueoControlFra
 
     public void imprimirArqueo()
     {
-        List<Pago> pagos = Pago.getArqueoCaja(getDataBase(), control.getID());
+        List<Pago> pagos = Pago.getArqueoCaja(getDataBase(), control.getID(), true);
         String toPrint = PrintHelper.generarArqueo(pagos, control);
 
         try {

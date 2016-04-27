@@ -61,6 +61,14 @@ public class ArqueoCajaAdapter extends BaseAdapter {
             ((TextView) convertView.findViewById(R.id.arqueo_descripcion)).setText("Nota de Crédito");
         else if(pago.getIdFormaPago() == -1)
             ((TextView) convertView.findViewById(R.id.arqueo_descripcion)).setText("Apertura");
+        else if(pago.getIdFormaPago() == -2) {
+            convertView.findViewById(R.id.arqueo_descripcion).setPadding(12, 0, 0, 0);
+            ((TextView) convertView.findViewById(R.id.arqueo_descripcion)).setText(pago.getBancoDescripcion());
+        }
+        else if(pago.getIdFormaPago() == -3) {
+            convertView.findViewById(R.id.arqueo_descripcion).setPadding(12, 0, 0, 0);
+            ((TextView) convertView.findViewById(R.id.arqueo_descripcion)).setText(pago.getBancoDescripcion() + " - " + pago.getMarcaTarjetaDescripcion());
+        }
         else
             ((TextView) convertView.findViewById(R.id.arqueo_descripcion)).setText(pago.getFormaPago().getDescripcion());
         ((TextView) convertView.findViewById(R.id.arqueo_valor)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(pago.getValor()));

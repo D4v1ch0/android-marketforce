@@ -24,7 +24,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/label_transacciones"
+            android:text="@string/label_formas_pago"
             android:id="@+id/textView128"
             android:layout_weight="1"
             android:textColor="@color/color_text_sky_blue"
@@ -46,8 +46,9 @@
 
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:id="@+id/arqueo_list" />
+        android:layout_height="match_parent"
+        android:id="@+id/arqueo_list"
+        android:layout_weight="1" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -70,7 +71,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="35"
+            android:text="0"
             android:id="@+id/arqueo_total_transacciones"
             android:layout_weight="1"
             android:textStyle="bold"
@@ -81,7 +82,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="₡ 970.000"
+            android:text="₡ 0.00"
             android:id="@+id/arqueo_total"
             android:layout_weight="1"
             android:textStyle="bold"

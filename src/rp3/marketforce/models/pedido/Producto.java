@@ -30,6 +30,7 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
     private float precioDescuento;
     private float porcentajeImpuesto;
     private float porcentajeDescuento;
+    private float porcentajeDescuentoOro;
     private int idBeneficio;
 
 
@@ -64,6 +65,7 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
         setValue(Contract.Producto.COLUMN_PRECIO_DESCUENTO, this.precioDescuento);
         setValue(Contract.Producto.COLUMN_PORCENTAJE_IMPUESTO, this.porcentajeImpuesto);
         setValue(Contract.Producto.COLUMN_PORCENTAJE_DESCUENTO, this.porcentajeDescuento);
+        setValue(Contract.Producto.COLUMN_PORCENTAJE_DESCUENTO_ORO, this.porcentajeDescuentoOro);
         setValue(Contract.Producto.COLUMN_ID_BENEFICIO, this.idBeneficio);
     }
 
@@ -133,6 +135,14 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
         this.porcentajeDescuento = porcentajeDescuento;
     }
 
+    public float getPorcentajeDescuentoOro() {
+        return porcentajeDescuentoOro;
+    }
+
+    public void setPorcentajeDescuentoOro(float porcentajeDescuentoOro) {
+        this.porcentajeDescuentoOro = porcentajeDescuentoOro;
+    }
+
     public int getIdBeneficio() {
         return idBeneficio;
     }
@@ -183,6 +193,7 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
             prod.setCodigoExterno(CursorUtils.getString(c, Contract.Producto.COLUMN_CODIGO_EXTERNO));
             prod.setPorcentajeImpuesto(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_IMPUESTO));
             prod.setPorcentajeDescuento(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_DESCUENTO));
+            prod.setPorcentajeDescuentoOro(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_DESCUENTO_ORO));
             prod.setPrecioDescuento(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_DESCUENTO));
             prod.setPrecioImpuesto(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_IMPUESTO));
             prod.setDescripcion(CursorUtils.getString(c, Contract.Producto.FIELD_DESCRIPCION));
@@ -210,6 +221,7 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
             prod.setCodigoExterno(CursorUtils.getString(c, Contract.Producto.COLUMN_CODIGO_EXTERNO));
             prod.setPorcentajeImpuesto(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_IMPUESTO));
             prod.setPorcentajeDescuento(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_DESCUENTO));
+            prod.setPorcentajeDescuentoOro(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_DESCUENTO_ORO));
             prod.setPrecioDescuento(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_DESCUENTO));
             prod.setPrecioImpuesto(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_IMPUESTO));
             prod.setDescripcion(CursorUtils.getString(c, Contract.Producto.FIELD_DESCRIPCION));
@@ -237,6 +249,7 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
             prod.setCodigoExterno(CursorUtils.getString(c, Contract.Producto.COLUMN_CODIGO_EXTERNO));
             prod.setPorcentajeImpuesto(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_IMPUESTO));
             prod.setPorcentajeDescuento(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_DESCUENTO));
+            prod.setPorcentajeDescuentoOro(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_DESCUENTO_ORO));
             prod.setPrecioDescuento(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_DESCUENTO));
             prod.setPrecioImpuesto(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_IMPUESTO));
             prod.setDescripcion(CursorUtils.getString(c, Contract.Producto.FIELD_DESCRIPCION));
@@ -263,6 +276,7 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
             prod.setCodigoExterno(CursorUtils.getString(c, Contract.Producto.COLUMN_CODIGO_EXTERNO));
             prod.setPorcentajeImpuesto(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_IMPUESTO));
             prod.setPorcentajeDescuento(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_DESCUENTO));
+            prod.setPorcentajeDescuentoOro(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_DESCUENTO_ORO));
             prod.setPrecioDescuento(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_DESCUENTO));
             prod.setPrecioImpuesto(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_IMPUESTO));
             prod.setDescripcion(CursorUtils.getString(c, Contract.Producto.FIELD_DESCRIPCION));
@@ -373,6 +387,7 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
             prod.setCodigoExterno(CursorUtils.getString(c, Contract.Producto.COLUMN_CODIGO_EXTERNO));
             prod.setPorcentajeImpuesto(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_IMPUESTO));
             prod.setPorcentajeDescuento(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_DESCUENTO));
+            prod.setPorcentajeDescuentoOro(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_DESCUENTO_ORO));
             prod.setPrecioDescuento(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_DESCUENTO));
             prod.setPrecioImpuesto(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_IMPUESTO));
             list.add(prod);
@@ -404,6 +419,7 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
             prod.setCodigoExterno(CursorUtils.getString(c, Contract.Producto.COLUMN_CODIGO_EXTERNO));
             prod.setPorcentajeImpuesto(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_IMPUESTO));
             prod.setPorcentajeDescuento(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_DESCUENTO));
+            prod.setPorcentajeDescuentoOro(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_DESCUENTO_ORO));
             prod.setPrecioDescuento(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_DESCUENTO));
             prod.setPrecioImpuesto(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_IMPUESTO));
             list.add(prod);
@@ -435,6 +451,7 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
             prod.setCodigoExterno(CursorUtils.getString(c, Contract.Producto.COLUMN_CODIGO_EXTERNO));
             prod.setPorcentajeImpuesto(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_IMPUESTO));
             prod.setPorcentajeDescuento(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_DESCUENTO));
+            prod.setPorcentajeDescuentoOro(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_DESCUENTO_ORO));
             prod.setPrecioDescuento(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_DESCUENTO));
             prod.setPrecioImpuesto(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_IMPUESTO));
             list.add(prod);
@@ -466,6 +483,7 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
             prod.setCodigoExterno(CursorUtils.getString(c, Contract.Producto.COLUMN_CODIGO_EXTERNO));
             prod.setPorcentajeImpuesto(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_IMPUESTO));
             prod.setPorcentajeDescuento(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_DESCUENTO));
+            prod.setPorcentajeDescuentoOro(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_DESCUENTO_ORO));
             prod.setPrecioDescuento(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_DESCUENTO));
             prod.setPrecioImpuesto(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_IMPUESTO));
         }
@@ -483,5 +501,12 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
         {
             db.delete(Contract.Producto.TABLE_NAME, Contract.Producto.COLUMN_ID_PRODUCTO + " NOT IN (" + idsNotDelete + "?)", 0);
         }
+    }
+
+    public static void deleteProducto(DataBase db, int id) {
+        Producto prod = getProductoIdServer(db, id);
+        prod.setIdBeneficio(-1);
+        Producto.update(db, prod);
+        //db.delete(Contract.Producto.TABLE_NAME, Contract.Producto.COLUMN_ID_PRODUCTO + " = ?" , id);
     }
 }

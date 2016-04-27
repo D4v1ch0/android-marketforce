@@ -23,8 +23,17 @@ public class Pago extends EntityBase<Pago> {
     private int idPedido;
     private String observacion;
     private float valor;
+    private int idBanco;
+    private int idMarcaTarjeta;
+    private String numeroCuenta;
+    private String numeroDocumento;
+    private int autorizadorTarjeta;
+    private int idTipoDiferido;
+    private int codigoSeguridad;
 
     private FormaPago formaPago;
+    private String bancoDescripcion;
+    private String marcaTarjetaDescripcion;
 
     @Override
     public long getID() {
@@ -103,6 +112,78 @@ public class Pago extends EntityBase<Pago> {
         this.formaPago = formaPago;
     }
 
+    public int getIdBanco() {
+        return idBanco;
+    }
+
+    public void setIdBanco(int idBanco) {
+        this.idBanco = idBanco;
+    }
+
+    public int getIdMarcaTarjeta() {
+        return idMarcaTarjeta;
+    }
+
+    public void setIdMarcaTarjeta(int idMarcaTarjeta) {
+        this.idMarcaTarjeta = idMarcaTarjeta;
+    }
+
+    public String getNumeroCuenta() {
+        return numeroCuenta;
+    }
+
+    public void setNumeroCuenta(String numeroCuenta) {
+        this.numeroCuenta = numeroCuenta;
+    }
+
+    public String getNumeroDocumento() {
+        return numeroDocumento;
+    }
+
+    public void setNumeroDocumento(String numeroDocumento) {
+        this.numeroDocumento = numeroDocumento;
+    }
+
+    public int getAutorizadorTarjeta() {
+        return autorizadorTarjeta;
+    }
+
+    public void setAutorizadorTarjeta(int autorizadorTarjeta) {
+        this.autorizadorTarjeta = autorizadorTarjeta;
+    }
+
+    public int getIdTipoDiferido() {
+        return idTipoDiferido;
+    }
+
+    public void setIdTipoDiferido(int idTipoDiferido) {
+        this.idTipoDiferido = idTipoDiferido;
+    }
+
+    public int getCodigoSeguridad() {
+        return codigoSeguridad;
+    }
+
+    public void setCodigoSeguridad(int codigoSeguridad) {
+        this.codigoSeguridad = codigoSeguridad;
+    }
+
+    public String getBancoDescripcion() {
+        return bancoDescripcion;
+    }
+
+    public void setBancoDescripcion(String bancoDescripcion) {
+        this.bancoDescripcion = bancoDescripcion;
+    }
+
+    public String getMarcaTarjetaDescripcion() {
+        return marcaTarjetaDescripcion;
+    }
+
+    public void setMarcaTarjetaDescripcion(String marcaTarjetaDescripcion) {
+        this.marcaTarjetaDescripcion = marcaTarjetaDescripcion;
+    }
+
     @Override
     public void setValues() {
         setValue(Contract.Pago.COLUMN_ID_FORMA_PAGO, this.idFormaPago);
@@ -111,6 +192,13 @@ public class Pago extends EntityBase<Pago> {
         setValue(Contract.Pago.COLUMN_ID_PEDIDO_INT, this._idPedido);
         setValue(Contract.Pago.COLUMN_OBSERVACION, this.observacion);
         setValue(Contract.Pago.COLUMN_VALOR, this.valor);
+        setValue(Contract.Pago.COLUMN_ID_BANCO, this.idBanco);
+        setValue(Contract.Pago.COLUMN_ID_MARCA_TARJETA, this.idMarcaTarjeta);
+        setValue(Contract.Pago.COLUMN_NUMERO_CUENTA, this.numeroCuenta);
+        setValue(Contract.Pago.COLUMN_NUMERO_DOCUMENTO, this.numeroDocumento);
+        setValue(Contract.Pago.COLUMN_ID_TIPO_DIFERIDO, this.idTipoDiferido);
+        setValue(Contract.Pago.COLUMN_AUTORIZADOR_TARJETA, this.autorizadorTarjeta);
+        setValue(Contract.Pago.COLUMN_CODIGO_SEGURIDAD, this.codigoSeguridad);
     }
 
     @Override
@@ -125,7 +213,8 @@ public class Pago extends EntityBase<Pago> {
 
     public static List<Pago> getPagos(DataBase db, int idPedido) {
         Cursor c = db.query(Contract.Pago.TABLE_NAME, new String[]{Contract.Pago._ID, Contract.Pago.COLUMN_ID_FORMA_PAGO, Contract.Pago.COLUMN_ID_PAGO, Contract.Pago.COLUMN_ID_PEDIDO,
-                Contract.Pago.COLUMN_ID_PEDIDO_INT, Contract.Pago.COLUMN_OBSERVACION, Contract.Pago.COLUMN_VALOR,}, Contract.Pago.COLUMN_ID_PEDIDO + " = ?", new String[]{idPedido + ""});
+                Contract.Pago.COLUMN_ID_PEDIDO_INT, Contract.Pago.COLUMN_OBSERVACION, Contract.Pago.COLUMN_VALOR, Contract.Pago.COLUMN_ID_BANCO, Contract.Pago.COLUMN_ID_MARCA_TARJETA, Contract.Pago.COLUMN_NUMERO_CUENTA,
+                Contract.Pago.COLUMN_NUMERO_DOCUMENTO, Contract.Pago.COLUMN_AUTORIZADOR_TARJETA, Contract.Pago.COLUMN_ID_TIPO_DIFERIDO, Contract.Pago.COLUMN_CODIGO_SEGURIDAD}, Contract.Pago.COLUMN_ID_PEDIDO + " = ?", new String[]{idPedido + ""});
 
         List<Pago> list = new ArrayList<Pago>();
         while(c.moveToNext()){
@@ -137,6 +226,13 @@ public class Pago extends EntityBase<Pago> {
             pago.set_idPedido(CursorUtils.getLong(c, Contract.Pago.COLUMN_ID_PEDIDO_INT));
             pago.setObservacion(CursorUtils.getString(c, Contract.Pago.COLUMN_OBSERVACION));
             pago.setValor(CursorUtils.getFloat(c, Contract.Pago.COLUMN_VALOR));
+            pago.setIdBanco(CursorUtils.getInt(c, Contract.Pago.COLUMN_ID_BANCO));
+            pago.setIdMarcaTarjeta(CursorUtils.getInt(c, Contract.Pago.COLUMN_ID_MARCA_TARJETA));
+            pago.setIdTipoDiferido(CursorUtils.getInt(c, Contract.Pago.COLUMN_ID_TIPO_DIFERIDO));
+            pago.setNumeroDocumento(CursorUtils.getString(c, Contract.Pago.COLUMN_NUMERO_DOCUMENTO));
+            pago.setNumeroCuenta(CursorUtils.getString(c, Contract.Pago.COLUMN_NUMERO_CUENTA));
+            pago.setAutorizadorTarjeta(CursorUtils.getInt(c, Contract.Pago.COLUMN_AUTORIZADOR_TARJETA));
+            pago.setCodigoSeguridad(CursorUtils.getInt(c, Contract.Pago.COLUMN_CODIGO_SEGURIDAD));
             pago.setFormaPago(FormaPago.getFormaPago(db, pago.getIdFormaPago()));
             list.add(pago);
         }
@@ -146,7 +242,8 @@ public class Pago extends EntityBase<Pago> {
 
     public static List<Pago> getPagosInt(DataBase db, long idPedido) {
         Cursor c = db.query(Contract.Pago.TABLE_NAME, new String[]{Contract.Pago._ID, Contract.Pago.COLUMN_ID_FORMA_PAGO, Contract.Pago.COLUMN_ID_PAGO, Contract.Pago.COLUMN_ID_PEDIDO,
-                Contract.Pago.COLUMN_ID_PEDIDO_INT, Contract.Pago.COLUMN_OBSERVACION, Contract.Pago.COLUMN_VALOR,}, Contract.Pago.COLUMN_ID_PEDIDO_INT + " = ?", new String[]{idPedido + ""});
+                Contract.Pago.COLUMN_ID_PEDIDO_INT, Contract.Pago.COLUMN_OBSERVACION, Contract.Pago.COLUMN_VALOR,  Contract.Pago.COLUMN_ID_BANCO, Contract.Pago.COLUMN_ID_MARCA_TARJETA, Contract.Pago.COLUMN_NUMERO_CUENTA,
+                Contract.Pago.COLUMN_NUMERO_DOCUMENTO, Contract.Pago.COLUMN_AUTORIZADOR_TARJETA, Contract.Pago.COLUMN_ID_TIPO_DIFERIDO, Contract.Pago.COLUMN_CODIGO_SEGURIDAD}, Contract.Pago.COLUMN_ID_PEDIDO_INT + " = ?", new String[]{idPedido + ""});
 
         List<Pago> list = new ArrayList<Pago>();
         while(c.moveToNext()){
@@ -158,6 +255,13 @@ public class Pago extends EntityBase<Pago> {
             pago.set_idPedido(CursorUtils.getLong(c, Contract.Pago.COLUMN_ID_PEDIDO_INT));
             pago.setObservacion(CursorUtils.getString(c, Contract.Pago.COLUMN_OBSERVACION));
             pago.setValor(CursorUtils.getFloat(c, Contract.Pago.COLUMN_VALOR));
+            pago.setIdBanco(CursorUtils.getInt(c, Contract.Pago.COLUMN_ID_BANCO));
+            pago.setIdMarcaTarjeta(CursorUtils.getInt(c, Contract.Pago.COLUMN_ID_MARCA_TARJETA));
+            pago.setIdTipoDiferido(CursorUtils.getInt(c, Contract.Pago.COLUMN_ID_TIPO_DIFERIDO));
+            pago.setNumeroDocumento(CursorUtils.getString(c, Contract.Pago.COLUMN_NUMERO_DOCUMENTO));
+            pago.setNumeroCuenta(CursorUtils.getString(c, Contract.Pago.COLUMN_NUMERO_CUENTA));
+            pago.setAutorizadorTarjeta(CursorUtils.getInt(c, Contract.Pago.COLUMN_AUTORIZADOR_TARJETA));
+            pago.setCodigoSeguridad(CursorUtils.getInt(c, Contract.Pago.COLUMN_CODIGO_SEGURIDAD));
             pago.setFormaPago(FormaPago.getFormaPago(db, pago.getIdFormaPago()));
             list.add(pago);
         }
@@ -165,8 +269,8 @@ public class Pago extends EntityBase<Pago> {
         return list;
     }
 
-    public static List<Pago> getArqueoCaja(DataBase db, long idControlCaja) {
-        Cursor c = db.rawQuery(QueryDir.getQuery(Contract.Pago.QUERY_ARQUEO), new String[] {idControlCaja + "", idControlCaja + "", idControlCaja + ""});
+    public static List<Pago> getArqueoCaja(DataBase db, long idControlCaja, boolean withFilter) {
+        Cursor c = db.rawQuery(QueryDir.getQuery(Contract.Pago.QUERY_ARQUEO), new String[] {idControlCaja + "", idControlCaja + "", idControlCaja + "", idControlCaja + "", idControlCaja + "", idControlCaja + "", idControlCaja + ""});
 
         List<Pago> list = new ArrayList<Pago>();
         while(c.moveToNext()){
@@ -174,8 +278,12 @@ public class Pago extends EntityBase<Pago> {
             pago.setIdPago(CursorUtils.getInt(c, Contract.Pago._COUNT));
             pago.setIdFormaPago(CursorUtils.getInt(c, Contract.Pago.COLUMN_ID_FORMA_PAGO));
             pago.setValor(CursorUtils.getFloat(c, Contract.Pago.COLUMN_VALOR));
-            if(pago.getIdFormaPago() != 0)
+            if(pago.getIdFormaPago() < -1 && !withFilter)
+                continue;
+            if(pago.getIdFormaPago() > 0)
                 pago.setFormaPago(FormaPago.getFormaPago(db, pago.getIdFormaPago()));
+            pago.setBancoDescripcion(CursorUtils.getString(c, "Banco"));
+            pago.setMarcaTarjetaDescripcion(CursorUtils.getString(c, "MarcaTarjeta"));
             list.add(pago);
         }
         c.close();

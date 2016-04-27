@@ -3,10 +3,12 @@ package rp3.marketforce.pedido;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v4.view.MenuItemCompat;
@@ -26,6 +28,10 @@ import com.starmicronics.stario.PortInfo;
 import com.starmicronics.stario.StarIOPort;
 import com.starmicronics.stario.StarIOPortException;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -36,6 +42,7 @@ import rp3.configuration.PreferenceManager;
 import rp3.content.SimpleGeneralValueAdapter;
 import rp3.data.MessageCollection;
 import rp3.data.models.GeneralValue;
+import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.cliente.ClientDetailFragment;
@@ -46,7 +53,10 @@ import rp3.marketforce.models.pedido.ControlCaja;
 import rp3.marketforce.models.pedido.Pago;
 import rp3.marketforce.models.pedido.Pedido;
 import rp3.marketforce.models.pedido.Producto;
+import rp3.marketforce.models.pedido.ProductoCodigo;
 import rp3.marketforce.ruta.MapaActivity;
+import rp3.marketforce.sync.Agenda;
+import rp3.marketforce.sync.Productos;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.PrintHelper;
 import rp3.util.CalendarUtils;
@@ -89,7 +99,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        setContentView(R.layout.fragment_client,R.menu.fragment_pedido_menu);
+        setContentView(R.layout.fragment_client, R.menu.fragment_pedido_menu);
 
     }
 
@@ -226,28 +236,31 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
             calPed.setTime(ped.getFechaCreacion());
         if(!mTwoPane){
             menu.findItem(R.id.action_arqueo_caja).setVisible(isActiveListFragment);
-            menu.findItem(R.id.action_crear_pedido).setVisible(isActiveListFragment && control != null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calApe) == 0);
+            menu.findItem(R.id.action_crear_pedido).setVisible(isActiveListFragment && control != null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calApe) == 0 && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA));
             menu.findItem(R.id.action_sincronizar_productos).setVisible(isActiveListFragment);
-            menu.findItem(R.id.action_anular_pedido).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && control != null && ref == null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calPed) == 0);
+            menu.findItem(R.id.action_anular_pedido).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && control != null && !ped.isTieneNotaCreditoRP3POS()
+                    && ref == null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calPed) == 0 && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA));
             menu.findItem(R.id.action_nota_credito).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && ped.getTipoDocumento().equalsIgnoreCase("FA") && control != null
-                    && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calApe) == 0 && PreferenceManager.getBoolean(Contants.KEY_TRANSACCION_NOTA_CREDITO, true));
-            menu.findItem(R.id.action_aperturar_caja).setVisible(isActiveListFragment && control == null);
+                    && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calApe) == 0 && PreferenceManager.getBoolean(Contants.KEY_TRANSACCION_NOTA_CREDITO, true) && !ped.isTieneNotaCreditoRP3POS() && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA));
+            menu.findItem(R.id.action_aperturar_caja).setVisible(isActiveListFragment && control == null && PreferenceManager.getInt(Contants.KEY_ID_CAJA,0) != 0);
             menu.findItem(R.id.action_cerrar_caja).setVisible(isActiveListFragment && control != null);
             menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
+            menu.findItem(R.id.action_ver_pagos).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getTipoDocumento().equalsIgnoreCase("FA"));
             menu.findItem(R.id.action_reimpresion).setVisible(!isActiveListFragment && selectedClientId!=0 && control != null);
-            menu.findItem(R.id.action_cotización_a_factura).setVisible(!isActiveListFragment && selectedClientId!=0 && control != null && ped.getTipoDocumento().equalsIgnoreCase("CT") && ref == null && PreferenceManager.getBoolean(Contants.KEY_TRANSACCION_FACTURA, true));
+            menu.findItem(R.id.action_cotización_a_factura).setVisible(!isActiveListFragment && selectedClientId!=0 && control != null && ped.getTipoDocumento().equalsIgnoreCase("CT") && ref == null && PreferenceManager.getBoolean(Contants.KEY_TRANSACCION_FACTURA, true) && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA));
             //menu.findItem(R.id.action_nota_credito).setVisible(false);
         }
         else{
             menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_arqueo_caja).setVisible(isActiveListFragment);
-            menu.findItem(R.id.action_crear_pedido).setVisible(isActiveListFragment && control != null);
-            menu.findItem(R.id.action_anular_pedido).setVisible(selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && control != null && ref == null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calPed) == 0 && PreferenceManager.getBoolean(Contants.KEY_TRANSACCION_NOTA_CREDITO, true));
-            menu.findItem(R.id.action_nota_credito).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && ped.getTipoDocumento().equalsIgnoreCase("FA") && control != null);
-            menu.findItem(R.id.action_aperturar_caja).setVisible(isActiveListFragment && control == null);
+            menu.findItem(R.id.action_crear_pedido).setVisible(isActiveListFragment && control != null && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA));
+            menu.findItem(R.id.action_anular_pedido).setVisible(selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && control != null && ref == null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calPed) == 0 && PreferenceManager.getBoolean(Contants.KEY_TRANSACCION_NOTA_CREDITO, true) && !ped.isTieneNotaCreditoRP3POS() && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA));
+            menu.findItem(R.id.action_nota_credito).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && ped.getTipoDocumento().equalsIgnoreCase("FA") && control != null && !ped.isTieneNotaCreditoRP3POS() && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA));
+            menu.findItem(R.id.action_aperturar_caja).setVisible(isActiveListFragment && control == null && PreferenceManager.getInt(Contants.KEY_ID_CAJA, 0) != 0);
             menu.findItem(R.id.action_cerrar_caja).setVisible(isActiveListFragment && control != null);
-            menu.findItem(R.id.action_reimpresion).setVisible(!isActiveListFragment && selectedClientId!=0 && control != null);
-            menu.findItem(R.id.action_cotización_a_factura).setVisible(!isActiveListFragment && selectedClientId!=0 && control != null && ped.getTipoDocumento().equalsIgnoreCase("CT") && PreferenceManager.getBoolean(Contants.KEY_TRANSACCION_FACTURA, true));
+            menu.findItem(R.id.action_reimpresion).setVisible(!isActiveListFragment && selectedClientId != 0 && control != null);
+            menu.findItem(R.id.action_ver_pagos).setVisible(!isActiveListFragment && selectedClientId != 0 && ped.getTipoDocumento().equalsIgnoreCase("FA"));
+            menu.findItem(R.id.action_cotización_a_factura).setVisible(!isActiveListFragment && selectedClientId != 0 && control != null && ped.getTipoDocumento().equalsIgnoreCase("CT") && PreferenceManager.getBoolean(Contants.KEY_TRANSACCION_FACTURA, true) && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA));
             //menu.findItem(R.id.action_nota_credito).setVisible(false);
 
         }
@@ -259,6 +272,13 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
             case R.id.action_arqueo_caja:
                 Intent intent = new Intent(getContext(), ArqueoCajaActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.action_ver_pagos:
+                Pedido ped = Pedido.getPedido(getDataBase(), selectedClientId);
+                PagosListFragment fragment = PagosListFragment.newInstance(ped.getValorTotal());
+                fragment.pagos = ped.getPagos();
+                fragment.isDetail = true;
+                showDialogFragment(fragment, "Formas de Pago", "Formas de Pago");
                 break;
             case R.id.action_reimpresion:
                 showDialogConfirmation(DIALOG_REPRINT, R.string.message_reimprimir, R.string.action_reimpresion);
@@ -278,11 +298,17 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                 break;
             case R.id.action_cotización_a_factura:
                 if(PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA, -1) != -1) {
-                    Intent intent2 = new Intent(getContext(), CrearPedidoActivity.class);
-                    intent2.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, "FA");
-                    intent2.putExtra(CrearPedidoActivity.ARG_IDPEDIDO, selectedClientId);
-                    startActivity(intent2);
-                    break;
+                    if(ValidateSecuencia("FA")) {
+                        Intent intent2 = new Intent(getContext(), CrearPedidoActivity.class);
+                        intent2.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, "FA");
+                        intent2.putExtra(CrearPedidoActivity.ARG_IDPEDIDO, selectedClientId);
+                        startActivity(intent2);
+                        break;
+                    }
+                    else
+                    {
+                        Toast.makeText(getContext(), "Número de documento de transacción ya existe. Por favor, comunicarse con el administrador del sistema.", Toast.LENGTH_LONG).show();
+                    }
                 }
                 else
                 {
@@ -291,11 +317,17 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                 break;
             case R.id.action_nota_credito:
                 if(PreferenceManager.getInt(Contants.KEY_SECUENCIA_NOTA_CREDITO, -1) != -1) {
-                    Intent intent2 = new Intent(getContext(), CrearPedidoActivity.class);
-                    intent2.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, "NC");
-                    intent2.putExtra(CrearPedidoActivity.ARG_IDPEDIDO, selectedClientId);
-                    startActivity(intent2);
-                    break;
+                    if(ValidateSecuencia("NC")) {
+                        Intent intent2 = new Intent(getContext(), CrearPedidoActivity.class);
+                        intent2.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, "NC");
+                        intent2.putExtra(CrearPedidoActivity.ARG_IDPEDIDO, selectedClientId);
+                        startActivity(intent2);
+                        break;
+                    }
+                    else
+                    {
+                        Toast.makeText(getContext(), "Número de documento de transacción ya existe. Por favor, comunicarse con el administrador del sistema.", Toast.LENGTH_LONG).show();
+                    }
                 }
                 else
                 {
@@ -315,9 +347,16 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     if(PreferenceManager.getBoolean(adapter.getGeneralValue(which).getCode(), true)) {
-                                        Intent intent = new Intent(getContext(), CrearPedidoActivity.class);
-                                        intent.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, adapter.getGeneralValue(which).getCode());
-                                        startActivity(intent);
+                                        if(ValidateSecuencia(adapter.getGeneralValue(which).getCode()))
+                                        {
+                                            Intent intent = new Intent(getContext(), CrearPedidoActivity.class);
+                                            intent.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, adapter.getGeneralValue(which).getCode());
+                                            startActivity(intent);
+                                        }
+                                        else
+                                        {
+                                            Toast.makeText(getContext(), "Número de documento de transacción ya existe. Por favor, comunicarse con el administrador del sistema.", Toast.LENGTH_LONG).show();
+                                        }
                                     }
                                     else
                                     {
@@ -345,10 +384,9 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                     }
                     else
                     {
-                        showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait);
-                        Bundle bundle = new Bundle();
-                        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_PRODUCTOS);
-                        requestSync(bundle);
+                        showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait, false, ProgressDialog.STYLE_HORIZONTAL);
+                        setDialogProgressMax(1);
+                        new UpdateProductos().execute();
                     }
                 }
                 break;
@@ -363,17 +401,16 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
         super.onPositiveConfirmation(id);
         switch (id) {
             case DIALOG_SYNC_PRODUCTOS:
-                showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait);
-                Bundle bundle = new Bundle();
-                bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_PRODUCTOS);
-                requestSync(bundle);
+                showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait, false, ProgressDialog.STYLE_HORIZONTAL);
+                setDialogProgressMax(1);
+                new UpdateProductos().execute();
                 break;
             case DIALOG_REPRINT:
                 generarFacturaFísica();
                 break;
             case DIALOG_CIERRE:
                 ControlCaja control = ControlCaja.getControlCajaActiva(getDataBase());
-                List<Pago> pagos = Pago.getArqueoCaja(getDataBase(), control.getID());
+                List<Pago> pagos = Pago.getArqueoCaja(getDataBase(), control.getID(), false);
 
                 float valor = 0;
                 for(Pago pago: pagos)
@@ -427,10 +464,6 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
     @Override
     public void onSyncComplete(Bundle data, MessageCollection messages) {
         super.onSyncComplete(data, messages);
-        if(data != null && data.getString(SyncAdapter.ARG_SYNC_TYPE).equalsIgnoreCase(SyncAdapter.SYNC_TYPE_PRODUCTOS))
-        {
-            closeDialogProgress();
-        }
     }
 
     @Override
@@ -513,5 +546,187 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
 
                 anulaFragment.onActivityResult(requestCode, resultCode, data);
 
+    }
+
+    private boolean ValidateSecuencia(String tipoDocumento)
+    {
+        String numeroDocumento = "";
+        if(tipoDocumento.equalsIgnoreCase("FA"))
+            numeroDocumento = CrearPedidoFragment.getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO)), 3) + "-" + CrearPedidoFragment.getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_SERIE)), 3) +
+                    "-" + CrearPedidoFragment.getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA) + 1, 9);
+        if(tipoDocumento.equalsIgnoreCase("NC"))
+            numeroDocumento = CrearPedidoFragment.getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO)), 3) + "-" + CrearPedidoFragment.getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_SERIE)), 3) +
+                    "-" + CrearPedidoFragment.getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_NOTA_CREDITO) + 1, 9);
+        if(tipoDocumento.equalsIgnoreCase("PD"))
+            numeroDocumento = CrearPedidoFragment.getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO)), 3) + "-" + CrearPedidoFragment.getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_SERIE)), 3) +
+                    "-" + CrearPedidoFragment.getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_PEDIDO) + 1, 9);
+        if(tipoDocumento.equalsIgnoreCase("CT"))
+            numeroDocumento = CrearPedidoFragment.getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO)), 3) + "-" + CrearPedidoFragment.getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_SERIE)), 3) +
+                    "-" + CrearPedidoFragment.getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_COTIZACION) + 1, 9);
+
+        Pedido ped = Pedido.getPedidoRepetido(getDataBase(), numeroDocumento, tipoDocumento);
+        if(ped.getID() == 0)
+            return true;
+        else
+            return false;
+    }
+
+    public class UpdateProductos extends AsyncTask<Void, Integer, String> {
+
+        @Override
+        protected String doInBackground(Void... params) {
+            publishProgress(new Integer[] {1, 0, R.string.message_descarga_productos});
+            Bundle bundle = Productos.executeSync(getDataBase());
+            if (bundle != null && bundle.getInt(SyncAdapter.ARG_SYNC_TYPE) == rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS) {
+                try {
+                    JSONArray types = new JSONArray(bundle.getString("Productos"));
+                    int length = types.length();
+                    for (int i = 0; i < length; i++) {
+                        publishProgress(new Integer[] {length, i, R.string.message_actualizar_productos});
+
+                        JSONObject type = types.getJSONObject(i);
+                        if(type.getString("E").equalsIgnoreCase("A")) {
+
+                            rp3.marketforce.models.pedido.Producto producto = rp3.marketforce.models.pedido.Producto.getProductoIdServer(getDataBase(), type.getInt("Id"));
+
+                            producto.setIdProducto(type.getInt("Id"));
+                            producto.setDescripcion(type.getString("D"));
+                            producto.setUrlFoto(type.getString("U"));
+                            producto.setValorUnitario(type.getDouble("P"));
+                            producto.setCodigoExterno(type.getString("Ex"));
+                            producto.setPrecioDescuento(Float.parseFloat(type.getString("PCD")));
+                            producto.setPrecioImpuesto(Float.parseFloat(type.getString("PCI")));
+                            producto.setPorcentajeDescuentoOro(Float.parseFloat(type.getString("PDO")));
+                            producto.setPorcentajeDescuento(Float.parseFloat(type.getString("PD")));
+                            producto.setPorcentajeImpuesto(Float.parseFloat(type.getString("PI")));
+                            producto.setIdBeneficio(type.getInt("B"));
+                            if (type.isNull("IdS"))
+                                producto.setIdSubCategoria(0);
+                            else
+                                producto.setIdSubCategoria(type.getInt("IdS"));
+
+                            if (producto.getID() == 0)
+                                rp3.marketforce.models.pedido.Producto.insert(getDataBase(), producto);
+                            else
+                                rp3.marketforce.models.pedido.Producto.update(getDataBase(), producto);
+
+                            ProductoCodigo.deleteCodigos(getDataBase(), producto.getCodigoExterno());
+                            JSONArray strs = type.getJSONArray("PC");
+
+                            for (int j = 0; j < strs.length(); j++) {
+                                JSONObject str = strs.getJSONObject(j);
+
+                                ProductoCodigo productoCodigo = new ProductoCodigo();
+                                productoCodigo.setCodigoExterno(str.getString("Ex"));
+                                productoCodigo.setCodigo(str.getString("C"));
+                                ProductoCodigo.insert(getDataBase(), productoCodigo);
+                            }
+                        }
+                        else
+                        {
+                            Producto.deleteProducto(getDataBase(), type.getInt("Id"));
+                        }
+
+
+                    }
+                } catch (JSONException e) {
+                    Log.e("Entro", "Error: " + e.toString());
+                    return getString(rp3.core.R.string.message_error_sync_connection_http_error);
+                }
+            }
+            else
+            {
+                return getString(rp3.core.R.string.message_error_sync_connection_http_error);
+            }
+            publishProgress(new Integer[] {1, 0, R.string.message_descarga_categorias});
+            bundle = Productos.executeSyncCategorias(getDataBase());
+            if (bundle != null && bundle.getInt(SyncAdapter.ARG_SYNC_TYPE) == rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS) {
+                try {
+                    JSONArray types = new JSONArray(bundle.getString("Categorias"));
+                    int length = types.length();
+                    for (int i = 0; i < length; i++) {
+                        publishProgress(new Integer[] {length, i, R.string.message_actualizar_categorias});
+
+                        JSONObject type = types.getJSONObject(i);
+
+                        rp3.marketforce.models.pedido.Categoria categoria = rp3.marketforce.models.pedido.Categoria.getCategoria(getDataBase(), type.getInt("IdCategoria"));
+
+                        categoria.setIdCategoria(type.getInt("IdCategoria"));
+                        categoria.setDescripcion(type.getString("Descripcion"));
+
+                        if (categoria.getID() == 0)
+                            rp3.marketforce.models.pedido.Categoria.insert(getDataBase(), categoria);
+                        else
+                            rp3.marketforce.models.pedido.Categoria.update(getDataBase(), categoria);
+
+
+                    }
+                } catch (JSONException e) {
+                    return getString(rp3.core.R.string.message_error_sync_connection_http_error);
+                }
+            }
+            else
+            {
+                return getString(rp3.core.R.string.message_error_sync_connection_http_error);
+            }
+            publishProgress(new Integer[] {1, 0, R.string.message_descarga_subcategorias});
+            bundle = Productos.executeSyncSubCategorias(getDataBase());
+            if (bundle != null && bundle.getInt(SyncAdapter.ARG_SYNC_TYPE) == rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS) {
+                try {
+                    JSONArray types = new JSONArray(bundle.getString("SubCategorias"));
+                    int length = types.length();
+                    for (int i = 0; i < length; i++) {
+                        publishProgress(new Integer[] {length, i, R.string.message_actualizar_subcategorias});
+                        JSONObject type = types.getJSONObject(i);
+
+                        rp3.marketforce.models.pedido.SubCategoria categoria = rp3.marketforce.models.pedido.SubCategoria.getSubCategoria(getDataBase(), type.getInt("IdSubCategoria"));
+
+                        categoria.setIdSubCategoria(type.getInt("IdSubCategoria"));
+                        categoria.setIdCategoria(type.getInt("IdCategoria"));
+                        categoria.setDescripcion(type.getString("Descripcion"));
+
+                        if (categoria.getID() == 0)
+                            rp3.marketforce.models.pedido.SubCategoria.insert(getDataBase(), categoria);
+                        else
+                            rp3.marketforce.models.pedido.SubCategoria.update(getDataBase(), categoria);
+                    }
+                } catch (JSONException e) {
+                    return getString(rp3.core.R.string.message_error_sync_connection_http_error);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+            else
+            {
+                return getString(rp3.core.R.string.message_error_sync_connection_http_error);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            setDialogProgressMessage(getString(values[2]));
+            setDialogProgressMax(values[0]);
+            setDialogProgressNumber(values[1]);
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            closeDialogProgress();
+            if(s != null)
+                showDialogMessage(s);
+            else {
+                Bundle bundle = new Bundle();
+                bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_PRODUCTOS);
+                requestSync(bundle);
+            }
+            super.onPostExecute(s);
+        }
     }
 }

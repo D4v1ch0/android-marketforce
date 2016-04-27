@@ -2,6 +2,7 @@ package rp3.marketforce.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 
 import com.starmicronics.stario.StarPrinterStatus;
 
@@ -202,7 +203,7 @@ public class PrintHelper {
             toPrint = toPrint + "=";
 
         toPrint = toPrint + '\n';
-        toPrint = toPrint + "Tipo Pago   Transac.     Total" + '\n';
+        toPrint = toPrint + "Tipo Pago   # Pagos     Total" + '\n';
         for(int i = 1; i <= SPACES; i++)
             toPrint = toPrint + "=";
         toPrint = toPrint + '\n';
@@ -210,13 +211,45 @@ public class PrintHelper {
         int cantidad = 0;
         double valor = 0;
         for(Pago pago: pagos) {
-            cantidad = cantidad + pago.getIdPago();
-            valor = valor + pago.getValor();
+            if(pago.getIdFormaPago() > - 2) {
+                cantidad = cantidad + pago.getIdPago();
+                valor = valor + pago.getValor();
+            }
 
             if(pago.getIdFormaPago() == 0)
                 toPrint = toPrint + StringUtils.leftStringInSpace("Nota Crédito", 12) + " ";
             else if(pago.getIdFormaPago() == -1)
                 toPrint = toPrint + StringUtils.leftStringInSpace("Apertura", 12) + " ";
+            else if(pago.getIdFormaPago() == -2) {
+                int linea = 1;
+                if(pago.getBancoDescripcion().length() > 11) {
+                    toPrint = toPrint + StringUtils.leftStringInSpace(" " + (pago.getBancoDescripcion()).substring(0, 11), 12) + " ";
+                    toPrint = toPrint + '\n';
+                    while (pago.getBancoDescripcion().length() > (linea + 1) * 11) {
+                        toPrint = toPrint + StringUtils.leftStringInSpace(" " + (pago.getBancoDescripcion()).substring(linea * 11, (linea + 1) * 11), 12) + " ";
+                        linea++;
+                        toPrint = toPrint + '\n';
+                    }
+                    toPrint = toPrint + StringUtils.leftStringInSpace(" " + (pago.getBancoDescripcion()).substring(linea * 11, pago.getBancoDescripcion().length()), 12) + " ";
+                }
+                else
+                    toPrint = toPrint + StringUtils.leftStringInSpace(" " + pago.getBancoDescripcion(), 12) + " ";
+            }
+            else if(pago.getIdFormaPago() == -3) {
+                int linea = 1;
+                if((pago.getBancoDescripcion() + " - " + pago.getMarcaTarjetaDescripcion()).length() > 12) {
+                    toPrint = toPrint + StringUtils.leftStringInSpace(" " + (pago.getBancoDescripcion() + " - " + pago.getMarcaTarjetaDescripcion()).substring(0, 11), 12) + " ";
+                    toPrint = toPrint + '\n';
+                    while ((pago.getBancoDescripcion() + " - " + pago.getMarcaTarjetaDescripcion()).length() > (linea + 1) * 11) {
+                        toPrint = toPrint + StringUtils.leftStringInSpace(" " + (pago.getBancoDescripcion() + " - " + pago.getMarcaTarjetaDescripcion()).substring(linea * 11, (linea + 1) * 11), 12) + " ";
+                        linea++;
+                        toPrint = toPrint + '\n';
+                    }
+                    toPrint = toPrint + StringUtils.leftStringInSpace(" " + (pago.getBancoDescripcion() + " - " + pago.getMarcaTarjetaDescripcion()).substring(linea * 11, (pago.getBancoDescripcion() + " - " + pago.getMarcaTarjetaDescripcion()).length()), 12) + " ";
+                }
+                else
+                    toPrint = toPrint + StringUtils.leftStringInSpace(" " + pago.getBancoDescripcion() + " - " + pago.getMarcaTarjetaDescripcion(), 12) + " ";
+            }
             else if(pago.getFormaPago().getDescripcion().length() > 12)
                 toPrint = toPrint + StringUtils.leftStringInSpace(pago.getFormaPago().getDescripcion().substring(0,12), 12) + " ";
             else

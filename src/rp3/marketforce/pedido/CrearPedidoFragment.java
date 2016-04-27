@@ -61,6 +61,7 @@ import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.PrintHelper;
 import rp3.runtime.Session;
 import rp3.util.ConnectionUtils;
+import rp3.util.NumberUtils;
 import rp3.util.StringUtils;
 
 
@@ -245,20 +246,20 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
 
         pedido.setObservaciones(((EditText) getRootView().findViewById(R.id.actividad_texto_respuesta)).getText().toString());
-        pedido.setValorTotal(valorTotal);
-        pedido.setSubtotal(subtotal);
-        pedido.setTotalDescuentos(descuentos);
-        pedido.setTotalImpuestos(impuestos);
-        pedido.setBaseImponible(baseImponible);
-        pedido.setBaseImponibleCero(base0);
-        pedido.setRedondeo(redondeo);
+        pedido.setValorTotal(NumberUtils.Round(valorTotal, 2));
+        pedido.setSubtotal(NumberUtils.Round(subtotal, 2));
+        pedido.setTotalDescuentos(NumberUtils.Round(descuentos, 2));
+        pedido.setTotalImpuestos(NumberUtils.Round(impuestos, 2));
+        pedido.setBaseImponible(NumberUtils.Round(baseImponible, 2));
+        pedido.setBaseImponibleCero(NumberUtils.Round(base0, 2));
+        pedido.setRedondeo(NumberUtils.Round(redondeo, 2));
         float pagado = 0;
         if (pedido.getPagos() != null)
             for (Pago pago : pedido.getPagos()) {
                 pagado = pagado + pago.getValor();
             }
-        pedido.setExcedente(valorTotal - pagado);
-        pedido.setSubtotalSinDescuento(subtotal);
+        pedido.setExcedente(NumberUtils.Round(valorTotal - pagado, 2));
+        pedido.setSubtotalSinDescuento(NumberUtils.Round(subtotal, 2));
 
         if (pendiente)
             pedido.setEstado("P");
@@ -294,12 +295,15 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                 detalle_nc.setDescripcion(detalle.getDescripcion());
                 detalle_nc.setIdPedidoDetalle(detalle.getIdPedidoDetalle());
                 detalle_nc.setIdProducto(detalle.getIdProducto());
+                detalle_nc.setPorcentajeDescuentoOro(detalle.getPorcentajeDescuentoOro());
                 detalle_nc.setPorcentajeDescuentoAutomatico(detalle.getPorcentajeDescuentoAutomatico());
                 detalle_nc.setPorcentajeImpuesto(detalle.getPorcentajeImpuesto());
                 detalle_nc.setSubtotal(detalle.getSubtotal());
                 detalle_nc.setSubtotalSinDescuento(detalle.getSubtotalSinDescuento());
                 detalle_nc.setSubtotalSinImpuesto(detalle.getSubtotalSinImpuesto());
                 detalle_nc.setUrlFoto(detalle.getUrlFoto());
+                detalle_nc.setValorDescuentoOro(detalle.getValorDescuentoOro());
+                detalle_nc.setValorDescuentoOroTotal(detalle.getValorDescuentoOroTotal());
                 detalle_nc.setValorDescuentoAutomatico(detalle.getValorDescuentoAutomatico());
                 detalle_nc.setValorDescuentoAutomaticoTotal(detalle.getValorDescuentoAutomaticoTotal());
                 detalle_nc.setValorDescuentoManual(detalle.getValorDescuentoManual());
@@ -343,7 +347,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
         if (ConnectionUtils.isNetAvailable(getActivity())) {
             Bundle bundle = new Bundle();
-            bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPDATE_PEDIDO);
+            bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_PEDIDO_PENDIENTES);
             bundle.putLong(ARG_PEDIDO, pedido.getID());
             requestSync(bundle);
         }
@@ -386,8 +390,17 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                     int position = list_nombres.indexOf(adapter.getItem(pos));
                     if (position != -1 && ((TextView) rootView.findViewById(R.id.pedido_email)).length() <= 0) {
                         ((TextView) rootView.findViewById(R.id.pedido_email)).setText(list_cliente.get(position).getCorreoElectronico());
-                        if(list_cliente.get(position).getExentoImpuesto())
-                            ValidarExentoImpuestos();
+                        if (pedido != null && pedido.getPedidoDetalles() != null) {
+                            ValidarDescuentos(list_cliente.get(position).isCiudadanoOro());
+                            if (list_cliente.get(position).getExentoImpuesto()) {
+                                ValidarExentoImpuestos();
+                            }
+                            else
+                            {
+                                ValidarImpuestos();
+                            }
+                            setTransaccionValues();
+                        }
                     }
                 }
             });
@@ -401,8 +414,15 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                     int position = list_nombres.indexOf(cliente_auto.getText().toString());
                     if (position != -1 && ((TextView) rootView.findViewById(R.id.pedido_email)).length() <= 0) {
                         ((TextView) rootView.findViewById(R.id.pedido_email)).setText(list_cliente.get(position).getCorreoElectronico());
-                        if(list_cliente.get(position).getExentoImpuesto())
-                            ValidarExentoImpuestos();
+                        if (pedido != null && pedido.getPedidoDetalles() != null) {
+                            ValidarDescuentos(list_cliente.get(position).isCiudadanoOro());
+                            if (list_cliente.get(position).getExentoImpuesto()) {
+                                ValidarExentoImpuestos();
+                            } else {
+                                ValidarImpuestos();
+                            }
+                            setTransaccionValues();
+                        }
                     }
                 }
             });
@@ -510,6 +530,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                     jsonObject.put("pdm", pedido.getPedidoDetalles().get(position).getPorcentajeDescuentoManual());
                     jsonObject.put("vdm", pedido.getPedidoDetalles().get(position).getValorDescuentoManual());
                     jsonObject.put("vdmt", pedido.getPedidoDetalles().get(position).getValorDescuentoManualTotal());
+                    jsonObject.put("pdo", pedido.getPedidoDetalles().get(position).getPorcentajeDescuentoOro());
                     jsonObject.put("pda", pedido.getPedidoDetalles().get(position).getPorcentajeDescuentoAutomatico());
                     jsonObject.put("vda", pedido.getPedidoDetalles().get(position).getValorDescuentoAutomatico());
                     jsonObject.put("vdat", pedido.getPedidoDetalles().get(position).getValorDescuentoAutomaticoTotal());
@@ -524,7 +545,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                     jsonObject.put("p", pedido.getPedidoDetalles().get(position).getValorUnitario());
                     jsonObject.put("id", pedido.getPedidoDetalles().get(position).getIdProducto());
                     jsonObject.put("f", pedido.getPedidoDetalles().get(position).getUrlFoto());
-                    jsonObject.put("c", pedido.getPedidoDetalles().get(position).getCantidad() - pedido.getPedidoDetalles().get(position).getCantidadDevolucion());
+                    jsonObject.put("c", pedido.getPedidoDetalles().get(position).getCantidad());
                     jsonObject.put("vd", prod.getPrecioDescuento());
                     jsonObject.put("pd", prod.getPorcentajeDescuento());
                     jsonObject.put("tipo", tipo);
@@ -542,7 +563,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
     }
 
-    private String getSecuencia(int numero, int spaces) {
+    public static String getSecuencia(int numero, int spaces) {
         String numText = numero + "";
         int faltanCeros = spaces - numText.length();
         for(int i = 1; i <= faltanCeros; i++)
@@ -592,7 +613,25 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         {
             if(detalleList.get(i).getCantidadDevolucion() == detalleList.get(i).getCantidad())
                 pedido.getPedidoDetalles().remove(i);
+            else
+            {
+                detalleList.get(i).setCantidad(detalleList.get(i).getCantidad() - detalleList.get(i).getCantidadDevolucion());
+                detalleList.get(i).setSubtotal(detalleList.get(i).getValorUnitario() * detalleList.get(i).getCantidad());
+                detalleList.get(i).setValorDescuentoOro(detalleList.get(i).getValorUnitario() * detalleList.get(i).getPorcentajeDescuentoOro());
+                detalleList.get(i).setValorDescuentoOroTotal(detalleList.get(i).getValorDescuentoOro() * detalleList.get(i).getCantidad());
+                detalleList.get(i).setValorDescuentoAutomaticoTotal(detalleList.get(i).getValorDescuentoAutomatico() * detalleList.get(i).getCantidad());
+                detalleList.get(i).setValorDescuentoManualTotal(detalleList.get(i).getValorDescuentoManual() * detalleList.get(i).getCantidad());
+                detalleList.get(i).setValorImpuestoTotal(detalleList.get(i).getValorImpuesto() * detalleList.get(i).getCantidad());
+                detalleList.get(i).setProducto(Producto.getProductoIdServer(getDataBase(), detalleList.get(i).getIdProducto()));
+                detalleList.get(i).setValorTotal(detalleList.get(i).getSubtotal() - detalleList.get(i).getValorDescuentoAutomaticoTotal() - detalleList.get(i).getValorDescuentoManualTotal() + detalleList.get(i).getValorImpuestoTotal());
+                detalleList.get(i).setBaseImponible(detalleList.get(i).getPorcentajeImpuesto() == 0 ? 0 : detalleList.get(i).getSubtotal() - detalleList.get(i).getValorDescuentoAutomaticoTotal() - detalleList.get(i).getValorDescuentoManualTotal());
+                detalleList.get(i).setBaseImponibleCero(detalleList.get(i).getPorcentajeImpuesto() == 0 ? detalleList.get(i).getSubtotal() - detalleList.get(i).getValorDescuentoAutomaticoTotal() - detalleList.get(i).getValorDescuentoManualTotal() : 0);
+                detalleList.get(i).setSubtotalSinDescuento(detalleList.get(i).getSubtotal());
+                detalleList.get(i).setSubtotalSinImpuesto(detalleList.get(i).getSubtotal() - detalleList.get(i).getValorDescuentoAutomaticoTotal() - detalleList.get(i).getValorDescuentoManualTotal());
+            }
         }
+
+
 
 
         adapter = new PedidoDetalleAdapter(this.getContext(), pedido.getPedidoDetalles());
@@ -605,11 +644,11 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         for (PedidoDetalle detalle : pedido.getPedidoDetalles()) {
             valorTotal = valorTotal + detalle.getValorTotal();
             subtotal = subtotal + detalle.getSubtotal();
-            descuentos = descuentos + detalle.getValorDescuentoManualTotal() + detalle.getValorDescuentoAutomaticoTotal();
+            descuentos = descuentos + detalle.getValorDescuentoManualTotal() + detalle.getValorDescuentoAutomaticoTotal() + detalle.getValorDescuentoOroTotal();
             impuestos = impuestos + detalle.getValorImpuestoTotal();
             base0 = base0 + detalle.getBaseImponibleCero();
             baseImponible = baseImponible + detalle.getBaseImponible();
-            neto = neto + (detalle.getSubtotal() - (detalle.getValorDescuentoManualTotal() + detalle.getValorDescuentoAutomaticoTotal()));
+            neto = neto + (detalle.getSubtotal() - (detalle.getValorDescuentoManualTotal() + detalle.getValorDescuentoAutomaticoTotal() + detalle.getValorDescuentoOroTotal()));
         }
         double residuo = valorTotal % 1;
         if(residuo >= 0.5)
@@ -712,6 +751,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                         detalle.setValorTotal(jsonObject.getDouble("v"));
                         detalle.setBaseImponible(jsonObject.getDouble("bi"));
                         detalle.setBaseImponibleCero(jsonObject.getDouble("bic"));
+                        detalle.setPorcentajeDescuentoOro(jsonObject.getDouble("pdo"));
                         detalle.setPorcentajeDescuentoManual(jsonObject.getDouble("pdm"));
                         detalle.setPorcentajeDescuentoAutomatico(jsonObject.getDouble("pda"));
                         detalle.setValorDescuentoAutomatico(jsonObject.getDouble("vda"));
@@ -736,8 +776,15 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                 if(resultCode == RESULT_OK)
                 {
                     Cliente cl = Cliente.getClienteID(getDataBase(), data.getExtras().getLong(CrearClienteActivity.ARG_IDCLIENTE), false);
-                    if(cl.getExentoImpuesto())
-                        ValidarExentoImpuestos();
+                    if(pedido != null && pedido.getPedidoDetalles() != null) {
+                        ValidarDescuentos(cl.isCiudadanoOro());
+                        if (cl.getExentoImpuesto()) {
+                            ValidarExentoImpuestos();
+                        } else {
+                            ValidarImpuestos();
+                        }
+                        setTransaccionValues();
+                    }
                     cliente_auto.setText(cl.getNombreCompleto().trim());
                     //cliente_auto.setEnabled(false);
                     ((TextView) getRootView().findViewById(R.id.pedido_email)).setText(cl.getCorreoElectronico());
@@ -847,6 +894,18 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             pedido.getPedidoDetalles().add(transaction);
         else
             pedido.getPedidoDetalles().set(exists, transaction);
+
+        int position = list_nombres.indexOf(cliente_auto.getText().toString());
+        if (position != -1) {
+            if(pedido != null && pedido.getPedidoDetalles() != null) {
+                ValidarDescuentos(list_cliente.get(position).isCiudadanoOro());
+                if (list_cliente.get(position).getExentoImpuesto()) {
+                    ValidarExentoImpuestos();
+                } else {
+                    ValidarImpuestos();
+                }
+            }
+        }
 
         setTransaccionValues();
 
@@ -1000,11 +1059,11 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         for (PedidoDetalle detalle : pedido.getPedidoDetalles()) {
             valorTotal = valorTotal + detalle.getValorTotal();
             subtotal = subtotal + detalle.getSubtotal();
-            descuentos = descuentos + detalle.getValorDescuentoManualTotal() + detalle.getValorDescuentoAutomaticoTotal();
+            descuentos = descuentos + detalle.getValorDescuentoManualTotal() + detalle.getValorDescuentoAutomaticoTotal() + detalle.getValorDescuentoOroTotal();
             impuestos = impuestos + detalle.getValorImpuestoTotal();
             base0 = base0 + detalle.getBaseImponibleCero();
             baseImponible = baseImponible + detalle.getBaseImponible();
-            neto = neto + (detalle.getSubtotal() - (detalle.getValorDescuentoManualTotal() + detalle.getValorDescuentoAutomaticoTotal()));
+            neto = neto + (detalle.getSubtotal() - (detalle.getValorDescuentoManualTotal() + detalle.getValorDescuentoAutomaticoTotal() + detalle.getValorDescuentoOroTotal()));
         }
         double residuo = valorTotal % 1;
         if(residuo >= 0.5)
@@ -1063,6 +1122,18 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             pedido.getPedidoDetalles().set(exists, actual);
         }
 
+        int position = list_nombres.indexOf(cliente_auto.getText().toString());
+        if (position != -1) {
+            if(pedido != null && pedido.getPedidoDetalles() != null) {
+                ValidarDescuentos(list_cliente.get(position).isCiudadanoOro());
+                if (list_cliente.get(position).getExentoImpuesto()) {
+                    ValidarExentoImpuestos();
+                } else {
+                    ValidarImpuestos();
+                }
+            }
+        }
+
         setTransaccionValues();
     }
 
@@ -1082,8 +1153,55 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         }
     }
 
-    private void ValidarExentoImpuestos()
-    {
+    private void ValidarExentoImpuestos() {
 
+        for (PedidoDetalle det : pedido.getPedidoDetalles()) {
+            det.setValorImpuestoTotal(0);
+            det.setValorTotal(det.getSubtotal() - det.getValorDescuentoAutomaticoTotal() - det.getValorDescuentoManualTotal() - det.getValorDescuentoOroTotal());
+            det.setBaseImponible(0);
+            det.setBaseImponibleCero(det.getSubtotal() - det.getValorDescuentoAutomaticoTotal() - det.getValorDescuentoManualTotal() - det.getValorDescuentoOroTotal());
+        }
+
+    }
+
+    private void ValidarImpuestos() {
+        for (PedidoDetalle det : pedido.getPedidoDetalles()) {
+            if(det.getValorImpuesto() != 0) {
+                det.setValorImpuestoTotal(det.getValorImpuesto() * det.getCantidad());
+                det.setValorTotal(det.getSubtotal() - det.getValorDescuentoAutomaticoTotal() - det.getValorDescuentoManualTotal() - det.getValorDescuentoOroTotal() + det.getValorImpuestoTotal());
+                det.setBaseImponible(det.getSubtotal() - det.getValorDescuentoAutomaticoTotal() - det.getValorDescuentoManualTotal() - det.getValorDescuentoOroTotal());
+                det.setBaseImponibleCero(0);
+            }
+        }
+    }
+
+    private void ValidarDescuentos(boolean isOro) {
+        for (PedidoDetalle det : pedido.getPedidoDetalles()) {
+            if(isOro) {
+                det.setValorDescuentoOro(det.getValorUnitario() * det.getPorcentajeDescuentoOro());
+                det.setValorDescuentoOroTotal(det.getValorDescuentoOro() * det.getCantidad());
+                det.setValorDescuentoAutomatico((det.getValorUnitario() - det.getValorDescuentoOro()) * det.getPorcentajeDescuentoAutomatico());
+                det.setValorDescuentoAutomaticoTotal(det.getValorDescuentoAutomatico() * det.getCantidad());
+                det.setValorDescuentoManual((det.getValorUnitario() - det.getValorDescuentoAutomatico() - det.getValorDescuentoOro()) * det.getPorcentajeDescuentoManual());
+                det.setValorDescuentoManualTotal(det.getValorDescuentoManual() * det.getCantidad());
+            }
+            else
+            {
+                det.setValorDescuentoOro(0);
+                det.setValorDescuentoOroTotal(0);
+                det.setValorDescuentoAutomatico(det.getValorUnitario() * det.getPorcentajeDescuentoAutomatico());
+                det.setValorDescuentoAutomaticoTotal(det.getValorDescuentoAutomatico() * det.getCantidad());
+                det.setValorDescuentoManual((det.getValorUnitario() - det.getValorDescuentoAutomatico()) * det.getPorcentajeDescuentoManual());
+                det.setValorDescuentoManualTotal(det.getValorDescuentoManual() * det.getCantidad());
+            }
+            det.setValorImpuesto((det.getValorUnitario()- det.getValorDescuentoManual() - det.getValorDescuentoAutomatico() - det.getValorDescuentoOro()) * det.getPorcentajeImpuesto());
+            det.setValorImpuestoTotal(det.getValorImpuesto() * det.getCantidad());
+            det.setProducto(Producto.getProductoIdServer(getDataBase(), det.getIdProducto()));
+            det.setValorTotal(det.getSubtotal() - det.getValorDescuentoAutomaticoTotal() - det.getValorDescuentoManualTotal() - det.getValorDescuentoOroTotal() + det.getValorImpuestoTotal());
+            det.setBaseImponible(det.getPorcentajeImpuesto() == 0 ? 0 : det.getSubtotal() - det.getValorDescuentoAutomaticoTotal() - det.getValorDescuentoManualTotal() - det.getValorDescuentoOroTotal());
+            det.setBaseImponibleCero(det.getPorcentajeImpuesto() == 0 ? det.getSubtotal() - det.getValorDescuentoAutomaticoTotal() - det.getValorDescuentoManualTotal() - det.getValorDescuentoOroTotal() : 0);
+            det.setSubtotalSinDescuento(det.getSubtotal());
+            det.setSubtotalSinImpuesto(det.getSubtotal() - det.getValorDescuentoAutomaticoTotal() - det.getValorDescuentoManualTotal() - det.getValorDescuentoOroTotal());
+        }
     }
 }

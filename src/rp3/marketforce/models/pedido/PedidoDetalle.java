@@ -32,6 +32,9 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
     private double subtotalSinImpuesto;
     private double baseImponible;
     private double baseImponibleCero;
+    private double porcentajeDescuentoOro;
+    private double valorDescuentoOro;
+    private double valorDescuentoOroTotal;
     private double porcentajeDescuentoManual;
     private double valorDescuentoManual;
     private double valorDescuentoManualTotal;
@@ -154,6 +157,30 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
 
     public void setSubtotalSinDescuento(double subtotalSinDescuento) {
         this.subtotalSinDescuento = subtotalSinDescuento;
+    }
+
+    public double getPorcentajeDescuentoOro() {
+        return porcentajeDescuentoOro;
+    }
+
+    public void setPorcentajeDescuentoOro(double porcentajeDescuentoOro) {
+        this.porcentajeDescuentoOro = porcentajeDescuentoOro;
+    }
+
+    public double getValorDescuentoOro() {
+        return valorDescuentoOro;
+    }
+
+    public void setValorDescuentoOro(double valorDescuentoOro) {
+        this.valorDescuentoOro = valorDescuentoOro;
+    }
+
+    public double getValorDescuentoOroTotal() {
+        return valorDescuentoOroTotal;
+    }
+
+    public void setValorDescuentoOroTotal(double valorDescuentoOroTotal) {
+        this.valorDescuentoOroTotal = valorDescuentoOroTotal;
     }
 
     public double getSubtotalSinImpuesto() {
@@ -311,6 +338,9 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
         setValue(Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO_TOTAL, this.valorImpuestoTotal);
         setValue(Contract.PedidoDetalle.COLUMN_CANTIDAD_DEVOLUCION, this.cantidadDevolucion);
         setValue(Contract.PedidoDetalle.COLUMN_BASE_ICE, this.baseICE);
+        setValue(Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_ORO, this.porcentajeDescuentoOro);
+        setValue(Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO, this.valorDescuentoOro);
+        setValue(Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO_TOTAL, this.valorDescuentoOroTotal);
     }
 
     @Override
@@ -329,7 +359,8 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
                 Contract.PedidoDetalle.COLUMN_VALOR_TOTAL, Contract.PedidoDetalle.COLUMN_DESCRIPCION, Contract.PedidoDetalle.COLUMN_URL_FOTO, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE_CERO,
                 Contract.PedidoDetalle.COLUMN_SUBTOTAL, Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_DESCUENTO, Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_IMPUESTO, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_AUTOMATICO, Contract.PedidoDetalle.COLUMN_VALOR_DESC_AUTOMATICO,
                 Contract.PedidoDetalle.COLUMN_VALOR_DESC_AUTOMATICO_TOTAL, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_MANUAL, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_MANUAL, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_MANUAL_TOTAL, Contract.PedidoDetalle.COLUMN_PORCENTAJE_IMPUESTO,
-                Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO, Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO_TOTAL, Contract.PedidoDetalle.COLUMN_BASE_ICE, Contract.PedidoDetalle.COLUMN_CANTIDAD_DEVOLUCION}
+                Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO, Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO_TOTAL, Contract.PedidoDetalle.COLUMN_BASE_ICE, Contract.PedidoDetalle.COLUMN_CANTIDAD_DEVOLUCION,
+                Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_ORO, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO_TOTAL}
                 ,Contract.PedidoDetalle.COLUMN_ID_PEDIDO + " = ? ", new String[]{idPedido + ""});
 
         List<PedidoDetalle> list = new ArrayList<PedidoDetalle>();
@@ -361,6 +392,9 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
             detalle.setBaseImponibleCero(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE_CERO));
             detalle.setBaseICE(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_BASE_ICE));
             detalle.setCantidadDevolucion(CursorUtils.getInt(c, Contract.PedidoDetalle.COLUMN_CANTIDAD_DEVOLUCION));
+            detalle.setPorcentajeDescuentoOro(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_ORO));
+            detalle.setValorDescuentoOro(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO));
+            detalle.setValorDescuentoOroTotal(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO_TOTAL));
             detalle.setCodigoExterno(Producto.getProductoIdServer(db, detalle.getIdProducto()).getCodigoExterno());
             detalle.setProducto(Producto.getProductoIdServer(db, detalle.getIdProducto()));
             list.add(detalle);
@@ -375,7 +409,8 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
                 Contract.PedidoDetalle.COLUMN_VALOR_TOTAL, Contract.PedidoDetalle.COLUMN_DESCRIPCION, Contract.PedidoDetalle.COLUMN_URL_FOTO, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE_CERO,
                 Contract.PedidoDetalle.COLUMN_SUBTOTAL, Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_DESCUENTO, Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_IMPUESTO, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_AUTOMATICO, Contract.PedidoDetalle.COLUMN_VALOR_DESC_AUTOMATICO,
                 Contract.PedidoDetalle.COLUMN_VALOR_DESC_AUTOMATICO_TOTAL, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_MANUAL, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_MANUAL, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_MANUAL_TOTAL, Contract.PedidoDetalle.COLUMN_PORCENTAJE_IMPUESTO,
-                Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO, Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO_TOTAL,  Contract.PedidoDetalle.COLUMN_BASE_ICE, Contract.PedidoDetalle.COLUMN_CANTIDAD_DEVOLUCION}
+                Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO, Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO_TOTAL,  Contract.PedidoDetalle.COLUMN_BASE_ICE, Contract.PedidoDetalle.COLUMN_CANTIDAD_DEVOLUCION,
+                Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_ORO, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO_TOTAL}
                 ,Contract.PedidoDetalle.COLUMN_ID_PEDIDO_INT + " = ? ", new String[]{idPedido + ""});
 
         List<PedidoDetalle> list = new ArrayList<PedidoDetalle>();
@@ -407,6 +442,9 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
             detalle.setBaseImponibleCero(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE_CERO));
             detalle.setBaseICE(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_BASE_ICE));
             detalle.setCantidadDevolucion(CursorUtils.getInt(c, Contract.PedidoDetalle.COLUMN_CANTIDAD_DEVOLUCION));
+            detalle.setPorcentajeDescuentoOro(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_ORO));
+            detalle.setValorDescuentoOro(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO));
+            detalle.setValorDescuentoOroTotal(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO_TOTAL));
             detalle.setCodigoExterno(Producto.getProductoIdServer(db, detalle.getIdProducto()).getCodigoExterno());
             detalle.setProducto(Producto.getProductoIdServer(db, detalle.getIdProducto()));
 

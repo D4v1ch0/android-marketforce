@@ -15,10 +15,15 @@ import rp3.connection.WebService;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
 import rp3.marketforce.db.Contract;
+import rp3.marketforce.models.pedido.Banco;
 import rp3.marketforce.models.pedido.ControlCaja;
 import rp3.marketforce.models.pedido.FormaPago;
+import rp3.marketforce.models.pedido.MarcaTarjeta;
 import rp3.marketforce.models.pedido.Pago;
 import rp3.marketforce.models.pedido.PedidoDetalle;
+import rp3.marketforce.models.pedido.Tarjeta;
+import rp3.marketforce.models.pedido.TarjetaComision;
+import rp3.marketforce.models.pedido.TipoDiferido;
 import rp3.runtime.Session;
 import rp3.util.Convert;
 
@@ -52,6 +57,7 @@ public class Caja {
                     PreferenceManager.setValue(Contants.KEY_SERIE, jObject.getString(Contants.KEY_SERIE));
                     PreferenceManager.setValue(Contants.KEY_ID_ESTABLECIMIENTO, jObject.getInt(Contants.KEY_ID_ESTABLECIMIENTO));
                     PreferenceManager.setValue(Contants.KEY_ID_CAJA, jObject.getInt(Contants.KEY_ID_CAJA));
+                    PreferenceManager.setValue(Contants.KEY_CAJA, jObject.getString(Contants.KEY_CAJA));
                     PreferenceManager.setValue(Contants.KEY_ID_PUNTO_OPERACION, jObject.getInt(Contants.KEY_ID_PUNTO_OPERACION));
                     PreferenceManager.setValue(Contants.KEY_ID_EMPRESA, jObject.getInt(Contants.KEY_ID_EMPRESA));
                     //if(!jObject.isNull(Contants.KEY_DESCUENTO_MAXIMO))
@@ -121,6 +127,191 @@ public class Caja {
                         formaPago.setIdFormaPago(jsonObject.getInt("IdFormaPago"));
                         formaPago.setDescripcion(jsonObject.getString("Descripcion"));
                         FormaPago.insert(db, formaPago);
+                    }
+                }
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return SyncAdapter.SYNC_EVENT_ERROR;
+            }
+
+        }finally{
+            webService.close();
+        }
+
+        return SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
+    public static int executeSyncBanco(DataBase db){
+        WebService webService = new WebService("MartketForce","GetBancos");
+
+        try
+        {
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+                JSONArray jsonArray = webService.getJSONArrayResponse();
+                if(jsonArray != null) {
+                    Banco.deleteAll(db, Contract.Banco.TABLE_NAME);
+                    for(int i = 0; i < jsonArray.length(); i++)
+                    {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        Banco banco = new Banco();
+                        banco.setIdBanco(jsonObject.getInt("IdBanco"));
+                        banco.setDescripcion(jsonObject.getString("Descripcion"));
+                        Banco.insert(db, banco);
+                    }
+                }
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return SyncAdapter.SYNC_EVENT_ERROR;
+            }
+
+        }finally{
+            webService.close();
+        }
+
+        return SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
+    public static int executeSyncMarcaTarjetas(DataBase db){
+        WebService webService = new WebService("MartketForce","GetMarcaTarjetas");
+
+        try
+        {
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+                JSONArray jsonArray = webService.getJSONArrayResponse();
+                if(jsonArray != null) {
+                    MarcaTarjeta.deleteAll(db, Contract.MarcaTarjeta.TABLE_NAME);
+                    for(int i = 0; i < jsonArray.length(); i++)
+                    {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        MarcaTarjeta marcaTarjeta = new MarcaTarjeta();
+                        marcaTarjeta.setIdMarcaTarjeta(jsonObject.getInt("IdMarcaTarjeta"));
+                        marcaTarjeta.setDescripcion(jsonObject.getString("Descripcion"));
+                        MarcaTarjeta.insert(db, marcaTarjeta);
+                    }
+                }
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return SyncAdapter.SYNC_EVENT_ERROR;
+            }
+
+        }finally{
+            webService.close();
+        }
+
+        return SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
+    public static int executeSyncTarjetas(DataBase db){
+        WebService webService = new WebService("MartketForce","GetTarjetas");
+
+        try
+        {
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+                JSONArray jsonArray = webService.getJSONArrayResponse();
+                if(jsonArray != null) {
+                    Tarjeta.deleteAll(db, Contract.Tarjeta.TABLE_NAME);
+                    for(int i = 0; i < jsonArray.length(); i++)
+                    {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        Tarjeta tarjeta = new Tarjeta();
+                        tarjeta.setIdMarcaTarjeta(jsonObject.getInt("IdMarcaTarjeta"));
+                        //tarjeta.setInterna(jsonObject.getInt("Interna"));
+                        tarjeta.setIdBanco(jsonObject.getInt("IdBanco"));
+                        Tarjeta.insert(db, tarjeta);
+                    }
+                }
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return SyncAdapter.SYNC_EVENT_ERROR;
+            }
+
+        }finally{
+            webService.close();
+        }
+
+        return SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
+    public static int executeSyncTipoDiferidos(DataBase db){
+        WebService webService = new WebService("MartketForce","GetTiposDiferidos");
+
+        try
+        {
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+                JSONArray jsonArray = webService.getJSONArrayResponse();
+                if(jsonArray != null) {
+                    TipoDiferido.deleteAll(db, Contract.TipoDiferido.TABLE_NAME);
+                    for(int i = 0; i < jsonArray.length(); i++)
+                    {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        TipoDiferido tipoDiferido = new TipoDiferido();
+                        tipoDiferido.setIdTipoDiferido(jsonObject.getInt("IdTipoDiferido"));
+                        tipoDiferido.setCuotas(jsonObject.getInt("Cuotas"));
+                        tipoDiferido.setTipoCredito(jsonObject.getString("TipoCredito"));
+                        tipoDiferido.setDescripcion(jsonObject.getString("Descripcion"));
+                        TipoDiferido.insert(db, tipoDiferido);
+                    }
+                }
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return SyncAdapter.SYNC_EVENT_ERROR;
+            }
+
+        }finally{
+            webService.close();
+        }
+
+        return SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
+    public static int executeSyncTarjetaComision(DataBase db){
+        WebService webService = new WebService("MartketForce","GetTarjetaComisiones");
+
+        try
+        {
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+                JSONArray jsonArray = webService.getJSONArrayResponse();
+                if(jsonArray != null) {
+                    TarjetaComision.deleteAll(db, Contract.TarjetaComision.TABLE_NAME);
+                    for(int i = 0; i < jsonArray.length(); i++)
+                    {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        TarjetaComision tarjetaComision = new TarjetaComision();
+                        tarjetaComision.setIdBanco(jsonObject.getInt("IdBanco"));
+                        tarjetaComision.setIdMarcaTarjeta(jsonObject.getInt("IdMarcaTarjeta"));
+                        tarjetaComision.setIdEmpresa(jsonObject.getInt("IdEmpresa"));
+                        tarjetaComision.setIdTipoDiferido(jsonObject.getInt("IdTipoDiferido"));
+                        TarjetaComision.insert(db, tarjetaComision);
                     }
                 }
             } catch (HttpResponseException e) {
@@ -244,6 +435,7 @@ public class Caja {
                 if(jObject != null && jObject.getInt("IdControlCaja") != 0) {
                     ControlCaja control = new ControlCaja();
                     control.setIdControlCaja(jObject.getInt("IdControlCaja"));
+                    control.setIdCaja(jObject.getInt("IdCaja"));
                     control.setIdAgente(jObject.getInt("IdAgente"));
                     control.setValorApertura(Float.parseFloat(jObject.getString("MontoApertura")));
                     control.setFechaApertura(Convert.getDateFromDotNetTicks(jObject.getLong("FechaAperturaTicks")));
