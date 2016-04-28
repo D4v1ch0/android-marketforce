@@ -156,7 +156,8 @@ public class Contants {
     public final static String POS_USENUMTC = "USENUMTC"; //Usa número de tarjeta de crédito
     public final static String POS_USENUMCHEQ = "USENUMCHEQ"; //Usa número de cheque
     public final static String POS_USEBANCHEQ = "USEBANCHEQ"; //Usa banco en forma de pago cheque
-    public final static String POS_USECUECHEQ = "USECUECHEQ"; //CUsa número de cuenta en forma de pago cheque
+    public final static String POS_USECUECHEQ = "USECUECHEQ"; //Usa número de cuenta en forma de pago cheque
+    public final static String POS_ROUNDNUM = "ROUNDNUM"; //Valor a redondear en descuentos especiales
 
     public final static String APPLICATION_ID = "AGENDACOMERCial";
 	

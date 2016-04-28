@@ -67,10 +67,13 @@ public class InformationFragment extends BaseFragment {
         ((TextView) rootView.findViewById(R.id.info_android_id)).setText("Android ID: " + PreferenceManager.getString(Contants.KEY_ANDROID_ID, ""));
         ((TextView) rootView.findViewById(R.id.info_punto_operacion)).setText("Punto de Operacion : " + PreferenceManager.getString(Contants.KEY_NOMBRE_PUNTO_OPERACION,""));
         ((TextView) rootView.findViewById(R.id.info_caja)).setText("Caja: " + PreferenceManager.getString(Contants.KEY_CAJA, "Sin Caja"));
+        ((TextView) rootView.findViewById(R.id.infor_caja_id)).setText("Id Caja: " + PreferenceManager.getInt(Contants.KEY_ID_CAJA, 0));
 
         if(PreferenceManager.getString(Contants.KEY_NOMBRE_PUNTO_OPERACION, "").equalsIgnoreCase("") || PreferenceManager.getString(Contants.KEY_NOMBRE_PUNTO_OPERACION) == null || PreferenceManager.getString(Contants.KEY_NOMBRE_PUNTO_OPERACION).equalsIgnoreCase("null"))
             ((TextView) rootView.findViewById(R.id.info_punto_operacion)).setVisibility(View.GONE);
-        if(PreferenceManager.getInt(Contants.KEY_ID_CAJA, 0) == 0)
+        if(PreferenceManager.getInt(Contants.KEY_ID_CAJA, 0) == 0) {
             ((TextView) rootView.findViewById(R.id.info_caja)).setVisibility(View.GONE);
+            ((TextView) rootView.findViewById(R.id.infor_caja_id)).setVisibility(View.GONE);
+        }
     }
 }

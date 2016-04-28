@@ -161,7 +161,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                 }
                 break;
             case R.id.action_cancel:
-                showDialogConfirmation(DIALOG_SAVE_CANCEL, R.string.message_guardar_pedido);
+                showDialogConfirmation(DIALOG_SAVE_CANCEL, R.string.message_guardar_pedido, R.string.title_abandonar_transaccion);
                 break;
             default:
                 break;
@@ -177,7 +177,6 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             case DIALOG_SAVE_ACCEPT:
                 break;
             case DIALOG_SAVE_CANCEL:
-                finish();
                 break;
         }
     }
@@ -193,11 +192,12 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                 generarFacturaFísica();
                 break;
             case DIALOG_SAVE_CANCEL:
-                if(Validaciones())
+                /*if(Validaciones())
                 {
                     Grabar(true);
                     finish();
-                }
+                }*/
+                finish();
                 break;
         }
     }
@@ -390,18 +390,17 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                     int position = list_nombres.indexOf(adapter.getItem(pos));
                     if (position != -1 && ((TextView) rootView.findViewById(R.id.pedido_email)).length() <= 0) {
                         ((TextView) rootView.findViewById(R.id.pedido_email)).setText(list_cliente.get(position).getCorreoElectronico());
-                        if (pedido != null && pedido.getPedidoDetalles() != null) {
-                            ValidarDescuentos(list_cliente.get(position).isCiudadanoOro());
-                            if (list_cliente.get(position).getExentoImpuesto()) {
-                                ValidarExentoImpuestos();
-                            }
-                            else
-                            {
-                                ValidarImpuestos();
-                            }
-                            setTransaccionValues();
-                        }
                     }
+                    if (position != -1 && pedido != null && pedido.getPedidoDetalles() != null) {
+                        ValidarDescuentos(list_cliente.get(position).isCiudadanoOro());
+                        if (list_cliente.get(position).getExentoImpuesto()) {
+                            ValidarExentoImpuestos();
+                        } else {
+                            ValidarImpuestos();
+                        }
+                        setTransaccionValues();
+                    }
+
                 }
             });
 
@@ -414,16 +413,17 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                     int position = list_nombres.indexOf(cliente_auto.getText().toString());
                     if (position != -1 && ((TextView) rootView.findViewById(R.id.pedido_email)).length() <= 0) {
                         ((TextView) rootView.findViewById(R.id.pedido_email)).setText(list_cliente.get(position).getCorreoElectronico());
-                        if (pedido != null && pedido.getPedidoDetalles() != null) {
-                            ValidarDescuentos(list_cliente.get(position).isCiudadanoOro());
-                            if (list_cliente.get(position).getExentoImpuesto()) {
-                                ValidarExentoImpuestos();
-                            } else {
-                                ValidarImpuestos();
-                            }
-                            setTransaccionValues();
-                        }
                     }
+                    if (position != -1 && pedido != null && pedido.getPedidoDetalles() != null) {
+                        ValidarDescuentos(list_cliente.get(position).isCiudadanoOro());
+                        if (list_cliente.get(position).getExentoImpuesto()) {
+                            ValidarExentoImpuestos();
+                        } else {
+                            ValidarImpuestos();
+                        }
+                        setTransaccionValues();
+                    }
+
                 }
             });
         }
@@ -1065,9 +1065,10 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             baseImponible = baseImponible + detalle.getBaseImponible();
             neto = neto + (detalle.getSubtotal() - (detalle.getValorDescuentoManualTotal() + detalle.getValorDescuentoAutomaticoTotal() + detalle.getValorDescuentoOroTotal()));
         }
-        double residuo = valorTotal % 1;
-        if(residuo >= 0.5)
-            redondeo = (1 - residuo);
+        double a_redondondear = Double.parseDouble(GeneralValue.getGeneralValue(getDataBase(), Contants.POS_ROUNDNUM).getValue());
+        double residuo = valorTotal % (a_redondondear * 2);
+        if(residuo >= a_redondondear)
+            redondeo = ((a_redondondear * 2) - residuo);
         else
             redondeo = - residuo;
 

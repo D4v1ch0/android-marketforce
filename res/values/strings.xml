@@ -214,7 +214,8 @@
     <string name="label_cantidad_items"># de Items:</string>
     <string name="label_total_pedido">Total:</string>
     <string name="label_agregar_producto">Agregar Producto</string>
-    <string name="message_guardar_pedido">Desea guardar los datos de la transacción?</string>
+    <string name="message_guardar_pedido">Esta seguro que desea salir?</string>
+    <string name="title_abandonar_transaccion">Abandonar Transacción</string>
     <string name="message_guardar_pedido_accept">Desea guardar los datos de la transacción y darlo por cerrado?</string>
     <string name="message_sin_productos">Debido a que no tiene ningun producto guardado en el dispositivo, este proceso tardará en terminarse. Desea continuar?</string>
     <string name="label_sin_productos">No tiene productos</string>

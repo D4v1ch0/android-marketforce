@@ -3,6 +3,7 @@ package rp3.marketforce.pedido;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.MenuItem;
 
 import java.util.List;
 
@@ -55,4 +56,35 @@ public class CrearPedidoActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId())
+        {
+            case android.R.id.home:
+                showDialogConfirmation(CrearPedidoFragment.DIALOG_SAVE_CANCEL, R.string.message_guardar_pedido, R.string.title_abandonar_transaccion);
+                break;
+            default:
+                break;
+        }
+        return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        showDialogConfirmation(CrearPedidoFragment.DIALOG_SAVE_CANCEL, R.string.message_guardar_pedido, R.string.title_abandonar_transaccion);
+        //super.onBackPressed();
+    }
+
+    @Override
+    public void onPositiveConfirmation(int id) {
+        switch (id)
+        {
+            case CrearPedidoFragment.DIALOG_SAVE_CANCEL:
+                finish();
+                break;
+            default:
+                break;
+        }
+        super.onPositiveConfirmation(id);
+    }
 }

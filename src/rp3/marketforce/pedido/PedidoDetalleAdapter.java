@@ -75,7 +75,7 @@ public class PedidoDetalleAdapter extends BaseAdapter {
         PedidoDetalle detalle = detalles.get(position);
 
         ((TextView) convertView.findViewById(R.id.pedido_detalle_sku)).setText(detalle.getCodigoExterno());
-        ((TextView) convertView.findViewById(R.id.pedido_detalle_descuento)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(detalle.getValorDescuentoAutomaticoTotal() + detalle.getValorDescuentoManualTotal()));
+        ((TextView) convertView.findViewById(R.id.pedido_detalle_descuento)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(detalle.getValorDescuentoAutomaticoTotal() + detalle.getValorDescuentoManualTotal() + detalle.getValorDescuentoOroTotal()));
         ((TextView) convertView.findViewById(R.id.pedido_detalle_impuesto)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(detalle.getValorImpuestoTotal()));
         ((TextView) convertView.findViewById(R.id.pedido_detalle_descripcion)).setText(detalle.getDescripcion());
         ((TextView) convertView.findViewById(R.id.pedido_detalle_cantidad)).setText((detalle.getCantidad())+"");
