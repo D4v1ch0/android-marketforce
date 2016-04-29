@@ -26,6 +26,9 @@ import rp3.marketforce.dashboard.DashboardFragment;
 import rp3.marketforce.db.Contract;
 import rp3.marketforce.db.DbOpenHelper;
 import rp3.marketforce.information.InformationFragment;
+import rp3.marketforce.marcaciones.MarcacionActivity;
+import rp3.marketforce.marcaciones.PermisoActivity;
+import rp3.marketforce.marcaciones.PermisoFragment;
 import rp3.marketforce.models.Actividad;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.Agenda.AgendaExt;
@@ -40,6 +43,7 @@ import rp3.marketforce.models.Tarea;
 import rp3.marketforce.models.Ubicacion;
 import rp3.marketforce.models.oportunidad.Oportunidad;
 import rp3.marketforce.oportunidad.OportunidadFragment;
+import rp3.marketforce.models.marcacion.Justificacion;
 import rp3.marketforce.radar.RadarFragment;
 import rp3.marketforce.recorrido.RecorridoFragment;
 import rp3.marketforce.resumen.DashboardGrupoFragment;
@@ -50,6 +54,7 @@ import rp3.marketforce.utils.Utils;
 import rp3.runtime.Session;
 import rp3.sync.SyncAudit;
 import rp3.util.ConnectionUtils;
+import rp3.util.LocationUtils;
 import rp3.util.NotificationPusher;
 import rp3.util.Screen;
 import rp3.widget.SlidingPaneLayout;
@@ -93,6 +98,7 @@ public class MainActivity extends rp3.app.NavActivity{
     public static final int NAV_RADAR	 	    = 12;
     public static final int NAV_INFORMATION	    = 13;
     public static final int NAV_OPORTUNIDAD	    = 14;
+    public static final int NAV_JUSTIFICACIONES = 15;
 
     public static final int CERRAR_SESION_DIALOG = 12;
 
@@ -186,6 +192,12 @@ public class MainActivity extends rp3.app.NavActivity{
 			bundle2.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SOLO_RESUMEN);
 			requestSync(bundle2);
 		}
+		try
+		{
+			LocationUtils.getLocation(this);
+		}
+		catch (Exception ex)
+		{}
 
 	}
 
@@ -217,12 +229,12 @@ public class MainActivity extends rp3.app.NavActivity{
 		NavItem recorrido = new NavItem(NAV_RECORRIDO, R.string.title_option_recorrido, R.drawable.ic_action_place_dark);
         NavItem radar = new NavItem(NAV_RADAR, R.string.title_option_radar, R.drawable.ic_action_data_usage);
         NavItem information = new NavItem(NAV_INFORMATION, R.string.title_option_informacion, R.drawable.ic_action_about);
-        NavItem oportunidad  = new NavItem(NAV_OPORTUNIDAD, R.string.title_option_oportunidad, R.drawable.oportunidades);
 		
 		NavItem settingsGroup  = new NavItem(0, R.string.title_option_setconfiguracion, 0,NavItem.TYPE_CATEGORY);
 
         Date ultimo = SyncAudit.getLastSyncDate();
 		NavItem sincronizar = new NavItem(NAV_SINCRONIZAR, R.string.title_option_setsincronizar , R.drawable.ic_sincronizar, NavItem.TYPE_ACTION, "Ult. Conexión: " + format4.format(ultimo));
+        NavItem justificaciones = new NavItem(NAV_JUSTIFICACIONES, R.string.title_option_justificaciones, R.drawable.solicitar_permiso);
 		NavItem ajustes = new NavItem(NAV_AJUSTES, R.string.title_option_setajustes, R.drawable.ic_ajustes);
 		NavItem cerrarsesion = new NavItem(NAV_CERRAR_SESION, R.string.title_option_setcerrar_sesion, R.drawable.ic_cerrar_sesion);
 		
@@ -242,6 +254,8 @@ public class MainActivity extends rp3.app.NavActivity{
 		if(PreferenceManager.getBoolean(Contants.KEY_ES_SUPERVISOR)) {
             navItems.add(grupo);
             navItems.add(radar);
+			justificaciones.setBadge(Justificacion.getPermisosPendientesAprobarCount(getDataBase()));
+            navItems.add(justificaciones);
         }
 		//navItems.add(pedido);
 		//navItems.add(reuniones);
@@ -254,59 +268,63 @@ public class MainActivity extends rp3.app.NavActivity{
 		super.onNavItemSelected(item);
 		selectedItem = item.getId();
 		switch (item.getId()) {
-            case NAV_DASHBOARD:
-                setNavFragment(DashboardFragment.newInstance(0), item.getTitle());
-                lastTitle = item.getTitle();
-                break;
-            case NAV_RUTAS:
-                setNavFragment(RutasFragment.newInstance(0),
+		case NAV_DASHBOARD:
+			setNavFragment(DashboardFragment.newInstance(0), item.getTitle());
+			lastTitle = item.getTitle();
+			break;
+		case NAV_RUTAS:
+			setNavFragment(RutasFragment.newInstance(0),
+				    item.getTitle());
+			lastTitle = item.getTitle();
+			break;
+		case NAV_CLIENTES:
+			setNavFragment(ClientFragment.newInstance(item.getId()),
+		    item.getTitle());
+			lastTitle = item.getTitle();
+			break;
+		case NAV_RESUMEN:
+			setNavFragment(DashboardGrupoFragment.newInstance(item.getId()),
+		    item.getTitle());
+			lastTitle = item.getTitle();
+			break;
+        case NAV_RADAR:
+            setNavFragment(RadarFragment.newInstance(),
+                item.getTitle());
+            lastTitle = item.getTitle();
+            break;
+		case NAV_RECORRIDO:
+            if(!ConnectionUtils.isNetAvailable(this))
+            {
+                Toast.makeText(this, "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
+            }
+            else {
+                setNavFragment(RecorridoFragment.newInstance(),
                         item.getTitle());
                 lastTitle = item.getTitle();
-                break;
-            case NAV_CLIENTES:
-                setNavFragment(ClientFragment.newInstance(item.getId()),
-                        item.getTitle());
-                lastTitle = item.getTitle();
-                break;
-            case NAV_RESUMEN:
-                setNavFragment(DashboardGrupoFragment.newInstance(item.getId()),
-                        item.getTitle());
-                lastTitle = item.getTitle();
-                break;
-            case NAV_RADAR:
-                setNavFragment(RadarFragment.newInstance(),
-                        item.getTitle());
-                lastTitle = item.getTitle();
-                break;
-            case NAV_RECORRIDO:
-                if (!ConnectionUtils.isNetAvailable(this)) {
-                    Toast.makeText(this, "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
-                } else {
-                    setNavFragment(RecorridoFragment.newInstance(),
-                            item.getTitle());
-                    lastTitle = item.getTitle();
-                }
-                break;
-            case NAV_PEDIDO:
-                setNavFragment(DefaultFragment.newInstance(0),
-                        item.getTitle());
-                lastTitle = item.getTitle();
-                break;
-            case NAV_REUNIONES:
-                setNavFragment(DefaultFragment.newInstance(0),
-                        item.getTitle());
-                lastTitle = item.getTitle();
-                break;
-            case NAV_RECORDATORIOS:
-                setNavFragment(DefaultFragment.newInstance(0),
-                        item.getTitle());
-                lastTitle = item.getTitle();
-                break;
-            case NAV_SINCRONIZAR:
-                if (!ConnectionUtils.isNetAvailable(this)) {
-                    Toast.makeText(this, "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
-                } else {
-                    showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait);
+            }
+			break;
+		case NAV_PEDIDO:	
+			setNavFragment(DefaultFragment.newInstance(0),
+				    item.getTitle());
+			lastTitle = item.getTitle();
+			break;
+		case NAV_REUNIONES:
+			setNavFragment(DefaultFragment.newInstance(0),
+				    item.getTitle());
+			lastTitle = item.getTitle();
+			break;
+		case NAV_RECORDATORIOS:	
+			setNavFragment(DefaultFragment.newInstance(0),
+				    item.getTitle());
+			lastTitle = item.getTitle();
+			break;
+		case NAV_SINCRONIZAR:
+            if(!ConnectionUtils.isNetAvailable(this))
+            {
+                Toast.makeText(this, "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
+            }
+            else {
+                showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait);
 
                     Bundle bundle = new Bundle();
                     bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_TODO);
@@ -332,6 +350,11 @@ public class MainActivity extends rp3.app.NavActivity{
                         item.getTitle());
                 lastTitle = item.getTitle();
                 break;
+			case NAV_JUSTIFICACIONES:
+				setNavFragment(PermisoFragment.newInstance(),
+						item.getTitle());
+				lastTitle = item.getTitle();
+				break;
             default:
                 break;
         }

@@ -3,12 +3,17 @@ package rp3.marketforce.dashboard;
 import com.google.android.gms.maps.MapFragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView.FindListener;
 import rp3.app.BaseFragment;
+import rp3.configuration.PreferenceManager;
+import rp3.marketforce.Contants;
 import rp3.marketforce.R;
+import rp3.marketforce.marcaciones.MarcacionActivity;
 
 public class DashboardFragment extends BaseFragment {
 
@@ -33,7 +38,10 @@ public class DashboardFragment extends BaseFragment {
 		getActivity().setTitle(R.string.title_option_setinicio);
 		
 		//setRetainInstance(true);
-		setContentView(R.layout.fragment_dashboard);
+        if(PreferenceManager.getBoolean(Contants.KEY_APLICA_MARCACION))
+		    setContentView(R.layout.fragment_dashboard, R.menu.fragment_dashboard_menu);
+        else
+            setContentView(R.layout.fragment_dashboard);
 		graphicFragment = DashboardGraphicFragment.newInstance();	
 		agendaFragment = DashboardAgendaFragment.newInstance();	
 		mapFragment = DashboardMapFragment.newInstance();	
@@ -68,5 +76,19 @@ public class DashboardFragment extends BaseFragment {
     	super.onFragmentCreateView(rootView, savedInstanceState);
     	
 	}
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId())
+        {
+            case R.id.action_marcaciones:
+                Intent intent = new Intent(getContext(), MarcacionActivity.class);
+                startActivity(intent);
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 }

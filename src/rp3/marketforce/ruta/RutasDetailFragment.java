@@ -1,5 +1,6 @@
 package rp3.marketforce.ruta;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,16 +17,21 @@ import rp3.marketforce.actividades.GrupoActivity;
 import rp3.marketforce.actividades.MultipleActivity;
 import rp3.marketforce.actividades.SeleccionActivity;
 import rp3.marketforce.actividades.TextoActivity;
+import rp3.marketforce.marcaciones.JustificacionFragment;
 import rp3.marketforce.models.Actividad;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.Cliente;
+import rp3.marketforce.models.DiaLaboral;
+import rp3.marketforce.models.marcacion.Marcacion;
+import rp3.marketforce.models.marcacion.Permiso;
 import rp3.marketforce.ruta.ObservacionesFragment.ObservacionesFragmentListener;
 import rp3.marketforce.sync.AsyncUpdater;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.DrawableManager;
 import rp3.marketforce.utils.Utils;
 import rp3.util.BitmapUtils;
+import rp3.util.GooglePlayServicesUtils;
 import rp3.util.LocationUtils;
 import rp3.util.LocationUtils.OnLocationResultListener;
 
@@ -67,6 +73,8 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
     public static final String PARENT_SOURCE_SEARCH = "SEARCH";
     
     public static final String STATE_IDAGENDA = "state_idagenda";
+
+    public static final int DIALOG_INICIO_JORNADA = 1;
     
     private long idAgenda;        
     private Agenda agenda;
@@ -80,6 +88,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
     public boolean reDoMenu = true;
     Uri photo = Utils.getOutputMediaFileUri(Utils.MEDIA_TYPE_IMAGE);
     private Menu menuRutas;
+    DateFormat format;
     public interface TransactionDetailListener{
     	public void onDeleteSuccess(Cliente transaction);
     }
@@ -98,6 +107,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
         super.onCreate(savedInstanceState); 
         format1 = new SimpleDateFormat("EEEE dd MMMM yyyy, HH:mm");
         format2 = new SimpleDateFormat("HH:mm");
+        format = new SimpleDateFormat("HH:mm");
 
         if(getParentFragment()==null)
         	setRetainInstance(true);
@@ -357,11 +367,28 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                        @Override
                        public void getLocationResult(Location location) {
 
-                       }
-                   });
-                   ValidateTareas();
-               }
-           });
+                    }
+                });
+
+                ValidateTareas();
+                
+                Marcacion ultimaMarcacion = Marcacion.getUltimaMarcacion(getDataBase());
+                if(ultimaMarcacion == null)
+                {
+                    showDialogConfirmation(DIALOG_INICIO_JORNADA, R.string.message_marcacion_agenda, R.string.label_iniciar_jornada);
+                }
+                else
+                {
+                    Calendar dia_hoy = Calendar.getInstance();
+                    Calendar dia_marcacion = Calendar.getInstance();
+                    DiaLaboral dia_laboral = DiaLaboral.getDia(getDataBase(), Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1);
+                    dia_marcacion.setTime(ultimaMarcacion.getFecha());
+                    if (dia_hoy.get(Calendar.DAY_OF_YEAR) != dia_marcacion.get(Calendar.DAY_OF_YEAR)) {
+                        showDialogConfirmation(DIALOG_INICIO_JORNADA, R.string.message_marcacion_agenda, R.string.label_iniciar_jornada);
+                    }
+                }
+				
+			}});
 		   
 		   setButtonClickListener(R.id.detail_agenda_button_modificar, new OnClickListener() {
 
@@ -495,7 +522,20 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 		   
 		}
     }
-      
+
+    @Override
+    public void onPositiveConfirmation(int id) {
+        super.onPositiveConfirmation(id);
+        switch (id)
+        {
+            case DIALOG_INICIO_JORNADA:
+                SetMarcacion();
+                break;
+            default:
+                break;
+        }
+    }
+
     protected boolean ValidarAgendas() {
 		if(Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_GESTIONANDO, 0, Agenda.getLastAgenda(getDataBase())) > 0 && !agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO))
 		{
@@ -508,7 +548,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 		cal_agenda.setTime(agenda.getFechaInicio());
 		if(cal.get(Calendar.DAY_OF_MONTH) != cal_agenda.get(Calendar.DAY_OF_MONTH) ||
 				cal.get(Calendar.MONTH) != cal_agenda.get(Calendar.MONTH) ||
-				cal.get(Calendar.YEAR) != cal_agenda.get(Calendar.YEAR))
+                cal.get(Calendar.YEAR) != cal_agenda.get(Calendar.YEAR))
 		{
 			return false;
 		}
@@ -525,10 +565,10 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			finish();
+            finish();
 			return true;
 		}
-		return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
 	}
 
     protected void takePicture(final int idView) {
@@ -561,7 +601,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 	
 	public void showTareaTexto(Actividad ata, AgendaTarea setter)
 	{
-		Intent intent = new Intent(getContext(), TextoActivity.class);
+        Intent intent = new Intent(getContext(), TextoActivity.class);
 		intent.putExtra(ARG_ITEM_ID, ata.getIdTarea());
 		intent.putExtra(ARG_AGENDA_ID, setter.getIdAgenda());
 		intent.putExtra(ARG_RUTA_ID, setter.getIdRuta());
@@ -746,5 +786,98 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
             getRootView().findViewById(R.id.listView_tareas).setVisibility(View.GONE);
             getRootView().findViewById(R.id.detail_agenda_empty_tareas).setVisibility(View.VISIBLE);
         }
+    }
+
+    private void SetMarcacion()
+    {
+        final Marcacion marc = new Marcacion();
+        marc.setTipo("J1");
+        marc.setPendiente(true);
+        if (GooglePlayServicesUtils.servicesConnected((BaseActivity) getActivity())) {
+
+            try {
+                ((BaseActivity) getActivity()).showDialogProgress("GPS", "Obteniendo Posición");
+                LocationUtils.getLocation(getContext(), new LocationUtils.OnLocationResultListener() {
+
+                    @Override
+                    public void getLocationResult(Location location) {
+                        if (location != null) {
+                            marc.setLatitud(location.getLatitude());
+                            marc.setLongitud(location.getLongitude());
+                            LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
+                            double distance = 0;
+                            marc.setEnUbicacion(true);
+                            if(agenda.getClienteDireccion().getLatitud() != 0) {
+                                LatLng partida = new LatLng(agenda.getClienteDireccion().getLatitud(),
+                                        agenda.getClienteDireccion().getLongitud());
+                                distance = SphericalUtil.computeDistanceBetween(pos, partida);
+                                marc.setEnUbicacion(distance < 30);
+                            }
+                            marc.setFecha(Calendar.getInstance().getTime());
+                            Marcacion.insert(getDataBase(), marc);
+                            JustificacionFragment fragment = new JustificacionFragment();
+                            if (distance < 30) {
+                                DiaLaboral dia = DiaLaboral.getDia(getDataBase(), Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1);
+                                Calendar cal_hoy = Calendar.getInstance();
+                                try {
+                                    cal_hoy.setTime(format.parse(dia.getHoraInicio1().replace("h", ":")));
+                                } catch (Exception ex) {
+                                }
+                                int atraso = CheckMinutes(cal_hoy);
+                                if (atraso > 0) {
+                                    marc.setMintutosAtraso(atraso);
+                                    Marcacion.update(getDataBase(), marc);
+                                    Permiso permiso = Permiso.getPermisoMarcacion(getDataBase(), 0);
+                                    if (permiso == null) {
+                                        fragment.idMarcacion = marc.getID();
+                                        showDialogFragment(fragment, "Justificacion");
+                                        Toast.makeText(getContext(), "Usted esta marcando atrasado. Indique su justificación", Toast.LENGTH_LONG).show();
+                                    } else {
+                                        permiso.setIdMarcacion(marc.getID());
+                                        Permiso.update(getDataBase(), permiso);
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
+                                        requestSync(bundle);
+                                        Toast.makeText(getContext(), "Se ha iniciado la Jornada.", Toast.LENGTH_LONG).show();
+                                    }
+                                } else {
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
+                                    requestSync(bundle);
+                                }
+                            } else {
+                                DiaLaboral dia = DiaLaboral.getDia(getDataBase(), Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1);
+                                Calendar cal_hoy = Calendar.getInstance();
+                                try {
+                                    cal_hoy.setTime(format.parse(dia.getHoraInicio1().replace("h", ":")));
+                                } catch (Exception ex) {
+                                }
+                                int atraso = CheckMinutes(cal_hoy);
+                                if(atraso > 0) {
+                                    marc.setMintutosAtraso(atraso);
+                                    Marcacion.update(getDataBase(), marc);
+                                }
+                                fragment.idMarcacion = marc.getID();
+                                showDialogFragment(fragment, "Justificacion");
+                                Toast.makeText(getContext(), R.string.message_fuera_posicion_agenda, Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            Toast.makeText(getContext(), "Debe de activar su GPS.", Toast.LENGTH_SHORT).show();
+                        }
+                        ((BaseActivity) getActivity()).closeDialogProgress();
+                    }
+                });
+            } catch (Exception ex) {
+            }
+
+        }
+    }
+
+    public int CheckMinutes(Calendar cal1)
+    {
+        Calendar hoy = Calendar.getInstance();
+        int horas = hoy.get(Calendar.HOUR_OF_DAY) - cal1.get(Calendar.HOUR_OF_DAY);
+        int minutos = hoy.get(Calendar.MINUTE) - cal1.get(Calendar.MINUTE);
+        return (horas * 60) + minutos;
     }
 }
