@@ -11,6 +11,7 @@ import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
 import rp3.marketforce.db.Contract;
 import rp3.marketforce.models.Cliente.ClientExt;
+import rp3.marketforce.models.pedido.Pedido;
 import rp3.util.Convert;
 import rp3.util.CursorUtils;
 import android.database.Cursor;
@@ -36,6 +37,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 	private String estadoAgenda;
 	private ClienteDireccion clienteDireccion;
 	private List<AgendaTarea> agendaTareas;
+	private Pedido pedido;
 	private String nombreCompleto;
 	private String ciudad;
 	private String direccion;
@@ -57,7 +59,15 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
     private long TiempoViaje;
     private String idMotivoReprogramacion;
 
-    public String getIdMotivoReprogramacion() {
+	public Pedido getPedido() {
+		return pedido;
+	}
+
+	public void setPedido(Pedido pedido) {
+		this.pedido = pedido;
+	}
+
+	public String getIdMotivoReprogramacion() {
         return idMotivoReprogramacion;
     }
 
@@ -576,6 +586,8 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 				agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getID(), agd.getIdRuta(), true));
 			else
 				agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getIdAgenda(), agd.getIdRuta(), false));
+
+			agd.setPedido(Pedido.getPedidoByAgenda(db, agd.getID()));
 			
 		}
         c.close();
@@ -633,6 +645,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
             else
                 agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getIdAgenda(), agd.getIdRuta(), false));
 
+			agd.setPedido(Pedido.getPedidoByAgenda(db, agd.getID()));
         }
         c.close();
         return agd;

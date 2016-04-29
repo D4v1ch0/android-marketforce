@@ -690,8 +690,13 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                     menuRutas.getItem(i).getSubMenu().findItem(R.id.action_reprogramar).setVisible(agendaNoClient != null);
                     menuRutas.getItem(i).getSubMenu().findItem(R.id.action_suspender_agenda).setVisible(true);
                     menuRutas.getItem(i).getSubMenu().findItem(R.id.action_no_visita).setVisible(true);
+                    if(agenda.getPedido().getID() != 0)
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setTitle("Editar Pedido");
                 }
             }
+        }
+        if(idAgenda != 0)
+        {
             String estado = Agenda.getAgendaEstado(getDataBase(), idAgenda);
             if (estado.equalsIgnoreCase(Contants.ESTADO_NO_VISITADO) || estado.equalsIgnoreCase(Contants.ESTADO_VISITADO)) {
                 for (int i = 0; i < menuRutas.size(); i++) {
@@ -699,6 +704,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_cambiar_contacto).setVisible(false);
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_no_visita).setVisible(false);
                         menuRutas.findItem(R.id.submenu_agenda).setVisible(false);
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setVisible(false);
                     }
                 }
             } else
@@ -709,6 +715,17 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_cambiar_contacto).setVisible(false);
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_reprogramar).setVisible(false);
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_suspender_agenda).setVisible(false);
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setVisible(false);
+                    }
+                }
+            }
+            if(estado.equalsIgnoreCase(Contants.ESTADO_GESTIONANDO))
+            {
+                for(int i = 0; i < menuRutas.size(); i ++)
+                {
+                    if(menuRutas.getItem(i).getItemId() == R.id.submenu_agenda)
+                    {
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setVisible(true);
                     }
                 }
             }

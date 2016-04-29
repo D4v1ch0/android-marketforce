@@ -44,6 +44,7 @@ import rp3.marketforce.models.Ubicacion;
 import rp3.marketforce.models.oportunidad.Oportunidad;
 import rp3.marketforce.oportunidad.OportunidadFragment;
 import rp3.marketforce.models.marcacion.Justificacion;
+import rp3.marketforce.pedido.PedidoFragment;
 import rp3.marketforce.radar.RadarFragment;
 import rp3.marketforce.recorrido.RecorridoFragment;
 import rp3.marketforce.resumen.DashboardGrupoFragment;
@@ -257,7 +258,7 @@ public class MainActivity extends rp3.app.NavActivity{
 			justificaciones.setBadge(Justificacion.getPermisosPendientesAprobarCount(getDataBase()));
             navItems.add(justificaciones);
         }
-		//navItems.add(pedido);
+		navItems.add(pedido);
 		//navItems.add(reuniones);
 		//navItems.add(recordatorios);
 		navItems.add(settingsGroup);
@@ -304,7 +305,7 @@ public class MainActivity extends rp3.app.NavActivity{
             }
 			break;
 		case NAV_PEDIDO:	
-			setNavFragment(DefaultFragment.newInstance(0),
+			setNavFragment(PedidoFragment.newInstance(0),
 				    item.getTitle());
 			lastTitle = item.getTitle();
 			break;

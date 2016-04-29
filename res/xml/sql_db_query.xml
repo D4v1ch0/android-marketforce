@@ -1362,4 +1362,104 @@
         = tbJustificacion.IdAgente
         WHERE tbJustificacion.IdPermiso = ?
     </statement>
+    <statement name="Productos">
+        SELECT
+        tbProducto._id AS _id,
+        tbProducto.IdProducto,
+        tbProducto.ValorUnitario,
+        tbProducto.URLFoto,
+        tbProducto.IdSubCategoria,
+        tbProductoExt.Descripcion AS tbProductoExt_Descripcion
+        FROM tbProducto
+        LEFT JOIN tbProductoExt
+        ON tbProducto._id = tbProductoExt.docid
+    </statement>
+    <statement name="ProductosByCategoria">
+        SELECT
+        tbProducto._id AS _id,
+        tbProducto.IdProducto,
+        tbProducto.ValorUnitario,
+        tbProducto.URLFoto,
+        tbProducto.IdSubCategoria,
+        tbProductoExt.Descripcion AS tbProductoExt_Descripcion
+        FROM tbProducto
+        LEFT JOIN tbProductoExt
+        ON tbProducto._id = tbProductoExt.docid
+        WHERE tbProducto.IdSubCategoria = ?
+    </statement>
+    <statement name="ProductoByID">
+        SELECT
+        tbProducto._id AS _id,
+        tbProducto.IdProducto,
+        tbProducto.ValorUnitario,
+        tbProducto.URLFoto,
+        tbProducto.IdSubCategoria,
+        tbProductoExt.Descripcion AS tbProductoExt_Descripcion
+        FROM tbProducto
+        LEFT JOIN tbProductoExt
+        ON tbProducto._id = tbProductoExt.docid
+        WHERE tbProducto._id = ?
+    </statement>
+    <statement name="ProductoByIdServer">
+        SELECT
+        tbProducto._id AS _id,
+        tbProducto.IdProducto,
+        tbProducto.ValorUnitario,
+        tbProducto.URLFoto,
+        tbProducto.IdSubCategoria,
+        tbProductoExt.Descripcion AS tbProductoExt_Descripcion
+        FROM tbProducto
+        LEFT JOIN tbProductoExt
+        ON tbProducto._id = tbProductoExt.docid
+        WHERE tbProducto.IdProducto = ?
+    </statement>
+    <statement name="SimpleProductoSearch">
+        SELECT
+        tbProducto._id AS _id,
+        tbProducto.IdProducto,
+        tbProducto.ValorUnitario,
+        tbProducto.URLFoto,
+        tbProducto.IdSubCategoria,
+        tbProductoExt.Descripcion AS tbProductoExt_Descripcion
+        FROM tbProductoExt
+        INNER JOIN tbProducto
+        ON tbProducto._id = tbProductoExt.docid
+        INNER JOIN (
+
+        SELECT
+        tbProductoExt.docid,
+        matchinfo( tbProductoExt ) AS Rank
+        FROM tbProductoExt
+        WHERE tbProductoExt MATCH ?
+        ORDER BY rank DESC LIMIT 30 OFFSET 0
+
+        ) AS tbProductoSearch
+        ON tbProductoExt.docid = tbProductoSearch.docid
+        ORDER BY tbProductoSearch.Rank DESC
+    </statement>
+    <statement name="SimpleProductoSearchByCategoria">
+        SELECT
+        tbProducto._id AS _id,
+        tbProducto.IdProducto,
+        tbProducto.ValorUnitario,
+        tbProducto.URLFoto,
+        tbProducto.IdSubCategoria,
+        tbProductoExt.Descripcion AS tbProductoExt_Descripcion
+        FROM tbProductoExt
+        INNER JOIN tbProducto
+        ON tbProducto._id = tbProductoExt.docid
+        INNER JOIN (
+
+        SELECT
+        tbProductoExt.docid,
+        matchinfo( tbProductoExt ) AS Rank
+        FROM tbProductoExt
+        WHERE tbProductoExt MATCH ?
+        ORDER BY rank DESC LIMIT 30 OFFSET 0
+
+        ) AS tbProductoSearch
+        ON tbProductoExt.docid = tbProductoSearch.docid
+        WHERE tbProducto.IdSubCategoria = ?
+        ORDER BY tbProductoSearch.Rank DESC
+    </statement>
 </sql>
