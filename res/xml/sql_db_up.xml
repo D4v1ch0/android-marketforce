@@ -104,6 +104,16 @@
     </statement>
     <statement name="ToVersion9-1">
         ALTER TABLE tbProducto ADD COLUMN PorcentajeDescuento REAL,
+        ADD COLUMN PorcentajeDescuentoOro REAL,
+        ADD COLUMN PrecioConDescuento REAL,
+        ADD COLUMN PorcentajeImpuesto REAL,
+        ADD COLUMN PrecioConImpuesto REAL,
+        ADD COLUMN CodigoExterno TEXT,
+        ADD COLUMN IdBeneficio INTEGER;
+    </statement>
+    <statement name="ToVersion9-2">
+        ALTER TABLE tbPedido ADD COLUMN _IdCliente REAL,
+        ADD COLUMN PorcentajeDescuentoOro REAL,
         ADD COLUMN PrecioConDescuento REAL,
         ADD COLUMN PorcentajeImpuesto REAL,
         ADD COLUMN PrecioConImpuesto REAL,

@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import rp3.db.QueryDir;
+import rp3.marketforce.models.pedido.Pedido;
 import rp3.sync.SyncAudit;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.models.marcacion.Justificacion;
@@ -30,17 +31,16 @@ public class DbOpenHelper extends rp3.db.sqlite.DataBaseOpenHelper {
 				case 6: UpgradeToVersion6(db); break;
 				case 7: UpgradeToVersion(db, i); break;
 				case 8: UpgradeToVersion8(db); break;
+				case 9: UpgradeToVersion9(db); break;
 			}
 		}
 	}
 
-	public void UpgradeToVersion(SQLiteDatabase database, int version)
-	{
+	public void UpgradeToVersion(SQLiteDatabase database, int version) {
 		database.execSQL(QueryDir.getQuery(TO_VERSION + version));
 	}
 
-	public void UpgradeToVersion3(SQLiteDatabase database)
-	{
+	public void UpgradeToVersion3(SQLiteDatabase database) {
 		database.execSQL(QueryDir.getQuery(TO_VERSION + 3));
 	}
 
@@ -74,5 +74,12 @@ public class DbOpenHelper extends rp3.db.sqlite.DataBaseOpenHelper {
 	private void UpgradeToVersion8(SQLiteDatabase database) {
 		database.execSQL(QueryDir.getQuery(TO_VERSION + "8-1"));
 		database.execSQL(QueryDir.getQuery(TO_VERSION + "8-2"));
+	}
+
+	private void UpgradeToVersion9(SQLiteDatabase db) {
+		db.delete(Contract.Pedido.TABLE_NAME, null, null);
+		db.delete(Contract.PedidoDetalle.TABLE_NAME, null, null);
+		db.delete(Contract.Producto.TABLE_NAME, null, null);
+		db.delete(Contract.ProductoExt.TABLE_NAME, null, null);
 	}
 }
