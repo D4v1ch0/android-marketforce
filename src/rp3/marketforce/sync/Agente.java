@@ -2,7 +2,9 @@ package rp3.marketforce.sync;
 
 import android.util.Log;
 
+import android.accounts.AccountManager;
 import android.content.Context;
+import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextUtils;
 
@@ -25,6 +27,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
+import rp3.accounts.ServerAuthenticate;
+import rp3.accounts.User;
 import rp3.configuration.PreferenceManager;
 import rp3.connection.HttpConnection;
 import rp3.connection.WebService;
@@ -35,9 +39,100 @@ import rp3.marketforce.R;
 import rp3.marketforce.db.Contract;
 import rp3.marketforce.models.AgenteResumen;
 import rp3.marketforce.models.AgenteUbicacion;
+import rp3.runtime.Session;
+import rp3.sync.TestConnection;
 import rp3.util.Convert;
 
 public class Agente {
+
+    public static String KEY_MESSAGE = "message";
+    public static String KEY_DESCUENTO = "descuento";
+
+    public static Bundle executeSyncSignIn(String user, String pass)
+    {
+        String authType = User.getAccountType();
+        WebService method = new WebService();
+        Bundle bundle = new Bundle();
+        if(TestConnection.executeSync()) {
+            method.setConfigurationName("Core", "SignIn");
+            method.setAuthTokenType(authType);
+
+            method.addParameter("LogonName", user);
+            method.addParameter("Password", pass);
+
+            bundle = new Bundle();
+
+
+            try {
+                method.invokeWebService();
+
+                JSONObject response = method.getJSONObjectResponse();
+                String authToken = null;
+                String fullName = null;
+
+                if (!response.getJSONObject("Data").isNull("AuthToken")) {
+                    authToken = response.getJSONObject("Data").getString("AuthToken");
+                    fullName = response.getJSONObject("Data").getString("Name");
+                    Session.getUser().setFullName(fullName);
+                }
+
+                if (!response.isNull("Message"))
+                    bundle.putString(ServerAuthenticate.KEY_ERROR_MESSAGE, response.getJSONObject("Message").getString("Text"));
+
+                bundle.putString(AccountManager.KEY_AUTHTOKEN, authToken);
+                bundle.putString(AccountManager.KEY_ACCOUNT_TYPE, authType);
+                //bundle.putString(KEY_FULL_NAME, fullName);
+                bundle.putBoolean(ServerAuthenticate.KEY_SUCCESS, response.getJSONObject("Data").getBoolean("IsValid"));
+            } catch (Exception e) {
+                bundle.putString(ServerAuthenticate.KEY_ERROR_MESSAGE, e.getMessage());
+                bundle.putString(AccountManager.KEY_AUTHTOKEN, null);
+                bundle.putBoolean(ServerAuthenticate.KEY_SUCCESS, false);
+            }
+        }
+        else {
+            bundle.putString(ServerAuthenticate.KEY_ERROR_MESSAGE, "No hay conexión al servidor");
+            bundle.putString(AccountManager.KEY_AUTHTOKEN, null);
+            bundle.putBoolean(ServerAuthenticate.KEY_SUCCESS, false);
+
+        }
+        return bundle;
+    }
+
+    public static Bundle executeSyncAuthDescuento(String user, String pass) {
+        Bundle signIn = executeSyncSignIn(user, pass);
+
+        WebService webService = new WebService("MartketForce", "GetDescuento");
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(ServerAuthenticate.KEY_SUCCESS, signIn.getBoolean(ServerAuthenticate.KEY_SUCCESS, false));
+        if (signIn.getBoolean(ServerAuthenticate.KEY_SUCCESS, false)) {
+            try {
+                webService.addCurrentAuthToken();
+                webService.addStringParameter("@user", user);
+
+                try {
+                    webService.invokeWebService();
+                    int descuento = webService.getIntegerResponse();
+                    bundle.putInt(KEY_DESCUENTO, descuento);
+                } catch (HttpResponseException e) {
+                    if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                        bundle.putInt(KEY_MESSAGE, SyncAdapter.SYNC_EVENT_AUTH_ERROR);
+                    bundle.putInt(KEY_MESSAGE, SyncAdapter.SYNC_EVENT_HTTP_ERROR);
+                } catch (Exception e) {
+                    bundle.putInt(KEY_MESSAGE, SyncAdapter.SYNC_EVENT_ERROR);
+                }
+
+            } finally {
+                webService.close();
+            }
+
+            bundle.putInt(KEY_MESSAGE, SyncAdapter.SYNC_EVENT_SUCCESS);
+        }
+        else
+        {
+            bundle.putInt(KEY_MESSAGE, SyncAdapter.SYNC_EVENT_ERROR);
+        }
+        return bundle;
+    }
 
 	public static int executeSync(DataBase db){
 		WebService webService = new WebService("MartketForce","GetAgente");			
@@ -60,6 +155,7 @@ public class Agente {
 				PreferenceManager.setValue(Contants.KEY_ES_AGENTE, jObject.getBoolean(Contants.KEY_ES_AGENTE));
 				PreferenceManager.setValue(Contants.KEY_ES_ADMINISTRADOR, jObject.getBoolean(Contants.KEY_ES_ADMINISTRADOR));
 				PreferenceManager.setValue(Contants.KEY_CARGO, jObject.getString(Contants.KEY_CARGO));
+                PreferenceManager.setValue(Contants.KEY_DESCUENTO_MAXIMO, jObject.getInt(Contants.KEY_DESCUENTO_MAXIMO));
 			} catch (HttpResponseException e) {
 				if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
 					return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
@@ -130,7 +226,7 @@ public class Agente {
         catch(Exception ex)
         {
             ex.printStackTrace();
-            return SyncAdapter.SYNC_EVENT_ERROR;
+            //return SyncAdapter.SYNC_EVENT_ERROR;
         }
 
         return SyncAdapter.SYNC_EVENT_SUCCESS;

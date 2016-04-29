@@ -16,6 +16,8 @@ public class Contants {
     public final static int GENERAL_TABLE_MOTIVO_PERMISO = 1042;
     public final static int GENERAL_TABLE_ESTADO_PERMISO = 1043;
     public final static int GENERAL_TABLE_TIPO_MARCACION = 1044;
+    public final static int GENERAL_TABLE_MOTIVOS_ANULACION = 1706;
+    public final static int GENERAL_TABLE_TIPOS_TRANSACCION = 1621;
 	public final static String IMAGE_FOLDER = "imagesFolder";
     public final static String IMAGE_FOLDER_PRODUCTOS = "imagesFolderProducto";
     public final static String IMAGE_FOLDER_OPORTUNIDADES = "imagesFolderOportunidad";
@@ -45,6 +47,7 @@ public class Contants {
 	public final static String KEY_ES_AGENTE = "EsAgente";
 	public final static String KEY_ES_ADMINISTRADOR = "EsAdministrador";
     public final static String KEY_ID_SUPERVISOR = "IdSupervisor";
+    public final static String KEY_DESCUENTO_MAXIMO = "DescuentoMaximo";
 	public final static String KEY_CARGO = "Cargo";
     public final static String KEY_FOTO = "Foto";
     public final static String KEY_GPS_NOTIFICATION = "NotificationGPS";
@@ -63,6 +66,32 @@ public class Contants {
 	public final static String KEY_CLIENT = "ClientName";
     public final static String KEY_APP_INSTANCE_ID = "TokenId";
     public final static String KEY_MARACIONES_DISTANCIA = "MarcacionDistance";
+    public final static String KEY_MONEDA_SIMBOLO = "Simbolo";
+    public final static String KEY_ID_MONEDA = "IdMoneda";
+    public final static String KEY_ID_CAJA = "IdCaja";
+    public final static String KEY_CAJA = "Descripcion";
+    public final static String KEY_ID_EMPRESA = "IdEmpresa";
+    public final static String KEY_ID_ESTABLECIMIENTO = "IdEstablecimiento";
+    public final static String KEY_ID_PUNTO_OPERACION = "IdPuntoOperacion";
+    public final static String KEY_AUTORIZACION_SRI = "AutorizacionSRI";
+    public final static String KEY_VIGENCIA_AUTORIZACION_SRI_INICIO = "VigenciaAutorizacionSRIInicio";
+    public final static String KEY_VIGENCIA_AUTORIZACION_SRI_FIN = "VigenciaAutorizacionSRIFin";
+    public final static String KEY_SECUENCIA_FACTURA = "SecuenciaFactura";
+    public final static String KEY_SECUENCIA_NOTA_CREDITO = "SecuenciaNotaCredito";
+    public final static String KEY_SECUENCIA_PEDIDO = "SecuenciaPedido";
+    public final static String KEY_SECUENCIA_COTIZACION = "SecuenciaCotizacion";
+    public final static String KEY_EMPRESA = "Empresa";
+    public final static String KEY_RUC = "RUC";
+    public final static String KEY_DIRECCION = "Dirección";
+    public final static String KEY_TELEFONO = "Telefono";
+    public final static String KEY_ESTABLECIMIENTO = "Establecimiento";
+    public final static String KEY_SERIE = "Serie";
+    public final static String KEY_NOMBRE_PUNTO_OPERACION = "NombrePuntoOperacion";
+    public final static String KEY_ANDROID_ID = "AndroidID";
+    public final static String KEY_TRANSACCION_FACTURA = "FA";
+    public final static String KEY_TRANSACCION_NOTA_CREDITO = "NC";
+    public final static String KEY_TRANSACCION_COTIZACION = "CT";
+    public final static String KEY_TRANSACCION_PEDIDO = "PD";
 
     public final static String CAMPO_FECHA_NACIMIENTO = "FecNac";
     public final static String CAMPO_GENERO = "Gen";
@@ -103,8 +132,44 @@ public class Contants {
     public final static int IS_CREACION = 1;
     public final static int IS_MODIFICACION = 2;
     public final static int IS_GESTION = 3;
-	
-	public final static String APPLICATION_ID = "AGENDACOMERCial";
+
+    public final static String POS_ALLOWDECIM = "ALLOWDECIM"; //Permitir decimales en cantidades
+    public final static String POS_CHAPRICPRO = "CHAPRICPRO"; //Cambiar precio a productos solo que sea de tipo servicio = 2
+    public final static String POS_FINALCONSU = "FINALCONSU"; //Id del consumidor final
+    public final static String POS_FINALMOUNT = "FINALMOUNT"; //Monto máximo para facturación de consumidor final
+    public final static String POS_GENERATENC = "GENERATENC"; //Hasta cuando días de hecho un documento puedes realizar la nota de crédito
+    public final static String POS_NULLOTHDAY = "NULLOTHDAY"; //Permite anular facturas de días anteriores si no tiene cierre y no se ha sincronizado
+    public final static String POS_PRICE0 = "PRICE0"; //Permite productos con precio 0 siempre que la factura tenga un valor > 0
+    public final static String POS_PRINTARQ = "PRINTARQ"; //Permite imprimir arqueo de caja
+    public final static String POS_PRINTCOPY = "PRINTCOPY"; //Permite imprimir una copia seguida de la original
+    public final static String POS_PRINTCTRAP = "PRINTCTRAP"; //Indica si imprime o no al aperturar caja
+    public final static String POS_PRINTCTRCC = "PRINTCTRCC"; //Indica si imprime o no al cerrar caja
+    public final static String POS_PRINTNULLI = "PRINTNULLI"; //Imprimir al anular
+    public final static String POS_REQUEMOTIV = "REQUEMOTIV"; //Requiere ingresar motivo anulación o nota de crédito
+    public final static String POS_ROUNDSPECI = "ROUNDSPECI"; //Bit que define el redondeo de Costa Rica
+    public final static String POS_ROUNDCAB = "ROUNDCAB"; //Redondeo en los valores de cabecera de transacción
+    public final static String POS_ROUNDDET = "ROUNDDET"; //Redondeo en los valores de detalle de la transacción
+    public final static String POS_USECASHFUN = "USECASHFUN"; //Usa fondo de caja (Para apertura de caja en 0)
+    public final static String POS_USENC = "USENC"; //Días de uso de la nota de crédito
+    public final static String POS_VALNCCUST = "VALNCCUST"; //Validar si la nota de crédito puede ser a consumidor final o no
+    public final static String POS_DIGITPOS = "DIGITPOS"; //Formato de impresión de la caja
+    public final static String POS_DIGISTORE = "DIGISTORE"; //Formato de impresión del establecimiento
+    public final static String POS_DIGITRANS = "DIGITRANS"; //Formato de impresión de la transacción
+    public final static String POS_IMPREDOC = "IMPREDOC"; //Si emite o no documento para impresión
+    public final static String POS_LENPAPER = "LENPAPER"; //Cantidad de letras de papel de factura
+    public final static String POS_PRINTMODE = "PRINTMODE"; //0 para no imprimir, 1 para impresora Bluetooth, 2 para impresora en red.
+    public final static String POS_USEAUTORTC = "USEAUTORTC"; //Si se debe de mostrar o no el codigo de autorización de tarjeta de crédito al pagar
+    public final static String POS_USEBANCOTC = "USEBANCOTC"; //Usa banco en el pago de tarjeta de crédito
+    public final static String POS_USEDIFERTC = "USEDIFERTC"; //Usa diferido en el pago de tarjeta de crédito
+    public final static String POS_USELOTETC = "USELOTETC"; //Usa el campo de lote de pago de tarjeta de crédito
+    public final static String POS_USEMARCATC = "USEMARCATC"; //Usa marca de tarjeta de crédito en pagos
+    public final static String POS_USENUMTC = "USENUMTC"; //Usa número de tarjeta de crédito
+    public final static String POS_USENUMCHEQ = "USENUMCHEQ"; //Usa número de cheque
+    public final static String POS_USEBANCHEQ = "USEBANCHEQ"; //Usa banco en forma de pago cheque
+    public final static String POS_USECUECHEQ = "USECUECHEQ"; //Usa número de cuenta en forma de pago cheque
+    public final static String POS_ROUNDNUM = "ROUNDNUM"; //Valor a redondear en descuentos especiales
+
+    public final static String APPLICATION_ID = "AGENDACOMERCial";
 	
 	public final static double LATITUD = -2.1637531;
 	public final static double LONGITUD = -79.9623577;

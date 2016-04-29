@@ -28,7 +28,9 @@
 	  Pendiente BOOLEAN,
       FechaUltimaVisita INTEGER,
       AgenteUltimaVisita TEXT,
-      FechaProximaVisita INTEGER
+      FechaProximaVisita INTEGER,
+        ExentoImpuesto BOOLEAN,
+        CiudadanoOro BOOLEAN
       )
 	</statement>
 	<statement>
@@ -466,11 +468,40 @@
         IdPedido INTEGER,
         _IdAgenda INTEGER,
         IdAgenda INTEGER,
+        _IdCliente INTEGER,
         IdCliente INTEGER,
         ValorTotal REAL,
         Email TEXT,
         Estado TEXT,
-        FechaCreacion INTEGER
+        FechaCreacion INTEGER,
+        TotalDescuentos REAL,
+        TotalImpuestos REAL,
+        Redondeo REAL,
+        Subtotal REAL,
+        SubtotalSinDescuento REAL,
+        Excedente REAL,
+        TipoDocumento TEXT,
+        BaseImponible REAL,
+        BaseImponibleCero REAL,
+        Observaciones TEXT,
+        MotivoAnulacion TEXT,
+        ObservacionAnulacion TEXT,
+        _IdDocumentoRef INTEGER,
+        IdDocumentoRef INTEGER,
+        FechaAnulacion INTEGER,
+        TotalImpuesto2 REAL,
+        TotalImpuesto3 REAL,
+        TotalImpuesto4 REAL,
+        _IdControlCaja INTEGER,
+        Pendiente BOOLEAN,
+        TieneNotaCreditoPOSRP3 BOOLEAN
+        )
+    </statement>
+    <statement>
+        CREATE VIRTUAL TABLE tbPedidoExt USING fts4 (
+        Nombre,
+        NumeroDocumento,
+        tokenize=porter
         )
     </statement>
     <statement>
@@ -484,7 +515,26 @@
         ValorUnitario REAL,
         Cantidad INTEGER,
         ValorTotal REAL,
-        URLFoto TEXT
+        URLFoto TEXT,
+        Subtotal REAL,
+        SubtotalSinDescuento REAL,
+        SubtotalSinImpuesto REAL,
+        BaseImponible REAL,
+        BaseImponibleCero REAL,
+        PorcDescOro REAL,
+        ValorDescOro REAL,
+        ValorDescOroTotal REAL,
+        PorcDescManual REAL,
+        ValorDescManual REAL,
+        ValorDescManualTotal REAL,
+        ValorDescAutomatico REAL,
+        ValorDescAutomaticoTotal REAL,
+        PorcDescAutomatico REAL,
+        PorcImpuestoIvaVenta REAL,
+        ValorImpuestoIvaVenta REAL,
+        ValorImpuestoIvaVentaTotal REAL,
+        CantidadDevolucion INTEGER,
+        BaseICE REAL
         )
     </statement>
     <statement>
@@ -493,7 +543,14 @@
         IdProducto INTEGER,
         ValorUnitario REAL,
         URLFoto TEXT,
-        IdSubCategoria INTEGER
+        IdSubCategoria INTEGER,
+        CodigoExterno TEXT,
+        PorcentajeDescuentoOro REAL,
+        PorcentajeDescuento REAL,
+        PrecioConDescuento REAL,
+        PorcentajeImpuesto REAL,
+        PrecioConImpuesto REAL,
+        IdBeneficio INTEGER
         )
     </statement>
     <statement>
@@ -515,6 +572,91 @@
         IdSubCategoria INTEGER,
         IdCategoria INTEGER,
         Descripcion TEXT
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbFormaPago(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdFormaPago INTEGER,
+        Descripcion TEXT,
+        Estado TEXT
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbPago(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdPago INTEGER,
+        IdPedido INTEGER,
+        _IdPedido INTEGER,
+        IdFormaPago INTEGER,
+        Observacion TEXT,
+        Valor REAL,
+        IdBanco INTEGER,
+        IdMarcaTarjeta INTEGER,
+        NumeroCuenta TEXT,
+        NumeroDocumento TEXT,
+        AutorizadorTarjeta INTEGER,
+        IdTipoDiferido INTEGER,
+        CodigoSeguridad INTEGER
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbControlCaja(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdCaja INTEGER,
+        IdControlCaja INTEGER,
+        IdAgente INTEGER,
+        FechaApertura INTEGER,
+        FechaCierre INTEGER,
+        ValorApertura REAL,
+        ValorCierre REAL
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbProductoCodigo(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        CodigoExterno TEXT,
+        Codigo TEXT
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbBanco(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdBanco INTEGER,
+        Descripcion TEXT
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbMarcaTarjeta(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdMarcaTarjeta INTEGER,
+        Descripcion TEXT
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbTarjeta(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdBanco INTEGER,
+        IdMarcaTarjeta INTEGER,
+        Interna INTEGER
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbTipoDiferido(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdTipoDiferido INTEGER,
+        Descripcion TEXT,
+        Cuotas INTEGER,
+        TipoCredito TEXT
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbTarjetaComision(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdEmpresa INTEGER,
+        IdBanco INTEGER,
+        IdMarcaTarjeta INTEGER,
+        IdTipoDiferido INTEGER
         )
     </statement>
 </sql>

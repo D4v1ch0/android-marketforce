@@ -24,14 +24,24 @@ public class ProductoListActivity extends BaseActivity {
         setHomeAsUpEnabled(true, true);
 
         int idCategoria = -1;
-        if(getIntent().getExtras() != null)
+        String tipo = "default";
+        if(getIntent().getExtras() != null) {
             idCategoria = getIntent().getExtras().getInt(CategoriaFragment.ARG_IDCATEGORIA, -1);
+            tipo = getIntent().getExtras().getString(ProductoListFragment.ARG_BUSQUEDA, "default");
+        }
 
 
         setContentView(R.layout.layout_simple_content);
         if (!hasFragment(rp3.core.R.id.content)) {
-            ProductoListFragment newFragment = ProductoListFragment.newInstance(idCategoria);
-            setFragment(rp3.core.R.id.content, newFragment);
+            if(tipo.equalsIgnoreCase("sku")) {
+                ProductoListFragment newFragment = ProductoListFragment.newInstance(tipo);
+                setFragment(rp3.core.R.id.content, newFragment);
+            }
+            else
+            {
+                ProductoListFragment newFragment = ProductoListFragment.newInstance(idCategoria);
+                setFragment(rp3.core.R.id.content, newFragment);
+            }
         }
     }
 

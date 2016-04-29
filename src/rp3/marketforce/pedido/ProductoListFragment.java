@@ -31,6 +31,7 @@ import rp3.marketforce.models.pedido.Producto;
 public class ProductoListFragment extends BaseFragment implements ProductFragment.ProductAcceptListener {
 
     public static final String ARG_PRODUCTO = "Producto";
+    public static final String ARG_BUSQUEDA = "busqueda";
 
     private JSONObject jsonObject;
     private LoaderProductos loaderProductos;
@@ -40,11 +41,21 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
     private String currentTransactionSearch;
     private ProductFragment productFragment;
     private int idSubCategoria = -1;
+    private String tipoBusqueda = "default";
 
     public static ProductoListFragment newInstance(int idCategoria)
     {
         Bundle bundle = new Bundle();
         bundle.putInt(CategoriaFragment.ARG_IDCATEGORIA, idCategoria);
+        ProductoListFragment fragment = new ProductoListFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    public static ProductoListFragment newInstance(String busqueda)
+    {
+        Bundle bundle = new Bundle();
+        bundle.putString(ARG_BUSQUEDA, busqueda);
         ProductoListFragment fragment = new ProductoListFragment();
         fragment.setArguments(bundle);
         return fragment;
@@ -80,6 +91,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
     public void ejecutarConsulta(){
         Bundle args = new Bundle();
         args.putInt(LoaderProductos.INT_CATEGORIA, idSubCategoria);
+        args.putString(LoaderProductos.STRING_BUSQUEDA, tipoBusqueda);
         executeLoader(0, args, loaderProductos);
     }
 
@@ -90,6 +102,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
         headerList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
         idSubCategoria = getArguments().getInt(CategoriaFragment.ARG_IDCATEGORIA, -1);
+        tipoBusqueda = getArguments().getString(ARG_BUSQUEDA, "default");
 
         if(adapter != null)
         {
@@ -137,6 +150,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
                     Bundle args = new Bundle();
                     args.putString(LoaderProductos.STRING_SEARCH, query);
                     args.putInt(LoaderProductos.INT_CATEGORIA, idSubCategoria);
+                    args.putString(LoaderProductos.STRING_BUSQUEDA, tipoBusqueda);
                     executeLoader(0, args, loaderProductos);
                     return true;
                 }
@@ -149,6 +163,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
                             Bundle args = new Bundle();
                             args.putString(LoaderProductos.STRING_SEARCH, "");
                             args.putInt(LoaderProductos.INT_CATEGORIA, idSubCategoria);
+                            args.putString(LoaderProductos.STRING_BUSQUEDA, tipoBusqueda);
                             executeLoader(0, args, loaderProductos);
                         } catch (Exception ex) {
 
@@ -177,6 +192,23 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
             jsonObject.put("f", transaction.getUrlFoto());
             jsonObject.put("c", transaction.getCantidad());
             jsonObject.put("v", transaction.getValorTotal());
+            jsonObject.put("pdo", transaction.getPorcentajeDescuentoOro());
+            jsonObject.put("pdm", transaction.getPorcentajeDescuentoManual());
+            jsonObject.put("vdm", transaction.getValorDescuentoManual());
+            jsonObject.put("vdmt", transaction.getValorDescuentoManualTotal());
+            jsonObject.put("pda", transaction.getPorcentajeDescuentoAutomatico());
+            jsonObject.put("vda", transaction.getValorDescuentoAutomatico());
+            jsonObject.put("vdat", transaction.getValorDescuentoAutomaticoTotal());
+            jsonObject.put("pi", transaction.getPorcentajeImpuesto());
+            jsonObject.put("vi", transaction.getValorImpuesto());
+            jsonObject.put("vit", transaction.getValorImpuestoTotal());
+            jsonObject.put("bi", transaction.getBaseImponible());
+            jsonObject.put("bic", transaction.getBaseImponibleCero());
+            jsonObject.put("s", transaction.getSubtotal());
+            jsonObject.put("ssd", transaction.getSubtotalSinDescuento());
+            jsonObject.put("ssi", transaction.getSubtotalSinImpuesto());
+            jsonObject.put("cod", transaction.getProducto().getCodigoExterno());
+
         }
         catch (Exception ex) {
         }
@@ -186,8 +218,9 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
     public class LoaderProductos implements LoaderManager.LoaderCallbacks<List<Producto>> {
 
         public static final String STRING_SEARCH = "string_search";
+        public static final String STRING_BUSQUEDA = "tipo_busqueda";
         public static final String INT_CATEGORIA = "int_categoria";
-        private String Search;
+        private String Search, tipo;
         private int idSubCategoria;
 
         @Override
@@ -196,7 +229,8 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
 
             Search = bundle.getString(STRING_SEARCH);
             idSubCategoria = bundle.getInt(INT_CATEGORIA);
-            return new ProductoLoader(getActivity(), getDataBase(), Search, idSubCategoria);
+            tipo = bundle.getString(STRING_BUSQUEDA);
+            return new ProductoLoader(getActivity(), getDataBase(), Search, idSubCategoria, tipo);
 
         }
 
@@ -223,6 +257,13 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
                         jsonObject.put("p", prod.getValorUnitario());
                         jsonObject.put("id", prod.getIdProducto());
                         jsonObject.put("f", prod.getUrlFoto());
+                        jsonObject.put("ce", prod.getCodigoExterno());
+                        jsonObject.put("b", prod.getIdBeneficio());
+                        jsonObject.put("pdo", prod.getPorcentajeDescuentoOro() + "");
+                        jsonObject.put("pd", prod.getPorcentajeDescuento() + "");
+                        jsonObject.put("pi", prod.getPorcentajeImpuesto());
+                        jsonObject.put("vd", prod.getPrecioDescuento());
+                        jsonObject.put("vi", prod.getPrecioImpuesto());
 
                         productFragment = ProductFragment.newInstance(jsonObject.toString());
                         productFragment.setCancelable(false);

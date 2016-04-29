@@ -587,7 +587,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			else
 				agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getIdAgenda(), agd.getIdRuta(), false));
 
-			agd.setPedido(Pedido.getPedidoByAgenda(db, agd.getID()));
+			//agd.setPedido(Pedido.getPedidoByAgenda(db, agd.getID()));
 			
 		}
         c.close();
@@ -645,7 +645,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
             else
                 agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getIdAgenda(), agd.getIdRuta(), false));
 
-			agd.setPedido(Pedido.getPedidoByAgenda(db, agd.getID()));
+			//agd.setPedido(Pedido.getPedidoByAgenda(db, agd.getID()));
         }
         c.close();
         return agd;

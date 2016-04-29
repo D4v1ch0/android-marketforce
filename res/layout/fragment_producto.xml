@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Medium Text"
+                android:text="Pantaloneta de Lino Marca Acme"
                 android:id="@+id/producto_descripcion"
                 android:lines="3"
                 android:maxLines="3"
@@ -40,8 +40,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Medium Text"
+                android:text="Precio: ₡ 120.000"
                 android:id="@+id/producto_precio" />
+
         </LinearLayout>
     </LinearLayout>
 
@@ -66,7 +67,46 @@
             android:id="@+id/producto_cantidad"
             android:layout_weight="0.65"
             android:inputType="number" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_descuento_points"
+            android:id="@+id/textView118"
+            android:layout_weight="0.35" />
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:id="@+id/producto_descuento_manual"
+            android:layout_weight="0.65"
+            android:inputType="number"
+            android:enabled="true"
+            android:editable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:maxLength="2" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="%"
+            android:id="@+id/textView83"
+            android:layout_marginRight="5dp" />
+
     </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Precio Total: ₡ 120.000"
+        android:id="@+id/producto_precio_final"
+        android:layout_margin="5dp"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:orientation="horizontal"

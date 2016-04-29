@@ -306,6 +306,12 @@
                     <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
+                    <name>GetDocRef</name>
+                    <action>pedido/GetDocRef?ultimaFechaActualizacion=@ultimaFechaActualizacion</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
                     <name>GetProductos</name>
                     <action>producto/GetProductos?ultimaFechaActualizacion=@ultimaFechaActualizacion</action>
                     <webMethod>GET</webMethod>
@@ -320,6 +326,96 @@
                 <method>
                     <name>GetSubcategorias</name>
                     <action>producto/GetSubcategorias?ultimaFechaActualizacion=@ultimaFechaActualizacion</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetMoneda</name>
+                    <action>caja/GetMoneda</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetCaja</name>
+                    <action>caja/GetCaja?androidID=@androidID</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetFormasPago</name>
+                    <action>caja/GetFormaPagos</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetTarjetaComisiones</name>
+                    <action>caja/GetTarjetaComisiones</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetTiposDiferidos</name>
+                    <action>caja/GetTiposDiferidos</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetTarjetas</name>
+                    <action>caja/GetTarjetas</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetMarcaTarjetas</name>
+                    <action>caja/GetMarcaTarjetas</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetBancos</name>
+                    <action>caja/GetBancos</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetTransacciones</name>
+                    <action>caja/GetTransacciones</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>AnularPedido</name>
+                    <action>pedido/AnulaPedido</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GuardarCaja</name>
+                    <action>caja/InsertControl</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetControl</name>
+                    <action>caja/GetControl?idCaja=@idCaja&amp;idEmpresa=@idEmpresa&amp;idEstablecimiento=@idEstablecimiento&amp;idPuntoOperacion=@idPuntoOperacion</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>CerrarCaja</name>
+                    <action>caja/CerrarCaja?idControlCaja=@idControlCaja</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetDescuento</name>
+                    <action>agente/getDescuento?user=@user</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetGrupo</name>
+                    <action>marcacion/GetGrupo</action>
                     <webMethod>GET</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>

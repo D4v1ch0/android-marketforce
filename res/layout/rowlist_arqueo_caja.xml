@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp">
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Efectivo"
+        android:id="@+id/arqueo_descripcion"
+        android:layout_weight="1"
+        android:textSize="@dimen/text_xsmall_size"
+        android:lines="2"
+        android:maxLines="2"
+        android:gravity="center_vertical" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="5"
+        android:id="@+id/arqueo_cantidad"
+        android:layout_weight="1"
+        android:textSize="@dimen/text_xsmall_size"
+        android:lines="2"
+        android:maxLines="2"
+        android:gravity="center" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="₡ 120.000"
+        android:id="@+id/arqueo_valor"
+        android:layout_weight="1"
+        android:textSize="@dimen/text_xsmall_size"
+        android:gravity="center_vertical|right" />
+</LinearLayout>

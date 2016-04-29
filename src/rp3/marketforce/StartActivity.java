@@ -22,6 +22,11 @@ import rp3.marketforce.models.ClienteDireccion;
 import rp3.marketforce.models.Contacto;
 import rp3.marketforce.models.Tarea;
 import rp3.marketforce.models.Ubicacion;
+import rp3.marketforce.models.pedido.ControlCaja;
+import rp3.marketforce.models.pedido.Pago;
+import rp3.marketforce.models.pedido.Pedido;
+import rp3.marketforce.models.pedido.PedidoDetalle;
+import rp3.marketforce.models.pedido.Producto;
 import rp3.marketforce.sync.Server;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.runtime.Session;
@@ -35,6 +40,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.provider.Settings;
 import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -60,8 +66,14 @@ public class StartActivity extends rp3.app.StartActivity{
 			Configuration.reinitializeConfiguration(context, DbOpenHelper.class);
 		Configuration.TryInitializeConfiguration(this, DbOpenHelper.class);
         Canal.getCanal(getDataBase(), "1");
-
-    }
+        
+        if(PreferenceManager.getString(Contants.KEY_ANDROID_ID, "").equalsIgnoreCase(""))
+        {
+            PreferenceManager.setValue(Contants.KEY_ANDROID_ID, Settings.Secure.getString(getContentResolver(),
+                    Settings.Secure.ANDROID_ID));
+        }
+		
+	}
 	
 	private void setServiceRecurring(){
 		Intent i = new Intent(this, EnviarUbicacionReceiver.class);
@@ -114,6 +126,13 @@ public class StartActivity extends rp3.app.StartActivity{
             AgendaTarea.deleteAll(getDataBase(), Contract.AgendaTarea.TABLE_NAME);
             AgendaTareaActividades.deleteAll(getDataBase(), Contract.AgendaTareaActividades.TABLE_NAME);
             Ubicacion.deleteAll(getDataBase(), Contract.Ubicacion.TABLE_NAME);
+            Pedido.deleteAll(getDataBase(), Contract.Pedido.TABLE_NAME);
+            Pedido.PedidoExt.deleteAll(getDataBase(), Contract.PedidoExt.TABLE_NAME);
+            PedidoDetalle.deleteAll(getDataBase(), Contract.PedidoDetalle.TABLE_NAME);
+            Pago.deleteAll(getDataBase(), Contract.Pago.TABLE_NAME);
+            Producto.deleteAll(getDataBase(), Contract.Producto.TABLE_NAME);
+            Producto.ProductoExt.deleteAll(getDataBase(), Contract.ProductoExt.TABLE_NAME);
+            ControlCaja.deleteAll(getDataBase(), Contract.ControlCaja.TABLE_NAME);
             //GeopoliticalStructure.deleteAll(getDataBase(), rp3.data.models.Contract.GeopoliticalStructure.TABLE_NAME);
             //GeopoliticalStructureExt.deleteAll(getDataBase(), rp3.data.models.Contract.GeopoliticalStructureExt.TABLE_NAME);
             PreferenceManager.setValue(Contants.KEY_IDAGENTE, 0);

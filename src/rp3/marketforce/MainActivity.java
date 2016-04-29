@@ -44,6 +44,9 @@ import rp3.marketforce.models.Ubicacion;
 import rp3.marketforce.models.oportunidad.Oportunidad;
 import rp3.marketforce.oportunidad.OportunidadFragment;
 import rp3.marketforce.models.marcacion.Justificacion;
+import rp3.marketforce.models.pedido.ControlCaja;
+import rp3.marketforce.models.pedido.ProductoCodigo;
+import rp3.marketforce.pedido.ControlCajaFragment;
 import rp3.marketforce.pedido.PedidoFragment;
 import rp3.marketforce.radar.RadarFragment;
 import rp3.marketforce.recorrido.RecorridoFragment;
@@ -70,6 +73,9 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.speech.tts.TextToSpeech;
@@ -102,6 +108,7 @@ public class MainActivity extends rp3.app.NavActivity{
     public static final int NAV_JUSTIFICACIONES = 15;
 
     public static final int CERRAR_SESION_DIALOG = 12;
+	public static final int CERRAR_CAJA_DIALOG = 13;
 
     public static final String TO_AGENDAS	 	= "toAgendas";
 	public String lastTitle;
@@ -200,6 +207,11 @@ public class MainActivity extends rp3.app.NavActivity{
 		catch (Exception ex)
 		{}
 
+		ControlCaja controlCaja = ControlCaja.getControlCajaActiva(getDataBase());
+		if(controlCaja != null && controlCaja.getIdAgente() != PreferenceManager.getInt(Contants.KEY_IDAGENTE))
+		{
+			showDialogConfirmation(CERRAR_CAJA_DIALOG, R.string.message_cerrar_caja_activa, R.string.title_cerrar_caja_activa);
+		}
 	}
 
     @Override
@@ -344,7 +356,18 @@ public class MainActivity extends rp3.app.NavActivity{
                 lastTitle = item.getTitle();
                 break;
             case NAV_CERRAR_SESION:
-                showDialogConfirmation(CERRAR_SESION_DIALOG, R.string.message_cerrar_sesion, R.string.title_option_setcerrar_sesion);
+				if(ControlCaja.getControlCajaActiva(getDataBase()) == null)
+                	showDialogConfirmation(CERRAR_SESION_DIALOG, R.string.message_cerrar_sesion, R.string.title_option_setcerrar_sesion);
+				else {
+					try {
+						Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+						Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+						r.play();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					Toast.makeText(this, "Para cerrar sesión, es necesario que cierre caja.", Toast.LENGTH_LONG).show();
+				}
                 break;
             case NAV_OPORTUNIDAD:
                 setNavFragment(OportunidadFragment.newInstance(),
@@ -359,6 +382,7 @@ public class MainActivity extends rp3.app.NavActivity{
             default:
                 break;
         }
+		setTitle(lastTitle);
 	}
 
     @Override
@@ -381,6 +405,14 @@ public class MainActivity extends rp3.app.NavActivity{
                 finish();
                 Session.logOut();
                 break;
+			case CERRAR_CAJA_DIALOG:
+				ControlCaja controlCaja = ControlCaja.getControlCajaActiva(getDataBase());
+				Bundle bundle2 = new Bundle();
+				bundle2.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_CERRAR_CAJA);
+				bundle2.putLong(ControlCajaFragment.ARG_CONTROL, controlCaja.getID());
+				requestSync(bundle2);
+
+				break;
         }
     }
 
@@ -421,7 +453,7 @@ public class MainActivity extends rp3.app.NavActivity{
 			{
 				int startNav = NAV_DASHBOARD;			
 				setNavigationSelection(startNav);
-				getActionBar().setTitle(getString(R.string.title_option_setinicio));
+				setTitle(getString(R.string.title_option_setinicio));
 				lastTitle = getString(R.string.title_option_setinicio);
 			}
 		}
@@ -433,7 +465,7 @@ public class MainActivity extends rp3.app.NavActivity{
 			{
 				int startNav = NAV_DASHBOARD;			
 				setNavigationSelection(startNav);
-				getActionBar().setTitle(getString(R.string.title_option_setinicio));
+				setTitle(getString(R.string.title_option_setinicio));
 				lastTitle = getString(R.string.title_option_setinicio);
 			}
 		}

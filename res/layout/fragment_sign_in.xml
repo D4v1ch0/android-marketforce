@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/hint_user"
+            android:id="@+id/textView22"
+            android:textSize="@dimen/text_large_size"
+            android:textStyle="bold"
+            android:textColor="@color/color_text_sky_blue"
+            android:layout_weight="0.33" />
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/sign_in_user"
+            android:layout_weight="0.66" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/hint_password"
+            android:id="@+id/textView23"
+            android:textSize="@dimen/text_large_size"
+            android:textStyle="bold"
+            android:textColor="@color/color_text_sky_blue"
+            android:layout_weight="0.33" />
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:id="@+id/sign_in_pass"
+            android:layout_weight="0.66" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/label_button_aceptar_act"
+            android:id="@+id/sign_ok"
+            android:layout_gravity="center_horizontal"
+            style="@style/Widget.Button.Theme"
+            android:layout_weight="1"
+            android:layout_margin="5dp" />
+
+        <Button
+            style="@style/Widget.Button.Theme"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/label_button_cancelar"
+            android:id="@+id/sign_cancel"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:layout_margin="5dp" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_tipo_de_pago"
+            android:id="@+id/textView127"
+            android:layout_weight="1"
+            android:textColor="@color/color_text_sky_blue"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_small_size" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_formas_pago"
+            android:id="@+id/textView128"
+            android:layout_weight="1"
+            android:textColor="@color/color_text_sky_blue"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_small_size" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_valor_total"
+            android:id="@+id/textView129"
+            android:layout_weight="1"
+            android:textColor="@color/color_text_sky_blue"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_small_size" />
+
+    </LinearLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/arqueo_list"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_total"
+            android:id="@+id/textView130"
+            android:layout_weight="1"
+            android:textColor="@color/color_text_sky_blue"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_small_size" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="0"
+            android:id="@+id/arqueo_total_transacciones"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_small_size"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="₡ 0.00"
+            android:id="@+id/arqueo_total"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_small_size"
+            android:gravity="right" />
+    </LinearLayout>
+</LinearLayout>

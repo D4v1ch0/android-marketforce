@@ -4,7 +4,52 @@
     android:layout_height="wrap_content"
     android:baselineAligned="false"
     android:orientation="vertical"
-    android:padding="10dp" >
+    android:padding="10dp"
+    android:background="@drawable/bkg"
+    android:id="@+id/pedido_bkg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight=".7"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <TextView
+                style="@style/Widget.TextView.XSmall"
+                android:id="@+id/pedido_tipo_documento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="3dp"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/text_xsmall_size"
+                android:textStyle="bold"
+                android:textColor="@color/color_text_sky_blue"
+                android:text="Nota de Crédito" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical" >
+
+            <TextView
+                style="@style/Widget.TextView.XSmall"
+                android:id="@+id/pedido_numero_documento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="3dp"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/text_xsmall_size"
+                android:textStyle="bold"
+                android:textColor="@color/color_text_sky_blue"
+                android:text="N.- 001-001-000000001" />
+        </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,7 +66,7 @@
             android:singleLine="true"
             android:layout_marginRight="5dp"
             android:textSize="@dimen/text_large_size"
-            />
+            android:text="Rp3 Retail" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -32,7 +77,7 @@
                 android:layout_width="14dp"
                 android:layout_height="14dp"
                 android:id="@+id/pedido_estado"
-                android:src="@drawable/circle_pending" />
+                android:src="@drawable/circle_unvisited" />
         </LinearLayout>
 
     </LinearLayout>
@@ -44,9 +89,10 @@
         android:orientation="horizontal" >
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical" >
+            android:gravity="center_vertical"
+            android:layout_weight="1">
 
             <TextView
                 android:id="@+id/pedido_valor"
@@ -57,39 +103,64 @@
                 style="@style/Widget.TextView.XSmall"
                 android:textSize="@dimen/text_xsmall_size"
                 android:textStyle="bold"
-                android:textColor="@color/color_text_sky_blue" />
+                android:textColor="@color/color_text_sky_blue"
+                android:text="₡ 970.000" />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical" >
+
+            <TextView
+                style="@style/Widget.TextView.XSmall"
+                android:id="@+id/textView93"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textSize="@dimen/text_xsmall_size"
+                android:textColor="@color/color_text_sky_blue"
+                android:text="@string/label_cantidad2" />
+
+            <TextView
+                style="@style/Widget.TextView.XSmall"
+                android:id="@+id/pedido_items"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textSize="@dimen/text_xsmall_size"
+                android:layout_marginLeft="5dp"
+                android:text="5" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:id="@+id/pedido_sincronizar"
+            android:src="@drawable/ic_sincronizar_red" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight=".7"
-        android:gravity="center_vertical" >
-
-        <TextView
-            android:id="@+id/label_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            style="@style/Widget.TextView.XSmall"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:textSize="@dimen/text_xsmall_size"
-            android:textColor="@color/color_text_sky_blue"
-            android:text="@string/label_cantidad2" />
+        android:gravity="center_vertical">
 
         <TextView
             style="@style/Widget.TextView.XSmall"
-            android:id="@+id/pedido_items"
+            android:id="@+id/pedido_fecha"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="3dp"
             android:gravity="center_vertical"
-            android:ellipsize="end"
-            android:singleLine="true"
             android:textSize="@dimen/text_xsmall_size"
-            android:layout_marginLeft="5dp" />
+            android:textStyle="bold"
+            android:text="Jueves, 10 de Diciembre del 2015" />
     </LinearLayout>
 
 </LinearLayout>

@@ -1,6 +1,8 @@
 package rp3.marketforce.pedido;
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -10,23 +12,34 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 import rp3.app.BaseFragment;
 import rp3.configuration.PreferenceManager;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
+import rp3.marketforce.cliente.SignInFragment;
 import rp3.marketforce.models.pedido.PedidoDetalle;
+import rp3.marketforce.models.pedido.Producto;
+import rp3.marketforce.sync.Agente;
 import rp3.marketforce.utils.DrawableManager;
 
 /**
  * Created by magno_000 on 13/10/2015.
  */
 
-public class ProductFragment extends BaseFragment {
+public class ProductFragment extends BaseFragment implements SignInFragment.SignConfirmListener{
 
     public static String ARG_CODE = "Code";
     private ProductAcceptListener createFragmentListener;
     private JSONObject jsonObject;
     private DrawableManager DManager;
+    private double porcentajeDescManual = 0, valorDescManual = 0, valorDescManualTotal = 0, porcentajeDescAuto = 0, valorDescAuto = 0, valorDescAutoTotal = 0;
+    private DecimalFormat df;
+    private NumberFormat numberFormat, numberFormatInteger;
+    private SignInFragment signInFragment;
 
     public static ProductFragment newInstance(String jcode)
     {
@@ -50,6 +63,23 @@ public class ProductFragment extends BaseFragment {
 
     }
 
+    @Override
+    public void onSignSuccess(Bundle bundle) {
+        if(bundle.getInt(Agente.KEY_DESCUENTO) >= Integer.parseInt(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).getText().toString())) {
+            Toast.makeText(getContext(), "Usuario Autorizado.", Toast.LENGTH_LONG).show();
+            saveDetail();
+        }
+        else
+        {
+            Toast.makeText(getContext(), "Usuario No Autorizado.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onSignError(Bundle bundle) {
+
+    }
+
     public interface ProductAcceptListener{
         public void onDeleteSuccess(PedidoDetalle transaction);
         public void onAcceptSuccess(PedidoDetalle transaction);
@@ -59,6 +89,16 @@ public class ProductFragment extends BaseFragment {
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
 
+        df = new DecimalFormat("#.##");
+        df.setRoundingMode(RoundingMode.CEILING);
+        numberFormat = NumberFormat.getInstance();
+        numberFormat.setMaximumFractionDigits(2);
+        numberFormat.setMinimumFractionDigits(2);
+
+        numberFormatInteger = NumberFormat.getInstance();
+        numberFormatInteger.setMaximumFractionDigits(0);
+        numberFormatInteger.setMinimumFractionDigits(0);
+
         DManager = new DrawableManager();
         try {
         String code = getArguments().getString("Code");
@@ -66,10 +106,118 @@ public class ProductFragment extends BaseFragment {
             if(!jsonObject.isNull("c"))
                 ((EditText)rootView.findViewById(R.id.producto_cantidad)).setText(jsonObject.getString("c"));
             ((TextView)rootView.findViewById(R.id.producto_descripcion)).setText("Descripción: " + jsonObject.getString("d"));
-            ((TextView)rootView.findViewById(R.id.producto_precio)).setText("Precio: $ " + jsonObject.getString("p"));
+            ((TextView)rootView.findViewById(R.id.producto_precio)).setText("Precio: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(jsonObject.getDouble("vi")));
+            ((TextView)rootView.findViewById(R.id.producto_precio_final)).setText("Precio Total: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " 0");
             DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
                             rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_PRODUCTOS) + jsonObject.getString("f"),
                     (ImageView) rootView.findViewById(R.id.producto_imagen));
+            if(!jsonObject.isNull("pdm"))
+                ((EditText)rootView.findViewById(R.id.producto_descuento_manual)).setText(numberFormatInteger.format(jsonObject.getDouble("pdm") * 100));
+            ((EditText)rootView.findViewById(R.id.producto_descuento_manual)).addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (s.length() == 0)
+                        porcentajeDescManual = 0;
+                    else {
+                        porcentajeDescManual = Double.parseDouble(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).getText().toString()) / 100;
+                    }
+                    int cantidad = 0;
+                    if (((EditText) rootView.findViewById(R.id.producto_cantidad)).length() > 0)
+                        cantidad = Integer.parseInt(((EditText) rootView.findViewById(R.id.producto_cantidad)).getText().toString());
+
+                    try {
+                        porcentajeDescAuto = jsonObject.getDouble("pd");
+                        valorDescAuto = jsonObject.getDouble("p") * porcentajeDescAuto;
+                        valorDescAutoTotal = valorDescAuto * cantidad;
+                        valorDescManual = (jsonObject.getDouble("p") - valorDescAuto) * porcentajeDescManual;
+                        double precio_total = cantidad * jsonObject.getDouble("p");
+                        valorDescManualTotal = valorDescManual * cantidad;
+                        precio_total = precio_total - valorDescManualTotal - valorDescAutoTotal;
+                        precio_total = precio_total * (1 + Float.parseFloat(jsonObject.getString("pi")));
+                        ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("Precio Total: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(precio_total));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+            ((EditText)rootView.findViewById(R.id.producto_cantidad)).addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (s.length() == 0)
+                        ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("Precio Total: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " 0");
+                    else {
+                        int cantidad = Integer.parseInt(((EditText) rootView.findViewById(R.id.producto_cantidad)).getText().toString());
+                        if(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).length() > 0)
+                            porcentajeDescManual = Double.parseDouble(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).getText().toString()) / 100;
+                        try {
+                            porcentajeDescAuto = jsonObject.getDouble("pd");
+                            valorDescAuto = jsonObject.getDouble("p") * porcentajeDescAuto;
+                            valorDescAutoTotal = valorDescAuto * cantidad;
+                            valorDescManual = (jsonObject.getDouble("p") - valorDescAuto) * porcentajeDescManual;
+                            double precio_total = cantidad * jsonObject.getDouble("p");
+                            valorDescManualTotal = valorDescManual * cantidad;
+                            precio_total = precio_total - valorDescManualTotal - valorDescAutoTotal;
+                            precio_total = precio_total * (1 + Float.parseFloat(jsonObject.getString("pi")));
+                            ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("Precio Total: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(precio_total));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+            //jsonObject.put("c", prod.getCodigoExterno());
+            //jsonObject.put("b", prod.getIdBeneficio());
+            //jsonObject.put("pd", prod.getPorcentajeDescuento());
+            //jsonObject.put("pi", prod.getPorcentajeImpuesto());
+            //jsonObject.put("vd", prod.getPrecioDescuento());
+            //jsonObject.put("vi", prod.getPrecioImpuesto());
+
+            if(jsonObject.isNull("c"))
+                ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("Precio Total: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " 0");
+            else {
+                int cantidad = Integer.parseInt(((EditText) rootView.findViewById(R.id.producto_cantidad)).getText().toString());
+                if(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).length() > 0)
+                    porcentajeDescManual = Double.parseDouble(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).getText().toString()) / 100;
+                try {
+                    porcentajeDescAuto = jsonObject.getDouble("pd");
+                    valorDescAuto = jsonObject.getDouble("p") * porcentajeDescAuto;
+                    valorDescAutoTotal = valorDescAuto * cantidad;
+                    valorDescManual = (jsonObject.getDouble("p") - valorDescAuto) * porcentajeDescManual;
+                    double precio_total = cantidad * jsonObject.getDouble("p");
+                    valorDescManualTotal = valorDescManual * cantidad;
+                    precio_total = precio_total - valorDescManualTotal - valorDescAutoTotal;
+                    precio_total = precio_total * (1 + Float.parseFloat(jsonObject.getString("pi")));
+                    ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("Precio Total: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(precio_total));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            //Validaciones si es que tipo de documento es nota de credito
+            if(!jsonObject.isNull("tipo") && jsonObject.getString("tipo").equalsIgnoreCase("NC"))
+            {
+                ((EditText)rootView.findViewById(R.id.producto_descuento_manual)).setEnabled(false);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
             Toast.makeText(this.getContext(), "Código Inválido.", Toast.LENGTH_LONG).show();
@@ -103,28 +251,67 @@ public class ProductFragment extends BaseFragment {
         rootView.findViewById(R.id.producto_aceptar).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(((EditText) rootView.findViewById(R.id.producto_cantidad)).length() > 0) {
-                    PedidoDetalle detalle = new PedidoDetalle();
-                    detalle.setCantidad(Integer.parseInt(((EditText) rootView.findViewById(R.id.producto_cantidad)).getText().toString()));
-                    try {
-                        detalle.setDescripcion(jsonObject.getString("d"));
-                        detalle.setValorUnitario(jsonObject.getDouble("p"));
-                        detalle.setIdProducto(jsonObject.getInt("id"));
-                        detalle.setUrlFoto(jsonObject.getString("f"));
-                        detalle.setValorTotal(detalle.getValorUnitario() * detalle.getCantidad());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                if(((EditText) getRootView().findViewById(R.id.producto_cantidad)).length() > 0) {
+                    if(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).length() > 0 &&
+                            Integer.parseInt(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).getText().toString()) > PreferenceManager.getInt(Contants.KEY_DESCUENTO_MAXIMO))
+                    {
+                        //Toast.makeText(getContext(), "Su máximo descuento permitido es del " + PreferenceManager.getInt(Contants.KEY_DESCUENTO_MAXIMO) + "%.", Toast.LENGTH_LONG).show();
+                        signInFragment = new SignInFragment();
+                        signInFragment.type = "AuthDesc";
+                        showDialogFragment(signInFragment, "Autorizar Descuento", "Autorizar Descuento");
+                        return;
                     }
-
-                    createFragmentListener.onAcceptSuccess(detalle);
-                    dismiss();
+                    saveDetail();
                 }
                 else
                 {
                     Toast.makeText(getContext(), "Ingrese una cantidad", Toast.LENGTH_LONG).show();
                 }
-
             }
         });
+    }
+
+    private void saveDetail()
+    {
+        PedidoDetalle detalle = new PedidoDetalle();
+        detalle.setCantidad(Integer.parseInt(((EditText) getRootView().findViewById(R.id.producto_cantidad)).getText().toString()));
+        try {
+            detalle.setDescripcion(jsonObject.getString("d"));
+            detalle.setValorUnitario(jsonObject.getDouble("p"));
+            detalle.setIdProducto(jsonObject.getInt("id"));
+            detalle.setUrlFoto(jsonObject.getString("f"));
+            detalle.setSubtotal(detalle.getValorUnitario() * detalle.getCantidad());
+            detalle.setPorcentajeDescuentoOro(Double.parseDouble(jsonObject.getString("pdo")));
+            detalle.setPorcentajeDescuentoManual(porcentajeDescManual);
+            detalle.setValorDescuentoManual(valorDescManual);
+            detalle.setValorDescuentoAutomatico(valorDescAuto);
+            detalle.setValorDescuentoAutomaticoTotal(valorDescAutoTotal);
+            detalle.setValorDescuentoManualTotal(valorDescManualTotal);
+            detalle.setPorcentajeDescuentoAutomatico(porcentajeDescAuto);
+            detalle.setPorcentajeImpuesto(Float.parseFloat(jsonObject.getString("pi")));
+            detalle.setValorImpuesto(Float.parseFloat(jsonObject.getString("pi")) * (Float.parseFloat(jsonObject.getString("p")) - valorDescManual - valorDescAuto));
+            detalle.setValorImpuestoTotal(detalle.getValorImpuesto() * detalle.getCantidad());
+            detalle.setProducto(Producto.getProductoIdServer(getDataBase(), detalle.getIdProducto()));
+            detalle.setValorTotal(detalle.getSubtotal() - detalle.getValorDescuentoAutomaticoTotal() - detalle.getValorDescuentoManualTotal() + detalle.getValorImpuestoTotal());
+            detalle.setBaseImponible(jsonObject.getDouble("pi") == 0 ? 0 : detalle.getSubtotal() - detalle.getValorDescuentoAutomaticoTotal() - detalle.getValorDescuentoManualTotal());
+            detalle.setBaseImponibleCero(jsonObject.getDouble("pi") == 0 ? detalle.getSubtotal() - detalle.getValorDescuentoAutomaticoTotal() - detalle.getValorDescuentoManualTotal() : 0);
+            detalle.setSubtotalSinDescuento(detalle.getSubtotal());
+            detalle.setSubtotalSinImpuesto(detalle.getSubtotal() - detalle.getValorDescuentoAutomaticoTotal() - detalle.getValorDescuentoManualTotal());
+
+            //Validaciones si es que tipo de documento es nota de credito
+            if(!jsonObject.isNull("tipo") && jsonObject.getString("tipo").equalsIgnoreCase("NC"))
+            {
+                if(detalle.getCantidad() > jsonObject.getInt("c"))
+                {
+                    Toast.makeText(getContext(), "No puede devolver mas unidades de lo que se facturó.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        createFragmentListener.onAcceptSuccess(detalle);
+        dismiss();
     }
 }

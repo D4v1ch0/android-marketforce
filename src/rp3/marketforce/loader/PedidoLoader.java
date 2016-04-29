@@ -30,7 +30,7 @@ public class PedidoLoader extends
         if(search == null || search.length() <= 0)
             result = Pedido.getPedidos(db);
         else
-            result = Pedido.getPedidos(db);
+            result = Pedido.getPedidos(db, search);
 
 
         return result;

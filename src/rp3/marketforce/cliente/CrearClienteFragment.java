@@ -42,6 +42,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -67,6 +68,7 @@ import rp3.data.models.IdentificationType;
 import rp3.maps.utils.SphericalUtil;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
+import rp3.marketforce.db.Contract;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.Campo;
 import rp3.marketforce.models.Canal;
@@ -74,6 +76,7 @@ import rp3.marketforce.models.Cliente;
 import rp3.marketforce.models.ClienteDireccion;
 import rp3.marketforce.models.Contacto;
 import rp3.marketforce.models.TipoCliente;
+import rp3.marketforce.models.pedido.Pedido;
 import rp3.marketforce.ruta.CrearVisitaActivity;
 import rp3.marketforce.ruta.CrearVisitaFragment;
 import rp3.marketforce.sync.SyncAdapter;
@@ -87,7 +90,7 @@ import rp3.util.IdentificationValidator;
 import rp3.util.LocationUtils;
 import rp3.widget.ViewPager;
 
-public class CrearClienteFragment extends BaseFragment {
+public class CrearClienteFragment extends BaseFragment implements SignInFragment.SignConfirmListener {
 
     boolean rotated = false;
 
@@ -122,6 +125,8 @@ public class CrearClienteFragment extends BaseFragment {
 	public List<String> contactPhotos;
 	private List<GeopoliticalStructure> ciudades;
 	private GeopoliticalStructureAdapter adapter;
+    private SignInFragment signInFragment;
+    private int flagAuth = -1;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -151,8 +156,8 @@ public class CrearClienteFragment extends BaseFragment {
 			if(Validaciones() && CamposObligatorios())
 			{
 				Grabar();
-                if(tipo == Contants.IS_MODIFICACION)
-				    finish();
+                if(tipo == Contants.IS_MODIFICACION || !ConnectionUtils.isNetAvailable(getActivity()))
+                    ((CrearClienteActivity)getActivity()).finishOnResult(idCliente);
 			}
 			break;
 		case R.id.action_cancel:
@@ -375,6 +380,8 @@ public class CrearClienteFragment extends BaseFragment {
         cli.setIdentificacion(((EditText) getRootView().findViewById(R.id.cliente_identificacion)).getText().toString());
         cli.setTipoPersona(((GeneralValue) ((Spinner) getRootView().findViewById(R.id.crear_cliente_tipo_persona)).getSelectedItem()).getCode());
         cli.setIdTipoCliente((int) ((Spinner) getRootView().findViewById(R.id.cliente_tipo_cliente)).getAdapter().getItemId(((Spinner) getRootView().findViewById(R.id.cliente_tipo_cliente)).getSelectedItemPosition()));
+        cli.setExentoImpuesto(((CheckBox) getRootView().findViewById(R.id.cliente_oro)).isChecked());
+        cli.setCiudadanoOro(((CheckBox) getRootView().findViewById(R.id.cliente_cd_oro)).isChecked());
         if (cliente.getURLFoto() != null && !cliente.getURLFoto().trim().equals(""))
             cli.setURLFoto(cliente.getURLFoto());
         if (((Spinner) getRootView().findViewById(R.id.crear_cliente_tipo_persona)).getSelectedItemPosition() == 1) {
@@ -410,83 +417,95 @@ public class CrearClienteFragment extends BaseFragment {
         else
             Cliente.update(getDataBase(), cli);
 
-        for (int i = 0; i < listViewDirecciones.size(); i++) {
-            ClienteDireccion cliDir = new ClienteDireccion();
-            if (cliDirecciones != null && cliDirecciones.size() > i) {
-                cliDir = cliDirecciones.get(i);
-            } else {
-                //cliDir.setIdClienteDireccion(i+1);
-                if (idCliente != 0)
-                    cliDir.setIdCliente(cli.getIdCliente());
-            }
-            cliDir.set_idCliente(cli.getID());
-            cliDir.setDireccion(((EditText) listViewDirecciones.get(i).findViewById(R.id.cliente_direccion)).getText().toString());
-            cliDir.setTipoDireccion(((GeneralValue) ((Spinner) listViewDirecciones.get(i).findViewById(R.id.cliente_tipo_direccion_spinner)).getSelectedItem()).getCode());
-            cliDir.setEsPrincipal(((CheckBox) listViewDirecciones.get(i).findViewById(R.id.cliente_es_principal)).isChecked());
-            cliDir.setTelefono1(((EditText) listViewDirecciones.get(i).findViewById(R.id.cliente_telefono1)).getText().toString());
-            cliDir.setTelefono2(((EditText) listViewDirecciones.get(i).findViewById(R.id.cliente_telefono2)).getText().toString());
-            cliDir.setReferencia(((EditText) listViewDirecciones.get(i).findViewById(R.id.cliente_referencia)).getText().toString());
-            cliDir.setCiudadDescripcion(((AutoCompleteTextView) listViewDirecciones.get(i).findViewById(R.id.cliente_ciudad)).getText().toString());
-            if (listCiudades.size() > i && listCiudades.get(i) != null)
-                cliDir.setIdCiudad((int) listCiudades.get(i).getID());
+            if(cli.getID() == 0)
+                cli.setID(getDataBase().queryMaxInt(Contract.Cliente.TABLE_NAME, Contract.Cliente._ID));
 
-            if (!((EditText) listViewDirecciones.get(i).findViewById(R.id.cliente_longitud)).getText().toString().equals("")) {
-                cliDir.setLongitud(Double.parseDouble(((EditText) listViewDirecciones.get(i).findViewById(R.id.cliente_longitud)).getText().toString()));
-                cliDir.setLatitud(Double.parseDouble(((EditText) listViewDirecciones.get(i).findViewById(R.id.cliente_latitud)).getText().toString()));
-            }
-            if (cliDir.getID() == 0)
-                ClienteDireccion.insert(getDataBase(), cliDir);
-            else
-                ClienteDireccion.update(getDataBase(), cliDir);
+			for(int i = 0; i < listViewDirecciones.size(); i ++)
+			{
+				ClienteDireccion cliDir = new ClienteDireccion();
+				if(cliDirecciones != null && cliDirecciones.size() > i)
+				{
+					cliDir = cliDirecciones.get(i);
+				}
+				else
+				{
+					//cliDir.setIdClienteDireccion(i+1);
+					if(idCliente != 0)
+						cliDir.setIdCliente(cli.getIdCliente());
+				}
+				cliDir.set_idCliente(cli.getID());
+				cliDir.setDireccion(((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_direccion)).getText().toString());
+				cliDir.setTipoDireccion(((GeneralValue)((Spinner)listViewDirecciones.get(i).findViewById(R.id.cliente_tipo_direccion_spinner)).getSelectedItem()).getCode());
+				cliDir.setEsPrincipal(((CheckBox)listViewDirecciones.get(i).findViewById(R.id.cliente_es_principal)).isChecked());
+				cliDir.setTelefono1(((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_telefono1)).getText().toString());
+				cliDir.setTelefono2(((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_telefono2)).getText().toString());
+				cliDir.setReferencia(((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_referencia)).getText().toString());
+				cliDir.setCiudadDescripcion(((AutoCompleteTextView)listViewDirecciones.get(i).findViewById(R.id.cliente_ciudad)).getText().toString());
+                if(listCiudades.size() > i && listCiudades.get(i) != null)
+				    cliDir.setIdCiudad((int) listCiudades.get(i).getID());
 
-            if (i == 0) {
-                cli.setDireccion(cliDir.getDireccion());
-                cli.setTelefono(cliDir.getTelefono1());
-                Cliente.update(getDataBase(), cli);
-            }
-        }
+				if(!((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_longitud)).getText().toString().equals(""))
+				{
+					cliDir.setLongitud(Double.parseDouble(((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_longitud)).getText().toString()));
+					cliDir.setLatitud(Double.parseDouble(((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_latitud)).getText().toString()));
+				}
+				if(cliDir.getID() == 0)
+					ClienteDireccion.insert(getDataBase(), cliDir);
+				else
+					ClienteDireccion.update(getDataBase(), cliDir);
+				
+				if(i == 0)
+				{
+					cli.setDireccion(cliDir.getDireccion());
+					cli.setTelefono(cliDir.getTelefono1());
+					Cliente.update(getDataBase(), cli);
+				}
+			}
 
-        for (int i = 0; i < listViewContactos.size(); i++) {
-            Contacto cliCont = new Contacto();
-            if (cliContactos != null && cliContactos.size() > i) {
-                cliCont = cliContactos.get(i);
-            } else {
-                //cliCont.setIdContacto(i+1);
-                if (idCliente != 0)
-                    cliCont.setIdCliente(cli.getIdCliente());
-            }
-            cliCont.set_idCliente(cli.getID());
-            cliCont.setNombre(((EditText) listViewContactos.get(i).findViewById(R.id.cliente_nombres)).getText().toString());
-            cliCont.setApellido(((EditText) listViewContactos.get(i).findViewById(R.id.cliente_apellidos)).getText().toString());
-            cliCont.setCargo(((EditText) listViewContactos.get(i).findViewById(R.id.cliente_cargo)).getText().toString());
-            cliCont.setTelefono1(((EditText) listViewContactos.get(i).findViewById(R.id.cliente_telefono1_contacto)).getText().toString());
-            cliCont.setTelefono2(((EditText) listViewContactos.get(i).findViewById(R.id.cliente_telefono2_contacto)).getText().toString());
-            cliCont.setCorreo(((EditText) listViewContactos.get(i).findViewById(R.id.cliente_correo_contacto)).getText().toString());
-            cliCont.setIdClienteDireccion(((Spinner) listViewContactos.get(i).findViewById(R.id.cliente_direccion_contacto)).getSelectedItemPosition() + 1);
-            cliCont.setURLFoto(contactPhotos.get(i));
-
-            if (cliCont.getID() == 0)
-                Contacto.insert(getDataBase(), cliCont);
-            else
-                Contacto.update(getDataBase(), cliCont);
-        }
-
-        if (ConnectionUtils.isNetAvailable(getActivity())) {
-            Bundle bundle = new Bundle();
-            if (idCliente != 0)
-                bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_CLIENTE_UPDATE_FULL);
-            else {
-                bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_CLIENTE_CREATE);
-                cliente = cli;
-            }
-            bundle.putLong(ARG_CLIENTE, cli.getID());
-            requestSync(bundle);
-        }
-        if (idCliente == 0)
-            showDialogConfirmation(DIALOG_VISITA, R.string.message_crear_visita, R.string.label_crear_visita);
-        else
-            finish();
-    }
+			for(int i = 0; i < listViewContactos.size(); i ++)
+			{
+				Contacto cliCont = new Contacto();
+				if(cliContactos != null && cliContactos.size() > i)
+				{
+					cliCont = cliContactos.get(i);
+				}
+				else
+				{
+					//cliCont.setIdContacto(i+1);
+					if(idCliente != 0)
+						cliCont.setIdCliente(cli.getIdCliente());
+				}
+				cliCont.set_idCliente(cli.getID());
+				cliCont.setNombre(((EditText)listViewContactos.get(i).findViewById(R.id.cliente_nombres)).getText().toString());
+				cliCont.setApellido(((EditText)listViewContactos.get(i).findViewById(R.id.cliente_apellidos)).getText().toString());
+				cliCont.setCargo(((EditText)listViewContactos.get(i).findViewById(R.id.cliente_cargo)).getText().toString());
+				cliCont.setTelefono1(((EditText)listViewContactos.get(i).findViewById(R.id.cliente_telefono1_contacto)).getText().toString());
+				cliCont.setTelefono2(((EditText)listViewContactos.get(i).findViewById(R.id.cliente_telefono2_contacto)).getText().toString());
+				cliCont.setCorreo(((EditText)listViewContactos.get(i).findViewById(R.id.cliente_correo_contacto)).getText().toString());
+				cliCont.setIdClienteDireccion(((Spinner)listViewContactos.get(i).findViewById(R.id.cliente_direccion_contacto)).getSelectedItemPosition()+1);
+				cliCont.setURLFoto(contactPhotos.get(i));
+				
+				if(cliCont.getID() == 0)
+					Contacto.insert(getDataBase(), cliCont);
+				else
+					Contacto.update(getDataBase(), cliCont);
+			}
+			
+			if(ConnectionUtils.isNetAvailable(getActivity()))
+			{
+				Bundle bundle = new Bundle();
+				if(idCliente != 0)
+					bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_CLIENTE_UPDATE_FULL);
+				else {
+                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_CLIENTE_CREATE);
+                    showDialogConfirmation(DIALOG_VISITA, R.string.message_crear_visita, R.string.label_crear_visita);
+                    cliente = cli;
+                }
+				bundle.putLong(ARG_CLIENTE, cli.getID());
+				requestSync(bundle);
+			}
+        idCliente = cli.getID();
+	}
 
     @Override
     public void onPositiveConfirmation(int id){
@@ -498,7 +517,7 @@ public class CrearClienteFragment extends BaseFragment {
                 intent2.putExtra(CrearVisitaFragment.ARG_IDAGENDA,(int) cliente.getID());
                 intent2.putExtra(CrearVisitaFragment.ARG_FROM, "Cliente");
                 startActivity(intent2);
-                finish();
+                ((CrearClienteActivity)getActivity()).finishOnResult(idCliente);
                 break;
             case DIALOG_GPS:
                 SaveAddress();
@@ -526,7 +545,7 @@ public class CrearClienteFragment extends BaseFragment {
         switch (id)
         {
             case DIALOG_VISITA:
-                finish();
+                ((CrearClienteActivity)getActivity()).finishOnResult(idCliente);
         }
 
     }
@@ -567,8 +586,8 @@ public class CrearClienteFragment extends BaseFragment {
         ContactosContainer = (LinearLayout) getRootView().findViewById(R.id.crear_cliente_container_contacto);
 
         SimpleGeneralValueAdapter tipoPersonaAdapter = new SimpleGeneralValueAdapter(getContext(), getDataBase(), rp3.marketforce.Contants.GENERAL_TABLE_TIPO_PERSONA);
-        SimpleGeneralValueAdapter tipoEstadoCivilAdapter = new SimpleGeneralValueAdapter(getContext(), getDataBase(), rp3.marketforce.Contants.GENERAL_TABLE_ESTADO_CIVIL);
-        SimpleGeneralValueAdapter tipoGeneroAdapter = new SimpleGeneralValueAdapter(getContext(), getDataBase(), rp3.marketforce.Contants.GENERAL_TABLE_GENERO);
+        SimpleGeneralValueAdapter tipoEstadoCivilAdapter = new SimpleGeneralValueAdapter(getContext(), GeneralValue.getGeneralValuesOrder(getDataBase(),rp3.marketforce.Contants.GENERAL_TABLE_ESTADO_CIVIL, rp3.data.models.Contract.GeneralValue.COLUMN_REFERENCE1) );
+        SimpleGeneralValueAdapter tipoGeneroAdapter = new SimpleGeneralValueAdapter(getContext(), GeneralValue.getGeneralValuesOrder(getDataBase(), rp3.marketforce.Contants.GENERAL_TABLE_GENERO, rp3.data.models.Contract.GeneralValue.COLUMN_REFERENCE1));
         SimpleIdentifiableAdapter tipoCliente = new SimpleIdentifiableAdapter(getContext(), TipoCliente.getTipoCliente(getDataBase(), ""));
         SimpleIdentifiableAdapter tipoCanal = new SimpleIdentifiableAdapter(getContext(), Canal.getCanal(getDataBase(), ""));
         SimpleDictionaryAdapter tipoIdentificacion = new SimpleDictionaryAdapter(getContext(), IdentificationType.getAll(getDataBase()));
@@ -637,6 +656,30 @@ public class CrearClienteFragment extends BaseFragment {
             idCliente = getArguments().getLong(ARG_CLIENTE);
             setDatosClientes();
         }
+        ((CheckBox) getRootView().findViewById(R.id.cliente_oro)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked)
+                {
+                    flagAuth = 1;
+                    signInFragment = new SignInFragment();
+                    showDialogFragment(signInFragment, "Autorizar Usuario", "Autorizar Usuario");
+                }
+
+            }
+        });
+        ((CheckBox) getRootView().findViewById(R.id.cliente_cd_oro)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked)
+                {
+                    flagAuth = 2;
+                    signInFragment = new SignInFragment();
+                    showDialogFragment(signInFragment, "Autorizar Usuario", "Autorizar Usuario");
+                }
+
+            }
+        });
     }
 
     @Override
@@ -653,6 +696,10 @@ public class CrearClienteFragment extends BaseFragment {
 		((EditText)getRootView().findViewById(R.id.cliente_identificacion)).setText(cli.getIdentificacion());
 		((Spinner)getRootView().findViewById(R.id.crear_cliente_tipo_persona)).setSelection(getPosition(((Spinner) getRootView().findViewById(R.id.crear_cliente_tipo_persona)).getAdapter(), cli.getTipoPersona()));
 		((Spinner)getRootView().findViewById(R.id.cliente_tipo_cliente)).setSelection(getPosition(((Spinner) getRootView().findViewById(R.id.cliente_tipo_cliente)).getAdapter(), cli.getIdTipoCliente()));
+        ((CheckBox)getRootView().findViewById(R.id.cliente_oro)).setChecked(cli.getExentoImpuesto());
+        ((CheckBox)getRootView().findViewById(R.id.cliente_cd_oro)).setChecked(cli.isCiudadanoOro());
+        if(Pedido.getPedidoCliente(getDataBase(), cli.getID()) != null)
+            ((CheckBox)getRootView().findViewById(R.id.cliente_oro)).setEnabled(false);
         if(cli.getFechaNacimiento() != null && cli.getFechaNacimiento().getTime() != 0) {
             ((EditText) getRootView().findViewById(R.id.cliente_fecha_nacimiento)).setText(format1.format(cli.getFechaNacimiento()));
             cliente.setFechaNacimiento(cli.getFechaNacimiento());
@@ -968,6 +1015,14 @@ public class CrearClienteFragment extends BaseFragment {
 	
 	public boolean Validaciones()
 	{
+        if(((EditText)getRootView().findViewById(R.id.cliente_identificacion)).getText().toString().trim().length() >= 0 && getRootView().findViewById(R.id.cliente_identificacion).isEnabled())
+        {
+            Cliente proof = Cliente.getClienteByIdentificacion(getDataBase(), ((EditText)getRootView().findViewById(R.id.cliente_identificacion)).getText().toString().trim());
+            if(proof != null) {
+                Toast.makeText(getContext(), "Ya existe cliente con esta identificación.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        }
 		if(listViewDirecciones.size() <= 0)
 		{
 			Toast.makeText(getContext(), "No se puede agregar clientes sin dirección.", Toast.LENGTH_LONG).show();
@@ -1106,4 +1161,16 @@ public class CrearClienteFragment extends BaseFragment {
         view.setHint(wordtoSpan);
     }
 
+    @Override
+    public void onSignSuccess(Bundle bundle) {
+        Toast.makeText(getContext(), "Usuario Autorizado.", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onSignError(Bundle bundle) {
+        if(flagAuth == 1)
+            ((CheckBox) getRootView().findViewById(R.id.cliente_oro)).setChecked(false);
+        else if(flagAuth == 2)
+            ((CheckBox) getRootView().findViewById(R.id.cliente_cd_oro)).setChecked(false);
+    }
 }

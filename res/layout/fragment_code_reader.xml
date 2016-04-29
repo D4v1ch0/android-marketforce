@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/code_to_read"
+            android:layout_margin="5dp"
+            android:focusableInTouchMode="false"
+            android:focusable="true"
+            android:layout_weight="1"
+            android:gravity="bottom" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/code_search"
+            android:layout_gravity="right"
+            android:src="@drawable/ic_new_item"
+            style="@style/Widget.Button.Theme" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:id="@+id/code_no_product"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_no_existe_producto"
+            android:id="@+id/textView21"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_large_size"
+            android:textColor="@color/color_text_sky_blue" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/code_product"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:id="@+id/producto_imagen"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.35"
+            android:src="@drawable/ic_launcher"
+            android:scaleType="fitCenter" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.65"
+            android:padding="5dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Pantaloneta de Lino Marca Acme"
+                android:id="@+id/producto_descripcion"
+                android:lines="3"
+                android:maxLines="3"
+                android:textColor="@color/color_text_sky_blue"
+                android:textSize="@dimen/text_medium_small_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="SKU:"
+                android:id="@+id/producto_sku"
+                android:lines="1"
+                android:maxLines="1"
+                android:textColor="@color/color_text_sky_blue"
+                android:textSize="@dimen/text_medium_small_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Precio: ₡ 120.000"
+                android:id="@+id/producto_precio" />
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
