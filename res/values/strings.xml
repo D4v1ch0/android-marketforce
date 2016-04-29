@@ -361,7 +361,7 @@
     <string name="label_ciudadano_oro">Está exento de impuestos?</string>
     <string name="label_descuento_cliente">Es ciudadano de oro?</string>
     <string name="label_banco">Banco:</string>
-    <string name="label_tarjeta">Tarjeta:</string>
+    <string name="label_marca_tarjeta">Tarjeta:</string>
     <string name="label_numero_cuenta">Número Cuenta:</string>
     <string name="label_numero_documento">Número Documento:</string>
     <string name="label_numero_autorizacion">Número de Autorización:</string>

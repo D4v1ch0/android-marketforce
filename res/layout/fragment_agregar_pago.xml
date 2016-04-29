@@ -108,7 +108,7 @@
                 android:id="@+id/textView26"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/label_tarjeta"
+                android:text="@string/label_marca_tarjeta"
                 android:textStyle="bold"
                 android:textColor="@color/color_text_sky_blue"
                 android:layout_weight="0.3" />

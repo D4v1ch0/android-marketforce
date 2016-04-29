@@ -112,12 +112,54 @@
         ADD COLUMN IdBeneficio INTEGER;
     </statement>
     <statement name="ToVersion9-2">
-        ALTER TABLE tbPedido ADD COLUMN _IdCliente REAL,
-        ADD COLUMN PorcentajeDescuentoOro REAL,
-        ADD COLUMN PrecioConDescuento REAL,
-        ADD COLUMN PorcentajeImpuesto REAL,
-        ADD COLUMN PrecioConImpuesto REAL,
-        ADD COLUMN CodigoExterno TEXT,
-        ADD COLUMN IdBeneficio REAL;
+        ALTER TABLE tbPedido ADD COLUMN _IdCliente INTEGER,
+        ADD COLUMN TotalImpuestos REAL,
+        ADD COLUMN Redondeo REAL,
+        ADD COLUMN Subtotal REAL,
+        ADD COLUMN SubtotalSinDescuento REAL,
+        ADD COLUMN Excedente REAL,
+        ADD COLUMN TipoDocumento TEXT,
+        ADD COLUMN BaseImponible REAL,
+        ADD COLUMN BaseImponibleCero REAL,
+        ADD COLUMN Observaciones TEXT,
+        ADD COLUMN MotivoAnulacion TEXT,
+        ADD COLUMN ObservacionAnulacion TEXT,
+        ADD COLUMN _IdDocumentoRef INTEGER,
+        ADD COLUMN IdDocumentoRef INTEGER,
+        ADD COLUMN FechaAnulacion INTEGER,
+        ADD COLUMN TotalImpuesto2 REAL,
+        ADD COLUMN TotalImpuesto3 REAL,
+        ADD COLUMN TotalImpuesto4 REAL,
+        ADD COLUMN _IdControlCaja INTEGER,
+        ADD COLUMN Pendiente BOOLEAN,
+        ADD COLUMN TieneNotaCreditoPOSRP3 BOOLEAN;
+    </statement>
+    <statement name="ToVersion9-3">
+        CREATE VIRTUAL TABLE tbPedidoExt USING fts4 (
+        Nombre,
+        NumeroDocumento,
+        tokenize=porter
+        );
+    </statement>
+    <statement name="ToVersion9-2">
+        ALTER TABLE tbPedidoDetalle ADD COLUMN Subtotal REAL,
+        ADD COLUMN SubtotalSinDescuento REAL,
+        ADD COLUMN SubtotalSinImpuesto REAL,
+        ADD COLUMN BaseImponible REAL,
+        ADD COLUMN BaseImponibleCero REAL,
+        ADD COLUMN PorcDescOro REAL,
+        ADD COLUMN ValorDescOro REAL,
+        ADD COLUMN ValorDescOroTotal REAL,
+        ADD COLUMN PorcDescManual REAL,
+        ADD COLUMN ValorDescManual REAL,
+        ADD COLUMN ValorDescManualTotal REAL,
+        ADD COLUMN ValorDescAutomatico REAL,
+        ADD COLUMN ValorDescAutomaticoTotal REAL,
+        ADD COLUMN PorcDescAutomatico REAL,
+        ADD COLUMN PorcImpuestoIvaVenta REAL,
+        ADD COLUMN ValorImpuestoIvaVenta REAL,
+        ADD COLUMN ValorImpuestoIvaVentaTotal REAL,
+        ADD COLUMN CantidadDevolucion INTEGER,
+        ADD COLUMN BaseICE REAL;
     </statement>
 </sql>
