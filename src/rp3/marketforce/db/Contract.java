@@ -701,6 +701,7 @@ public final class Contract {
 
 		public static final String COLUMN_ID_FORMA_PAGO = "IdFormaPago";
 		public static final String COLUMN_DESCRIPCION = "Descripcion";
+		public static final String COLUMN_ESTADO = "Estado";
 
 	}
 

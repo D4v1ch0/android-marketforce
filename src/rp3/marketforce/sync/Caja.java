@@ -119,14 +119,18 @@ public class Caja {
                 webService.invokeWebService();
                 JSONArray jsonArray = webService.getJSONArrayResponse();
                 if(jsonArray != null) {
-                    FormaPago.deleteAll(db, Contract.FormaPago.TABLE_NAME);
+                    FormaPago.DeletePagos(db);
                     for(int i = 0; i < jsonArray.length(); i++)
                     {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        FormaPago formaPago = new FormaPago();
+                        FormaPago formaPago = FormaPago.getFormaPago(db, jsonObject.getInt("IdFormaPago"));
                         formaPago.setIdFormaPago(jsonObject.getInt("IdFormaPago"));
                         formaPago.setDescripcion(jsonObject.getString("Descripcion"));
-                        FormaPago.insert(db, formaPago);
+                        formaPago.setEstado("A");
+                        if(formaPago.getID() == 0)
+                            FormaPago.insert(db, formaPago);
+                        else
+                            FormaPago.update(db, formaPago);
                     }
                 }
             } catch (HttpResponseException e) {

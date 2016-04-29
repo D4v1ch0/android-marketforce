@@ -126,7 +126,7 @@ public class ControlCaja extends EntityBase<ControlCaja> {
 
     public static List<ControlCaja> getControlCajas(DataBase db) {
         Cursor c = db.query(Contract.ControlCaja.TABLE_NAME, new String[]{Contract.ControlCaja._ID, Contract.ControlCaja.COLUMN_ID_CONTROL_CAJA, Contract.ControlCaja.COLUMN_ID_AGENTE, Contract.ControlCaja.COLUMN_ID_FECHA_APERTURA,
-                Contract.ControlCaja.COLUMN_ID_FECHA_CIERRE, Contract.ControlCaja.COLUMN_VALOR_APERTURA, Contract.ControlCaja.COLUMN_VALOR_CIERRE, Contract.ControlCaja.COLUMN_ID_CAJA});
+                Contract.ControlCaja.COLUMN_ID_FECHA_CIERRE, Contract.ControlCaja.COLUMN_VALOR_APERTURA, Contract.ControlCaja.COLUMN_VALOR_CIERRE, Contract.ControlCaja.COLUMN_ID_CAJA}, null, null, null, null,Contract.ControlCaja.COLUMN_ID_FECHA_APERTURA + " DESC" );
 
         List<ControlCaja> list = new ArrayList<ControlCaja>();
         while(c.moveToNext()){

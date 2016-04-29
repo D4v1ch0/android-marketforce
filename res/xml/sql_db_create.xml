@@ -388,7 +388,8 @@
         CREATE TABLE tbFormaPago(
         _id INTEGER PRIMARY KEY AUTOINCREMENT,
         IdFormaPago INTEGER,
-        Descripcion TEXT
+        Descripcion TEXT,
+        Estado TEXT
         )
     </statement>
     <statement>
