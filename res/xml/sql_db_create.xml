@@ -534,7 +534,8 @@
         ValorImpuestoIvaVenta REAL,
         ValorImpuestoIvaVentaTotal REAL,
         CantidadDevolucion INTEGER,
-        BaseICE REAL
+        BaseICE REAL,
+        IdBeneficio INTEGER
         )
     </statement>
     <statement>
@@ -659,4 +660,18 @@
         IdTipoDiferido INTEGER
         )
     </statement>
+    <statement>
+        CREATE TABLE tbProductoPromocion(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdProducto INTEGER,
+        IdEstablecimiento INTEGER,
+        IdPuntoOperacion INTEGER,
+        IdBeneficio INTEGER,
+        FechaDesde INTEGER,
+        FechaHasta INTEGER,
+        PorcentajeDescuento REAL,
+        FormaPagoAplica TEXT
+        )
+    </statement>
+
 </sql>

@@ -297,6 +297,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
             detalle.setBaseImponibleCero(jsonObject.getDouble("pi") == 0 ? detalle.getSubtotal() - detalle.getValorDescuentoAutomaticoTotal() - detalle.getValorDescuentoManualTotal() : 0);
             detalle.setSubtotalSinDescuento(detalle.getSubtotal());
             detalle.setSubtotalSinImpuesto(detalle.getSubtotal() - detalle.getValorDescuentoAutomaticoTotal() - detalle.getValorDescuentoManualTotal());
+            detalle.setIdBeneficio(jsonObject.getInt("ib"));
 
             //Validaciones si es que tipo de documento es nota de credito
             if(!jsonObject.isNull("tipo") && jsonObject.getString("tipo").equalsIgnoreCase("NC"))

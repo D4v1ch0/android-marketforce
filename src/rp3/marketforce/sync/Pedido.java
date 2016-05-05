@@ -301,7 +301,7 @@ public class Pedido {
                     jObjectDetalle.put("ValorTotal", df.format(NumberUtils.Round(det.getValorTotal(), 2)));
                     jObjectDetalle.put("BaseImponible", df.format(NumberUtils.Round(det.getBaseImponible(), 2)));
                     jObjectDetalle.put("BaseImponibleCero", df.format(NumberUtils.Round(det.getBaseImponibleCero(), 2)));
-                    //jObjectDetalle.put("IdBeneficio", det.getProducto().getIdBeneficio());
+                    jObjectDetalle.put("IdBeneficio", det.getIdBeneficio());
                     jObjectDetalle.put("PorcDescOro", df.format(NumberUtils.Round(det.getPorcentajeDescuentoOro(), 2)));
                     jObjectDetalle.put("ValorDescOro", df.format(NumberUtils.Round(det.getValorDescuentoOro(), 2)));
                     jObjectDetalle.put("ValorDescOroTotal", df.format(NumberUtils.Round(det.getValorDescuentoOroTotal(), 2)));

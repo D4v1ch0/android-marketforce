@@ -2,6 +2,7 @@ package rp3.marketforce.pedido;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
@@ -105,6 +106,8 @@ public class AgregarPagoFragment extends BaseFragment {
 
     public interface PagoAgregarListener{
         public void onAcceptSuccess(Pago pago);
+        public double getNewSaldo(int idPago);
+        public double getNewSaldoUpdate(int idFormaPago, int idPago);
     }
 
     @Override
@@ -136,7 +139,13 @@ public class AgregarPagoFragment extends BaseFragment {
         ((Spinner) rootView.findViewById(R.id.pago_tipo)).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                DecimalFormat df = new DecimalFormat("#.##");
                 ValidarCampos(FormaPago.getFormasPago(getDataBase()).get(position));
+                if(idpago != - 1)
+                    saldo = createFragmentListener.getNewSaldoUpdate(FormaPago.getFormasPago(getDataBase()).get(position).getIdFormaPago(), idpago);
+                else
+                    saldo = createFragmentListener.getNewSaldo(FormaPago.getFormasPago(getDataBase()).get(position).getIdFormaPago());
+                ((EditText) getRootView().findViewById(R.id.pago_valor)).setText(df.format(saldo) + ".00");
             }
 
             @Override
@@ -365,5 +374,11 @@ public class AgregarPagoFragment extends BaseFragment {
             if(GeneralValue.getGeneralValue(getDataBase(), Contants.POS_USELOTETC).getValue().equalsIgnoreCase("1")) getRootView().findViewById(R.id.pago_codigo_seguridad_layout).setVisibility(View.VISIBLE);
             if(GeneralValue.getGeneralValue(getDataBase(), Contants.POS_USEDIFERTC).getValue().equalsIgnoreCase("1")) getRootView().findViewById(R.id.pago_tipo_diferido_layout).setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        createFragmentListener.getNewSaldo(0);
+        super.onDismiss(dialog);
     }
 }

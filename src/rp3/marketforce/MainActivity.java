@@ -242,6 +242,7 @@ public class MainActivity extends rp3.app.NavActivity{
 		NavItem recorrido = new NavItem(NAV_RECORRIDO, R.string.title_option_recorrido, R.drawable.ic_action_place_dark);
         NavItem radar = new NavItem(NAV_RADAR, R.string.title_option_radar, R.drawable.ic_action_data_usage);
         NavItem information = new NavItem(NAV_INFORMATION, R.string.title_option_informacion, R.drawable.ic_action_about);
+		NavItem oportunidad  = new NavItem(NAV_OPORTUNIDAD, R.string.title_option_oportunidad, R.drawable.oportunidades);
 		
 		NavItem settingsGroup  = new NavItem(0, R.string.title_option_setconfiguracion, 0,NavItem.TYPE_CATEGORY);
 
@@ -256,7 +257,8 @@ public class MainActivity extends rp3.app.NavActivity{
 		settingsGroup.addChildItem(cerrarsesion);
 		
 		navItems.add(dashboard);
-        navItems.add(oportunidad);
+		if(PreferenceManager.getBoolean(Contants.KEY_MODULO_OPORTUNIDADES, true))
+        	navItems.add(oportunidad);
 		int ruta = PreferenceManager.getInt(Contants.KEY_IDRUTA);
 		if(PreferenceManager.getInt(Contants.KEY_IDRUTA) != 0)
 		{
@@ -268,9 +270,11 @@ public class MainActivity extends rp3.app.NavActivity{
             navItems.add(grupo);
             navItems.add(radar);
 			justificaciones.setBadge(Justificacion.getPermisosPendientesAprobarCount(getDataBase()));
-            navItems.add(justificaciones);
+			if(PreferenceManager.getBoolean(Contants.KEY_MODULO_MARCACIONES, true))
+            	navItems.add(justificaciones);
         }
-		navItems.add(pedido);
+		if(PreferenceManager.getBoolean(Contants.KEY_MODULO_POS, true))
+			navItems.add(pedido);
 		//navItems.add(reuniones);
 		//navItems.add(recordatorios);
 		navItems.add(settingsGroup);

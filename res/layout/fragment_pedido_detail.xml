@@ -300,6 +300,30 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_redondeo"
+            android:id="@+id/pedido_redondeo_label"
+            android:layout_weight="1"
+            android:textColor="@color/color_text_sky_blue"
+            android:textStyle="bold"
+            android:gravity="right"
+            android:paddingRight="5dp"
+            android:visibility="visible" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="¢ 0.00"
+            android:id="@+id/pedido_redondeo"
+            android:layout_weight="1"
+            android:textSize="@dimen/text_medium_small_size"
+            android:gravity="right"
+            android:visibility="visible" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/label_cantidad_items"
             android:id="@+id/textView80"
             android:layout_weight="1"
@@ -318,27 +342,6 @@
             android:textSize="@dimen/text_medium_small_size"
             android:gravity="right" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/label_redondeo"
-            android:id="@+id/textView133"
-            android:layout_weight="1"
-            android:textColor="@color/color_text_sky_blue"
-            android:textStyle="bold"
-            android:gravity="right"
-            android:paddingRight="5dp" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="¢ 0.00"
-            android:id="@+id/pedido_redondeo"
-            android:layout_weight="1"
-            android:textSize="@dimen/text_medium_small_size"
-            android:gravity="right" />
     </LinearLayout>
 
     <LinearLayout

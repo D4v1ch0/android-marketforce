@@ -48,12 +48,14 @@ import rp3.marketforce.R;
 import rp3.marketforce.cliente.ClientDetailFragment;
 import rp3.marketforce.cliente.ClientListFragment;
 import rp3.marketforce.cliente.CrearClienteActivity;
+import rp3.marketforce.db.Contract;
 import rp3.marketforce.models.Cliente;
 import rp3.marketforce.models.pedido.ControlCaja;
 import rp3.marketforce.models.pedido.Pago;
 import rp3.marketforce.models.pedido.Pedido;
 import rp3.marketforce.models.pedido.Producto;
 import rp3.marketforce.models.pedido.ProductoCodigo;
+import rp3.marketforce.models.pedido.ProductoPromocion;
 import rp3.marketforce.ruta.MapaActivity;
 import rp3.marketforce.sync.Agenda;
 import rp3.marketforce.sync.Productos;
@@ -61,6 +63,7 @@ import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.PrintHelper;
 import rp3.util.CalendarUtils;
 import rp3.util.ConnectionUtils;
+import rp3.util.Convert;
 import rp3.util.StringUtils;
 import rp3.widget.SlidingPaneLayout;
 
@@ -575,62 +578,105 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
 
         @Override
         protected String doInBackground(Void... params) {
+            //Se llama a conteo de productos
             publishProgress(new Integer[] {1, 0, R.string.message_descarga_productos});
-            Bundle bundle = Productos.executeSync(getDataBase());
+            Bundle conteo = Productos.executeSyncConteo(getDataBase());
+            int total = 0, descargados = 0, pagina = 0;
+            if(conteo != null && conteo.getInt(SyncAdapter.ARG_SYNC_TYPE) == rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS)
+                total = conteo.getInt("Conteo",0);
+            else
+            {
+                return getString(rp3.core.R.string.message_error_sync_connection_http_error);
+            }
+            publishProgress(new Integer[]{total, 0, R.string.message_descarga_productos});
+            while(total != 0 && total > descargados) {
+                Bundle bundle = Productos.executeSync(getDataBase(), pagina, 3000);
+                pagina++;
+                if (bundle != null && bundle.getInt(SyncAdapter.ARG_SYNC_TYPE) == rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS) {
+                    try {
+                        JSONArray types = new JSONArray(bundle.getString("Productos"));
+                        int length = types.length();
+                        for (int i = 0; i < length; i++) {
+                            descargados++;
+                            publishProgress(new Integer[]{total, descargados, R.string.message_actualizar_productos});
+
+                            JSONObject type = types.getJSONObject(i);
+                            if (type.getString("E").equalsIgnoreCase("A")) {
+
+                                rp3.marketforce.models.pedido.Producto producto = rp3.marketforce.models.pedido.Producto.getProductoIdServer(getDataBase(), type.getInt("Id"));
+
+                                producto.setIdProducto(type.getInt("Id"));
+                                producto.setDescripcion(type.getString("D"));
+                                producto.setUrlFoto(type.getString("U"));
+                                producto.setValorUnitario(type.getDouble("P"));
+                                producto.setCodigoExterno(type.getString("Ex"));
+                                producto.setPrecioDescuento(Float.parseFloat(type.getString("PCD")));
+                                producto.setPrecioImpuesto(Float.parseFloat(type.getString("PCI")));
+                                producto.setPorcentajeDescuentoOro(Float.parseFloat(type.getString("PDO")));
+                                producto.setPorcentajeDescuento(Float.parseFloat(type.getString("PD")));
+                                producto.setPorcentajeImpuesto(Float.parseFloat(type.getString("PI")));
+                                producto.setIdBeneficio(type.getInt("B"));
+                                if (type.isNull("IdS"))
+                                    producto.setIdSubCategoria(0);
+                                else
+                                    producto.setIdSubCategoria(type.getInt("IdS"));
+
+                                if (producto.getID() == 0)
+                                    rp3.marketforce.models.pedido.Producto.insert(getDataBase(), producto);
+                                else
+                                    rp3.marketforce.models.pedido.Producto.update(getDataBase(), producto);
+
+                                ProductoCodigo.deleteCodigos(getDataBase(), producto.getCodigoExterno());
+                                JSONArray strs = type.getJSONArray("PC");
+
+                                for (int j = 0; j < strs.length(); j++) {
+                                    JSONObject str = strs.getJSONObject(j);
+
+                                    ProductoCodigo productoCodigo = new ProductoCodigo();
+                                    productoCodigo.setCodigoExterno(str.getString("Ex"));
+                                    productoCodigo.setCodigo(str.getString("C"));
+                                    ProductoCodigo.insert(getDataBase(), productoCodigo);
+                                }
+                            } else {
+                                Producto.deleteProducto(getDataBase(), type.getInt("Id"));
+                            }
+
+
+                        }
+                    } catch (JSONException e) {
+                        Log.e("Entro", "Error: " + e.toString());
+                        return getString(rp3.core.R.string.message_error_sync_connection_http_error);
+                    }
+                } else {
+                    return getString(rp3.core.R.string.message_error_sync_connection_http_error);
+                }
+            }
+            publishProgress(new Integer[] {1, 0, R.string.message_descarga_promociones});
+            Bundle bundle = Productos.executeSyncPromociones(getDataBase());
             if (bundle != null && bundle.getInt(SyncAdapter.ARG_SYNC_TYPE) == rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS) {
                 try {
-                    JSONArray types = new JSONArray(bundle.getString("Productos"));
+                    JSONArray types = new JSONArray(bundle.getString("Promociones"));
                     int length = types.length();
+                    ProductoPromocion.deleteAll(getDataBase(), Contract.ProductoPromocion.TABLE_NAME);
                     for (int i = 0; i < length; i++) {
-                        publishProgress(new Integer[] {length, i, R.string.message_actualizar_productos});
+                        publishProgress(new Integer[]{length, i, R.string.message_descarga_promociones});
 
                         JSONObject type = types.getJSONObject(i);
-                        if(type.getString("E").equalsIgnoreCase("A")) {
 
-                            rp3.marketforce.models.pedido.Producto producto = rp3.marketforce.models.pedido.Producto.getProductoIdServer(getDataBase(), type.getInt("Id"));
+                        ProductoPromocion productoPromocion = new ProductoPromocion();
 
-                            producto.setIdProducto(type.getInt("Id"));
-                            producto.setDescripcion(type.getString("D"));
-                            producto.setUrlFoto(type.getString("U"));
-                            producto.setValorUnitario(type.getDouble("P"));
-                            producto.setCodigoExterno(type.getString("Ex"));
-                            producto.setPrecioDescuento(Float.parseFloat(type.getString("PCD")));
-                            producto.setPrecioImpuesto(Float.parseFloat(type.getString("PCI")));
-                            producto.setPorcentajeDescuentoOro(Float.parseFloat(type.getString("PDO")));
-                            producto.setPorcentajeDescuento(Float.parseFloat(type.getString("PD")));
-                            producto.setPorcentajeImpuesto(Float.parseFloat(type.getString("PI")));
-                            producto.setIdBeneficio(type.getInt("B"));
-                            if (type.isNull("IdS"))
-                                producto.setIdSubCategoria(0);
-                            else
-                                producto.setIdSubCategoria(type.getInt("IdS"));
-
-                            if (producto.getID() == 0)
-                                rp3.marketforce.models.pedido.Producto.insert(getDataBase(), producto);
-                            else
-                                rp3.marketforce.models.pedido.Producto.update(getDataBase(), producto);
-
-                            ProductoCodigo.deleteCodigos(getDataBase(), producto.getCodigoExterno());
-                            JSONArray strs = type.getJSONArray("PC");
-
-                            for (int j = 0; j < strs.length(); j++) {
-                                JSONObject str = strs.getJSONObject(j);
-
-                                ProductoCodigo productoCodigo = new ProductoCodigo();
-                                productoCodigo.setCodigoExterno(str.getString("Ex"));
-                                productoCodigo.setCodigo(str.getString("C"));
-                                ProductoCodigo.insert(getDataBase(), productoCodigo);
-                            }
-                        }
-                        else
-                        {
-                            Producto.deleteProducto(getDataBase(), type.getInt("Id"));
-                        }
-
-
+                        productoPromocion.setIdProducto(type.getInt("IdProducto"));
+                        productoPromocion.setIdBeneficio(type.getInt("IdBeneficio"));
+                        productoPromocion.setIdEstablecimiento(type.getInt("IdEstablecimiento"));
+                        productoPromocion.setIdPuntoOperacion(type.getInt("IdPuntoOperacion"));
+                        productoPromocion.setFechaDesde(Convert.getDateFromDotNetTicks(type.getLong("FechaDesdeTicks")));
+                        productoPromocion.setFechaHasta(Convert.getDateFromDotNetTicks(type.getLong("FechaHastaTicks")));
+                        productoPromocion.setPorcentajeDescuento(Float.parseFloat(type.getString("PorcentajeDescuento")));
+                        if(!type.isNull("FormaPagoAplica"))
+                            productoPromocion.setFormaPagoAplica(type.getString("FormaPagoAplica"));
+                        ProductoPromocion.insert(getDataBase(), productoPromocion);
                     }
                 } catch (JSONException e) {
-                    Log.e("Entro", "Error: " + e.toString());
                     return getString(rp3.core.R.string.message_error_sync_connection_http_error);
                 }
             }
@@ -638,7 +684,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
             {
                 return getString(rp3.core.R.string.message_error_sync_connection_http_error);
             }
-            publishProgress(new Integer[] {1, 0, R.string.message_descarga_categorias});
+            publishProgress(new Integer[]{1, 0, R.string.message_descarga_categorias});
             bundle = Productos.executeSyncCategorias(getDataBase());
             if (bundle != null && bundle.getInt(SyncAdapter.ARG_SYNC_TYPE) == rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS) {
                 try {

@@ -146,7 +146,8 @@
             android:inputType="numberDecimal"
             android:ems="10"
             android:id="@+id/pago_numero_cuenta"
-            android:layout_weight="0.7" />
+            android:layout_weight="0.7"
+            android:maxLength="50" />
     </LinearLayout>
 
     <LinearLayout
@@ -174,7 +175,8 @@
             android:inputType="numberDecimal"
             android:ems="10"
             android:id="@+id/pago_numero_documento"
-            android:layout_weight="0.7" />
+            android:layout_weight="0.7"
+            android:maxLength="50" />
     </LinearLayout>
 
     <LinearLayout
@@ -202,7 +204,8 @@
             android:inputType="numberDecimal"
             android:ems="10"
             android:id="@+id/pago_autorizacion"
-            android:layout_weight="0.7" />
+            android:layout_weight="0.7"
+            android:maxLength="5" />
     </LinearLayout>
 
     <LinearLayout
@@ -230,7 +233,8 @@
             android:inputType="numberDecimal"
             android:ems="10"
             android:id="@+id/pago_lote"
-            android:layout_weight="0.7" />
+            android:layout_weight="0.7"
+            android:maxLength="5" />
     </LinearLayout>
 
     <LinearLayout

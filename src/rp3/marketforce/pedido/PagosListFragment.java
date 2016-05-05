@@ -99,8 +99,52 @@ public class PagosListFragment extends BaseFragment implements AgregarPagoFragme
         ((TextView) getRootView().findViewById(R.id.forma_pago_saldo)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(saldo));
     }
 
+    @Override
+    public double getNewSaldo(int idPago) {
+        List<Integer> idsFormaPago = new ArrayList<Integer>();
+        for(Pago pago : pagos)
+            idsFormaPago.add(pago.getIdFormaPago());
+        idsFormaPago.add(idPago);
+        valorTotal = createFragmentListener.getNewSaldo(idsFormaPago);
+        saldo = valorTotal;
+
+        for(Pago pag : pagos)
+        {
+            saldo = saldo - pag.getValor();
+        }
+
+        ((TextView) getRootView().findViewById(R.id.forma_pago_saldo)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(saldo));
+        return saldo;
+    }
+
+    @Override
+    public double getNewSaldoUpdate(int idFormaPago, int idPago) {
+        List<Integer> idsFormaPago = new ArrayList<Integer>();
+        int pos = 0;
+        for(Pago pago : pagos) {
+            if(pos != idPago)
+                idsFormaPago.add(pago.getIdFormaPago());
+            pos++;
+        }
+        idsFormaPago.add(idFormaPago);
+        valorTotal = createFragmentListener.getNewSaldo(idsFormaPago);
+        saldo = valorTotal;
+
+        pos = 0;
+        for(Pago pag : pagos)
+        {
+            if(pos != idPago)
+                saldo = saldo - pag.getValor();
+            pos++;
+        }
+
+        ((TextView) getRootView().findViewById(R.id.forma_pago_saldo)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(saldo));
+        return saldo;
+    }
+
     public interface PagosAcceptListener{
         public void onAcceptSuccess(List<Pago> pagos);
+        public double getNewSaldo(List<Integer> idsFormaPago);
     }
 
     @Override
@@ -139,6 +183,7 @@ public class PagosListFragment extends BaseFragment implements AgregarPagoFragme
                                     pagos.remove(position);
                                     adapter = new PagoAdapter(getContext(), pagos);
                                     ((ListView) rootView.findViewById(R.id.forma_pago_list)).setAdapter(adapter);
+                                    getNewSaldo(0);
                                     saldo = valorTotal;
 
                                     for (Pago pag : pagos) {

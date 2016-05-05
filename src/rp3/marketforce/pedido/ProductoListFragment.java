@@ -24,6 +24,7 @@ import rp3.marketforce.R;
 import rp3.marketforce.loader.ProductoLoader;
 import rp3.marketforce.models.pedido.PedidoDetalle;
 import rp3.marketforce.models.pedido.Producto;
+import rp3.marketforce.models.pedido.ProductoPromocion;
 
 /**
  * Created by magno_000 on 20/10/2015.
@@ -208,6 +209,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
             jsonObject.put("ssd", transaction.getSubtotalSinDescuento());
             jsonObject.put("ssi", transaction.getSubtotalSinImpuesto());
             jsonObject.put("cod", transaction.getProducto().getCodigoExterno());
+            jsonObject.put("ib", transaction.getIdBeneficio());
 
         }
         catch (Exception ex) {
@@ -260,7 +262,15 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
                         jsonObject.put("ce", prod.getCodigoExterno());
                         jsonObject.put("b", prod.getIdBeneficio());
                         jsonObject.put("pdo", prod.getPorcentajeDescuentoOro() + "");
-                        jsonObject.put("pd", prod.getPorcentajeDescuento() + "");
+                        ProductoPromocion productoPromocion = ProductoPromocion.getProductoPromocion(getDataBase(), prod.getIdProducto());
+                        if(productoPromocion == null) {
+                            jsonObject.put("pd", 0 + "");
+                            jsonObject.put("ib", 0 + "");
+                        }
+                        else {
+                            jsonObject.put("pd", productoPromocion.getPorcentajeDescuento() + "");
+                            jsonObject.put("ib", productoPromocion.getIdBeneficio() + "");
+                        }
                         jsonObject.put("pi", prod.getPorcentajeImpuesto());
                         jsonObject.put("vd", prod.getPrecioDescuento());
                         jsonObject.put("vi", prod.getPrecioImpuesto());

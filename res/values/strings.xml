@@ -353,6 +353,7 @@
     <string name="label_no_existe_producto">Producto no existe</string>
     <string name="message_reimprimir">Desea reimprimir esta transacción?</string>
     <string name="message_descarga_productos">Descargando productos</string>
+    <string name="message_descarga_promociones">Descargando promociones</string>
     <string name="message_actualizar_productos">Actualizando productos</string>
     <string name="message_descarga_categorias">Descargando categorías</string>
     <string name="message_actualizar_categorias">Actualizando categorías</string>

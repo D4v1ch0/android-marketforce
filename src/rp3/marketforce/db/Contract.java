@@ -985,7 +985,7 @@ public final class Contract {
 		public static final String COLUMN_VALOR_IMPUESTO_TOTAL = "ValorImpuestoIvaVentaTotal";
 		public static final String COLUMN_CANTIDAD_DEVOLUCION = "CantidadDevolucion";
 		public static final String COLUMN_BASE_ICE = "BaseICE";
-
+		public static final String COLUMN_ID_BENEFICIO = "IdBeneficio";
 	}
 
 	public static abstract class Producto implements BaseColumns {
@@ -1149,6 +1149,21 @@ public final class Contract {
 		public static final String COLUMN_ID_BANCO = "IdBanco";
 		public static final String COLUMN_ID_MARCA_TARJETA = "IdMarcaTarjeta";
 		public static final String COLUMN_ID_TIPO_DIFERIDO = "IdTipoDiferido";
+
+	}
+
+	public static abstract class ProductoPromocion implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbProductoPromocion";
+
+		public static final String COLUMN_ID_PRODUCTO = "IdProducto";
+		public static final String COLUMN_ID_ESTABLECIMIENTO = "IdEstablecimiento";
+		public static final String COLUMN_ID_PUNTO_OPERACION = "IdPuntoOperacion";
+		public static final String COLUMN_ID_BENEFICIO = "IdBeneficio";
+		public static final String COLUMN_FECHA_DESDE = "FechaDesde";
+		public static final String COLUMN_FECHA_HASTA = "FechaHasta";
+		public static final String COLUMN_PORCENTAJE_DESCUENTO = "PorcentajeDescuento";
+		public static final String COLUMN_FORMA_PAGO_APLICA = "FormaPagoAplica";
 
 	}
 }

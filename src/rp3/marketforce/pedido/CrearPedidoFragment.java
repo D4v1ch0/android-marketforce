@@ -57,6 +57,7 @@ import rp3.marketforce.models.pedido.Pago;
 import rp3.marketforce.models.pedido.Pedido;
 import rp3.marketforce.models.pedido.PedidoDetalle;
 import rp3.marketforce.models.pedido.Producto;
+import rp3.marketforce.models.pedido.ProductoPromocion;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.PrintHelper;
 import rp3.runtime.Session;
@@ -548,6 +549,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                     jsonObject.put("c", pedido.getPedidoDetalles().get(position).getCantidad());
                     jsonObject.put("vd", prod.getPrecioDescuento());
                     jsonObject.put("pd", prod.getPorcentajeDescuento());
+                    jsonObject.put("ib", prod.getIdBeneficio());
                     jsonObject.put("tipo", tipo);
 
                     productFragment = ProductFragment.newInstance(jsonObject.toString());
@@ -765,6 +767,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                         detalle.setSubtotalSinDescuento(jsonObject.getDouble("ssd"));
                         detalle.setSubtotalSinImpuesto(jsonObject.getDouble("ssi"));
                         detalle.setCodigoExterno(jsonObject.getString("cod"));
+                        detalle.setIdBeneficio(jsonObject.getInt("ib"));
                         onAcceptSuccess(detalle);
                     }
                     catch (Exception ex)
@@ -1204,5 +1207,72 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             det.setSubtotalSinDescuento(det.getSubtotal());
             det.setSubtotalSinImpuesto(det.getSubtotal() - det.getValorDescuentoAutomaticoTotal() - det.getValorDescuentoManualTotal() - det.getValorDescuentoOroTotal());
         }
+    }
+
+    public double getNewSaldo(List<Integer> idsFormaPagos)
+    {
+        if(pedido != null && pedido.getPedidoDetalles() != null) {
+            for (PedidoDetalle det : pedido.getPedidoDetalles()) {
+                //Obtengo promociones del producto
+                List<ProductoPromocion> promociones = ProductoPromocion.getProductoPromocionAll(getDataBase(), det.getIdProducto());
+
+                //Reviso primero si tiene promociones
+                //Si tiene, se procesa, caso contrario, paso al siguiente detalle
+                if (promociones.size() > 0) {
+                    boolean isPromo = false;
+                    //Chequeo cada promocion
+                    for (ProductoPromocion promo : promociones) {
+
+                        //Por cada promocion veo si tiene un descuento por forma de pago
+                        if (promo.getFormaPagoAplica() != null && !promo.getFormaPagoAplica().equalsIgnoreCase("null")) {
+                            //En el caso de que la tenga, recorro el arreglo de formas de pago hechas y comparo para ver si tiene ingresada cualquiera de las indicadas
+                            for (int fp : promo.getIdFormaPago()) {
+                                //En el caso de que exista algun descuento del producto por forma de pago, comparo el descuento que tiene el detalle con el descuento
+                                //que ofrece la promocion
+                                if (idsFormaPagos.contains(fp)) {
+                                    isPromo = true;
+                                    //Si el descuento ofrecido por la promocion es mayor, cambio el descuento y el idBeneficio, caso contrario, sigue igual
+                                    if (promo.getPorcentajeDescuento() > det.getPorcentajeDescuentoAutomatico()) {
+                                        det.setPorcentajeDescuentoAutomatico(promo.getPorcentajeDescuento());
+                                        det.setIdBeneficio(promo.getIdBeneficio());
+                                    }
+                                }
+                            }
+                        } else {
+                            //Caso contrario, chequeo si el detalle ya tiene un descuento, incluido dentro de las promociones consultadas.
+                            if (promo.getIdBeneficio() != det.getIdBeneficio() && !isPromo) {
+                                det.setPorcentajeDescuentoAutomatico(promo.getPorcentajeDescuento());
+                                det.setIdBeneficio(promo.getIdBeneficio());
+                            }
+                            isPromo = true;
+
+                        }
+
+                    }
+                    //Si existe, paso al siguiente detalle, caso contrario, encero el descuento y el idBeneficio
+                    if (!isPromo) {
+                        det.setPorcentajeDescuentoAutomatico(0);
+                        det.setIdBeneficio(0);
+                    }
+                }
+                //Terminado el proceso paso al siguiente detalle
+            }
+
+            //Terminado el proceso con todos los descuentos, los vuelvo a procesar y a setear.
+            int position = list_nombres.indexOf(cliente_auto.getText().toString());
+            if (position != -1) {
+                if (pedido != null && pedido.getPedidoDetalles() != null) {
+                    ValidarDescuentos(list_cliente.get(position).isCiudadanoOro());
+                    if (list_cliente.get(position).getExentoImpuesto()) {
+                        ValidarExentoImpuestos();
+                    } else {
+                        ValidarImpuestos();
+                    }
+                }
+            }
+            setTransaccionValues();
+        }
+        //Retorno el saldo para que se presente en la forma de pago.
+        return valorTotal;
     }
 }

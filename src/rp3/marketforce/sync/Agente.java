@@ -355,6 +355,9 @@ public class Agente {
                 PreferenceManager.setValue(Contants.KEY_AGENTE_UBICACION_1, jObject.getInt(Contants.KEY_AGENTE_UBICACION_1));
                 PreferenceManager.setValue(Contants.KEY_AGENTE_UBICACION_2, jObject.getInt(Contants.KEY_AGENTE_UBICACION_2));
                 PreferenceManager.setValue(Contants.KEY_AGENTE_UBICACION_3, jObject.getInt(Contants.KEY_AGENTE_UBICACION_3));
+                PreferenceManager.setValue(Contants.KEY_MODULO_OPORTUNIDADES, jObject.getBoolean(Contants.KEY_MODULO_OPORTUNIDADES));
+                PreferenceManager.setValue(Contants.KEY_MODULO_MARCACIONES, jObject.getBoolean(Contants.KEY_MODULO_MARCACIONES));
+                PreferenceManager.setValue(Contants.KEY_MODULO_POS, jObject.getBoolean(Contants.KEY_MODULO_POS));
                 if(!jObject.isNull(Contants.KEY_MARACIONES_DISTANCIA))
                     PreferenceManager.setValue(Contants.KEY_MARACIONES_DISTANCIA, jObject.getDouble(Contants.KEY_MARACIONES_DISTANCIA) + "");
 			} catch (HttpResponseException e) {

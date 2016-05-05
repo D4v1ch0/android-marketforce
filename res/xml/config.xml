@@ -19,8 +19,8 @@
     <webServiceConfiguration>                
         <webServiceData>
             <name>Core</name>
-            <url>[@server:http://www.rp3marketforce.com/Rp3MarketForce]/api</url>
-            <!--url>http://192.168.0.11/AgendaComercial/api</url-->
+            <!--url>[@server:http://www.rp3marketforce.com/Rp3MarketForce]/api</url-->
+            <url>http://190.216.215.133/Rp3Retail/api</url>
             <type>REST</type>
             <oAuthClientId>android-app-marketforce</oAuthClientId>
             <oAuthClientSecret>rp3-marketforce2014</oAuthClientSecret>
@@ -65,8 +65,8 @@
         </webServiceData>
            <webServiceData>
             <name>MartketForce</name>
-            <url>[@server:http://www.rp3marketforce.com/Rp3MarketForce]/api</url>
-            <!--url>http://192.168.0.11/AgendaComercial/api</url-->
+            <!--url>[@server:http://www.rp3marketforce.com/Rp3MarketForce]/api</url-->
+            <url>http://190.216.215.133/Rp3Retail/api</url>
             <type>REST</type>
             <oAuthClientId>android-app-marketforce</oAuthClientId>
             <oAuthClientSecret>rp3-marketforce2014</oAuthClientSecret>
@@ -312,8 +312,20 @@
                     <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
+                    <name>GetProductosCount</name>
+                    <action>producto/GetProductosCount?ultimaFechaActualizacion=@ultimaFechaActualizacion</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetProductosPromociones</name>
+                    <action>producto/GetProductosPromociones?idPuntoOperacion=@idPuntoOperacion</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
                     <name>GetProductos</name>
-                    <action>producto/GetProductos?ultimaFechaActualizacion=@ultimaFechaActualizacion</action>
+                    <action>producto/GetProductos?ultimaFechaActualizacion=@ultimaFechaActualizacion&amp;pagina=@pagina&amp;tamano=@tamano</action>
                     <webMethod>GET</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>
