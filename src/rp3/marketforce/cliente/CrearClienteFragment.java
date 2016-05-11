@@ -156,7 +156,7 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
 			if(Validaciones() && CamposObligatorios())
 			{
 				Grabar();
-                if(tipo == Contants.IS_MODIFICACION || !ConnectionUtils.isNetAvailable(getActivity()))
+                //if(tipo == Contants.IS_MODIFICACION || !ConnectionUtils.isNetAvailable(getActivity()))
                     ((CrearClienteActivity)getActivity()).finishOnResult(idCliente);
 			}
 			break;
@@ -498,7 +498,7 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
 					bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_CLIENTE_UPDATE_FULL);
 				else {
                     bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_CLIENTE_CREATE);
-                    showDialogConfirmation(DIALOG_VISITA, R.string.message_crear_visita, R.string.label_crear_visita);
+                    //showDialogConfirmation(DIALOG_VISITA, R.string.message_crear_visita, R.string.label_crear_visita);
                     cliente = cli;
                 }
 				bundle.putLong(ARG_CLIENTE, cli.getID());
@@ -1086,7 +1086,7 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
 
 		if(((EditText)getRootView().findViewById(R.id.cliente_identificacion)).getText().toString().trim().length() > 0 && getRootView().findViewById(R.id.cliente_identificacion).isEnabled())
 		{
-            if(!IdentificationValidator.ValidateIdentification(((EditText)getRootView().findViewById(R.id.cliente_identificacion)).getText().toString(),
+            if(!IdentificationValidator.ValidateIdentification(this.getDataBase(),((EditText)getRootView().findViewById(R.id.cliente_identificacion)).getText().toString(),
                     (int) ((Spinner)getRootView().findViewById(R.id.cliente_tipo_identificacion)).getAdapter().getItemId(((Spinner)getRootView().findViewById(R.id.cliente_tipo_identificacion)).getSelectedItemPosition())))
             {
                 Toast.makeText(getContext(), "Número de identificación incorrecto.", Toast.LENGTH_LONG).show();

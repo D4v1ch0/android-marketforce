@@ -104,14 +104,14 @@ public class AnularTransaccionFragment extends BaseFragment {
         rootView.findViewById(R.id.actividad_aceptar).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Pedido pedido = Pedido.getPedido(getDataBase(), id);
+                Pedido pedido = Pedido.getPedido(getDataBase(), id, true);
                 pedido.setMotivoAnulacion(((GeneralValue) ((Spinner) getRootView().findViewById(R.id.anulacion_motivo)).getSelectedItem()).getCode());
                 pedido.setObservacionAnulacion(((EditText) getRootView().findViewById(R.id.actividad_texto_respuesta)).getText().toString());
                 pedido.setEstado("A");
                 pedido.setFechaAnulacion(Calendar.getInstance().getTime());
                 Pedido.update(getDataBase(), pedido);
                 if (pedido.getTipoDocumento().equalsIgnoreCase("NC")) {
-                    Pedido toUpdate = Pedido.getPedido(getDataBase(), pedido.get_idDocumentoRef());
+                    Pedido toUpdate = Pedido.getPedido(getDataBase(), pedido.get_idDocumentoRef(), true);
                     for (PedidoDetalle detalle_nc : pedido.getPedidoDetalles()) {
                         for (PedidoDetalle detalleRef : toUpdate.getPedidoDetalles()) {
                             if (detalle_nc.getIdProducto() == detalleRef.getIdProducto()) {

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -15,6 +16,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -84,7 +86,7 @@ public class PedidoListFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+        Log.e("CARGA PEDIDOS", "Entra pantalla: " + Calendar.getInstance().getTime().toString());
         if(savedInstanceState == null)
         {
             Bundle args = new Bundle();
@@ -115,21 +117,20 @@ public class PedidoListFragment extends BaseFragment {
 
         refreshLayout.setRefreshing(false);
 
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 
             @Override
             public void onRefresh() {
-                if(ConnectionUtils.isNetAvailable(getContext())) {
-                    //Bundle bundle = new Bundle();
-                    //bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_JUSTIFICACIONES);
-                    //requestSync(bundle);
-                }
-                else
-                {
+                if (ConnectionUtils.isNetAvailable(getContext())) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_PEDIDO_PENDIENTES);
+                    requestSync(bundle);
+                } else {
                     Toast.makeText(getContext(), R.string.message_error_sync_no_net_available, Toast.LENGTH_LONG).show();
                     refreshLayout.setRefreshing(false);
                 }
-            }});
+            }
+        });
 
         if(adapter != null)
         {
@@ -189,9 +190,9 @@ public class PedidoListFragment extends BaseFragment {
                 @Override
                 public void onRefresh() {
                     if (ConnectionUtils.isNetAvailable(getContext())) {
-                        //Bundle bundle = new Bundle();
-                        //bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_JUSTIFICACIONES);
-                        //requestSync(bundle);
+                        Bundle bundle = new Bundle();
+                        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_PEDIDO_PENDIENTES);
+                        requestSync(bundle);
                     } else {
                         Toast.makeText(getContext(), R.string.message_error_sync_no_net_available, Toast.LENGTH_LONG).show();
                         refreshLayout.setRefreshing(false);
@@ -253,6 +254,7 @@ public class PedidoListFragment extends BaseFragment {
                 }
             });
 
+            Log.e("CARGA PEDIDOS", "Antes de Mostrar Transacciones: " + Calendar.getInstance().getTime().toString());
             HashMap<String, List<Pedido>> groupPedidos = toExpandableList(data);
             if(adapter == null) {
                 adapter = new PedidoAdapter(getContext(), groupPedidos, headers, tipos);
@@ -263,6 +265,7 @@ public class PedidoListFragment extends BaseFragment {
                 adapter.setPedidos(groupPedidos);
             }
             adapter.notifyDataSetChanged();
+            Log.e("CARGA PEDIDOS", "Despues de mostrar: " + Calendar.getInstance().getTime().toString());
             if (permisoListFragmentCallback.allowSelectedItem() && data.size() > 0)
                 permisoListFragmentCallback.onPermisoSelected(data.get(0));
             permisoListFragmentCallback.onFinalizaConsulta();
@@ -280,6 +283,7 @@ public class PedidoListFragment extends BaseFragment {
                 getRootView().findViewById(R.id.list_pedidos_ninguno).setVisibility(View.VISIBLE);
             else
                 getRootView().findViewById(R.id.list_pedidos_ninguno).setVisibility(View.GONE);
+            Log.e("CARGA PEDIDOS", "Fin de carga: " + Calendar.getInstance().getTime().toString());
         }
 
         @Override
@@ -291,6 +295,22 @@ public class PedidoListFragment extends BaseFragment {
     public void onSyncComplete(Bundle data, MessageCollection messages) {
         super.onSyncComplete(data, messages);
 
+        closeDialogProgress();
+        refreshLayout.setRefreshing(false);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (ConnectionUtils.isNetAvailable(getContext())) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_PEDIDO_PENDIENTES);
+                    requestSync(bundle);
+                } else {
+                    Toast.makeText(getContext(), R.string.message_error_sync_no_net_available, Toast.LENGTH_LONG).show();
+                    refreshLayout.setRefreshing(false);
+                }
+            }
+        });
+        onResume();
     }
 
     public void setList()

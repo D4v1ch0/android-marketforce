@@ -37,7 +37,7 @@ public class Pedido {
         WebService webService = new WebService("MartketForce", "UpdatePedido");
         webService.setTimeOut(20000);
 
-        rp3.marketforce.models.pedido.Pedido pedidoUpload = rp3.marketforce.models.pedido.Pedido.getPedido(db, idPedido);
+        rp3.marketforce.models.pedido.Pedido pedidoUpload = rp3.marketforce.models.pedido.Pedido.getPedido(db, idPedido, true);
         ControlCaja controlCaja = ControlCaja.getControlCajaActiva(db);
         if(controlCaja.getIdControlCaja() == 0) {
             Caja.executeSyncInsertControl(db, controlCaja.getID());
@@ -215,7 +215,7 @@ public class Pedido {
                 jObject.put("IdAgenda", pedidoUpload.getIdAgenda());
                 jObject.put("IdRuta", PreferenceManager.getInt(Contants.KEY_IDRUTA));
                 jObject.put("IdPedido", pedidoUpload.getIdPedido());
-                if (pedidoUpload.getIdCliente() == 0) {
+                if (pedidoUpload.getIdCliente() == 0 && pedidoUpload.get_idCliente() != 0) {
                     rp3.marketforce.models.Cliente cli = rp3.marketforce.models.Cliente.getClienteID(db, pedidoUpload.get_idCliente(), false);
                     if(cli.getIdCliente() == 0)
                         continue;
@@ -266,7 +266,7 @@ public class Pedido {
                 jObject.put("IdControlCaja", controlCaja.getIdControlCaja());
                 if(pedidoUpload.getTipoDocumento().equalsIgnoreCase("NC") && pedidoUpload.getIdDocumentoRef() == 0)
                 {
-                    rp3.marketforce.models.pedido.Pedido pedidoRef = rp3.marketforce.models.pedido.Pedido.getPedido(db, pedidoUpload.get_idDocumentoRef());
+                    rp3.marketforce.models.pedido.Pedido pedidoRef = rp3.marketforce.models.pedido.Pedido.getPedido(db, pedidoUpload.get_idDocumentoRef(), false);
                     if(pedidoRef.getIdPedido() == 0)
                         continue;
                     jObject.put("IdDocumentoRef", pedidoRef.getIdPedido());
@@ -302,22 +302,33 @@ public class Pedido {
                     jObjectDetalle.put("BaseImponible", df.format(NumberUtils.Round(det.getBaseImponible(), 2)));
                     jObjectDetalle.put("BaseImponibleCero", df.format(NumberUtils.Round(det.getBaseImponibleCero(), 2)));
                     jObjectDetalle.put("IdBeneficio", det.getIdBeneficio());
-                    jObjectDetalle.put("PorcDescOro", df.format(NumberUtils.Round(det.getPorcentajeDescuentoOro(), 2)));
                     jObjectDetalle.put("ValorDescOro", df.format(NumberUtils.Round(det.getValorDescuentoOro(), 2)));
+                    if(det.getValorDescuentoOro() == 0)
+                        jObjectDetalle.put("PorcDescOro", 0);
+                    else
+                        jObjectDetalle.put("PorcDescOro", df.format(NumberUtils.Round(det.getPorcentajeDescuentoOro(), 2)));
+
                     jObjectDetalle.put("ValorDescOroTotal", df.format(NumberUtils.Round(det.getValorDescuentoOroTotal(), 2)));
-                    jObjectDetalle.put("PorcDescAutomatico", df.format(NumberUtils.Round(det.getPorcentajeDescuentoAutomatico(), 2)));
+
+                    jObjectDetalle.put("ValorDescAutomatico", df.format(NumberUtils.Round(det.getValorDescuentoAutomatico(), 2)));
+                    if(det.getValorDescuentoAutomatico() == 0)
+                        jObjectDetalle.put("PorcDescAutomatico", 0);
+                    else
+                        jObjectDetalle.put("PorcDescAutomatico", df.format(NumberUtils.Round(det.getPorcentajeDescuentoAutomatico(), 2)));
+
                     jObjectDetalle.put("PorcDescManual", df.format(NumberUtils.Round(det.getPorcentajeDescuentoManual(), 2)));
                     jObjectDetalle.put("PorcImpuestoIvaVenta", df.format(NumberUtils.Round(det.getPorcentajeImpuesto(), 2)));
                     jObjectDetalle.put("Subtotal", df.format(NumberUtils.Round(det.getSubtotal(), 2)));
                     jObjectDetalle.put("SubtotalSinDescuento", df.format(NumberUtils.Round(det.getSubtotalSinDescuento(), 2)));
                     jObjectDetalle.put("SubtotalSinImpuesto", df.format(NumberUtils.Round(det.getSubtotalSinImpuesto(), 2)));
-                    jObjectDetalle.put("ValorDescAutomatico", df.format(NumberUtils.Round(det.getValorDescuentoAutomatico(), 2)));
+
                     jObjectDetalle.put("ValorDescAutomaticoTotal", df.format(NumberUtils.Round(det.getValorDescuentoAutomaticoTotal(), 2)));
                     jObjectDetalle.put("ValorDescManual", df.format(NumberUtils.Round(det.getValorDescuentoManual(), 2)));
                     jObjectDetalle.put("ValorDescManualTotal", df.format(NumberUtils.Round(det.getValorDescuentoManualTotal(), 2)));
                     jObjectDetalle.put("ValorImpuestoIvaVenta", df.format(NumberUtils.Round(det.getValorImpuesto(), 2)));
                     jObjectDetalle.put("ValorImpuestoIvaVentaTotal", df.format(NumberUtils.Round(det.getValorImpuestoTotal(), 2)));
                     jObjectDetalle.put("BaseICE", df.format(NumberUtils.Round(det.getBaseICE(), 2)));
+                    jObjectDetalle.put("UsrAutorizaDescManual", det.getUsrDescManual());
                     jObjectDetalle.put("CantidadDevolucion", det.getCantidadDevolucion());
 
                     jArrayDetalle.put(jObjectDetalle);
@@ -397,7 +408,7 @@ public class Pedido {
         WebService webService = new WebService("MartketForce", "AnularPedido");
         webService.setTimeOut(20000);
 
-        rp3.marketforce.models.pedido.Pedido pedidoUpload = rp3.marketforce.models.pedido.Pedido.getPedido(db, idPedido);
+        rp3.marketforce.models.pedido.Pedido pedidoUpload = rp3.marketforce.models.pedido.Pedido.getPedido(db, idPedido, false);
 
         JSONObject jObject = new JSONObject();
         try {

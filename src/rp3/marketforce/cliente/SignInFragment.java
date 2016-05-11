@@ -52,6 +52,7 @@ public class SignInFragment extends BaseFragment {
             showDialogMessage(messages);
         }else {
             if(data.getBoolean(ServerAuthenticate.KEY_SUCCESS, false)) {
+                data.putString(ARG_USER, ((EditText) getRootView().findViewById(R.id.sign_in_user)).getText().toString());
                 createFragmentListener.onSignSuccess(data);
                 dismiss();
             }

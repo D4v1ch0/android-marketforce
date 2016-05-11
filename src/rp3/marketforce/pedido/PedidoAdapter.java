@@ -27,6 +27,7 @@ import rp3.marketforce.models.pedido.Pedido;
 public class PedidoAdapter extends BaseExpandableListAdapter {
 
     private final SimpleDateFormat format1, format2, format3, format5;
+    private final SimpleDateFormat format6;
     private Context context;
     private LayoutInflater inflater;
     private List<String> listHeader, identifiers;
@@ -48,6 +49,7 @@ public class PedidoAdapter extends BaseExpandableListAdapter {
         format2 = new SimpleDateFormat("dd");
         format3 = new SimpleDateFormat("MMMM");
         format5 = new SimpleDateFormat("yyyy");
+        format6 = new SimpleDateFormat("HH:mm");
     }
 
     public HashMap<String, List<Pedido>> getPedidos() {
@@ -122,7 +124,8 @@ public class PedidoAdapter extends BaseExpandableListAdapter {
         if(pedido.getIdPedido() != 0)
             convertView.findViewById(R.id.pedido_sincronizar).setVisibility(View.INVISIBLE);
         ((TextView) convertView.findViewById(R.id.pedido_cliente)).setText(pedido.getNombre());
-        ((TextView) convertView.findViewById(R.id.pedido_fecha)).setText(format1.format(pedido.getFechaCreacion()) + ", " + format2.format(pedido.getFechaCreacion()) + " de " + format3.format(pedido.getFechaCreacion()) + " del " + format5.format(pedido.getFechaCreacion()));
+        ((TextView) convertView.findViewById(R.id.pedido_fecha)).setText(format1.format(pedido.getFechaCreacion()) + ", " + format2.format(pedido.getFechaCreacion()) + " de " + format3.format(pedido.getFechaCreacion()) + " del " + format5.format(pedido.getFechaCreacion()) +
+                                        " - " + format6.format(pedido.getFechaCreacion()));
         if(pedido.get_idDocumentoRef() == 0)
             ((TextView) convertView.findViewById(R.id.pedido_numero_documento)).setText(pedido.getNumeroDocumento());
         else

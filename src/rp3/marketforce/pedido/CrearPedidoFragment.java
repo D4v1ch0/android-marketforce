@@ -90,6 +90,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     public static final int DIALOG_SAVE_ACCEPT = 2;
     static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
 
+    private Cliente consumidorFinal = new Cliente();
     private long idCliente = 0;
     private long idAgenda = 0;
     private boolean saved = false;
@@ -118,6 +119,13 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        consumidorFinal.setCiudadanoOro(false);
+        consumidorFinal.setExentoImpuesto(false);
+        consumidorFinal.setNombre1("Consumidor Final");
+        consumidorFinal.setNombre2("");
+        consumidorFinal.setApellido1("");
+        consumidorFinal.setApellido2("");
+        consumidorFinal.setNombreCompleto("Consumidor Final");
         pedido = new Pedido();
         numberFormat = NumberFormat.getInstance();
         numberFormat.setMaximumFractionDigits(2);
@@ -206,7 +214,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     private void Grabar(boolean pendiente) {
         Pedido docRef = null;
         if(tipo.equalsIgnoreCase("NC"))
-            docRef = Pedido.getPedido(getDataBase(), pedido.get_idDocumentoRef());
+            docRef = Pedido.getPedido(getDataBase(), pedido.get_idDocumentoRef(), true);
 
         if (idCliente == 0)
             pedido.setFechaCreacion(Calendar.getInstance().getTime());
@@ -372,11 +380,12 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         list_nombres = new ArrayList<String>();
 
         list_cliente = Cliente.getCliente(getDataBase());
+        list_cliente.add(consumidorFinal);
         for (Cliente cli : list_cliente) {
             list_nombres.add(cli.getNombreCompleto().trim());
         }
         //Se agrega Consumidor Final
-        list_nombres.add("Consumidor Final");
+        //list_nombres.add("Consumidor Final");
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(), R.layout.spinner_small_text, list_nombres);
 
         cliente_auto.setAdapter(adapter);
@@ -548,8 +557,11 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                     jsonObject.put("f", pedido.getPedidoDetalles().get(position).getUrlFoto());
                     jsonObject.put("c", pedido.getPedidoDetalles().get(position).getCantidad());
                     jsonObject.put("vd", prod.getPrecioDescuento());
-                    jsonObject.put("pd", prod.getPorcentajeDescuento());
+                    jsonObject.put("pd", pedido.getPedidoDetalles().get(position).getPorcentajeDescuentoAutomatico());
                     jsonObject.put("ib", prod.getIdBeneficio());
+                    jsonObject.put("co", pedido.getPedidoDetalles().get(position).getCantidadOriginal());
+                    if(pedido.getPedidoDetalles().get(position).getUsrDescManual() != null && !pedido.getPedidoDetalles().get(position).getUsrDescManual().equalsIgnoreCase(""))
+                        jsonObject.put("udm", pedido.getPedidoDetalles().get(position).getUsrDescManual());
                     jsonObject.put("tipo", tipo);
 
                     productFragment = ProductFragment.newInstance(jsonObject.toString());
@@ -588,9 +600,10 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     }
 
     private void setDatosPedidos() {
-        pedido = Pedido.getPedido(getDataBase(), idCliente);
+        pedido = Pedido.getPedido(getDataBase(), idCliente, true);
+        Cliente cl = null;
         if(pedido.get_idCliente() != 0) {
-            Cliente cl = Cliente.getClienteID(getDataBase(), pedido.get_idCliente(), false);
+            cl = Cliente.getClienteID(getDataBase(), pedido.get_idCliente(), false);
             cliente_auto.setText(cl.getNombreCompleto().trim());
             cliente_auto.setEnabled(false);
             ((TextView) getRootView().findViewById(R.id.pedido_email)).setText(cl.getCorreoElectronico());
@@ -618,22 +631,30 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             else
             {
                 detalleList.get(i).setCantidad(detalleList.get(i).getCantidad() - detalleList.get(i).getCantidadDevolucion());
+                detalleList.get(i).setCantidadOriginal(detalleList.get(i).getCantidad());
                 detalleList.get(i).setSubtotal(detalleList.get(i).getValorUnitario() * detalleList.get(i).getCantidad());
-                detalleList.get(i).setValorDescuentoOro(detalleList.get(i).getValorUnitario() * detalleList.get(i).getPorcentajeDescuentoOro());
+                //detalleList.get(i).setValorDescuentoOro(detalleList.get(i).getValorUnitario() * detalleList.get(i).getPorcentajeDescuentoOro());
                 detalleList.get(i).setValorDescuentoOroTotal(detalleList.get(i).getValorDescuentoOro() * detalleList.get(i).getCantidad());
                 detalleList.get(i).setValorDescuentoAutomaticoTotal(detalleList.get(i).getValorDescuentoAutomatico() * detalleList.get(i).getCantidad());
                 detalleList.get(i).setValorDescuentoManualTotal(detalleList.get(i).getValorDescuentoManual() * detalleList.get(i).getCantidad());
                 detalleList.get(i).setValorImpuestoTotal(detalleList.get(i).getValorImpuesto() * detalleList.get(i).getCantidad());
                 detalleList.get(i).setProducto(Producto.getProductoIdServer(getDataBase(), detalleList.get(i).getIdProducto()));
-                detalleList.get(i).setValorTotal(detalleList.get(i).getSubtotal() - detalleList.get(i).getValorDescuentoAutomaticoTotal() - detalleList.get(i).getValorDescuentoManualTotal() + detalleList.get(i).getValorImpuestoTotal());
-                detalleList.get(i).setBaseImponible(detalleList.get(i).getPorcentajeImpuesto() == 0 ? 0 : detalleList.get(i).getSubtotal() - detalleList.get(i).getValorDescuentoAutomaticoTotal() - detalleList.get(i).getValorDescuentoManualTotal());
-                detalleList.get(i).setBaseImponibleCero(detalleList.get(i).getPorcentajeImpuesto() == 0 ? detalleList.get(i).getSubtotal() - detalleList.get(i).getValorDescuentoAutomaticoTotal() - detalleList.get(i).getValorDescuentoManualTotal() : 0);
+                detalleList.get(i).setValorTotal(detalleList.get(i).getSubtotal() - detalleList.get(i).getValorDescuentoOroTotal() - detalleList.get(i).getValorDescuentoAutomaticoTotal() - detalleList.get(i).getValorDescuentoManualTotal() + detalleList.get(i).getValorImpuestoTotal());
+                detalleList.get(i).setBaseImponible(detalleList.get(i).getPorcentajeImpuesto() == 0 ? 0 : detalleList.get(i).getSubtotal() - detalleList.get(i).getValorDescuentoOroTotal() - detalleList.get(i).getValorDescuentoAutomaticoTotal() - detalleList.get(i).getValorDescuentoManualTotal());
+                detalleList.get(i).setBaseImponibleCero(detalleList.get(i).getPorcentajeImpuesto() == 0 ? detalleList.get(i).getSubtotal() - detalleList.get(i).getValorDescuentoOroTotal() - detalleList.get(i).getValorDescuentoAutomaticoTotal() - detalleList.get(i).getValorDescuentoManualTotal() : 0);
                 detalleList.get(i).setSubtotalSinDescuento(detalleList.get(i).getSubtotal());
-                detalleList.get(i).setSubtotalSinImpuesto(detalleList.get(i).getSubtotal() - detalleList.get(i).getValorDescuentoAutomaticoTotal() - detalleList.get(i).getValorDescuentoManualTotal());
+                detalleList.get(i).setSubtotalSinImpuesto(detalleList.get(i).getSubtotal() - detalleList.get(i).getValorDescuentoOroTotal() - detalleList.get(i).getValorDescuentoAutomaticoTotal() - detalleList.get(i).getValorDescuentoManualTotal());
             }
         }
 
-
+        if (pedido != null && pedido.getPedidoDetalles() != null && cl != null) {
+            ValidarDescuentos(cl.isCiudadanoOro());
+            if (cl.getExentoImpuesto()) {
+                ValidarExentoImpuestos();
+            } else {
+                ValidarImpuestos();
+            }
+        }
 
 
         adapter = new PedidoDetalleAdapter(this.getContext(), pedido.getPedidoDetalles());
@@ -652,9 +673,10 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             baseImponible = baseImponible + detalle.getBaseImponible();
             neto = neto + (detalle.getSubtotal() - (detalle.getValorDescuentoManualTotal() + detalle.getValorDescuentoAutomaticoTotal() + detalle.getValorDescuentoOroTotal()));
         }
-        double residuo = valorTotal % 1;
-        if(residuo >= 0.5)
-            redondeo = (1 - residuo);
+        double a_redondondear = Double.parseDouble(GeneralValue.getGeneralValue(getDataBase(), Contants.POS_ROUNDNUM).getValue());
+        double residuo = valorTotal % (a_redondondear * 2);
+        if(residuo >= a_redondondear)
+            redondeo = ((a_redondondear * 2) - residuo);
         else
             redondeo = - residuo;
 
@@ -768,6 +790,8 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                         detalle.setSubtotalSinImpuesto(jsonObject.getDouble("ssi"));
                         detalle.setCodigoExterno(jsonObject.getString("cod"));
                         detalle.setIdBeneficio(jsonObject.getInt("ib"));
+                        if(!jsonObject.isNull("udm"))
+                            detalle.setUsrDescManual(jsonObject.getString("udm"));
                         onAcceptSuccess(detalle);
                     }
                     catch (Exception ex)
@@ -792,10 +816,12 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                     //cliente_auto.setEnabled(false);
                     ((TextView) getRootView().findViewById(R.id.pedido_email)).setText(cl.getCorreoElectronico());
                     list_cliente = Cliente.getCliente(getDataBase());
+                    list_cliente.add(consumidorFinal);
                     list_nombres = new ArrayList<String>();
                     for (Cliente cli : list_cliente) {
                         list_nombres.add(cli.getNombreCompleto().trim());
                     }
+                    //list_nombres.add("Consumidor Final");
                 }
         }
     }
@@ -846,7 +872,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                 Toast.makeText(getContext(), "No se puede registrar esta transacción a un Consumidor Final.", Toast.LENGTH_LONG).show();
                 return false;
             }
-            if(valorTotal > 200000)
+            if(valorTotal > Double.parseDouble(GeneralValue.getGeneralValue(getDataBase(), Contants.POS_FINALMOUNT).getValue()))
             {
                 Toast.makeText(getContext(), "No se puede facturar a un Consumidor Final un valor mayor a 200000.", Toast.LENGTH_LONG).show();
                 return false;
@@ -941,7 +967,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     }
 
     public void generarFacturaFísica() {
-        pedido = Pedido.getPedido(getDataBase(), pedido.getID());
+        pedido = Pedido.getPedido(getDataBase(), pedido.getID(), true);
         String toPrint = PrintHelper.generarFacturaFísica(pedido, false);
 
         GeneralValue printParameter = GeneralValue.getGeneralValue(getDataBase(), Contants.POS_PRINTMODE);
@@ -1269,6 +1295,11 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                         ValidarImpuestos();
                     }
                 }
+            }
+            else
+            {
+                ValidarDescuentos(false);
+                ValidarImpuestos();
             }
             setTransaccionValues();
         }

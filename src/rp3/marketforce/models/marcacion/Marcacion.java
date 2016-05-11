@@ -187,7 +187,7 @@ public class Marcacion extends EntityBase<Marcacion>
 
             }while(c.moveToNext());
         }
-
+        c.close();
         return marcaciones;
 
     }
@@ -219,7 +219,7 @@ public class Marcacion extends EntityBase<Marcacion>
 
             }while(c.moveToNext());
         }
-
+        c.close();
         return marcaciones;
 
     }
@@ -244,7 +244,7 @@ public class Marcacion extends EntityBase<Marcacion>
             marcacion.setMintutosAtraso(CursorUtils.getInt(c, Contract.Marcacion.COLUMN_MINUTOS_ATRASO));
             marcacion.setPermiso(Permiso.getPermisoMarcacion(db, marcacion.getID()));
         }
-
+        c.close();
         return marcacion;
     }
 
@@ -269,7 +269,7 @@ public class Marcacion extends EntityBase<Marcacion>
             marcacion.setMintutosAtraso(CursorUtils.getInt(c, Contract.Marcacion.COLUMN_MINUTOS_ATRASO));
             marcacion.setPermiso(Permiso.getPermisoMarcacion(db, marcacion.getID()));
         }
-
+        c.close();
         return marcacion;
     }
 
@@ -293,7 +293,7 @@ public class Marcacion extends EntityBase<Marcacion>
             marcacion.setMintutosAtraso(CursorUtils.getInt(c, Contract.Marcacion.COLUMN_MINUTOS_ATRASO));
             marcacion.setPermiso(Permiso.getPermisoMarcacion(db, marcacion.getID()));
         }
-
+        c.close();
         return marcacion;
     }
 }

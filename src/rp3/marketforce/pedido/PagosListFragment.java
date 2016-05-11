@@ -142,6 +142,11 @@ public class PagosListFragment extends BaseFragment implements AgregarPagoFragme
         return saldo;
     }
 
+    @Override
+    public Pago getPago(int idPago) {
+        return pagos.get(idPago);
+    }
+
     public interface PagosAcceptListener{
         public void onAcceptSuccess(List<Pago> pagos);
         public double getNewSaldo(List<Integer> idsFormaPago);

@@ -177,10 +177,10 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
         // TODO Auto-generated method stub
         super.onStart();
 
-        if(selectedClientId != 0){
+        /*if(selectedClientId != 0){
             if(!mTwoPane)
                 slidingPane.closePane();
-        }
+        }*/
     }
 
     @Override
@@ -228,7 +228,8 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
     }
 
     public void RefreshMenu(){
-        Pedido ped = Pedido.getPedido(getDataBase(), selectedClientId);
+        Log.e("CARGA PEDIDOS", "Antes de Creacion de Menu: " + Calendar.getInstance().getTime().toString());
+        Pedido ped = Pedido.getPedido(getDataBase(), selectedClientId, false);
         Pedido ref = Pedido.getPedidoRef(getDataBase(), selectedClientId);
         ControlCaja control = ControlCaja.getControlCajaActiva(getDataBase());
         Calendar calPed = Calendar.getInstance();
@@ -267,6 +268,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
             //menu.findItem(R.id.action_nota_credito).setVisible(false);
 
         }
+        Log.e("CARGA PEDIDOS", "Despues de creacion de menu: " + Calendar.getInstance().getTime().toString());
     }
 
     @Override
@@ -277,7 +279,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                 startActivity(intent);
                 break;
             case R.id.action_ver_pagos:
-                Pedido ped = Pedido.getPedido(getDataBase(), selectedClientId);
+                Pedido ped = Pedido.getPedido(getDataBase(), selectedClientId, true);
                 PagosListFragment fragment = PagosListFragment.newInstance(ped.getValorTotal());
                 fragment.pagos = ped.getPagos();
                 fragment.isDetail = true;
@@ -476,7 +478,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
 
     public void generarFacturaFísica() {
 
-        Pedido pedido = Pedido.getPedido(getDataBase(), selectedClientId);
+        Pedido pedido = Pedido.getPedido(getDataBase(), selectedClientId, true);
         String toPrint = PrintHelper.generarFacturaFísica(pedido, true);
 
         try {
@@ -612,7 +614,10 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                                 producto.setCodigoExterno(type.getString("Ex"));
                                 producto.setPrecioDescuento(Float.parseFloat(type.getString("PCD")));
                                 producto.setPrecioImpuesto(Float.parseFloat(type.getString("PCI")));
-                                producto.setPorcentajeDescuentoOro(Float.parseFloat(type.getString("PDO")));
+                                if(!type.isNull("PDO"))
+                                    producto.setPorcentajeDescuentoOro(Float.parseFloat(type.getString("PDO")));
+                                else
+                                    producto.setPorcentajeDescuentoOro(0);
                                 producto.setPorcentajeDescuento(Float.parseFloat(type.getString("PD")));
                                 producto.setPorcentajeImpuesto(Float.parseFloat(type.getString("PI")));
                                 producto.setIdBeneficio(type.getInt("B"));
@@ -672,7 +677,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                         productoPromocion.setFechaDesde(Convert.getDateFromDotNetTicks(type.getLong("FechaDesdeTicks")));
                         productoPromocion.setFechaHasta(Convert.getDateFromDotNetTicks(type.getLong("FechaHastaTicks")));
                         productoPromocion.setPorcentajeDescuento(Float.parseFloat(type.getString("PorcentajeDescuento")));
-                        if(!type.isNull("FormaPagoAplica"))
+                        if(!type.isNull("FormaPagoAplica") && type.getString("FormaPagoAplica").trim().length() > 0)
                             productoPromocion.setFormaPagoAplica(type.getString("FormaPagoAplica"));
                         ProductoPromocion.insert(getDataBase(), productoPromocion);
                     }

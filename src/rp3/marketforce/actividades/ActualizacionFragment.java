@@ -790,7 +790,7 @@ public class ActualizacionFragment extends BaseFragment {
 
         if(((EditText)getRootView().findViewById(R.id.cliente_identificacion)).getText().toString().trim().length() > 0 && getRootView().findViewById(R.id.cliente_identificacion).isEnabled())
         {
-            if(!IdentificationValidator.ValidateIdentification(((EditText) getRootView().findViewById(R.id.cliente_identificacion)).getText().toString(),
+            if(!IdentificationValidator.ValidateIdentification(getDataBase(), ((EditText) getRootView().findViewById(R.id.cliente_identificacion)).getText().toString(),
                     (int) ((Spinner) getRootView().findViewById(R.id.cliente_tipo_identificacion)).getAdapter().getItemId(((Spinner) getRootView().findViewById(R.id.cliente_tipo_identificacion)).getSelectedItemPosition())))
             {
                 Toast.makeText(getContext(), "Número de identificación incorrecto.", Toast.LENGTH_LONG).show();

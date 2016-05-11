@@ -56,8 +56,8 @@ public class AgregarPagoFragment extends BaseFragment {
     private PagoAdapter adapter;
     private NumberFormat numberFormat;
     private double saldo, pago;
-    private int idpago, idFormaPago;
-    private boolean efectivo;
+    private int idpago, idFormaPago, idMarca, idDiferido;
+    private boolean efectivo, putPago = false;
     private String obs;
 
     public static AgregarPagoFragment newInstance(double saldo, boolean efectivo)
@@ -108,6 +108,7 @@ public class AgregarPagoFragment extends BaseFragment {
         public void onAcceptSuccess(Pago pago);
         public double getNewSaldo(int idPago);
         public double getNewSaldoUpdate(int idFormaPago, int idPago);
+        public Pago getPago(int idPago);
     }
 
     @Override
@@ -141,11 +142,19 @@ public class AgregarPagoFragment extends BaseFragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 DecimalFormat df = new DecimalFormat("#.##");
                 ValidarCampos(FormaPago.getFormasPago(getDataBase()).get(position));
-                if(idpago != - 1)
+                if(idpago != - 1) {
                     saldo = createFragmentListener.getNewSaldoUpdate(FormaPago.getFormasPago(getDataBase()).get(position).getIdFormaPago(), idpago);
-                else
+                    if(!putPago)
+                    {
+                        putPago = true;
+                        ((EditText) getRootView().findViewById(R.id.pago_valor)).setText(df.format(pago) + ".00");
+                    }
+                }
+                else {
                     saldo = createFragmentListener.getNewSaldo(FormaPago.getFormasPago(getDataBase()).get(position).getIdFormaPago());
-                ((EditText) getRootView().findViewById(R.id.pago_valor)).setText(df.format(saldo) + ".00");
+                    ((EditText) getRootView().findViewById(R.id.pago_valor)).setText(df.format(saldo) + ".00");
+                }
+
             }
 
             @Override
@@ -164,13 +173,29 @@ public class AgregarPagoFragment extends BaseFragment {
                 listMarcaTarjetas = MarcaTarjeta.getMarcasTarjetasPorBanco(getDataBase(), banco);
                 SimpleIdentifiableAdapter tarjetas = new SimpleIdentifiableAdapter(getContext(), listMarcaTarjetas);
                 ((Spinner) rootView.findViewById(R.id.pago_tarjeta)).setAdapter(tarjetas);
+                for(int i = 0; i < listMarcaTarjetas.size(); i++)
+                {
+                    if(listMarcaTarjetas.get(i).getIdMarcaTarjeta() == idMarca) {
+                        ((Spinner) rootView.findViewById(R.id.pago_tarjeta)).setSelection(i);
+                    }
+                }
+                idMarca = 0;
                 if (listMarcaTarjetas.size() > 0) {
                     int marca = listMarcaTarjetas.get(((Spinner) getRootView().findViewById(R.id.pago_tarjeta)).getSelectedItemPosition()).getIdMarcaTarjeta();
-                    SimpleIdentifiableAdapter tipoDiferidos = new SimpleIdentifiableAdapter(getContext(), TipoDiferido.getTipoDiferidosByBancoTarjeta(getDataBase(), banco, marca));
+                    List<TipoDiferido> listDiferidos = TipoDiferido.getTipoDiferidosByBancoTarjeta(getDataBase(), banco, marca);
+                    SimpleIdentifiableAdapter tipoDiferidos = new SimpleIdentifiableAdapter(getContext(), listDiferidos);
+                    ((Spinner) rootView.findViewById(R.id.pago_diferido)).setAdapter(tipoDiferidos);
+                    for(int i = 0; i < listDiferidos.size(); i++)
+                    {
+                        if(listDiferidos.get(i).getIdTipoDiferido() == idDiferido) {
+                            ((Spinner) rootView.findViewById(R.id.pago_diferido)).setSelection(i);
+                        }
+                    }
+                }
+                else {
+                    SimpleIdentifiableAdapter tipoDiferidos = new SimpleIdentifiableAdapter(getContext(), new ArrayList<Identifiable>());
                     ((Spinner) rootView.findViewById(R.id.pago_diferido)).setAdapter(tipoDiferidos);
                 }
-                SimpleIdentifiableAdapter tipoDiferidos = new SimpleIdentifiableAdapter(getContext(), new ArrayList<Identifiable>());
-                ((Spinner) rootView.findViewById(R.id.pago_diferido)).setAdapter(tipoDiferidos);
             }
 
             @Override
@@ -190,8 +215,16 @@ public class AgregarPagoFragment extends BaseFragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 int marca = ((int) ((Identifiable)((Spinner) getRootView().findViewById(R.id.pago_tarjeta)).getAdapter().getItem(position)).getValue(""));
                 int banco = ((int) ((Identifiable)((Spinner) getRootView().findViewById(R.id.pago_banco)).getAdapter().getItem(((Spinner) getRootView().findViewById(R.id.pago_banco)).getSelectedItemPosition())).getValue(""));
-                SimpleIdentifiableAdapter tipoDiferidos = new SimpleIdentifiableAdapter(getContext(), TipoDiferido.getTipoDiferidosByBancoTarjeta(getDataBase(), banco, marca));
+                List<TipoDiferido> listDiferidos = TipoDiferido.getTipoDiferidosByBancoTarjeta(getDataBase(), banco, marca);
+                SimpleIdentifiableAdapter tipoDiferidos = new SimpleIdentifiableAdapter(getContext(), listDiferidos);
                 ((Spinner) rootView.findViewById(R.id.pago_diferido)).setAdapter(tipoDiferidos);
+                for(int i = 0; i < listDiferidos.size(); i++)
+                {
+                    if(listDiferidos.get(i).getIdTipoDiferido() == idDiferido) {
+                        ((Spinner) rootView.findViewById(R.id.pago_diferido)).setSelection(i);
+                    }
+                }
+                //idDiferido = 0;
             }
 
             @Override
@@ -231,6 +264,54 @@ public class AgregarPagoFragment extends BaseFragment {
             }
             ((EditText) getRootView().findViewById(R.id.pago_valor)).setText(pago + "");
             ((EditText) getRootView().findViewById(R.id.actividad_texto_respuesta)).setText(obs);
+
+            Pago pag = createFragmentListener.getPago(idpago);
+            switch (pag.getIdFormaPago())
+            {
+                case 2:
+                    if(pag.getIdBanco() != 0)
+                    {
+                        for(int i = 0; i < listBancos.size(); i++)
+                        {
+                            if(listBancos.get(i).getIdBanco() == pag.getIdBanco()) {
+                                ((Spinner) rootView.findViewById(R.id.pago_banco)).setSelection(i);
+                            }
+                        }
+                    }
+                    if(pag.getNumeroDocumento() != null && !pag.getNumeroDocumento().equalsIgnoreCase("null"))
+                        ((EditText) getRootView().findViewById(R.id.pago_numero_documento)).setText(pag.getNumeroDocumento());
+                    if(pag.getNumeroCuenta() != null && !pag.getNumeroCuenta().equalsIgnoreCase("null"))
+                        ((EditText) getRootView().findViewById(R.id.pago_numero_cuenta)).setText(pag.getNumeroCuenta());
+                    break;
+                case 3:
+                    if(pag.getIdBanco() != 0)
+                    {
+                        for(int i = 0; i < listBancos.size(); i++)
+                        {
+                            if(listBancos.get(i).getIdBanco() == pag.getIdBanco()) {
+                                ((Spinner) rootView.findViewById(R.id.pago_banco)).setSelection(i);
+                            }
+                        }
+                    }
+                    if(pag.getIdMarcaTarjeta() != 0)
+                    {
+                        idMarca = pag.getIdMarcaTarjeta();
+                    }
+                    if(pag.getIdTipoDiferido() != 0)
+                    {
+                        idDiferido = pag.getIdTipoDiferido();
+                    }
+                    if(pag.getNumeroDocumento() != null && !pag.getNumeroDocumento().equalsIgnoreCase("null"))
+                        ((EditText) getRootView().findViewById(R.id.pago_numero_documento)).setText(pag.getNumeroDocumento());
+                    if(pag.getNumeroCuenta() != null && !pag.getNumeroCuenta().equalsIgnoreCase("null"))
+                        ((EditText) getRootView().findViewById(R.id.pago_numero_cuenta)).setText(pag.getNumeroCuenta());
+                    if(pag.getCodigoSeguridad() != 0)
+                        ((EditText) getRootView().findViewById(R.id.pago_lote)).setText(pag.getCodigoSeguridad() + "");
+                    if(pag.getAutorizadorTarjeta() != 0)
+                        ((EditText) getRootView().findViewById(R.id.pago_autorizacion)).setText(pag.getAutorizadorTarjeta() + "");
+                    break;
+            }
+
 
         }
 

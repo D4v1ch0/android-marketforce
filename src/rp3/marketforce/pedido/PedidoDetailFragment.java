@@ -74,7 +74,7 @@ public class PedidoDetailFragment extends BaseFragment {
         super.onResume();
         detailFragmentListener.RefreshMenu();
         if (clientId != 0) {
-            pedido = Pedido.getPedido(getDataBase(), clientId);
+            pedido = Pedido.getPedido(getDataBase(), clientId, true);
         }
 
         if(pedido==null) return;

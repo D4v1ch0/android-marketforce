@@ -47,9 +47,11 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
     private int cantidadDevolucion;
     private double baseICE;
     private int idBeneficio;
+    private String usrDescManual;
 
     private Producto producto;
     private String codigoExterno;
+    private int cantidadOriginal;
 
 
     @Override
@@ -120,12 +122,28 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
         this.valorUnitario = valorUnitario;
     }
 
+    public String getUsrDescManual() {
+        return usrDescManual;
+    }
+
+    public void setUsrDescManual(String usrDescManual) {
+        this.usrDescManual = usrDescManual;
+    }
+
     public int getCantidad() {
         return cantidad;
     }
 
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
+    }
+
+    public int getCantidadOriginal() {
+        return cantidadOriginal;
+    }
+
+    public void setCantidadOriginal(int cantidadOriginal) {
+        this.cantidadOriginal = cantidadOriginal;
     }
 
     public double getValorTotal() {
@@ -351,6 +369,7 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
         setValue(Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO, this.valorDescuentoOro);
         setValue(Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO_TOTAL, this.valorDescuentoOroTotal);
         setValue(Contract.PedidoDetalle.COLUMN_ID_BENEFICIO, this.idBeneficio);
+        setValue(Contract.PedidoDetalle.COLUMN_USR_DESC_MANUAL, this.usrDescManual);
     }
 
     @Override
@@ -362,15 +381,14 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
     public String getDescription() {
         return null;
     }
-
-    public static List<PedidoDetalle> getPedidoDetalles(DataBase db, int idPedido) {
+    public static List<PedidoDetalle> getPedidoDetallesNoProductos(DataBase db, int idPedido) {
         Cursor c = db.query(Contract.PedidoDetalle.TABLE_NAME, new String[] {Contract.PedidoDetalle._ID, Contract.PedidoDetalle.COLUMN_ID_PEDIDO, Contract.PedidoDetalle.COLUMN_ID_PEDIDO_DETALLE,
                 Contract.PedidoDetalle.COLUMN_ID_PEDIDO_INT, Contract.PedidoDetalle.COLUMN_ID_PRODUCTO, Contract.PedidoDetalle.COLUMN_VALOR_UNITARIO, Contract.PedidoDetalle.COLUMN_CANTIDAD,
                 Contract.PedidoDetalle.COLUMN_VALOR_TOTAL, Contract.PedidoDetalle.COLUMN_DESCRIPCION, Contract.PedidoDetalle.COLUMN_URL_FOTO, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE_CERO,
                 Contract.PedidoDetalle.COLUMN_SUBTOTAL, Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_DESCUENTO, Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_IMPUESTO, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_AUTOMATICO, Contract.PedidoDetalle.COLUMN_VALOR_DESC_AUTOMATICO,
                 Contract.PedidoDetalle.COLUMN_VALOR_DESC_AUTOMATICO_TOTAL, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_MANUAL, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_MANUAL, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_MANUAL_TOTAL, Contract.PedidoDetalle.COLUMN_PORCENTAJE_IMPUESTO,
                 Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO, Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO_TOTAL, Contract.PedidoDetalle.COLUMN_BASE_ICE, Contract.PedidoDetalle.COLUMN_CANTIDAD_DEVOLUCION,
-                Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_ORO, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO, Contract.PedidoDetalle.COLUMN_ID_BENEFICIO, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO_TOTAL}
+                Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_ORO, Contract.PedidoDetalle.COLUMN_USR_DESC_MANUAL, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO, Contract.PedidoDetalle.COLUMN_ID_BENEFICIO, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO_TOTAL}
                 ,Contract.PedidoDetalle.COLUMN_ID_PEDIDO + " = ? ", new String[]{idPedido + ""});
 
         List<PedidoDetalle> list = new ArrayList<PedidoDetalle>();
@@ -406,6 +424,59 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
             detalle.setValorDescuentoOro(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO));
             detalle.setValorDescuentoOroTotal(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO_TOTAL));
             detalle.setIdBeneficio(CursorUtils.getInt(c, Contract.PedidoDetalle.COLUMN_ID_BENEFICIO));
+            detalle.setUsrDescManual(CursorUtils.getString(c, Contract.PedidoDetalle.COLUMN_USR_DESC_MANUAL));
+            //detalle.setCodigoExterno(Producto.getProductoIdServer(db, detalle.getIdProducto()).getCodigoExterno());
+            //detalle.setProducto(Producto.getProductoIdServer(db, detalle.getIdProducto()));
+            list.add(detalle);
+        }
+        c.close();
+        return list;
+    }
+
+    public static List<PedidoDetalle> getPedidoDetalles(DataBase db, int idPedido) {
+        Cursor c = db.query(Contract.PedidoDetalle.TABLE_NAME, new String[] {Contract.PedidoDetalle._ID, Contract.PedidoDetalle.COLUMN_ID_PEDIDO, Contract.PedidoDetalle.COLUMN_ID_PEDIDO_DETALLE,
+                Contract.PedidoDetalle.COLUMN_ID_PEDIDO_INT, Contract.PedidoDetalle.COLUMN_ID_PRODUCTO, Contract.PedidoDetalle.COLUMN_VALOR_UNITARIO, Contract.PedidoDetalle.COLUMN_CANTIDAD,
+                Contract.PedidoDetalle.COLUMN_VALOR_TOTAL, Contract.PedidoDetalle.COLUMN_DESCRIPCION, Contract.PedidoDetalle.COLUMN_URL_FOTO, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE_CERO,
+                Contract.PedidoDetalle.COLUMN_SUBTOTAL, Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_DESCUENTO, Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_IMPUESTO, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_AUTOMATICO, Contract.PedidoDetalle.COLUMN_VALOR_DESC_AUTOMATICO,
+                Contract.PedidoDetalle.COLUMN_VALOR_DESC_AUTOMATICO_TOTAL, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_MANUAL, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_MANUAL, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_MANUAL_TOTAL, Contract.PedidoDetalle.COLUMN_PORCENTAJE_IMPUESTO,
+                Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO, Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO_TOTAL, Contract.PedidoDetalle.COLUMN_BASE_ICE, Contract.PedidoDetalle.COLUMN_CANTIDAD_DEVOLUCION,
+                Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_ORO, Contract.PedidoDetalle.COLUMN_USR_DESC_MANUAL, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO, Contract.PedidoDetalle.COLUMN_ID_BENEFICIO, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO_TOTAL}
+                ,Contract.PedidoDetalle.COLUMN_ID_PEDIDO + " = ? ", new String[]{idPedido + ""});
+
+        List<PedidoDetalle> list = new ArrayList<PedidoDetalle>();
+        while(c.moveToNext()){
+            PedidoDetalle detalle = new PedidoDetalle();
+            detalle.setID(CursorUtils.getInt(c, Contract.PedidoDetalle._ID));
+            detalle.set_idPedido(CursorUtils.getInt(c, Contract.PedidoDetalle.COLUMN_ID_PEDIDO_INT));
+            detalle.setIdProducto(CursorUtils.getInt(c, Contract.PedidoDetalle.COLUMN_ID_PRODUCTO));
+            detalle.setIdPedido(CursorUtils.getInt(c, Contract.PedidoDetalle.COLUMN_ID_PEDIDO));
+            detalle.setIdPedidoDetalle(CursorUtils.getInt(c, Contract.PedidoDetalle.COLUMN_ID_PEDIDO_DETALLE));
+            detalle.setValorUnitario(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_UNITARIO));
+            detalle.setCantidad(CursorUtils.getInt(c, Contract.PedidoDetalle.COLUMN_CANTIDAD));
+            detalle.setValorTotal(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_TOTAL));
+            detalle.setDescripcion(CursorUtils.getString(c, Contract.PedidoDetalle.COLUMN_DESCRIPCION));
+            detalle.setUrlFoto(CursorUtils.getString(c, Contract.PedidoDetalle.COLUMN_URL_FOTO));
+            detalle.setPorcentajeDescuentoManual(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_MANUAL));
+            detalle.setValorDescuentoManual(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_MANUAL));
+            detalle.setValorDescuentoManualTotal(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_MANUAL_TOTAL));
+            detalle.setPorcentajeDescuentoAutomatico(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_AUTOMATICO));
+            detalle.setValorDescuentoAutomatico(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_DESC_AUTOMATICO));
+            detalle.setValorDescuentoAutomaticoTotal(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_DESC_AUTOMATICO_TOTAL));
+            detalle.setPorcentajeImpuesto(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_PORCENTAJE_IMPUESTO));
+            detalle.setValorImpuesto(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO));
+            detalle.setValorImpuestoTotal(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO_TOTAL));
+            detalle.setSubtotal(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_SUBTOTAL));
+            detalle.setSubtotalSinDescuento(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_DESCUENTO));
+            detalle.setSubtotalSinImpuesto(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_IMPUESTO));
+            detalle.setBaseImponible(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE));
+            detalle.setBaseImponibleCero(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE_CERO));
+            detalle.setBaseICE(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_BASE_ICE));
+            detalle.setCantidadDevolucion(CursorUtils.getInt(c, Contract.PedidoDetalle.COLUMN_CANTIDAD_DEVOLUCION));
+            detalle.setPorcentajeDescuentoOro(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_ORO));
+            detalle.setValorDescuentoOro(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO));
+            detalle.setValorDescuentoOroTotal(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO_TOTAL));
+            detalle.setIdBeneficio(CursorUtils.getInt(c, Contract.PedidoDetalle.COLUMN_ID_BENEFICIO));
+            detalle.setUsrDescManual(CursorUtils.getString(c, Contract.PedidoDetalle.COLUMN_USR_DESC_MANUAL));
             detalle.setCodigoExterno(Producto.getProductoIdServer(db, detalle.getIdProducto()).getCodigoExterno());
             detalle.setProducto(Producto.getProductoIdServer(db, detalle.getIdProducto()));
             list.add(detalle);
@@ -414,14 +485,14 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
         return list;
     }
 
-    public static List<PedidoDetalle> getPedidoDetallesInt(DataBase db, long idPedido) {
+    public static List<PedidoDetalle> getPedidoDetallesIntNoProducto(DataBase db, long idPedido) {
         Cursor c = db.query(Contract.PedidoDetalle.TABLE_NAME, new String[] {Contract.PedidoDetalle._ID, Contract.PedidoDetalle.COLUMN_ID_PEDIDO, Contract.PedidoDetalle.COLUMN_ID_PEDIDO_DETALLE,
                 Contract.PedidoDetalle.COLUMN_ID_PEDIDO_INT, Contract.PedidoDetalle.COLUMN_ID_PRODUCTO, Contract.PedidoDetalle.COLUMN_VALOR_UNITARIO, Contract.PedidoDetalle.COLUMN_CANTIDAD,
                 Contract.PedidoDetalle.COLUMN_VALOR_TOTAL, Contract.PedidoDetalle.COLUMN_DESCRIPCION, Contract.PedidoDetalle.COLUMN_URL_FOTO, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE_CERO,
                 Contract.PedidoDetalle.COLUMN_SUBTOTAL, Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_DESCUENTO, Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_IMPUESTO, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_AUTOMATICO, Contract.PedidoDetalle.COLUMN_VALOR_DESC_AUTOMATICO,
                 Contract.PedidoDetalle.COLUMN_VALOR_DESC_AUTOMATICO_TOTAL, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_MANUAL, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_MANUAL, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_MANUAL_TOTAL, Contract.PedidoDetalle.COLUMN_PORCENTAJE_IMPUESTO,
                 Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO, Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO_TOTAL,  Contract.PedidoDetalle.COLUMN_BASE_ICE, Contract.PedidoDetalle.COLUMN_ID_BENEFICIO, Contract.PedidoDetalle.COLUMN_CANTIDAD_DEVOLUCION,
-                Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_ORO, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO_TOTAL}
+                Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_ORO, Contract.PedidoDetalle.COLUMN_USR_DESC_MANUAL, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO_TOTAL}
                 ,Contract.PedidoDetalle.COLUMN_ID_PEDIDO_INT + " = ? ", new String[]{idPedido + ""});
 
         List<PedidoDetalle> list = new ArrayList<PedidoDetalle>();
@@ -457,6 +528,60 @@ public class PedidoDetalle extends EntityBase<PedidoDetalle> {
             detalle.setValorDescuentoOro(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO));
             detalle.setValorDescuentoOroTotal(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO_TOTAL));
             detalle.setIdBeneficio(CursorUtils.getInt(c, Contract.PedidoDetalle.COLUMN_ID_BENEFICIO));
+            detalle.setUsrDescManual(CursorUtils.getString(c, Contract.PedidoDetalle.COLUMN_USR_DESC_MANUAL));
+            //detalle.setCodigoExterno(Producto.getProductoIdServer(db, detalle.getIdProducto()).getCodigoExterno());
+            //detalle.setProducto(Producto.getProductoIdServer(db, detalle.getIdProducto()));
+
+            list.add(detalle);
+        }
+        c.close();
+        return list;
+    }
+
+    public static List<PedidoDetalle> getPedidoDetallesInt(DataBase db, long idPedido) {
+        Cursor c = db.query(Contract.PedidoDetalle.TABLE_NAME, new String[] {Contract.PedidoDetalle._ID, Contract.PedidoDetalle.COLUMN_ID_PEDIDO, Contract.PedidoDetalle.COLUMN_ID_PEDIDO_DETALLE,
+                Contract.PedidoDetalle.COLUMN_ID_PEDIDO_INT, Contract.PedidoDetalle.COLUMN_ID_PRODUCTO, Contract.PedidoDetalle.COLUMN_VALOR_UNITARIO, Contract.PedidoDetalle.COLUMN_CANTIDAD,
+                Contract.PedidoDetalle.COLUMN_VALOR_TOTAL, Contract.PedidoDetalle.COLUMN_DESCRIPCION, Contract.PedidoDetalle.COLUMN_URL_FOTO, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE_CERO,
+                Contract.PedidoDetalle.COLUMN_SUBTOTAL, Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_DESCUENTO, Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_IMPUESTO, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_AUTOMATICO, Contract.PedidoDetalle.COLUMN_VALOR_DESC_AUTOMATICO,
+                Contract.PedidoDetalle.COLUMN_VALOR_DESC_AUTOMATICO_TOTAL, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_MANUAL, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_MANUAL, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_MANUAL_TOTAL, Contract.PedidoDetalle.COLUMN_PORCENTAJE_IMPUESTO,
+                Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO, Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO_TOTAL,  Contract.PedidoDetalle.COLUMN_BASE_ICE, Contract.PedidoDetalle.COLUMN_ID_BENEFICIO, Contract.PedidoDetalle.COLUMN_CANTIDAD_DEVOLUCION,
+                Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_ORO, Contract.PedidoDetalle.COLUMN_USR_DESC_MANUAL, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO_TOTAL}
+                ,Contract.PedidoDetalle.COLUMN_ID_PEDIDO_INT + " = ? ", new String[]{idPedido + ""});
+
+        List<PedidoDetalle> list = new ArrayList<PedidoDetalle>();
+        while(c.moveToNext()){
+            PedidoDetalle detalle = new PedidoDetalle();
+            detalle.setID(CursorUtils.getInt(c, Contract.PedidoDetalle._ID));
+            detalle.set_idPedido(CursorUtils.getInt(c, Contract.PedidoDetalle.COLUMN_ID_PEDIDO_INT));
+            detalle.setIdProducto(CursorUtils.getInt(c, Contract.PedidoDetalle.COLUMN_ID_PRODUCTO));
+            detalle.setIdPedido(CursorUtils.getInt(c, Contract.PedidoDetalle.COLUMN_ID_PEDIDO));
+            detalle.setIdPedidoDetalle(CursorUtils.getInt(c, Contract.PedidoDetalle.COLUMN_ID_PEDIDO_DETALLE));
+            detalle.setValorUnitario(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_UNITARIO));
+            detalle.setCantidad(CursorUtils.getInt(c, Contract.PedidoDetalle.COLUMN_CANTIDAD));
+            detalle.setValorTotal(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_TOTAL));
+            detalle.setDescripcion(CursorUtils.getString(c, Contract.PedidoDetalle.COLUMN_DESCRIPCION));
+            detalle.setUrlFoto(CursorUtils.getString(c, Contract.PedidoDetalle.COLUMN_URL_FOTO));
+            detalle.setPorcentajeDescuentoManual(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_MANUAL));
+            detalle.setValorDescuentoManual(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_MANUAL));
+            detalle.setValorDescuentoManualTotal(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_MANUAL_TOTAL));
+            detalle.setPorcentajeDescuentoAutomatico(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_AUTOMATICO));
+            detalle.setValorDescuentoAutomatico(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_DESC_AUTOMATICO));
+            detalle.setValorDescuentoAutomaticoTotal(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_DESC_AUTOMATICO_TOTAL));
+            detalle.setPorcentajeImpuesto(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_PORCENTAJE_IMPUESTO));
+            detalle.setValorImpuesto(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO));
+            detalle.setValorImpuestoTotal(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_IMPUESTO_TOTAL));
+            detalle.setSubtotal(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_SUBTOTAL));
+            detalle.setSubtotalSinDescuento(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_DESCUENTO));
+            detalle.setSubtotalSinImpuesto(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_SUBTOTAL_SIN_IMPUESTO));
+            detalle.setBaseImponible(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE));
+            detalle.setBaseImponibleCero(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_BASE_IMPONIBLE_CERO));
+            detalle.setBaseICE(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_BASE_ICE));
+            detalle.setCantidadDevolucion(CursorUtils.getInt(c, Contract.PedidoDetalle.COLUMN_CANTIDAD_DEVOLUCION));
+            detalle.setPorcentajeDescuentoOro(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_PORCENTAJE_DESCUENTO_ORO));
+            detalle.setValorDescuentoOro(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO));
+            detalle.setValorDescuentoOroTotal(CursorUtils.getDouble(c, Contract.PedidoDetalle.COLUMN_VALOR_DESCUENTO_ORO_TOTAL));
+            detalle.setIdBeneficio(CursorUtils.getInt(c, Contract.PedidoDetalle.COLUMN_ID_BENEFICIO));
+            detalle.setUsrDescManual(CursorUtils.getString(c, Contract.PedidoDetalle.COLUMN_USR_DESC_MANUAL));
             detalle.setCodigoExterno(Producto.getProductoIdServer(db, detalle.getIdProducto()).getCodigoExterno());
             detalle.setProducto(Producto.getProductoIdServer(db, detalle.getIdProducto()));
 

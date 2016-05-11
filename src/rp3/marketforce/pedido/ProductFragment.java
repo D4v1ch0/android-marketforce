@@ -40,6 +40,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
     private DecimalFormat df;
     private NumberFormat numberFormat, numberFormatInteger;
     private SignInFragment signInFragment;
+    private String usrDescManual;
 
     public static ProductFragment newInstance(String jcode)
     {
@@ -66,6 +67,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
     @Override
     public void onSignSuccess(Bundle bundle) {
         if(bundle.getInt(Agente.KEY_DESCUENTO) >= Integer.parseInt(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).getText().toString())) {
+            usrDescManual = bundle.getString(SignInFragment.ARG_USER);
             Toast.makeText(getContext(), "Usuario Autorizado.", Toast.LENGTH_LONG).show();
             saveDetail();
         }
@@ -105,6 +107,8 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
             jsonObject = new JSONObject(code);
             if(!jsonObject.isNull("c"))
                 ((EditText)rootView.findViewById(R.id.producto_cantidad)).setText(jsonObject.getString("c"));
+            if(!jsonObject.isNull("udm"))
+                usrDescManual = jsonObject.getString("udm");
             ((TextView)rootView.findViewById(R.id.producto_descripcion)).setText("Descripción: " + jsonObject.getString("d"));
             ((TextView)rootView.findViewById(R.id.producto_precio)).setText("Precio: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(jsonObject.getDouble("vi")));
             ((TextView)rootView.findViewById(R.id.producto_precio_final)).setText("Precio Total: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " 0");
@@ -251,21 +255,26 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
         rootView.findViewById(R.id.producto_aceptar).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(((EditText) getRootView().findViewById(R.id.producto_cantidad)).length() > 0) {
-                    if(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).length() > 0 &&
-                            Integer.parseInt(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).getText().toString()) > PreferenceManager.getInt(Contants.KEY_DESCUENTO_MAXIMO))
-                    {
-                        //Toast.makeText(getContext(), "Su máximo descuento permitido es del " + PreferenceManager.getInt(Contants.KEY_DESCUENTO_MAXIMO) + "%.", Toast.LENGTH_LONG).show();
-                        signInFragment = new SignInFragment();
-                        signInFragment.type = "AuthDesc";
-                        showDialogFragment(signInFragment, "Autorizar Descuento", "Autorizar Descuento");
-                        return;
+                try {
+
+                    if (((EditText) getRootView().findViewById(R.id.producto_cantidad)).length() > 0) {
+                        if (((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).length() > 0 && (jsonObject.isNull("tipo") || !jsonObject.getString("tipo").equalsIgnoreCase("NC")) &&
+                                Integer.parseInt(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).getText().toString()) > PreferenceManager.getInt(Contants.KEY_DESCUENTO_MAXIMO) && ((jsonObject.isNull("c")) ||
+                                        (!jsonObject.isNull("c") && (Integer.parseInt(((EditText) getRootView().findViewById(R.id.producto_cantidad)).getText().toString()) > jsonObject.getInt("c") &&
+                                                Integer.parseInt(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).getText().toString()) >= (jsonObject.getDouble("pdm") * 100)) ||
+                                                Integer.parseInt(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).getText().toString()) > (jsonObject.getDouble("pdm") * 100)))) {
+                            //Toast.makeText(getContext(), "Su máximo descuento permitido es del " + PreferenceManager.getInt(Contants.KEY_DESCUENTO_MAXIMO) + "%.", Toast.LENGTH_LONG).show();
+                            signInFragment = new SignInFragment();
+                            signInFragment.type = "AuthDesc";
+                            showDialogFragment(signInFragment, "Autorizar Descuento", "Autorizar Descuento");
+                            return;
+                        }
+                        saveDetail();
+                    } else {
+                        Toast.makeText(getContext(), "Ingrese una cantidad", Toast.LENGTH_LONG).show();
                     }
-                    saveDetail();
-                }
-                else
-                {
-                    Toast.makeText(getContext(), "Ingrese una cantidad", Toast.LENGTH_LONG).show();
+                } catch (Exception ex) {
+                    Toast.makeText(getContext(), "Hubo un error", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -298,11 +307,14 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
             detalle.setSubtotalSinDescuento(detalle.getSubtotal());
             detalle.setSubtotalSinImpuesto(detalle.getSubtotal() - detalle.getValorDescuentoAutomaticoTotal() - detalle.getValorDescuentoManualTotal());
             detalle.setIdBeneficio(jsonObject.getInt("ib"));
+            if(usrDescManual != null && !usrDescManual.equalsIgnoreCase(""))
+                detalle.setUsrDescManual(usrDescManual);
 
             //Validaciones si es que tipo de documento es nota de credito
             if(!jsonObject.isNull("tipo") && jsonObject.getString("tipo").equalsIgnoreCase("NC"))
             {
-                if(detalle.getCantidad() > jsonObject.getInt("c"))
+                detalle.setCantidadOriginal(jsonObject.getInt("co"));
+                if(detalle.getCantidad() > jsonObject.getInt("co"))
                 {
                     Toast.makeText(getContext(), "No puede devolver mas unidades de lo que se facturó.", Toast.LENGTH_LONG).show();
                     return;

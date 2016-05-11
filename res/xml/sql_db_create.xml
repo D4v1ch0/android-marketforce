@@ -524,6 +524,7 @@
         PorcDescOro REAL,
         ValorDescOro REAL,
         ValorDescOroTotal REAL,
+        UsrAutorizaDescManual TEXT,
         PorcDescManual REAL,
         ValorDescManual REAL,
         ValorDescManualTotal REAL,

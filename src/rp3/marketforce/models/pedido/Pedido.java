@@ -440,11 +440,11 @@ public class Pedido extends EntityBase<Pedido> {
             pedido.setEstado(CursorUtils.getString(c, Contract.Pedido.COLUMN_ESTADO));
             pedido.setFechaCreacion(CursorUtils.getDate(c, Contract.Pedido.COLUMN_FECHA_CREACION));
             if(pedido.getIdPedido() != 0) {
-                pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetalles(db, pedido.getIdPedido()));
+                pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetallesNoProductos(db, pedido.getIdPedido()));
                 pedido.setPagos(Pago.getPagos(db, pedido.getIdPedido()));
             }
             else {
-                pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetallesInt(db, pedido.getID()));
+                pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetallesIntNoProducto(db, pedido.getID()));
                 pedido.setPagos(Pago.getPagosInt(db, pedido.getID()));
             }
             pedido.setTipoDocumento(CursorUtils.getString(c, Contract.Pedido.COLUMN_TIPO_DOCUMENTO));
@@ -464,7 +464,7 @@ public class Pedido extends EntityBase<Pedido> {
             pedido.set_idControlCaja(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_CONTROL_CAJA_INT));
             pedido.set_idDocumentoRef(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_DOCUMENTO_REF_INT));
             if(pedido.get_idDocumentoRef()!= 0)
-                pedido.setDocRef(Pedido.getPedido(db, pedido.get_idDocumentoRef()));
+                pedido.setDocRef(Pedido.getPedido(db, pedido.get_idDocumentoRef(), false));
             if(pedido.getIdCliente() != 0)
                 pedido.setCliente(Cliente.getClienteIDServer(db, pedido.getIdCliente(), false));
             else
@@ -478,7 +478,7 @@ public class Pedido extends EntityBase<Pedido> {
     }
 
     public static List<Pedido> getPedidosPendientes(DataBase db) {
-        String query = QueryDir.getQuery( Contract.Pedido.QUERY_PEDIDOS_PENDIENTES );
+        String query = QueryDir.getQuery(Contract.Pedido.QUERY_PEDIDOS_PENDIENTES);
         Cursor c = null;
 
         c = db.rawQuery(query);
@@ -561,11 +561,11 @@ public class Pedido extends EntityBase<Pedido> {
             pedido.setEstado(CursorUtils.getString(c, Contract.Pedido.COLUMN_ESTADO));
             pedido.setFechaCreacion(CursorUtils.getDate(c, Contract.Pedido.COLUMN_FECHA_CREACION));
             if(pedido.getIdPedido() != 0) {
-                pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetalles(db, pedido.getIdPedido()));
+                pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetallesNoProductos(db, pedido.getIdPedido()));
                 pedido.setPagos(Pago.getPagos(db, pedido.getIdPedido()));
             }
             else {
-                pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetallesInt(db, pedido.getID()));
+                pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetallesIntNoProducto(db, pedido.getID()));
                 pedido.setPagos(Pago.getPagosInt(db, pedido.getID()));
             }
             pedido.setTipoDocumento(CursorUtils.getString(c, Contract.Pedido.COLUMN_TIPO_DOCUMENTO));
@@ -585,7 +585,7 @@ public class Pedido extends EntityBase<Pedido> {
             pedido.set_idControlCaja(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_CONTROL_CAJA_INT));
             pedido.set_idDocumentoRef(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_DOCUMENTO_REF_INT));
             if(pedido.get_idDocumentoRef()!= 0)
-                pedido.setDocRef(Pedido.getPedido(db, pedido.get_idDocumentoRef()));
+                pedido.setDocRef(Pedido.getPedido(db, pedido.get_idDocumentoRef(), false));
             if(pedido.getIdCliente() != 0)
                 pedido.setCliente(Cliente.getClienteIDServer(db, pedido.getIdCliente(), false));
             else
@@ -618,11 +618,11 @@ public class Pedido extends EntityBase<Pedido> {
             pedido.setEstado(CursorUtils.getString(c, Contract.Pedido.COLUMN_ESTADO));
             pedido.setFechaCreacion(CursorUtils.getDate(c, Contract.Pedido.COLUMN_FECHA_CREACION));
             pedido.setCliente(Cliente.getClienteIDServer(db, pedido.getIdCliente(), false));
-            pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetalles(db, pedido.getIdPedido()));
+            //pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetallesNoProductos(db, pedido.getIdPedido()));
             if(pedido.getIdPedido() != 0)
-                pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetalles(db, pedido.getIdPedido()));
+                pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetallesNoProductos(db, pedido.getIdPedido()));
             else
-                pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetallesInt(db, pedido.getID()));
+                pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetallesIntNoProducto(db, pedido.getID()));
         }
         c.close();
         return pedido;
@@ -658,7 +658,7 @@ public class Pedido extends EntityBase<Pedido> {
         return pedido;
     }
 
-    public static Pedido getPedido(DataBase db, long id) {
+    public static Pedido getPedido(DataBase db, long id, boolean withDetalles) {
         String query = QueryDir.getQuery( Contract.Pedido.QUERY_PEDIDOS_BY_ID );
         Cursor c = null;
 
@@ -677,14 +677,15 @@ public class Pedido extends EntityBase<Pedido> {
             pedido.setEstado(CursorUtils.getString(c, Contract.Pedido.COLUMN_ESTADO));
             pedido.setFechaCreacion(CursorUtils.getDate(c, Contract.Pedido.COLUMN_FECHA_CREACION));
             pedido.setCliente(Cliente.getClienteIDServer(db, pedido.getIdCliente(), false));
-            pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetalles(db, pedido.getIdPedido()));
-            if(pedido.getIdPedido() != 0) {
-                pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetalles(db, pedido.getIdPedido()));
-                pedido.setPagos(Pago.getPagos(db, pedido.getIdPedido()));
-            }
-            else {
-                pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetallesInt(db, pedido.getID()));
-                pedido.setPagos(Pago.getPagosInt(db, pedido.getID()));
+            if(withDetalles) {
+                //pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetalles(db, pedido.getIdPedido()));
+                if (pedido.getIdPedido() != 0) {
+                    pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetalles(db, pedido.getIdPedido()));
+                    pedido.setPagos(Pago.getPagos(db, pedido.getIdPedido()));
+                } else {
+                    pedido.setPedidoDetalles(PedidoDetalle.getPedidoDetallesInt(db, pedido.getID()));
+                    pedido.setPagos(Pago.getPagosInt(db, pedido.getID()));
+                }
             }
             pedido.setTipoDocumento(CursorUtils.getString(c, Contract.Pedido.COLUMN_TIPO_DOCUMENTO));
             pedido.setNumeroDocumento(CursorUtils.getString(c, Contract.Pedido.FIELD_NUMERO_DOCUMENTO));
