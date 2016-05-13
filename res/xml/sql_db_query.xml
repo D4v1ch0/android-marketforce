@@ -1786,6 +1786,7 @@
         INNER JOIN tbPedido
         ON tbPedido._id = tbPedidoExt.docid
         ORDER BY tbPedido.FechaCreacion DESC
+        LIMIT 100
     </statement>
     <statement name="PedidoByDocumento">
         SELECT

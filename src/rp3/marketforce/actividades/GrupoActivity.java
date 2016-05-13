@@ -108,7 +108,7 @@ public class GrupoActivity extends ActividadActivity {
 	    	}
 	    }
 
-		if(Container != null)
+		if(Container != null && Container.getChildCount() > 0)
 	    	Container.removeViewAt(Container.getChildCount()-1);
 
 	    if(soloVista)

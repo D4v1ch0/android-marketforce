@@ -690,8 +690,8 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                     menuRutas.getItem(i).getSubMenu().findItem(R.id.action_reprogramar).setVisible(agendaNoClient != null);
                     menuRutas.getItem(i).getSubMenu().findItem(R.id.action_suspender_agenda).setVisible(true);
                     menuRutas.getItem(i).getSubMenu().findItem(R.id.action_no_visita).setVisible(true);
-                    if(agenda.getPedido().getID() != 0)
-                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setTitle("Editar Pedido");
+                    //if(agenda.getPedido().getID() != 0)
+                    //    menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setTitle("Editar Pedido");
                 }
             }
         }
@@ -704,7 +704,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_cambiar_contacto).setVisible(false);
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_no_visita).setVisible(false);
                         menuRutas.findItem(R.id.submenu_agenda).setVisible(false);
-                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setVisible(false);
+                        //menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setVisible(false);
                     }
                 }
             } else
@@ -715,7 +715,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_cambiar_contacto).setVisible(false);
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_reprogramar).setVisible(false);
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_suspender_agenda).setVisible(false);
-                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setVisible(false);
+                        //menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setVisible(false);
                     }
                 }
             }
@@ -725,7 +725,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                 {
                     if(menuRutas.getItem(i).getItemId() == R.id.submenu_agenda)
                     {
-                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setVisible(true);
+                        //menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setVisible(true);
                     }
                 }
             }
