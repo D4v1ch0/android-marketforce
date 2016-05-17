@@ -396,6 +396,12 @@
                     <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
+                    <name>GetVendedores</name>
+                    <action>caja/GetVendedores</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
                     <name>AnularPedido</name>
                     <action>pedido/AnulaPedido</action>
                     <webMethod>POST</webMethod>
@@ -405,6 +411,12 @@
                     <name>GuardarCaja</name>
                     <action>caja/InsertControl</action>
                     <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetNumeroDocumento</name>
+                    <action>caja/GetNumeroDocumento?numeroDocumento=@numeroDocumento</action>
+                    <webMethod>GET</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>

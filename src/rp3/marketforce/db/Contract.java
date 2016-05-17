@@ -987,6 +987,7 @@ public final class Contract {
 		public static final String COLUMN_BASE_ICE = "BaseICE";
 		public static final String COLUMN_ID_BENEFICIO = "IdBeneficio";
 		public static final String COLUMN_USR_DESC_MANUAL = "UsrAutorizaDescManual";
+		public static final String COLUMN_ID_VENDEDOR = "IdVendedor";
 	}
 
 	public static abstract class Producto implements BaseColumns {
@@ -1165,6 +1166,15 @@ public final class Contract {
 		public static final String COLUMN_FECHA_HASTA = "FechaHasta";
 		public static final String COLUMN_PORCENTAJE_DESCUENTO = "PorcentajeDescuento";
 		public static final String COLUMN_FORMA_PAGO_APLICA = "FormaPagoAplica";
+
+	}
+
+	public static abstract class Vendedor implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbVendedor";
+
+		public static final String COLUMN_ID_VENDEDOR = "IdVendedor";
+		public static final String COLUMN_NAME = "Name";
 
 	}
 }

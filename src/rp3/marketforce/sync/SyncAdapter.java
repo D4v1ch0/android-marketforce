@@ -11,6 +11,7 @@ import rp3.marketforce.cliente.CrearClienteFragment;
 import rp3.marketforce.cliente.SignInFragment;
 import rp3.marketforce.marcaciones.JustificacionFragment;
 import rp3.marketforce.models.Tarea;
+import rp3.marketforce.pedido.AgregarPagoFragment;
 import rp3.marketforce.pedido.ControlCajaFragment;
 import rp3.marketforce.pedido.CrearPedidoFragment;
 import rp3.marketforce.resumen.AgenteDetalleFragment;
@@ -74,6 +75,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
     public static String SYNC_TYPE_CERRAR_CAJA = "cerrar_caja";
     public static String SYNC_TYPE_AUTORIZAR_CIUD_ORO = "ciud_oro";
     public static String SYNC_TYPE_AUTORIZAR_DESC = "autorizar_desc";
+    public static String SYNC_TYPE_VALIDAR_NC = "validar_nc";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -457,6 +459,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     int id = extras.getInt(MotivoNoVisitaFragment.ARG_AGENDA);
                     result = Agenda.executeSyncNoVisita(db, id);
                     addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_VALIDAR_NC)) {
+                    String nc = extras.getString(AgregarPagoFragment.ARG_NC);
+                    Bundle bundle = Caja.executeSyncGetNC(nc);
+                    addDefaultMessage(bundle.getInt("Status"));
+                    putData(AgregarPagoFragment.ARG_NC, bundle.getBoolean(AgregarPagoFragment.ARG_NC));
                 } else if (syncType.equals(SYNC_TYPE_UPLOAD_PERMISO)) {
                     long id = extras.getLong(JustificacionFragment.ARG_PERMISO);
                     result = Marcaciones.executeSyncPermiso(db, id);

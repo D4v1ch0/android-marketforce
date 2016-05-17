@@ -1,5 +1,6 @@
 package rp3.marketforce.sync;
 
+import android.os.Bundle;
 import android.provider.Settings;
 
 import org.json.JSONArray;
@@ -24,6 +25,7 @@ import rp3.marketforce.models.pedido.PedidoDetalle;
 import rp3.marketforce.models.pedido.Tarjeta;
 import rp3.marketforce.models.pedido.TarjetaComision;
 import rp3.marketforce.models.pedido.TipoDiferido;
+import rp3.marketforce.pedido.AgregarPagoFragment;
 import rp3.runtime.Session;
 import rp3.util.Convert;
 
@@ -419,6 +421,33 @@ public class Caja {
         }
 
         return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
+    public static Bundle executeSyncGetNC(String nc){
+        Bundle bundle = new Bundle();
+        WebService webService = new WebService("MartketForce","GetNumeroDocumento");
+        try
+        {
+            webService.addStringParameter("@numeroDocumento", nc);
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+                bundle.putBoolean(AgregarPagoFragment.ARG_NC, webService.getBooleanResponse());
+                bundle.putInt("Status", SyncAdapter.SYNC_EVENT_SUCCESS);
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    bundle.putInt("Status", SyncAdapter.SYNC_EVENT_AUTH_ERROR);
+                bundle.putInt("Status",SyncAdapter.SYNC_EVENT_HTTP_ERROR);
+            } catch (Exception e) {
+                bundle.putInt("Status", SyncAdapter.SYNC_EVENT_ERROR);
+            }
+
+        }finally{
+            webService.close();
+        }
+
+        return  bundle;
     }
 
     public static int executeSyncGetControl(DataBase db){

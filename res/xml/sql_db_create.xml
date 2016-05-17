@@ -536,7 +536,8 @@
         ValorImpuestoIvaVentaTotal REAL,
         CantidadDevolucion INTEGER,
         BaseICE REAL,
-        IdBeneficio INTEGER
+        IdBeneficio INTEGER,
+        IdVendedor INTEGER
         )
     </statement>
     <statement>
@@ -671,6 +672,12 @@
         FechaHasta INTEGER,
         PorcentajeDescuento REAL,
         FormaPagoAplica TEXT
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbVendedor(
+        IdVendedor INTEGER PRIMARY KEY,
+        Name TEXT
         )
     </statement>
 

@@ -49,6 +49,7 @@ public class AgregarPagoFragment extends BaseFragment {
     public static final String ARG_PAGO = "pago";
     public static final String ARG_FORMA = "forma";
     public static final String ARG_OBS = "obs";
+    public static final String ARG_NC = "notacredito";
 
     public static final int REQ_CODE_SPEECH_INPUT_PAGO = 102;
 
@@ -348,6 +349,15 @@ public class AgregarPagoFragment extends BaseFragment {
                     Toast.makeText(getContext(), "Ya existe un pago con efectivo. Solo se puede ingresar uno.", Toast.LENGTH_LONG).show();
                     return;
                 }
+                if (pago.getFormaPago().getDescripcion().equalsIgnoreCase("Nota Crédito"))
+                {
+                    if(((EditText) getRootView().findViewById(R.id.pago_numero_documento)).length() <= 0)
+                    {
+                        Toast.makeText(getContext(), "Debe ingresar el número de documento.", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    pago.setNumeroDocumento(((EditText) getRootView().findViewById(R.id.pago_numero_documento)).getText().toString());
+                }
                 if (pago.getFormaPago().getDescripcion().equalsIgnoreCase("Cheque"))
                 {
                     if (((Spinner) getRootView().findViewById(R.id.pago_banco)).getSelectedItemPosition() < -1 && GeneralValue.getGeneralValue(getDataBase(), Contants.POS_USEBANCHEQ).getValue().equalsIgnoreCase("1"))
@@ -441,6 +451,10 @@ public class AgregarPagoFragment extends BaseFragment {
         getRootView().findViewById(R.id.pago_autorizador_layout).setVisibility(View.GONE);
         getRootView().findViewById(R.id.pago_codigo_seguridad_layout).setVisibility(View.GONE);
         getRootView().findViewById(R.id.pago_tipo_diferido_layout).setVisibility(View.GONE);
+        if (formaPago.getDescripcion().equalsIgnoreCase("Nota Crédito"))
+        {
+            getRootView().findViewById(R.id.pago_numero_documento_layout).setVisibility(View.VISIBLE);
+        }
         if(formaPago.getDescripcion().equalsIgnoreCase("Cheque"))
         {
             if(GeneralValue.getGeneralValue(getDataBase(), Contants.POS_USEBANCHEQ).getValue().equalsIgnoreCase("1")) getRootView().findViewById(R.id.pago_banco_layout).setVisibility(View.VISIBLE);
