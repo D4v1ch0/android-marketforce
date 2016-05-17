@@ -30,8 +30,12 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.android.gms.maps.model.TileProvider;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -50,6 +54,7 @@ import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -68,6 +73,7 @@ import rp3.marketforce.ruta.CrearVisitaActivity;
 import rp3.marketforce.ruta.MapaActivity;
 import rp3.marketforce.ruta.MotivoNoVisitaFragment;
 import rp3.marketforce.ruta.ReprogramarActivity;
+import rp3.marketforce.utils.TileProviderFactory;
 import rp3.util.ConnectionUtils;
 
 public class RecorridoFragment  extends BaseFragment {
@@ -79,6 +85,16 @@ public class RecorridoFragment  extends BaseFragment {
 	private SimpleDateFormat format1;
 	private LatLng ult;
     private SupportMapFragment mapFragment;
+    private String[] mapasServices = {"http://www.geoportaligm.gob.ec/25k/wms?service=wms&version=1.3.0&request=GetMap&layers=via_ruta_l&srs=EPSG:900913&bbox=%f,%f,%f,%f&width=256&height=256&format=image/png&transparent=true",
+            "http://www.geoportaligm.gob.ec/25k/wms?service=wms&version=1.3.0&request=GetMap&layers=cultivo_a&srs=EPSG:900913&bbox=%f,%f,%f,%f&width=256&height=256&format=image/png&transparent=true",
+            "http://www.geoportaligm.gob.ec/25k/wms?service=wms&version=1.3.0&request=GetMap&layers=zona_edificada_a&srs=EPSG:900913&bbox=%f,%f,%f,%f&width=256&height=256&format=image/png&transparent=true",
+            "http://www.geoportaligm.gob.ec/25k/wms?service=wms&version=1.3.0&request=GetMap&layers=hacienda_p&srs=EPSG:900913&bbox=%f,%f,%f,%f&width=256&height=256&format=image/png&transparent=true",
+            "http://www.geoportaligm.gob.ec/25k/wms?service=wms&version=1.3.0&request=GetMap&layers=rio_l&srs=EPSG:900913&bbox=%f,%f,%f,%f&width=256&height=256&format=image/png&transparent=true",
+            "http://www.geoportaligm.gob.ec/25k/wms?service=wms&version=1.3.0&request=GetMap&layers=sendero_l&srs=EPSG:900913&bbox=%f,%f,%f,%f&width=256&height=256&format=image/png&transparent=true",
+            "http://www.geoportaligm.gob.ec/25k/wms?service=wms&version=1.3.0&request=GetMap&layers=corral_a&srs=EPSG:900913&bbox=%f,%f,%f,%f&width=256&height=256&format=image/png&transparent=true",
+            "http://www.geoportaligm.gob.ec/25k/wms?service=wms&version=1.3.0&request=GetMap&layers=rancho_a&srs=EPSG:900913&bbox=%f,%f,%f,%f&width=256&height=256&format=image/png&transparent=true"};
+    private String[] mapasNames = {"Rutas", "Cultivos", "Edificaciones", "Haciendas", "Ríos", "Senderos", "Corrales", "Ranchos" };
+    private boolean[] mapasChecks = {false, false, false, false, false, false, false, false};
 
     public static RecorridoFragment newInstance() {
 		RecorridoFragment fragment = new RecorridoFragment();
@@ -94,7 +110,7 @@ public class RecorridoFragment  extends BaseFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
-		
+
 	}
 	
 	@Override
@@ -113,8 +129,10 @@ public class RecorridoFragment  extends BaseFragment {
                 public void onMapReady(GoogleMap googleMap) {
                     map = googleMap;
                     view.findViewById(R.id.progress_map).setVisibility(View.GONE);
-                    closeDialogProgress();
                     setMapa();
+                    setUpMap();
+                    closeDialogProgress();
+
 
                 }
             });
@@ -138,8 +156,9 @@ public class RecorridoFragment  extends BaseFragment {
                                 public void onMapReady(GoogleMap googleMap) {
                                     map = googleMap;
                                     view.findViewById(R.id.progress_map).setVisibility(View.GONE);
-                                    closeDialogProgress();
                                     setMapa();
+                                    setUpMap();
+                                    closeDialogProgress();
 
                                 }
                             });
@@ -161,7 +180,7 @@ public class RecorridoFragment  extends BaseFragment {
         switch(item.getItemId())
         {
             case R.id.action_ver_ruta:
-                if(!ConnectionUtils.isNetAvailable(getContext()))
+                /*if(!ConnectionUtils.isNetAvailable(getContext()))
                 {
                     Toast.makeText(getContext(), "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
                 }
@@ -169,7 +188,30 @@ public class RecorridoFragment  extends BaseFragment {
                     Intent intent3 = new Intent(getActivity(), MapaActivity.class);
                     intent3.putExtra(MapaActivity.ACTION_TYPE, MapaActivity.ACTION_RUTAS);
                     startActivity(intent3);
-                }
+                }*/
+                AlertDialog.Builder builderSingle = new AlertDialog.Builder(this.getActivity());
+                builderSingle.setIcon(R.drawable.ic_launcher);
+                builderSingle.setTitle("Seleccione los mapas:");
+
+                builderSingle.setPositiveButton(
+                        "Aceptar",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                setMapa();
+                                setUpMap();
+                            }
+                        });
+
+                builderSingle.setMultiChoiceItems(mapasNames, mapasChecks, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                        mapasChecks[which] = isChecked;
+                    }
+                });
+
+                builderSingle.show();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -250,7 +292,7 @@ public class RecorridoFragment  extends BaseFragment {
                 }
 
 				
-				map.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 12), 1, null);
+				map.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, Contants.ZOOM), 1, null);
 				
 				ult = pos;
 			}
@@ -455,4 +497,17 @@ public class RecorridoFragment  extends BaseFragment {
 
 	    return  bm;
 	}
+
+    private void setUpMap() {
+        for(int i = 0; i < mapasNames.length; i++) {
+            if(mapasChecks[i]) {
+                TileProvider wmsTileProvider = TileProviderFactory.getOsgeoWmsTileProvider(mapasServices[i]);
+                map.addTileOverlay(new TileOverlayOptions().tileProvider(wmsTileProvider));
+            }
+        }
+
+        // Because the demo WMS layer we are using is just a white background map, switch the base layer
+        // to satellite so we can see the WMS overlay.
+        map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+    }
 }
