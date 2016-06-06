@@ -76,6 +76,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
     private static final int DIALOG_SYNC_PRODUCTOS = 1;
     private static final int DIALOG_CIERRE = 2;
     private static final int DIALOG_REPRINT = 3;
+    private static final int DIALOG_CANCELAR = 4;
 
     private PedidoListFragment transactionListFragment;
     private PedidoDetailFragment transactionDetailFragment;
@@ -228,21 +229,26 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
     }
 
     public void RefreshMenu(){
-        Log.e("CARGA PEDIDOS", "Antes de Creacion de Menu: " + Calendar.getInstance().getTime().toString());
+        //Log.e("CARGA PEDIDOS", "Antes de Creacion de Menu: " + Calendar.getInstance().getTime().toString());
         Pedido ped = Pedido.getPedido(getDataBase(), selectedClientId, false);
         Pedido ref = Pedido.getPedidoRef(getDataBase(), selectedClientId);
         ControlCaja control = ControlCaja.getControlCajaActiva(getDataBase());
         Calendar calPed = Calendar.getInstance();
         Calendar calApe = Calendar.getInstance();
+        Pago pagoNC = null;
         if(control != null)
             calApe.setTime(control.getFechaApertura());
-        if(selectedClientId != 0)
+        if(selectedClientId != 0) {
             calPed.setTime(ped.getFechaCreacion());
+            pagoNC = Pago.getPagoNC(getDataBase(), ped.getNumeroDocumento());
+        }
         if(!mTwoPane){
             menu.findItem(R.id.action_arqueo_caja).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_crear_pedido).setVisible(isActiveListFragment && control != null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calApe) == 0 && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA));
             menu.findItem(R.id.action_sincronizar_productos).setVisible(isActiveListFragment);
-            menu.findItem(R.id.action_anular_pedido).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && control != null && !ped.isTieneNotaCreditoRP3POS()
+            menu.findItem(R.id.action_cancelar_transaccion).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && control != null && !ped.isTieneNotaCreditoRP3POS() && pagoNC == null
+                    && ref == null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calPed) == 0 && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA) && ped.getTipoDocumento().equalsIgnoreCase("NC"));
+            menu.findItem(R.id.action_anular_pedido).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && control != null && !ped.isTieneNotaCreditoRP3POS() && pagoNC == null
                     && ref == null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calPed) == 0 && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA));
             menu.findItem(R.id.action_nota_credito).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && ped.getTipoDocumento().equalsIgnoreCase("FA") && control != null
                     && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calApe) == 0 && PreferenceManager.getBoolean(Contants.KEY_TRANSACCION_NOTA_CREDITO, true) && !ped.isTieneNotaCreditoRP3POS() && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA));
@@ -258,6 +264,8 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
             menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_arqueo_caja).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_crear_pedido).setVisible(isActiveListFragment && control != null && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA));
+            menu.findItem(R.id.action_cancelar_transaccion).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && control != null && !ped.isTieneNotaCreditoRP3POS() && pagoNC == null
+                    && ref == null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calPed) == 0 && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA) && ped.getTipoDocumento().equalsIgnoreCase("NC"));
             menu.findItem(R.id.action_anular_pedido).setVisible(selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && control != null && ref == null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calPed) == 0 && PreferenceManager.getBoolean(Contants.KEY_TRANSACCION_NOTA_CREDITO, true) && !ped.isTieneNotaCreditoRP3POS() && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA));
             menu.findItem(R.id.action_nota_credito).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && ped.getTipoDocumento().equalsIgnoreCase("FA") && control != null && !ped.isTieneNotaCreditoRP3POS() && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA));
             menu.findItem(R.id.action_aperturar_caja).setVisible(isActiveListFragment && control == null && PreferenceManager.getInt(Contants.KEY_ID_CAJA, 0) != 0);
@@ -293,6 +301,9 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                 break;
             case R.id.action_cerrar_caja:
                 showDialogConfirmation(DIALOG_CIERRE, R.string.message_cierre_caja, R.string.title_cerrar_caja_activa);
+                break;
+            case R.id.action_cancelar_transaccion:
+                showDialogConfirmation(DIALOG_CANCELAR, R.string.message_cancelar_nc, R.string.title_cancelar_nc);
                 break;
             case R.id.action_anular_pedido:
                 if(transactionDetailFragment != null)
@@ -433,7 +444,17 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                 }
                 RefreshMenu();
                 break;
-
+            case DIALOG_CANCELAR:
+                Pedido ped = Pedido.getPedido(getDataBase(), selectedClientId, false);
+                ped.setEstado("N");
+                Pedido.update(getDataBase(), ped);
+                transactionDetailFragment = PedidoDetailFragment.newInstance(ped);
+                setFragment(R.id.content_transaction_detail, transactionDetailFragment);
+                Bundle bundle3 = new Bundle();
+                bundle3.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_CANCELAR_NC);
+                bundle3.putLong(CrearPedidoFragment.ARG_PEDIDO, selectedClientId);
+                requestSync(bundle3);
+                break;
         }
 
     }

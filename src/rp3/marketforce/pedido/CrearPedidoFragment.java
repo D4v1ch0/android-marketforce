@@ -322,6 +322,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                 detalle_nc.setValorUnitario(detalle.getValorUnitario());
                 detalle_nc.setValorTotal(detalle.getValorTotal());
 
+                detalle_nc.setIdVendedor(detalle.getIdVendedor());
                 detalle_nc.set_idPedido((int) pedido.getID());
                 detalle_nc.setIdPedido(0);
                 PedidoDetalle.insert(getDataBase(), detalle_nc);
@@ -560,6 +561,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                     jsonObject.put("pd", pedido.getPedidoDetalles().get(position).getPorcentajeDescuentoAutomatico());
                     jsonObject.put("ib", prod.getIdBeneficio());
                     jsonObject.put("co", pedido.getPedidoDetalles().get(position).getCantidadOriginal());
+                    jsonObject.put("ven", pedido.getPedidoDetalles().get(position).getIdVendedor());
                     if(pedido.getPedidoDetalles().get(position).getUsrDescManual() != null && !pedido.getPedidoDetalles().get(position).getUsrDescManual().equalsIgnoreCase(""))
                         jsonObject.put("udm", pedido.getPedidoDetalles().get(position).getUsrDescManual());
                     jsonObject.put("tipo", tipo);
@@ -790,6 +792,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                         detalle.setSubtotalSinImpuesto(jsonObject.getDouble("ssi"));
                         detalle.setCodigoExterno(jsonObject.getString("cod"));
                         detalle.setIdBeneficio(jsonObject.getInt("ib"));
+                        detalle.setIdVendedor(jsonObject.getString("ven"));
                         if(!jsonObject.isNull("udm"))
                             detalle.setUsrDescManual(jsonObject.getString("udm"));
                         onAcceptSuccess(detalle);

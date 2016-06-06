@@ -6,6 +6,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,14 +16,20 @@ import org.json.JSONObject;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.List;
 
+import rp3.accounts.User;
 import rp3.app.BaseFragment;
 import rp3.configuration.PreferenceManager;
+import rp3.content.SimpleIdentifiableAdapter;
+import rp3.data.Identifiable;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.cliente.SignInFragment;
+import rp3.marketforce.models.TipoCliente;
 import rp3.marketforce.models.pedido.PedidoDetalle;
 import rp3.marketforce.models.pedido.Producto;
+import rp3.marketforce.models.pedido.Vendedor;
 import rp3.marketforce.sync.Agente;
 import rp3.marketforce.utils.DrawableManager;
 
@@ -112,6 +119,26 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
             ((TextView)rootView.findViewById(R.id.producto_descripcion)).setText("Descripción: " + jsonObject.getString("d"));
             ((TextView)rootView.findViewById(R.id.producto_precio)).setText("Precio: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(jsonObject.getDouble("vi")));
             ((TextView)rootView.findViewById(R.id.producto_precio_final)).setText("Precio Total: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " 0");
+            List<Vendedor> list_vendedores = Vendedor.getVendedores(getDataBase());
+            SimpleIdentifiableAdapter vendedores = new SimpleIdentifiableAdapter(getContext(), list_vendedores);
+            ((Spinner) rootView.findViewById(R.id.producto_vendedor)).setAdapter(vendedores);
+            if(!jsonObject.isNull("ven")) {
+                //selecciono el vendedor
+                for(int i = 0; i < list_vendedores.size(); i++)
+                {
+                    if(jsonObject.getString("ven").equalsIgnoreCase(list_vendedores.get(i).getIdVendedor()))
+                        ((Spinner) rootView.findViewById(R.id.producto_vendedor)).setSelection(i);
+                }
+            }
+            else
+            {
+                //selecciono al usuario del dispositivo
+                for(int i = 0; i < list_vendedores.size(); i++)
+                {
+                    if(User.getCurrentUser(this.getContext()).getLogonName().equalsIgnoreCase(list_vendedores.get(i).getIdVendedor()))
+                        ((Spinner) rootView.findViewById(R.id.producto_vendedor)).setSelection(i);
+                }
+            }
             DManager.fetchDrawableOnThread(PreferenceManager.getString("server") +
                             rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER_PRODUCTOS) + jsonObject.getString("f"),
                     (ImageView) rootView.findViewById(R.id.producto_imagen));
@@ -221,6 +248,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
             if(!jsonObject.isNull("tipo") && jsonObject.getString("tipo").equalsIgnoreCase("NC"))
             {
                 ((EditText)rootView.findViewById(R.id.producto_descuento_manual)).setEnabled(false);
+                rootView.findViewById(R.id.producto_vendedor).setEnabled(false);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -307,6 +335,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
             detalle.setSubtotalSinDescuento(detalle.getSubtotal());
             detalle.setSubtotalSinImpuesto(detalle.getSubtotal() - detalle.getValorDescuentoAutomaticoTotal() - detalle.getValorDescuentoManualTotal());
             detalle.setIdBeneficio(jsonObject.getInt("ib"));
+            detalle.setIdVendedor(((String) ((Identifiable) ((Spinner) getRootView().findViewById(R.id.producto_vendedor)).getAdapter().getItem(((Spinner) getRootView().findViewById(R.id.producto_vendedor)).getSelectedItemPosition())).getValue("")));
             if(usrDescManual != null && !usrDescManual.equalsIgnoreCase(""))
                 detalle.setUsrDescManual(usrDescManual);
 

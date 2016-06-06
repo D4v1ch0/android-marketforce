@@ -87,8 +87,12 @@ public class PedidoDetailFragment extends BaseFragment {
             this.getActivity().setTitle("Factura No. " + pedido.getNumeroDocumento());
         if(pedido.getTipoDocumento().equalsIgnoreCase("NC"))
             this.getActivity().setTitle("Nota de Crédito No. " + pedido.getNumeroDocumento());
+        if(pedido.getTipoDocumento().equalsIgnoreCase("CT"))
+            this.getActivity().setTitle("Cotización No. " + pedido.getNumeroDocumento());
+        if(pedido.getTipoDocumento().equalsIgnoreCase("PD"))
+            this.getActivity().setTitle("Pedido No. " + pedido.getNumeroDocumento());
 
-        if (pedido.getEstado().equals("P")) {
+        if (pedido.getEstado().equals("N")) {
             ((ImageView) getRootView().findViewById(R.id.pedido_estado)).setImageDrawable(this.getResources().getDrawable(R.drawable.circle_pending));
         } else if (pedido.getEstado().equals("C")) {
             ((ImageView) getRootView().findViewById(R.id.pedido_estado)).setImageDrawable(this.getResources().getDrawable(R.drawable.circle_visited));

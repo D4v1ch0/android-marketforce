@@ -115,7 +115,7 @@ public class PedidoAdapter extends BaseExpandableListAdapter {
         convertView = (View) inflater.inflate(this.context.getApplicationContext().getResources().getLayout(R.layout.rowlist_pedido), null);
 
         Pedido pedido = pedidos.get(identifiers.get(groupPosition)).get(childPosition);
-        if (pedido.getEstado().equals("P")) {
+        if (pedido.getEstado().equals("N")) {
             ((ImageView) convertView.findViewById(R.id.pedido_estado)).setImageDrawable(context.getResources().getDrawable(R.drawable.circle_pending));
         } else if (pedido.getEstado().equals("C")) {
             ((ImageView) convertView.findViewById(R.id.pedido_estado)).setImageDrawable(context.getResources().getDrawable(R.drawable.circle_visited));

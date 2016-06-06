@@ -130,7 +130,7 @@ public class FormaPago extends EntityBase<FormaPago> {
 
     public static void DeletePagos(DataBase db)
     {
-        db.rawQuery("UPDATE " + Contract.FormaPago.TABLE_NAME + " SET " + Contract.FormaPago.COLUMN_ESTADO + " = 'I'");
+        db.execSQL("UPDATE " + Contract.FormaPago.TABLE_NAME + " SET " + Contract.FormaPago.COLUMN_ESTADO + " = 'I'");
     }
 
 }

@@ -16,8 +16,7 @@ import rp3.util.CursorUtils;
 public class Vendedor extends EntityBase<FormaPago> {
 
     private long id;
-    private int idVendedor;
-    private String nombre;
+    private String idVendedor;
 
     @Override
     public long getID() {
@@ -39,26 +38,17 @@ public class Vendedor extends EntityBase<FormaPago> {
         return Contract.Vendedor.TABLE_NAME;
     }
 
-    public int getIdVendedor() {
+    public String getIdVendedor() {
         return idVendedor;
     }
 
-    public void setIdVendedor(int idVendedor) {
+    public void setIdVendedor(String idVendedor) {
         this.idVendedor = idVendedor;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
     }
 
     @Override
     public void setValues() {
         setValue(Contract.Vendedor.COLUMN_ID_VENDEDOR, this.idVendedor);
-        setValue(Contract.Vendedor.COLUMN_NAME, this.nombre);
     }
 
     @Override
@@ -68,17 +58,16 @@ public class Vendedor extends EntityBase<FormaPago> {
 
     @Override
     public String getDescription() {
-        return nombre;
+        return idVendedor;
     }
 
     public static List<Vendedor> getVendedores(DataBase db) {
-        Cursor c = db.query(Contract.Vendedor.TABLE_NAME, new String[] {Contract.Vendedor.COLUMN_ID_VENDEDOR, Contract.Vendedor.COLUMN_NAME});
+        Cursor c = db.query(Contract.Vendedor.TABLE_NAME, new String[] {Contract.Vendedor.COLUMN_ID_VENDEDOR});
 
         List<Vendedor> list = new ArrayList<Vendedor>();
         while(c.moveToNext()){
             Vendedor vendedor = new Vendedor();
-            vendedor.setIdVendedor(CursorUtils.getInt(c, Contract.Vendedor.COLUMN_ID_VENDEDOR));
-            vendedor.setNombre(CursorUtils.getString(c, Contract.Vendedor.COLUMN_NAME));
+            vendedor.setIdVendedor(CursorUtils.getString(c, Contract.Vendedor.COLUMN_ID_VENDEDOR));
             list.add(vendedor);
         }
         c.close();

@@ -62,7 +62,10 @@ public class PagoAdapter extends BaseAdapter {
 
         ((TextView) convertView.findViewById(R.id.pago_forma)).setText(pago.getFormaPago().getDescripcion());
         ((TextView) convertView.findViewById(R.id.pago_valor)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(pago.getValor()));
-        ((TextView) convertView.findViewById(R.id.pago_referencia)).setText(pago.getObservacion());
+        if(pago.getIdFormaPago() == 4)
+            ((TextView) convertView.findViewById(R.id.pago_referencia)).setText(pago.getNumeroDocumento() + " " + pago.getObservacion());
+        else
+            ((TextView) convertView.findViewById(R.id.pago_referencia)).setText(pago.getObservacion());
 
         return convertView;
     }

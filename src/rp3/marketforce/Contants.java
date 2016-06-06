@@ -173,7 +173,8 @@ public class Contants {
     public final static String POS_ROUNDNUM = "ROUNDNUM"; //Valor a redondear en descuentos especiales
 
     public final static String APPLICATION_ID = "AGENDACOMERCial";
-	
+    public final static String ULTIMO_VENDEDOR = "UltimoVendedor";
+
 	public final static double LATITUD = -2.1637531;
 	public final static double LONGITUD = -79.9623577;
 	public final static int ZOOM = 11;

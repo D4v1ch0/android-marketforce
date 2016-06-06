@@ -43,12 +43,14 @@ public class PrintHelper {
         toPrint = toPrint + StringUtils.centerStringInLine("Ced. Jur.:" + PreferenceManager.getString(Contants.KEY_RUC).trim(), SPACES);
         toPrint = toPrint + StringUtils.centerStringInLine("Tel:" + PreferenceManager.getString(Contants.KEY_TELEFONO).trim(), SPACES);
         toPrint = toPrint + StringUtils.centerStringInLine("Dir:" + PreferenceManager.getString(Contants.KEY_DIRECCION).trim(), SPACES);
-        toPrint = toPrint + StringUtils.centerStringInLine("GUAYAQUIL - ECUADOR", SPACES);
+        //toPrint = toPrint + StringUtils.centerStringInLine("GUAYAQUIL - ECUADOR", SPACES);
         toPrint = toPrint + '\n';
         if(reimpresion)
             toPrint = toPrint + StringUtils.centerStringInLine("REIMPRESIÓN", SPACES);
         if(pedido.getEstado().equalsIgnoreCase("A"))
             toPrint = toPrint + StringUtils.centerStringInLine("DOCUMENTO ANULADO", SPACES);
+        if(pedido.getEstado().equalsIgnoreCase("N"))
+            toPrint = toPrint + StringUtils.centerStringInLine("DOCUMENTO CANCELADO", SPACES);
 
         toPrint = toPrint + StringUtils.centerStringInLine(pedido.getTransaccion().getValue().toUpperCase(), SPACES);
 
@@ -217,7 +219,7 @@ public class PrintHelper {
             }
 
             if(pago.getIdFormaPago() == 0)
-                toPrint = toPrint + StringUtils.leftStringInSpace("Nota Crédito", 12) + " ";
+                toPrint = toPrint + StringUtils.leftStringInSpace("(-) NC", 12) + " ";
             else if(pago.getIdFormaPago() == -1)
                 toPrint = toPrint + StringUtils.leftStringInSpace("Apertura", 12) + " ";
             else if(pago.getIdFormaPago() == -2) {

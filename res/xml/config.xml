@@ -397,13 +397,19 @@
                 </method>
                 <method>
                     <name>GetVendedores</name>
-                    <action>caja/GetVendedores</action>
+                    <action>caja/GetVendedores?idPuntoOperacion=@idPuntoOperacion</action>
                     <webMethod>GET</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
                     <name>AnularPedido</name>
                     <action>pedido/AnulaPedido</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>CancelarNC</name>
+                    <action>pedido/CancelaNC</action>
                     <webMethod>POST</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>
@@ -415,7 +421,7 @@
                 </method>
                 <method>
                     <name>GetNumeroDocumento</name>
-                    <action>caja/GetNumeroDocumento?numeroDocumento=@numeroDocumento</action>
+                    <action>caja/GetNumeroDocumento?numeroDocumento=@numeroDocumento&amp;valor=@valor</action>
                     <webMethod>GET</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>

@@ -6,7 +6,6 @@ dependencies {
     compile project(':AndroidGraphView')
     compile project(':main')
     compile 'com.github.lzyzsd:circleprogress:1.1.0@aar'
-
 }
 
 android {

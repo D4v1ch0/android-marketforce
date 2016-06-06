@@ -537,7 +537,7 @@
         CantidadDevolucion INTEGER,
         BaseICE REAL,
         IdBeneficio INTEGER,
-        IdVendedor INTEGER
+        IdVendedor TEXT
         )
     </statement>
     <statement>
@@ -676,8 +676,7 @@
     </statement>
     <statement>
         CREATE TABLE tbVendedor(
-        IdVendedor INTEGER PRIMARY KEY,
-        Name TEXT
+        IdVendedor TEXT PRIMARY KEY
         )
     </statement>
 

@@ -240,9 +240,37 @@ public class Pago extends EntityBase<Pago> {
         return list;
     }
 
-    public static List<Pago> getPagosInt(DataBase db, long idPedido) {
+    public static Pago getPagoNC(DataBase db, String numeroDocumento) {
         Cursor c = db.query(Contract.Pago.TABLE_NAME, new String[]{Contract.Pago._ID, Contract.Pago.COLUMN_ID_FORMA_PAGO, Contract.Pago.COLUMN_ID_PAGO, Contract.Pago.COLUMN_ID_PEDIDO,
                 Contract.Pago.COLUMN_ID_PEDIDO_INT, Contract.Pago.COLUMN_OBSERVACION, Contract.Pago.COLUMN_VALOR,  Contract.Pago.COLUMN_ID_BANCO, Contract.Pago.COLUMN_ID_MARCA_TARJETA, Contract.Pago.COLUMN_NUMERO_CUENTA,
+                Contract.Pago.COLUMN_NUMERO_DOCUMENTO, Contract.Pago.COLUMN_AUTORIZADOR_TARJETA, Contract.Pago.COLUMN_ID_TIPO_DIFERIDO, Contract.Pago.COLUMN_CODIGO_SEGURIDAD}, Contract.Pago.COLUMN_NUMERO_DOCUMENTO + " = ?", new String[]{numeroDocumento});
+
+        Pago pago = null;
+        while(c.moveToNext()){
+            pago = new Pago();
+            pago.setID(CursorUtils.getInt(c, Contract.Pago._ID));
+            pago.setIdFormaPago(CursorUtils.getInt(c, Contract.Pago.COLUMN_ID_FORMA_PAGO));
+            pago.setIdPago(CursorUtils.getInt(c, Contract.Pago.COLUMN_ID_PAGO));
+            pago.setIdPedido(CursorUtils.getInt(c, Contract.Pago.COLUMN_ID_PEDIDO));
+            pago.set_idPedido(CursorUtils.getLong(c, Contract.Pago.COLUMN_ID_PEDIDO_INT));
+            pago.setObservacion(CursorUtils.getString(c, Contract.Pago.COLUMN_OBSERVACION));
+            pago.setValor(CursorUtils.getFloat(c, Contract.Pago.COLUMN_VALOR));
+            pago.setIdBanco(CursorUtils.getInt(c, Contract.Pago.COLUMN_ID_BANCO));
+            pago.setIdMarcaTarjeta(CursorUtils.getInt(c, Contract.Pago.COLUMN_ID_MARCA_TARJETA));
+            pago.setIdTipoDiferido(CursorUtils.getInt(c, Contract.Pago.COLUMN_ID_TIPO_DIFERIDO));
+            pago.setNumeroDocumento(CursorUtils.getString(c, Contract.Pago.COLUMN_NUMERO_DOCUMENTO));
+            pago.setNumeroCuenta(CursorUtils.getString(c, Contract.Pago.COLUMN_NUMERO_CUENTA));
+            pago.setAutorizadorTarjeta(CursorUtils.getInt(c, Contract.Pago.COLUMN_AUTORIZADOR_TARJETA));
+            pago.setCodigoSeguridad(CursorUtils.getInt(c, Contract.Pago.COLUMN_CODIGO_SEGURIDAD));
+            pago.setFormaPago(FormaPago.getFormaPago(db, pago.getIdFormaPago()));
+        }
+        c.close();
+        return pago;
+    }
+
+    public static List<Pago> getPagosInt(DataBase db, long idPedido) {
+        Cursor c = db.query(Contract.Pago.TABLE_NAME, new String[]{Contract.Pago._ID, Contract.Pago.COLUMN_ID_FORMA_PAGO, Contract.Pago.COLUMN_ID_PAGO, Contract.Pago.COLUMN_ID_PEDIDO,
+                Contract.Pago.COLUMN_ID_PEDIDO_INT, Contract.Pago.COLUMN_OBSERVACION, Contract.Pago.COLUMN_VALOR, Contract.Pago.COLUMN_ID_BANCO, Contract.Pago.COLUMN_ID_MARCA_TARJETA, Contract.Pago.COLUMN_NUMERO_CUENTA,
                 Contract.Pago.COLUMN_NUMERO_DOCUMENTO, Contract.Pago.COLUMN_AUTORIZADOR_TARJETA, Contract.Pago.COLUMN_ID_TIPO_DIFERIDO, Contract.Pago.COLUMN_CODIGO_SEGURIDAD}, Contract.Pago.COLUMN_ID_PEDIDO_INT + " = ?", new String[]{idPedido + ""});
 
         List<Pago> list = new ArrayList<Pago>();

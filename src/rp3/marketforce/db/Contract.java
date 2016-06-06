@@ -1174,7 +1174,6 @@ public final class Contract {
 		public static final String TABLE_NAME = "tbVendedor";
 
 		public static final String COLUMN_ID_VENDEDOR = "IdVendedor";
-		public static final String COLUMN_NAME = "Name";
 
 	}
 }

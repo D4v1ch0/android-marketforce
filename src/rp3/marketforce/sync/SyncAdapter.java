@@ -76,6 +76,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
     public static String SYNC_TYPE_AUTORIZAR_CIUD_ORO = "ciud_oro";
     public static String SYNC_TYPE_AUTORIZAR_DESC = "autorizar_desc";
     public static String SYNC_TYPE_VALIDAR_NC = "validar_nc";
+    public static String SYNC_TYPE_CANCELAR_NC = "cancelar_nc";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -292,6 +293,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                             result = rp3.marketforce.sync.Caja.executeSyncTransacciones(db);
                             addDefaultMessage(result);
                         }
+
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Caja.executeSyncGetVendedores(db);
+                            addDefaultMessage(result);
+                        }
                     }
 				/*
 				 * Se comenta carga de fotos ya que se la hara mediante un lazy loader.
@@ -416,6 +422,10 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     long id = extras.getLong(CrearPedidoFragment.ARG_PEDIDO);
                     result = Pedido.executeSyncAnular(db, id);
                     addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_CANCELAR_NC)) {
+                    long id = extras.getLong(CrearPedidoFragment.ARG_PEDIDO);
+                    result = Pedido.executeSyncCancelar(db, id);
+                    addDefaultMessage(result);
                 } else if (syncType.equals(SYNC_TYPE_AUTORIZAR_CIUD_ORO)) {
                     String user = extras.getString(SignInFragment.ARG_USER);
                     String pass = extras.getString(SignInFragment.ARG_PASS);
@@ -461,7 +471,8 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     addDefaultMessage(result);
                 } else if (syncType.equals(SYNC_TYPE_VALIDAR_NC)) {
                     String nc = extras.getString(AgregarPagoFragment.ARG_NC);
-                    Bundle bundle = Caja.executeSyncGetNC(nc);
+                    String pago = extras.getString(AgregarPagoFragment.ARG_PAGO);
+                    Bundle bundle = Caja.executeSyncGetNC(nc, pago);
                     addDefaultMessage(bundle.getInt("Status"));
                     putData(AgregarPagoFragment.ARG_NC, bundle.getBoolean(AgregarPagoFragment.ARG_NC));
                 } else if (syncType.equals(SYNC_TYPE_UPLOAD_PERMISO)) {
@@ -667,102 +678,113 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         addDefaultMessage(result);
                     }
 
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Pedido.executeSyncPendientes(db);
-                        addDefaultMessage(result);
-                    }
+                    if(PreferenceManager.getBoolean(Contants.KEY_MODULO_POS, true)) {
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Pedido.executeSyncPendientes(db);
+                            addDefaultMessage(result);
+                        }
 
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Caja.executeSync(db);
-                        addDefaultMessage(result);
-                    }
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Caja.executeSync(db);
+                            addDefaultMessage(result);
+                        }
 
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Caja.executeSyncMoneda(db);
-                        addDefaultMessage(result);
-                    }
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Caja.executeSyncMoneda(db);
+                            addDefaultMessage(result);
+                        }
 
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Caja.executeSyncFormasPago(db);
-                        addDefaultMessage(result);
-                    }
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Caja.executeSyncFormasPago(db);
+                            addDefaultMessage(result);
+                        }
 
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Caja.executeSyncBanco(db);
-                        addDefaultMessage(result);
-                    }
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Caja.executeSyncBanco(db);
+                            addDefaultMessage(result);
+                        }
 
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Caja.executeSyncMarcaTarjetas(db);
-                        addDefaultMessage(result);
-                    }
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Caja.executeSyncMarcaTarjetas(db);
+                            addDefaultMessage(result);
+                        }
 
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Caja.executeSyncTarjetas(db);
-                        addDefaultMessage(result);
-                    }
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Caja.executeSyncTarjetas(db);
+                            addDefaultMessage(result);
+                        }
 
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Caja.executeSyncTipoDiferidos(db);
-                        addDefaultMessage(result);
-                    }
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Caja.executeSyncTipoDiferidos(db);
+                            addDefaultMessage(result);
+                        }
 
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Caja.executeSyncTarjetaComision(db);
-                        addDefaultMessage(result);
-                    }
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Caja.executeSyncTarjetaComision(db);
+                            addDefaultMessage(result);
+                        }
 
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Caja.executeSyncGetControl(db);
-                        addDefaultMessage(result);
-                    }
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Caja.executeSyncGetControl(db);
+                            addDefaultMessage(result);
+                        }
 
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Caja.executeSyncTransacciones(db);
-                        addDefaultMessage(result);
-                    }
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Caja.executeSyncTransacciones(db);
+                            addDefaultMessage(result);
+                        }
 
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Pedido.executeSyncDocRef(db);
-                        if(result == SYNC_EVENT_SUCCESS)
-                            SyncAudit.insert(SYNC_TYPE_DOC_REF, SYNC_EVENT_SUCCESS);
-                        addDefaultMessage(result);
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Caja.executeSyncGetVendedores(db);
+                            addDefaultMessage(result);
+                        }
+
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Pedido.executeSyncDocRef(db);
+                            if (result == SYNC_EVENT_SUCCESS)
+                                SyncAudit.insert(SYNC_TYPE_DOC_REF, SYNC_EVENT_SUCCESS);
+                            addDefaultMessage(result);
+                        }
                     }
 
                     //Modulo Oportunidades
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Etapa.executeSyncTipos(db);
-                        addDefaultMessage(result);
+                    if(PreferenceManager.getBoolean(Contants.KEY_MODULO_OPORTUNIDADES, true)) {
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Etapa.executeSyncTipos(db);
+                            addDefaultMessage(result);
+                        }
+
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Etapa.executeSync(db);
+                            addDefaultMessage(result);
+                        }
+
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Oportunidad.executeSyncInserts(db);
+                            addDefaultMessage(result);
+                        }
+
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Oportunidad.executeSyncPendientes(db);
+                            addDefaultMessage(result);
+                        }
+
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Oportunidad.executeSync(db);
+                            addDefaultMessage(result);
+                        }
                     }
 
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Etapa.executeSync(db);
-                        addDefaultMessage(result);
-                    }
+                    if(PreferenceManager.getBoolean(Contants.KEY_MODULO_MARCACIONES, true)) {
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Marcaciones.executeSyncGrupo(db);
+                            addDefaultMessage(result);
+                        }
 
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Oportunidad.executeSyncInserts(db);
-                        addDefaultMessage(result);
-                    }
-
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Oportunidad.executeSyncPendientes(db);
-                        addDefaultMessage(result);
-                    }
-
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Oportunidad.executeSync(db);
-                        addDefaultMessage(result);
-                    }
-
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Marcaciones.executeSyncGrupo(db);
-                        addDefaultMessage(result);
-                    }
-
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = Marcaciones.executeSyncMarcacionesHoy(db);
-                        addDefaultMessage(result);
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = Marcaciones.executeSyncMarcacionesHoy(db);
+                            addDefaultMessage(result);
+                        }
                     }
 
                 }

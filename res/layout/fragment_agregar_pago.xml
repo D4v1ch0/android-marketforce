@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/apptheme_color"
@@ -149,6 +150,41 @@
             android:layout_weight="0.7"
             android:maxLength="50" />
     </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/pago_numero_documento_nc_layout"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/textView2445"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/label_numero_documento"
+                android:textStyle="bold"
+                android:textColor="@color/color_text_sky_blue"
+                android:layout_weight="0.3"
+                android:lines="2"
+                android:gravity="clip_vertical|left"
+                android:layout_gravity="center_vertical" />
+
+            <rp3.widget.MaskedEditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:mask = "***-***-*********"
+                app:notMaskedSymbol = "*"
+                app:replacementChar = "0"
+                app:deleteChar = "0"
+                app:format = "[1][2][3]-[4][5][6]-[7][8][9][10][11][12][13][14][15]"
+                app:maskIconColor = "@color/caldroid_black"
+                android:id="@+id/pago_numero_documento_nc"
+                android:layout_weight="0.7"
+                android:maxLength="17"
+                style="@style/EditTextAppTheme"
+                android:textColor="@color/caldroid_black" />
+        </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.text.InputType;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -26,6 +27,7 @@ import rp3.app.BaseFragment;
 import rp3.configuration.PreferenceManager;
 import rp3.content.SimpleIdentifiableAdapter;
 import rp3.data.Identifiable;
+import rp3.data.MessageCollection;
 import rp3.data.models.GeneralValue;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
@@ -35,8 +37,10 @@ import rp3.marketforce.models.pedido.FormaPago;
 import rp3.marketforce.models.pedido.MarcaTarjeta;
 import rp3.marketforce.models.pedido.Pago;
 import rp3.marketforce.models.pedido.TipoDiferido;
+import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.NothingSelectedSpinnerAdapter;
 import rp3.util.StringUtils;
+import rp3.widget.MaskedEditText;
 
 /**
  * Created by magno_000 on 16/12/2015.
@@ -135,6 +139,8 @@ public class AgregarPagoFragment extends BaseFragment {
         idpago = getArguments().getInt(ARG_IDPAGO, -1);
         efectivo = getArguments().getBoolean(ARG_EFECTIVO);
         DecimalFormat df = new DecimalFormat("#.##");
+
+        ((MaskedEditText) getRootView().findViewById(R.id.pago_numero_documento_nc)).setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
         SimpleIdentifiableAdapter formasPago = new SimpleIdentifiableAdapter(getContext(), FormaPago.getFormasPago(getDataBase()));
         ((Spinner) rootView.findViewById(R.id.pago_tipo)).setAdapter(formasPago);
@@ -311,6 +317,9 @@ public class AgregarPagoFragment extends BaseFragment {
                     if(pag.getAutorizadorTarjeta() != 0)
                         ((EditText) getRootView().findViewById(R.id.pago_autorizacion)).setText(pag.getAutorizadorTarjeta() + "");
                     break;
+                case 4:
+                    if(pag.getNumeroDocumento() != null && !pag.getNumeroDocumento().equalsIgnoreCase("null"))
+                        ((EditText) getRootView().findViewById(R.id.pago_numero_documento_nc)).setText(pag.getNumeroDocumento());
             }
 
 
@@ -351,12 +360,18 @@ public class AgregarPagoFragment extends BaseFragment {
                 }
                 if (pago.getFormaPago().getDescripcion().equalsIgnoreCase("Nota Crédito"))
                 {
-                    if(((EditText) getRootView().findViewById(R.id.pago_numero_documento)).length() <= 0)
+                    if(((MaskedEditText) getRootView().findViewById(R.id.pago_numero_documento_nc)).length() <= 0)
                     {
                         Toast.makeText(getContext(), "Debe ingresar el número de documento.", Toast.LENGTH_LONG).show();
                         return;
                     }
-                    pago.setNumeroDocumento(((EditText) getRootView().findViewById(R.id.pago_numero_documento)).getText().toString());
+                    showDialogProgress(R.string.message_title_connecting, R.string.message_verificando_nc);
+                    Bundle bundle2 = new Bundle();
+                    bundle2.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_VALIDAR_NC);
+                    bundle2.putString(ARG_NC, ((MaskedEditText) getRootView().findViewById(R.id.pago_numero_documento_nc)).getUnmaskedText());
+                    bundle2.putString(ARG_PAGO, ((EditText) getRootView().findViewById(R.id.pago_valor)).getText().toString());
+                    requestSync(bundle2);
+                    return;
                 }
                 if (pago.getFormaPago().getDescripcion().equalsIgnoreCase("Cheque"))
                 {
@@ -426,6 +441,36 @@ public class AgregarPagoFragment extends BaseFragment {
         });
     }
 
+    @Override
+    public void onSyncComplete(Bundle data, MessageCollection messages) {
+        super.onSyncComplete(data, messages);
+        if(data.containsKey(SyncAdapter.ARG_SYNC_TYPE) && data.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_VALIDAR_NC)){
+            closeDialogProgress();
+            if(messages.hasErrorMessage()){
+                showDialogMessage(messages);
+            }else{
+                if(data.getBoolean(ARG_NC, false))
+                {
+                    Pago pago = new Pago();
+                    pago.setIdPago(idpago);
+                    pago.setValor(Float.parseFloat(((EditText) getRootView().findViewById(R.id.pago_valor)).getText().toString()));
+                    int idFormaPago = ((int) ((Spinner) getRootView().findViewById(R.id.pago_tipo)).getAdapter().getItemId(((Spinner) getRootView().findViewById(R.id.pago_tipo)).getSelectedItemPosition()));
+                    pago.setFormaPago(FormaPago.getFormaPagoInt(getDataBase(), idFormaPago));
+                    pago.setIdFormaPago(pago.getFormaPago().getIdFormaPago());
+                    pago.setNumeroDocumento(((EditText) getRootView().findViewById(R.id.pago_numero_documento_nc)).getText().toString());
+                    pago.setObservacion(((EditText) getRootView().findViewById(R.id.actividad_texto_respuesta)).getText().toString());
+                    createFragmentListener.onAcceptSuccess(pago);
+                    dismiss();
+                }
+                else
+                {
+                    Toast.makeText(this.getContext(), "Nota de Crédito no es válida para realizar el pago.", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        }
+    }
+
     private void promptSpeechInput() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
@@ -448,18 +493,21 @@ public class AgregarPagoFragment extends BaseFragment {
         getRootView().findViewById(R.id.pago_tarjeta_layout).setVisibility(View.GONE);
         getRootView().findViewById(R.id.pago_numero_cuenta_layout).setVisibility(View.GONE);
         getRootView().findViewById(R.id.pago_numero_documento_layout).setVisibility(View.GONE);
+        getRootView().findViewById(R.id.pago_numero_documento_nc_layout).setVisibility(View.GONE);
         getRootView().findViewById(R.id.pago_autorizador_layout).setVisibility(View.GONE);
         getRootView().findViewById(R.id.pago_codigo_seguridad_layout).setVisibility(View.GONE);
         getRootView().findViewById(R.id.pago_tipo_diferido_layout).setVisibility(View.GONE);
         if (formaPago.getDescripcion().equalsIgnoreCase("Nota Crédito"))
         {
-            getRootView().findViewById(R.id.pago_numero_documento_layout).setVisibility(View.VISIBLE);
+            getRootView().findViewById(R.id.pago_numero_documento_nc_layout).setVisibility(View.VISIBLE);
+            //((EditText) getRootView().findViewById(R.id.pago_numero_documento)).setInputType(InputType.TYPE_CLASS_TEXT);
         }
         if(formaPago.getDescripcion().equalsIgnoreCase("Cheque"))
         {
             if(GeneralValue.getGeneralValue(getDataBase(), Contants.POS_USEBANCHEQ).getValue().equalsIgnoreCase("1")) getRootView().findViewById(R.id.pago_banco_layout).setVisibility(View.VISIBLE);
             if(GeneralValue.getGeneralValue(getDataBase(), Contants.POS_USECUECHEQ).getValue().equalsIgnoreCase("1")) getRootView().findViewById(R.id.pago_numero_cuenta_layout).setVisibility(View.VISIBLE);
             if(GeneralValue.getGeneralValue(getDataBase(), Contants.POS_USENUMCHEQ).getValue().equalsIgnoreCase("1")) getRootView().findViewById(R.id.pago_numero_documento_layout).setVisibility(View.VISIBLE);
+            ((EditText) getRootView().findViewById(R.id.pago_numero_documento)).setInputType(InputType.TYPE_CLASS_NUMBER);
         } else if(formaPago.getDescripcion().equalsIgnoreCase("Tarjeta Credito"))
         {
             if(GeneralValue.getGeneralValue(getDataBase(), Contants.POS_USEBANCOTC).getValue().equalsIgnoreCase("1")) getRootView().findViewById(R.id.pago_banco_layout).setVisibility(View.VISIBLE);
@@ -468,6 +516,7 @@ public class AgregarPagoFragment extends BaseFragment {
             if(GeneralValue.getGeneralValue(getDataBase(), Contants.POS_USEAUTORTC).getValue().equalsIgnoreCase("1")) getRootView().findViewById(R.id.pago_autorizador_layout).setVisibility(View.VISIBLE);
             if(GeneralValue.getGeneralValue(getDataBase(), Contants.POS_USELOTETC).getValue().equalsIgnoreCase("1")) getRootView().findViewById(R.id.pago_codigo_seguridad_layout).setVisibility(View.VISIBLE);
             if(GeneralValue.getGeneralValue(getDataBase(), Contants.POS_USEDIFERTC).getValue().equalsIgnoreCase("1")) getRootView().findViewById(R.id.pago_tipo_diferido_layout).setVisibility(View.VISIBLE);
+            ((EditText) getRootView().findViewById(R.id.pago_numero_documento)).setInputType(InputType.TYPE_CLASS_NUMBER);
         }
     }
 

@@ -130,6 +130,7 @@ public class Pedido {
                 jObjectDetalle.put("ValorImpuestoIvaVentaTotal", df.format(det.getValorImpuestoTotal()));
                 jObjectDetalle.put("BaseICE", df.format(det.getBaseICE()));
                 jObjectDetalle.put("CantidadDevolucion", det.getCantidadDevolucion());
+                jObjectDetalle.put("IdVendedor", det.getIdVendedor());
 
                 jArrayDetalle.put(jObjectDetalle);
             }
@@ -330,6 +331,7 @@ public class Pedido {
                     jObjectDetalle.put("BaseICE", df.format(NumberUtils.Round(det.getBaseICE(), 2)));
                     jObjectDetalle.put("UsrAutorizaDescManual", det.getUsrDescManual());
                     jObjectDetalle.put("CantidadDevolucion", det.getCantidadDevolucion());
+                    jObjectDetalle.put("IdVendedor", det.getIdVendedor());
 
                     jArrayDetalle.put(jObjectDetalle);
                 }
@@ -399,6 +401,49 @@ public class Pedido {
             } finally {
                 webService.close();
             }
+        }
+
+        return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
+    public static int executeSyncCancelar(DataBase db, long idPedido) {
+        WebService webService = new WebService("MartketForce", "CancelarNC");
+        webService.setTimeOut(20000);
+
+        rp3.marketforce.models.pedido.Pedido pedidoUpload = rp3.marketforce.models.pedido.Pedido.getPedido(db, idPedido, false);
+
+        JSONObject jObject = new JSONObject();
+        try {
+            DecimalFormat df = new DecimalFormat("#.##");
+            df.setRoundingMode(RoundingMode.CEILING);
+
+            jObject.put("IdPedido", pedidoUpload.getIdPedido());
+            jObject.put("NumeroDocumento", pedidoUpload.getNumeroDocumento());
+            //jObject.put("MotivoAnulacion", pedidoUpload.getMotivoAnulacion());
+            //jObject.put("ObservacionAnulacion", pedidoUpload.getObservacionAnulacion());
+            //jObject.put("FecAnulaTicks",  Convert.getDotNetTicksFromDate(pedidoUpload.getFechaAnulacion()));
+
+        } catch (Exception ex) {
+
+        }
+
+        webService.addParameter("pedido", jObject);
+
+        try {
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+            } catch (HttpResponseException e) {
+                if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return rp3.content.SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return rp3.content.SyncAdapter.SYNC_EVENT_ERROR;
+            }
+
+        } finally {
+            webService.close();
         }
 
         return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;

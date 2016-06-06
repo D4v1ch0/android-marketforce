@@ -25,6 +25,7 @@ import rp3.marketforce.models.pedido.PedidoDetalle;
 import rp3.marketforce.models.pedido.Tarjeta;
 import rp3.marketforce.models.pedido.TarjetaComision;
 import rp3.marketforce.models.pedido.TipoDiferido;
+import rp3.marketforce.models.pedido.Vendedor;
 import rp3.marketforce.pedido.AgregarPagoFragment;
 import rp3.runtime.Session;
 import rp3.util.Convert;
@@ -423,12 +424,48 @@ public class Caja {
         return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
     }
 
-    public static Bundle executeSyncGetNC(String nc){
+    public static int executeSyncGetVendedores(DataBase db){
+        WebService webService = new WebService("MartketForce","GetVendedores");
+        try
+        {
+            webService.addIntParameter("@idPuntoOperacion", PreferenceManager.getInt(Contants.KEY_ID_PUNTO_OPERACION));
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+                JSONArray jsonArray = webService.getJSONArrayResponse();
+                if(jsonArray != null) {
+                    Vendedor.deleteAll(db, Contract.Vendedor.TABLE_NAME);
+                    for(int i = 0; i < jsonArray.length(); i++)
+                    {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        Vendedor vendedor = new Vendedor();
+                        vendedor.setIdVendedor(jsonObject.getString("IdVendedor"));
+                        Vendedor.insert(db, vendedor);
+                    }
+                }
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return SyncAdapter.SYNC_EVENT_ERROR;
+            }
+
+        }finally{
+            webService.close();
+        }
+
+        return SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
+    public static Bundle executeSyncGetNC(String nc, String pago){
         Bundle bundle = new Bundle();
         WebService webService = new WebService("MartketForce","GetNumeroDocumento");
         try
         {
             webService.addStringParameter("@numeroDocumento", nc);
+            webService.addStringParameter("@valor", pago);
             webService.addCurrentAuthToken();
 
             try {

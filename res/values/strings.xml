@@ -329,7 +329,9 @@
     <string name="label_nuevo_arqueo">Nuevo Arqueo</string>
     <string name="imprimir_arqueo">Imprimir Arqueo</string>
     <string name="message_anulacion">Desea anular esta transacción?</string>
+    <string name="message_verificando_nc">Verificando Nota de Crédito</string>
     <string name="message_cierre_caja">Desea cerrar caja?</string>
+    <string name="message_cancelar_nc">Desea cancelar esta Nota de Crédito?</string>
     <string name="action_nota_credito">Crear Nota de Crédito</string>
     <string name="label_motivo_anulacion">Motivo de Anulación:</string>
     <string name="label_eliminar_pago">Eliminar Pago</string>
@@ -338,10 +340,12 @@
     <string name="action_aperturar_caja">Aperturar Caja</string>
     <string name="action_cerrar_caja">Cerrar Caja</string>
     <string name="title_cerrar_caja_activa">Cerrar Caja</string>
+    <string name="title_cancelar_nc">Cancelar</string>
     <string name="message_cerrar_caja_activa">Existe una caja abierta por otro usuario, desea cerrarla? (En el caso de no cerrarla, no podra transaccionar)</string>
     <string name="title_guardar_transaccion">Guardar Transacción</string>
     <string name="action_reimpresion">Reimprimir Transacción</string>
     <string name="action_ver_pagos">Ver Formas de Pago</string>
+    <string name="action_cancelar_transaccion">Cancelar Nota de Crédito</string>
     <string name="warning_sin_papel">Impresora no tiene papel. Cargue la impresora de papel y haga touch en Reintentar.</string>
     <string name="warning_impresora_no_vinculada">No existe impresora vinculada al dispositivo. Por favor vincule una impresora por medio de Bluetooth y haga touch en Reintentar.</string>
     <string name="warning_error_desconocido">Error desconocido al imprimir. Si desea continuar, haga touch en Reintentar.</string>
@@ -406,4 +410,5 @@
     <string name="label_no_permisos">No hay permisos por aprobar</string>
     <string name="laber_jornada_sin">Jornada</string>
     <string name="label_llegada">Llegada:</string>
+    <string name="label_vendedor">Vendedor:</string>
 </resources>
