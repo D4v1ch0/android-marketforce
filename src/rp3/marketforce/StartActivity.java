@@ -1,6 +1,14 @@
 package rp3.marketforce;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Random;
 
 import rp3.configuration.Configuration;
@@ -34,11 +42,13 @@ import rp3.sync.SyncAudit;
 import rp3.util.ConnectionUtils;
 
 import android.accounts.AccountManager;
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.provider.Settings;
 import android.widget.Toast;
@@ -48,7 +58,7 @@ import com.google.android.gms.iid.InstanceID;
 
 public class StartActivity extends rp3.app.StartActivity{
 
-    public final static int REINTENTAR_MESSAGE = 100;
+    public final static int RECOVER_DB = 1;
     public final static int OFFLINE_MESSAGE = 200;
 	
 	public StartActivity() {
@@ -65,7 +75,6 @@ public class StartActivity extends rp3.app.StartActivity{
 		else
 			Configuration.reinitializeConfiguration(context, DbOpenHelper.class);
 		Configuration.TryInitializeConfiguration(this, DbOpenHelper.class);
-        Canal.getCanal(getDataBase(), "1");
         
         if(PreferenceManager.getString(Contants.KEY_ANDROID_ID, "").equalsIgnoreCase(""))
         {
@@ -107,10 +116,20 @@ public class StartActivity extends rp3.app.StartActivity{
 	public void onContinue() {	
 		
 		super.onContinue();
+        /*File file2 = new File(Environment.getExternalStorageDirectory() + "/testM.db");
+        if(file2.exists() && !PreferenceManager.getBoolean(Contants.KEY_DATABASE_RESTORE, false))
+        {
+            showDialogConfirmation(RECOVER_DB,R.string.message_recupera_db, R.string.title_recupera_db);
+            return;
+        }
+        else
+            PreferenceManager.setValue(Contants.KEY_DATABASE_RESTORE, true);*/
         String proof = PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"");
         String proof2 = PreferenceManager.getString(Constants.KEY_LAST_PASS,"");
         String peer = Session.getUser().getLogonName();
         String peer2 = Session.getUser().getPassword();
+        Canal.getCanal(getDataBase(), "1");
+
         if(!PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"").equalsIgnoreCase(Session.getUser().getLogonName()) ||
                 !PreferenceManager.getString(Constants.KEY_LAST_PASS,"").equalsIgnoreCase(Session.getUser().getPassword()))
         {
@@ -146,6 +165,8 @@ public class StartActivity extends rp3.app.StartActivity{
 
         PreferenceManager.setValue(Constants.KEY_LAST_LOGIN, Session.getUser().getLogonName());
         PreferenceManager.setValue(Constants.KEY_LAST_PASS, Session.getUser().getPassword());
+
+        //List<Cliente> arf = Cliente.getCliente(getDataBase());
 
 		Long days = SyncAudit.getDaysOfLastSync(SyncAdapter.SYNC_TYPE_GENERAL, SyncAdapter.SYNC_EVENT_SUCCESS);
 
@@ -185,22 +206,87 @@ public class StartActivity extends rp3.app.StartActivity{
     @Override
     public void onPositiveConfirmation(int id) {
         super.onPositiveConfirmation(id);
-        Bundle bundle = new Bundle();
-        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_GENERAL);
-        requestSync(bundle);
+        //restoreDatabase();
+        PreferenceManager.setValue(Contants.KEY_DATABASE_RESTORE, true);
+        onContinue();
     }
 
     @Override
     public void onNegativeConfirmation(int id) {
         super.onNegativeConfirmation(id);
-        finish();
+        PreferenceManager.setValue(Contants.KEY_DATABASE_RESTORE, true);
+        onContinue();
     }
 
     //	@Override
 //	public void onVerifyRequestSignIn() {
 //		callNextActivity();
 //	}
-	
+    @SuppressLint("NewApi")
+    private void restoreDatabase() {
+        File file = new File(Environment.getExternalStorageDirectory() + "/testM.db");
+        file.setExecutable(true);
+        file.setReadable(true);
+        file.setWritable(true);
+
+        File file2 = this.getDatabasePath("Rp3MarketForce.db");
+        file2.setExecutable(true);
+        file2.setReadable(true);
+        file2.setWritable(true);
+
+        try {
+            if(!file2.exists()) {
+                File fileDir = this.getDatabasePath("extra");
+                fileDir.mkdirs();
+                file2.createNewFile();
+            }
+            InputStream in = new FileInputStream(file);
+            OutputStream out = new FileOutputStream(file2);
+
+            // Transfer bytes from in to out
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+            in.close();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        file.delete();
+
+        File file3 = new File(Environment.getExternalStorageDirectory() + "/testK.db");
+        file2.setExecutable(true);
+        file2.setReadable(true);
+        file2.setWritable(true);
+
+        try {
+            if(file3.exists()) {
+                InputStream in = new FileInputStream(file3);
+                StringBuilder sb = new StringBuilder();
+                BufferedReader br = new BufferedReader(new InputStreamReader(in));
+                String read;
+
+                while((read=br.readLine()) != null) {
+                    //System.out.println(read);
+                    sb.append(read);
+                }
+
+                br.close();
+                in.close();
+                file3.delete();
+
+                String[] locks = sb.toString().split(";");
+                PreferenceManager.setValue(Constants.KEY_LAST_LOGIN, locks[0]);
+                PreferenceManager.setValue(Constants.KEY_LAST_PASS, locks[1]);
+            }
+        } catch (Exception e) {
+
+        }
+
+    }
+
 	private void callNextActivity(){
 		setServiceRecurring();
 		startActivity(MainActivity.newIntent(this));

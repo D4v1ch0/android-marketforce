@@ -242,7 +242,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         }
                     }
 
-                    if(PreferenceManager.getBoolean(Contants.KEY_MODULO_POS, true)) {
+                    if(PreferenceManager.getBoolean(Contants.KEY_MODULO_POS, false)) {
 
                         if (result == SYNC_EVENT_SUCCESS) {
                             result = rp3.marketforce.sync.Caja.executeSync(db);

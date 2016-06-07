@@ -114,8 +114,15 @@ public class Cliente {
                             cl.setFechaNacimiento(Convert.getDateFromDotNetTicks(type.getLong("FechaNacimientoTicks")));
                             cl.setNombreCompleto(type.getString("NombresCompletos").trim().replace("null", ""));
                             cl.setURLFoto(type.getString("Foto"));
-							cl.setExentoImpuesto(type.getBoolean("ExentoImpuesto"));
-							cl.setCiudadanoOro(type.getBoolean("CiudadanoOro"));
+							if(!type.isNull("ExentoImpuesto"))
+								cl.setExentoImpuesto(type.getBoolean("ExentoImpuesto"));
+							else
+								cl.setExentoImpuesto(false);
+							if(!type.isNull("CiudadanoOro"))
+								cl.setCiudadanoOro(type.getBoolean("CiudadanoOro"));
+							else
+								cl.setCiudadanoOro(false);
+
                             cl.setTipoPersona(type.getString("TipoPersona"));
                             if(!type.isNull("ActividadEconomica"))
                                 cl.setActividadEconomica(type.getString("ActividadEconomica"));

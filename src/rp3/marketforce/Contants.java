@@ -23,6 +23,7 @@ public class Contants {
     public final static String IMAGE_FOLDER_OPORTUNIDADES = "imagesFolderOportunidad";
 	public final static String KEY_FIRST_TIME = "firstTime";
     public final static String KEY_SECOND_TIME = "secondTime";
+    public final static String KEY_DATABASE_RESTORE = "db_restore";
 	
 	public final static String ESTADO_GESTIONANDO = "G";
     public final static String ESTADO_ELIMINADO = "ELIM";

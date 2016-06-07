@@ -285,6 +285,8 @@
     <string name="label_debe_iniciar">Debe Iniciar</string>
     <string name="label_dias_programado">Dias Programado</string>
     <string name="label_dias_reales">Días Reales</string>
+    <string name="message_recupera_db">Existe una base de datos respaldada en su dispositivo. Desea recuperarla?</string>
+    <string name="title_recupera_db">Recuperación de Base de Datos</string>
     <!-- Modulo Pedidos -->
     <string name="action_crear_pedido">Crear Transacción</string>
     <string name="action_sincronizar_productos">Sincronizar Productos</string>
