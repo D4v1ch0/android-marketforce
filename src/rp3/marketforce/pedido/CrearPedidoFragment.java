@@ -517,6 +517,26 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                         "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_COTIZACION) + 1, 9));
         }
 
+        ((TextView) getRootView().findViewById(R.id.pedido_total)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(0));
+        ((TextView) getRootView().findViewById(R.id.pedido_descuentos)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(0));
+        ((TextView) getRootView().findViewById(R.id.pedido_impuestos)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(0));
+        ((TextView) getRootView().findViewById(R.id.pedido_base_cero)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(0));
+        ((TextView) getRootView().findViewById(R.id.pedido_base_imponible)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(0));
+        ((TextView) getRootView().findViewById(R.id.pedido_subtotal)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(0));
+        ((TextView) getRootView().findViewById(R.id.pedido_redondeo)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(0));
+        ((TextView) getRootView().findViewById(R.id.pedido_neto)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(0));
+        ((TextView) getRootView().findViewById(R.id.pedido_saldo)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(0));
+
+        if(GeneralValue.getGeneralValue(getDataBase(), Contants.POS_ROUNDSPECI).getValue().equalsIgnoreCase("1")) {
+            getRootView().findViewById(R.id.pedido_redondeo).setVisibility(View.VISIBLE);
+            getRootView().findViewById(R.id.pedido_redondeo_label).setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            getRootView().findViewById(R.id.pedido_redondeo).setVisibility(View.INVISIBLE);
+            getRootView().findViewById(R.id.pedido_redondeo_label).setVisibility(View.INVISIBLE);
+        }
+
         if (getArguments().containsKey(ARG_PEDIDO) && getArguments().getLong(ARG_PEDIDO) != 0 && !rotated) {
             idCliente = getArguments().getLong(ARG_PEDIDO);
             setDatosPedidos();
@@ -562,7 +582,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                     jsonObject.put("ib", prod.getIdBeneficio());
                     jsonObject.put("co", pedido.getPedidoDetalles().get(position).getCantidadOriginal());
                     jsonObject.put("ven", pedido.getPedidoDetalles().get(position).getIdVendedor());
-                    if(pedido.getPedidoDetalles().get(position).getUsrDescManual() != null && !pedido.getPedidoDetalles().get(position).getUsrDescManual().equalsIgnoreCase(""))
+                    if (pedido.getPedidoDetalles().get(position).getUsrDescManual() != null && !pedido.getPedidoDetalles().get(position).getUsrDescManual().equalsIgnoreCase(""))
                         jsonObject.put("udm", pedido.getPedidoDetalles().get(position).getUsrDescManual());
                     jsonObject.put("tipo", tipo);
 
@@ -861,7 +881,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                     pagado = pagado + pago.getValor();
                 }
 
-            if ((valorTotal - pagado) > 0) {
+            if ((valorTotal - pagado) > 0.005) {
                 Toast.makeText(getContext(), "Saldo insuficiente. Debe de ingresar pagos.", Toast.LENGTH_LONG).show();
                 return false;
             }
@@ -1097,12 +1117,24 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             baseImponible = baseImponible + detalle.getBaseImponible();
             neto = neto + (detalle.getSubtotal() - (detalle.getValorDescuentoManualTotal() + detalle.getValorDescuentoAutomaticoTotal() + detalle.getValorDescuentoOroTotal()));
         }
-        double a_redondondear = Double.parseDouble(GeneralValue.getGeneralValue(getDataBase(), Contants.POS_ROUNDNUM).getValue());
-        double residuo = valorTotal % (a_redondondear * 2);
-        if(residuo >= a_redondondear)
-            redondeo = ((a_redondondear * 2) - residuo);
+        if(GeneralValue.getGeneralValue(getDataBase(), Contants.POS_ROUNDSPECI).getValue().equalsIgnoreCase("1")) {
+            double a_redondondear = Double.parseDouble(GeneralValue.getGeneralValue(getDataBase(), Contants.POS_ROUNDNUM).getValue());
+            double residuo = valorTotal % (a_redondondear * 2);
+            if (residuo >= a_redondondear)
+                redondeo = ((a_redondondear * 2) - residuo);
+            else
+                redondeo = -residuo;
+        }
         else
-            redondeo = - residuo;
+        {
+            double a_redondondear = 0.005;
+            double residuo = valorTotal % (a_redondondear * 2);
+            if (residuo >= a_redondondear)
+                redondeo = ((a_redondondear * 2) - residuo);
+            else
+                redondeo = -residuo;
+        }
+
 
         valorTotal = valorTotal + redondeo;
 

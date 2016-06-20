@@ -154,12 +154,12 @@ public class AgregarPagoFragment extends BaseFragment {
                     if(!putPago)
                     {
                         putPago = true;
-                        ((EditText) getRootView().findViewById(R.id.pago_valor)).setText(df.format(pago) + ".00");
+                        ((EditText) getRootView().findViewById(R.id.pago_valor)).setText(df.format(pago).replace(",","."));
                     }
                 }
                 else {
                     saldo = createFragmentListener.getNewSaldo(FormaPago.getFormasPago(getDataBase()).get(position).getIdFormaPago());
-                    ((EditText) getRootView().findViewById(R.id.pago_valor)).setText(df.format(saldo) + ".00");
+                    ((EditText) getRootView().findViewById(R.id.pago_valor)).setText(df.format(saldo).replace(",", "."));
                 }
 
             }
@@ -246,7 +246,7 @@ public class AgregarPagoFragment extends BaseFragment {
             ((Spinner) rootView.findViewById(R.id.pago_diferido)).setAdapter(tipoDiferidos);
         }
 
-        ((EditText) getRootView().findViewById(R.id.pago_valor)).setText(df.format(saldo) + ".00");
+        ((EditText) getRootView().findViewById(R.id.pago_valor)).setText(df.format(saldo).replace(",","."));
 
         ((ImageView) rootView.findViewById(R.id.actividad_voice_to_text)).setOnClickListener(new View.OnClickListener() {
             @Override

@@ -57,6 +57,8 @@ public class MarcacionFragment extends BaseFragment {
 
     private static final int PRESS_TIME = 2000;
     private double DISTANCE = 0;
+    private static final int DIALOG_J2 = 1;
+    private static final int DIALOG_J4 = 2;
 
     CountDownTimer count1, count2, count3, count4;
     JustificacionFragment fragment;
