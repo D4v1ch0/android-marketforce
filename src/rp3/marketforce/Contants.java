@@ -63,6 +63,9 @@ public class Contants {
 	public final static String KEY_CLIENT = "ClientName";
     public final static String KEY_APP_INSTANCE_ID = "TokenId";
     public final static String KEY_MARACIONES_DISTANCIA = "MarcacionDistance";
+    public final static String KEY_MODULO_POS = "ModuloPOS";
+    public final static String KEY_MODULO_OPORTUNIDADES = "ModuloOportunidades";
+    public final static String KEY_MODULO_MARCACIONES = "ModuloMarcaciones";
 
     public final static String CAMPO_FECHA_NACIMIENTO = "FecNac";
     public final static String CAMPO_GENERO = "Gen";

@@ -187,16 +187,22 @@ public class Marcacion extends EntityBase<Marcacion>
 
             }while(c.moveToNext());
         }
-
+        c.close();
         return marcaciones;
 
     }
 
     public static List<Marcacion> getMarcaciones(DataBase db)
     {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.add(Calendar.DATE, -60);
         Cursor c = db.query(Contract.Marcacion.TABLE_NAME, new String[]{Contract.Marcacion._ID, Contract.Marcacion.COLUMN_EN_UBICACION, Contract.Marcacion.COLUMN_FECHA,
                 Contract.Marcacion.COLUMN_TIPO, Contract.Marcacion.COLUMN_LATITUD, Contract.Marcacion.COLUMN_LONGITUD, Contract.Marcacion.COLUMN_HORA_INICIO,
-                Contract.Marcacion.COLUMN_HORA_FIN, Contract.Marcacion.COLUMN_PENDIENTE, Contract.Marcacion.COLUMN_MINUTOS_ATRASO},null,null,null,null, Contract.Marcacion.COLUMN_FECHA);
+                Contract.Marcacion.COLUMN_HORA_FIN, Contract.Marcacion.COLUMN_PENDIENTE, Contract.Marcacion.COLUMN_MINUTOS_ATRASO},
+                Contract.Marcacion.COLUMN_FECHA + " >= ? ",new String[]{cal.getTimeInMillis() + ""},null,null, Contract.Marcacion.COLUMN_FECHA);
         List<Marcacion> marcaciones = new ArrayList<Marcacion>();
 
         if(c.moveToFirst())
@@ -219,7 +225,7 @@ public class Marcacion extends EntityBase<Marcacion>
 
             }while(c.moveToNext());
         }
-
+        c.close();
         return marcaciones;
 
     }
@@ -244,7 +250,7 @@ public class Marcacion extends EntityBase<Marcacion>
             marcacion.setMintutosAtraso(CursorUtils.getInt(c, Contract.Marcacion.COLUMN_MINUTOS_ATRASO));
             marcacion.setPermiso(Permiso.getPermisoMarcacion(db, marcacion.getID()));
         }
-
+        c.close();
         return marcacion;
     }
 
@@ -269,7 +275,7 @@ public class Marcacion extends EntityBase<Marcacion>
             marcacion.setMintutosAtraso(CursorUtils.getInt(c, Contract.Marcacion.COLUMN_MINUTOS_ATRASO));
             marcacion.setPermiso(Permiso.getPermisoMarcacion(db, marcacion.getID()));
         }
-
+        c.close();
         return marcacion;
     }
 
@@ -293,7 +299,7 @@ public class Marcacion extends EntityBase<Marcacion>
             marcacion.setMintutosAtraso(CursorUtils.getInt(c, Contract.Marcacion.COLUMN_MINUTOS_ATRASO));
             marcacion.setPermiso(Permiso.getPermisoMarcacion(db, marcacion.getID()));
         }
-
+        c.close();
         return marcacion;
     }
 }

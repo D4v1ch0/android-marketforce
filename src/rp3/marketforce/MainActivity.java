@@ -245,7 +245,9 @@ public class MainActivity extends rp3.app.NavActivity{
 		settingsGroup.addChildItem(cerrarsesion);
 		
 		navItems.add(dashboard);
-        navItems.add(oportunidad);
+		if(PreferenceManager.getBoolean(Contants.KEY_MODULO_OPORTUNIDADES, true)) {
+			navItems.add(oportunidad);
+		}
 		int ruta = PreferenceManager.getInt(Contants.KEY_IDRUTA);
 		if(PreferenceManager.getInt(Contants.KEY_IDRUTA) != 0)
 		{
@@ -256,10 +258,14 @@ public class MainActivity extends rp3.app.NavActivity{
 		if(PreferenceManager.getBoolean(Contants.KEY_ES_SUPERVISOR)) {
             navItems.add(grupo);
             navItems.add(radar);
-			justificaciones.setBadge(Justificacion.getPermisosPendientesAprobarCount(getDataBase()));
-            navItems.add(justificaciones);
+			if(PreferenceManager.getBoolean(Contants.KEY_MODULO_MARCACIONES, true)) {
+				justificaciones.setBadge(Justificacion.getPermisosPendientesAprobarCount(getDataBase()));
+				navItems.add(justificaciones);
+			}
         }
-		navItems.add(pedido);
+		if(PreferenceManager.getBoolean(Contants.KEY_MODULO_POS, true)) {
+			navItems.add(pedido);
+		}
 		//navItems.add(reuniones);
 		//navItems.add(recordatorios);
 		navItems.add(settingsGroup);

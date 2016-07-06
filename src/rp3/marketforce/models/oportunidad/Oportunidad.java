@@ -794,6 +794,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
         {
             opt.setID(CursorUtils.getInt(c, Contract.Oportunidad._ID));
         }
+        c.close();
         return opt;
 
     }

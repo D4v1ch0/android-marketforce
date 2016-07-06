@@ -125,7 +125,7 @@ public class Permiso extends EntityBase<Permiso>
             permiso.setFecha(CursorUtils.getDate(c, Contract.Permiso.COLUMN_FECHA));
             permiso.setObservacion(CursorUtils.getString(c, Contract.Permiso.COLUMN_OBSERVACION));
         }
-
+        c.close();
         return permiso;
 
     }
@@ -145,7 +145,7 @@ public class Permiso extends EntityBase<Permiso>
             permiso.setFecha(CursorUtils.getDate(c, Contract.Permiso.COLUMN_FECHA));
             permiso.setObservacion(CursorUtils.getString(c, Contract.Permiso.COLUMN_OBSERVACION));
         }
-
+        c.close();
         return permiso;
     }
 
@@ -171,7 +171,7 @@ public class Permiso extends EntityBase<Permiso>
             permiso.setFecha(CursorUtils.getDate(c, Contract.Permiso.COLUMN_FECHA));
             permiso.setObservacion(CursorUtils.getString(c, Contract.Permiso.COLUMN_OBSERVACION));
         }
-
+        c.close();
         return permiso;
     }
 }

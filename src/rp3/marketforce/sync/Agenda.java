@@ -409,7 +409,7 @@ public class Agenda {
                 webService.invokeWebService();
                 int id = webService.getIntegerResponse();
 
-                agenda.setIdAgenda(id);
+                /*agenda.setIdAgenda(id);
                 agenda.setIdRuta(PreferenceManager.getInt(Contants.KEY_IDRUTA));
                 agenda.setEnviado(true);
 
@@ -424,7 +424,7 @@ public class Agenda {
                     agendaTarea.setIdRuta(PreferenceManager.getInt(Contants.KEY_IDRUTA));
 
                     rp3.marketforce.models.AgendaTarea.update(db, agendaTarea);
-                }
+                }*/
 
             } catch (HttpResponseException e) {
                 if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)

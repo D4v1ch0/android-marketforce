@@ -190,39 +190,42 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     }
 
                     //Modulo Oportunidades
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Etapa.executeSyncTipos(db);
-                        addDefaultMessage(result);
-                    }
+                    if(PreferenceManager.getBoolean(Contants.KEY_MODULO_OPORTUNIDADES, true)) {
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Etapa.executeSyncTipos(db);
+                            addDefaultMessage(result);
+                        }
 
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Etapa.executeSync(db);
-                        addDefaultMessage(result);
-                    }
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Agente.executeSyncAgentes(db);
-                        addDefaultMessage(result);
-                    }
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Oportunidad.executeSync(db);
-                        addDefaultMessage(result);
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Etapa.executeSync(db);
+                            addDefaultMessage(result);
+                        }
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Agente.executeSyncAgentes(db);
+                            addDefaultMessage(result);
+                        }
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Oportunidad.executeSync(db);
+                            addDefaultMessage(result);
+                        }
                     }
 
                     // MODULO DE MARCACIONES
+                    if(PreferenceManager.getBoolean(Contants.KEY_MODULO_MARCACIONES, true)) {
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Marcaciones.executeSyncGrupo(db);
+                            addDefaultMessage(result);
+                        }
 
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Marcaciones.executeSyncGrupo(db);
-                        addDefaultMessage(result);
-                    }
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = Marcaciones.executeSyncPermisoHoy(db);
+                            addDefaultMessage(result);
+                        }
 
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = Marcaciones.executeSyncPermisoHoy(db);
-                        addDefaultMessage(result);
-                    }
-
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = Marcaciones.executeSyncMarcacionesHoy(db);
-                        addDefaultMessage(result);
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = Marcaciones.executeSyncMarcacionesHoy(db);
+                            addDefaultMessage(result);
+                        }
                     }
 
 				/*
@@ -561,39 +564,43 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     }
 
                     //Modulo Oportunidades
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Etapa.executeSyncTipos(db);
-                        addDefaultMessage(result);
+                    if(PreferenceManager.getBoolean(Contants.KEY_MODULO_OPORTUNIDADES, true)) {
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Etapa.executeSyncTipos(db);
+                            addDefaultMessage(result);
+                        }
+
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Etapa.executeSync(db);
+                            addDefaultMessage(result);
+                        }
+
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Oportunidad.executeSyncInserts(db);
+                            addDefaultMessage(result);
+                        }
+
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Oportunidad.executeSyncPendientes(db);
+                            addDefaultMessage(result);
+                        }
+
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Oportunidad.executeSync(db);
+                            addDefaultMessage(result);
+                        }
                     }
 
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Etapa.executeSync(db);
-                        addDefaultMessage(result);
-                    }
+                    if(PreferenceManager.getBoolean(Contants.KEY_MODULO_MARCACIONES, true)) {
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Marcaciones.executeSyncGrupo(db);
+                            addDefaultMessage(result);
+                        }
 
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Oportunidad.executeSyncInserts(db);
-                        addDefaultMessage(result);
-                    }
-
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Oportunidad.executeSyncPendientes(db);
-                        addDefaultMessage(result);
-                    }
-
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Oportunidad.executeSync(db);
-                        addDefaultMessage(result);
-                    }
-
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = rp3.marketforce.sync.Marcaciones.executeSyncGrupo(db);
-                        addDefaultMessage(result);
-                    }
-
-                    if (result == SYNC_EVENT_SUCCESS) {
-                        result = Marcaciones.executeSyncMarcacionesHoy(db);
-                        addDefaultMessage(result);
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = Marcaciones.executeSyncMarcacionesHoy(db);
+                            addDefaultMessage(result);
+                        }
                     }
 
                 }

@@ -38,7 +38,7 @@ public class DashboardFragment extends BaseFragment {
 		getActivity().setTitle(R.string.title_option_setinicio);
 		
 		//setRetainInstance(true);
-        if(PreferenceManager.getBoolean(Contants.KEY_APLICA_MARCACION))
+        if(PreferenceManager.getBoolean(Contants.KEY_APLICA_MARCACION) && PreferenceManager.getBoolean(Contants.KEY_MODULO_MARCACIONES, true))
 		    setContentView(R.layout.fragment_dashboard, R.menu.fragment_dashboard_menu);
         else
             setContentView(R.layout.fragment_dashboard);
