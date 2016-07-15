@@ -17,30 +17,22 @@
             android:id="@+id/textView52"
             android:layout_weight="0.25"
             android:textColor="@color/color_text_sky_blue"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textSize="@dimen/text_medium_small_size" />
 
-        <AutoCompleteTextView
-            android:id="@+id/pedido_cliente"
+        <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/hint_search_transaction"
-            android:textSize="@dimen/text_input_size"
-            android:layout_weight="0.70" />
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:text="+"
-            android:id="@+id/pedido_crear_cliente"
-            style="@style/Widget.Button.Theme"
-            android:layout_weight="0.1"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:layout_gravity="center"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp" />
-
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Rp3 Retail"
+            android:id="@+id/pedido_cliente"
+            android:layout_weight="1"
+            android:textSize="@dimen/text_medium_small_size" />
+        <ImageView
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:id="@+id/pedido_estado"
+            android:src="@drawable/circle_unvisited" />
     </LinearLayout>
 
     <LinearLayout
@@ -57,16 +49,17 @@
             android:id="@+id/textView55"
             android:layout_weight="0.25"
             android:textColor="@color/color_text_sky_blue"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textSize="@dimen/text_medium_small_size" />
 
-        <EditText
+        <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:ems="10"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="info@gmail.com"
             android:id="@+id/pedido_email"
-            android:layout_weight="0.75" />
-
+            android:layout_weight="1"
+            android:textSize="@dimen/text_medium_small_size" />
     </LinearLayout>
 
     <LinearLayout
@@ -80,7 +73,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/label_sku"
-            android:id="@+id/textView108"
+            android:id="@+id/textView96"
             android:layout_weight="0.15"
             android:textColor="@color/color_text_sky_blue"
             android:textStyle="bold"
@@ -92,7 +85,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/label_descripción"
-            android:id="@+id/textView110"
+            android:id="@+id/textView56"
             android:layout_weight="0.5"
             android:textColor="@color/color_text_sky_blue"
             android:textStyle="bold"
@@ -104,63 +97,60 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/label_cant_short"
-            android:id="@+id/textView109"
+            android:id="@+id/textView81"
             android:layout_weight="0.1"
             android:textColor="@color/color_text_sky_blue"
             android:textStyle="bold"
-            android:textSize="@dimen/text_small_size"
-            android:visibility="gone" />
+            android:textSize="@dimen/text_small_size" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/label_valor_unitario"
-            android:id="@+id/textView111"
+            android:id="@+id/textView78"
             android:layout_weight="0.2"
             android:textColor="@color/color_text_sky_blue"
             android:textStyle="bold"
             android:textSize="@dimen/text_small_size"
-            android:gravity="right"
-            android:visibility="gone" />
+            android:gravity="right" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/label_descuento"
-            android:id="@+id/textView112"
+            android:id="@+id/textView97"
             android:layout_weight="0.2"
             android:textColor="@color/color_text_sky_blue"
             android:textStyle="bold"
             android:textSize="@dimen/text_small_size"
-            android:gravity="right"
-            android:visibility="gone" />
+            android:gravity="right" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/label_impuesto"
-            android:id="@+id/textView113"
+            android:id="@+id/textView98"
             android:layout_weight="0.2"
             android:textColor="@color/color_text_sky_blue"
             android:textStyle="bold"
             android:textSize="@dimen/text_small_size"
-            android:gravity="right"
-            android:visibility="gone" />
+            android:gravity="right" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/label_valor_total"
-            android:id="@+id/textView114"
+            android:id="@+id/textView79"
             android:layout_weight="0.2"
             android:textColor="@color/color_text_sky_blue"
             android:textStyle="bold"
             android:textSize="@dimen/text_small_size"
             android:gravity="right" />
+
     </LinearLayout>
 
     <ListView
@@ -169,21 +159,40 @@
         android:id="@+id/pedido_detalles"
         android:layout_weight="1" />
 
-    <Button
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/label_agregar_producto"
-        android:id="@+id/pedido_agregar_producto"
-        android:layout_gravity="center_horizontal"
-        style="@style/Widget.Button.Theme"
-        android:layout_margin="5dp" />
+        android:layout_margin="5dp" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_subtotal_points"
+            android:id="@+id/textView115"
+            android:layout_weight="0.75"
+            android:textColor="@color/color_text_sky_blue"
+            android:textStyle="bold"
+            android:gravity="right"
+            android:paddingRight="5dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="¢ 0.00"
+            android:id="@+id/pedido_subtotal"
+            android:layout_weight="0.25"
+            android:textSize="@dimen/text_medium_small_size"
+            android:gravity="right" />
+    </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:visibility="gone">
+        android:layout_margin="5dp" >
 
         <TextView
             android:layout_width="0dp"
@@ -211,60 +220,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/label_subtotal_points"
-            android:id="@+id/textView115"
-            android:layout_weight="1"
-            android:textColor="@color/color_text_sky_blue"
-            android:textStyle="bold"
-            android:gravity="right"
-            android:paddingRight="5dp" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="¢ 0.00"
-            android:id="@+id/pedido_subtotal"
-            android:layout_weight="1"
-            android:textSize="@dimen/text_medium_small_size"
-            android:gravity="right" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:visibility="gone">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/label_base_imponible"
-            android:id="@+id/textView96"
-            android:layout_weight="1"
-            android:textColor="@color/color_text_sky_blue"
-            android:textStyle="bold"
-            android:gravity="right"
-            android:paddingRight="5dp" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="¢ 0.00"
-            android:id="@+id/pedido_base_imponible"
-            android:layout_weight="1"
-            android:textSize="@dimen/text_medium_small_size"
-            android:gravity="right" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/label_total_descuentos"
-            android:id="@+id/textView115aa"
+            android:id="@+id/textView115ff"
             android:layout_weight="1"
             android:textColor="@color/color_text_sky_blue"
             android:textStyle="bold"
@@ -286,8 +243,58 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:visibility="gone">
+        android:layout_margin="5dp" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_base_imponible"
+            android:id="@+id/textView9f6"
+            android:layout_weight="1"
+            android:textColor="@color/color_text_sky_blue"
+            android:textStyle="bold"
+            android:gravity="right"
+            android:paddingRight="5dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="¢ 0.00"
+            android:id="@+id/pedido_base_imponible"
+            android:layout_weight="1"
+            android:textSize="@dimen/text_medium_small_size"
+            android:gravity="right" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_total_impuestos"
+            android:id="@+id/textView115ss"
+            android:layout_weight="1"
+            android:textColor="@color/color_text_sky_blue"
+            android:textStyle="bold"
+            android:gravity="right"
+            android:paddingRight="5dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="¢ 0.00"
+            android:id="@+id/pedido_impuestos"
+            android:layout_weight="1"
+            android:textSize="@dimen/text_medium_small_size"
+            android:gravity="right" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp" >
 
         <TextView
             android:layout_width="0dp"
@@ -299,7 +306,8 @@
             android:textColor="@color/color_text_sky_blue"
             android:textStyle="bold"
             android:gravity="right"
-            android:paddingRight="5dp" />
+            android:paddingRight="5dp"
+            android:visibility="visible" />
 
         <TextView
             android:layout_width="0dp"
@@ -309,38 +317,8 @@
             android:id="@+id/pedido_redondeo"
             android:layout_weight="1"
             android:textSize="@dimen/text_medium_small_size"
-            android:gravity="right" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/label_neto"
-            android:id="@+id/textView20"
-            android:layout_weight="1"
-            android:textColor="@color/color_text_sky_blue"
-            android:textStyle="bold"
             android:gravity="right"
-            android:paddingRight="5dp" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="¢ 0.00"
-            android:id="@+id/pedido_neto"
-            android:layout_weight="1"
-            android:textSize="@dimen/text_medium_small_size"
-            android:gravity="right" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:visibility="gone">
+            android:visibility="visible" />
 
         <TextView
             android:layout_width="0dp"
@@ -360,28 +338,6 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="0"
             android:id="@+id/pedido_cantidad"
-            android:layout_weight="1"
-            android:textSize="@dimen/text_medium_small_size"
-            android:gravity="right" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/label_total_impuestos"
-            android:id="@+id/textView115ww"
-            android:layout_weight="1"
-            android:textColor="@color/color_text_sky_blue"
-            android:textStyle="bold"
-            android:gravity="right"
-            android:paddingRight="5dp" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="¢ 0.00"
-            android:id="@+id/pedido_impuestos"
             android:layout_weight="1"
             android:textSize="@dimen/text_medium_small_size"
             android:gravity="right" />
@@ -457,20 +413,13 @@
             android:scrollbars="vertical"
             android:fadeScrollbars="false"
             android:hint="@string/hint_escriba_aqui"
-            android:lines="2">
+            android:lines="3"
+            android:editable="false"
+            android:enabled="false">
 
             <requestFocus />
         </EditText>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/actividad_voice_to_text"
-            android:src="@drawable/ic_action_mic"
-            android:layout_alignTop="@+id/actividad_texto_respuesta"
-            android:layout_alignRight="@+id/actividad_texto_respuesta"
-            android:layout_alignEnd="@+id/actividad_texto_respuesta"
-            android:clickable="true" />
     </RelativeLayout>
 
 </LinearLayout>

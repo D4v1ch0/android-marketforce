@@ -15,7 +15,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/label_cliente_2"
             android:id="@+id/textView52"
-            android:layout_weight="0.25"
+            android:layout_weight="0.3"
             android:textColor="@color/color_text_sky_blue"
             android:textStyle="bold"
             android:textSize="@dimen/text_medium_small_size" />
@@ -47,7 +47,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/label_correo_2"
             android:id="@+id/textView55"
-            android:layout_weight="0.25"
+            android:layout_weight="0.3"
             android:textColor="@color/color_text_sky_blue"
             android:textStyle="bold"
             android:textSize="@dimen/text_medium_small_size" />
@@ -101,7 +101,8 @@
             android:layout_weight="0.1"
             android:textColor="@color/color_text_sky_blue"
             android:textStyle="bold"
-            android:textSize="@dimen/text_small_size" />
+            android:textSize="@dimen/text_small_size"
+            android:visibility="gone" />
 
         <TextView
             android:layout_width="0dp"
@@ -113,7 +114,8 @@
             android:textColor="@color/color_text_sky_blue"
             android:textStyle="bold"
             android:textSize="@dimen/text_small_size"
-            android:gravity="right" />
+            android:gravity="right"
+            android:visibility="gone" />
 
         <TextView
             android:layout_width="0dp"
@@ -125,7 +127,8 @@
             android:textColor="@color/color_text_sky_blue"
             android:textStyle="bold"
             android:textSize="@dimen/text_small_size"
-            android:gravity="right" />
+            android:gravity="right"
+            android:visibility="gone" />
 
         <TextView
             android:layout_width="0dp"
@@ -137,7 +140,8 @@
             android:textColor="@color/color_text_sky_blue"
             android:textStyle="bold"
             android:textSize="@dimen/text_small_size"
-            android:gravity="right" />
+            android:gravity="right"
+            android:visibility="gone" />
 
         <TextView
             android:layout_width="0dp"
@@ -163,7 +167,8 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp" >
+        android:layout_margin="5dp"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="0dp"
@@ -192,7 +197,8 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp" >
+        android:layout_margin="5dp"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="0dp"
@@ -243,7 +249,8 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp" >
+        android:layout_margin="5dp"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="0dp"
@@ -294,7 +301,8 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp" >
+        android:layout_margin="5dp"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="0dp"
@@ -413,7 +421,7 @@
             android:scrollbars="vertical"
             android:fadeScrollbars="false"
             android:hint="@string/hint_escriba_aqui"
-            android:lines="3"
+            android:lines="2"
             android:editable="false"
             android:enabled="false">
 
