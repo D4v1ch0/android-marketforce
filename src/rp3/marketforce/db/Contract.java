@@ -254,6 +254,7 @@ public final class Contract {
         public static final String COLUMN_DURACION = "Duracion";
         public static final String COLUMN_TIEMPO_VIAJE= "TiempoViaje";
         public static final String COLUMN_MOTIVO_REPROGRAMACION= "IdMotivoReprogramar";
+		public static final String COLUMN_FECHA_CREACION= "FechaCreacion";
 		
 		public static final String FIELD_RUTA_ID = COLUMN_RUTA_ID;
 		public static final String FIELD_AGENDA_ID = COLUMN_AGENDA_ID;
@@ -298,6 +299,7 @@ public final class Contract {
 		public static final String QUERY_AGENDA_SEMANAL = "AgendaSemanal";
 		public static final String QUERY_AGENDA_ID = "AgendaByAgendaID";
 		public static final String QUERY_AGENDA_ID_SERVER = "AgendaByAgendaIDServer";
+		public static final String QUERY_AGENDA_TICKS = "AgendaByTicks";
 		public static final String QUERY_AGENDA_SEARCH = "SimpleRutaSearch";
 		public static final String QUERY_CONTEO = "AgendaConteo";
 	} 

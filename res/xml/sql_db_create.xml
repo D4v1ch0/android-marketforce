@@ -118,7 +118,8 @@
       Distancia INTEGER,
       Duracion INTEGER,
       TiempoViaje INTEGER,
-      IdMotivoReprogramar TEXT
+      IdMotivoReprogramar TEXT,
+        FechaCreacion INTEGER
       )
 	</statement>
 	
