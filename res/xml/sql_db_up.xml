@@ -319,4 +319,9 @@
         IdVendedor TEXT PRIMARY KEY
         );
     </statement>
+    <statement name="ToVersion9-22">
+        ALTER TABLE tbCliente ADD COLUMN ExentoImpuesto BOOLEAN,
+        CiudadanoOro BOOLEAN;
+    </statement>
+
 </sql>
