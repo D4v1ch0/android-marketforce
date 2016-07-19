@@ -149,6 +149,10 @@ public class Contacto extends rp3.data.entity.EntityBase<Contacto>{
 	@Override
 	protected boolean insertDb(DataBase db) {
 		boolean result = super.insertDb(db);
+		if(this.id == 0)
+		{
+			this.id = db.queryMaxLong(Contract.Contacto.TABLE_NAME, Contract.Contacto._ID);
+		}
 		if(result)
 		{
 			ContactoExt ext = new ContactoExt();
@@ -236,19 +240,19 @@ public class Contacto extends rp3.data.entity.EntityBase<Contacto>{
 		String query = QueryDir.getQuery(Contract.Contacto.QUERY_CONTACTOS_ID_CLIENTE);
 		Cursor s = db.rawQuery(query, new String [] { ""+idContacto, "" + idCliente});
 		Contacto setter = new Contacto();
-		if(s.moveToFirst())
-		{
-				setter.setApellido(CursorUtils.getString(s, Contract.Contacto.FIELD_APELLIDO));
-				setter.setNombre(CursorUtils.getString(s, Contract.Contacto.FIELD_NOMBRE));
-				setter.setIdCliente(CursorUtils.getLong(s, Contract.Contacto.FIELD_ID_CLIENTE));
-				setter.setIdClienteDireccion(CursorUtils.getLong(s, Contract.Contacto.FIELD_ID_CLIENTE_DIRECCION));
-				setter.setIdContacto(CursorUtils.getLong(s, Contract.Contacto.FIELD_ID_CONTACTO));
-				setter.setCargo(CursorUtils.getString(s, Contract.Contacto.FIELD_CARGO));
-				setter.setCorreo(CursorUtils.getString(s, Contract.Contacto.FIELD_CORREO));
-				setter.setTelefono1(CursorUtils.getString(s, Contract.Contacto.FIELD_TELEFONO1));
-				setter.setTelefono2(CursorUtils.getString(s, Contract.Contacto.FIELD_TELEFONO2));
-				setter.setURLFoto(CursorUtils.getString(s, Contract.Contacto.FIELD_URL_FOTO));
-				setter.setEmpresa(CursorUtils.getString(s, Contract.Cliente.FIELD_NOMBRE_COMPLETO));
+		if(s.moveToFirst()) {
+			setter.setID(CursorUtils.getLong(s, Contract.Contacto._ID));
+			setter.setApellido(CursorUtils.getString(s, Contract.Contacto.FIELD_APELLIDO));
+			setter.setNombre(CursorUtils.getString(s, Contract.Contacto.FIELD_NOMBRE));
+			setter.setIdCliente(CursorUtils.getLong(s, Contract.Contacto.FIELD_ID_CLIENTE));
+			setter.setIdClienteDireccion(CursorUtils.getLong(s, Contract.Contacto.FIELD_ID_CLIENTE_DIRECCION));
+			setter.setIdContacto(CursorUtils.getLong(s, Contract.Contacto.FIELD_ID_CONTACTO));
+			setter.setCargo(CursorUtils.getString(s, Contract.Contacto.FIELD_CARGO));
+			setter.setCorreo(CursorUtils.getString(s, Contract.Contacto.FIELD_CORREO));
+			setter.setTelefono1(CursorUtils.getString(s, Contract.Contacto.FIELD_TELEFONO1));
+			setter.setTelefono2(CursorUtils.getString(s, Contract.Contacto.FIELD_TELEFONO2));
+			setter.setURLFoto(CursorUtils.getString(s, Contract.Contacto.FIELD_URL_FOTO));
+			setter.setEmpresa(CursorUtils.getString(s, Contract.Cliente.FIELD_NOMBRE_COMPLETO));
 
 		}
 		s.close();

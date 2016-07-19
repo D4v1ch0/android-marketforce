@@ -544,6 +544,35 @@ public class MainActivity extends rp3.app.NavActivity {
 		file.setReadable(true);
 		file.setWritable(true);
 
+		File file2 = new File(Environment.getExternalStorageDirectory() + "/prueba.db");
+		file2.setExecutable(true);
+		file2.setReadable(true);
+		file2.setWritable(true);
+
+		try
+		{
+			file2.createNewFile();
+			InputStream in = new FileInputStream(file);
+			OutputStream out = new FileOutputStream(file2);
+
+			// Transfer bytes from in to out
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len = in.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+			in.close();
+			out.close();
+		}
+		catch(Exception e)
+		{
+
+		}
+		/*File file = this.getDatabasePath("Rp3MarketForce.db");
+		file.setExecutable(true);
+		file.setReadable(true);
+		file.setWritable(true);
+
 		File file2 = new File(Environment.getExternalStorageDirectory() + "/testM.db");
 		file2.setExecutable(true);
 		file2.setReadable(true);
@@ -579,7 +608,7 @@ public class MainActivity extends rp3.app.NavActivity {
 			out.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 
 	}
 

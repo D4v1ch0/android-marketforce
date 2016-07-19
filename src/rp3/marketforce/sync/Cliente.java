@@ -198,17 +198,17 @@ public class Cliente {
 
                             strs = type.getJSONArray("ClienteContactos");
 
-                            rp3.marketforce.models.Contacto.deleteContactoIdCliente(db, cl.getIdCliente());
+                            //rp3.marketforce.models.Contacto.deleteContactoIdCliente(db, cl.getIdCliente());
 
                             for (int j = 0; j < strs.length(); j++) {
                                 JSONObject str = strs.getJSONObject(j);
-                                rp3.marketforce.models.Contacto clienteCont = new rp3.marketforce.models.Contacto();
+								rp3.marketforce.models.Contacto clienteCont = rp3.marketforce.models.Contacto.getContactoId(db, str.getLong("IdClienteContacto"), str.getLong("IdCliente"));
+
                                 if(str.getString("Estado").equalsIgnoreCase(Contants.ESTADO_ELIMINADO))
                                 {
-                                    rp3.marketforce.models.Contacto toDelete = rp3.marketforce.models.Contacto.getContactoId(db, str.getLong("IdClienteContacto"), str.getLong("IdCliente"));
-                                    if(toDelete != null)
+                                    if(clienteCont.getID() != 0)
                                     {
-                                        rp3.marketforce.models.Contacto.delete(db, toDelete);
+                                        rp3.marketforce.models.Contacto.delete(db, clienteCont);
                                     }
                                 }
                                 else {
@@ -236,7 +236,10 @@ public class Cliente {
                                     if (!str.isNull("Foto"))
                                         clienteCont.setURLFoto("" + str.getString("Foto"));
 
-                                    rp3.marketforce.models.Contacto.insert(db, clienteCont);
+									if(clienteCont.getID() != 0)
+										rp3.marketforce.models.Contacto.update(db, clienteCont);
+									else
+										rp3.marketforce.models.Contacto.insert(db, clienteCont);
                                 }
                             }
                             if (rp3.marketforce.models.Cliente.getClienteIDServer(db, cl.getIdCliente(), false) == null) {
