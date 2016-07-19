@@ -320,8 +320,11 @@
         );
     </statement>
     <statement name="ToVersion9-22">
-        ALTER TABLE tbCliente ADD COLUMN ExentoImpuesto BOOLEAN,
-        CiudadanoOro BOOLEAN;
+        ALTER TABLE tbCliente ADD COLUMN ExentoImpuesto BOOLEAN;
     </statement>
+    <statement name="ToVersion9-23">
+        ALTER TABLE tbCliente ADD COLUMN CiudadanoOro BOOLEAN;
+    </statement>
+
 
 </sql>

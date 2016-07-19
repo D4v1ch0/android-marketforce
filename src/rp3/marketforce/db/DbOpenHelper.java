@@ -99,5 +99,6 @@ public class DbOpenHelper extends rp3.db.sqlite.DataBaseOpenHelper {
 		db.execSQL(QueryDir.getQuery(TO_VERSION + "9-20"));
 		db.execSQL(QueryDir.getQuery(TO_VERSION + "9-21"));
 		db.execSQL(QueryDir.getQuery(TO_VERSION + "9-22"));
+		db.execSQL(QueryDir.getQuery(TO_VERSION + "9-23"));
 	}
 }
