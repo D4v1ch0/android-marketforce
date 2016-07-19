@@ -77,9 +77,26 @@ public class DbOpenHelper extends rp3.db.sqlite.DataBaseOpenHelper {
 	}
 
 	private void UpgradeToVersion9(SQLiteDatabase db) {
-		db.delete(Contract.Pedido.TABLE_NAME, null, null);
-		db.delete(Contract.PedidoDetalle.TABLE_NAME, null, null);
-		db.delete(Contract.Producto.TABLE_NAME, null, null);
-		db.delete(Contract.ProductoExt.TABLE_NAME, null, null);
+		db.execSQL(QueryDir.getQuery(TO_VERSION + "9-1"));
+		db.execSQL(QueryDir.getQuery(TO_VERSION + "9-2"));
+		db.execSQL(QueryDir.getQuery(TO_VERSION + "9-3"));
+		db.execSQL(QueryDir.getQuery(TO_VERSION + "9-4"));
+		db.execSQL(QueryDir.getQuery(TO_VERSION + "9-5"));
+		db.execSQL(QueryDir.getQuery(TO_VERSION + "9-6"));
+		db.execSQL(QueryDir.getQuery(TO_VERSION + "9-7"));
+		db.execSQL(QueryDir.getQuery(TO_VERSION + "9-8"));
+		db.execSQL(QueryDir.getQuery(TO_VERSION + "9-9"));
+		db.execSQL(QueryDir.getQuery(TO_VERSION + "9-10"));
+		db.execSQL(QueryDir.getQuery(TO_VERSION + "9-11"));
+		db.execSQL(QueryDir.getQuery(TO_VERSION + "9-12"));
+		db.execSQL(QueryDir.getQuery(TO_VERSION + "9-13"));
+		db.execSQL(QueryDir.getQuery(TO_VERSION + "9-14"));
+		db.execSQL(QueryDir.getQuery(TO_VERSION + "9-15"));
+		db.execSQL(QueryDir.getQuery(TO_VERSION + "9-16"));
+		db.execSQL(QueryDir.getQuery(TO_VERSION + "9-17"));
+		db.execSQL(QueryDir.getQuery(TO_VERSION + "9-18"));
+		db.execSQL(QueryDir.getQuery(TO_VERSION + "9-19"));
+		db.execSQL(QueryDir.getQuery(TO_VERSION + "9-20"));
+		db.execSQL(QueryDir.getQuery(TO_VERSION + "9-21"));
 	}
 }

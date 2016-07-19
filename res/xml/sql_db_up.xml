@@ -106,9 +106,18 @@
         ALTER TABLE tbAgenda ADD COLUMN FechaCreacion INTEGER;
     </statement>
     <statement name="ToVersion9-2">
-        DROP TABLE tbAgenda ADD COLUMN FechaCreacion INTEGER;
+        DROP TABLE tbPedido;
     </statement>
-    <statement>
+    <statement name="ToVersion9-3">
+        DROP TABLE tbPedidoDetalle;
+    </statement>
+    <statement name="ToVersion9-4">
+        DROP TABLE tbProducto;
+    </statement>
+    <statement name="ToVersion9-5">
+        DROP TABLE tbProductoExt;
+    </statement>
+    <statement name="ToVersion9-6">
         CREATE TABLE tbPedido(
         _id INTEGER PRIMARY KEY AUTOINCREMENT,
         IdPedido INTEGER,
@@ -141,16 +150,16 @@
         _IdControlCaja INTEGER,
         Pendiente BOOLEAN,
         TieneNotaCreditoPOSRP3 BOOLEAN
-        )
+        );
     </statement>
-    <statement>
+    <statement name="ToVersion9-7">
         CREATE VIRTUAL TABLE tbPedidoExt USING fts4 (
         Nombre,
         NumeroDocumento,
         tokenize=porter
-        )
+        );
     </statement>
-    <statement>
+    <statement name="ToVersion9-8">
         CREATE TABLE tbPedidoDetalle(
         _id INTEGER PRIMARY KEY AUTOINCREMENT,
         IdPedidoDetalle INTEGER,
@@ -184,9 +193,9 @@
         BaseICE REAL,
         IdBeneficio INTEGER,
         IdVendedor TEXT
-        )
+        );
     </statement>
-    <statement>
+    <statement name="ToVersion9-9">
         CREATE TABLE tbProducto(
         _id INTEGER PRIMARY KEY AUTOINCREMENT,
         IdProducto INTEGER,
@@ -200,38 +209,23 @@
         PorcentajeImpuesto REAL,
         PrecioConImpuesto REAL,
         IdBeneficio INTEGER
-        )
+        );
     </statement>
-    <statement>
+    <statement name="ToVersion9-10">
         CREATE VIRTUAL TABLE tbProductoExt USING fts4 (
         Descripcion,
         tokenize=porter
-        )
+        );
     </statement>
-    <statement>
-        CREATE TABLE tbCategoria(
-        _id INTEGER PRIMARY KEY AUTOINCREMENT,
-        IdCategoria INTEGER,
-        Descripcion TEXT
-        )
-    </statement>
-    <statement>
-        CREATE TABLE tbSubCategoria(
-        _id INTEGER PRIMARY KEY AUTOINCREMENT,
-        IdSubCategoria INTEGER,
-        IdCategoria INTEGER,
-        Descripcion TEXT
-        )
-    </statement>
-    <statement>
+    <statement name="ToVersion9-11">
         CREATE TABLE tbFormaPago(
         _id INTEGER PRIMARY KEY AUTOINCREMENT,
         IdFormaPago INTEGER,
         Descripcion TEXT,
         Estado TEXT
-        )
+        );
     </statement>
-    <statement>
+    <statement name="ToVersion9-12">
         CREATE TABLE tbPago(
         _id INTEGER PRIMARY KEY AUTOINCREMENT,
         IdPago INTEGER,
@@ -247,9 +241,9 @@
         AutorizadorTarjeta INTEGER,
         IdTipoDiferido INTEGER,
         CodigoSeguridad INTEGER
-        )
+        );
     </statement>
-    <statement>
+    <statement name="ToVersion9-13">
         CREATE TABLE tbControlCaja(
         _id INTEGER PRIMARY KEY AUTOINCREMENT,
         IdCaja INTEGER,
@@ -259,55 +253,55 @@
         FechaCierre INTEGER,
         ValorApertura REAL,
         ValorCierre REAL
-        )
+        );
     </statement>
-    <statement>
+    <statement name="ToVersion9-14">
         CREATE TABLE tbProductoCodigo(
         CodigoExterno TEXT,
         Codigo TEXT
-        )
+        );
     </statement>
-    <statement>
+    <statement name="ToVersion9-15">
         CREATE TABLE tbBanco(
         _id INTEGER PRIMARY KEY AUTOINCREMENT,
         IdBanco INTEGER,
         Descripcion TEXT
-        )
+        );
     </statement>
-    <statement>
+    <statement name="ToVersion9-16">
         CREATE TABLE tbMarcaTarjeta(
         _id INTEGER PRIMARY KEY AUTOINCREMENT,
         IdMarcaTarjeta INTEGER,
         Descripcion TEXT
-        )
+        );
     </statement>
-    <statement>
+    <statement name="ToVersion9-17">
         CREATE TABLE tbTarjeta(
         _id INTEGER PRIMARY KEY AUTOINCREMENT,
         IdBanco INTEGER,
         IdMarcaTarjeta INTEGER,
         Interna INTEGER
-        )
+        );
     </statement>
-    <statement>
+    <statement name="ToVersion9-18">
         CREATE TABLE tbTipoDiferido(
         _id INTEGER PRIMARY KEY AUTOINCREMENT,
         IdTipoDiferido INTEGER,
         Descripcion TEXT,
         Cuotas INTEGER,
         TipoCredito TEXT
-        )
+        );
     </statement>
-    <statement>
+    <statement name="ToVersion9-19">
         CREATE TABLE tbTarjetaComision(
         _id INTEGER PRIMARY KEY AUTOINCREMENT,
         IdEmpresa INTEGER,
         IdBanco INTEGER,
         IdMarcaTarjeta INTEGER,
         IdTipoDiferido INTEGER
-        )
+        );
     </statement>
-    <statement>
+    <statement name="ToVersion9-20">
         CREATE TABLE tbProductoPromocion(
         _id INTEGER PRIMARY KEY AUTOINCREMENT,
         IdProducto INTEGER,
@@ -318,11 +312,11 @@
         FechaHasta INTEGER,
         PorcentajeDescuento REAL,
         FormaPagoAplica TEXT
-        )
+        );
     </statement>
-    <statement>
+    <statement name="ToVersion9-21">
         CREATE TABLE tbVendedor(
         IdVendedor TEXT PRIMARY KEY
-        )
+        );
     </statement>
 </sql>
