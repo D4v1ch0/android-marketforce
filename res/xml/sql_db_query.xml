@@ -548,7 +548,6 @@
         tbAgenda.Duracion,
         tbAgenda.TiempoViaje,
         tbAgenda.IdMotivoReprogramar,
-          tbAgenda.FechaCreacion,
         tbAgenda.Enviado,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
@@ -585,7 +584,6 @@
         tbAgenda.Duracion,
         tbAgenda.TiempoViaje,
         tbAgenda.IdMotivoReprogramar,
-        tbAgenda.FechaCreacion,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
         tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad,
@@ -630,7 +628,6 @@
         tbAgenda.IdMotivoNoVisita,
         tbAgenda.Latitud,
         tbAgenda.Longitud,
-        tbAgenda.FechaCreacion,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
         tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad,
@@ -675,7 +672,6 @@
         tbAgenda.IdMotivoNoVisita,
         tbAgenda.Latitud,
         tbAgenda.Longitud,
-        tbAgenda.FechaCreacion,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
         tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad,
@@ -703,7 +699,6 @@
         tbAgenda.FechaInicio,
         tbAgenda.FechaFin,
         tbAgenda.EstadoAgenda,
-        tbAgenda.FechaCreacion,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
         tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad,
@@ -737,7 +732,6 @@
         tbAgenda.TiempoViaje,
         tbAgenda.IdMotivoReprogramar,
         tbAgenda.Enviado,
-          tbAgenda.FechaCreacion,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
         tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad
@@ -766,7 +760,6 @@
         tbAgenda.Duracion,
         tbAgenda.TiempoViaje,
         tbAgenda.IdMotivoReprogramar,
-        tbAgenda.FechaCreacion,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
         tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad
@@ -806,7 +799,6 @@
         tbAgenda.Duracion,
         tbAgenda.TiempoViaje,
         tbAgenda.IdMotivoReprogramar,
-          tbAgenda.FechaCreacion,
         tbCliente.URLFoto AS tbCliente_URLFoto,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
@@ -860,7 +852,6 @@
         tbAgenda.Duracion,
         tbAgenda.TiempoViaje,
         tbAgenda.IdMotivoReprogramar,
-          tbAgenda.FechaCreacion,
         tbCliente.URLFoto AS tbCliente_URLFoto,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
@@ -886,60 +877,6 @@
         AND tbAgenda.EstadoAgenda = tbEstadoAgenda.Code 
         WHERE tbAgenda.IdAgenda = ?
      </statement>
-
-    <statement name="AgendaByTicks">
-        SELECT
-        tbAgenda._id,
-        tbAgenda.IdRuta,
-        tbAgenda.IdAgenda,
-        tbAgenda.IdCliente,
-        tbAgenda._IdCliente,
-        tbAgenda.IdContacto,
-        tbAgenda._IdContacto,
-        tbAgenda.IdClienteDireccion,
-        tbAgenda._IdClienteDireccion,
-        tbAgenda.FechaInicio,
-        tbAgenda.FechaFin,
-        tbAgenda.EstadoAgenda,
-        tbAgenda.FechaInicioReal,
-        tbAgenda.FechaFinReal,
-        tbAgenda.Foto1Ext,
-        tbAgenda.Foto2Ext,
-        tbAgenda.Foto3Ext,
-        tbAgenda.Foto1Int,
-        tbAgenda.Foto2Int,
-        tbAgenda.Foto3Int,
-        tbAgenda.Observaciones,
-        tbAgenda.Distancia,
-        tbAgenda.Duracion,
-        tbAgenda.TiempoViaje,
-        tbAgenda.IdMotivoReprogramar,
-        tbAgenda.FechaCreacion,
-        tbCliente.URLFoto AS tbCliente_URLFoto,
-        tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
-        tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
-        tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad,
-        tbClienteExt.CorreoElectronico AS tbClienteExt_CorreoElectronico,
-        tbClienteDireccion.Direccion AS tbClienteDireccion_Direccion,
-        tbClienteDireccion.Telefono1 AS tbClienteDireccion_Telefono1,
-        tbEstadoAgenda.Value AS tbEstadoAgenda_Value
-        FROM tbAgenda
-        JOIN tbAgendaExt
-        ON tbAgenda._id = tbAgendaExt.docid
-        JOIN tbCliente
-        ON (tbAgenda.IdCliente = tbCliente.IdCliente AND tbAgenda.IdCliente &lt;&gt; 0)
-        OR (tbAgenda._IdCliente = tbCliente._id AND tbAgenda.IdCliente = 0)
-        JOIN tbClienteExt
-        ON tbClienteExt.docid = tbCliente._id
-        JOIN tbClienteDireccion
-        ON ((tbAgenda.IdCliente = tbClienteDireccion.IdCliente AND tbAgenda.IdCliente &lt;&gt; 0)
-        OR (tbAgenda._IdCliente = tbClienteDireccion._IdCliente AND tbAgenda.IdCliente = 0))
-        AND tbAgenda.IdClienteDireccion = tbClienteDireccion.IdClienteDireccion
-        JOIN tbGeneralValue tbEstadoAgenda
-        ON tbEstadoAgenda.GeneralTableId = 1013
-        AND tbAgenda.EstadoAgenda = tbEstadoAgenda.Code
-        WHERE tbAgenda.FechaCreacion = ?
-    </statement>
      
 	 <statement name="AgendaConteo">
   		SELECT 

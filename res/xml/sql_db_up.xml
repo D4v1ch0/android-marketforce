@@ -102,7 +102,4 @@
     <statement name="ToVersion8-2">
         ALTER TABLE tbEtapa ADD COLUMN EsVariable BOOLEAN;
     </statement>
-    <statement name="ToVersion9">
-        ALTER TABLE tbAgenda ADD COLUMN FechaCreacion INTEGER;
-    </statement>
 </sql>

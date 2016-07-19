@@ -111,12 +111,7 @@ public class Rutas {
 					try {
 						JSONObject type = types.getJSONObject(i);
 						rp3.marketforce.models.Agenda agenda = rp3.marketforce.models.Agenda.getAgendaServer(db, (int) type.getLong("IdAgenda"));
-						if(agenda == null && !type.isNull("Origen") && type.getString("Origen").equalsIgnoreCase("M")) {
-							agenda = rp3.marketforce.models.Agenda.getAgendaServerByTicks(db, Convert.getDateFromDotNetTicks(type.getLong("FechaCreacionTicks")).getTime());
-							if(agenda == null)
-								agenda = new Agenda();
-						}
-						else
+						if(agenda == null)
 							agenda = new Agenda();
 
                         if(type.getString("EstadoAgenda").equalsIgnoreCase(Contants.ESTADO_ELIMINADO))
@@ -143,10 +138,8 @@ public class Rutas {
                                 agenda.setFechaFinReal(Convert.getDateFromDotNetTicks(type.getLong("FechaFinGestionTicks")));
                             }
                             agenda.setCiudad(type.getString("Ciudad"));
-                            agenda.setNombreCompleto(type.getString("NombresCompletos").trim().replace("null", ""));
+                            agenda.setNombreCompleto(type.getString("NombresCompletos").trim().replace("null",""));
                             agenda.setDireccion(type.getString("Direccion"));
-							if (!type.isNull("FechaCreacionTicks"))
-								agenda.setFechaCreacion(Convert.getDateFromDotNetTicks(type.getLong("FechaCreacionTicks")));
 
                             agenda.setEstadoAgenda(type.getString("EstadoAgenda"));
                             agenda.setEnviado(true);
@@ -154,7 +147,7 @@ public class Rutas {
                             //rp3.marketforce.models.AgendaTarea.deleteTareas(db, agenda.getIdRuta(), agenda.getIdAgenda());
 
 
-                            if (!rp3.marketforce.models.Agenda.existAgendaServer(db, agenda.getIdAgenda()) && !rp3.marketforce.models.Agenda.existAgendaServerByTime(db, agenda.getFechaCreacion().getTime())) {
+                            if (!rp3.marketforce.models.Agenda.existAgendaServer(db, agenda.getIdAgenda())) {
                                 rp3.marketforce.models.Agenda.insert(db, agenda);
                             } else {
                                 rp3.marketforce.models.Agenda.update(db, agenda);

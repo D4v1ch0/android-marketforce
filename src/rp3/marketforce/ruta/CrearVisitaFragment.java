@@ -428,9 +428,6 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
                 agenda.set_idClienteDireccion(agenda.getClienteDireccion().getID());
                 agenda.setIdRuta(0);
                 agenda.setNombreCompleto(agenda.getCliente().getNombreCompleto().trim());
-                Calendar fc = Calendar.getInstance();
-                fc.set(Calendar.MILLISECOND, 0);
-                agenda.setFechaCreacion(fc.getTime());
                 //agenda.setID(0);
                 agenda.setIdAgenda(0);
 
