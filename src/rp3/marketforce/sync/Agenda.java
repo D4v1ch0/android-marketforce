@@ -372,6 +372,7 @@ public class Agenda {
             jObject.put("FechaFinTicks", Convert.getDotNetTicksFromDate(agenda.getFechaFin()));
             jObject.put("FechaInicioOriginalTicks", Convert.getDotNetTicksFromDate(agenda.getFechaInicio()));
             jObject.put("FechaFinOriginalTicks", Convert.getDotNetTicksFromDate(agenda.getFechaFin()));
+            jObject.put("FechaCreacionTicks", Convert.getDotNetTicksFromDate(agenda.getFechaCreacion()));
             jObject.put("IdCliente", agenda.getIdCliente());
             jObject.put("IdClienteDireccion", agenda.getIdClienteDireccion());
             jObject.put("Ciudad", agenda.getCiudad());
@@ -466,6 +467,7 @@ public class Agenda {
                 jObject.put("FechaFinTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaFin()));
                 jObject.put("FechaInicioGestionTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaInicioReal()));
                 jObject.put("FechaFinGestionTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaFinReal()));
+                jObject.put("FechaCreacionTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaCreacion()));
                 jObject.put("Latitud", agendaUpload.getLatitud());
                 jObject.put("Longitud", agendaUpload.getLongitud());
                 jObject.put("MotivoNoGestion", agendaUpload.getIdMotivoNoVisita());
@@ -706,6 +708,7 @@ public class Agenda {
                 jObject.put("FechaFinTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaFin()));
                 jObject.put("FechaInicioGestionTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaInicioReal()));
                 jObject.put("FechaFinGestionTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaFinReal()));
+                jObject.put("FechaCreacionTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaCreacion()));
                 jObject.put("Latitud", agendaUpload.getLatitud());
                 jObject.put("Longitud", agendaUpload.getLongitud());
                 jObject.put("MotivoNoGestion", agendaUpload.getIdMotivoNoVisita());

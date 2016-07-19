@@ -54,10 +54,11 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 	private String idMotivoNoVisita;
 	private double latitud;
 	private double longitud;
-    private long duracion;
-    private long distancia;
-    private long TiempoViaje;
-    private String idMotivoReprogramacion;
+	private long duracion;
+	private long distancia;
+	private long TiempoViaje;
+	private String idMotivoReprogramacion;
+	private Date fechaCreacion;
 
 	public Pedido getPedido() {
 		return pedido;
@@ -68,40 +69,48 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 	}
 
 	public String getIdMotivoReprogramacion() {
-        return idMotivoReprogramacion;
-    }
+		return idMotivoReprogramacion;
+	}
 
-    public void setIdMotivoReprogramacion(String idMotivoReprogramacion) {
-        this.idMotivoReprogramacion = idMotivoReprogramacion;
-    }
+	public void setIdMotivoReprogramacion(String idMotivoReprogramacion) {
+		this.idMotivoReprogramacion = idMotivoReprogramacion;
+	}
 
-    public long getTiempoViaje() {
-        return TiempoViaje;
-    }
+	public Date getFechaCreacion() {
+		return fechaCreacion;
+	}
 
-    public void setTiempoViaje(long tiempoViaje) {
-        TiempoViaje = tiempoViaje;
-    }
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
 
-    public long getDuracion() {
-        return duracion;
-    }
+	public long getTiempoViaje() {
+		return TiempoViaje;
+	}
 
-    public void setDuracion(long duracion) {
-        this.duracion = duracion;
-    }
+	public void setTiempoViaje(long tiempoViaje) {
+		TiempoViaje = tiempoViaje;
+	}
 
-    public long getDistancia() {
-        return distancia;
-    }
+	public long getDuracion() {
+		return duracion;
+	}
 
-    public void setDistancia(long distancia) {
-        this.distancia = distancia;
-    }
+	public void setDuracion(long duracion) {
+		this.duracion = duracion;
+	}
+
+	public long getDistancia() {
+		return distancia;
+	}
+
+	public void setDistancia(long distancia) {
+		this.distancia = distancia;
+	}
 
 
 
-    @Override
+	@Override
 	public long getID() {
 		return id;
 	}
@@ -123,7 +132,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 
 	@Override
 	public void setValues() {
-		
+
 		setValue(Contract.Agenda.COLUMN_RUTA_ID, this.idRuta);
 		setValue(Contract.Agenda.COLUMN_AGENDA_ID, this.idAgenda);
 		setValue(Contract.Agenda.COLUMN_CLIENTE_ID, this.idCliente);
@@ -149,10 +158,11 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 		setValue(Contract.Agenda.COLUMN_CLIENTE_ID_EXT, this._idCliente);
 		setValue(Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID_EXT, this._idClienteDireccion);
 		setValue(Contract.Agenda.COLUMN_CONTACTO_ID_EXT, this._idContacto);
-        setValue(Contract.Agenda.COLUMN_DURACION, this.duracion);
-        setValue(Contract.Agenda.COLUMN_DISTANCIA, this.distancia);
-        setValue(Contract.Agenda.COLUMN_TIEMPO_VIAJE, this.TiempoViaje);
-        setValue(Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION, this.idMotivoReprogramacion);
+		setValue(Contract.Agenda.COLUMN_DURACION, this.duracion);
+		setValue(Contract.Agenda.COLUMN_DISTANCIA, this.distancia);
+		setValue(Contract.Agenda.COLUMN_TIEMPO_VIAJE, this.TiempoViaje);
+		setValue(Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION, this.idMotivoReprogramacion);
+		setValue(Contract.Agenda.COLUMN_FECHA_CREACION, this.fechaCreacion);
 	}
 
 	@Override
@@ -236,7 +246,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 	public void setEstadoAgenda(String estadoAgenda) {
 		this.estadoAgenda = estadoAgenda;
 	}
-	
+
 	public ClienteDireccion getClienteDireccion() {
 		return clienteDireccion;
 	}
@@ -244,10 +254,10 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 	public void setClienteDireccion(ClienteDireccion clienteDireccion) {
 		this.clienteDireccion = clienteDireccion;
 	}
-	
+
 	public List<AgendaTarea> getAgendaTareas() {
 		if(agendaTareas==null)
-			agendaTareas = new ArrayList<AgendaTarea>();		
+			agendaTareas = new ArrayList<AgendaTarea>();
 		return agendaTareas;
 	}
 
@@ -278,7 +288,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 	public void setDireccion(String direccion) {
 		this.direccion = direccion;
 	}
-	
+
 	public String getEstadoAgendaDescripcion() {
 		return estadoAgendaDescripcion;
 	}
@@ -294,7 +304,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 	public void setCliente(Cliente cliente) {
 		Cliente = cliente;
 	}
-	
+
 	public int getIdContacto() {
 		return idContacto;
 	}
@@ -432,13 +442,13 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 	}
 
 	public static List<Agenda> getAgenda(DataBase db){
-        String query = QueryDir.getQuery( Contract.Agenda.QUERY_AGENDA );
-		
+		String query = QueryDir.getQuery( Contract.Agenda.QUERY_AGENDA );
+
 		Cursor c = db.rawQuery(query);
-		
+
 		List<Agenda> list = new ArrayList<Agenda>();
 		while(c.moveToNext()){
-			
+
 			Agenda agd = new Agenda();
 			agd.setID(CursorUtils.getInt(c, Contract.Agenda._ID));
 			agd.setFechaInicio(CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_INCICIO));
@@ -446,43 +456,44 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setEstadoAgenda(CursorUtils.getString(c, Contract.Agenda.FIELD_ESTADO_AGENDA));
 			agd.setNombreCompleto(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_NOMBRE));
 			agd.setEstadoAgenda(CursorUtils.getString(c, Contract.Agenda.FIELD_ESTADO_AGENDA));
-			agd.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));	
+			agd.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
 			agd.setIdMotivoNoVisita(CursorUtils.getString(c, Contract.Agenda.FIELD_MOTIVO_NO_VISITA_ID));
-            agd.setDuracion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DURACION));
-            agd.setDistancia(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DISTANCIA));
-            agd.setTiempoViaje(CursorUtils.getInt(c, Contract.Agenda.COLUMN_TIEMPO_VIAJE));
-            agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
-            agd.setEnviado(CursorUtils.getBoolean(c, Contract.Agenda.COLUMN_ENVIADO));
-			
+			agd.setDuracion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DURACION));
+			agd.setDistancia(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DISTANCIA));
+			agd.setTiempoViaje(CursorUtils.getInt(c, Contract.Agenda.COLUMN_TIEMPO_VIAJE));
+			agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
+			agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
+			agd.setEnviado(CursorUtils.getBoolean(c, Contract.Agenda.COLUMN_ENVIADO));
+
 			ClienteDireccion cld = new ClienteDireccion();
-			cld.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));			
-			agd.setCiudad(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_CIUDAD));			
+			cld.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
+			agd.setCiudad(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_CIUDAD));
 			agd.setClienteDireccion(cld);
-			
+
 			agd.setIdContacto(CursorUtils.getInt(c, Contract.Agenda.FIELD_CONTACTO_ID));
 			agd.setIdCliente(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_ID));
 			agd.setCliente(rp3.marketforce.models.Cliente.getClienteIDServer(db, agd.getIdCliente(), false));
 			agd.setContacto(Contacto.getContactoId(db, agd.getIdContacto(), agd.getIdCliente()));
-			
+
 			list.add(agd);
 		}
-        c.close();
+		c.close();
 		return list;
 	}
-	
+
 	public static List<Agenda> getAgendaSemanal(DataBase db){
-		
-        String query = QueryDir.getQuery( Contract.Agenda.QUERY_AGENDA_SEMANAL );
+
+		String query = QueryDir.getQuery( Contract.Agenda.QUERY_AGENDA_SEMANAL);
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
-		
+
 		Cursor c = db.rawQuery(query, Convert.getTicksFromDate(cal.getTime()));
-		
+
 		List<Agenda> list = new ArrayList<Agenda>();
-		while(c.moveToNext()){
-			
+		while (c.moveToNext()){
+
 			Agenda agd = new Agenda();
 			agd.setID(CursorUtils.getInt(c, Contract.Agenda._ID));
 			agd.setIdAgenda(CursorUtils.getInt(c, Contract.Agenda.COLUMN_AGENDA_ID));
@@ -495,17 +506,18 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setNombreCompleto(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_NOMBRE));
 			agd.setEstadoAgenda(CursorUtils.getString(c, Contract.Agenda.FIELD_ESTADO_AGENDA));
 			agd.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
-            agd.setDuracion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DURACION));
-            agd.setDistancia(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DISTANCIA));
-            agd.setTiempoViaje(CursorUtils.getInt(c, Contract.Agenda.COLUMN_TIEMPO_VIAJE));
-            agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
-            agd.setEnviado(CursorUtils.getBoolean(c, Contract.Agenda.COLUMN_ENVIADO));
-			
+			agd.setDuracion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DURACION));
+			agd.setDistancia(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DISTANCIA));
+			agd.setTiempoViaje(CursorUtils.getInt(c, Contract.Agenda.COLUMN_TIEMPO_VIAJE));
+			agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
+			agd.setEnviado(CursorUtils.getBoolean(c, Contract.Agenda.COLUMN_ENVIADO));
+			agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
+
 			ClienteDireccion cld = new ClienteDireccion();
-			cld.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));			
-			agd.setCiudad(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_CIUDAD));			
+			cld.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
+			agd.setCiudad(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_CIUDAD));
 			agd.setClienteDireccion(cld);
-			
+
 			agd.setIdContacto(CursorUtils.getInt(c, Contract.Agenda.FIELD_CONTACTO_ID));
 			agd.setIdCliente(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_ID));
 			if(agd.getIdCliente() == 0)
@@ -513,21 +525,21 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			else
 				agd.setCliente(rp3.marketforce.models.Cliente.getClienteIDServer(db, agd.getIdCliente(), false));
 			agd.setContacto(Contacto.getContactoId(db, agd.getIdContacto(), agd.getIdCliente()));
-			
+
 			list.add(agd);
 		}
-        c.close();
+		c.close();
 		return list;
 	}
-	
-	public static Agenda getAgenda(DataBase db, long id){
-		
-        String query = QueryDir.getQuery( Contract.Agenda.QUERY_AGENDA_ID );		
-		Cursor c = db.rawQuery(query,""+id);
-		
+
+	public static Agenda getAgenda(DataBase db, long id) {
+
+		String query = QueryDir.getQuery(Contract.Agenda.QUERY_AGENDA_ID );
+		Cursor c = db.rawQuery(query, "" + id);
+
 		Agenda agd = null;
-		while(c.moveToNext()){
-			
+		while (c.moveToNext()){
+
 			agd = new Agenda();
 			agd.setID(CursorUtils.getInt(c, Contract.Agenda._ID));
 			agd.setIdRuta(CursorUtils.getInt(c, Contract.Agenda.COLUMN_RUTA_ID));
@@ -535,7 +547,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.set_idCliente(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_ID_EXT));
 			agd.set_idClienteDireccion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID_EXT));
 			agd.set_idContacto(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CONTACTO_ID_EXT));
-			
+
 			agd.setIdCliente(CursorUtils.getInt(c, Contract.Agenda.FIELD_CLIENTE_ID));
 			agd.setIdClienteDireccion(CursorUtils.getInt(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION_ID));
 			agd.setFechaInicio(CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_INCICIO));
@@ -553,11 +565,12 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setFoto2Int(CursorUtils.getString(c, Contract.Agenda.FIELD_FOTO2_INT));
 			agd.setFoto3Int(CursorUtils.getString(c, Contract.Agenda.FIELD_FOTO3_INT));
 			agd.setObservaciones(CursorUtils.getString(c, Contract.Agenda.FIELD_OBSERVACIONES));
-            agd.setDuracion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DURACION));
-            agd.setDistancia(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DISTANCIA));
-            agd.setTiempoViaje(CursorUtils.getInt(c, Contract.Agenda.COLUMN_TIEMPO_VIAJE));
-            agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
-			
+			agd.setDuracion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DURACION));
+			agd.setDistancia(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DISTANCIA));
+			agd.setTiempoViaje(CursorUtils.getInt(c, Contract.Agenda.COLUMN_TIEMPO_VIAJE));
+			agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
+			agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
+
 			Cliente cl = new Cliente();
 			cl.setNombreCompleto(agd.getNombreCompleto());
 			cl.setCorreoElectronico(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_CORREO_ELECTRONICO));
@@ -565,105 +578,48 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			cl.setIdCliente(agd.getIdCliente());
 			agd.setIdContacto(CursorUtils.getInt(c, Contract.Agenda.FIELD_CONTACTO_ID));
 			agd.setContacto(Contacto.getContactoId(db, agd.getIdContacto(), agd.getIdCliente()));
-			
+
 			agd.setCliente(cl);
-			
+
 			ClienteDireccion cld = new ClienteDireccion();
 			cld.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
 			cld.setTelefono1((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION_TELEFONO)));
 			agd.setClienteDireccion(cld);
-            if(agd.getIdCliente() == 0)
-                agd.setCliente(rp3.marketforce.models.Cliente.getClienteID(db, agd.get_idCliente(), false));
-            else
-                agd.setCliente(rp3.marketforce.models.Cliente.getClienteIDServer(db, agd.getIdCliente(), false));
+			if(agd.getIdCliente() == 0)
+				agd.setCliente(rp3.marketforce.models.Cliente.getClienteID(db, agd.get_idCliente(), false));
+			else
+				agd.setCliente(rp3.marketforce.models.Cliente.getClienteIDServer(db, agd.getIdCliente(), false));
 
-            if(agd.getIdCliente() == 0)
-                agd.setClienteDireccion(ClienteDireccion.getClienteDireccionIdDireccionIntern(db, agd.get_idCliente(), agd.getIdClienteDireccion()));
-            else
-                agd.setClienteDireccion(ClienteDireccion.getClienteDireccionIdDireccion(db, agd.getIdCliente(), agd.getIdClienteDireccion()));
-			
+			if(agd.getIdCliente() == 0)
+				agd.setClienteDireccion(ClienteDireccion.getClienteDireccionIdDireccionIntern(db, agd.get_idCliente(), agd.getIdClienteDireccion()));
+			else
+				agd.setClienteDireccion(ClienteDireccion.getClienteDireccionIdDireccion(db, agd.getIdCliente(), agd.getIdClienteDireccion()));
+
 			if(agd.getIdAgenda() == 0)
 				agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getID(), agd.getIdRuta(), true));
 			else
 				agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getIdAgenda(), agd.getIdRuta(), false));
 
 			//agd.setPedido(Pedido.getPedidoByAgenda(db, agd.getID()));
-			
+
 		}
-        c.close();
+		c.close();
 		return agd;
 	}
 
-    public static Agenda getAgendaClienteNull(DataBase db, long id){
+	public static Agenda getAgendaClienteNull(DataBase db, long id) {
 
-        String query = QueryDir.getQuery( Contract.Agenda.QUERY_AGENDA_NO_CLIENTE );
-        Cursor c = db.rawQuery(query,""+id);
+		String query = QueryDir.getQuery( Contract.Agenda.QUERY_AGENDA_NO_CLIENTE);
+		Cursor c = db.rawQuery(query, "" + id);
 
-        Agenda agd = null;
-        while(c.moveToNext()){
-
-            agd = new Agenda();
-            agd.setID(CursorUtils.getInt(c, Contract.Agenda._ID));
-            agd.setIdRuta(CursorUtils.getInt(c, Contract.Agenda.COLUMN_RUTA_ID));
-            agd.setIdAgenda(CursorUtils.getInt(c, Contract.Agenda.COLUMN_AGENDA_ID));
-
-            agd.setIdCliente(CursorUtils.getInt(c, Contract.Agenda.FIELD_CLIENTE_ID));
-            agd.setIdClienteDireccion(CursorUtils.getInt(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION_ID));
-            agd.setFechaInicio(CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_INCICIO));
-            agd.setFechaFin(CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_FIN));
-            agd.setEstadoAgenda(CursorUtils.getString(c, Contract.Agenda.FIELD_ESTADO_AGENDA));
-            agd.setNombreCompleto(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_NOMBRE));
-            agd.setEstadoAgendaDescripcion(CursorUtils.getString(c, Contract.Agenda.FIELD_ESTADO_AGENDA_DESCRIPCION));
-            agd.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
-            agd.setFechaInicioReal((CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_INICIO_REAL)));
-            agd.setFechaFinReal((CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_FIN_REAL)));
-            agd.setFoto1Ext(CursorUtils.getString(c, Contract.Agenda.FIELD_FOTO1_EXT));
-            agd.setFoto2Ext(CursorUtils.getString(c, Contract.Agenda.FIELD_FOTO2_EXT));
-            agd.setFoto3Ext(CursorUtils.getString(c, Contract.Agenda.FIELD_FOTO3_EXT));
-            agd.setFoto1Int(CursorUtils.getString(c, Contract.Agenda.FIELD_FOTO1_INT));
-            agd.setFoto2Int(CursorUtils.getString(c, Contract.Agenda.FIELD_FOTO2_INT));
-            agd.setFoto3Int(CursorUtils.getString(c, Contract.Agenda.FIELD_FOTO3_INT));
-            agd.setObservaciones(CursorUtils.getString(c, Contract.Agenda.FIELD_OBSERVACIONES));
-            agd.setDuracion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DURACION));
-            agd.setDistancia(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DISTANCIA));
-            agd.setTiempoViaje(CursorUtils.getInt(c, Contract.Agenda.COLUMN_TIEMPO_VIAJE));
-            agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
-
-            Cliente cl = new Cliente();
-            cl.setNombreCompleto(agd.getNombreCompleto());
-            cl.setIdCliente(agd.getIdCliente());
-            agd.setIdContacto(CursorUtils.getInt(c, Contract.Agenda.FIELD_CONTACTO_ID));
-
-            agd.setCliente(cl);
-
-            ClienteDireccion cld = new ClienteDireccion();
-            cld.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
-            agd.setClienteDireccion(cld);
-
-            if(agd.getIdAgenda() == 0)
-                agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getID(), agd.getIdRuta(), true));
-            else
-                agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getIdAgenda(), agd.getIdRuta(), false));
-
-			//agd.setPedido(Pedido.getPedidoByAgenda(db, agd.getID()));
-        }
-        c.close();
-        return agd;
-    }
-	
-	public static Agenda getAgendaServer(DataBase db, long id){
-		
-        String query = QueryDir.getQuery( Contract.Agenda.QUERY_AGENDA_ID_SERVER );		
-		Cursor c = db.rawQuery(query,""+id);
-		
 		Agenda agd = null;
-		while(c.moveToNext()){
-			
+		while (c.moveToNext()) {
+
 			agd = new Agenda();
 			agd.setID(CursorUtils.getInt(c, Contract.Agenda._ID));
 			agd.setIdRuta(CursorUtils.getInt(c, Contract.Agenda.COLUMN_RUTA_ID));
 			agd.setIdAgenda(CursorUtils.getInt(c, Contract.Agenda.COLUMN_AGENDA_ID));
-			
+
 			agd.setIdCliente(CursorUtils.getInt(c, Contract.Agenda.FIELD_CLIENTE_ID));
 			agd.setIdClienteDireccion(CursorUtils.getInt(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION_ID));
 			agd.setFechaInicio(CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_INCICIO));
@@ -681,11 +637,70 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setFoto2Int(CursorUtils.getString(c, Contract.Agenda.FIELD_FOTO2_INT));
 			agd.setFoto3Int(CursorUtils.getString(c, Contract.Agenda.FIELD_FOTO3_INT));
 			agd.setObservaciones(CursorUtils.getString(c, Contract.Agenda.FIELD_OBSERVACIONES));
-            agd.setDuracion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DURACION));
-            agd.setDistancia(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DISTANCIA));
-            agd.setTiempoViaje(CursorUtils.getInt(c, Contract.Agenda.COLUMN_TIEMPO_VIAJE));
-            agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
-			
+			agd.setDuracion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DURACION));
+			agd.setDistancia(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DISTANCIA));
+			agd.setTiempoViaje(CursorUtils.getInt(c, Contract.Agenda.COLUMN_TIEMPO_VIAJE));
+			agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
+			agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
+
+			Cliente cl = new Cliente();
+			cl.setNombreCompleto(agd.getNombreCompleto());
+			cl.setIdCliente(agd.getIdCliente());
+			agd.setIdContacto(CursorUtils.getInt(c, Contract.Agenda.FIELD_CONTACTO_ID));
+
+			agd.setCliente(cl);
+
+			ClienteDireccion cld = new ClienteDireccion();
+			cld.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
+			agd.setClienteDireccion(cld);
+
+			if(agd.getIdAgenda() == 0)
+				agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getID(), agd.getIdRuta(), true));
+			else
+				agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getIdAgenda(), agd.getIdRuta(), false));
+
+			//agd.setPedido(Pedido.getPedidoByAgenda(db, agd.getID()));
+		}
+		c.close();
+		return agd;
+	}
+
+	public static Agenda getAgendaServer(DataBase db, long id){
+
+		String query = QueryDir.getQuery( Contract.Agenda.QUERY_AGENDA_ID_SERVER );
+		Cursor c = db.rawQuery(query,""+id);
+
+		Agenda agd = null;
+		while(c.moveToNext()){
+
+			agd = new Agenda();
+			agd.setID(CursorUtils.getInt(c, Contract.Agenda._ID));
+			agd.setIdRuta(CursorUtils.getInt(c, Contract.Agenda.COLUMN_RUTA_ID));
+			agd.setIdAgenda(CursorUtils.getInt(c, Contract.Agenda.COLUMN_AGENDA_ID));
+
+			agd.setIdCliente(CursorUtils.getInt(c, Contract.Agenda.FIELD_CLIENTE_ID));
+			agd.setIdClienteDireccion(CursorUtils.getInt(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION_ID));
+			agd.setFechaInicio(CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_INCICIO));
+			agd.setFechaFin(CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_FIN));
+			agd.setEstadoAgenda(CursorUtils.getString(c, Contract.Agenda.FIELD_ESTADO_AGENDA));
+			agd.setNombreCompleto(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_NOMBRE));
+			agd.setEstadoAgendaDescripcion(CursorUtils.getString(c, Contract.Agenda.FIELD_ESTADO_AGENDA_DESCRIPCION));
+			agd.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
+			agd.setFechaInicioReal((CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_INICIO_REAL)));
+			agd.setFechaFinReal((CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_FIN_REAL)));
+			agd.setFoto1Ext(CursorUtils.getString(c, Contract.Agenda.FIELD_FOTO1_EXT));
+			agd.setFoto2Ext(CursorUtils.getString(c, Contract.Agenda.FIELD_FOTO2_EXT));
+			agd.setFoto3Ext(CursorUtils.getString(c, Contract.Agenda.FIELD_FOTO3_EXT));
+			agd.setFoto1Int(CursorUtils.getString(c, Contract.Agenda.FIELD_FOTO1_INT));
+			agd.setFoto2Int(CursorUtils.getString(c, Contract.Agenda.FIELD_FOTO2_INT));
+			agd.setFoto3Int(CursorUtils.getString(c, Contract.Agenda.FIELD_FOTO3_INT));
+			agd.setObservaciones(CursorUtils.getString(c, Contract.Agenda.FIELD_OBSERVACIONES));
+			agd.setDuracion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DURACION));
+			agd.setDistancia(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DISTANCIA));
+			agd.setTiempoViaje(CursorUtils.getInt(c, Contract.Agenda.COLUMN_TIEMPO_VIAJE));
+			agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
+			agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
+
 			Cliente cl = new Cliente();
 			cl.setNombreCompleto(agd.getNombreCompleto());
 			cl.setCorreoElectronico(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_CORREO_ELECTRONICO));
@@ -693,30 +708,88 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			cl.setID(agd.getIdCliente());
 			agd.setIdContacto(CursorUtils.getInt(c, Contract.Agenda.FIELD_CONTACTO_ID));
 			agd.setContacto(Contacto.getContactoId(db, agd.getIdContacto(), agd.getIdCliente()));
-			
+
 			agd.setCliente(cl);
-			
+
 			ClienteDireccion cld = new ClienteDireccion();
 			cld.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
 			cld.setTelefono1((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION_TELEFONO)));
 			agd.setClienteDireccion(cld);
-			
+
 			agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getIdAgenda(), agd.getIdRuta(), false));
-			
+
 		}
-        c.close();
+		c.close();
 		return agd;
 	}
-	
+
+	public static Agenda getAgendaServerByTicks(DataBase db, long ticks){
+
+		String query = QueryDir.getQuery( Contract.Agenda.QUERY_AGENDA_TICKS );
+		Cursor c = db.rawQuery(query,""+ticks);
+
+		Agenda agd = null;
+		while(c.moveToNext()){
+
+			agd = new Agenda();
+			agd.setID(CursorUtils.getInt(c, Contract.Agenda._ID));
+			agd.setIdRuta(CursorUtils.getInt(c, Contract.Agenda.COLUMN_RUTA_ID));
+			agd.setIdAgenda(CursorUtils.getInt(c, Contract.Agenda.COLUMN_AGENDA_ID));
+
+			agd.setIdCliente(CursorUtils.getInt(c, Contract.Agenda.FIELD_CLIENTE_ID));
+			agd.setIdClienteDireccion(CursorUtils.getInt(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION_ID));
+			agd.setFechaInicio(CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_INCICIO));
+			agd.setFechaFin(CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_FIN));
+			agd.setEstadoAgenda(CursorUtils.getString(c, Contract.Agenda.FIELD_ESTADO_AGENDA));
+			agd.setNombreCompleto(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_NOMBRE));
+			agd.setEstadoAgendaDescripcion(CursorUtils.getString(c, Contract.Agenda.FIELD_ESTADO_AGENDA_DESCRIPCION));
+			agd.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
+			agd.setFechaInicioReal((CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_INICIO_REAL)));
+			agd.setFechaFinReal((CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_FIN_REAL)));
+			agd.setFoto1Ext(CursorUtils.getString(c, Contract.Agenda.FIELD_FOTO1_EXT));
+			agd.setFoto2Ext(CursorUtils.getString(c, Contract.Agenda.FIELD_FOTO2_EXT));
+			agd.setFoto3Ext(CursorUtils.getString(c, Contract.Agenda.FIELD_FOTO3_EXT));
+			agd.setFoto1Int(CursorUtils.getString(c, Contract.Agenda.FIELD_FOTO1_INT));
+			agd.setFoto2Int(CursorUtils.getString(c, Contract.Agenda.FIELD_FOTO2_INT));
+			agd.setFoto3Int(CursorUtils.getString(c, Contract.Agenda.FIELD_FOTO3_INT));
+			agd.setObservaciones(CursorUtils.getString(c, Contract.Agenda.FIELD_OBSERVACIONES));
+			agd.setDuracion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DURACION));
+			agd.setDistancia(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DISTANCIA));
+			agd.setTiempoViaje(CursorUtils.getInt(c, Contract.Agenda.COLUMN_TIEMPO_VIAJE));
+			agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
+			agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
+
+			Cliente cl = new Cliente();
+			cl.setNombreCompleto(agd.getNombreCompleto());
+			cl.setCorreoElectronico(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_CORREO_ELECTRONICO));
+			cl.setURLFoto(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_URL_FOTO));
+			cl.setID(agd.getIdCliente());
+			agd.setIdContacto(CursorUtils.getInt(c, Contract.Agenda.FIELD_CONTACTO_ID));
+			agd.setContacto(Contacto.getContactoId(db, agd.getIdContacto(), agd.getIdCliente()));
+
+			agd.setCliente(cl);
+
+			ClienteDireccion cld = new ClienteDireccion();
+			cld.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
+			cld.setTelefono1((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION_TELEFONO)));
+			agd.setClienteDireccion(cld);
+
+			agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getIdAgenda(), agd.getIdRuta(), false));
+
+		}
+		c.close();
+		return agd;
+	}
+
 	public static Agenda getAgendaUpload(DataBase db, long id){
 
-        String query = QueryDir.getQuery( Contract.Agenda.QUERY_AGENDA_UPLOAD );
-        Cursor c = db.rawQuery(query,""+id);
-		
+		String query = QueryDir.getQuery( Contract.Agenda.QUERY_AGENDA_UPLOAD );
+		Cursor c = db.rawQuery(query,""+id);
+
 		Agenda agd = null;
 		if(c.moveToFirst())
 		{
-			
+
 			agd = new Agenda();
 			agd.setID(CursorUtils.getInt(c, Contract.Agenda._ID));
 			agd.setIdRuta(CursorUtils.getInt(c, Contract.Agenda.COLUMN_RUTA_ID));
@@ -726,71 +799,71 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setIdClienteDireccion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID));
 			agd.setFechaInicioReal(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_INICIO_REAL));
 			agd.setFechaFinReal(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_FIN_REAL));
-			agd.setEstadoAgenda(CursorUtils.getString(c,Contract.Agenda.COLUMN_ESTADO_AGENDA));
-			agd.setFechaInicio(Convert.getDateFromTicks(CursorUtils.getLong(c,Contract.Agenda.COLUMN_FECHA_INICIO)));
-			agd.setFechaFin(Convert.getDateFromTicks(CursorUtils.getLong(c,Contract.Agenda.COLUMN_FECHA_FIN)));
+			agd.setEstadoAgenda(CursorUtils.getString(c, Contract.Agenda.COLUMN_ESTADO_AGENDA));
+			agd.setFechaInicio(Convert.getDateFromTicks(CursorUtils.getLong(c, Contract.Agenda.COLUMN_FECHA_INICIO)));
+			agd.setFechaFin(Convert.getDateFromTicks(CursorUtils.getLong(c, Contract.Agenda.COLUMN_FECHA_FIN)));
 			agd.setObservaciones(CursorUtils.getString(c, Contract.Agenda.COLUMN_OBSERVACIONES));
 			agd.setIdContacto(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CONTACTO_ID));
 			agd.setFoto1Int(CursorUtils.getString(c, Contract.Agenda.COLUMN_FOTO1_INT));
 			agd.setFoto2Int(CursorUtils.getString(c, Contract.Agenda.COLUMN_FOTO2_INT));
 			agd.setFoto3Int(CursorUtils.getString(c, Contract.Agenda.COLUMN_FOTO3_INT));
-            agd.setFoto1Ext(CursorUtils.getString(c, Contract.Agenda.COLUMN_FOTO1_EXT));
-            agd.setFoto2Ext(CursorUtils.getString(c, Contract.Agenda.COLUMN_FOTO2_EXT));
-            agd.setFoto3Ext(CursorUtils.getString(c, Contract.Agenda.COLUMN_FOTO3_EXT));
+			agd.setFoto1Ext(CursorUtils.getString(c, Contract.Agenda.COLUMN_FOTO1_EXT));
+			agd.setFoto2Ext(CursorUtils.getString(c, Contract.Agenda.COLUMN_FOTO2_EXT));
+			agd.setFoto3Ext(CursorUtils.getString(c, Contract.Agenda.COLUMN_FOTO3_EXT));
 			agd.setIdMotivoNoVisita(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_NO_VISITA_ID));
 			agd.setLatitud(CursorUtils.getDouble(c, Contract.Agenda.COLUMN_LATITUD));
 			agd.setLongitud(CursorUtils.getDouble(c, Contract.Agenda.COLUMN_LONGITUD));
-            agd.setDuracion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DURACION));
-            agd.setDistancia(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DISTANCIA));
-            agd.setTiempoViaje(CursorUtils.getInt(c, Contract.Agenda.COLUMN_TIEMPO_VIAJE));
-            agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
-			
+			agd.setDuracion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DURACION));
+			agd.setDistancia(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DISTANCIA));
+			agd.setTiempoViaje(CursorUtils.getInt(c, Contract.Agenda.COLUMN_TIEMPO_VIAJE));
+			agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
+			agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
+
 			agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getIdAgenda(), agd.getIdRuta(), false));
 			agd.setCliente(rp3.marketforce.models.Cliente.getClienteIDServer(db, agd.getIdCliente(), false));
-            if(agd.getCliente() != null) {
-                agd.setNombreCompleto(agd.getCliente().getNombreCompleto());
-                agd.setClienteDireccion(rp3.marketforce.models.ClienteDireccion.getClienteDireccionIdDireccion(db, agd.getIdCliente(), agd.getIdClienteDireccion()));
-                agd.setDireccion(agd.getClienteDireccion().getDireccion());
-            }
-            else
-            {
-                agd.setNombreCompleto(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_NOMBRE));
-                agd.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
-            }
-			
+			if(agd.getCliente() != null) {
+				agd.setNombreCompleto(agd.getCliente().getNombreCompleto());
+				agd.setClienteDireccion(rp3.marketforce.models.ClienteDireccion.getClienteDireccionIdDireccion(db, agd.getIdCliente(), agd.getIdClienteDireccion()));
+				agd.setDireccion(agd.getClienteDireccion().getDireccion());
+			}
+			else
+			{
+				agd.setNombreCompleto(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_NOMBRE));
+				agd.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
+			}
+
 		}
-        c.close();
+		c.close();
 		return agd;
 	}
-	
+
 	public static String getAgendaEstado(DataBase db, long id){
-		
-		Cursor c = db.query(Contract.Agenda.TABLE_NAME, new String[] {Contract.Agenda._ID, Contract.Agenda.COLUMN_AGENDA_ID,
-				Contract.Agenda.COLUMN_ESTADO_AGENDA}, 
+
+		Cursor c = db.query(Contract.Agenda.TABLE_NAME, new String[]{Contract.Agenda._ID, Contract.Agenda.COLUMN_AGENDA_ID,
+						Contract.Agenda.COLUMN_ESTADO_AGENDA},
 				Contract.Agenda._ID + " = ? ", id);
-		
+
 		String estado = "";
-		if(c.moveToFirst())
-		{
+		if (c.moveToFirst()) {
 			estado = CursorUtils.getString(c, Contract.Agenda.COLUMN_ESTADO_AGENDA);
 		}
-        c.close();
+		c.close();
 		return estado;
 	}
-	
-	public static List<Agenda> getAgendaClienteInterno(DataBase db, long id){
-		
-		Cursor c = db.query(Contract.Agenda.TABLE_NAME, new String[] {Contract.Agenda._ID, Contract.Agenda.COLUMN_AGENDA_ID, Contract.Agenda.COLUMN_CLIENTE_ID,
-				Contract.Agenda.COLUMN_RUTA_ID, Contract.Agenda.COLUMN_FECHA_INICIO_REAL, Contract.Agenda.COLUMN_FECHA_FIN_REAL, Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID,
-				Contract.Agenda.COLUMN_ESTADO_AGENDA, Contract.Agenda.COLUMN_CONTACTO_ID, Contract.Agenda.COLUMN_FECHA_INICIO, 
-				Contract.Agenda.COLUMN_FECHA_FIN, Contract.Agenda.COLUMN_OBSERVACIONES, Contract.Agenda.COLUMN_CONTACTO_ID, 
-				Contract.Agenda.COLUMN_FOTO1_INT, Contract.Agenda.COLUMN_FOTO2_INT, Contract.Agenda.COLUMN_FOTO3_INT, 
-				Contract.Agenda.COLUMN_MOTIVO_NO_VISITA_ID, Contract.Agenda.COLUMN_LATITUD, Contract.Agenda.COLUMN_LONGITUD, Contract.Agenda.COLUMN_DISTANCIA,
-                Contract.Agenda.COLUMN_DURACION, Contract.Agenda.COLUMN_TIEMPO_VIAJE, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION},
+
+	public static List<Agenda> getAgendaClienteInterno(DataBase db, long id) {
+
+		Cursor c = db.query(Contract.Agenda.TABLE_NAME, new String[]{Contract.Agenda._ID, Contract.Agenda.COLUMN_AGENDA_ID, Contract.Agenda.COLUMN_CLIENTE_ID,
+						Contract.Agenda.COLUMN_RUTA_ID, Contract.Agenda.COLUMN_FECHA_INICIO_REAL, Contract.Agenda.COLUMN_FECHA_FIN_REAL, Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID,
+						Contract.Agenda.COLUMN_ESTADO_AGENDA, Contract.Agenda.COLUMN_CONTACTO_ID, Contract.Agenda.COLUMN_FECHA_INICIO,
+						Contract.Agenda.COLUMN_FECHA_FIN, Contract.Agenda.COLUMN_OBSERVACIONES, Contract.Agenda.COLUMN_CONTACTO_ID,
+						Contract.Agenda.COLUMN_FOTO1_INT, Contract.Agenda.COLUMN_FOTO2_INT, Contract.Agenda.COLUMN_FOTO3_INT,
+						Contract.Agenda.COLUMN_MOTIVO_NO_VISITA_ID, Contract.Agenda.COLUMN_LATITUD, Contract.Agenda.COLUMN_LONGITUD, Contract.Agenda.COLUMN_DISTANCIA,
+						Contract.Agenda.COLUMN_DURACION, Contract.Agenda.COLUMN_TIEMPO_VIAJE, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION},
 				Contract.Agenda.COLUMN_CLIENTE_ID_EXT + " = ?", id);
-		
+
 		List<Agenda> agds = new ArrayList<Agenda>();
-		if(c.moveToFirst())
+		if (c.moveToFirst())
 		{
 			Agenda agd = new Agenda();
 			agd.setID(CursorUtils.getInt(c, Contract.Agenda._ID));
@@ -801,9 +874,9 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setIdClienteDireccion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID));
 			agd.setFechaInicioReal(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_INICIO_REAL));
 			agd.setFechaFinReal(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_FIN_REAL));
-			agd.setEstadoAgenda(CursorUtils.getString(c,Contract.Agenda.COLUMN_ESTADO_AGENDA));
-			agd.setFechaInicio(Convert.getDateFromTicks(CursorUtils.getLong(c,Contract.Agenda.COLUMN_FECHA_INICIO)));
-			agd.setFechaFin(Convert.getDateFromTicks(CursorUtils.getLong(c,Contract.Agenda.COLUMN_FECHA_FIN)));
+			agd.setEstadoAgenda(CursorUtils.getString(c, Contract.Agenda.COLUMN_ESTADO_AGENDA));
+			agd.setFechaInicio(Convert.getDateFromTicks(CursorUtils.getLong(c, Contract.Agenda.COLUMN_FECHA_INICIO)));
+			agd.setFechaFin(Convert.getDateFromTicks(CursorUtils.getLong(c, Contract.Agenda.COLUMN_FECHA_FIN)));
 			agd.setObservaciones(CursorUtils.getString(c, Contract.Agenda.COLUMN_OBSERVACIONES));
 			agd.setIdContacto(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CONTACTO_ID));
 			agd.setFoto1Int(CursorUtils.getString(c, Contract.Agenda.COLUMN_FOTO1_INT));
@@ -812,11 +885,12 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setIdMotivoNoVisita(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_NO_VISITA_ID));
 			agd.setLatitud(CursorUtils.getDouble(c, Contract.Agenda.COLUMN_LATITUD));
 			agd.setLongitud(CursorUtils.getDouble(c, Contract.Agenda.COLUMN_LONGITUD));
-            agd.setDuracion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DURACION));
-            agd.setDistancia(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DISTANCIA));
-            agd.setTiempoViaje(CursorUtils.getInt(c, Contract.Agenda.COLUMN_TIEMPO_VIAJE));
-            agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
-			
+			agd.setDuracion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DURACION));
+			agd.setDistancia(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DISTANCIA));
+			agd.setTiempoViaje(CursorUtils.getInt(c, Contract.Agenda.COLUMN_TIEMPO_VIAJE));
+			agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
+			agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
+
 			agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getIdAgenda(), agd.getIdRuta(), false));
 			agd.setCliente(rp3.marketforce.models.Cliente.getClienteIDServer(db, agd.getIdCliente(), false));
 			agd.setNombreCompleto(agd.getCliente().getNombreCompleto());
@@ -824,20 +898,20 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setDireccion(agd.getClienteDireccion().getDireccion());
 			agds.add(agd);
 		}
-        c.close();
+		c.close();
 		return agds;
 	}
-	
+
 	public static List<Agenda> getAgendaInserts(DataBase db){
 		Cursor c = db.query(Contract.Agenda.TABLE_NAME, new String[] {Contract.Agenda._ID, Contract.Agenda.COLUMN_AGENDA_ID, Contract.Agenda.COLUMN_CLIENTE_ID,
-				Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID, Contract.Agenda.COLUMN_RUTA_ID, Contract.Agenda.COLUMN_FECHA_INICIO_REAL, Contract.Agenda.COLUMN_FECHA_FIN_REAL,
-				Contract.Agenda.COLUMN_ESTADO_AGENDA, Contract.Agenda.COLUMN_CONTACTO_ID, Contract.Agenda.COLUMN_FECHA_INICIO, 
-				Contract.Agenda.COLUMN_FECHA_FIN, Contract.Agenda.COLUMN_OBSERVACIONES, Contract.Agenda.COLUMN_CONTACTO_ID, 
-				Contract.Agenda.COLUMN_FOTO1_INT, Contract.Agenda.COLUMN_FOTO2_INT, Contract.Agenda.COLUMN_FOTO3_INT, 
-				Contract.Agenda.COLUMN_MOTIVO_NO_VISITA_ID, Contract.Agenda.COLUMN_LATITUD, Contract.Agenda.COLUMN_LONGITUD, Contract.Agenda.COLUMN_DISTANCIA,
-                Contract.Agenda.COLUMN_DURACION, Contract.Agenda.COLUMN_TIEMPO_VIAJE, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION},
+						Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID, Contract.Agenda.COLUMN_RUTA_ID, Contract.Agenda.COLUMN_FECHA_INICIO_REAL, Contract.Agenda.COLUMN_FECHA_FIN_REAL,
+						Contract.Agenda.COLUMN_ESTADO_AGENDA, Contract.Agenda.COLUMN_CONTACTO_ID, Contract.Agenda.COLUMN_FECHA_INICIO,
+						Contract.Agenda.COLUMN_FECHA_FIN, Contract.Agenda.COLUMN_OBSERVACIONES, Contract.Agenda.COLUMN_CONTACTO_ID,
+						Contract.Agenda.COLUMN_FOTO1_INT, Contract.Agenda.COLUMN_FOTO2_INT, Contract.Agenda.COLUMN_FOTO3_INT,
+						Contract.Agenda.COLUMN_MOTIVO_NO_VISITA_ID, Contract.Agenda.COLUMN_LATITUD, Contract.Agenda.COLUMN_LONGITUD, Contract.Agenda.COLUMN_DISTANCIA,
+						Contract.Agenda.COLUMN_DURACION, Contract.Agenda.COLUMN_TIEMPO_VIAJE, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION, Contract.Agenda.COLUMN_FECHA_CREACION},
 				Contract.Agenda.COLUMN_AGENDA_ID + " = ? ", 0);
-		
+
 		List<Agenda> list_agenda = new ArrayList<Agenda>();
 		if(c.moveToFirst())
 		{
@@ -852,9 +926,9 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 				agd.setIdClienteDireccion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID));
 				agd.setFechaInicioReal(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_INICIO_REAL));
 				agd.setFechaFinReal(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_FIN_REAL));
-				agd.setEstadoAgenda(CursorUtils.getString(c,Contract.Agenda.COLUMN_ESTADO_AGENDA));
-				agd.setFechaInicio(Convert.getDateFromTicks(CursorUtils.getLong(c,Contract.Agenda.COLUMN_FECHA_INICIO)));
-				agd.setFechaFin(Convert.getDateFromTicks(CursorUtils.getLong(c,Contract.Agenda.COLUMN_FECHA_FIN)));
+				agd.setEstadoAgenda(CursorUtils.getString(c, Contract.Agenda.COLUMN_ESTADO_AGENDA));
+				agd.setFechaInicio(Convert.getDateFromTicks(CursorUtils.getLong(c, Contract.Agenda.COLUMN_FECHA_INICIO)));
+				agd.setFechaFin(Convert.getDateFromTicks(CursorUtils.getLong(c, Contract.Agenda.COLUMN_FECHA_FIN)));
 				agd.setObservaciones(CursorUtils.getString(c, Contract.Agenda.COLUMN_OBSERVACIONES));
 				agd.setIdContacto(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CONTACTO_ID));
 				agd.setFoto1Int(CursorUtils.getString(c, Contract.Agenda.COLUMN_FOTO1_INT));
@@ -867,28 +941,29 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 				agd.setNombreCompleto(agd.getCliente().getNombreCompleto());
 				agd.setClienteDireccion(rp3.marketforce.models.ClienteDireccion.getClienteDireccionIdDireccion(db, agd.getIdCliente(), agd.getIdClienteDireccion()));
 				agd.setDireccion(agd.getClienteDireccion().getDireccion());
-                agd.setDuracion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DURACION));
-                agd.setDistancia(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DISTANCIA));
-                agd.setTiempoViaje(CursorUtils.getInt(c, Contract.Agenda.COLUMN_TIEMPO_VIAJE));
-                agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
-				
+				agd.setDuracion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DURACION));
+				agd.setDistancia(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DISTANCIA));
+				agd.setTiempoViaje(CursorUtils.getInt(c, Contract.Agenda.COLUMN_TIEMPO_VIAJE));
+				agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
+				agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
+
 				if(agd.getIdAgenda() == 0)
 					agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getID(), agd.getIdRuta(), true));
 				else
 					agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getIdAgenda(), agd.getIdRuta(), false));
-				
+
 				list_agenda.add(agd);
 			}while(c.moveToNext());
 		}
-        c.close();
+		c.close();
 		return list_agenda;
 	}
-	
+
 	public static List<Agenda> getAgendaPendientes(DataBase db){
-        String query = QueryDir.getQuery( Contract.Agenda.QUERY_AGENDA_PENDIENTES );
+		String query = QueryDir.getQuery( Contract.Agenda.QUERY_AGENDA_PENDIENTES );
 
 		Cursor c = db.rawQuery(query);
-		
+
 		List<Agenda> list_agenda = new ArrayList<Agenda>();
 		if(c.moveToFirst())
 		{
@@ -903,56 +978,56 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 				agd.setIdClienteDireccion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID));
 				agd.setFechaInicioReal(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_INICIO_REAL));
 				agd.setFechaFinReal(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_FIN_REAL));
-				agd.setEstadoAgenda(CursorUtils.getString(c,Contract.Agenda.COLUMN_ESTADO_AGENDA));
-				agd.setFechaInicio(Convert.getDateFromTicks(CursorUtils.getLong(c,Contract.Agenda.COLUMN_FECHA_INICIO)));
-				agd.setFechaFin(Convert.getDateFromTicks(CursorUtils.getLong(c,Contract.Agenda.COLUMN_FECHA_FIN)));
+				agd.setEstadoAgenda(CursorUtils.getString(c, Contract.Agenda.COLUMN_ESTADO_AGENDA));
+				agd.setFechaInicio(Convert.getDateFromTicks(CursorUtils.getLong(c, Contract.Agenda.COLUMN_FECHA_INICIO)));
+				agd.setFechaFin(Convert.getDateFromTicks(CursorUtils.getLong(c, Contract.Agenda.COLUMN_FECHA_FIN)));
 				agd.setObservaciones(CursorUtils.getString(c, Contract.Agenda.COLUMN_OBSERVACIONES));
 				agd.setIdContacto(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CONTACTO_ID));
 				agd.setFoto1Int(CursorUtils.getString(c, Contract.Agenda.COLUMN_FOTO1_INT));
 				agd.setFoto2Int(CursorUtils.getString(c, Contract.Agenda.COLUMN_FOTO2_INT));
 				agd.setFoto3Int(CursorUtils.getString(c, Contract.Agenda.COLUMN_FOTO3_INT));
-                agd.setFoto1Ext(CursorUtils.getString(c, Contract.Agenda.COLUMN_FOTO1_EXT));
-                agd.setFoto2Ext(CursorUtils.getString(c, Contract.Agenda.COLUMN_FOTO2_EXT));
-                agd.setFoto3Ext(CursorUtils.getString(c, Contract.Agenda.COLUMN_FOTO3_EXT));
+				agd.setFoto1Ext(CursorUtils.getString(c, Contract.Agenda.COLUMN_FOTO1_EXT));
+				agd.setFoto2Ext(CursorUtils.getString(c, Contract.Agenda.COLUMN_FOTO2_EXT));
+				agd.setFoto3Ext(CursorUtils.getString(c, Contract.Agenda.COLUMN_FOTO3_EXT));
 				agd.setIdMotivoNoVisita(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_NO_VISITA_ID));
 				agd.setLatitud(CursorUtils.getDouble(c, Contract.Agenda.COLUMN_LATITUD));
 				agd.setLongitud(CursorUtils.getDouble(c, Contract.Agenda.COLUMN_LONGITUD));
-                agd.setDuracion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DURACION));
-                agd.setDistancia(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DISTANCIA));
-                agd.setTiempoViaje(CursorUtils.getInt(c, Contract.Agenda.COLUMN_TIEMPO_VIAJE));
-                agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
-                agd.setNombreCompleto(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_NOMBRE));
-                agd.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
-				
+				agd.setDuracion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DURACION));
+				agd.setDistancia(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DISTANCIA));
+				agd.setTiempoViaje(CursorUtils.getInt(c, Contract.Agenda.COLUMN_TIEMPO_VIAJE));
+				agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
+				agd.setNombreCompleto(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_NOMBRE));
+				agd.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
+				agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
+
 				if(agd.getIdAgenda() == 0)
 					agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getID(), agd.getIdRuta(), true));
 				else
 					agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getIdAgenda(), agd.getIdRuta(), false));
-				
+
 				list_agenda.add(agd);
 			}while(c.moveToNext());
-			
+
 		}
-        c.close();
+		c.close();
 		return list_agenda;
 	}
-	
-	public static List<Agenda> getAgendaSearch(DataBase db, String termSearch)
-	{		
-		String query = QueryDir.getQuery( Contract.Agenda.QUERY_AGENDA_SEARCH );
-        String version = db.getSQLiteVersion();
-        int compare = Convert.versionCompare(version, Contants.SQLITE_VERSION_SEARCH);
-        Cursor c = null;
 
-        if(compare > 0)
-            c = db.rawQuery(query, termSearch + "*");
-        else
-            c = db.rawQuery(query, "'*" + termSearch + "*'");
+	public static List<Agenda> getAgendaSearch(DataBase db, String termSearch) {
+		String query = QueryDir.getQuery(Contract.Agenda.QUERY_AGENDA_SEARCH);
+		String version = db.getSQLiteVersion();
+		int compare = Convert.versionCompare(version, Contants.SQLITE_VERSION_SEARCH);
+		Cursor c = null;
 
-		
+		if(compare > 0)
+			c = db.rawQuery(query, termSearch + "*");
+		else
+			c = db.rawQuery(query, "'*" + termSearch + "*'");
+
+
 		List<Agenda> list = new ArrayList<Agenda>();
-		while(c.moveToNext()){
-			
+		while (c.moveToNext()) {
+
 			Agenda agd = new Agenda();
 			agd.setID(CursorUtils.getInt(c, Contract.AgendaExt.COLUMN_AGENDA_ID));
 			agd.setFechaInicio(CursorUtils.getDate(c, Contract.AgendaExt.COLUMN_FECHA_INICIO));
@@ -960,38 +1035,38 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setEstadoAgenda(CursorUtils.getString(c, Contract.AgendaExt.COLUMN_ESTADO_AGENDA));
 			agd.setNombreCompleto(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_NOMBRE));
 			agd.setEstadoAgendaDescripcion(CursorUtils.getString(c, Contract.Agenda.FIELD_ESTADO_AGENDA_DESCRIPCION));
-            agd.setEnviado(CursorUtils.getBoolean(c, Contract.Agenda.COLUMN_ENVIADO));
-			
+			agd.setEnviado(CursorUtils.getBoolean(c, Contract.Agenda.COLUMN_ENVIADO));
+
 			ClienteDireccion cld = new ClienteDireccion();
 			cld.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
 //			cld.setTelefono1((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_TELEFONO)));
 			agd.setClienteDireccion(cld);
-			
+
 			agd.setIdContacto(CursorUtils.getInt(c, Contract.Agenda.FIELD_CONTACTO_ID));
 			agd.setIdCliente(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_ID));
 			agd.setCliente(rp3.marketforce.models.Cliente.getClienteID(db, agd.getIdCliente(), false));
 			agd.setContacto(Contacto.getContactoId(db, agd.getIdContacto(), agd.getIdCliente()));
-			
+
 			list.add(agd);
 		}
-        c.close();
+		c.close();
 		return list;
 	}
-	
+
 	public static List<Agenda> getRutaDia(DataBase db, Calendar cal) {
-		
+
 		long inicio = Convert.getTicksFromDate(cal.getTime());
 		cal.set(Calendar.HOUR_OF_DAY, 23);
 		cal.set(Calendar.MINUTE, 59);
 		cal.set(Calendar.SECOND, 59);
 		long fin = Convert.getTicksFromDate(cal.getTime());
 
-        String query = QueryDir.getQuery( Contract.Agenda.QUERY_AGENDA_DIAS );
+		String query = QueryDir.getQuery(Contract.Agenda.QUERY_AGENDA_DIAS);
 
 		Cursor c = db.rawQuery(query, new String [] {inicio + "", fin + "" });
-		
+
 		List<Agenda> list = new ArrayList<Agenda>();
-		
+
 		if(c.moveToFirst())
 		{
 			do
@@ -1006,14 +1081,14 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 				agd.setEstadoAgenda(CursorUtils.getString(c, Contract.Agenda.COLUMN_ESTADO_AGENDA));
 				agd.set_idCliente(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_ID_EXT));
 				agd.set_idClienteDireccion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID_EXT));
-                agd.setNombreCompleto(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_NOMBRE));
-                agd.setDireccion(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION));
-				
+				agd.setNombreCompleto(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_NOMBRE));
+				agd.setDireccion(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION));
+
 				if(agd.getIdCliente() == 0)
 					agd.setCliente(rp3.marketforce.models.Cliente.getClienteID(db, agd.get_idCliente(), true));
 				else
 					agd.setCliente(rp3.marketforce.models.Cliente.getClienteIDServer(db, agd.getIdCliente(), false));
-				
+
 				if(agd.getIdClienteDireccion() == 0)
 					agd.setClienteDireccion(ClienteDireccion.getClienteDireccionIdDireccion(db, agd.getIdCliente(), agd.getIdClienteDireccion()));
 				else
@@ -1021,11 +1096,11 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 				list.add(agd);
 			}while(c.moveToNext());
 		}
-        c.close();
-		
+		c.close();
+
 		return list;
 	}
-	
+
 	public static List<Agenda> getRutaDiaDashboard(DataBase db,	Calendar cal) {
 		long inicio = Convert.getTicksFromDate(cal.getTime());
 		cal.set(Calendar.HOUR_OF_DAY, 23);
@@ -1033,11 +1108,11 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 		cal.set(Calendar.SECOND, 59);
 		long fin = Convert.getTicksFromDate(cal.getTime());
 
-        String query = QueryDir.getQuery( Contract.Agenda.QUERY_AGENDA_DASHBOARD );
-        Cursor c = db.rawQuery(query,new String [] {inicio + "", fin + "" });
-		
+		String query = QueryDir.getQuery( Contract.Agenda.QUERY_AGENDA_DASHBOARD );
+		Cursor c = db.rawQuery(query,new String [] {inicio + "", fin + "" });
+
 		List<Agenda> list = new ArrayList<Agenda>();
-		
+
 		if(c.moveToFirst())
 		{
 			do
@@ -1052,14 +1127,15 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 				agd.setEstadoAgenda(CursorUtils.getString(c, Contract.Agenda.COLUMN_ESTADO_AGENDA));
 				agd.set_idCliente(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_ID_EXT));
 				agd.set_idClienteDireccion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID_EXT));
-                agd.setNombreCompleto(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_NOMBRE));
-                agd.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
-				
+				agd.setNombreCompleto(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_NOMBRE));
+				agd.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
+				agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
+
 				if(agd.getIdCliente() == 0)
 					agd.setCliente(rp3.marketforce.models.Cliente.getClienteID(db, agd.get_idCliente(), true));
 				else
 					agd.setCliente(rp3.marketforce.models.Cliente.getClienteIDServer(db, agd.getIdCliente(), false));
-				
+
 				if(agd.getIdClienteDireccion() == 0)
 					agd.setClienteDireccion(ClienteDireccion.getClienteDireccionIdDireccionIntern(db, agd.get_idCliente(), agd.getIdClienteDireccion()));
 				else
@@ -1067,21 +1143,21 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 				list.add(agd);
 			}while(c.moveToNext());
 		}
-        c.close();
+		c.close();
 
 		return list;
 	}
-	
+
 	public static List<Agenda> getAgendaMinutes(DataBase db, long minutes_max, long minutes_min) {
 		long actual = Calendar.getInstance().getTimeInMillis();
-		Cursor c = db.query(Contract.Agenda.TABLE_NAME, new String[] {Contract.Agenda.COLUMN_AGENDA_ID, Contract.Agenda.COLUMN_CLIENTE_ID,
-				Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID, Contract.Agenda.COLUMN_FECHA_INICIO, Contract.Agenda.COLUMN_FECHA_FIN,
-				Contract.Agenda.COLUMN_ESTADO_AGENDA}, 
-				"(" + Contract.Agenda.COLUMN_FECHA_INICIO + " - " + actual + ") <= " + minutes_max + " AND " + 
-				"(" + Contract.Agenda.COLUMN_FECHA_INICIO + " - " + actual + ") >= " + minutes_min + " AND " + 
-				Contract.Agenda.COLUMN_ESTADO_AGENDA + " = 'P'" , 
+		Cursor c = db.query(Contract.Agenda.TABLE_NAME, new String[]{Contract.Agenda.COLUMN_AGENDA_ID, Contract.Agenda.COLUMN_CLIENTE_ID,
+						Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID, Contract.Agenda.COLUMN_FECHA_INICIO, Contract.Agenda.COLUMN_FECHA_FIN,
+						Contract.Agenda.COLUMN_ESTADO_AGENDA},
+				"(" + Contract.Agenda.COLUMN_FECHA_INICIO + " - " + actual + ") <= " + minutes_max + " AND " +
+						"(" + Contract.Agenda.COLUMN_FECHA_INICIO + " - " + actual + ") >= " + minutes_min + " AND " +
+						Contract.Agenda.COLUMN_ESTADO_AGENDA + " = 'P'",
 				null, null, null, Contract.Agenda.COLUMN_FECHA_INICIO + " ASC");
-		
+
 		List<Agenda> list = new ArrayList<Agenda>();
 		if(c.moveToFirst())
 		{
@@ -1094,31 +1170,31 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 				agd.setFechaInicio(CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_INCICIO));
 				agd.setFechaFin(CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_FIN));
 				agd.setEstadoAgenda(CursorUtils.getString(c, Contract.Agenda.COLUMN_ESTADO_AGENDA));
-				
+
 				agd.setCliente(rp3.marketforce.models.Cliente.getClienteIDServer(db, agd.getIdCliente(), false));
 				agd.setClienteDireccion(ClienteDireccion.getClienteDireccionIdDireccion(db, agd.getIdCliente(), agd.getIdClienteDireccion()));
 				list.add(agd);
 			}while(c.moveToNext());
 		}
-        c.close();
+		c.close();
 		return list;
 	}
-	
+
 	public static long getLastAgenda(DataBase db)
 	{
 		return db.queryMaxLong(Contract.Agenda.TABLE_NAME, Contract.Agenda.COLUMN_FECHA_FIN);
 	}
-	
+
 	public static long getFirstAgenda(DataBase db)
 	{
 		return db.queryMinLong(Contract.Agenda.TABLE_NAME, Contract.Agenda.COLUMN_FECHA_INICIO);
 	}
 
-    public static void deleteAgendaIdServer(DataBase db, int idServer)
-    {
-        db.delete(Contract.Agenda.TABLE_NAME, Contract.Agenda.COLUMN_AGENDA_ID + " = ?", idServer);
-    }
-	
+	public static void deleteAgendaIdServer(DataBase db, int idServer)
+	{
+		db.delete(Contract.Agenda.TABLE_NAME, Contract.Agenda.COLUMN_AGENDA_ID + " = ?", idServer);
+	}
+
 	public static int getCountVisitados(DataBase db, String estado, long inicio, long fin)
 	{
 		String query = QueryDir.getQuery( Contract.Agenda.QUERY_CONTEO );
@@ -1128,33 +1204,42 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 		{
 			cont = CursorUtils.getInt(c,"conteo");
 		}
-        c.close();
+		c.close();
 		return cont;
 	}
 
-    public static boolean existAgendaServer(DataBase db, int idServer)
-    {
-        Cursor c = db.query(Contract.Agenda.TABLE_NAME, Contract.Agenda._ID, Contract.Agenda.COLUMN_AGENDA_ID + " = ?", idServer + "");
-        if(c.moveToFirst())
-            return true;
-        else
-            return false;
-    }
-	
-	
-	
+	public static boolean existAgendaServer(DataBase db, int idServer)
+	{
+		Cursor c = db.query(Contract.Agenda.TABLE_NAME, Contract.Agenda._ID, Contract.Agenda.COLUMN_AGENDA_ID + " = ?", idServer + "");
+		if(c.moveToFirst())
+			return true;
+		else
+			return false;
+	}
+
+	public static boolean existAgendaServerByTime(DataBase db, long ticks)
+	{
+		Cursor c = db.query(Contract.Agenda.TABLE_NAME, Contract.Agenda._ID, Contract.Agenda.COLUMN_FECHA_CREACION + " = ?", ticks + "");
+		if(c.moveToFirst())
+			return true;
+		else
+			return false;
+	}
+
+
+
 	@Override
 	protected boolean insertDb(DataBase db) {
 		boolean result = false;
-		
+
 		try
 		{
 			result = super.insertDb(db);
-            if(this.id == 0)
-            {
-                this.id = db.queryMaxLong(Contract.Agenda.TABLE_NAME, Contract.Agenda._ID);
-            }
-			
+			if(this.id == 0)
+			{
+				this.id = db.queryMaxLong(Contract.Agenda.TABLE_NAME, Contract.Agenda._ID);
+			}
+
 			if(result){
 				for(AgendaTarea d : this.getAgendaTareas()){
 					d.setIdAgenda(this.id);
@@ -1162,31 +1247,31 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 						result = AgendaTarea.insert(db, d);
 					else
 						result = AgendaTarea.update(db, d);
-						
-					if(!result) break;					
-				}								
-							
+
+					if(!result) break;
+				}
+
 				if(result)
 				{
 					AgendaExt cl_ex = new AgendaExt();
 					result = AgendaExt.insert(db, cl_ex);
 				}
 			}
-			
-			
-						
+
+
+
 		}catch(Exception ex){
-			result = false;	
+			result = false;
 			Log.e("Cliente Insert", ex.getMessage());
-		}finally{						
+		}finally{
 		}
-		return result;	
+		return result;
 	}
-	
+
 	@Override
 	protected boolean updateDb(DataBase db) {
 		boolean result = super.updateDb(db);
-		
+
 		if(result)
 		{
 			AgendaExt cl_ex = new AgendaExt();
@@ -1194,7 +1279,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 		}
 		return result;
 	}
-	
+
 
 
 	public class AgendaExt extends EntityBase<AgendaExt>{
@@ -1238,9 +1323,9 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 		public String getDescription() {
 			return null;
 		}
-		
+
 		@Override
-		public String getWhere() {			
+		public String getWhere() {
 			return Contract.AgendaExt.COLUMN_ID + " = ?";
 		}
 	}
