@@ -99,11 +99,15 @@ public class PedidoListFragment extends BaseFragment {
     public void searchTransactions(String termSearch){
         Bundle args = new Bundle();
         args.putString(LoaderPedidos.STRING_SEARCH, termSearch);
+        if(loaderPedidos == null)
+            loaderPedidos = new LoaderPedidos();
         executeLoader(0, args, loaderPedidos);
     }
 
     public void ejecutarConsulta(){
         Bundle args = new Bundle();
+        if(loaderPedidos == null)
+            loaderPedidos = new LoaderPedidos();
         executeLoader(0, args, loaderPedidos);
     }
 

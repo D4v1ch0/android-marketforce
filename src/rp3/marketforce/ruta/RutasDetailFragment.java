@@ -690,6 +690,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                     menuRutas.getItem(i).getSubMenu().findItem(R.id.action_reprogramar).setVisible(agendaNoClient != null);
                     menuRutas.getItem(i).getSubMenu().findItem(R.id.action_suspender_agenda).setVisible(true);
                     menuRutas.getItem(i).getSubMenu().findItem(R.id.action_no_visita).setVisible(true);
+                    menuRutas.getItem(i).getSubMenu().findItem(R.id.action_crear_agenda).setVisible(true);
                     //if(agenda.getPedido().getID() != 0)
                     //    menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setTitle("Editar Pedido");
                 }

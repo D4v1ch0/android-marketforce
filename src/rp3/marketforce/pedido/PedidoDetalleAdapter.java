@@ -53,7 +53,10 @@ public class PedidoDetalleAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return detalles.size();
+        if(detalles == null)
+            return 0;
+        else
+            return detalles.size();
     }
 
     @Override

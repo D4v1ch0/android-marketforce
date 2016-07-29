@@ -320,6 +320,18 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	    				Toast.makeText(getContext(), R.string.warning_seleccionar_agenda, Toast.LENGTH_LONG).show();
 	    			}
 	    			return true;
+                case R.id.action_crear_agenda:
+                    if(selectedTransactionId != 0) {
+                        Intent intent2 = new Intent(getActivity(), CrearVisitaActivity.class);
+                        intent2.putExtra(CrearVisitaFragment.ARG_IDAGENDA, (int) selectedTransactionId);
+                        intent2.putExtra(CrearVisitaFragment.ARG_FROM, "Agenda");
+                        startActivity(intent2);
+                    }
+                    else
+                    {
+                        Toast.makeText(getContext(), R.string.warning_seleccionar_agenda, Toast.LENGTH_LONG).show();
+                    }
+                    return true;
 	    		case R.id.action_reprogramar:
 	    			if(selectedTransactionId != 0)
 	    			{
@@ -401,6 +413,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_reprogramar).setVisible(agenda != null);
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_suspender_agenda).setVisible(true);
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_no_visita).setVisible(true);
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_crear_agenda).setVisible(true);
                         //menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setVisible(true);
                         //if(agenda.getPedido() != null && agenda.getPedido().getID() != 0)
                         //    menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setTitle("Editar Pedido");
@@ -469,6 +482,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_reprogramar).setVisible(false);
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_suspender_agenda).setVisible(false);
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_no_visita).setVisible(false);
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_crear_agenda).setVisible(false);
                         //menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setVisible(false);
                     }
                 }

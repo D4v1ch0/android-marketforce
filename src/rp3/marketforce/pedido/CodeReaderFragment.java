@@ -105,11 +105,12 @@ public class CodeReaderFragment extends BaseFragment {
         ((EditText)rootView.findViewById(R.id.code_to_read)).setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    findProduct(v.getText().toString());
-                    v.setText("");
-                    v.requestFocus();
-                }
+                if(event != null)
+                    if(event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                        findProduct(v.getText().toString());
+                        v.setText("");
+                        v.requestFocus();
+                    }
                 return false;
             }
         });

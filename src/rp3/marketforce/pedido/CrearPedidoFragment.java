@@ -74,7 +74,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     public final static int CODE_PRINT = 1;
     private final int REQ_CODE_SPEECH_INPUT = 100;
 
-    boolean rotated = false;
+    boolean rotated = false, activated = false;
     private AutoCompleteTextView cliente_auto;
     private ArrayList<String> list_nombres;
     private List<Cliente> list_cliente;
@@ -374,9 +374,18 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+    }
+
+    @Override
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
-
         cliente_auto = (AutoCompleteTextView) rootView.findViewById(R.id.pedido_cliente);
         list_nombres = new ArrayList<String>();
 
@@ -503,16 +512,16 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
         if (getArguments().containsKey(ARG_TIPO_DOCUMENTO) && !rotated) {
             tipo = getArguments().getString(ARG_TIPO_DOCUMENTO);
-            if(tipo.equalsIgnoreCase("FA"))
-                this.getActivity().setTitle("Factura No. " + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO)), 3) + "-" + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_SERIE)),3) +
+            if (tipo.equalsIgnoreCase("FA"))
+                this.getActivity().setTitle("Factura No. " + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO)), 3) + "-" + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_SERIE)), 3) +
                         "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA) + 1, 9));
-            if(tipo.equalsIgnoreCase("NC"))
+            if (tipo.equalsIgnoreCase("NC"))
                 this.getActivity().setTitle("Nota de Crédito No. " + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO)), 3) + "-" + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_SERIE)), 3) +
                         "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_NOTA_CREDITO) + 1, 9));
-            if(tipo.equalsIgnoreCase("PD"))
+            if (tipo.equalsIgnoreCase("PD"))
                 this.getActivity().setTitle("Pedido No. " + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO)), 3) + "-" + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_SERIE)), 3) +
                         "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_PEDIDO) + 1, 9));
-            if(tipo.equalsIgnoreCase("CT"))
+            if (tipo.equalsIgnoreCase("CT"))
                 this.getActivity().setTitle("Cotización No. " + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO)), 3) + "-" + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_SERIE)), 3) +
                         "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_COTIZACION) + 1, 9));
         }
@@ -527,12 +536,10 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         ((TextView) getRootView().findViewById(R.id.pedido_neto)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(0));
         ((TextView) getRootView().findViewById(R.id.pedido_saldo)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(0));
 
-        if(GeneralValue.getGeneralValue(getDataBase(), Contants.POS_ROUNDSPECI).getValue().equalsIgnoreCase("1")) {
+        if (GeneralValue.getGeneralValue(getDataBase(), Contants.POS_ROUNDSPECI).getValue().equalsIgnoreCase("1")) {
             getRootView().findViewById(R.id.pedido_redondeo).setVisibility(View.VISIBLE);
             getRootView().findViewById(R.id.pedido_redondeo_label).setVisibility(View.VISIBLE);
-        }
-        else
-        {
+        } else {
             getRootView().findViewById(R.id.pedido_redondeo).setVisibility(View.INVISIBLE);
             getRootView().findViewById(R.id.pedido_redondeo_label).setVisibility(View.INVISIBLE);
         }
@@ -596,7 +603,10 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
             }
         });
-
+        if(savedInstanceState != null)
+            this.adapter = null;
+        if(pedido != null && pedido.getPedidoDetalles() != null)
+            setTransaccionValues();
     }
 
     public static String getSecuencia(int numero, int spaces) {
@@ -622,7 +632,8 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     }
 
     private void setDatosPedidos() {
-        pedido = Pedido.getPedido(getDataBase(), idCliente, true);
+        if(pedido != null && pedido.getPedidoDetalles() == null)
+            pedido = Pedido.getPedido(getDataBase(), idCliente, true);
         Cliente cl = null;
         if(pedido.get_idCliente() != 0) {
             cl = Cliente.getClienteID(getDataBase(), pedido.get_idCliente(), false);
@@ -897,7 +908,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             }
             if(valorTotal > Double.parseDouble(GeneralValue.getGeneralValue(getDataBase(), Contants.POS_FINALMOUNT).getValue()))
             {
-                Toast.makeText(getContext(), "No se puede facturar a un Consumidor Final un valor mayor a 200000.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "No se puede facturar a un Consumidor Final un valor mayor a " + GeneralValue.getGeneralValue(getDataBase(), Contants.POS_FINALMOUNT).getValue(), Toast.LENGTH_LONG).show();
                 return false;
             }
         }

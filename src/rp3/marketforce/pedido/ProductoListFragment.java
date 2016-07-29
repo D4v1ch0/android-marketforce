@@ -93,6 +93,8 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
         Bundle args = new Bundle();
         args.putInt(LoaderProductos.INT_CATEGORIA, idSubCategoria);
         args.putString(LoaderProductos.STRING_BUSQUEDA, tipoBusqueda);
+        if(loaderProductos == null)
+            loaderProductos = new LoaderProductos();
         executeLoader(0, args, loaderProductos);
     }
 

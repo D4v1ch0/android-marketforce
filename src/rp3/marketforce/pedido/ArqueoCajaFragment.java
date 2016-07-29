@@ -123,37 +123,22 @@ public class ArqueoCajaFragment extends BaseFragment implements ArqueoControlFra
 
     public void imprimirArqueo()
     {
-        List<Pago> pagos = Pago.getArqueoCaja(getDataBase(), control.getID(), true);
-        String toPrint = PrintHelper.generarArqueo(pagos, control);
+        if(control != null) {
+            List<Pago> pagos = Pago.getArqueoCaja(getDataBase(), control.getID(), true);
+            String toPrint = PrintHelper.generarArqueo(pagos, control);
 
-        try {
-            PortInfo portInfo = null;
-            List<PortInfo> portList = StarIOPort.searchPrinter("BT:");
-            for (PortInfo port : portList) {
-                if (port.getPortName().contains("BT:STAR"))
-                    portInfo = port;
-            }
+            try {
+                PortInfo portInfo = null;
+                List<PortInfo> portList = StarIOPort.searchPrinter("BT:");
+                for (PortInfo port : portList) {
+                    if (port.getPortName().contains("BT:STAR"))
+                        portInfo = port;
+                }
 
-            if (portInfo == null) {
-                AlertDialog.Builder dialog = new AlertDialog.Builder(getContext())
-                        .setTitle(R.string.title_error_impresión)
-                        .setMessage(R.string.warning_impresora_no_vinculada)
-                        .setPositiveButton(R.string.action_reintentar, new DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface arg0, int arg1) {
-                                imprimirArqueo();
-                            }
-                        })
-                        .setCancelable(true);
-                dialog.show();
-                return;
-            } else {
-                StarIOPort port = StarIOPort.getPort(portInfo.getPortName(), "portable;", 10000);
-                if (PrintHelper.isPrinterReady(port.retreiveStatus()) != -1) {
+                if (portInfo == null) {
                     AlertDialog.Builder dialog = new AlertDialog.Builder(getContext())
                             .setTitle(R.string.title_error_impresión)
-                            .setMessage(PrintHelper.isPrinterReady(port.retreiveStatus()))
+                            .setMessage(R.string.warning_impresora_no_vinculada)
                             .setPositiveButton(R.string.action_reintentar, new DialogInterface.OnClickListener() {
 
                                 @Override
@@ -165,29 +150,50 @@ public class ArqueoCajaFragment extends BaseFragment implements ArqueoControlFra
                     dialog.show();
                     return;
                 } else {
-                    byte[] command = toPrint.getBytes(Charset.forName("UTF-8"));
-                    port.writePort(command, 0, command.length);
-                    byte[] cut = {27, 100, 3};
-                    port.writePort(cut, 0, cut.length);
+                    StarIOPort port = StarIOPort.getPort(portInfo.getPortName(), "portable;", 10000);
+                    if (PrintHelper.isPrinterReady(port.retreiveStatus()) != -1) {
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(getContext())
+                                .setTitle(R.string.title_error_impresión)
+                                .setMessage(PrintHelper.isPrinterReady(port.retreiveStatus()))
+                                .setPositiveButton(R.string.action_reintentar, new DialogInterface.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(DialogInterface arg0, int arg1) {
+                                        imprimirArqueo();
+                                    }
+                                })
+                                .setCancelable(true);
+                        dialog.show();
+                        return;
+                    } else {
+                        byte[] command = toPrint.getBytes(Charset.forName("UTF-8"));
+                        port.writePort(command, 0, command.length);
+                        byte[] cut = {27, 100, 3};
+                        port.writePort(cut, 0, cut.length);
+                    }
+
                 }
 
+            } catch (StarIOPortException e) {
+                e.printStackTrace();
+                AlertDialog.Builder dialog = new AlertDialog.Builder(getContext())
+                        .setTitle(R.string.title_error_impresión)
+                        .setMessage(R.string.warning_error_desconocido)
+                        .setPositiveButton(R.string.action_reintentar, new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                imprimirArqueo();
+                            }
+                        })
+                        .setCancelable(true);
+                dialog.show();
+                return;
             }
-
-        } catch (StarIOPortException e) {
-            e.printStackTrace();
-            AlertDialog.Builder dialog = new AlertDialog.Builder(getContext())
-                    .setTitle(R.string.title_error_impresión)
-                    .setMessage(R.string.warning_error_desconocido)
-                    .setPositiveButton(R.string.action_reintentar, new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface arg0, int arg1) {
-                            imprimirArqueo();
-                        }
-                    })
-                    .setCancelable(true);
-            dialog.show();
-            return;
+        }
+        else
+        {
+            Toast.makeText(getContext(), "Debe de Seleccionar una Apertura de Caja", Toast.LENGTH_SHORT).show();
         }
     }
 }

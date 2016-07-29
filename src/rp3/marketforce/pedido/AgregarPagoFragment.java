@@ -396,17 +396,17 @@ public class AgregarPagoFragment extends BaseFragment {
                 }
                 if (pago.getFormaPago().getDescripcion().equalsIgnoreCase("Tarjeta Credito"))
                 {
-                    if (((Spinner) getRootView().findViewById(R.id.pago_banco)).getSelectedItemPosition() <= -1 && GeneralValue.getGeneralValue(getDataBase(), Contants.POS_USEBANCOTC).getValue().equalsIgnoreCase("1"))
+                    if (GeneralValue.getGeneralValue(getDataBase(), Contants.POS_USEBANCOTC).getValue().equalsIgnoreCase("1") && ((Spinner) getRootView().findViewById(R.id.pago_banco)).getSelectedItemPosition() <= -1)
                     {
                         Toast.makeText(getContext(), "Debe escoger un banco.", Toast.LENGTH_LONG).show();
                         return;
                     }
-                    if (((Spinner) getRootView().findViewById(R.id.pago_tarjeta)).getSelectedItemPosition() <= -1 && GeneralValue.getGeneralValue(getDataBase(), Contants.POS_USEMARCATC).getValue().equalsIgnoreCase("1"))
+                    if (GeneralValue.getGeneralValue(getDataBase(), Contants.POS_USEMARCATC).getValue().equalsIgnoreCase("1") && ((Spinner) getRootView().findViewById(R.id.pago_tarjeta)).getSelectedItemPosition() <= -1)
                     {
                         Toast.makeText(getContext(), "Debe escoger una tarjeta.", Toast.LENGTH_LONG).show();
                         return;
                     }
-                    if (((Spinner) getRootView().findViewById(R.id.pago_diferido)).getSelectedItemPosition() <= -1 && GeneralValue.getGeneralValue(getDataBase(), Contants.POS_USEDIFERTC).getValue().equalsIgnoreCase("1"))
+                    if (GeneralValue.getGeneralValue(getDataBase(), Contants.POS_USEDIFERTC).getValue().equalsIgnoreCase("1") && ((Spinner) getRootView().findViewById(R.id.pago_diferido)).getSelectedItemPosition() <= -1)
                     {
                         Toast.makeText(getContext(), "Debe escoger el tipo de diferido.", Toast.LENGTH_LONG).show();
                         return;
@@ -426,9 +426,9 @@ public class AgregarPagoFragment extends BaseFragment {
                         Toast.makeText(getContext(), "Debe ingresar el número de lote.", Toast.LENGTH_LONG).show();
                         return;
                     }
-                    pago.setIdBanco(((int) ((Identifiable)((Spinner) getRootView().findViewById(R.id.pago_banco)).getAdapter().getItem(((Spinner) getRootView().findViewById(R.id.pago_banco)).getSelectedItemPosition())).getValue("")));
-                    pago.setIdMarcaTarjeta(((int) ((Identifiable)((Spinner) getRootView().findViewById(R.id.pago_tarjeta)).getAdapter().getItem(((Spinner) getRootView().findViewById(R.id.pago_tarjeta)).getSelectedItemPosition())).getValue("")));
-                    pago.setIdTipoDiferido(((int) ((Identifiable)((Spinner) getRootView().findViewById(R.id.pago_diferido)).getAdapter().getItem(((Spinner) getRootView().findViewById(R.id.pago_diferido)).getSelectedItemPosition())).getValue("")));
+                    if (GeneralValue.getGeneralValue(getDataBase(), Contants.POS_USEBANCOTC).getValue().equalsIgnoreCase("1")) pago.setIdBanco(((int) ((Identifiable)((Spinner) getRootView().findViewById(R.id.pago_banco)).getAdapter().getItem(((Spinner) getRootView().findViewById(R.id.pago_banco)).getSelectedItemPosition())).getValue("")));
+                    if (GeneralValue.getGeneralValue(getDataBase(), Contants.POS_USEMARCATC).getValue().equalsIgnoreCase("1")) pago.setIdMarcaTarjeta(((int) ((Identifiable)((Spinner) getRootView().findViewById(R.id.pago_tarjeta)).getAdapter().getItem(((Spinner) getRootView().findViewById(R.id.pago_tarjeta)).getSelectedItemPosition())).getValue("")));
+                    if (GeneralValue.getGeneralValue(getDataBase(), Contants.POS_USEDIFERTC).getValue().equalsIgnoreCase("1")) pago.setIdTipoDiferido(((int) ((Identifiable)((Spinner) getRootView().findViewById(R.id.pago_diferido)).getAdapter().getItem(((Spinner) getRootView().findViewById(R.id.pago_diferido)).getSelectedItemPosition())).getValue("")));
                     pago.setNumeroDocumento(((EditText) getRootView().findViewById(R.id.pago_numero_documento)).getText().toString());
                     pago.setAutorizadorTarjeta(Integer.parseInt(((EditText) getRootView().findViewById(R.id.pago_autorizacion)).getText().toString()));
                     pago.setCodigoSeguridad(Integer.parseInt(((EditText) getRootView().findViewById(R.id.pago_lote)).getText().toString()));

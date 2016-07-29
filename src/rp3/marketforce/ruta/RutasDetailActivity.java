@@ -186,6 +186,18 @@ public class RutasDetailActivity extends rp3.app.BaseActivity implements Contact
     				Toast.makeText(this, R.string.warning_seleccionar_agenda, Toast.LENGTH_LONG).show();
     			}
     			return true;
+			case R.id.action_crear_agenda:
+				if(transactionId != 0) {
+					Intent intent8 = new Intent(this, CrearVisitaActivity.class);
+					intent8.putExtra(CrearVisitaFragment.ARG_IDAGENDA, (int) transactionId);
+					intent8.putExtra(CrearVisitaFragment.ARG_FROM, "Agenda");
+					startActivity(intent8);
+				}
+				else
+				{
+					Toast.makeText(this, R.string.warning_seleccionar_agenda, Toast.LENGTH_LONG).show();
+				}
+				return true;
     		case R.id.action_reprogramar:
     			if(transactionId != 0)
     			{
