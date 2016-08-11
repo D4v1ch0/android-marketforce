@@ -1575,6 +1575,34 @@
         ON tbProducto._id = tbProductoExt.docid
         WHERE tbProducto.IdProducto = ?
     </statement>
+    <statement name="ProductoBulkInsert">
+        INSERT OR REPLACE INTO tbProducto
+        (_id ,
+        IdProducto,
+        ValorUnitario,
+        URLFoto,
+        IdSubCategoria,
+        CodigoExterno,
+        PorcentajeDescuentoOro,
+        PorcentajeDescuento,
+        PrecioConDescuento,
+        PorcentajeImpuesto,
+        PrecioConImpuesto,
+        IdBeneficio)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
+    </statement>
+    <statement name="ProductoSearchBulkInsert">
+        INSERT OR REPLACE INTO tbProductoExt
+        (docid,
+        Descripcion)
+        VALUES (?,?)
+    </statement>
+    <statement name="ProductoCodigoBulkInsert">
+        INSERT OR REPLACE INTO tbProductoCodigo
+        (CodigoExterno,
+        Codigo)
+        VALUES (?,?)
+    </statement>
     <statement name="SimpleProductoSearch">
         SELECT
         tbProducto._id AS _id,

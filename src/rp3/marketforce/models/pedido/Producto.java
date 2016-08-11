@@ -509,4 +509,16 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
         Producto.update(db, prod);
         //db.delete(Contract.Producto.TABLE_NAME, Contract.Producto.COLUMN_ID_PRODUCTO + " = ?" , id);
     }
+
+    public static int conteoProductos(DataBase db)
+    {
+        Cursor c = null;
+        c = db.rawQuery("SELECT COUNT(*) as _count FROM " + Contract.Producto.TABLE_NAME);
+        int cont = 0;
+        while(c.moveToNext()){
+            cont = c.getInt(0);
+        }
+        c.close();
+        return cont;
+    }
 }

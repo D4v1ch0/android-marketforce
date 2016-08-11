@@ -1018,6 +1018,7 @@ public final class Contract {
 		public static final String QUERY_SEARCH = "SimpleProductoSearch";
 		public static final String QUERY_SEARCH_BY_CATEGORIA = "SimpleProductoSearchByCategoria";
 		public static final String QUERY_SEARCH_BY_CODIGO_EXTERNO = "ProductoSearchCodigo";
+		public static final String BULK_INSERT = "ProductoBulkInsert";
 	}
 
 	public static abstract class ProductoExt implements BaseColumns {
@@ -1025,6 +1026,8 @@ public final class Contract {
 		public static final String TABLE_NAME = "tbProductoExt";
 		public static final String COLUMN_ID = "docid";
 		public static final String COLUMN_DESCRIPCION = "Descripcion";
+
+		public static final String BULK_INSERT = "ProductoSearchBulkInsert";
 
 	}
 
@@ -1099,6 +1102,9 @@ public final class Contract {
 
 		public static final String COLUMN_CODIGO_EXTERNO = "CodigoExterno";
 		public static final String COLUMN_CODIGO = "Codigo";
+
+
+		public static final String BULK_INSERT = "ProductoCodigoBulkInsert";
 
 	}
 

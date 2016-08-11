@@ -351,19 +351,20 @@ public class RadarFragment extends BaseFragment implements AgenteRadarFragment.A
 
             try
             {
-                LocationUtils.getLocation(getContext(), 100, new LocationUtils.OnLocationResultListener() {
+                LocationUtils locationUtils = new LocationUtils();
+                locationUtils.getLocationReference(getContext(), new LocationUtils.OnLocationResultListener() {
 
-                    @Override
-                    public void getLocationResult(Location location) {
-                        if (location != null) {
-                            sup = new LatLng(location.getLatitude(), location.getLongitude());
-                            SetPoints();
-                        } else {
-                            Toast.makeText(getContext(), "Debe de activar su GPS.", Toast.LENGTH_SHORT).show();
-                        }
-                        ((BaseActivity) getActivity()).closeDialogProgress();
+                @Override
+                public void getLocationResult(Location location) {
+                    if (location != null) {
+                        sup = new LatLng(location.getLatitude(), location.getLongitude());
+                        SetPoints();
+                    } else {
+                        Toast.makeText(getContext(), "Debe de activar su GPS.", Toast.LENGTH_SHORT).show();
                     }
-                });
+                    ((BaseActivity) getActivity()).closeDialogProgress();
+                }
+            });
             }
             catch(Exception ex)
             {	}
