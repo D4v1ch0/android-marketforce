@@ -1511,7 +1511,7 @@
         ON tbProducto._id = tbProductoExt.docid
         WHERE tbProducto.IdBeneficio &lt;&gt; -1
         ORDER BY tbProductoExt.Descripcion
-        LIMIT 200
+        LIMIT 100
     </statement>
     <statement name="ProductosByCategoria">
         SELECT
@@ -1533,7 +1533,7 @@
         ON tbProducto._id = tbProductoExt.docid
         WHERE tbProducto.IdSubCategoria = ?
         AND tbProducto.IdBeneficio &lt;&gt; -1
-        LIMIT 200
+        LIMIT 100
     </statement>
     <statement name="ProductoByID">
         SELECT
@@ -1634,7 +1634,7 @@
         ON tbProductoExt.docid = tbProductoSearch.docid
         WHERE tbProducto.IdBeneficio &lt;&gt; -1
         ORDER BY tbProductoExt.Descripcion, tbProductoSearch.Rank DESC
-        LIMIT 200
+        LIMIT 100
     </statement>
     <statement name="SimpleProductoSearchByCategoria">
         SELECT

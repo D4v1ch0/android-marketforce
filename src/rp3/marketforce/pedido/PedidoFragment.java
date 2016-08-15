@@ -614,98 +614,104 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
             SQLiteStatement stmt = null, stmtSearch = null, stmtCod = null;
 
             //Se llama a conteo de productos
-            publishProgress(new Integer[] {1, 0, R.string.message_descarga_productos});
+            publishProgress(new Integer[]{1, 0, R.string.message_descarga_productos});
             Bundle conteo = Productos.executeSyncConteo(getDataBase());
             int total = 0, descargados = 0, pagina = 0;
-            if(conteo != null && conteo.getInt(SyncAdapter.ARG_SYNC_TYPE) == rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS)
-                total = conteo.getInt("Conteo",0);
-            else
-            {
+            if (conteo != null && conteo.getInt(SyncAdapter.ARG_SYNC_TYPE) == rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS)
+                total = conteo.getInt("Conteo", 0);
+            else {
                 return getString(rp3.core.R.string.message_error_sync_connection_http_error);
             }
             publishProgress(new Integer[]{total, 0, R.string.message_descarga_productos});
-            if(allProducts) {
-                sql = QueryDir.getQuery(Contract.Producto.BULK_INSERT);
-                sqlCodigos = QueryDir.getQuery(Contract.ProductoCodigo.BULK_INSERT);
-                sqlProdBusq = QueryDir.getQuery(Contract.ProductoExt.BULK_INSERT);
-                db = getDataBase();
-                db.beginTransactionNonExclusive();
-                stmt = db.compileStatement(sql);
-                stmtCod = db.compileStatement(sqlCodigos);
-                stmtSearch = db.compileStatement(sqlProdBusq);
-                while (total != 0 && total > descargados) {
-                    Bundle bundle = Productos.executeSync(getDataBase(), pagina, 3000);
-                    pagina++;
-                    if (bundle != null && bundle.getInt(SyncAdapter.ARG_SYNC_TYPE) == rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS) {
-                        try {
-                            JSONArray types = new JSONArray(bundle.getString("Productos"));
-                            int length = types.length();
-                            for (int i = 0; i < length; i++) {
-                                descargados++;
-                                publishProgress(new Integer[]{total, descargados, R.string.message_actualizar_productos});
 
-                                JSONObject type = types.getJSONObject(i);
-                                if (type.getString("E").equalsIgnoreCase("A")) {
+            //Elimino Productos
+            Producto.deleteAll(getDataBase(), Contract.Producto.TABLE_NAME);
+            Producto.ProductoExt.deleteAll(getDataBase(), Contract.ProductoExt.TABLE_NAME);
+            ProductoCodigo.deleteAll(getDataBase(), Contract.ProductoCodigo.TABLE_NAME);
+            sql = QueryDir.getQuery(Contract.Producto.BULK_INSERT);
+            sqlCodigos = QueryDir.getQuery(Contract.ProductoCodigo.BULK_INSERT);
+            sqlProdBusq = QueryDir.getQuery(Contract.ProductoExt.BULK_INSERT);
+            db = getDataBase();
+            db.beginTransactionNonExclusive();
+            stmt = db.compileStatement(sql);
+            stmtCod = db.compileStatement(sqlCodigos);
+            stmtSearch = db.compileStatement(sqlProdBusq);
+            while (total != 0 && total > descargados) {
+                Bundle bundle = Productos.executeSync(getDataBase(), pagina, 3000);
+                pagina++;
+                if (bundle != null && bundle.getInt(SyncAdapter.ARG_SYNC_TYPE) == rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS) {
+                    try {
+                        JSONArray types = new JSONArray(bundle.getString("Productos"));
+                        int length = types.length();
+                        for (int i = 0; i < length; i++) {
+                            descargados++;
+                            publishProgress(new Integer[]{total, descargados, R.string.message_actualizar_productos});
 
-                                    stmt.bindLong(1, descargados - 1);
-                                    stmt.bindLong(2, type.getInt("Id"));
-                                    stmt.bindDouble(3, type.getDouble("P"));
-                                    stmt.bindString(4, type.getString("U"));
-                                    if (type.isNull("IdS"))
-                                        stmt.bindLong(5, 0);
-                                    else
-                                        stmt.bindLong(5, type.getInt("IdS"));
+                            JSONObject type = types.getJSONObject(i);
+                            if (type.getString("E").equalsIgnoreCase("A")) {
 
-                                    stmt.bindString(6, type.getString("Ex"));
-                                    if (!type.isNull("PDO"))
-                                        stmt.bindDouble(7, Float.parseFloat(type.getString("PDO")));
-                                    else
-                                        stmt.bindDouble(7, 0);
+                                stmt.bindLong(1, descargados - 1);
+                                stmt.bindLong(2, type.getInt("Id"));
+                                stmt.bindDouble(3, type.getDouble("P"));
+                                stmt.bindString(4, type.getString("U"));
+                                if (type.isNull("IdS"))
+                                    stmt.bindLong(5, 0);
+                                else
+                                    stmt.bindLong(5, type.getInt("IdS"));
 
-                                    stmt.bindDouble(8, Float.parseFloat(type.getString("PD")));
-                                    stmt.bindDouble(9, Float.parseFloat(type.getString("PCD")));
-                                    stmt.bindDouble(10, Float.parseFloat(type.getString("PI")));
-                                    stmt.bindDouble(11, Float.parseFloat(type.getString("PCI")));
-                                    stmt.bindLong(12, type.getInt("B"));
+                                stmt.bindString(6, type.getString("Ex"));
+                                if (!type.isNull("PDO"))
+                                    stmt.bindDouble(7, Float.parseFloat(type.getString("PDO")));
+                                else
+                                    stmt.bindDouble(7, 0);
 
-                                    stmtSearch.bindLong(1, descargados - 1);
-                                    stmtSearch.bindString(2, type.getString("D"));
+                                stmt.bindDouble(8, Float.parseFloat(type.getString("PD")));
+                                stmt.bindDouble(9, Float.parseFloat(type.getString("PCD")));
+                                stmt.bindDouble(10, Float.parseFloat(type.getString("PI")));
+                                stmt.bindDouble(11, Float.parseFloat(type.getString("PCI")));
+                                stmt.bindLong(12, type.getInt("B"));
 
-                                    stmtSearch.execute();
-                                    stmtSearch.clearBindings();
+                                stmtSearch.bindLong(1, descargados - 1);
+                                stmtSearch.bindString(2, type.getString("D"));
 
-                                    stmt.execute();
-                                    stmt.clearBindings();
+                                stmtSearch.execute();
+                                stmtSearch.clearBindings();
 
-                                    JSONArray strs = type.getJSONArray("PC");
+                                stmt.execute();
+                                stmt.clearBindings();
 
-                                    for (int j = 0; j < strs.length(); j++) {
-                                        JSONObject str = strs.getJSONObject(j);
-                                        stmtCod.bindString(1, str.getString("Ex"));
-                                        stmtCod.bindString(2, str.getString("C"));
-                                        stmtCod.execute();
-                                        stmtCod.clearBindings();
-                                    }
+                                JSONArray strs = type.getJSONArray("PC");
 
-                                } else {
-                                    Producto.deleteProducto(getDataBase(), type.getInt("Id"));
+                                for (int j = 0; j < strs.length(); j++) {
+                                    JSONObject str = strs.getJSONObject(j);
+                                    stmtCod.bindString(1, str.getString("Ex"));
+                                    stmtCod.bindString(2, str.getString("C"));
+                                    stmtCod.execute();
+                                    stmtCod.clearBindings();
                                 }
 
-
+                            } else {
+                                Producto.deleteProducto(getDataBase(), type.getInt("Id"));
                             }
-                        } catch (JSONException e) {
-                            Log.e("Entro", "Error: " + e.toString());
-                            return getString(rp3.core.R.string.message_error_sync_connection_http_error);
+
+
                         }
-                    } else {
+                    } catch (JSONException e) {
+                        db.setTransactionSuccessful();
+                        db.endTransaction();
+                        Log.e("Entro", "Error: " + e.toString());
                         return getString(rp3.core.R.string.message_error_sync_connection_http_error);
                     }
+                } else {
+                    db.setTransactionSuccessful();
+                    db.endTransaction();
+                    return getString(rp3.core.R.string.message_error_sync_connection_http_error);
                 }
-                db.setTransactionSuccessful();
-                db.endTransaction();
             }
-            else {
-                while (total != 0 && total > descargados) {
+            db.setTransactionSuccessful();
+            db.endTransaction();
+
+                /*while (total != 0 && total > descargados) {
                     Bundle bundle = Productos.executeSync(getDataBase(), pagina, 3000);
                     pagina++;
                     if (bundle != null && bundle.getInt(SyncAdapter.ARG_SYNC_TYPE) == rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS) {
@@ -769,9 +775,9 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                     } else {
                         return getString(rp3.core.R.string.message_error_sync_connection_http_error);
                     }
-                }
-            }
-            publishProgress(new Integer[] {1, 0, R.string.message_descarga_promociones});
+                }*/
+
+            publishProgress(new Integer[]{1, 0, R.string.message_descarga_promociones});
             Bundle bundle = Productos.executeSyncPromociones(getDataBase());
             if (bundle != null && bundle.getInt(SyncAdapter.ARG_SYNC_TYPE) == rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS) {
                 try {
@@ -792,16 +798,14 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                         productoPromocion.setFechaDesde(Convert.getDateFromDotNetTicks(type.getLong("FechaDesdeTicks")));
                         productoPromocion.setFechaHasta(Convert.getDateFromDotNetTicks(type.getLong("FechaHastaTicks")));
                         productoPromocion.setPorcentajeDescuento(Float.parseFloat(type.getString("PorcentajeDescuento")));
-                        if(!type.isNull("FormaPagoAplica") && type.getString("FormaPagoAplica").trim().length() > 0)
+                        if (!type.isNull("FormaPagoAplica") && type.getString("FormaPagoAplica").trim().length() > 0)
                             productoPromocion.setFormaPagoAplica(type.getString("FormaPagoAplica"));
                         ProductoPromocion.insert(getDataBase(), productoPromocion);
                     }
                 } catch (JSONException e) {
                     return getString(rp3.core.R.string.message_error_sync_connection_http_error);
                 }
-            }
-            else
-            {
+            } else {
                 return getString(rp3.core.R.string.message_error_sync_connection_http_error);
             }
             publishProgress(new Integer[]{1, 0, R.string.message_descarga_categorias});
@@ -811,7 +815,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                     JSONArray types = new JSONArray(bundle.getString("Categorias"));
                     int length = types.length();
                     for (int i = 0; i < length; i++) {
-                        publishProgress(new Integer[] {length, i, R.string.message_actualizar_categorias});
+                        publishProgress(new Integer[]{length, i, R.string.message_actualizar_categorias});
 
                         JSONObject type = types.getJSONObject(i);
 
@@ -830,19 +834,17 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                 } catch (JSONException e) {
                     return getString(rp3.core.R.string.message_error_sync_connection_http_error);
                 }
-            }
-            else
-            {
+            } else {
                 return getString(rp3.core.R.string.message_error_sync_connection_http_error);
             }
-            publishProgress(new Integer[] {1, 0, R.string.message_descarga_subcategorias});
+            publishProgress(new Integer[]{1, 0, R.string.message_descarga_subcategorias});
             bundle = Productos.executeSyncSubCategorias(getDataBase());
             if (bundle != null && bundle.getInt(SyncAdapter.ARG_SYNC_TYPE) == rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS) {
                 try {
                     JSONArray types = new JSONArray(bundle.getString("SubCategorias"));
                     int length = types.length();
                     for (int i = 0; i < length; i++) {
-                        publishProgress(new Integer[] {length, i, R.string.message_actualizar_subcategorias});
+                        publishProgress(new Integer[]{length, i, R.string.message_actualizar_subcategorias});
                         JSONObject type = types.getJSONObject(i);
 
                         rp3.marketforce.models.pedido.SubCategoria categoria = rp3.marketforce.models.pedido.SubCategoria.getSubCategoria(getDataBase(), type.getInt("IdSubCategoria"));
@@ -861,9 +863,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
-            }
-            else
-            {
+            } else {
                 return getString(rp3.core.R.string.message_error_sync_connection_http_error);
             }
             return null;

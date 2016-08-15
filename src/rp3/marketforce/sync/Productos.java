@@ -33,8 +33,8 @@ public class Productos {
         long fecha = rp3.util.Convert.getDotNetTicksFromDate(fechaUlt.getTime());
         try
         {
-            if(fechaUlt.getTimeInMillis() > 0)
-                webService.addParameter("@ultimaFechaActualizacion", fecha);
+            /*if(fechaUlt.getTimeInMillis() > 0)
+                webService.addParameter("@ultimaFechaActualizacion", fecha);*/
             webService.addParameter("@pagina", pagina);
             webService.addParameter("@tamano", tamano);
             webService.addCurrentAuthToken();
@@ -102,8 +102,8 @@ public class Productos {
         long fecha = rp3.util.Convert.getDotNetTicksFromDate(fechaUlt.getTime());
         try
         {
-            if(fechaUlt.getTimeInMillis() > 0)
-                webService.addParameter("@ultimaFechaActualizacion", fecha);
+            /*if(fechaUlt.getTimeInMillis() > 0)
+                webService.addParameter("@ultimaFechaActualizacion", fecha);*/
             webService.addCurrentAuthToken();
 
             try {
