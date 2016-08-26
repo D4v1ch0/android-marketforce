@@ -367,26 +367,25 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                        @Override
                        public void getLocationResult(Location location) {
 
-                    }
-                });
+                       }
+                   });
 
                 ValidateTareas();
-                
-                Marcacion ultimaMarcacion = Marcacion.getUltimaMarcacion(getDataBase());
-                if(ultimaMarcacion == null)
-                {
-                    showDialogConfirmation(DIALOG_INICIO_JORNADA, R.string.message_marcacion_agenda, R.string.label_iniciar_jornada);
-                }
-                else
-                {
-                    Calendar dia_hoy = Calendar.getInstance();
-                    Calendar dia_marcacion = Calendar.getInstance();
-                    DiaLaboral dia_laboral = DiaLaboral.getDia(getDataBase(), Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1);
-                    dia_marcacion.setTime(ultimaMarcacion.getFecha());
-                    if (dia_hoy.get(Calendar.DAY_OF_YEAR) != dia_marcacion.get(Calendar.DAY_OF_YEAR)) {
-                        showDialogConfirmation(DIALOG_INICIO_JORNADA, R.string.message_marcacion_agenda, R.string.label_iniciar_jornada);
-                    }
-                }
+
+                   if(PreferenceManager.getBoolean(Contants.KEY_APLICA_MARCACION) && PreferenceManager.getBoolean(Contants.KEY_MODULO_MARCACIONES, true)) {
+                       Marcacion ultimaMarcacion = Marcacion.getUltimaMarcacion(getDataBase());
+                       if (ultimaMarcacion == null) {
+                           showDialogConfirmation(DIALOG_INICIO_JORNADA, R.string.message_marcacion_agenda, R.string.label_iniciar_jornada);
+                       } else {
+                           Calendar dia_hoy = Calendar.getInstance();
+                           Calendar dia_marcacion = Calendar.getInstance();
+                           DiaLaboral dia_laboral = DiaLaboral.getDia(getDataBase(), Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1);
+                           dia_marcacion.setTime(ultimaMarcacion.getFecha());
+                           if (dia_hoy.get(Calendar.DAY_OF_YEAR) != dia_marcacion.get(Calendar.DAY_OF_YEAR)) {
+                               showDialogConfirmation(DIALOG_INICIO_JORNADA, R.string.message_marcacion_agenda, R.string.label_iniciar_jornada);
+                           }
+                       }
+                   }
 				
 			}});
 		   

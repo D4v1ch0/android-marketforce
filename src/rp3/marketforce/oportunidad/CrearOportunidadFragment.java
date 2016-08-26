@@ -531,27 +531,28 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
 
                     try {
                         ((BaseActivity) getActivity()).showDialogProgress("GPS", "Obteniendo Posición");
-                        LocationUtils.getLocation(getContext(), new LocationUtils.OnLocationResultListener() {
+                        LocationUtils locationUtils = new LocationUtils();
+                        locationUtils.getLocationReference(getContext(), new LocationUtils.OnLocationResultListener() {
 
-                            @Override
-                            public void getLocationResult(Location location) {
-                                if (location != null) {
-                                    map.clear();
-                                    LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
-                                    Marker mark = map.addMarker(new MarkerOptions().position(pos)
-                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_position)));
-                                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 12), 1, null);
-                                    oportunidad.setLatitud(location.getLatitude());
-                                    oportunidad.setLongitud(location.getLongitude());
-                                    currentLoc = location;
-                                    showDialogConfirmation(DIALOG_GPS, R.string.message_direccion_google, R.string.title_direccion);
+                    @Override
+                    public void getLocationResult(Location location) {
+                        if (location != null) {
+                            map.clear();
+                            LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
+                            Marker mark = map.addMarker(new MarkerOptions().position(pos)
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_position)));
+                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 12), 1, null);
+                            oportunidad.setLatitud(location.getLatitude());
+                            oportunidad.setLongitud(location.getLongitude());
+                            currentLoc = location;
+                            showDialogConfirmation(DIALOG_GPS, R.string.message_direccion_google, R.string.title_direccion);
 
-                                } else {
-                                    Toast.makeText(getContext(), "Debe de activar su GPS.", Toast.LENGTH_SHORT).show();
-                                }
-                                ((BaseActivity) getActivity()).closeDialogProgress();
-                            }
-                        });
+                        } else {
+                            Toast.makeText(getContext(), "Debe de activar su GPS.", Toast.LENGTH_SHORT).show();
+                        }
+                        ((BaseActivity) getActivity()).closeDialogProgress();
+                    }
+                });
                     } catch (Exception ex) {
                     }
 

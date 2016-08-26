@@ -925,6 +925,7 @@
         tbAgenda.Duracion,
         tbAgenda.TiempoViaje,
         tbAgenda.IdMotivoReprogramar,
+          tbAgenda.Enviado,
           tbAgenda.FechaCreacion,
         tbCliente.URLFoto AS tbCliente_URLFoto,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
@@ -1133,8 +1134,8 @@
         tbActividad.Limite
         FROM  tbActividad
         WHERE IdTarea = ?
-        AND Tipo &lt;&gt; 'G'
         AND IdTareaActividadPadre = 0
+        ORDER BY Orden
     </statement>
      
 	 <statement name="ActividadesHijas">

@@ -86,13 +86,13 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	@Override
 	public void onStart() {		
 		super.onStart();
-		if(selectedTransactionId != 0 && openPane){
+		/*if(selectedTransactionId != 0 && openPane){
             isMainFragment = false;
 			if(!mTwoPane)			
 				slidingPane.closePane();			
 		}
 		else
-			openPane = true;
+			openPane = true;*/
 	}
 
     @Override

@@ -41,8 +41,8 @@
             style="@style/Widget.Button.Theme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/label_button_aceptar_act"
-            android:id="@+id/forma_pago_aceptar"
+            android:text="@string/label_agregar_nueva_forma_pago"
+            android:id="@+id/forma_pago_agregar"
             android:layout_gravity="center_horizontal"
             android:layout_margin="5dp"
             android:layout_weight="1" />
@@ -51,8 +51,8 @@
             style="@style/Widget.Button.Theme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/label_agregar_nueva_forma_pago"
-            android:id="@+id/forma_pago_agregar"
+            android:text="@string/label_button_aceptar_act"
+            android:id="@+id/forma_pago_aceptar"
             android:layout_gravity="center_horizontal"
             android:layout_margin="5dp"
             android:layout_weight="1" />

@@ -700,6 +700,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setTiempoViaje(CursorUtils.getInt(c, Contract.Agenda.COLUMN_TIEMPO_VIAJE));
 			agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
 			agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
+			agd.setEnviado(CursorUtils.getBoolean(c, Contract.Agenda.COLUMN_ENVIADO));
 
 			Cliente cl = new Cliente();
 			cl.setNombreCompleto(agd.getNombreCompleto());

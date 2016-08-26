@@ -180,7 +180,7 @@ public class RecorridoFragment  extends BaseFragment {
         switch(item.getItemId())
         {
             case R.id.action_ver_ruta:
-                /*if(!ConnectionUtils.isNetAvailable(getContext()))
+                if(!ConnectionUtils.isNetAvailable(getContext()))
                 {
                     Toast.makeText(getContext(), "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
                 }
@@ -188,8 +188,8 @@ public class RecorridoFragment  extends BaseFragment {
                     Intent intent3 = new Intent(getActivity(), MapaActivity.class);
                     intent3.putExtra(MapaActivity.ACTION_TYPE, MapaActivity.ACTION_RUTAS);
                     startActivity(intent3);
-                }*/
-                AlertDialog.Builder builderSingle = new AlertDialog.Builder(this.getActivity());
+                }
+                /*AlertDialog.Builder builderSingle = new AlertDialog.Builder(this.getActivity());
                 builderSingle.setIcon(R.drawable.ic_launcher);
                 builderSingle.setTitle("Seleccione los mapas:");
 
@@ -211,7 +211,7 @@ public class RecorridoFragment  extends BaseFragment {
                     }
                 });
 
-                builderSingle.show();
+                builderSingle.show();*/
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -508,6 +508,6 @@ public class RecorridoFragment  extends BaseFragment {
 
         // Because the demo WMS layer we are using is just a white background map, switch the base layer
         // to satellite so we can see the WMS overlay.
-        map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        //map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
     }
 }

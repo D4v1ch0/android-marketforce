@@ -63,6 +63,7 @@ public class EtapaTareasFragment extends BaseFragment {
     private List<OportunidadTarea> tareas;
     private EtapaTareasAdapter adapter;
     private Oportunidad opt;
+    private boolean esActiva;
 
     public static EtapaTareasFragment newInstance(int idEtapa, long idOportunidad) {
         Bundle arguments = new Bundle();
@@ -109,8 +110,12 @@ public class EtapaTareasFragment extends BaseFragment {
         opt.setPendiente(true);
         Oportunidad.update(getDataBase(), opt);
 
-        if(etapa.getIdEtapaPadre() != opt.getIdEtapa())
+        if(etapa.getIdEtapaPadre() != opt.getIdEtapa()) {
             getRootView().findViewById(R.id.finalizar_etapa).setVisibility(View.GONE);
+            esActiva = false;
+        }
+        else
+            esActiva = true;
 
         tareas = new ArrayList<OportunidadTarea>();
         List<OportunidadTarea> subTareas = OportunidadTarea.getTareasOportunidadByEtapa(getDataBase(), opt.getIdOportunidad(), idEtapa);
@@ -270,7 +275,7 @@ public class EtapaTareasFragment extends BaseFragment {
         intent.putExtra(ARG_ITEM_ID, agt.getIdTarea());
         intent.putExtra(ARG_ETAPA, agt.getIdEtapa());
         intent.putExtra(ARG_OPORTUNIDAD, agt.getIdOportunidad());
-        intent.putExtra(ActividadActivity.ARG_VISTA, false);
+        intent.putExtra(ActividadActivity.ARG_VISTA, !opt.getEstado().equalsIgnoreCase("A") || !esActiva);
         intent.putExtra(ActividadActivity.ARG_TITULO, agt.getTarea().getNombreTarea());
         startActivity(intent);
     }

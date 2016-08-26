@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -19,9 +20,11 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -643,7 +646,10 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
         ((EditText) getRootView().findViewById(R.id.cliente_fecha_nacimiento)).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDialogDatePicker(0);
+                if(cliente != null && cliente.getFechaNacimiento() != null)
+                    showDialogDatePicker(0, cliente.getFechaNacimiento());
+                else
+                    showDialogDatePicker(0);
             }
         });
 
@@ -851,7 +857,8 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
                     try
                     {
                         ((BaseActivity)getActivity()).showDialogProgress("GPS","Obteniendo Posición");
-                        LocationUtils.getLocation(getContext(), new LocationUtils.OnLocationResultListener() {
+                        LocationUtils locationUtils = new LocationUtils();
+                        locationUtils.getLocationReference(getContext(), new LocationUtils.OnLocationResultListener() {
 
                             @Override
                             public void getLocationResult(Location location) {
@@ -979,6 +986,7 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
                     try {
                         photo = Uri.parse(data.getAction());
                         pree = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), photo);
+                        pree = getRotation(photo.getPath(), pree);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -986,19 +994,22 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
             else {
                 try {
                     pree = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), photo);
+                    pree = getRotation(photo.getPath(), pree);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
 			if(isClient)
 			{
-                ((ImageButton) getRootView().findViewById(R.id.cliente_foto)).setImageBitmap(pree);
                 cliente.setURLFoto(Utils.SaveBitmap(pree, String.format("%s.%s", java.util.UUID.randomUUID(), ".jpg")));
+                pree = getRotation(Utils.getImagesPath() + cliente.getURLFoto(), pree);
+                ((ImageButton) getRootView().findViewById(R.id.cliente_foto)).setImageBitmap(pree);
 			}
 			else
 			{
-                ((ImageButton) listViewContactos.get(posContact).findViewById(R.id.cliente_contacto_foto)).setImageBitmap(pree);
                 contactPhotos.set(posContact, Utils.SaveBitmap(pree, String.format("%s.%s", java.util.UUID.randomUUID(), ".jpg")));
+                pree = getRotation(Utils.getImagesPath() + cliente.getURLFoto(), pree);
+                ((ImageButton) listViewContactos.get(posContact).findViewById(R.id.cliente_contacto_foto)).setImageBitmap(pree);
 			}        
 	    }
 	}
@@ -1018,7 +1029,7 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
         if(((EditText)getRootView().findViewById(R.id.cliente_identificacion)).getText().toString().trim().length() >= 0 && getRootView().findViewById(R.id.cliente_identificacion).isEnabled())
         {
             Cliente proof = Cliente.getClienteByIdentificacion(getDataBase(), ((EditText)getRootView().findViewById(R.id.cliente_identificacion)).getText().toString().trim());
-            if(proof != null) {
+            if(proof != null && proof.getID() != idCliente) {
                 Toast.makeText(getContext(), "Ya existe cliente con esta identificación.", Toast.LENGTH_LONG).show();
                 return false;
             }
@@ -1172,5 +1183,41 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
             ((CheckBox) getRootView().findViewById(R.id.cliente_oro)).setChecked(false);
         else if(flagAuth == 2)
             ((CheckBox) getRootView().findViewById(R.id.cliente_cd_oro)).setChecked(false);
+    }
+
+    public Bitmap getRotation(String source, Bitmap bitmap)
+    {
+        try {
+            ExifInterface ei = new ExifInterface(source);
+            int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_UNDEFINED);
+
+            switch(orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    bitmap = rotateImage(bitmap, 90);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    bitmap = rotateImage(bitmap, 180);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    bitmap = rotateImage(bitmap, 270);
+                    break;
+                case ExifInterface.ORIENTATION_NORMAL:
+                default:
+                    break;
+            }
+        }
+        catch (Exception ex)
+        {
+
+        }
+        return bitmap;
+    }
+
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix,
+                true);
     }
 }

@@ -55,6 +55,7 @@ public class EtapaFragment extends BaseFragment {
     private List<OportunidadTarea> tareas;
     private SubEtapaAdapter adapter;
     private Oportunidad opt;
+    private boolean esActiva;
     SimpleDateFormat format1 = new SimpleDateFormat("dd");
     SimpleDateFormat format2 = new SimpleDateFormat("MM");
     SimpleDateFormat format3 = new SimpleDateFormat("yyyy");
@@ -105,9 +106,12 @@ public class EtapaFragment extends BaseFragment {
         opt.setPendiente(true);
         Oportunidad.update(getDataBase(), opt);
 
-        if(etapa.getIdEtapa() != opt.getIdEtapa())
+        if(etapa.getIdEtapa() != opt.getIdEtapa()) {
             getRootView().findViewById(R.id.finalizar_etapa).setVisibility(View.GONE);
-
+            esActiva = false;
+        }
+        else
+            esActiva = true;
 
         tareas = new ArrayList<OportunidadTarea>();
         List<OportunidadTarea> subTareas = OportunidadTarea.getTareasOportunidadByEtapa(getDataBase(), opt.getIdOportunidad(), idEtapa);
@@ -377,7 +381,7 @@ public class EtapaFragment extends BaseFragment {
         intent.putExtra(ARG_ITEM_ID, agt.getIdTarea());
         intent.putExtra(ARG_ETAPA, agt.getIdEtapa());
         intent.putExtra(ARG_OPORTUNIDAD, agt.getIdOportunidad());
-        intent.putExtra(ActividadActivity.ARG_VISTA, !opt.getEstado().equalsIgnoreCase("A"));
+        intent.putExtra(ActividadActivity.ARG_VISTA, !opt.getEstado().equalsIgnoreCase("A") || !esActiva);
         intent.putExtra(ActividadActivity.ARG_TITULO, agt.getTarea().getNombreTarea());
         startActivity(intent);
     }

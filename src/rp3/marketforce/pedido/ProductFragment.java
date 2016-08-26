@@ -285,7 +285,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
             public void onClick(View v) {
                 try {
 
-                    if (((EditText) getRootView().findViewById(R.id.producto_cantidad)).length() > 0) {
+                    if (((EditText) getRootView().findViewById(R.id.producto_cantidad)).length() > 0 && !((EditText) getRootView().findViewById(R.id.producto_cantidad)).getText().toString().equalsIgnoreCase("0")) {
                         if (((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).length() > 0 && (jsonObject.isNull("tipo") || !jsonObject.getString("tipo").equalsIgnoreCase("NC")) &&
                                 Integer.parseInt(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).getText().toString()) > PreferenceManager.getInt(Contants.KEY_DESCUENTO_MAXIMO) && ((jsonObject.isNull("c")) ||
                                         (!jsonObject.isNull("c") && (Integer.parseInt(((EditText) getRootView().findViewById(R.id.producto_cantidad)).getText().toString()) > jsonObject.getInt("c") &&

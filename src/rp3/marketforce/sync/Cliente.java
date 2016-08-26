@@ -11,6 +11,7 @@ import org.ksoap2.transport.HttpResponseException;
 import rp3.connection.HttpConnection;
 import rp3.connection.WebService;
 import rp3.content.SyncAdapter;
+import rp3.data.Constants;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
 import rp3.marketforce.models.ClienteDireccion;
@@ -52,15 +53,12 @@ public class Cliente {
 						
 						JSONObject type = types.getJSONObject(i);
 						
-						rp3.marketforce.models.Cliente cl = new rp3.marketforce.models.Cliente();
-                        if(type.getString("Estado").equalsIgnoreCase(Contants.ESTADO_ELIMINADO))
-                        {
-                            rp3.marketforce.models.Cliente toDelete = rp3.marketforce.models.Cliente.getClienteIDServer(db, type.getLong("IdCliente"), false);
-                            if(toDelete != null)
-                            {
-                                rp3.marketforce.models.Cliente.delete(db, toDelete);
-                            }
-                        }
+						rp3.marketforce.models.Cliente cl = rp3.marketforce.models.Cliente.getClienteIDServer(db, type.getLong("IdCliente"), false);
+						if(cl == null)
+							cl = new rp3.marketforce.models.Cliente();
+                        if(type.getString("Estado").equalsIgnoreCase(Contants.ESTADO_ELIMINADO)) {
+							rp3.marketforce.models.Cliente.delete(db, cl);
+						}
                         else
                         {
                             if(!type.isNull("Apellido1"))
@@ -245,7 +243,7 @@ public class Cliente {
                             if (rp3.marketforce.models.Cliente.getClienteIDServer(db, cl.getIdCliente(), false) == null) {
                                 rp3.marketforce.models.Cliente.insert(db, cl);
                             } else {
-                                rp3.marketforce.models.Cliente.update(db, cl, rp3.marketforce.models.Cliente.ACTION_SYNC);
+                                rp3.marketforce.models.Cliente.update(db, cl);
                             }
                         }
 						
@@ -326,7 +324,8 @@ public class Cliente {
 				jObject.put("IdTipoCliente", cl.getIdTipoCliente());
 				jObject.put("Nombre1", cl.getNombre1());
 				jObject.put("Nombre2", cl.getNombre2());
-				jObject.put("FechaNacimientoTicks", Convert.getDotNetTicksFromDate(cl.getFechaNacimiento()));
+				if(cl.getFechaNacimiento() != null && cl.getFechaNacimiento().getTime() != 0)
+					jObject.put("FechaNacimientoTicks", Convert.getDotNetTicksFromDate(cl.getFechaNacimiento()));
 				jObject.put("NombresCompletos", cl.getNombreCompleto());
 				jObject.put("Foto", cl.getURLFoto());
 				jObject.put("TipoPersona", cl.getTipoPersona());
@@ -515,7 +514,8 @@ public class Cliente {
 				jObject.put("IdTipoCliente", cl.getIdTipoCliente());
 				jObject.put("Nombre1", cl.getNombre1());
 				jObject.put("Nombre2", cl.getNombre2());
-				jObject.put("FechaNacimientoTicks", Convert.getDotNetTicksFromDate(cl.getFechaNacimiento()));
+				if(cl.getFechaNacimiento() != null && cl.getFechaNacimiento().getTime() != 0)
+					jObject.put("FechaNacimientoTicks", Convert.getDotNetTicksFromDate(cl.getFechaNacimiento()));
 				jObject.put("NombresCompletos", cl.getNombreCompleto());
 				jObject.put("Foto", cl.getURLFoto());
 				jObject.put("TipoPersona", cl.getTipoPersona());
@@ -563,6 +563,8 @@ public class Cliente {
 					jObjectCont.put("Telefono2", cl.getContactos().get(i).getTelefono2());
 					jObjectCont.put("CorreoElectronico", cl.getContactos().get(i).getCorreo());
 					jObjectCont.put("Foto", cl.getContactos().get(i).getURLFoto());
+					jObjectCont.put("Estado", "A");
+					jObjectCont.put("EstadoTabla", Contants.GENERAL_TABLE_ESTADO);
 					jArrayContactos.put(jObjectCont);
 				}
 				jObject.put("ClienteContactos", jArrayContactos);
@@ -711,7 +713,8 @@ public class Cliente {
 					jObject.put("IdTipoCliente", cl.getIdTipoCliente());
 					jObject.put("Nombre1", cl.getNombre1());
 					jObject.put("Nombre2", cl.getNombre2());
-					jObject.put("FechaNacimientoTicks", Convert.getDotNetTicksFromDate(cl.getFechaNacimiento()));
+					if(cl.getFechaNacimiento() != null && cl.getFechaNacimiento().getTime() != 0)
+						jObject.put("FechaNacimientoTicks", Convert.getDotNetTicksFromDate(cl.getFechaNacimiento()));
 					jObject.put("NombresCompletos", cl.getNombreCompleto());
 					jObject.put("Foto", cl.getURLFoto());
 					jObject.put("TipoPersona", cl.getTipoPersona());
@@ -759,6 +762,8 @@ public class Cliente {
 						jObjectCont.put("Telefono2", cl.getContactos().get(i).getTelefono2());
 						jObjectCont.put("CorreoElectronico", cl.getContactos().get(i).getCorreo());
 						jObjectCont.put("Foto", cl.getContactos().get(i).getURLFoto());
+						jObjectCont.put("Estado", "A");
+						jObjectCont.put("EstadoTabla", Contants.GENERAL_TABLE_ESTADO);
 						jArrayContactos.put(jObjectCont);
 					}
 					jObject.put("ClienteContactos", jArrayContactos);
@@ -903,7 +908,7 @@ public class Cliente {
 				try
 				{
 					jObject = new JSONObject();
-					
+
 					jObject.put("Apellido1", cl.getApellido1());
 					jObject.put("Apellido2", cl.getApellido2());
 					jObject.put("CorreoElectronico", cl.getCorreoElectronico());
@@ -916,7 +921,8 @@ public class Cliente {
 					jObject.put("IdTipoCliente", cl.getIdTipoCliente());
 					jObject.put("Nombre1", cl.getNombre1());
 					jObject.put("Nombre2", cl.getNombre2());
-					jObject.put("FechaNacimientoTicks", Convert.getDotNetTicksFromDate(cl.getFechaNacimiento()));
+					if(cl.getFechaNacimiento() != null && cl.getFechaNacimiento().getTime() != 0)
+						jObject.put("FechaNacimientoTicks", Convert.getDotNetTicksFromDate(cl.getFechaNacimiento()));
 					jObject.put("NombresCompletos", cl.getNombreCompleto());
 					jObject.put("Foto", cl.getURLFoto());
 					jObject.put("TipoPersona", cl.getTipoPersona());

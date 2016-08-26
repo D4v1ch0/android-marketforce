@@ -232,17 +232,18 @@ public class DashboardGraphicFragment extends BaseFragment {
         inicio.set(Calendar.MINUTE, 0);
         inicio.set(Calendar.SECOND, 0);
 
+        String initit = inicio.getTime().toString();
         switch(inicio.get(Calendar.DAY_OF_WEEK))
         {
             case Calendar.MONDAY:
                 break;
-            case Calendar.THURSDAY:
+            case Calendar.TUESDAY:
                 inicio.add(Calendar.DATE, -1);
                 break;
             case Calendar.WEDNESDAY:
                 inicio.add(Calendar.DATE, -2);
                 break;
-            case Calendar.TUESDAY:
+            case Calendar.THURSDAY:
                 inicio.add(Calendar.DATE, -3);
                 break;
             case Calendar.FRIDAY:
@@ -260,11 +261,16 @@ public class DashboardGraphicFragment extends BaseFragment {
         fin.set(Calendar.MINUTE, 59);
         fin.set(Calendar.SECOND, 59);
 
+        String inicio1 = inicio.getTime().toString();
+
         time_inicio_semana = inicio.getTimeInMillis();
         inicio.add(Calendar.DATE, -7);
+        String inicio2 = inicio.getTime().toString();
         time_inicio_semana_anterior = inicio.getTimeInMillis();
+        String fin1 = fin.getTime().toString();
         time_fin_semana = fin.getTimeInMillis();
         fin.add(Calendar.DATE, -7);
+        String fin2 = fin.getTime().toString();
         time_fin_semana_anterior = fin.getTimeInMillis();
 
         int visitados = Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_VISITADO, time_inicio_semana, time_fin_semana);
@@ -298,8 +304,8 @@ public class DashboardGraphicFragment extends BaseFragment {
         }
         ((TextView) parent.findViewById(R.id.dashboard_semana_efectividad)).setText("" + (efectividad) + "%");
         ((TextView) parent.findViewById(R.id.dashboard_semana_ant_efectividad)).setText("" + (efectividad_ant) + "%");
-        ((TextView) parent.findViewById(R.id.dashboard_semana_total_visitas)).setText("" + (visitados));
-        ((TextView) parent.findViewById(R.id.dashboard_semana_ant_total_visitas)).setText("" + (visitados_ant));
+        ((TextView) parent.findViewById(R.id.dashboard_semana_total_visitas)).setText("" + (total));
+        ((TextView) parent.findViewById(R.id.dashboard_semana_ant_total_visitas)).setText("" + (total_ant));
         ((TextView) parent.findViewById(R.id.dashboard_semana_visitas_norealizadas)).setText("" + (no_visitado));
         ((TextView) parent.findViewById(R.id.dashboard_semana_ant_visitas_norealizadas)).setText("" + (no_visitado_ant));
 

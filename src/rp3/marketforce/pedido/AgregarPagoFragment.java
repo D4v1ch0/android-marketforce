@@ -350,7 +350,7 @@ public class AgregarPagoFragment extends BaseFragment {
                 int idFormaPago = ((int) ((Spinner) getRootView().findViewById(R.id.pago_tipo)).getAdapter().getItemId(((Spinner) getRootView().findViewById(R.id.pago_tipo)).getSelectedItemPosition()));
                 pago.setFormaPago(FormaPago.getFormaPagoInt(getDataBase(), idFormaPago));
                 pago.setIdFormaPago(pago.getFormaPago().getIdFormaPago());
-                if (!pago.getFormaPago().getDescripcion().equalsIgnoreCase("Efectivo") && pago.getValor() > saldo) {
+                if (!pago.getFormaPago().getDescripcion().equalsIgnoreCase("Efectivo") && (pago.getValor() - saldo) >= 0.01) {
                     Toast.makeText(getContext(), "Solo debe de existir excedente con efectivo.", Toast.LENGTH_LONG).show();
                     return;
                 }

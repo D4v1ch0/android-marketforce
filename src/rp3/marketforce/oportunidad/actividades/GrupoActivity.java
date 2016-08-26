@@ -43,7 +43,7 @@ import rp3.marketforce.utils.NothingSelectedSpinnerAdapter;
 public class GrupoActivity extends ActividadActivity {
 	
 	LinearLayout Container;
-	int contador = 0;
+	int contador = 0, contador_ungroup = 0;
     List<Spinner> combos;
     List<TextView> multiples;
     boolean sinGrupos;
@@ -71,11 +71,11 @@ public class GrupoActivity extends ActividadActivity {
 	    Container = (LinearLayout) findViewById(R.id.actividad_agrupar);
         combos = new ArrayList<Spinner>();
         multiples = new ArrayList<TextView>();
-        sinGrupos = true;
 
         List<Actividad> list_atas = Actividad.getActividadesNoGrupalesByTarea(getDataBase(), id_actividad);
         for(Actividad actividad : list_atas)
         {
+			sinGrupos = true;
             if(actividad.getTipo().equalsIgnoreCase("C"))
                 agregarCheckbox(actividad);
             if(actividad.getTipo().equalsIgnoreCase("M"))
@@ -88,10 +88,30 @@ public class GrupoActivity extends ActividadActivity {
 				agregarFecha(actividad);
 			if(actividad.getTipo().equalsIgnoreCase("N"))
 				agregarNumerico(actividad);
+			if(actividad.getTipo().equalsIgnoreCase("G")) {
+				sinGrupos = false;
+				contador_ungroup = contador;
+				agregarGrupo(actividad);
+				for (Actividad actividad_hija : actividad.getActividades_hijas()) {
+					if (actividad_hija.getTipo().equalsIgnoreCase("C"))
+						agregarCheckbox(actividad_hija);
+					if (actividad_hija.getTipo().equalsIgnoreCase("M"))
+						agregarMultiple(actividad_hija);
+					if (actividad_hija.getTipo().equalsIgnoreCase("S"))
+						agregarSeleccion(actividad_hija);
+					if (actividad_hija.getTipo().equalsIgnoreCase("T"))
+						agregarTexto(actividad_hija);
+					if (actividad_hija.getTipo().equalsIgnoreCase("F"))
+						agregarFecha(actividad_hija);
+					if (actividad_hija.getTipo().equalsIgnoreCase("N"))
+						agregarNumerico(actividad_hija);
+				}
+				contador = contador_ungroup;
+				Container.addView(getLinea());
+			}
         }
 
-        sinGrupos = false;
-	    list_atas = Actividad.getActividadesGrupalesByTarea(getDataBase(), id_actividad);
+	    /*list_atas = Actividad.getActividadesGrupalesByTarea(getDataBase(), id_actividad);
 	    for(Actividad actividad : list_atas)
 	    {
 	    	if(actividad.getTipo().equalsIgnoreCase("G"))
@@ -106,12 +126,12 @@ public class GrupoActivity extends ActividadActivity {
 					agregarSeleccion(actividad_hija);
 				if(actividad_hija.getTipo().equalsIgnoreCase("T"))
 					agregarTexto(actividad_hija);
-				if(actividad.getTipo().equalsIgnoreCase("F"))
+				if(actividad_hija.getTipo().equalsIgnoreCase("F"))
 					agregarFecha(actividad_hija);
-				if(actividad.getTipo().equalsIgnoreCase("N"))
+				if(actividad_hija.getTipo().equalsIgnoreCase("N"))
 					agregarNumerico(actividad_hija);
 	    	}
-	    }
+	    }*/
 
 		if(Container != null && Container.getChildCount() > 1)
 	    	Container.removeViewAt(Container.getChildCount()-1);
@@ -359,7 +379,7 @@ public class GrupoActivity extends ActividadActivity {
 			@Override
 			public void onClick(View v) {
 				Calendar cal = Calendar.getInstance();
-				if(resp.getIdsResultado() != null && resp.getIdsResultado().length() > 0)
+				if(resp.getIdsResultado() != null && resp.getIdsResultado().length() > 0 && !resp.getIdsResultado().equalsIgnoreCase("null"))
 				{
 					long time = Long.parseLong(resp.getIdsResultado());
 					cal.setTimeInMillis(time);
@@ -805,10 +825,11 @@ public class GrupoActivity extends ActividadActivity {
         combos = new ArrayList<Spinner>();
         multiples = new ArrayList<TextView>();
         contador = 0;
-        sinGrupos = true;
+
         List<Actividad> list_atas = Actividad.getActividadesNoGrupalesByTarea(getDataBase(), id_actividad);
         for(Actividad actividad : list_atas)
         {
+			sinGrupos = true;
             if(actividad.getTipo().equalsIgnoreCase("C"))
                 agregarCheckbox(actividad);
             if(actividad.getTipo().equalsIgnoreCase("M"))
@@ -821,10 +842,30 @@ public class GrupoActivity extends ActividadActivity {
 				agregarFecha(actividad);
 			if(actividad.getTipo().equalsIgnoreCase("N"))
 				agregarNumerico(actividad);
+			if(actividad.getTipo().equalsIgnoreCase("G")) {
+				sinGrupos = false;
+				contador_ungroup = contador;
+				agregarGrupo(actividad);
+				for (Actividad actividad_hija : actividad.getActividades_hijas()) {
+					if (actividad_hija.getTipo().equalsIgnoreCase("C"))
+						agregarCheckbox(actividad_hija);
+					if (actividad_hija.getTipo().equalsIgnoreCase("M"))
+						agregarMultiple(actividad_hija);
+					if (actividad_hija.getTipo().equalsIgnoreCase("S"))
+						agregarSeleccion(actividad_hija);
+					if (actividad_hija.getTipo().equalsIgnoreCase("T"))
+						agregarTexto(actividad_hija);
+					if (actividad_hija.getTipo().equalsIgnoreCase("F"))
+						agregarFecha(actividad_hija);
+					if (actividad_hija.getTipo().equalsIgnoreCase("N"))
+						agregarNumerico(actividad_hija);
+				}
+				contador = contador_ungroup;
+				Container.addView(getLinea());
+			}
         }
 
-        sinGrupos = false;
-		list_atas = Actividad.getActividadesGrupalesByTarea(getDataBase(), id_actividad);
+		/*list_atas = Actividad.getActividadesGrupalesByTarea(getDataBase(), id_actividad);
 	    for(Actividad actividad : list_atas)
 	    {
 	    	if(actividad.getTipo().equalsIgnoreCase("G"))
@@ -844,7 +885,7 @@ public class GrupoActivity extends ActividadActivity {
 				if(actividad_hija.getTipo().equalsIgnoreCase("N"))
 					agregarNumerico(actividad_hija);
 	    	}
-	    }
+	    }*/
         ((Button) findViewById(R.id.actividad_aceptar)).setVisibility(View.GONE);
         ((Button) findViewById(R.id.actividad_cancelar)).setVisibility(View.GONE);
 		super.onResume();

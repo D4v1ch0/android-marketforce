@@ -113,7 +113,7 @@ public class PrintHelper {
         toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(pedido.getBaseImponible()), 12) + '\n';
         toPrint = toPrint + StringUtils.rightStringInSpace("IVA 0% :", 18) + " ";
         toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(pedido.getBaseImponibleCero()), 12) + '\n';
-        toPrint = toPrint + StringUtils.rightStringInSpace("13% IVA :", 18) + " ";
+        toPrint = toPrint + StringUtils.rightStringInSpace("14% IVA :", 18) + " ";
         toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(pedido.getTotalImpuestos()), 12) + '\n';
         toPrint = toPrint + StringUtils.rightStringInSpace("0% IVA :", 18) + " ";
         toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(0), 12) + '\n';

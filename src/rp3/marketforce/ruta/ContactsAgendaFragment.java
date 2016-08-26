@@ -14,6 +14,7 @@ import android.widget.ListView;
 import rp3.app.BaseFragment;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
+import rp3.marketforce.models.Cliente;
 import rp3.marketforce.models.Contacto;
 
 public class ContactsAgendaFragment extends BaseFragment {
@@ -119,6 +120,8 @@ public class ContactsAgendaFragment extends BaseFragment {
 		  contact.setEmpresa(agenda.getNombreCompleto());
 		  Contacto.insert(getDataBase(), contact);
 		  agenda.setIdContacto((int) contact.getIdContacto());
+			agenda.getCliente().setPendiente(true);
+			Cliente.update(getDataBase(), agenda.getCliente());
 		  Agenda.update(getDataBase(), agenda);
 		  saveListener.Refresh();
 		  dismiss();
