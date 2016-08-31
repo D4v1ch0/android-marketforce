@@ -134,6 +134,10 @@ public class Cliente {
                                 cl.setRazonSocial(type.getString("RazonSocial"));
                             else
                                 cl.setRazonSocial("");
+							if(!type.isNull("Tarjeta"))
+								cl.setTarjeta(type.getString("Tarjeta"));
+							else
+								cl.setTarjeta("");
 
                             JSONArray strs = type.getJSONArray("ClienteDirecciones");
 
@@ -334,6 +338,7 @@ public class Cliente {
 				jObject.put("RazonSocial", cl.getRazonSocial());
 				jObject.put("ExentoImpuesto", cl.getExentoImpuesto());
 				jObject.put("CiudadanoOro", cl.isCiudadanoOro());
+				jObject.put("Tarjeta", cl.getTarjeta());
 				
 				JSONArray jArrayDirecciones = new JSONArray();
 				for(int i = 0; i < cl.getClienteDirecciones().size(); i++)
@@ -524,6 +529,7 @@ public class Cliente {
 				jObject.put("RazonSocial", cl.getRazonSocial());
 				jObject.put("ExentoImpuesto", cl.getExentoImpuesto());
 				jObject.put("CiudadanoOro", cl.isCiudadanoOro());
+				jObject.put("Tarjeta", cl.getTarjeta());
 				
 				JSONArray jArrayDirecciones = new JSONArray();
 				for(int i = 0; i < cl.getClienteDirecciones().size(); i++)
@@ -723,6 +729,7 @@ public class Cliente {
 					jObject.put("RazonSocial", cl.getRazonSocial());
 					jObject.put("ExentoImpuesto", cl.getExentoImpuesto());
 					jObject.put("CiudadanoOro", cl.isCiudadanoOro());
+					jObject.put("Tarjeta", cl.getTarjeta());
 
 					JSONArray jArrayDirecciones = new JSONArray();
 					for(int i = 0; i < cl.getClienteDirecciones().size(); i++)
@@ -931,6 +938,7 @@ public class Cliente {
 					jObject.put("RazonSocial", cl.getRazonSocial());
 					jObject.put("ExentoImpuesto", cl.getExentoImpuesto());
 					jObject.put("CiudadanoOro", cl.isCiudadanoOro());
+					jObject.put("Tarjeta", cl.getTarjeta());
 					
 					JSONArray jArrayDirecciones = new JSONArray();
 					for(int i = 0; i < cl.getClienteDirecciones().size(); i++)

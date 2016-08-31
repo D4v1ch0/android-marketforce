@@ -149,8 +149,9 @@ public class ActualizacionFragment extends BaseFragment {
         ClienteDireccion cliDir = agd.getClienteDireccion();
         Contacto contacto = agd.getContacto();
         cli.setIdCanal((int) ((Spinner) getRootView().findViewById(R.id.cliente_canal)).getAdapter().getItemId(((Spinner) getRootView().findViewById(R.id.cliente_canal)).getSelectedItemPosition()));
-        cli.setIdTipoIdentificacion((int) ((Spinner)getRootView().findViewById(R.id.cliente_tipo_identificacion)).getAdapter().getItemId(((Spinner)getRootView().findViewById(R.id.cliente_tipo_identificacion)).getSelectedItemPosition()));
+        cli.setIdTipoIdentificacion((int) ((Spinner) getRootView().findViewById(R.id.cliente_tipo_identificacion)).getAdapter().getItemId(((Spinner) getRootView().findViewById(R.id.cliente_tipo_identificacion)).getSelectedItemPosition()));
         cli.setIdentificacion(((EditText) getRootView().findViewById(R.id.cliente_identificacion)).getText().toString());
+        cli.setTarjeta(((EditText) getRootView().findViewById(R.id.cliente_tarjeta)).getText().toString());
         cli.setTipoPersona(((GeneralValue)((Spinner)getRootView().findViewById(R.id.crear_cliente_tipo_persona)).getSelectedItem()).getCode());
         cli.setIdTipoCliente((int) ((Spinner)getRootView().findViewById(R.id.cliente_tipo_cliente)).getAdapter().getItemId(((Spinner)getRootView().findViewById(R.id.cliente_tipo_cliente)).getSelectedItemPosition()));
         if(cliente.getURLFoto() != null && !cliente.getURLFoto().trim().equals(""))
@@ -451,6 +452,7 @@ public class ActualizacionFragment extends BaseFragment {
         ((Spinner) getRootView().findViewById(R.id.cliente_canal)).setSelection(getPosition(((Spinner) getRootView().findViewById(R.id.cliente_canal)).getAdapter(), cli.getIdCanal()));
         ((Spinner) getRootView().findViewById(R.id.cliente_tipo_identificacion)).setSelection(getPosition(((Spinner) getRootView().findViewById(R.id.cliente_tipo_identificacion)).getAdapter(), cli.getTipoIdentificacionId()));
         ((EditText) getRootView().findViewById(R.id.cliente_identificacion)).setText(cli.getIdentificacion());
+        ((EditText) getRootView().findViewById(R.id.cliente_tarjeta)).setText(cli.getTarjeta());
         ((Spinner) getRootView().findViewById(R.id.crear_cliente_tipo_persona)).setSelection(getPosition(((Spinner) getRootView().findViewById(R.id.crear_cliente_tipo_persona)).getAdapter(), cli.getTipoPersona()));
         ((Spinner) getRootView().findViewById(R.id.cliente_tipo_cliente)).setSelection(getPosition(((Spinner) getRootView().findViewById(R.id.cliente_tipo_cliente)).getAdapter(), cli.getIdTipoCliente()));
         if (cli.getFechaNacimiento() != null && cli.getFechaNacimiento().getTime() != 0) {
@@ -729,6 +731,14 @@ public class ActualizacionFragment extends BaseFragment {
 
     public boolean Validaciones()
     {
+        if(((EditText)getRootView().findViewById(R.id.cliente_identificacion)).getText().toString().trim().length() >= 0 && getRootView().findViewById(R.id.cliente_identificacion).isEnabled())
+        {
+            Cliente proof = Cliente.getClienteByIdentificacion(getDataBase(), ((EditText)getRootView().findViewById(R.id.cliente_identificacion)).getText().toString().trim());
+            if(proof != null && proof.getID() != agd.getCliente().getID()) {
+                Toast.makeText(getContext(), "Ya existe cliente con esta identificación.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        }
         if(listViewDirecciones.size() <= 0)
         {
             Toast.makeText(getContext(), "No se puede agregar clientes sin dirección.", Toast.LENGTH_LONG).show();

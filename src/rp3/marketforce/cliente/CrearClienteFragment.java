@@ -381,6 +381,7 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
         cli.setIdCanal((int) ((Spinner) getRootView().findViewById(R.id.cliente_canal)).getAdapter().getItemId(((Spinner) getRootView().findViewById(R.id.cliente_canal)).getSelectedItemPosition()));
         cli.setIdTipoIdentificacion((int) ((Spinner) getRootView().findViewById(R.id.cliente_tipo_identificacion)).getAdapter().getItemId(((Spinner) getRootView().findViewById(R.id.cliente_tipo_identificacion)).getSelectedItemPosition()));
         cli.setIdentificacion(((EditText) getRootView().findViewById(R.id.cliente_identificacion)).getText().toString());
+        cli.setTarjeta(((EditText) getRootView().findViewById(R.id.cliente_tarjeta)).getText().toString());
         cli.setTipoPersona(((GeneralValue) ((Spinner) getRootView().findViewById(R.id.crear_cliente_tipo_persona)).getSelectedItem()).getCode());
         cli.setIdTipoCliente((int) ((Spinner) getRootView().findViewById(R.id.cliente_tipo_cliente)).getAdapter().getItemId(((Spinner) getRootView().findViewById(R.id.cliente_tipo_cliente)).getSelectedItemPosition()));
         cli.setExentoImpuesto(((CheckBox) getRootView().findViewById(R.id.cliente_oro)).isChecked());
@@ -700,6 +701,7 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
 		((Spinner)getRootView().findViewById(R.id.cliente_canal)).setSelection(getPosition(((Spinner)getRootView().findViewById(R.id.cliente_canal)).getAdapter(), cli.getIdCanal()));
 		((Spinner)getRootView().findViewById(R.id.cliente_tipo_identificacion)).setSelection(getPosition(((Spinner) getRootView().findViewById(R.id.cliente_tipo_identificacion)).getAdapter(), cli.getTipoIdentificacionId()));
 		((EditText)getRootView().findViewById(R.id.cliente_identificacion)).setText(cli.getIdentificacion());
+        ((EditText)getRootView().findViewById(R.id.cliente_tarjeta)).setText(cli.getTarjeta());
 		((Spinner)getRootView().findViewById(R.id.crear_cliente_tipo_persona)).setSelection(getPosition(((Spinner) getRootView().findViewById(R.id.crear_cliente_tipo_persona)).getAdapter(), cli.getTipoPersona()));
 		((Spinner)getRootView().findViewById(R.id.cliente_tipo_cliente)).setSelection(getPosition(((Spinner) getRootView().findViewById(R.id.cliente_tipo_cliente)).getAdapter(), cli.getIdTipoCliente()));
         ((CheckBox)getRootView().findViewById(R.id.cliente_oro)).setChecked(cli.getExentoImpuesto());

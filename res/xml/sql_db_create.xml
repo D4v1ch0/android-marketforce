@@ -30,7 +30,8 @@
       AgenteUltimaVisita TEXT,
       FechaProximaVisita INTEGER,
         ExentoImpuesto BOOLEAN,
-        CiudadanoOro BOOLEAN
+        CiudadanoOro BOOLEAN,
+        Tarjeta TEXT
       )
 	</statement>
 	<statement>

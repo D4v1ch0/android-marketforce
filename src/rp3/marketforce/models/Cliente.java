@@ -43,6 +43,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
     private String agenteUltimaVisita;
 	private boolean exentoImpuesto;
 	private boolean ciudadanoOro;
+	private String tarjeta;
 	
 	private String direccion;
 	private String telefono;
@@ -98,7 +99,15 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
         this.agenteUltimaVisita = agenteUltimaVisita;
     }
 
-    public static String getFotoFileNameFormat(Long id){
+	public String getTarjeta() {
+		return tarjeta;
+	}
+
+	public void setTarjeta(String tarjeta) {
+		this.tarjeta = tarjeta;
+	}
+
+	public static String getFotoFileNameFormat(Long id){
 		return "PCL" + String.valueOf(id);
 	}
 	
@@ -143,6 +152,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
         setValue(Contract.Cliente.COLUMN_AGENTE_ULTIMA_VISITA, this.agenteUltimaVisita);
 		setValue(Contract.Cliente.COLUMN_EXENTO_IMPUESTO, this.exentoImpuesto);
 		setValue(Contract.Cliente.COLUMN_CIUDADANO_ORO, this.ciudadanoOro);
+		setValue(Contract.Cliente.COLUMN_TARJETA, this.tarjeta);
 	}
 
 	@Override
@@ -455,6 +465,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			cl.setTipoPersona(CursorUtils.getString(c, Contract.Cliente.FIELD_TIPO_PERSONA));
 			cl.setExentoImpuesto(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_EXENTO_IMPUESTO));
 			cl.setCiudadanoOro(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_CIUDADANO_ORO));
+			cl.setTarjeta(CursorUtils.getString(c, Contract.Cliente.FIELD_TARJETA));
 			cl.setClienteDirecciones(ClienteDireccion.getClienteDirecciones(db, cl.getIdCliente(), false));
 			if(cl.getIdCliente() == 0)
 				cl.setContactos(Contacto.getContactoIdCliente(db, cl.getID(), true));
@@ -553,6 +564,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			client.setNuevo(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_NUEVO));
 			client.setExentoImpuesto(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_EXENTO_IMPUESTO));
 			client.setCiudadanoOro(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_CIUDADANO_ORO));
+			client.setTarjeta(CursorUtils.getString(c, Contract.Cliente.FIELD_TARJETA));
 			
 			if(client.getIdCliente() == 0)
 				client.setContactos(Contacto.getContactoIdCliente(db, client.getID(), true));
@@ -612,6 +624,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			client.setNuevo(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_NUEVO));
 			client.setExentoImpuesto(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_EXENTO_IMPUESTO));
 			client.setCiudadanoOro(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_CIUDADANO_ORO));
+			client.setTarjeta(CursorUtils.getString(c, Contract.Cliente.FIELD_TARJETA));
 
 			if(client.getIdCliente() == 0)
 				client.setContactos(Contacto.getContactoIdCliente(db, client.getID(), true));
@@ -665,6 +678,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			client.setNuevo(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_NUEVO));
 			client.setExentoImpuesto(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_EXENTO_IMPUESTO));
 			client.setCiudadanoOro(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_CIUDADANO_ORO));
+			client.setTarjeta(CursorUtils.getString(c, Contract.Cliente.FIELD_TARJETA));
 			
 			if(client.getIdCliente() == 0)
 				client.setContactos(Contacto.getContactoIdCliente(db, client.getID(), true));
@@ -727,7 +741,8 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 				client.setNuevo(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_NUEVO));
 				client.setExentoImpuesto(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_EXENTO_IMPUESTO));
 				client.setCiudadanoOro(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_CIUDADANO_ORO));
-				
+				client.setTarjeta(CursorUtils.getString(c, Contract.Cliente.FIELD_TARJETA));
+
 				if(client.getIdCliente() == 0)
 					client.setContactos(Contacto.getContactoIdCliente(db, client.getID(), true));
 				else
@@ -791,6 +806,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 				client.setNuevo(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_NUEVO));
 				client.setExentoImpuesto(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_EXENTO_IMPUESTO));
 				client.setCiudadanoOro(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_CIUDADANO_ORO));
+				client.setTarjeta(CursorUtils.getString(c, Contract.Cliente.FIELD_TARJETA));
 				
 				if(client.getIdCliente() == 0)
 					client.setContactos(Contacto.getContactoIdCliente(db, client.getID(), true));
