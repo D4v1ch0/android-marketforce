@@ -7,7 +7,8 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp">
+        android:layout_margin="5dp"
+        android:gravity="center_vertical">
 
         <TextView
             android:layout_width="0dp"
@@ -16,32 +17,40 @@
             android:text="@string/label_cliente_2"
             android:id="@+id/textView52"
             android:layout_weight="0.25"
-            android:textColor="@color/color_text_sky_blue"
-            android:textStyle="bold" />
+            android:textColor="@color/caldroid_holo_blue_light"
+            android:textSize="@dimen/text_medium_small_size" />
 
         <AutoCompleteTextView
             android:id="@+id/pedido_cliente"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="@string/hint_search_transaction"
-            android:textSize="@dimen/text_input_size"
-            android:layout_weight="0.70" />
+            android:hint="@string/hint_nombre_razon_social"
+            android:textSize="@dimen/text_medium_small_size"
+            android:layout_weight="0.70"
+            android:background="@color/caldroid_white" />
 
-        <Button
+        <ImageButton
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:text="+"
             android:id="@+id/pedido_crear_cliente"
-            style="@style/Widget.Button.Theme"
             android:layout_weight="0.1"
             android:gravity="center"
             android:textStyle="bold"
             android:layout_gravity="center"
             android:paddingLeft="5dp"
-            android:paddingRight="5dp" />
+            android:paddingRight="5dp"
+            android:src="@drawable/ic_new_item"
+            android:background="@color/caldroid_transparent" />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_grey_lines" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -56,8 +65,8 @@
             android:text="@string/label_correo_2"
             android:id="@+id/textView55"
             android:layout_weight="0.25"
-            android:textColor="@color/color_text_sky_blue"
-            android:textStyle="bold" />
+            android:textColor="@color/caldroid_holo_blue_light"
+            android:textSize="@dimen/text_medium_small_size" />
 
         <EditText
             android:layout_width="0dp"
@@ -65,7 +74,10 @@
             android:inputType="textEmailAddress"
             android:ems="10"
             android:id="@+id/pedido_email"
-            android:layout_weight="0.75" />
+            android:layout_weight="0.8"
+            android:background="@color/caldroid_white"
+            android:textSize="@dimen/text_medium_small_size"
+            android:hint="@string/hint_email" />
 
     </LinearLayout>
 
@@ -73,7 +85,9 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp" >
+        android:background="@color/color_grey"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp">
 
         <TextView
             android:layout_width="0dp"
@@ -160,7 +174,7 @@
             android:textColor="@color/color_text_sky_blue"
             android:textStyle="bold"
             android:textSize="@dimen/text_small_size"
-            android:gravity="right" />
+            android:gravity="center" />
     </LinearLayout>
 
     <ListView
@@ -176,7 +190,8 @@
         android:id="@+id/pedido_agregar_producto"
         android:layout_gravity="center_horizontal"
         style="@style/Widget.Button.Theme"
-        android:layout_margin="5dp" />
+        android:background="@color/color_agregar_prod_green"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -389,10 +404,15 @@
     </LinearLayout>
 
     <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/caldroid_black" />
+
+    <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp" >
+        android:layout_height="wrap_content">
 
         <TextView
             android:layout_width="0dp"
@@ -403,18 +423,35 @@
             android:layout_weight="1"
             android:textColor="@color/color_text_sky_blue"
             android:textStyle="bold"
-            android:gravity="right"
-            android:paddingRight="5dp" />
+            android:paddingRight="0dp"
+            android:paddingLeft="5dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="5dp"
+            android:background="@color/color_grey"
+            android:textSize="@dimen/text_small_size" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/material_blue_grey_800" />
 
         <TextView
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="¢ 0.00"
             android:id="@+id/pedido_saldo"
             android:layout_weight="1"
-            android:textSize="@dimen/text_medium_small_size"
-            android:gravity="right" />
+            android:textSize="@dimen/text_small_size"
+            android:gravity="center_vertical|right"
+            android:paddingRight="3dp" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/material_blue_grey_800" />
 
         <TextView
             android:layout_width="0dp"
@@ -425,22 +462,41 @@
             android:layout_weight="1"
             android:textColor="@color/color_text_sky_blue"
             android:textStyle="bold"
-            android:gravity="right"
-            android:paddingRight="5dp" />
+            android:paddingRight="0dp"
+            android:paddingLeft="5dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="5dp"
+            android:background="@color/color_grey"
+            android:textSize="@dimen/text_small_size" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/material_blue_grey_800" />
 
         <TextView
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="¢ 0.00"
             android:id="@+id/pedido_total"
             android:layout_weight="1"
-            android:textSize="@dimen/text_medium_small_size"
-            android:gravity="right" />
+            android:textSize="@dimen/text_small_size"
+            android:gravity="center_vertical|right"
+            android:paddingRight="3dp" />
     </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/caldroid_black" />
+
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/color_grey">
 
         <EditText
             android:id="@+id/actividad_texto_respuesta"
@@ -451,13 +507,14 @@
             android:minWidth="@dimen/nav_drawer_width"
             android:textAppearance="@style/EditTextAppTheme"
             android:textSize="@dimen/text_input_size"
-            android:background="@drawable/observaciones_fondo"
+            android:background="@color/caldroid_white"
             android:gravity="top"
             android:layout_margin="5dp"
             android:scrollbars="vertical"
             android:fadeScrollbars="false"
             android:hint="@string/hint_escriba_aqui"
-            android:lines="2">
+            android:lines="2"
+            android:padding="5dp">
 
             <requestFocus />
         </EditText>

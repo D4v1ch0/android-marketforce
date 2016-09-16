@@ -133,7 +133,7 @@ public class MainActivity extends rp3.app.NavActivity {
 		Session.Start(this);
 		rp3.configuration.Configuration.TryInitializeConfiguration(this, DbOpenHelper.class);
 
-		t1 = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+		/*t1 = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
 			@Override
 			public void onInit(int status) {
 				if (status != TextToSpeech.ERROR) {
@@ -144,19 +144,19 @@ public class MainActivity extends rp3.app.NavActivity {
 					}
 				}
 			}
-		});
+		});*/
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
 		int numAgendas = Agenda.getRutaDiaDashboard(getDataBase(), cal).size();
 		//int numAgendas = 1;
-		if (numAgendas != 0) {
+		/*if (numAgendas != 0) {
 			if (numAgendas > 1)
 				toSpeak = "Usted tiene " + numAgendas + " visitas pendientes";
 			else
 				toSpeak = "Usted tiene una visita pendiente";
-		}
+		}*/
 
 		//extractDatabase();
 

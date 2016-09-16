@@ -1,6 +1,8 @@
 package rp3.marketforce.marcaciones;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -26,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import rp3.app.BaseActivity;
 import rp3.app.BaseFragment;
@@ -36,6 +39,7 @@ import rp3.db.sqlite.DataBase;
 import rp3.maps.utils.SphericalUtil;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
+import rp3.marketforce.content.EnviarUbicacionReceiver;
 import rp3.marketforce.db.DbOpenHelper;
 import rp3.marketforce.models.DiaLaboral;
 import rp3.marketforce.models.marcacion.Marcacion;
@@ -254,7 +258,9 @@ public class MarcacionFragment extends BaseFragment {
                                             }
                                         });
                                     } catch (Exception ex) {
+                                        ((BaseActivity) getActivity()).closeDialogProgress();
                                     }
+                                    setServiceRecurring();
 
                                 }
                             }
@@ -511,6 +517,7 @@ public class MarcacionFragment extends BaseFragment {
                                             }
                                         });
                                     } catch (Exception ex) {
+                                        ((BaseActivity) getActivity()).closeDialogProgress();
                                     }
 
                                 }
@@ -627,6 +634,7 @@ public class MarcacionFragment extends BaseFragment {
                                             }
                                         });
                                     } catch (Exception ex) {
+                                        ((BaseActivity) getActivity()).closeDialogProgress();
                                     }
 
                                 }
@@ -749,6 +757,7 @@ public class MarcacionFragment extends BaseFragment {
                                             }
                                         });
                                     } catch (Exception ex) {
+                                        ((BaseActivity) getActivity()).closeDialogProgress();
                                     }
 
                                 }
@@ -875,6 +884,33 @@ public class MarcacionFragment extends BaseFragment {
         //print out in degrees
         System.out.println(Math.toDegrees(lat3) + " " + Math.toDegrees(lon3));
         return new LatLng(Math.toDegrees(lat3), Math.toDegrees(lon3));
+
+    }
+
+    private void setServiceRecurring(){
+        Intent i = new Intent(this.getContext(), EnviarUbicacionReceiver.class);
+        PendingIntent pi = PendingIntent.getBroadcast(this.getContext(), 0, i, 0);
+
+        // Set the alarm to start at 8:30 a.m.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        Calendar cal = Calendar.getInstance();
+        long time = PreferenceManager.getLong(Contants.KEY_ALARMA_INICIO);
+        cal.setTimeInMillis(time);
+        calendar.set(Calendar.HOUR_OF_DAY, cal.get(Calendar.HOUR_OF_DAY));
+        calendar.set(Calendar.MINUTE, cal.get(Calendar.MINUTE));
+
+        String prueba = cal.getTime().toString();
+        String prueba2 = calendar.getTime().toString();
+
+        Random r = new Random();
+        int i1 = r.nextInt(5);
+
+        AlarmManager am = (AlarmManager) getContext().getSystemService(getContext().ALARM_SERVICE);
+        //am.cancel(pi); // cancel any existing alarms
+        am.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+                calendar.getTimeInMillis() + (i1 * 1000 * 5),
+                1000 * 60 * PreferenceManager.getInt(Contants.KEY_ALARMA_INTERVALO), pi);
 
     }
 }

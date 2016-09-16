@@ -116,9 +116,9 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
                 ((EditText)rootView.findViewById(R.id.producto_cantidad)).setText(jsonObject.getString("c"));
             if(!jsonObject.isNull("udm"))
                 usrDescManual = jsonObject.getString("udm");
-            ((TextView)rootView.findViewById(R.id.producto_descripcion)).setText("Descripción: " + jsonObject.getString("d"));
-            ((TextView)rootView.findViewById(R.id.producto_precio)).setText("Precio: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(jsonObject.getDouble("vi")));
-            ((TextView)rootView.findViewById(R.id.producto_precio_final)).setText("Precio Total: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " 0");
+            ((TextView)rootView.findViewById(R.id.producto_descripcion)).setText(jsonObject.getString("d"));
+            ((TextView)rootView.findViewById(R.id.producto_precio)).setText("" + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(jsonObject.getDouble("vi")));
+            ((TextView)rootView.findViewById(R.id.producto_precio_final)).setText("" + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " 0");
             List<Vendedor> list_vendedores = Vendedor.getVendedores(getDataBase());
             SimpleIdentifiableAdapter vendedores = new SimpleIdentifiableAdapter(getContext(), list_vendedores);
             ((Spinner) rootView.findViewById(R.id.producto_vendedor)).setAdapter(vendedores);
@@ -170,7 +170,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
                         valorDescManualTotal = valorDescManual * cantidad;
                         precio_total = precio_total - valorDescManualTotal - valorDescAutoTotal;
                         precio_total = precio_total * (1 + Float.parseFloat(jsonObject.getString("pi")));
-                        ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("Precio Total: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(precio_total));
+                        ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("" + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(precio_total));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -190,7 +190,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     if (s.length() == 0)
-                        ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("Precio Total: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " 0");
+                        ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("" + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " 0");
                     else {
                         int cantidad = Integer.parseInt(((EditText) rootView.findViewById(R.id.producto_cantidad)).getText().toString());
                         if(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).length() > 0)
@@ -204,7 +204,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
                             valorDescManualTotal = valorDescManual * cantidad;
                             precio_total = precio_total - valorDescManualTotal - valorDescAutoTotal;
                             precio_total = precio_total * (1 + Float.parseFloat(jsonObject.getString("pi")));
-                            ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("Precio Total: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(precio_total));
+                            ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("" + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(precio_total));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -224,7 +224,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
             //jsonObject.put("vi", prod.getPrecioImpuesto());
 
             if(jsonObject.isNull("c"))
-                ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("Precio Total: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " 0");
+                ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("" + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " 0");
             else {
                 int cantidad = Integer.parseInt(((EditText) rootView.findViewById(R.id.producto_cantidad)).getText().toString());
                 if(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).length() > 0)
@@ -238,7 +238,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
                     valorDescManualTotal = valorDescManual * cantidad;
                     precio_total = precio_total - valorDescManualTotal - valorDescAutoTotal;
                     precio_total = precio_total * (1 + Float.parseFloat(jsonObject.getString("pi")));
-                    ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("Precio Total: " + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(precio_total));
+                    ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("" + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(precio_total));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp">
+    android:paddingTop="3dp"
+    android:paddingBottom="3dp">
 
     <TextView
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="12534678"
         android:id="@+id/pedido_detalle_sku"
         android:layout_weight="0.15"
         android:textSize="@dimen/text_xsmall_size"
@@ -20,7 +20,6 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Pantaloneta de Lino Marca Acme"
         android:id="@+id/pedido_detalle_descripcion"
         android:layout_weight="0.5"
         android:textSize="@dimen/text_xsmall_size"
@@ -79,9 +78,10 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="₡ 122.000"
         android:id="@+id/pedido_detalle_valor_total"
         android:layout_weight="0.2"
         android:textSize="@dimen/text_xsmall_size"
-        android:gravity="center_vertical|right" />
+        android:gravity="center_vertical|right"
+        android:paddingRight="3dp"
+        android:background="@color/color_fondo_total" />
 </LinearLayout>

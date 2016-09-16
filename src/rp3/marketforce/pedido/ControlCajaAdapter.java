@@ -65,10 +65,16 @@ public class ControlCajaAdapter extends BaseAdapter {
         ControlCaja controlCaja = controles.get(position);
         Calendar cal = Calendar.getInstance();
         cal.setTime(controlCaja.getFechaApertura());
-        ((TextView) convertView.findViewById(R.id.control_list_fechas)).setText(format1.format(cal.getTime()) + ", " + format2.format(cal.getTime()) + " de " +
-                format3.format(cal.getTime()) + " del " + format5.format(cal.getTime()) + " - " + format6.format(cal.getTime()));
-        if(controlCaja.getFechaCierre() != null && controlCaja.getFechaCierre().getTime() <= 0)
-            ((TextView) convertView.findViewById(R.id.control_list_activo)).setText("Activo");
+        ((TextView) convertView.findViewById(R.id.control_list_fechas)).setText(format1.format(cal.getTime()).substring(0,1).toUpperCase() + format1.format(cal.getTime()).substring(1) + ", " + format2.format(cal.getTime()) + " de " +
+                format3.format(cal.getTime()) + " " + format5.format(cal.getTime()) + " - " + format6.format(cal.getTime()));
+        if(controlCaja.getFechaCierre() != null && controlCaja.getFechaCierre().getTime() <= 0) {
+            ((TextView) convertView.findViewById(R.id.control_list_activo)).setText("Activa");
+            ((TextView) convertView.findViewById(R.id.control_list_activo)).setTextColor(context.getResources().getColor(R.color.caldroid_holo_blue_light));
+        }
+        else
+        {
+            ((TextView) convertView.findViewById(R.id.control_list_activo)).setText("Inactiva");
+        }
 
 
         return convertView;

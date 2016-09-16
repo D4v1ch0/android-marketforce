@@ -2,6 +2,7 @@ package rp3.marketforce.pedido;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -15,9 +16,11 @@ import java.text.NumberFormat;
 
 import rp3.app.BaseFragment;
 import rp3.configuration.PreferenceManager;
+import rp3.data.models.GeneralValue;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.pedido.Pedido;
+import rp3.util.Screen;
 
 /**
  * Created by magno_000 on 12/10/2015.
@@ -109,7 +112,26 @@ public class PedidoDetailFragment extends BaseFragment {
         ((TextView) getRootView().findViewById(R.id.pedido_subtotal)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(pedido.getSubtotal()));
         ((TextView) getRootView().findViewById(R.id.pedido_redondeo)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(pedido.getRedondeo()));
         ((TextView) getRootView().findViewById(R.id.pedido_saldo)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(pedido.getExcedente()));
+        ((TextView) getRootView().findViewById(R.id.pedido_neto)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(pedido.getSubtotal() - pedido.getTotalDescuentos()));
         ((EditText) getRootView().findViewById(R.id.actividad_texto_respuesta)).setText(pedido.getObservaciones());
+
+        if(Screen.isLargeLayoutSize(this.getContext())) {
+            if (GeneralValue.getGeneralValue(getDataBase(), Contants.POS_ROUNDSPECI).getValue().equalsIgnoreCase("1")) {
+                getRootView().findViewById(R.id.pedido_redondeo).setVisibility(View.VISIBLE);
+                getRootView().findViewById(R.id.pedido_redondeo_label).setVisibility(View.VISIBLE);
+                getRootView().findViewById(R.id.pedido_redondeo_line).setVisibility(View.VISIBLE);
+                getRootView().findViewById(R.id.pedido_cantidad).setVisibility(View.GONE);
+                getRootView().findViewById(R.id.pedido_cantidad_label).setVisibility(View.GONE);
+                getRootView().findViewById(R.id.pedido_cantidad_line).setVisibility(View.GONE);
+            } else {
+                getRootView().findViewById(R.id.pedido_cantidad).setVisibility(View.VISIBLE);
+                getRootView().findViewById(R.id.pedido_cantidad_label).setVisibility(View.VISIBLE);
+                getRootView().findViewById(R.id.pedido_cantidad_line).setVisibility(View.VISIBLE);
+                getRootView().findViewById(R.id.pedido_redondeo).setVisibility(View.GONE);
+                getRootView().findViewById(R.id.pedido_redondeo_label).setVisibility(View.GONE);
+                getRootView().findViewById(R.id.pedido_redondeo_line).setVisibility(View.GONE);
+            }
+        }
 
     }
 

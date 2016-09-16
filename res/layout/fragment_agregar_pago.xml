@@ -21,16 +21,17 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
             <TextView
                 android:id="@+id/label_pregunta_actividad"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/label_tipo_pago"
-                android:textStyle="bold"
-                android:textColor="@color/color_text_sky_blue"
-                android:layout_weight="0.3" />
+                android:textColor="@color/caldroid_holo_blue_light"
+                android:layout_weight="0.3"
+                android:textSize="@dimen/text_medium_size" />
 
             <Spinner
                 android:layout_width="0dp"
@@ -52,9 +53,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/label_valor"
-            android:textStyle="bold"
-            android:textColor="@color/color_text_sky_blue"
-            android:layout_weight="0.3" />
+            android:textColor="@color/caldroid_holo_blue_light"
+            android:layout_weight="0.3"
+            android:lines="1"
+            android:textSize="@dimen/text_medium_size" />
 
         <EditText
             android:layout_width="0dp"
@@ -62,7 +64,9 @@
             android:inputType="numberDecimal"
             android:ems="10"
             android:id="@+id/pago_valor"
-            android:layout_weight="0.7" />
+            android:layout_weight="0.7"
+            android:background="@color/caldroid_white"
+            android:padding="8dp" />
 
     </LinearLayout>
 
@@ -75,16 +79,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:id="@+id/pago_banco_layout">
+            android:id="@+id/pago_banco_layout"
+            android:gravity="center_vertical">
 
             <TextView
                 android:id="@+id/textView25"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/label_banco"
-                android:textStyle="bold"
-                android:textColor="@color/color_text_sky_blue"
-                android:layout_weight="0.3" />
+                android:textColor="@color/caldroid_holo_blue_light"
+                android:layout_weight="0.3"
+                android:lines="1"
+                android:textSize="@dimen/text_medium_size" />
 
             <Spinner
                 android:layout_width="0dp"
@@ -103,16 +109,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:id="@+id/pago_tarjeta_layout">
+            android:id="@+id/pago_tarjeta_layout"
+            android:gravity="center_vertical">
 
             <TextView
                 android:id="@+id/textView26"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/label_marca_tarjeta"
-                android:textStyle="bold"
-                android:textColor="@color/color_text_sky_blue"
-                android:layout_weight="0.3" />
+                android:textColor="@color/caldroid_holo_blue_light"
+                android:layout_weight="0.3"
+                android:lines="1"
+                android:textSize="@dimen/text_medium_size" />
 
             <Spinner
                 android:layout_width="0dp"
@@ -134,12 +142,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/label_numero_cuenta"
-            android:textStyle="bold"
-            android:textColor="@color/color_text_sky_blue"
+            android:textColor="@color/caldroid_holo_blue_light"
             android:layout_weight="0.3"
-            android:lines="2"
+            android:lines="1"
             android:gravity="clip_vertical|left"
-            android:layout_gravity="center_vertical" />
+            android:layout_gravity="center_vertical"
+            android:textSize="@dimen/text_medium_size" />
 
         <EditText
             android:layout_width="0dp"
@@ -148,7 +156,10 @@
             android:ems="10"
             android:id="@+id/pago_numero_cuenta"
             android:layout_weight="0.7"
-            android:maxLength="50" />
+            android:maxLength="50"
+            android:background="@color/caldroid_white"
+            android:padding="8dp"
+            android:hint="@string/hint_numero_cuenta" />
     </LinearLayout>
 
         <LinearLayout
@@ -163,12 +174,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/label_numero_documento"
-                android:textStyle="bold"
-                android:textColor="@color/color_text_sky_blue"
+                android:textColor="@color/caldroid_holo_blue_light"
                 android:layout_weight="0.3"
-                android:lines="2"
+                android:lines="1"
                 android:gravity="clip_vertical|left"
-                android:layout_gravity="center_vertical" />
+                android:layout_gravity="center_vertical"
+                android:textSize="@dimen/text_medium_size" />
 
             <rp3.widget.MaskedEditText
                 android:layout_width="0dp"
@@ -183,7 +194,9 @@
                 android:layout_weight="0.7"
                 android:maxLength="17"
                 style="@style/EditTextAppTheme"
-                android:textColor="@color/caldroid_black" />
+                android:textColor="@color/caldroid_black"
+                android:background="@color/caldroid_white"
+                android:padding="8dp" />
         </LinearLayout>
 
     <LinearLayout
@@ -198,12 +211,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/label_numero_documento"
-            android:textStyle="bold"
-            android:textColor="@color/color_text_sky_blue"
+            android:textColor="@color/caldroid_holo_blue_light"
             android:layout_weight="0.3"
-            android:lines="2"
+            android:lines="1"
             android:gravity="clip_vertical|left"
-            android:layout_gravity="center_vertical" />
+            android:layout_gravity="center_vertical"
+            android:textSize="@dimen/text_medium_size" />
 
         <EditText
             android:layout_width="0dp"
@@ -212,7 +225,10 @@
             android:ems="10"
             android:id="@+id/pago_numero_documento"
             android:layout_weight="0.7"
-            android:maxLength="50" />
+            android:maxLength="50"
+            android:background="@color/caldroid_white"
+            android:padding="8dp"
+            android:hint="@string/hint_numero_documento" />
     </LinearLayout>
 
     <LinearLayout
@@ -227,12 +243,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/label_numero_autorizacion"
-            android:textStyle="bold"
-            android:textColor="@color/color_text_sky_blue"
+            android:textColor="@color/caldroid_holo_blue_light"
             android:layout_weight="0.3"
-            android:lines="2"
+            android:lines="1"
             android:gravity="clip_vertical|left"
-            android:layout_gravity="center_vertical" />
+            android:layout_gravity="center_vertical"
+            android:textSize="@dimen/text_medium_size" />
 
         <EditText
             android:layout_width="0dp"
@@ -241,7 +257,10 @@
             android:ems="10"
             android:id="@+id/pago_autorizacion"
             android:layout_weight="0.7"
-            android:maxLength="5" />
+            android:maxLength="5"
+            android:background="@color/caldroid_white"
+            android:padding="8dp"
+            android:hint="@string/hint_numero_autorizacion" />
     </LinearLayout>
 
     <LinearLayout
@@ -256,12 +275,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/label_numero_lote"
-            android:textStyle="bold"
-            android:textColor="@color/color_text_sky_blue"
+            android:textColor="@color/caldroid_holo_blue_light"
             android:layout_weight="0.3"
-            android:lines="2"
+            android:lines="1"
             android:gravity="clip_vertical|left"
-            android:layout_gravity="center_vertical" />
+            android:layout_gravity="center_vertical"
+            android:textSize="@dimen/text_medium_size" />
 
         <EditText
             android:layout_width="0dp"
@@ -270,7 +289,10 @@
             android:ems="10"
             android:id="@+id/pago_lote"
             android:layout_weight="0.7"
-            android:maxLength="5" />
+            android:maxLength="5"
+            android:background="@color/caldroid_white"
+            android:padding="8dp"
+            android:hint="@string/hint_numero_lote" />
     </LinearLayout>
 
     <LinearLayout
@@ -282,16 +304,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:id="@+id/pago_tipo_diferido_layout" >
+            android:id="@+id/pago_tipo_diferido_layout"
+            android:gravity="center_vertical">
 
             <TextView
                 android:id="@+id/textView31"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/label_tipo_diferido"
-                android:textStyle="bold"
-                android:textColor="@color/color_text_sky_blue"
-                android:layout_weight="0.3" />
+                android:textColor="@color/caldroid_holo_blue_light"
+                android:layout_weight="0.3"
+                android:lines="1"
+                android:textSize="@dimen/text_medium_size" />
 
             <Spinner
                 android:layout_width="0dp"
@@ -314,13 +338,14 @@
             android:minWidth="@dimen/nav_drawer_width"
             android:textAppearance="@style/EditTextAppTheme"
             android:textSize="@dimen/text_input_size"
-            android:background="@drawable/observaciones_fondo"
+            android:background="@color/caldroid_white"
             android:gravity="top"
             android:layout_margin="5dp"
             android:scrollbars="vertical"
             android:fadeScrollbars="false"
             android:hint="@string/hint_escriba_aqui"
-            android:lines="8">
+            android:lines="4"
+            android:padding="5dp">
 
             <requestFocus />
         </EditText>

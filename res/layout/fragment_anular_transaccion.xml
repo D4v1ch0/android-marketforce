@@ -21,15 +21,15 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/label_motivo_anulacion"
-                android:textStyle="bold"
-                android:textColor="@color/color_text_sky_blue"
-                android:layout_weight="0.3" />
+                android:textColor="@color/caldroid_holo_blue_light"
+                android:layout_weight="0.4"
+                android:textSize="@dimen/text_medium_size" />
 
             <Spinner
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/anulacion_motivo"
-                android:layout_weight="0.7" />
+                android:layout_weight="0.6" />
 
         </LinearLayout>
 
@@ -48,13 +48,14 @@
             android:minWidth="@dimen/nav_drawer_width"
             android:textAppearance="@style/EditTextAppTheme"
             android:textSize="@dimen/text_input_size"
-            android:background="@drawable/observaciones_fondo"
+            android:background="@color/caldroid_white"
             android:gravity="top"
             android:layout_margin="5dp"
             android:scrollbars="vertical"
             android:fadeScrollbars="false"
             android:hint="@string/hint_escriba_aqui"
-            android:lines="8">
+            android:lines="4"
+            android:padding="5dp">
 
             <requestFocus />
         </EditText>

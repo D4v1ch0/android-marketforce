@@ -19,6 +19,7 @@
      <color name="color_hint">#ABABAB</color>
      <color name="color_divider">#E5ECF1</color>
      <color name="color_timeline_gray">#E4E4E4</color>
+     <color name="color_agregar_prod_green">#4DBE9B</color>
      
      <color name="color_background_header">#495A6B</color>
      <color name="color_rating_select">#0C6D98</color>
@@ -27,6 +28,7 @@
      <color name="color_backgroun_list">#F1F1F1</color>
      <color name="tab_activated">#328fca</color>
      <color name="tab_inactivated">#3dafda</color>
+     <color name="title_dialog_background">#ff33b5e5</color>
      <color name="color_white_maps_list">#DDFFFFFF</color>
      <color name="color_title_dialog">#c7e9f5</color>
      <color name="color_text_sky_blue">#2582b4</color>
@@ -44,8 +46,7 @@
     <color name="color_etapa4">#FDCF4E</color>
     <color name="color_etapa5">#17B365</color>
     <color name="color_on_time">#AA9944</color>
-     
-     
-     
-     
+    <color name="color_fondo_total">#DEEAf2</color>
+
+
 </resources>

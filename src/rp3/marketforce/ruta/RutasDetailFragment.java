@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Random;
 
 import rp3.app.BaseActivity;
 import rp3.configuration.PreferenceManager;
@@ -17,6 +18,7 @@ import rp3.marketforce.actividades.GrupoActivity;
 import rp3.marketforce.actividades.MultipleActivity;
 import rp3.marketforce.actividades.SeleccionActivity;
 import rp3.marketforce.actividades.TextoActivity;
+import rp3.marketforce.content.EnviarUbicacionReceiver;
 import rp3.marketforce.marcaciones.JustificacionFragment;
 import rp3.marketforce.models.Actividad;
 import rp3.marketforce.models.Agenda;
@@ -36,7 +38,9 @@ import rp3.util.LocationUtils;
 import rp3.util.LocationUtils.OnLocationResultListener;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -885,8 +889,9 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                     }
                 });
             } catch (Exception ex) {
+                ((BaseActivity) getActivity()).closeDialogProgress();
             }
-
+            setServiceRecurring();
         }
     }
 
@@ -896,5 +901,31 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
         int horas = hoy.get(Calendar.HOUR_OF_DAY) - cal1.get(Calendar.HOUR_OF_DAY);
         int minutos = hoy.get(Calendar.MINUTE) - cal1.get(Calendar.MINUTE);
         return (horas * 60) + minutos;
+    }
+    private void setServiceRecurring(){
+        Intent i = new Intent(this.getContext(), EnviarUbicacionReceiver.class);
+        PendingIntent pi = PendingIntent.getBroadcast(this.getContext(), 0, i, 0);
+
+        // Set the alarm to start at 8:30 a.m.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        Calendar cal = Calendar.getInstance();
+        long time = PreferenceManager.getLong(Contants.KEY_ALARMA_INICIO);
+        cal.setTimeInMillis(time);
+        calendar.set(Calendar.HOUR_OF_DAY, cal.get(Calendar.HOUR_OF_DAY));
+        calendar.set(Calendar.MINUTE, cal.get(Calendar.MINUTE));
+
+        String prueba = cal.getTime().toString();
+        String prueba2 = calendar.getTime().toString();
+
+        Random r = new Random();
+        int i1 = r.nextInt(5);
+
+        AlarmManager am = (AlarmManager) getContext().getSystemService(getContext().ALARM_SERVICE);
+        //am.cancel(pi); // cancel any existing alarms
+        am.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+                calendar.getTimeInMillis() + (i1 * 1000 * 5),
+                1000 * 60 * PreferenceManager.getInt(Contants.KEY_ALARMA_INTERVALO), pi);
+
     }
 }

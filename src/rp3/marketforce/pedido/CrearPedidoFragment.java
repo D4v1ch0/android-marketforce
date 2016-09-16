@@ -63,6 +63,7 @@ import rp3.marketforce.utils.PrintHelper;
 import rp3.runtime.Session;
 import rp3.util.ConnectionUtils;
 import rp3.util.NumberUtils;
+import rp3.util.Screen;
 import rp3.util.StringUtils;
 
 
@@ -177,6 +178,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     @Override
     public void onNegativeConfirmation(int id) {
@@ -505,6 +507,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
                             }
                         });
+                builderSingle.setTitle("Agregar Producto");
                 builderSingle.show();
 
             }
@@ -536,12 +539,22 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         ((TextView) getRootView().findViewById(R.id.pedido_neto)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(0));
         ((TextView) getRootView().findViewById(R.id.pedido_saldo)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(0));
 
-        if (GeneralValue.getGeneralValue(getDataBase(), Contants.POS_ROUNDSPECI).getValue().equalsIgnoreCase("1")) {
-            getRootView().findViewById(R.id.pedido_redondeo).setVisibility(View.VISIBLE);
-            getRootView().findViewById(R.id.pedido_redondeo_label).setVisibility(View.VISIBLE);
-        } else {
-            getRootView().findViewById(R.id.pedido_redondeo).setVisibility(View.INVISIBLE);
-            getRootView().findViewById(R.id.pedido_redondeo_label).setVisibility(View.INVISIBLE);
+        if(Screen.isLargeLayoutSize(this.getContext())) {
+            if (GeneralValue.getGeneralValue(getDataBase(), Contants.POS_ROUNDSPECI).getValue().equalsIgnoreCase("1")) {
+                getRootView().findViewById(R.id.pedido_redondeo).setVisibility(View.VISIBLE);
+                getRootView().findViewById(R.id.pedido_redondeo_label).setVisibility(View.VISIBLE);
+                getRootView().findViewById(R.id.pedido_redondeo_line).setVisibility(View.VISIBLE);
+                getRootView().findViewById(R.id.pedido_cantidad).setVisibility(View.GONE);
+                getRootView().findViewById(R.id.pedido_cantidad_label).setVisibility(View.GONE);
+                getRootView().findViewById(R.id.pedido_cantidad_line).setVisibility(View.GONE);
+            } else {
+                getRootView().findViewById(R.id.pedido_cantidad).setVisibility(View.VISIBLE);
+                getRootView().findViewById(R.id.pedido_cantidad_label).setVisibility(View.VISIBLE);
+                getRootView().findViewById(R.id.pedido_cantidad_line).setVisibility(View.VISIBLE);
+                getRootView().findViewById(R.id.pedido_redondeo).setVisibility(View.GONE);
+                getRootView().findViewById(R.id.pedido_redondeo_label).setVisibility(View.GONE);
+                getRootView().findViewById(R.id.pedido_redondeo_line).setVisibility(View.GONE);
+            }
         }
 
         if (getArguments().containsKey(ARG_PEDIDO) && getArguments().getLong(ARG_PEDIDO) != 0 && !rotated) {
@@ -603,6 +616,8 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
             }
         });
+        if (pedido.getPedidoDetalles() == null)
+            pedido.setPedidoDetalles(new ArrayList<PedidoDetalle>());
         if(savedInstanceState != null)
             this.adapter = null;
         if(pedido != null && pedido.getPedidoDetalles() != null)
@@ -743,7 +758,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         pedido.setIdPedido(0);
 
         if(tipo.equalsIgnoreCase("NC")) {
-            getRootView().findViewById(R.id.pedido_agregar_producto).setVisibility(View.GONE);
+            getRootView().findViewById(R.id.pedido_agregar_producto).setVisibility(View.VISIBLE);
         }
 
 

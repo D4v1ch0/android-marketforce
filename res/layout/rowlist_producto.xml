@@ -17,8 +17,10 @@
             android:id="@+id/producto_descripcion"
             android:textSize="@dimen/text_medium_size"
             android:textStyle="bold"
-            android:lines="2"
-            android:maxLines="2" />
+            android:lines="1"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:padding="5dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -30,8 +32,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="₡ 120.000"
-            android:id="@+id/producto_precio"
+            android:text="1234567"
+            android:id="@+id/producto_codigo"
             android:layout_weight="1"
             android:textSize="@dimen/text_medium_small_size" />
 
@@ -39,9 +41,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="1234567"
-            android:id="@+id/producto_codigo"
+            android:text="₡ 120.000"
+            android:id="@+id/producto_precio"
             android:layout_weight="1"
-            android:textSize="@dimen/text_medium_small_size" />
+            android:textSize="@dimen/text_medium_small_size"
+            android:gravity="right" />
     </LinearLayout>
 </LinearLayout>

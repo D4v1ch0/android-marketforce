@@ -22,8 +22,64 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         <item name="android:actionBarStyle">@style/MyActionBar</item>
         <item name="android:actionOverflowButtonStyle">@style/Widget.ActionButton.Overflow</item>
+        <item name="android:alertDialogTheme">@style/Theme_Holo_Dialog_Alert</item>
+        <item name="android:alertDialogStyle">@style/AlertDialog_Sphinx</item>
+        <item name="android:dialogTheme">@style/Theme_Holo_Dialog_Theme</item>
     </style>
-    
+
+    <!-- INICIA ALERT THEME -->
+    <style name="Theme_Holo_Dialog_Alert">
+        <item name="android:spinnerStyle">@style/Widget.Spinner</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
+        <item name="android:windowTitleStyle">@style/DialogWindowTitle.Sphinx</item>
+        <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="android:textColorAlertDialogListItem">@android:color/darker_gray</item>
+        <item name="android:textAppearanceLarge">@style/TextAppearance.Sphinx.DialogWindowTitle</item>
+    </style>
+    <!-- FIN ALERT THEME -->
+    <!-- INICIA DIALOG THEME -->
+    <style name="Theme_Holo_Dialog_Theme" parent="@android:style/Theme.Holo.Light.Dialog">
+        <item name="android:windowTitleStyle">@style/DialogWindowTitle_Holo</item>
+        <item name="android:spinnerStyle">@style/Widget.Spinner</item>
+    </style>
+
+    <style name="DialogWindowTitle_Holo">
+        <item name="android:textAppearance">@style/TextAppearance.Sphinx.DialogWindowTitle</item>
+        <item name="android:background">@color/title_dialog_background</item>
+        <item name="android:layout_marginTop">-5dp</item>
+        <item name="android:layout_marginBottom">-7dp</item>
+    </style>
+
+    <style name="DialogWindowTitle.Sphinx" parent="@style/DialogWindowTitle_Holo">
+        <item name="android:textAppearance">@style/TextAppearance.Sphinx.DialogWindowTitle</item>
+    </style>
+
+    <style name="TextAppearance.Sphinx.DialogWindowTitle" parent="@android:style/TextAppearance.Holo.DialogWindowTitle">
+        <item name="android:maxLines">1</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="AlertDialog_Sphinx">
+        <item name="android:fullDark">@android:color/white</item>
+        <item name="android:topDark">@color/title_dialog_background</item>
+        <item name="android:centerDark">@android:color/white</item>
+        <item name="android:bottomDark">@android:color/white</item>
+        <item name="android:fullBright">@android:color/white</item>
+        <item name="android:topBright">@color/title_dialog_background</item>
+        <item name="android:centerBright">@android:color/white</item>
+        <item name="android:bottomBright">@android:color/white</item>
+        <item name="android:bottomMedium">@android:color/white</item>
+        <item name="android:centerMedium">@android:color/white</item>
+    </style>
+
+    <!-- END DIALOG THEME -->
     <style name="Widget.ActionButton.Overflow" parent="@android:style/Widget.Holo.ActionButton.Overflow">
     	<item name="android:contentDescription">overflow</item>
 	</style>

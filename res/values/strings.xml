@@ -302,7 +302,7 @@
     <string name="label_valor_total">Total</string>
     <string name="label_cantidad_items"># de Items:</string>
     <string name="label_total_pedido">Total:</string>
-    <string name="label_agregar_producto">Agregar Producto</string>
+    <string name="label_agregar_producto">+ Agregar Producto</string>
     <string name="message_guardar_pedido">Esta seguro que desea salir?</string>
     <string name="title_abandonar_transaccion">Abandonar Transacción</string>
     <string name="message_guardar_pedido_accept">Desea guardar los datos de la transacción y darlo por cerrado?</string>
@@ -315,7 +315,7 @@
     <string name="label_impuesto">Impuesto</string>
     <string name="label_subtotal_points">Subtotal:</string>
     <string name="label_total_descuentos">Descuentos:</string>
-    <string name="label_total_impuestos">Impuestos(14%):</string>
+    <string name="label_total_impuestos">Impuestos 14%:</string>
     <string name="label_saldo">Saldo:</string>
     <string name="label_descuento_points">Descuento:</string>
     <string name="label_agregar_nueva_forma_pago">Agregar Pago</string>
@@ -414,4 +414,15 @@
     <string name="laber_jornada_sin">Jornada</string>
     <string name="label_llegada">Llegada:</string>
     <string name="label_vendedor">Vendedor:</string>
+    <string name="hint_nombre_razon_social">Nombre o Razón Social</string>
+    <string name="hint_email">ejemplo@email.com</string>
+    <string name="label_desc">Desc.</string>
+    <string name="hint_comentarios">Comentarios</string>
+    <string name="hint_numero_cuenta">Ingrese número de cuenta</string>
+    <string name="hint_numero_documento">Ingrese número de documento</string>
+    <string name="hint_numero_autorizacion">Ingrese número de autorización</string>
+    <string name="hint_numero_lote">Ingrese número de lote</string>
+    <string name="label_precio">Precio:</string>
+    <string name="label_descuento_percentage">Descuento (%):</string>
+    <string name="label_total_upper">TOTAL:</string>
 </resources>

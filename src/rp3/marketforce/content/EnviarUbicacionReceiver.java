@@ -14,6 +14,7 @@ import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.DiaLaboral;
 import rp3.marketforce.models.Ubicacion;
+import rp3.marketforce.models.marcacion.Marcacion;
 import rp3.marketforce.resumen.AgenteDetalleFragment;
 import rp3.marketforce.sync.EnviarUbicacion;
 import rp3.marketforce.sync.SyncAdapter;
@@ -98,7 +99,9 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 				}
 				Utils.ErrorToFile("Context is ok - GPS: " + gps + " - NET: " + net + " - BATTERY: " + getBatteryLevel(context) + " - " + Calendar.getInstance().getTime().toString());
 			}
-			if(calendarCurrent.getTimeInMillis() < calendar.getTimeInMillis() && diaLaboral.isEsLaboral())
+
+			Marcacion ultimaMarcacion = Marcacion.getUltimaMarcacion(DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class));
+			if(calendarCurrent.getTimeInMillis() < calendar.getTimeInMillis() && diaLaboral.isEsLaboral() && (!PreferenceManager.getBoolean(Contants.KEY_MODULO_MARCACIONES, false) || ultimaMarcacion == null || !ultimaMarcacion.getTipo().equalsIgnoreCase("J4")))
 			{
 				LocationUtils.getLocation(context, new OnLocationResultListener() {
 					

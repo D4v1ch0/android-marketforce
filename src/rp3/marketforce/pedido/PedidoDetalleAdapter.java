@@ -19,6 +19,7 @@ import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.pedido.Pedido;
 import rp3.marketforce.models.pedido.PedidoDetalle;
+import rp3.util.Screen;
 
 /**
  * Created by magno_000 on 13/10/2015.
@@ -54,9 +55,21 @@ public class PedidoDetalleAdapter extends BaseAdapter {
     @Override
     public int getCount() {
         if(detalles == null)
-            return 0;
+            if(Screen.isLargeLayoutSize(context))
+                return 14;
+            else
+                return 8;
         else
-            return detalles.size();
+            if(Screen.isLargeLayoutSize(context))
+                if(detalles.size() > 14)
+                    return detalles.size();
+                else
+                    return detalles.size() + (14 - detalles.size());
+            else
+                if(detalles.size() > 8)
+                    return detalles.size();
+                else
+                    return detalles.size() + (8 - detalles.size());
     }
 
     @Override
@@ -75,16 +88,22 @@ public class PedidoDetalleAdapter extends BaseAdapter {
 
         convertView = (View) inflater.inflate(this.context.getApplicationContext().getResources().getLayout(R.layout.rowlist_pedido_detalle), null);
 
-        PedidoDetalle detalle = detalles.get(position);
+        if(detalles != null && detalles.size() > position) {
+            PedidoDetalle detalle = detalles.get(position);
 
-        ((TextView) convertView.findViewById(R.id.pedido_detalle_sku)).setText(detalle.getCodigoExterno());
-        ((TextView) convertView.findViewById(R.id.pedido_detalle_descuento)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(detalle.getValorDescuentoAutomaticoTotal() + detalle.getValorDescuentoManualTotal() + detalle.getValorDescuentoOroTotal()));
-        ((TextView) convertView.findViewById(R.id.pedido_detalle_impuesto)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(detalle.getValorImpuestoTotal()));
-        ((TextView) convertView.findViewById(R.id.pedido_detalle_descripcion)).setText(detalle.getDescripcion());
-        ((TextView) convertView.findViewById(R.id.pedido_detalle_cantidad)).setText((detalle.getCantidad())+"");
+            ((TextView) convertView.findViewById(R.id.pedido_detalle_sku)).setText(detalle.getCodigoExterno());
+            ((TextView) convertView.findViewById(R.id.pedido_detalle_descuento)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(detalle.getValorDescuentoAutomaticoTotal() + detalle.getValorDescuentoManualTotal() + detalle.getValorDescuentoOroTotal()));
+            ((TextView) convertView.findViewById(R.id.pedido_detalle_impuesto)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(detalle.getValorImpuestoTotal()));
+            ((TextView) convertView.findViewById(R.id.pedido_detalle_descripcion)).setText(detalle.getDescripcion());
+            ((TextView) convertView.findViewById(R.id.pedido_detalle_cantidad)).setText((detalle.getCantidad()) + "");
 
-        ((TextView) convertView.findViewById(R.id.pedido_detalle_unitario)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(detalle.getValorUnitario()));
-        ((TextView) convertView.findViewById(R.id.pedido_detalle_valor_total)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(detalle.getValorTotal()));
+            ((TextView) convertView.findViewById(R.id.pedido_detalle_unitario)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(detalle.getValorUnitario()));
+            ((TextView) convertView.findViewById(R.id.pedido_detalle_valor_total)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(detalle.getValorTotal()));
+        }
+        else
+        {
+            convertView.setOnClickListener(null);
+        }
 
         return convertView;
     }
