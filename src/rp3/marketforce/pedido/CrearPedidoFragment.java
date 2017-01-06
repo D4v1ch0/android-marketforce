@@ -391,6 +391,16 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         cliente_auto = (AutoCompleteTextView) rootView.findViewById(R.id.pedido_cliente);
         list_nombres = new ArrayList<String>();
 
+        try {
+            GeneralValue imp = GeneralValue.getGeneralValue(getDataBase(), Contants.POS_PORCIMP);
+            if(imp != null)
+                ((TextView) rootView.findViewById(R.id.pedido_impuestos_label)).setText("Impuestos " + imp.getValue() + "%");
+        }
+        catch(Exception ex)
+        {}
+
+
+
         list_cliente = Cliente.getCliente(getDataBase());
         list_cliente.add(consumidorFinal);
         for (Cliente cli : list_cliente) {

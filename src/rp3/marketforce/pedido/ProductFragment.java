@@ -23,6 +23,7 @@ import rp3.app.BaseFragment;
 import rp3.configuration.PreferenceManager;
 import rp3.content.SimpleIdentifiableAdapter;
 import rp3.data.Identifiable;
+import rp3.data.models.GeneralValue;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.cliente.SignInFragment;

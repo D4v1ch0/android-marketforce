@@ -373,7 +373,18 @@ public class Agenda {
             jObject.put("FechaInicioOriginalTicks", Convert.getDotNetTicksFromDate(agenda.getFechaInicio()));
             jObject.put("FechaFinOriginalTicks", Convert.getDotNetTicksFromDate(agenda.getFechaFin()));
             jObject.put("FechaCreacionTicks", Convert.getDotNetTicksFromDate(agenda.getFechaCreacion()));
-            jObject.put("IdCliente", agenda.getIdCliente());
+            if(agenda.getIdCliente() == 0)
+            {
+                Cliente.executeSyncCreate(db, agenda.get_idCliente());
+                rp3.marketforce.models.Cliente newCliente = rp3.marketforce.models.Cliente.getClienteID(db, agenda.get_idCliente(), false);
+                if(newCliente.getIdCliente() != 0)
+                    jObject.put("IdCliente", newCliente.getIdCliente());
+                else
+                    return SyncAdapter.SYNC_EVENT_ERROR;
+            }
+            else {
+                jObject.put("IdCliente", agenda.getIdCliente());
+            }
             jObject.put("IdClienteDireccion", agenda.getIdClienteDireccion());
             jObject.put("Ciudad", agenda.getCiudad());
             jObject.put("NombresCompletos", agenda.getNombreCompleto());
@@ -458,7 +469,18 @@ public class Agenda {
                 jObject.put("IdAgenda", agendaUpload.getIdAgenda());
                 jObject.put("IdInterno", agendaUpload.getID());
                 jObject.put("IdRuta", agendaUpload.getIdRuta());
-                jObject.put("IdCliente", agendaUpload.getIdCliente());
+                if(agendaUpload.getIdCliente() == 0)
+                {
+                    Cliente.executeSyncCreate(db, agendaUpload.get_idCliente());
+                    rp3.marketforce.models.Cliente newCliente = rp3.marketforce.models.Cliente.getClienteID(db, agendaUpload.get_idCliente(), false);
+                    if(newCliente.getIdCliente() != 0)
+                        jObject.put("IdCliente", newCliente.getIdCliente());
+                    else
+                        continue;
+                }
+                else {
+                    jObject.put("IdCliente", agendaUpload.getIdCliente());
+                }
                 jObject.put("IdClienteContacto", agendaUpload.getIdContacto());
                 jObject.put("IdClienteDireccion", agendaUpload.getIdClienteDireccion());
                 jObject.put("EstadoAgenda", agendaUpload.getEstadoAgenda());
@@ -699,7 +721,18 @@ public class Agenda {
                 jObject.put("IdAgenda", agendaUpload.getIdAgenda());
                 jObject.put("IdInterno", agendaUpload.getID());
                 jObject.put("IdRuta", agendaUpload.getIdRuta());
-                jObject.put("IdCliente", agendaUpload.getIdCliente());
+                if(agendaUpload.getIdCliente() == 0)
+                {
+                    Cliente.executeSyncCreate(db, agendaUpload.get_idCliente());
+                    rp3.marketforce.models.Cliente newCliente = rp3.marketforce.models.Cliente.getClienteID(db, agendaUpload.get_idCliente(), false);
+                    if(newCliente.getIdCliente() != 0)
+                        jObject.put("IdCliente", newCliente.getIdCliente());
+                    else
+                        return SyncAdapter.SYNC_EVENT_ERROR;
+                }
+                else {
+                    jObject.put("IdCliente", agendaUpload.getIdCliente());
+                }
                 jObject.put("IdClienteContacto", agendaUpload.getIdContacto());
                 jObject.put("IdClienteDireccion", agendaUpload.getIdClienteDireccion());
                 jObject.put("EstadoAgenda", agendaUpload.getEstadoAgenda());

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import rp3.configuration.PreferenceManager;
+import rp3.data.models.GeneralValue;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
@@ -113,7 +114,14 @@ public class PrintHelper {
         toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(pedido.getBaseImponible()), 12) + '\n';
         toPrint = toPrint + StringUtils.rightStringInSpace("IVA 0% :", 18) + " ";
         toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(pedido.getBaseImponibleCero()), 12) + '\n';
-        toPrint = toPrint + StringUtils.rightStringInSpace("14% IVA :", 18) + " ";
+        //Se obtiene porcentaje de descuento
+        DataBase db = DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class);
+        GeneralValue imp = GeneralValue.getGeneralValue(db, Contants.POS_PORCIMP);
+        if(imp != null)
+            toPrint = toPrint + StringUtils.rightStringInSpace(imp.getValue() + "% IVA :", 18) + " ";
+        else
+            toPrint = toPrint + StringUtils.rightStringInSpace("13% IVA :", 18) + " ";
+
         toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(pedido.getTotalImpuestos()), 12) + '\n';
         toPrint = toPrint + StringUtils.rightStringInSpace("0% IVA :", 18) + " ";
         toPrint = toPrint + StringUtils.rightStringInSpace(numberFormat.format(0), 12) + '\n';

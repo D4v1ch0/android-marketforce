@@ -85,6 +85,14 @@ public class PedidoDetailFragment extends BaseFragment {
         ((TextView) getRootView().findViewById(R.id.pedido_email)).setText(pedido.getEmail());
         PedidoDetalleAdapter adapter = new PedidoDetalleAdapter(this.getContext(), pedido.getPedidoDetalles());
         ((ListView) getRootView().findViewById(R.id.pedido_detalles)).setAdapter(adapter);
+        try {
+            GeneralValue imp = GeneralValue.getGeneralValue(getDataBase(), Contants.POS_PORCIMP);
+            if(imp != null)
+                ((TextView) getRootView().findViewById(R.id.pedido_impuestos_label)).setText("Impuestos " + imp.getValue() + "%");
+        }
+        catch (Exception ex)
+        {}
+
 
         if(pedido.getTipoDocumento().equalsIgnoreCase("FA"))
             this.getActivity().setTitle("Factura No. " + pedido.getNumeroDocumento());

@@ -538,7 +538,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/label_total_impuestos"
-                android:id="@+id/textView115ss"
+                android:id="@+id/pedido_impuestos_label"
                 android:layout_weight="1"
                 android:textColor="@color/color_text_sky_blue"
                 android:textStyle="bold"

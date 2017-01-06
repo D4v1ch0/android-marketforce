@@ -173,6 +173,7 @@ public class Contants {
     public final static String POS_USEBANCHEQ = "USEBANCHEQ"; //Usa banco en forma de pago cheque
     public final static String POS_USECUECHEQ = "USECUECHEQ"; //Usa número de cuenta en forma de pago cheque
     public final static String POS_ROUNDNUM = "ROUNDNUM"; //Valor a redondear en descuentos especiales
+    public final static String POS_PORCIMP = "PORCIMP"; //Valor a mostrar del porcentaje de Impuesto
 
     public final static String APPLICATION_ID = "AGENDACOMERCial";
     public final static String ULTIMO_VENDEDOR = "UltimoVendedor";

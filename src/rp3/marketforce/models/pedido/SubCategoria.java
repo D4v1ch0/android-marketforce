@@ -131,4 +131,7 @@ public class SubCategoria extends EntityBase<SubCategoria> {
         return categoria;
     }
 
+    public static void deleteSubCategoria(DataBase db, int id) {
+        db.delete(Contract.SubCategoria.TABLE_NAME, Contract.SubCategoria.COLUMN_ID_SUBCATEGORIA + " = ?" , id);
+    }
 }

@@ -103,4 +103,7 @@ public class Categoria extends EntityBase<Categoria> {
         return categoria;
     }
 
+    public static void deleteCategoria(DataBase db, int id) {
+        db.delete(Contract.Categoria.TABLE_NAME, Contract.Categoria.COLUMN_ID_CATEGORIA + " = ?" , id);
+    }
 }
