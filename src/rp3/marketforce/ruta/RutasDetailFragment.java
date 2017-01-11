@@ -8,6 +8,7 @@ import java.util.Random;
 
 import rp3.app.BaseActivity;
 import rp3.configuration.PreferenceManager;
+import rp3.db.sqlite.DataBase;
 import rp3.maps.utils.SphericalUtil;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
@@ -79,6 +80,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
     public static final String STATE_IDAGENDA = "state_idagenda";
 
     public static final int DIALOG_INICIO_JORNADA = 1;
+    public static final int DIALOG_FIN_JORNADA = 2;
     
     private long idAgenda;        
     private Agenda agenda;
@@ -93,6 +95,9 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
     Uri photo = Utils.getOutputMediaFileUri(Utils.MEDIA_TYPE_IMAGE);
     private Menu menuRutas;
     DateFormat format;
+    private LocationUtils locationUtils;
+    private double DISTANCE = 0;
+
     public interface TransactionDetailListener{
     	public void onDeleteSuccess(Cliente transaction);
     }
@@ -112,6 +117,9 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
         format1 = new SimpleDateFormat("EEEE dd MMMM yyyy, HH:mm");
         format2 = new SimpleDateFormat("HH:mm");
         format = new SimpleDateFormat("HH:mm");
+
+        locationUtils = new LocationUtils();
+        DISTANCE = Double.parseDouble(PreferenceManager.getString(Contants.KEY_MARACIONES_DISTANCIA));
 
         if(getParentFragment()==null)
         	setRetainInstance(true);
@@ -518,6 +526,30 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                    setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());
 
                    ValidateTareas();
+
+                   if (PreferenceManager.getBoolean(Contants.KEY_APLICA_MARCACION) && PreferenceManager.getBoolean(Contants.KEY_MODULO_MARCACIONES, true)) {
+                       Marcacion ultimaMarcacion = Marcacion.getUltimaMarcacion(getDataBase());
+                       if (ultimaMarcacion != null) {
+                           Calendar dia_hoy = Calendar.getInstance();
+                           Calendar dia_marcacion = Calendar.getInstance();
+                           DiaLaboral dia_laboral = DiaLaboral.getDia(getDataBase(), Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1);
+                           dia_marcacion.setTime(ultimaMarcacion.getFecha());
+                           if (dia_hoy.get(Calendar.DAY_OF_YEAR) == dia_marcacion.get(Calendar.DAY_OF_YEAR)) {
+                               Calendar cal_hoy = Calendar.getInstance();
+                               try {
+                                   if (dia_laboral.getHoraFin2() == null)
+                                       cal_hoy.setTime(format.parse(dia_laboral.getHoraFin1().replace("h", ":")));
+                                   else
+                                       cal_hoy.setTime(format.parse(dia_laboral.getHoraFin2().replace("h", ":")));
+                               } catch (Exception ex) {
+                               }
+                               cal_hoy.add(Calendar.MINUTE, -30);
+                               int atraso = CheckMinutes(cal_hoy);
+                               if (atraso >= 0)
+                                   showDialogConfirmation(DIALOG_FIN_JORNADA, R.string.message_marcacion_fin_agenda, R.string.label_fin_jornada);
+                           }
+                       }
+                   }
                }
            });
 
@@ -533,6 +565,9 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
         {
             case DIALOG_INICIO_JORNADA:
                 SetMarcacion();
+                break;
+            case DIALOG_FIN_JORNADA:
+                SetMarcacionFin();
                 break;
             default:
                 break;
@@ -895,6 +930,105 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
         }
     }
 
+    public void SetMarcacionFin()
+    {
+        final Marcacion marc = new Marcacion();
+        marc.setTipo("J4"); //falta tipo
+        marc.setFecha(Calendar.getInstance().getTime());
+        marc.setPendiente(true);
+        if (GooglePlayServicesUtils.servicesConnected((BaseActivity) getActivity())) {
+
+            try {
+                ((BaseActivity) getActivity()).showDialogProgress("GPS", "Obteniendo Posición");
+                locationUtils.getLocationReference(getContext(), new LocationUtils.OnLocationResultListener() {
+
+                    @Override
+                    public void getLocationResult(Location location) {
+                        if (location != null) {
+                            LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
+                            LatLng partida = new LatLng(Double.parseDouble(PreferenceManager.getString(Contants.KEY_LATITUD_PARTIDA, "0")),
+                                    Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA, "0")));
+                            double distance = 0;
+                            if(agenda.getClienteDireccion().getLatitud() != 0) {
+                                partida = new LatLng(agenda.getClienteDireccion().getLatitud(),
+                                        agenda.getClienteDireccion().getLongitud());
+                                distance = SphericalUtil.computeDistanceBetween(pos, partida);
+                                marc.setEnUbicacion(distance < DISTANCE);
+                            }
+                            if (partida.latitude != 0 || partida.longitude != 0) {
+                                if (distance > DISTANCE) {
+                                    location = getAproximatelyLocation(location, partida, distance);
+                                }
+                                marc.setLatitud(location.getLatitude());
+                                marc.setLongitud(location.getLongitude());
+                                pos = new LatLng(location.getLatitude(), location.getLongitude());
+                                if(agenda.getClienteDireccion().getLatitud() != 0) {
+                                    partida = new LatLng(agenda.getClienteDireccion().getLatitud(),
+                                            agenda.getClienteDireccion().getLongitud());
+                                    distance = SphericalUtil.computeDistanceBetween(pos, partida);
+                                    marc.setEnUbicacion(distance < DISTANCE);
+                                }
+                                //distance = SphericalUtil.computeDistanceBetween(pos, partida);
+                            } else {
+                                marc.setLatitud(location.getLatitude());
+                                marc.setLongitud(location.getLongitude());
+                                distance = 0;
+                            }
+                            marc.setEnUbicacion(distance < DISTANCE);
+                            try {
+                                Marcacion.insert(getDataBase(), marc);
+                            } catch (Exception ex) {
+                                DataBase db = DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class);
+                                Marcacion.insert(db, marc);
+                            }
+                            if (marc.getID() == 0)
+                                marc.setID(Marcacion.getUltimaMarcacion(getDataBase()).getID());
+                            Toast.makeText(getContext(), "Se ha finalizado la Jornada.", Toast.LENGTH_LONG).show();
+                            JustificacionFragment fragment = new JustificacionFragment();
+                            if (distance < DISTANCE) {
+                                DiaLaboral dia = DiaLaboral.getDia(getDataBase(), Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1);
+                                Calendar cal_hoy = Calendar.getInstance();
+                                try {
+                                    if (dia.getHoraFin2() == null)
+                                        cal_hoy.setTime(format.parse(dia.getHoraFin1().replace("h", ":")));
+                                    else
+                                        cal_hoy.setTime(format.parse(dia.getHoraFin2().replace("h", ":")));
+                                } catch (Exception ex) {
+                                }
+                                cal_hoy.add(Calendar.MINUTE, - 30);
+                                int atraso = CheckMinutes(cal_hoy);
+                                if (atraso < 0) {
+                                    marc.setMintutosAtraso(atraso * (-1));
+                                    Marcacion.update(getDataBase(), marc);
+                                    fragment = new JustificacionFragment();
+                                    fragment.idMarcacion = marc.getID();
+                                    showDialogFragment(fragment, "Justificacion");
+                                    Toast.makeText(getContext(), "Usted esta finalizando su jornada por adelantado. Indique su justificación", Toast.LENGTH_LONG).show();
+                                } else {
+                                    marc.setPendiente(true);
+                                    Marcacion.update(getDataBase(), marc);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
+                                    requestSync(bundle);
+                                }
+                            } else {
+                                fragment = new JustificacionFragment();
+                                fragment.idMarcacion = marc.getID();
+                                showDialogFragment(fragment, "Justificacion");
+                                Toast.makeText(getContext(), R.string.message_fuera_posicion, Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            Toast.makeText(getContext(), "Debe de activar su GPS.", Toast.LENGTH_SHORT).show();
+                        }
+                        ((BaseActivity) getActivity()).closeDialogProgress();
+                    }
+                });
+            } catch (Exception ex) {
+                ((BaseActivity) getActivity()).closeDialogProgress();
+            }
+        }
+    }
+
     public int CheckMinutes(Calendar cal1)
     {
         Calendar hoy = Calendar.getInstance();
@@ -926,6 +1060,47 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
         am.setInexactRepeating(AlarmManager.RTC_WAKEUP,
                 calendar.getTimeInMillis() + (i1 * 1000 * 5),
                 1000 * 60 * PreferenceManager.getInt(Contants.KEY_ALARMA_INTERVALO), pi);
+
+    }
+
+    public Location getAproximatelyLocation(Location gpsLocation, LatLng reference, double distanceBetween)
+    {
+        if(distanceBetween < (gpsLocation.getAccuracy() + DISTANCE)) {
+            Location aproxLoc = new Location("");
+            LatLng midpoint = new LatLng(gpsLocation.getLatitude(), gpsLocation.getLongitude());
+            double pars = 0;
+            do {
+                midpoint = midPoint(midpoint.latitude, midpoint.longitude, reference.latitude, reference.longitude);
+                aproxLoc.setLatitude(midpoint.latitude);
+                aproxLoc.setLongitude(midpoint.longitude);
+                pars = SphericalUtil.computeDistanceBetween(midpoint, reference);
+            } while (SphericalUtil.computeDistanceBetween(reference, midpoint) > DISTANCE);
+            aproxLoc.setAccuracy((float) SphericalUtil.computeDistanceBetween(reference, midpoint));
+            return aproxLoc;
+        }
+        else
+        {
+            return gpsLocation;
+        }
+    }
+
+    public static LatLng midPoint(double lat1,double lon1,double lat2,double lon2){
+
+        double dLon = Math.toRadians(lon2 - lon1);
+
+        //convert to radians
+        lat1 = Math.toRadians(lat1);
+        lat2 = Math.toRadians(lat2);
+        lon1 = Math.toRadians(lon1);
+
+        double Bx = Math.cos(lat2) * Math.cos(dLon);
+        double By = Math.cos(lat2) * Math.sin(dLon);
+        double lat3 = Math.atan2(Math.sin(lat1) + Math.sin(lat2), Math.sqrt((Math.cos(lat1) + Bx) * (Math.cos(lat1) + Bx) + By * By));
+        double lon3 = lon1 + Math.atan2(By, Math.cos(lat1) + Bx);
+
+        //print out in degrees
+        System.out.println(Math.toDegrees(lat3) + " " + Math.toDegrees(lon3));
+        return new LatLng(Math.toDegrees(lat3), Math.toDegrees(lon3));
 
     }
 }

@@ -387,6 +387,7 @@
     <string name="message_fuera_posicion">Esta marcando fuera de su punto de partida. Ingrese una justificación.</string>
     <string name="message_fuera_posicion_agenda">Esta marcando fuera de la posición del cliente. Ingrese una justificación.</string>
     <string name="message_marcacion_agenda">Usted no tiene marcación para el inicio de jornada. Desea ingresar este inicio de visita como su inicio de jornada?</string>
+    <string name="message_marcacion_fin_agenda">La jornada esta a punto de terminar y usted no ha marcado el fin de su jornada. Desea ingresar este fin de visita como su fin de jornada?</string>
     <string name="label_fecha_just">Fecha</string>
     <string name="label_ausencia_just">Ausencia</string>
     <string name="label_atraso">Atraso</string>
