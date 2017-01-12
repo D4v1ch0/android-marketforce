@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="rp3.marketforce"
     android:versionCode="74"
-    android:versionName="1.5c">
+    android:versionName="AUNA">
 
     <uses-sdk
         android:minSdkVersion="13"

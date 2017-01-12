@@ -55,7 +55,7 @@ import rp3.util.ConnectionUtils;
 import rp3.util.Convert;
 
 @SuppressLint("NewApi")
-public class CrearVisitaFragment extends BaseFragment implements EditTareasDialogListener {
+public class CrearVisitaFragment extends BaseFragment implements EditTareasDialogListener, CrearClienteFragment.CrearClienteDialogListener {
 
     public static String ARG_AGENDA = "agenda";
     public static String ARG_IDAGENDA = "idagenda";
@@ -63,6 +63,8 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 
     public static final int ID_DURACION = 0;
     public static final int ID_TIEMPO = 1;
+
+    public static final int DIALOG_CREAR_CLIENTE = 1;
 
     private AutoCompleteTextView cliente_auto;
     private SimpleGeneralValueAdapter adapterDuracion;
@@ -404,7 +406,8 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
                 agenda.setFechaFin(calFin.getTime());
 
                 if (list_nombres.indexOf(cliente_auto.getText().toString()) == -1) {
-                    Toast.makeText(getContext(), "Nombre de Cliente o Contacto incorrecto.", Toast.LENGTH_LONG).show();
+                    showDialogConfirmation(DIALOG_CREAR_CLIENTE, R.string.message_crear_cliente_visita, R.string.title_crear_cliente_visita);
+                    //Toast.makeText(getContext(), "Nombre de Cliente o Contacto incorrecto.", Toast.LENGTH_LONG).show();
                     return true;
                 }
                 Cliente cli = list_cliente.get(list_nombres.indexOf(cliente_auto.getText().toString()));
@@ -471,6 +474,16 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPositiveConfirmation(int id) {
+        switch (id)
+        {
+            case DIALOG_CREAR_CLIENTE:
+
+        }
+        super.onPositiveConfirmation(id);
     }
 
     public String AgendaToJSON(Agenda agenda) {
@@ -572,5 +585,10 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
                     }
                 });
         builderSingle.show();
+    }
+
+    @Override
+    public int onFinishCrearClienteDialog(long idCliente) {
+        return 0;
     }
 }

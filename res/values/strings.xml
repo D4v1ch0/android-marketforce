@@ -426,4 +426,8 @@
     <string name="label_precio">Precio:</string>
     <string name="label_descuento_percentage">Descuento (%):</string>
     <string name="label_total_upper">TOTAL:</string>
+
+    <!-- AUNA -->
+    <string name="message_crear_cliente_visita">El cliente mencionado no existe en su cartera de clientes. Desea ingresarlo como un nuevo prospecto?</string>
+    <string name="title_crear_cliente_visita">Crear Cliente</string>
 </resources>
