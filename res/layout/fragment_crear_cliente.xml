@@ -37,7 +37,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:paddingRight="5dp" >
+            android:paddingRight="5dp"
+            android:visibility="gone">
 
             <Spinner
                 android:id="@+id/crear_cliente_tipo_persona"
@@ -46,7 +47,8 @@
                 android:layout_weight="0.6"
                 android:background="@color/caldroid_transparent"
                 android:layout_marginLeft="3dp"
-                android:spinnerMode="dialog" />
+                android:spinnerMode="dialog"
+                android:visibility="gone" />
         </LinearLayout>
 
         <LinearLayout
@@ -54,7 +56,8 @@
             android:layout_height="1dp"
             android:layout_weight="1"
             android:background="@color/color_grey_lines"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:visibility="gone">
 
         </LinearLayout>
 
@@ -120,7 +123,8 @@
             android:gravity="center"
             android:paddingRight="5dp"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp">
+            android:layout_marginBottom="5dp"
+            android:visibility="gone">
 
             <Spinner
                 android:id="@+id/cliente_tipo_cliente"
@@ -129,14 +133,16 @@
                 android:layout_weight="0.6"
                 android:background="@color/caldroid_transparent"
                 android:layout_marginLeft="6dp"
-                android:spinnerMode="dialog" />
+                android:spinnerMode="dialog"
+                android:visibility="gone" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/color_grey_lines"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:visibility="gone">
         </LinearLayout>
 
         <LinearLayout
@@ -146,7 +152,8 @@
             android:gravity="center"
             android:paddingRight="5dp"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp">
+            android:layout_marginBottom="5dp"
+            android:visibility="gone">
 
             <Spinner
                 android:id="@+id/cliente_canal"
@@ -162,7 +169,8 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/color_grey_lines"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:visibility="gone">
 
         </LinearLayout>
 
@@ -331,7 +339,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:paddingRight="5dp" >
+                android:paddingRight="5dp"
+                android:visibility="gone">
 
                 <EditText
                     android:id="@+id/cliente_fecha_nacimiento"
@@ -350,14 +359,16 @@
                     android:paddingTop="10dp"
                     android:paddingRight="10dp"
                     android:paddingBottom="10dp"
-                    android:hint="@string/label_fecha_nacimiento" />
+                    android:hint="@string/label_fecha_nacimiento"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/color_grey_lines"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:visibility="gone">
             </LinearLayout>
 
             <LinearLayout
@@ -365,7 +376,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:paddingRight="5dp" >
+                android:paddingRight="5dp"
+                android:visibility="gone">
 
                 <Spinner
                     android:id="@+id/cliente_genero"
@@ -380,7 +392,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/color_grey_lines"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:visibility="gone">
             </LinearLayout>
 
             <LinearLayout
@@ -388,7 +401,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:paddingRight="5dp" >
+                android:paddingRight="5dp"
+                android:visibility="gone">
 
                 <Spinner
                     android:id="@+id/cliente_estado_civil"
@@ -404,7 +418,8 @@
                 android:layout_height="1dp"
                 android:layout_weight="1"
                 android:background="@color/color_grey_lines"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:visibility="gone">
             </LinearLayout>
 
         </LinearLayout>
@@ -519,7 +534,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:paddingRight="5dp" >
+                android:paddingRight="5dp"
+                android:visibility="gone">
 
                 <EditText
                     android:id="@+id/cliente_pagina_web"
@@ -536,7 +552,8 @@
                     android:paddingTop="10dp"
                     android:paddingRight="10dp"
                     android:paddingBottom="10dp"
-                    android:hint="@string/label_pagina_web" />
+                    android:hint="@string/label_pagina_web"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <LinearLayout
@@ -544,7 +561,8 @@
                 android:layout_height="1dp"
                 android:layout_weight="1"
                 android:background="@color/color_grey_lines"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:visibility="gone">
             </LinearLayout>
 
             <LinearLayout
@@ -552,7 +570,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:paddingRight="5dp" >
+                android:paddingRight="5dp"
+                android:visibility="gone">
 
                 <EditText
                     android:id="@+id/cliente_actividad_economica"
@@ -577,7 +596,8 @@
                 android:layout_height="1dp"
                 android:layout_weight="1"
                 android:background="@color/color_grey_lines"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:visibility="gone">
             </LinearLayout>
 
         </LinearLayout>
@@ -587,7 +607,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:paddingRight="5dp" >
+            android:paddingRight="5dp"
+            android:visibility="gone">
 
             <EditText
                 android:id="@+id/cliente_tarjeta"
@@ -604,7 +625,8 @@
                 android:paddingRight="10dp"
                 android:paddingBottom="10dp"
                 android:hint="@string/label_tarjeta"
-                android:inputType="number" />
+                android:inputType="number"
+                android:visibility="gone" />
         </LinearLayout>
 
         <LinearLayout
@@ -612,11 +634,13 @@
             android:layout_height="1dp"
             android:layout_weight="1"
             android:background="@color/color_grey_lines"
-            android:orientation="vertical" />
+            android:orientation="vertical"
+            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -653,11 +677,13 @@
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
             android:background="@color/color_grey_lines"
-            android:orientation="vertical" />
+            android:orientation="vertical"
+            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -694,7 +720,8 @@
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
             android:background="@color/color_grey_lines"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:visibility="gone">
         </LinearLayout>
 
         <LinearLayout
@@ -703,7 +730,8 @@
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="horizontal"
-            android:padding="5dp" >
+            android:padding="5dp"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/foto_label"
@@ -738,7 +766,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="fill_parent"
@@ -795,7 +824,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="fill_parent"
@@ -847,6 +877,82 @@
 
         </LinearLayout>
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_forma_pago_max"
+            android:id="@+id/textView83"
+            android:textColor="@color/color_text_sky_blue"
+            android:textStyle="bold"
+            android:paddingLeft="12dp"
+            android:paddingTop="5dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="5dp"
+            android:background="@color/color_grey" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingRight="5dp" >
+
+            <Spinner
+                android:id="@+id/cliente_forma_pago"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.6"
+                android:background="@color/caldroid_transparent"
+                android:layout_marginLeft="3dp"
+                android:spinnerMode="dialog" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="@color/color_grey_lines"
+            android:orientation="vertical" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/agregar_tarjeta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:clickable="true"
+                android:drawableLeft="@drawable/ic_new_item"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                android:text="@string/label_agregar_tarjeta"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/color_text_sky_blue" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/bg_button_bg_main_pressed"
+            android:orientation="vertical" />
+
+        <LinearLayout
+            android:id="@+id/crear_cliente_container_forma_pago"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" />
     </LinearLayout>
 
 </LinearLayout>

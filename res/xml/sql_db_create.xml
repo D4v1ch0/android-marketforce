@@ -31,7 +31,9 @@
       FechaProximaVisita INTEGER,
         ExentoImpuesto BOOLEAN,
         CiudadanoOro BOOLEAN,
-        Tarjeta TEXT
+        Tarjeta TEXT,
+        FormaPago TEXT,
+        EstadoCliente TEXT
       )
 	</statement>
 	<statement>
@@ -69,6 +71,20 @@
       CiudadDescripcion TEXT
       )
 	</statement>
+    <statement>
+        CREATE TABLE tbClienteTarjeta(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        _IdCliente INTEGER,
+        IdCliente INTEGER,
+        IdClienteTarjeta INTEGER,
+        Numero TEXT,
+        CodSeguridad TEXT,
+        IdMarcaTarjeta INTEGER,
+        FechaCaducidad TEXT,
+        EsPrincipal INTEGER,
+        EsValida INTEGER
+        )
+    </statement>
 	<statement>
       CREATE TABLE tbContacto(
       _id INTEGER PRIMARY KEY AUTOINCREMENT,	 

@@ -44,6 +44,8 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 	private boolean exentoImpuesto;
 	private boolean ciudadanoOro;
 	private String tarjeta;
+	private String formaPago;
+	private String estadoCliente;
 	
 	private String direccion;
 	private String telefono;
@@ -57,6 +59,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 
 	private List<Contacto> contactos;
 	private List<ClienteDireccion> clienteDirecciones;
+	private List<ClienteTarjeta> clienteTarjetas;
 	private ClienteDireccion clienteDireccionPrincipal;
 
     public Date getFechaUltimaVisita() {
@@ -107,6 +110,14 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 		this.tarjeta = tarjeta;
 	}
 
+	public String getFormaPago() {
+		return formaPago;
+	}
+
+	public void setFormaPago(String formaPago) {
+		this.formaPago = formaPago;
+	}
+
 	public static String getFotoFileNameFormat(Long id){
 		return "PCL" + String.valueOf(id);
 	}
@@ -153,6 +164,8 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 		setValue(Contract.Cliente.COLUMN_EXENTO_IMPUESTO, this.exentoImpuesto);
 		setValue(Contract.Cliente.COLUMN_CIUDADANO_ORO, this.ciudadanoOro);
 		setValue(Contract.Cliente.COLUMN_TARJETA, this.tarjeta);
+		setValue(Contract.Cliente.COLUMN_FORMA_PAGO, this.formaPago);
+		setValue(Contract.Cliente.COLUMN_ESTADO_CLIENTE, this.estadoCliente);
 	}
 
 	@Override
@@ -408,6 +421,22 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 		this.actividadEconomica = actividadEconomica;
 	}
 
+	public String getEstadoCliente() {
+		return estadoCliente;
+	}
+
+	public void setEstadoCliente(String estadoCliente) {
+		this.estadoCliente = estadoCliente;
+	}
+
+	public List<ClienteTarjeta> getClienteTarjetas() {
+		return clienteTarjetas;
+	}
+
+	public void setClienteTarjetas(List<ClienteTarjeta> clienteTarjetas) {
+		this.clienteTarjetas = clienteTarjetas;
+	}
+
 	public static List<Long> getIDSCliente(DataBase db){
 		Cursor c = db.query(Contract.Cliente.TABLE_NAME, Contract.Cliente._ID);
 		List<Long> result = new ArrayList<Long>();
@@ -570,6 +599,8 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 				client.setContactos(Contacto.getContactoIdCliente(db, client.getID(), true));
 			else
 				client.setContactos(Contacto.getContactoIdCliente(db, client.getIdCliente(), false));
+
+			client.setClienteTarjetas(ClienteTarjeta.getClienteTarjetas(db, client.getID()));
 			
 			if(incluirDirecciones)
 				if(client.getIdCliente() == 0)
@@ -684,6 +715,8 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 				client.setContactos(Contacto.getContactoIdCliente(db, client.getID(), true));
 			else
 				client.setContactos(Contacto.getContactoIdCliente(db, client.getIdCliente(), false));
+
+			client.setClienteTarjetas(ClienteTarjeta.getClienteTarjetas(db, client.getID()));
 			
 			if(incluirDirecciones)
 				if(client.getIdCliente() == 0)
@@ -747,6 +780,8 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 					client.setContactos(Contacto.getContactoIdCliente(db, client.getID(), true));
 				else
 					client.setContactos(Contacto.getContactoIdCliente(db, client.getIdCliente(), false));
+
+				client.setClienteTarjetas(ClienteTarjeta.getClienteTarjetas(db, client.getID()));
 				
 				if(incluirDirecciones)
 					if(client.getIdCliente() == 0)
@@ -812,7 +847,9 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 					client.setContactos(Contacto.getContactoIdCliente(db, client.getID(), true));
 				else
 					client.setContactos(Contacto.getContactoIdCliente(db, client.getIdCliente(), false));
-				
+
+				client.setClienteTarjetas(ClienteTarjeta.getClienteTarjetas(db, client.getID()));
+
 				if(incluirDirecciones)
 					if(client.getIdCliente() == 0)
 						client.setClienteDirecciones(ClienteDireccion.getClienteDirecciones(db, client.getID(), true));

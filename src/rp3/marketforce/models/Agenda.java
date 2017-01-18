@@ -451,6 +451,9 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 
 			Agenda agd = new Agenda();
 			agd.setID(CursorUtils.getInt(c, Contract.Agenda._ID));
+			agd.set_idCliente(CursorUtils.getLong(c, Contract.Agenda.COLUMN_CLIENTE_ID_EXT));
+			agd.set_idClienteDireccion(CursorUtils.getLong(c, Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID_EXT));
+			agd.set_idContacto(CursorUtils.getLong(c, Contract.Agenda.COLUMN_CONTACTO_ID_EXT));
 			agd.setFechaInicio(CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_INCICIO));
 			agd.setFechaFin(CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_FIN));
 			agd.setEstadoAgenda(CursorUtils.getString(c, Contract.Agenda.FIELD_ESTADO_AGENDA));
@@ -472,7 +475,10 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 
 			agd.setIdContacto(CursorUtils.getInt(c, Contract.Agenda.FIELD_CONTACTO_ID));
 			agd.setIdCliente(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_ID));
-			agd.setCliente(rp3.marketforce.models.Cliente.getClienteIDServer(db, agd.getIdCliente(), false));
+			if(agd.getIdCliente() == 0)
+				agd.setCliente(rp3.marketforce.models.Cliente.getClienteID(db, agd.get_idCliente(), false));
+			else
+				agd.setCliente(rp3.marketforce.models.Cliente.getClienteIDServer(db, agd.getIdCliente(), false));
 			agd.setContacto(Contacto.getContactoId(db, agd.getIdContacto(), agd.getIdCliente()));
 
 			list.add(agd);
@@ -497,9 +503,9 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			Agenda agd = new Agenda();
 			agd.setID(CursorUtils.getInt(c, Contract.Agenda._ID));
 			agd.setIdAgenda(CursorUtils.getInt(c, Contract.Agenda.COLUMN_AGENDA_ID));
-			agd.set_idCliente(CursorUtils.getLong(c, Contract.Agenda.COLUMN_AGENDA_ID));
-			agd.set_idClienteDireccion(CursorUtils.getLong(c, Contract.Agenda.COLUMN_AGENDA_ID));
-			agd.set_idContacto(CursorUtils.getLong(c, Contract.Agenda.COLUMN_AGENDA_ID));
+			agd.set_idCliente(CursorUtils.getLong(c, Contract.Agenda.COLUMN_CLIENTE_ID_EXT));
+			agd.set_idClienteDireccion(CursorUtils.getLong(c, Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID_EXT));
+			agd.set_idContacto(CursorUtils.getLong(c, Contract.Agenda.COLUMN_CONTACTO_ID_EXT));
 			agd.setFechaInicio(CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_INCICIO));
 			agd.setFechaFin(CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_FIN));
 			agd.setEstadoAgenda(CursorUtils.getString(c, Contract.Agenda.FIELD_ESTADO_AGENDA));
@@ -573,20 +579,9 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setLatitud(CursorUtils.getDouble(c, Contract.Agenda.COLUMN_LATITUD));
 			agd.setLongitud(CursorUtils.getDouble(c, Contract.Agenda.COLUMN_LONGITUD));
 
-			Cliente cl = new Cliente();
-			cl.setNombreCompleto(agd.getNombreCompleto());
-			cl.setCorreoElectronico(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_CORREO_ELECTRONICO));
-			cl.setURLFoto(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_URL_FOTO));
-			cl.setIdCliente(agd.getIdCliente());
 			agd.setIdContacto(CursorUtils.getInt(c, Contract.Agenda.FIELD_CONTACTO_ID));
 			agd.setContacto(Contacto.getContactoId(db, agd.getIdContacto(), agd.getIdCliente()));
 
-			agd.setCliente(cl);
-
-			ClienteDireccion cld = new ClienteDireccion();
-			cld.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
-			cld.setTelefono1((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION_TELEFONO)));
-			agd.setClienteDireccion(cld);
 			if(agd.getIdCliente() == 0)
 				agd.setCliente(rp3.marketforce.models.Cliente.getClienteID(db, agd.get_idCliente(), false));
 			else
@@ -908,7 +903,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 	}
 
 	public static List<Agenda> getAgendaInserts(DataBase db){
-		Cursor c = db.query(Contract.Agenda.TABLE_NAME, new String[] {Contract.Agenda._ID, Contract.Agenda.COLUMN_AGENDA_ID, Contract.Agenda.COLUMN_CLIENTE_ID,
+		Cursor c = db.query(Contract.Agenda.TABLE_NAME, new String[] {Contract.Agenda._ID, Contract.Agenda.COLUMN_AGENDA_ID, Contract.Agenda.COLUMN_CLIENTE_ID, Contract.Agenda.COLUMN_CLIENTE_ID_EXT,
 						Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID, Contract.Agenda.COLUMN_RUTA_ID, Contract.Agenda.COLUMN_FECHA_INICIO_REAL, Contract.Agenda.COLUMN_FECHA_FIN_REAL,
 						Contract.Agenda.COLUMN_ESTADO_AGENDA, Contract.Agenda.COLUMN_CONTACTO_ID, Contract.Agenda.COLUMN_FECHA_INICIO,
 						Contract.Agenda.COLUMN_FECHA_FIN, Contract.Agenda.COLUMN_OBSERVACIONES, Contract.Agenda.COLUMN_CONTACTO_ID,
@@ -928,6 +923,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 				agd.setIdContacto(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CONTACTO_ID));
 				agd.setIdAgenda(CursorUtils.getInt(c, Contract.Agenda.COLUMN_AGENDA_ID));
 				agd.setIdCliente(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_ID));
+				agd.set_idCliente(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_ID_EXT));
 				agd.setIdClienteDireccion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID));
 				agd.setFechaInicioReal(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_INICIO_REAL));
 				agd.setFechaFinReal(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_FIN_REAL));
@@ -980,6 +976,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 				agd.setIdContacto(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CONTACTO_ID));
 				agd.setIdAgenda(CursorUtils.getInt(c, Contract.Agenda.COLUMN_AGENDA_ID));
 				agd.setIdCliente(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_ID));
+				agd.set_idCliente(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_ID_EXT));
 				agd.setIdClienteDireccion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID));
 				agd.setFechaInicioReal(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_INICIO_REAL));
 				agd.setFechaFinReal(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_FIN_REAL));
@@ -1049,7 +1046,14 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 
 			agd.setIdContacto(CursorUtils.getInt(c, Contract.Agenda.FIELD_CONTACTO_ID));
 			agd.setIdCliente(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_ID));
-			agd.setCliente(rp3.marketforce.models.Cliente.getClienteID(db, agd.getIdCliente(), false));
+			agd.set_idCliente(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_ID_EXT));
+			agd.set_idClienteDireccion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID_EXT));
+			agd.set_idContacto(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CONTACTO_ID_EXT));
+			if(agd.getIdCliente() == 0)
+				agd.setCliente(rp3.marketforce.models.Cliente.getClienteID(db, agd.get_idCliente(), true));
+			else
+				agd.setCliente(rp3.marketforce.models.Cliente.getClienteIDServer(db, agd.getIdCliente(), false));
+
 			agd.setContacto(Contacto.getContactoId(db, agd.getIdContacto(), agd.getIdCliente()));
 
 			list.add(agd);

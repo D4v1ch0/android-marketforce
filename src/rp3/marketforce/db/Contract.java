@@ -45,6 +45,8 @@ public final class Contract {
 		public static final String COLUMN_EXENTO_IMPUESTO = "ExentoImpuesto";
 		public static final String COLUMN_CIUDADANO_ORO = "CiudadanoOro";
 		public static final String COLUMN_TARJETA = "Tarjeta";
+		public static final String COLUMN_FORMA_PAGO = "FormaPago";
+		public static final String COLUMN_ESTADO_CLIENTE = "EstadoCliente";
 				
 		public static final String FIELD_ID_TIPO_IDENTIFICACION = COLUMN_ID_TIPO_IDENTIFICACION;	
 		public static final String FIELD_ID_CLIENTE = COLUMN_ID_CLIENTE;	
@@ -187,6 +189,22 @@ public final class Contract {
 		public static final String QUERY_CLIENTE_DIRECCION_BY_ID_INTERNO = "ClienteDireccionByIdInterno";
 		public static final String QUERY_CLIENTE_DIRECCION_BY_ID_DIRECCION = "ClienteDireccionByIdDireccion";
 		public static final String QUERY_CLIENTE_DIRECCION_BY_ID_DIRECCION_INTERN = "ClienteDireccionByIdDireccionIntern";
+	}
+
+	public static abstract class ClienteTarjeta implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbClienteTarjeta";
+
+		public static final String COLUMN_CLIENTE_ID_EXT = "_IdCliente";
+		public static final String COLUMN_CLIENTE_ID = "IdCliente";
+		public static final String COLUMN_CLIENTE_TARJETA_ID = "IdClienteTarjeta";
+		public static final String COLUMN_NUMERO = "Numero";
+		public static final String COLUMN_CODIGO_SEGURIDAD = "CodSeguridad";
+		public static final String COLUMN_ID_MARCA_TARJETA = "IdMarcaTarjeta";
+		public static final String COLUMN_FECHA_CADUCIDAD = "FechaCaducidad";
+		public static final String COLUMN_ES_PRINCIPAL = "EsPrincipal";
+		public static final String COLUMN_ES_VALIDA = "EsValida";
+
 	}
 	
 	public static abstract class Contacto implements BaseColumns {

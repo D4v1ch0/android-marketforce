@@ -430,4 +430,15 @@
     <!-- AUNA -->
     <string name="message_crear_cliente_visita">El cliente mencionado no existe en su cartera de clientes. Desea ingresarlo como un nuevo prospecto?</string>
     <string name="title_crear_cliente_visita">Crear Cliente</string>
+    <string name="warning_falta_nombre">Falta primer nombre del cliente</string>
+    <string name="warning_falta_apellido">Falta primer apellido del cliente</string>
+    <string name="warning_falta_numero">Falta número de tarjeta</string>
+    <string name="warning_falta_cod_seguridad">Falta codigo de seguridad</string>
+    <string name="label_forma_pago_max">FORMA DE PAGO</string>
+    <string name="label_agregar_tarjeta">Añadir tarjeta de crédito</string>
+    <string name="label_numero_tarjeta">Número de Tarjeta</string>
+    <string name="label_codigo_seguridad">Código de Seguridad</string>
+    <string name="label_es_principal_tarjeta">Es Tarjeta Principal</string>
+    <string name="label_validar_tarjeta">Validar</string>
+    <string name="label_es_tarjeta_valida">Es Tarjeta Válida</string>
 </resources>

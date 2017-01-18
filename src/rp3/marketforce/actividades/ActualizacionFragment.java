@@ -47,6 +47,7 @@ import rp3.data.models.GeopoliticalStructure;
 import rp3.data.models.IdentificationType;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
+import rp3.marketforce.cliente.AgregarTarjetaFragment;
 import rp3.marketforce.cliente.CrearClienteFragment;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.AgendaTarea;
@@ -54,8 +55,10 @@ import rp3.marketforce.models.Campo;
 import rp3.marketforce.models.Canal;
 import rp3.marketforce.models.Cliente;
 import rp3.marketforce.models.ClienteDireccion;
+import rp3.marketforce.models.ClienteTarjeta;
 import rp3.marketforce.models.Contacto;
 import rp3.marketforce.models.TipoCliente;
+import rp3.marketforce.models.pedido.MarcaTarjeta;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.DetailsPageAdapter;
 import rp3.marketforce.utils.DrawableManager;
@@ -70,7 +73,7 @@ import rp3.widget.ViewPager;
 /**
  * Created by magno_000 on 10/04/2015.
  */
-public class ActualizacionFragment extends BaseFragment {
+public class ActualizacionFragment extends BaseFragment implements AgregarTarjetaFragment.AgregarTarjetaDialogListener{
 
     boolean rotated = false;
 
@@ -89,8 +92,8 @@ public class ActualizacionFragment extends BaseFragment {
     public static String ARG_TIPO = "tipo";
     public static String ARG_TAREA = "tarea";
     private LayoutInflater inflater;
-    private LinearLayout ContactosContainer, DireccionContainer;
-    private List<LinearLayout> listViewDirecciones, listViewContactos;
+    private LinearLayout ContactosContainer, DireccionContainer, TarjetasContainer;
+    private List<LinearLayout> listViewDirecciones, listViewContactos, listViewTarjetas;
     private List<GeopoliticalStructure> listCiudades;
     private int curentPage;
     private Agenda agd;
@@ -153,7 +156,7 @@ public class ActualizacionFragment extends BaseFragment {
         cli.setIdentificacion(((EditText) getRootView().findViewById(R.id.cliente_identificacion)).getText().toString());
         cli.setTarjeta(((EditText) getRootView().findViewById(R.id.cliente_tarjeta)).getText().toString());
         cli.setTipoPersona(((GeneralValue)((Spinner)getRootView().findViewById(R.id.crear_cliente_tipo_persona)).getSelectedItem()).getCode());
-        cli.setIdTipoCliente((int) ((Spinner)getRootView().findViewById(R.id.cliente_tipo_cliente)).getAdapter().getItemId(((Spinner)getRootView().findViewById(R.id.cliente_tipo_cliente)).getSelectedItemPosition()));
+        cli.setIdTipoCliente((int) ((Spinner) getRootView().findViewById(R.id.cliente_tipo_cliente)).getAdapter().getItemId(((Spinner) getRootView().findViewById(R.id.cliente_tipo_cliente)).getSelectedItemPosition()));
         if(cliente.getURLFoto() != null && !cliente.getURLFoto().trim().equals(""))
             cli.setURLFoto(cliente.getURLFoto());
         if(((Spinner) getRootView().findViewById(R.id.crear_cliente_tipo_persona)).getSelectedItemPosition() == 1)
@@ -252,6 +255,7 @@ public class ActualizacionFragment extends BaseFragment {
 
         listViewDirecciones = new ArrayList<LinearLayout>();
         listViewContactos = new ArrayList<LinearLayout>();
+        listViewTarjetas = new ArrayList<LinearLayout>();
         listCiudades = new ArrayList<GeopoliticalStructure>();
         //ciudades = GeopoliticalStructure.getGeopoliticalStructureCities(getDataBase());
 
@@ -279,9 +283,20 @@ public class ActualizacionFragment extends BaseFragment {
         });
         ContactosContainer = (LinearLayout) getRootView().findViewById(R.id.crear_cliente_container_contacto);
 
+        ((TextView) getRootView().findViewById(R.id.agregar_tarjeta)).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                addTarjeta();
+
+            }
+        });
+        TarjetasContainer = (LinearLayout) getRootView().findViewById(R.id.crear_cliente_container_forma_pago);
+
         SimpleGeneralValueAdapter tipoPersonaAdapter = new SimpleGeneralValueAdapter(getContext(), getDataBase(), rp3.marketforce.Contants.GENERAL_TABLE_TIPO_PERSONA);
         SimpleGeneralValueAdapter tipoEstadoCivilAdapter = new SimpleGeneralValueAdapter(getContext(), getDataBase(), rp3.marketforce.Contants.GENERAL_TABLE_ESTADO_CIVIL);
         SimpleGeneralValueAdapter tipoGeneroAdapter = new SimpleGeneralValueAdapter(getContext(), getDataBase(), rp3.marketforce.Contants.GENERAL_TABLE_GENERO);
+        SimpleGeneralValueAdapter tipoFormaPago = new SimpleGeneralValueAdapter(getContext(), getDataBase(), Contants.GENERAL_TABLE_FORMA_PAGO);
         SimpleIdentifiableAdapter tipoCliente = new SimpleIdentifiableAdapter(getContext(), TipoCliente.getTipoCliente(getDataBase(), ""));
         SimpleIdentifiableAdapter tipoCanal = new SimpleIdentifiableAdapter(getContext(), Canal.getCanal(getDataBase(), ""));
         SimpleDictionaryAdapter tipoIdentificacion = new SimpleDictionaryAdapter(getContext(), IdentificationType.getAll(getDataBase()));
@@ -299,6 +314,30 @@ public class ActualizacionFragment extends BaseFragment {
                 } else {
                     ((LinearLayout) getRootView().findViewById(R.id.crear_cliente_content_natural)).setVisibility(View.GONE);
                     ((LinearLayout) getRootView().findViewById(R.id.crear_cliente_content_juridico)).setVisibility(View.VISIBLE);
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+
+        ((Spinner) getRootView().findViewById(R.id.cliente_forma_pago)).setAdapter(tipoFormaPago);
+        ((Spinner) getRootView().findViewById(R.id.cliente_forma_pago)).setPrompt("Seleccione una forma de pago");
+        ((Spinner) getRootView().findViewById(R.id.cliente_forma_pago)).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                if (position == 1) {
+                    getRootView().findViewById(R.id.agregar_tarjeta).setVisibility(View.GONE);
+                    TarjetasContainer.setVisibility(View.GONE);
+                } else {
+                    getRootView().findViewById(R.id.agregar_tarjeta).setVisibility(View.VISIBLE);
+                    TarjetasContainer.setVisibility(View.VISIBLE);
                 }
 
             }
@@ -470,12 +509,16 @@ public class ActualizacionFragment extends BaseFragment {
             ((EditText) getRootView().findViewById(R.id.cliente_correo)).setText(cli.getCorreoElectronico());
             ((Spinner) getRootView().findViewById(R.id.cliente_genero)).setSelection(getPosition(((Spinner) getRootView().findViewById(R.id.cliente_genero)).getAdapter(), cli.getGenero()));
             ((Spinner) getRootView().findViewById(R.id.cliente_estado_civil)).setSelection(getPosition(((Spinner) getRootView().findViewById(R.id.cliente_estado_civil)).getAdapter(), cli.getEstadoCivil()));
+            ((LinearLayout) getRootView().findViewById(R.id.crear_cliente_content_natural)).setVisibility(View.VISIBLE);
+            ((LinearLayout) getRootView().findViewById(R.id.crear_cliente_content_juridico)).setVisibility(View.GONE);
         } else {
             ((EditText) getRootView().findViewById(R.id.cliente_nombre)).setText(cli.getNombre1());
             ((EditText) getRootView().findViewById(R.id.cliente_actividad_economica)).setText(cli.getActividadEconomica());
             ((EditText) getRootView().findViewById(R.id.cliente_correo_juridico)).setText(cli.getCorreoElectronico());
             ((EditText) getRootView().findViewById(R.id.cliente_razon_social)).setText(cli.getRazonSocial());
             ((EditText) getRootView().findViewById(R.id.cliente_pagina_web)).setText(cli.getPaginaWeb());
+            ((LinearLayout) getRootView().findViewById(R.id.crear_cliente_content_natural)).setVisibility(View.GONE);
+            ((LinearLayout) getRootView().findViewById(R.id.crear_cliente_content_juridico)).setVisibility(View.VISIBLE);
         }
 
         addDireccion();
@@ -561,6 +604,11 @@ public class ActualizacionFragment extends BaseFragment {
         myAlertDialog.show();
     }
 
+    private void addTarjeta()
+    {
+        showDialogFragment(AgregarTarjetaFragment.newInstance(listViewTarjetas.size()), "Agregar Tarjeta");
+    }
+
     private void addDireccion()
     {
         final LinearLayout direccion = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.layout_cliente_direccion_detail, null);
@@ -568,11 +616,9 @@ public class ActualizacionFragment extends BaseFragment {
         direccion.findViewById(R.id.cliente_direccion).setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus)
-                {
-                    for(LinearLayout contacto : listViewContactos)
-                    {
-                        ((Spinner)contacto.findViewById(R.id.cliente_direccion_contacto)).setAdapter(getDirecciones());
+                if (!hasFocus) {
+                    for (LinearLayout contacto : listViewContactos) {
+                        ((Spinner) contacto.findViewById(R.id.cliente_direccion_contacto)).setAdapter(getDirecciones());
                     }
                 }
             }
@@ -658,24 +704,26 @@ public class ActualizacionFragment extends BaseFragment {
     {
         final LinearLayout contacto = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.layout_cliente_contacto_detail, null);
         final int pos = listViewContactos.size();
-        ((Button) contacto.findViewById(R.id.eliminar_contacto)).setOnClickListener(new View.OnClickListener(){
+        ((Button) contacto.findViewById(R.id.eliminar_contacto)).setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 listViewContactos.remove(contacto);
                 ContactosContainer.removeView(contacto);
                 contactPhotos.remove(pos);
-            }});
+            }
+        });
         contactPhotos.add("");
         ((Spinner) contacto.findViewById(R.id.cliente_direccion_contacto)).setAdapter(getDirecciones());
-        ((ImageButton) contacto.findViewById(R.id.cliente_contacto_foto)).setOnClickListener(new View.OnClickListener(){
+        ((ImageButton) contacto.findViewById(R.id.cliente_contacto_foto)).setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 posContact = pos;
                 isClient = false;
                 takePicture(1);
-            }});
+            }
+        });
         ContactosContainer.addView(contacto);
         listViewContactos.add(contacto);
     }
@@ -725,6 +773,20 @@ public class ActualizacionFragment extends BaseFragment {
         for(int i = 0; i < listViewDirecciones.size(); i ++)
         {
             list.add(((EditText)listViewDirecciones.get(i).findViewById(R.id.cliente_direccion)).getText().toString());
+        }
+        return new ArrayAdapter<String>(getActivity(), rp3.core.R.layout.base_rowlist_simple_spinner_small, list);
+    }
+
+    public ArrayAdapter<String> getFechasCaducidad()
+    {
+        SimpleDateFormat format1 = new SimpleDateFormat("MM/yyyy");
+        List<String> list = new ArrayList<String>();
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, 1);
+        for(int i = 0; i < 50; i ++)
+        {
+            list.add(format1.format(cal.getTime()));
+            cal.add(Calendar.MONTH, 1);
         }
         return new ArrayAdapter<String>(getActivity(), rp3.core.R.layout.base_rowlist_simple_spinner_small, list);
     }
@@ -865,5 +927,44 @@ public class ActualizacionFragment extends BaseFragment {
         return position;
     }
 
+    @Override
+    public void onFinishAgregarTarjetaDialog(ClienteTarjeta clienteTarjeta) {
+        final LinearLayout tarjeta = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.layout_cliente_tarjeta_detail, null);
+        final int pos = listViewTarjetas.size();
+        ((Button) tarjeta.findViewById(R.id.eliminar_tarjeta)).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                listViewTarjetas.remove(tarjeta);
+                TarjetasContainer.removeView(tarjeta);
+            }
+        });
+
+        List<MarcaTarjeta> marcas = MarcaTarjeta.getMarcasTarjetas(getDataBase());
+        SimpleIdentifiableAdapter marcaTarjetas = new SimpleIdentifiableAdapter(getContext(), marcas);
+        ((Spinner) tarjeta.findViewById(R.id.cliente_tarjeta)).setAdapter(marcaTarjetas);
+        for(int i = 0; i < marcas.size(); i++)
+        {
+            if(marcas.get(i).getIdMarcaTarjeta() == clienteTarjeta.getIdMarcaTarjeta())
+                ((Spinner) tarjeta.findViewById(R.id.cliente_tarjeta)).setSelection(i);
+        }
+
+        ((Spinner) tarjeta.findViewById(R.id.cliente_tarjeta_fecha)).setAdapter(getFechasCaducidad());
+        ((Spinner) tarjeta.findViewById(R.id.cliente_tarjeta_fecha)).setSelection(((ArrayAdapter<String>) ((Spinner) tarjeta.findViewById(R.id.cliente_tarjeta_fecha)).getAdapter()).getPosition(clienteTarjeta.getFechaCaducidad()));
+        ((EditText) tarjeta.findViewById(R.id.cliente_numero_tarjeta)).setText(clienteTarjeta.getNumero());
+        ((EditText) tarjeta.findViewById(R.id.cliente_cod_seguridad)).setText(clienteTarjeta.getCodigoSeguridad());
+        ((CheckBox) tarjeta.findViewById(R.id.cliente_es_principal_tarjeta)).setChecked(clienteTarjeta.getEsPrincipal());
+
+        tarjeta.findViewById(R.id.validar_tarjeta).setVisibility(View.GONE);
+        tarjeta.findViewById(R.id.cliente_numero_tarjeta).setEnabled(false);
+        tarjeta.findViewById(R.id.cliente_cod_seguridad).setEnabled(false);
+        tarjeta.findViewById(R.id.cliente_tarjeta_fecha).setEnabled(false);
+        tarjeta.findViewById(R.id.cliente_tarjeta).setEnabled(false);
+        tarjeta.findViewById(R.id.cliente_es_principal_tarjeta).setEnabled(false);
+        ((CheckBox) tarjeta.findViewById(R.id.cliente_tarjeta_valida)).setChecked(true);
+
+        TarjetasContainer.addView(tarjeta);
+        listViewTarjetas.add(tarjeta);
+    }
 }
 

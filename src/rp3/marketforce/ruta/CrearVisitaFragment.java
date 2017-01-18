@@ -481,7 +481,8 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
         switch (id)
         {
             case DIALOG_CREAR_CLIENTE:
-
+                showDialogFragment(CrearClienteFragment.newInstance(cliente_auto.getText().toString()), "Crear Cliente");
+                break;
         }
         super.onPositiveConfirmation(id);
     }
@@ -589,6 +590,91 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 
     @Override
     public int onFinishCrearClienteDialog(long idCliente) {
+        Agenda agenda = new Agenda();
+        agenda.setDuracion(duracion);
+        agenda.setTiempoViaje(tiempo);
+
+        Calendar cal_hoy = Calendar.getInstance();
+        //if((fecha.get(Calendar.YEAR) < cal_hoy.get(Calendar.YEAR)) || (fecha.get(Calendar.MONTH) < cal_hoy.get(Calendar.MONTH))
+        //		|| (fecha.get(Calendar.DATE) < cal_hoy.get(Calendar.DATE)) )
+        //{
+        //	Toast.makeText(getActivity(), "Fecha no puede ser anterior a hoy.", Toast.LENGTH_LONG).show();
+        //	return true;
+        //}
+
+        Calendar cal = Calendar.getInstance();
+        Calendar calFin = Calendar.getInstance();
+
+        cal.set(Calendar.DATE, fecha.get(Calendar.DATE));
+        cal.set(Calendar.MONTH, fecha.get(Calendar.MONTH));
+        cal.set(Calendar.YEAR, fecha.get(Calendar.YEAR));
+
+        calFin.set(Calendar.DATE, fecha.get(Calendar.DATE));
+        calFin.set(Calendar.MONTH, fecha.get(Calendar.MONTH));
+        calFin.set(Calendar.YEAR, fecha.get(Calendar.YEAR));
+
+        cal.set(Calendar.HOUR_OF_DAY, fecha.get(Calendar.HOUR_OF_DAY));
+        cal.set(Calendar.MINUTE, fecha.get(Calendar.MINUTE));
+
+        if(duracion < 1440) {
+            calFin.set(Calendar.HOUR_OF_DAY, fecha.get(Calendar.HOUR_OF_DAY));
+            calFin.set(Calendar.MINUTE, fecha.get(Calendar.MINUTE));
+            calFin.add(Calendar.MINUTE, (int) agenda.getDuracion());
+        }
+        else
+        {
+            calFin.set(Calendar.HOUR_OF_DAY, 23);
+            calFin.set(Calendar.MINUTE, 59);
+        }
+
+        agenda.setFechaInicio(cal.getTime());
+        agenda.setFechaFin(calFin.getTime());
+
+
+        agenda.setCliente(Cliente.getClienteID(getDataBase(), idCliente, true));
+        agenda.setClienteDireccion(agenda.getCliente().getClienteDirecciones().get(0));
+        agenda.setCiudad(agenda.getCliente().getClienteDirecciones().get(0).getCiudadDescripcion());
+        agenda.setDireccion(agenda.getCliente().getClienteDirecciones().get(0).getDireccion());
+        agenda.setEstadoAgenda(Contants.ESTADO_PENDIENTE);
+        agenda.setEstadoAgendaDescripcion(Contants.DESC_PENDIENTE);
+        agenda.setIdCliente((int) agenda.getCliente().getIdCliente());
+        agenda.set_idCliente(agenda.getCliente().getID());
+        agenda.setIdClienteDireccion(agenda.getClienteDireccion().getIdClienteDireccion());
+        agenda.set_idClienteDireccion(agenda.getClienteDireccion().getID());
+        agenda.setIdRuta(0);
+        agenda.setNombreCompleto(agenda.getCliente().getNombreCompleto().trim());
+        Calendar fc = Calendar.getInstance();
+        fc.set(Calendar.MILLISECOND, 0);
+        agenda.setFechaCreacion(fc.getTime());
+        //agenda.setID(0);
+        agenda.setIdAgenda(0);
+
+        if(ConnectionUtils.isNetAvailable(this.getContext()))
+            agenda.setEnviado(true);
+        else
+            agenda.setEnviado(false);
+
+        Agenda.insert(getDataBase(), agenda);
+        int last = getDataBase().getIntLastInsertRowId();
+        long last2 = getDataBase().getLongLastInsertRowId();
+
+
+        for (Tarea tarea : list_tareas) {
+            AgendaTarea agendaTarea = new AgendaTarea();
+            agendaTarea.setIdAgenda(0);
+            agendaTarea.set_idAgenda(agenda.getID());
+            agendaTarea.setEstadoTarea("P");
+            agendaTarea.setIdRuta(0);
+            agendaTarea.setIdTarea(tarea.getIdTarea());
+            AgendaTarea.insert(getDataBase(), agendaTarea);
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_INSERTAR_AGENDA);
+        bundle.putLong(ARG_AGENDA, agenda.getID());
+        requestSync(bundle);
+
+        finish();
         return 0;
     }
 }

@@ -17,6 +17,8 @@ public class Contants {
     public final static int GENERAL_TABLE_MOTIVO_PERMISO = 1042;
     public final static int GENERAL_TABLE_ESTADO_PERMISO = 1043;
     public final static int GENERAL_TABLE_TIPO_MARCACION = 1044;
+    public final static int GENERAL_TABLE_ESTADO_CLIENTE = 1048;
+    public final static int GENERAL_TABLE_FORMA_PAGO = 1049;
     public final static int GENERAL_TABLE_MOTIVOS_ANULACION = 1706;
     public final static int GENERAL_TABLE_TIPOS_TRANSACCION = 1621;
 	public final static String IMAGE_FOLDER = "imagesFolder";
