@@ -56,7 +56,7 @@ public class Pedido {
             jObject.put("IdRuta", PreferenceManager.getInt(Contants.KEY_IDRUTA));
             jObject.put("IdPedido", pedidoUpload.getIdPedido());
             jObject.put("IdCliente", pedidoUpload.getIdCliente());
-            jObject.put("ValorTotal", df.format(pedidoUpload.getValorTotal()));
+            jObject.put("ValorTotal", removeCommas(df.format(pedidoUpload.getValorTotal())));
             jObject.put("Email", pedidoUpload.getEmail());
             jObject.put("Estado", pedidoUpload.getEstado());
             jObject.put("FechaCreacionTicks", Convert.getDotNetTicksFromDate(pedidoUpload.getFechaCreacion()));
@@ -69,9 +69,9 @@ public class Pedido {
             else
                 jObject.put("Anulado", false);
 
-            jObject.put("BaseImponible", df.format(pedidoUpload.getBaseImponible()));
-            jObject.put("BaseImponibleCero", df.format(pedidoUpload.getBaseImponibleCero()));
-            jObject.put("Cambio", df.format(pedidoUpload.getExcedente()));
+            jObject.put("BaseImponible", removeCommas(df.format(pedidoUpload.getBaseImponible())));
+            jObject.put("BaseImponibleCero", removeCommas(df.format(pedidoUpload.getBaseImponibleCero())));
+            jObject.put("Cambio", removeCommas(df.format(pedidoUpload.getExcedente())));
 
             jObject.put("IdEmpresa", PreferenceManager.getInt(Contants.KEY_ID_EMPRESA));
             jObject.put("IdEstablecimiento", PreferenceManager.getInt(Contants.KEY_ID_ESTABLECIMIENTO));
@@ -80,18 +80,18 @@ public class Pedido {
             jObject.put("IdPuntoOperacion", PreferenceManager.getInt(Contants.KEY_ID_PUNTO_OPERACION));
             jObject.put("NumeroDocumento", pedidoUpload.getNumeroDocumento());
             jObject.put("Observacion", pedidoUpload.getObservaciones());
-            jObject.put("Redondeo", df.format(pedidoUpload.getRedondeo()));
-            jObject.put("Subtotal", df.format(pedidoUpload.getSubtotal()));
-            jObject.put("SubtotalSinDescuento", df.format(pedidoUpload.getSubtotalSinDescuento()));
-            jObject.put("SubtotalSinImpuesto", df.format(pedidoUpload.getSubtotal() - pedidoUpload.getTotalDescuentos()));
+            jObject.put("Redondeo", removeCommas(df.format(pedidoUpload.getRedondeo())));
+            jObject.put("Subtotal", removeCommas(df.format(pedidoUpload.getSubtotal())));
+            jObject.put("SubtotalSinDescuento", removeCommas(df.format(pedidoUpload.getSubtotalSinDescuento())));
+            jObject.put("SubtotalSinImpuesto", removeCommas(df.format(pedidoUpload.getSubtotal() - pedidoUpload.getTotalDescuentos())));
             jObject.put("TipoTransaccion", pedidoUpload.getTipoDocumento());
-            jObject.put("ValorDescAutomatico", df.format(pedidoUpload.getTotalDescuentos()));
-            jObject.put("ValorImpuestoIvaVenta", df.format(pedidoUpload.getTotalImpuestos()));
+            jObject.put("ValorDescAutomatico", removeCommas(df.format(pedidoUpload.getTotalDescuentos())));
+            jObject.put("ValorImpuestoIvaVenta", removeCommas(df.format(pedidoUpload.getTotalImpuestos())));
             jObject.put("IdControlCaja", controlCaja.getIdControlCaja());
             jObject.put("IdDocumentoRef", pedidoUpload.getIdDocumentoRef());
-            jObject.put("TotalImpuesto2", df.format(pedidoUpload.getTotalImpuesto2()));
-            jObject.put("TotalImpuesto3", df.format(pedidoUpload.getTotalImpuesto3()));
-            jObject.put("TotalImpuesto4", df.format(pedidoUpload.getTotalImpuesto4()));
+            jObject.put("TotalImpuesto2", removeCommas(df.format(pedidoUpload.getTotalImpuesto2())));
+            jObject.put("TotalImpuesto3", removeCommas(df.format(pedidoUpload.getTotalImpuesto3())));
+            jObject.put("TotalImpuesto4", removeCommas(df.format(pedidoUpload.getTotalImpuesto4())));
             jObject.put("IdNumeroLocalSRI", Integer.parseInt(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO)));
             jObject.put("IdNumeroCajaSRI", Integer.parseInt(PreferenceManager.getString(Contants.KEY_SERIE)));
             if(pedidoUpload.getTipoDocumento().equalsIgnoreCase("FA"))
@@ -107,28 +107,28 @@ public class Pedido {
                 jObjectDetalle.put("Descripcion", det.getDescripcion());
                 jObjectDetalle.put("IdPedido", det.getIdPedido());
                 jObjectDetalle.put("IdPedidoDetalle", det.getIdPedidoDetalle());
-                jObjectDetalle.put("ValorUnitario", df.format(det.getValorUnitario()));
+                jObjectDetalle.put("ValorUnitario", removeCommas(df.format(det.getValorUnitario())));
                 jObjectDetalle.put("Cantidad", det.getCantidad());
-                jObjectDetalle.put("ValorTotal", df.format(det.getValorTotal()));
-                jObjectDetalle.put("BaseImponible", df.format(det.getBaseImponible()));
-                jObjectDetalle.put("BaseImponibleCero", df.format(det.getBaseImponibleCero()));
+                jObjectDetalle.put("ValorTotal", removeCommas(df.format(det.getValorTotal())));
+                jObjectDetalle.put("BaseImponible",removeCommas(df.format(det.getBaseImponible())));
+                jObjectDetalle.put("BaseImponibleCero", removeCommas(df.format(det.getBaseImponibleCero())));
                 //jObjectDetalle.put("IdBeneficio", det.getProducto().getIdBeneficio());
-                jObjectDetalle.put("PorcDescOro", df.format(NumberUtils.Round(det.getPorcentajeDescuentoOro(), 2)));
-                jObjectDetalle.put("ValorDescOro", df.format(NumberUtils.Round(det.getValorDescuentoOro(), 2)));
-                jObjectDetalle.put("ValorDescOroTotal", df.format(NumberUtils.Round(det.getValorDescuentoOroTotal(), 2)));
-                jObjectDetalle.put("PorcDescAutomatico", df.format(det.getPorcentajeDescuentoAutomatico()));
-                jObjectDetalle.put("PorcDescManual", df.format(det.getPorcentajeDescuentoManual()));
-                jObjectDetalle.put("PorcImpuestoIvaVenta", df.format(det.getPorcentajeImpuesto()));
-                jObjectDetalle.put("Subtotal", df.format(det.getSubtotal()));
-                jObjectDetalle.put("SubtotalSinDescuento", df.format(det.getSubtotalSinDescuento()));
-                jObjectDetalle.put("SubtotalSinImpuesto", df.format(det.getSubtotalSinImpuesto()));
-                jObjectDetalle.put("ValorDescAutomatico", df.format(det.getValorDescuentoAutomatico()));
-                jObjectDetalle.put("ValorDescAutomaticoTotal", df.format(det.getValorDescuentoAutomaticoTotal()));
-                jObjectDetalle.put("ValorDescManual", df.format(det.getValorDescuentoManual()));
-                jObjectDetalle.put("ValorDescManualTotal", df.format(det.getValorDescuentoManualTotal()));
-                jObjectDetalle.put("ValorImpuestoIvaVenta", df.format(det.getValorImpuesto()));
-                jObjectDetalle.put("ValorImpuestoIvaVentaTotal", df.format(det.getValorImpuestoTotal()));
-                jObjectDetalle.put("BaseICE", df.format(det.getBaseICE()));
+                jObjectDetalle.put("PorcDescOro", removeCommas(df.format(NumberUtils.Round(det.getPorcentajeDescuentoOro(), 2))));
+                jObjectDetalle.put("ValorDescOro", removeCommas(df.format(NumberUtils.Round(det.getValorDescuentoOro(), 2))));
+                jObjectDetalle.put("ValorDescOroTotal", removeCommas(df.format(NumberUtils.Round(det.getValorDescuentoOroTotal(), 2))));
+                jObjectDetalle.put("PorcDescAutomatico", removeCommas(df.format(det.getPorcentajeDescuentoAutomatico())));
+                jObjectDetalle.put("PorcDescManual", removeCommas(df.format(det.getPorcentajeDescuentoManual())));
+                jObjectDetalle.put("PorcImpuestoIvaVenta", removeCommas(df.format(det.getPorcentajeImpuesto())));
+                jObjectDetalle.put("Subtotal", removeCommas(df.format(det.getSubtotal())));
+                jObjectDetalle.put("SubtotalSinDescuento", removeCommas(df.format(det.getSubtotalSinDescuento())));
+                jObjectDetalle.put("SubtotalSinImpuesto", removeCommas(df.format(det.getSubtotalSinImpuesto())));
+                jObjectDetalle.put("ValorDescAutomatico", removeCommas(df.format(det.getValorDescuentoAutomatico())));
+                jObjectDetalle.put("ValorDescAutomaticoTotal", removeCommas(df.format(det.getValorDescuentoAutomaticoTotal())));
+                jObjectDetalle.put("ValorDescManual", removeCommas(df.format(det.getValorDescuentoManual())));
+                jObjectDetalle.put("ValorDescManualTotal", removeCommas(df.format(det.getValorDescuentoManualTotal())));
+                jObjectDetalle.put("ValorImpuestoIvaVenta", removeCommas(df.format(det.getValorImpuesto())));
+                jObjectDetalle.put("ValorImpuestoIvaVentaTotal", removeCommas(df.format(det.getValorImpuestoTotal())));
+                jObjectDetalle.put("BaseICE", removeCommas(df.format(det.getBaseICE())));
                 jObjectDetalle.put("CantidadDevolucion", det.getCantidadDevolucion());
                 jObjectDetalle.put("IdVendedor", det.getIdVendedor());
 
@@ -145,7 +145,7 @@ public class Pedido {
                 jObjectPago.put("IdFormaPago", pago.getIdFormaPago());
                 jObjectPago.put("IdMoneda", PreferenceManager.getInt(Contants.KEY_ID_MONEDA));
                 jObjectPago.put("Observacion", pago.getObservacion());
-                jObjectPago.put("Valor", df.format(pago.getValor()));
+                jObjectPago.put("Valor", removeCommas(df.format(pago.getValor())));
                 jObjectPago.put("ValorMoneda", 1);
 
                 jArrayPago.put(jObjectPago);
@@ -226,7 +226,7 @@ public class Pedido {
                 else {
                     jObject.put("IdCliente", pedidoUpload.getIdCliente());
                 }
-                jObject.put("ValorTotal", df.format(NumberUtils.Round(pedidoUpload.getValorTotal(), 2)));
+                jObject.put("ValorTotal", removeCommas(df.format(NumberUtils.Round(pedidoUpload.getValorTotal(), 2))));
                 jObject.put("Email", pedidoUpload.getEmail());
                 jObject.put("Estado", pedidoUpload.getEstado());
                 jObject.put("FechaCreacionTicks", Convert.getDotNetTicksFromDate(pedidoUpload.getFechaCreacion()));
@@ -238,9 +238,9 @@ public class Pedido {
                 } else
                     jObject.put("Anulado", false);
 
-                jObject.put("BaseImponible", df.format(NumberUtils.Round(pedidoUpload.getBaseImponible(), 2)));
-                jObject.put("BaseImponibleCero", df.format(NumberUtils.Round(pedidoUpload.getBaseImponibleCero(), 2)));
-                jObject.put("Cambio", df.format(NumberUtils.Round(pedidoUpload.getExcedente(), 2)));
+                jObject.put("BaseImponible", removeCommas(df.format(NumberUtils.Round(pedidoUpload.getBaseImponible(), 2))));
+                jObject.put("BaseImponibleCero", removeCommas(df.format(NumberUtils.Round(pedidoUpload.getBaseImponibleCero(), 2))));
+                jObject.put("Cambio", removeCommas(df.format(NumberUtils.Round(pedidoUpload.getExcedente(), 2))));
 
                 jObject.put("IdEmpresa", PreferenceManager.getInt(Contants.KEY_ID_EMPRESA));
                 jObject.put("IdEstablecimiento", PreferenceManager.getInt(Contants.KEY_ID_ESTABLECIMIENTO));
@@ -249,13 +249,13 @@ public class Pedido {
                 jObject.put("IdPuntoOperacion", PreferenceManager.getInt(Contants.KEY_ID_PUNTO_OPERACION));
                 jObject.put("NumeroDocumento", pedidoUpload.getNumeroDocumento());
                 jObject.put("Observacion", pedidoUpload.getObservaciones());
-                jObject.put("Redondeo", df.format(NumberUtils.Round(pedidoUpload.getRedondeo(), 2)));
-                jObject.put("Subtotal", df.format(NumberUtils.Round(pedidoUpload.getSubtotal(), 2)));
-                jObject.put("SubtotalSinDescuento", df.format(NumberUtils.Round(pedidoUpload.getSubtotalSinDescuento(), 2)));
-                jObject.put("SubtotalSinImpuesto", df.format(NumberUtils.Round(pedidoUpload.getSubtotal() - pedidoUpload.getTotalDescuentos(), 2)));
+                jObject.put("Redondeo", removeCommas(df.format(NumberUtils.Round(pedidoUpload.getRedondeo(), 2))));
+                jObject.put("Subtotal", removeCommas(df.format(NumberUtils.Round(pedidoUpload.getSubtotal(), 2))));
+                jObject.put("SubtotalSinDescuento", removeCommas(df.format(NumberUtils.Round(pedidoUpload.getSubtotalSinDescuento(), 2))));
+                jObject.put("SubtotalSinImpuesto", removeCommas(df.format(NumberUtils.Round(pedidoUpload.getSubtotal() - pedidoUpload.getTotalDescuentos(), 2))));
                 jObject.put("TipoTransaccion", pedidoUpload.getTipoDocumento());
-                jObject.put("ValorDescAutomatico", df.format(NumberUtils.Round(pedidoUpload.getTotalDescuentos(), 2)));
-                jObject.put("ValorImpuestoIvaVenta", df.format(NumberUtils.Round(pedidoUpload.getTotalImpuestos(), 2)));
+                jObject.put("ValorDescAutomatico", removeCommas(df.format(NumberUtils.Round(pedidoUpload.getTotalDescuentos(), 2))));
+                jObject.put("ValorImpuestoIvaVenta", removeCommas(df.format(NumberUtils.Round(pedidoUpload.getTotalImpuestos(), 2))));
                 ControlCaja controlCaja = ControlCaja.getControlCaja(db, pedidoUpload.get_idControlCaja());
                 if (controlCaja.getIdControlCaja() == 0) {
                     Caja.executeSyncInsertControl(db, controlCaja.getID());
@@ -275,9 +275,9 @@ public class Pedido {
                 else {
                     jObject.put("IdDocumentoRef", pedidoUpload.getIdDocumentoRef());
                 }
-                jObject.put("TotalImpuesto2", df.format(NumberUtils.Round(pedidoUpload.getTotalImpuesto2(), 2)));
-                jObject.put("TotalImpuesto3", df.format(NumberUtils.Round(pedidoUpload.getTotalImpuesto3(), 2)));
-                jObject.put("TotalImpuesto4", df.format(NumberUtils.Round(pedidoUpload.getTotalImpuesto4(), 2)));
+                jObject.put("TotalImpuesto2", removeCommas(df.format(NumberUtils.Round(pedidoUpload.getTotalImpuesto2(), 2))));
+                jObject.put("TotalImpuesto3", removeCommas(df.format(NumberUtils.Round(pedidoUpload.getTotalImpuesto3(), 2))));
+                jObject.put("TotalImpuesto4", removeCommas(df.format(NumberUtils.Round(pedidoUpload.getTotalImpuesto4(), 2))));
                 jObject.put("IdNumeroLocalSRI", Integer.parseInt(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO)));
                 jObject.put("IdNumeroCajaSRI", Integer.parseInt(PreferenceManager.getString(Contants.KEY_SERIE)));
                 if (pedidoUpload.getTipoDocumento().equalsIgnoreCase("FA"))
@@ -297,38 +297,38 @@ public class Pedido {
                     jObjectDetalle.put("Descripcion", det.getDescripcion());
                     jObjectDetalle.put("IdPedido", det.getIdPedido());
                     jObjectDetalle.put("IdPedidoDetalle", det.getIdPedidoDetalle());
-                    jObjectDetalle.put("ValorUnitario", df.format(det.getValorUnitario()));
+                    jObjectDetalle.put("ValorUnitario", removeCommas(df.format(det.getValorUnitario())));
                     jObjectDetalle.put("Cantidad", det.getCantidad());
-                    jObjectDetalle.put("ValorTotal", df.format(NumberUtils.Round(det.getValorTotal(), 2)));
-                    jObjectDetalle.put("BaseImponible", df.format(NumberUtils.Round(det.getBaseImponible(), 2)));
-                    jObjectDetalle.put("BaseImponibleCero", df.format(NumberUtils.Round(det.getBaseImponibleCero(), 2)));
+                    jObjectDetalle.put("ValorTotal", removeCommas(df.format(NumberUtils.Round(det.getValorTotal(), 2))));
+                    jObjectDetalle.put("BaseImponible", removeCommas(df.format(NumberUtils.Round(det.getBaseImponible(), 2))));
+                    jObjectDetalle.put("BaseImponibleCero", removeCommas(df.format(NumberUtils.Round(det.getBaseImponibleCero(), 2))));
                     jObjectDetalle.put("IdBeneficio", det.getIdBeneficio());
-                    jObjectDetalle.put("ValorDescOro", df.format(NumberUtils.Round(det.getValorDescuentoOro(), 2)));
+                    jObjectDetalle.put("ValorDescOro", removeCommas(df.format(NumberUtils.Round(det.getValorDescuentoOro(), 2))));
                     if(det.getValorDescuentoOro() == 0)
                         jObjectDetalle.put("PorcDescOro", 0);
                     else
-                        jObjectDetalle.put("PorcDescOro", df.format(NumberUtils.Round(det.getPorcentajeDescuentoOro(), 2)));
+                        jObjectDetalle.put("PorcDescOro", removeCommas(df.format(NumberUtils.Round(det.getPorcentajeDescuentoOro(), 2))));
 
-                    jObjectDetalle.put("ValorDescOroTotal", df.format(NumberUtils.Round(det.getValorDescuentoOroTotal(), 2)));
+                    jObjectDetalle.put("ValorDescOroTotal", removeCommas(df.format(NumberUtils.Round(det.getValorDescuentoOroTotal(), 2))));
 
-                    jObjectDetalle.put("ValorDescAutomatico", df.format(NumberUtils.Round(det.getValorDescuentoAutomatico(), 2)));
+                    jObjectDetalle.put("ValorDescAutomatico", removeCommas(df.format(NumberUtils.Round(det.getValorDescuentoAutomatico(), 2))));
                     if(det.getValorDescuentoAutomatico() == 0)
                         jObjectDetalle.put("PorcDescAutomatico", 0);
                     else
-                        jObjectDetalle.put("PorcDescAutomatico", df.format(NumberUtils.Round(det.getPorcentajeDescuentoAutomatico(), 2)));
+                        jObjectDetalle.put("PorcDescAutomatico", removeCommas(df.format(NumberUtils.Round(det.getPorcentajeDescuentoAutomatico(), 2))));
 
-                    jObjectDetalle.put("PorcDescManual", df.format(NumberUtils.Round(det.getPorcentajeDescuentoManual(), 2)));
-                    jObjectDetalle.put("PorcImpuestoIvaVenta", df.format(NumberUtils.Round(det.getPorcentajeImpuesto(), 2)));
-                    jObjectDetalle.put("Subtotal", df.format(NumberUtils.Round(det.getSubtotal(), 2)));
-                    jObjectDetalle.put("SubtotalSinDescuento", df.format(NumberUtils.Round(det.getSubtotalSinDescuento(), 2)));
-                    jObjectDetalle.put("SubtotalSinImpuesto", df.format(NumberUtils.Round(det.getSubtotalSinImpuesto(), 2)));
+                    jObjectDetalle.put("PorcDescManual", removeCommas(df.format(NumberUtils.Round(det.getPorcentajeDescuentoManual(), 2))));
+                    jObjectDetalle.put("PorcImpuestoIvaVenta", removeCommas(df.format(NumberUtils.Round(det.getPorcentajeImpuesto(), 2))));
+                    jObjectDetalle.put("Subtotal", removeCommas(df.format(NumberUtils.Round(det.getSubtotal(), 2))));
+                    jObjectDetalle.put("SubtotalSinDescuento", removeCommas(df.format(NumberUtils.Round(det.getSubtotalSinDescuento(), 2))));
+                    jObjectDetalle.put("SubtotalSinImpuesto", removeCommas(df.format(NumberUtils.Round(det.getSubtotalSinImpuesto(), 2))));
 
-                    jObjectDetalle.put("ValorDescAutomaticoTotal", df.format(NumberUtils.Round(det.getValorDescuentoAutomaticoTotal(), 2)));
-                    jObjectDetalle.put("ValorDescManual", df.format(NumberUtils.Round(det.getValorDescuentoManual(), 2)));
-                    jObjectDetalle.put("ValorDescManualTotal", df.format(NumberUtils.Round(det.getValorDescuentoManualTotal(), 2)));
-                    jObjectDetalle.put("ValorImpuestoIvaVenta", df.format(NumberUtils.Round(det.getValorImpuesto(), 2)));
-                    jObjectDetalle.put("ValorImpuestoIvaVentaTotal", df.format(NumberUtils.Round(det.getValorImpuestoTotal(), 2)));
-                    jObjectDetalle.put("BaseICE", df.format(NumberUtils.Round(det.getBaseICE(), 2)));
+                    jObjectDetalle.put("ValorDescAutomaticoTotal", removeCommas(df.format(NumberUtils.Round(det.getValorDescuentoAutomaticoTotal(), 2))));
+                    jObjectDetalle.put("ValorDescManual", removeCommas(df.format(NumberUtils.Round(det.getValorDescuentoManual(), 2))));
+                    jObjectDetalle.put("ValorDescManualTotal", removeCommas(df.format(NumberUtils.Round(det.getValorDescuentoManualTotal(), 2))));
+                    jObjectDetalle.put("ValorImpuestoIvaVenta", removeCommas(df.format(NumberUtils.Round(det.getValorImpuesto(), 2))));
+                    jObjectDetalle.put("ValorImpuestoIvaVentaTotal", removeCommas(df.format(NumberUtils.Round(det.getValorImpuestoTotal(), 2))));
+                    jObjectDetalle.put("BaseICE", removeCommas(df.format(NumberUtils.Round(det.getBaseICE(), 2))));
                     jObjectDetalle.put("UsrAutorizaDescManual", det.getUsrDescManual());
                     jObjectDetalle.put("CantidadDevolucion", det.getCantidadDevolucion());
                     jObjectDetalle.put("IdVendedor", det.getIdVendedor());
@@ -346,7 +346,7 @@ public class Pedido {
                     jObjectPago.put("IdFormaPago", pago.getIdFormaPago());
                     jObjectPago.put("IdMoneda", PreferenceManager.getInt(Contants.KEY_ID_MONEDA));
                     jObjectPago.put("Observacion", pago.getObservacion());
-                    jObjectPago.put("Valor", df.format(pago.getValor()));
+                    jObjectPago.put("Valor", removeCommas(df.format(pago.getValor())));
                     jObjectPago.put("ValorMoneda", 1);
                     if(pago.getCodigoSeguridad() != 0)
                         jObjectPago.put("CodigoSeguridad", pago.getCodigoSeguridad());
@@ -535,4 +535,10 @@ public class Pedido {
         }
         return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
     }
+
+    private static String removeCommas(String value)
+    {
+        return value.replace(",",".");
+    }
 }
+
