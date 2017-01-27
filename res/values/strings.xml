@@ -441,4 +441,13 @@
     <string name="label_es_principal_tarjeta">Es Tarjeta Principal</string>
     <string name="label_validar_tarjeta">Validar</string>
     <string name="label_es_tarjeta_valida">Es Tarjeta Válida</string>
+    <string name="label_no_datos">No hay datos</string>
+    <string name="label_agregar_afiliado">Agregar afiliado</string>
+    <string name="label_edad">Edad</string>
+    <string name="label_es_fumador">Es Fumador?</string>
+    <string name="label_pago_anual">Pago Anual</string>
+    <string name="label_con_todas_tarjetas">con todas las tarjetas</string>
+    <string name="label_pago_mensual">Pago Mensual</string>
+    <string name="label_con_tarjeta_credito">con tarjeta de crédito</string>
+    <string name="label_con_tarjeta_debito">con tarjeta de débito</string>
 </resources>

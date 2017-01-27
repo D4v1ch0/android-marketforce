@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Afiliado # 1"
+        android:id="@+id/afiliado_cotizacion_numero"
+        android:padding="5dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="25 años"
+        android:id="@+id/afiliado_cotizacion_edad"
+        android:padding="5dp"
+        android:textColor="@color/color_hint" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Masculino"
+        android:id="@+id/afiliado_cotizacion_sexo"
+        android:padding="5dp"
+        android:textColor="@color/color_hint" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Es Fumador"
+        android:id="@+id/afiliado_cotizacion_fumador"
+        android:padding="5dp"
+        android:textColor="@color/color_hint" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="S/. 711.00"
+        android:id="@+id/afiliado_cotizacion_precio"
+        android:padding="5dp"
+        android:textColor="@color/color_text_sky_blue"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_grey_lines"></LinearLayout>
+</LinearLayout>
