@@ -79,7 +79,7 @@
         IdClienteTarjeta INTEGER,
         Numero TEXT,
         CodSeguridad TEXT,
-        IdMarcaTarjeta INTEGER,
+        IdMarcaTarjeta TEXT,
         FechaCaducidad TEXT,
         EsPrincipal INTEGER,
         EsValida INTEGER
@@ -141,6 +141,18 @@
         FechaCreacion INTEGER
       )
 	</statement>
+
+    <statement>
+        CREATE TABLE tbAgendaLlamada(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdAgenda INTEGER,
+        _IdAgenda INTEGER,
+        IdAgendaLlamada INTEGER,
+        Fecha INTEGER,
+        Numero TEXT,
+        Duracion INTEGER
+        )
+    </statement>
 	
 	<statement>
         CREATE VIRTUAL TABLE tbAgendaExt USING fts4 (

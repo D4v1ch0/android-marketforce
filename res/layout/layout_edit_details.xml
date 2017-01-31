@@ -64,7 +64,7 @@
             android:textStyle="bold" 
             android:text="@string/label_fecha_nacimiento" />
 
-        <rp3.marketforce.DateDisplayPicker
+        <rp3.auna.DateDisplayPicker
             android:id="@+id/datePicker"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

@@ -16,7 +16,7 @@ limitations under the License.
 -->
 
 <sync-adapter xmlns:android="http://schemas.android.com/apk/res/android"
-              android:contentAuthority="rp3.marketforce.provider"
+              android:contentAuthority="rp3.auna.provider"
               android:accountType="rp3.marketforce"
               android:userVisible="false"
               android:supportsUploading="false"
