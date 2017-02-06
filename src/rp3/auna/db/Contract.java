@@ -1217,4 +1217,19 @@ public final class Contract {
 		public static final String COLUMN_ID_VENDEDOR = "IdVendedor";
 
 	}
+
+	/* AUNA */
+	public static abstract class Cotizacion implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbCotizacion";
+
+		public static final String COLUMN_RUTA_ID = "IdRuta";
+		public static final String COLUMN_AGENDA_ID = "IdAgenda";
+		public static final String COLUMN_AGENDA_ID_EXT = "_IdAgenda";
+		public static final String COLUMN_TAREA_ID = "IdTarea";
+		public static final String COLUMN_PARAMETROS = "Parametros";
+		public static final String COLUMN_RESPONSE = "Response";
+		public static final String COLUMN_OPCION = "Opcion";
+
+	}
 }

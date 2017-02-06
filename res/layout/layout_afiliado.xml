@@ -31,7 +31,6 @@
             android:layout_weight="1"
             android:ems="10"
             android:hint="@string/label_edad"
-            android:inputType="number"
             android:textSize="@dimen/text_medium_size"
             android:background="@color/caldroid_transparent"
             android:layout_marginTop="5dp"
@@ -39,7 +38,8 @@
             android:paddingLeft="15dp"
             android:paddingTop="10dp"
             android:paddingRight="10dp"
-            android:paddingBottom="10dp" />
+            android:paddingBottom="10dp"
+            android:inputType="number" />
 
         <LinearLayout
             android:orientation="vertical"
@@ -79,7 +79,7 @@
                 android:id="@+id/textView88"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.75"
+                android:layout_weight="0.35"
                 android:text="@string/label_es_fumador"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/text_medium_size"
@@ -91,8 +91,16 @@
                 android:id="@+id/afiliado_es_fumador"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.25"
+                android:layout_weight="0.15"
                 android:button="@drawable/custom_checkbox" />
+            <Button
+                style="@style/Widget.Button.Theme"
+                android:id="@+id/eliminar_afiliado"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="@string/label_eliminar_direccion"
+                android:layout_weight="0.5" />
         </LinearLayout>
     </LinearLayout>
 

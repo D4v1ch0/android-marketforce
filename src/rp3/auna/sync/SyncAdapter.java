@@ -1,6 +1,7 @@
 package rp3.auna.sync;
 
 import rp3.accounts.ServerAuthenticate;
+import rp3.auna.actividades.CotizacionActivity;
 import rp3.configuration.PreferenceManager;
 import rp3.db.sqlite.DataBase;
 import rp3.auna.Contants;
@@ -75,6 +76,8 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
     public static String SYNC_TYPE_AUTORIZAR_DESC = "autorizar_desc";
     public static String SYNC_TYPE_VALIDAR_NC = "validar_nc";
     public static String SYNC_TYPE_CANCELAR_NC = "cancelar_nc";
+
+    public static String SYNC_TYPE_CONSULTA_COTIZACION = "cotizacion";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -491,6 +494,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     double longitud = extras.getInt(RutasDetailFragment.ARG_LONGITUD);
                     result = Agenda.executeSyncGeolocation(db, id, latitud, longitud);
                     addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_CONSULTA_COTIZACION)) {
+                    String params = extras.getString(CotizacionActivity.ARG_PARAMS);
+                    Bundle bundle = Auna.executeCotizacion(params);
+                    addDefaultMessage(bundle.getInt("Status"));
+                    putData(CotizacionActivity.ARG_RESPONSE, bundle.getString(CotizacionActivity.ARG_RESPONSE));
                 } else if (syncType.equals(SYNC_TYPE_BATCH)) {
                     result = Cliente.executeSyncInserts(db);
                     addDefaultMessage(result);

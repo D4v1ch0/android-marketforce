@@ -1,4 +1,4 @@
-package rp3.auna.models;
+package rp3.auna.models.auna;
 
 import android.database.Cursor;
 
@@ -12,7 +12,7 @@ import rp3.util.CursorUtils;
 /**
  * Created by magno_000 on 16/01/2017.
  */
-public class ClienteTarjeta extends rp3.data.entity.EntityBase<ClienteDireccion> {
+public class ClienteTarjeta extends rp3.data.entity.EntityBase<ClienteTarjeta> {
 
     private long id;
     private long _idCliente;

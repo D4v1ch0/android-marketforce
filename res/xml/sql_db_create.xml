@@ -709,5 +709,18 @@
         IdVendedor TEXT PRIMARY KEY
         )
     </statement>
+    <!--AUNA-->
+    <statement>
+        CREATE TABLE tbCotizacion(
+        _id INTEGER PRIMARY KEY,
+        IdRuta INTEGER,
+        IdAgenda INTEGER,
+        _IdAgenda INTEGER,
+        IdTarea INTEGER,
+        Parametros TEXT,
+        Response TEXT,
+        Opcion INTEGER
+        )
+    </statement>
 
 </sql>

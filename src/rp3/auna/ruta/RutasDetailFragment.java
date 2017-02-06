@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Random;
 
 import rp3.app.BaseActivity;
+import rp3.auna.actividades.CotizacionActivity;
 import rp3.configuration.PreferenceManager;
 import rp3.db.sqlite.DataBase;
 import rp3.maps.utils.SphericalUtil;
@@ -693,6 +694,18 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 		startActivity(intent);
 	}
 
+    public void showTareaCotizacion(AgendaTarea agt)
+    {
+        Intent intent = new Intent(getContext(), CotizacionActivity.class);
+        intent.putExtra(ARG_ITEM_ID, agt.getIdTarea());
+        intent.putExtra(ARG_AGENDA_ID, agt.getIdAgenda());
+        intent.putExtra(ARG_RUTA_ID, agt.getIdRuta());
+        intent.putExtra(ActividadActivity.ARG_AGENDA_INT, agt.get_idAgenda());
+        intent.putExtra(ActividadActivity.ARG_VISTA, soloVista);
+        intent.putExtra(ActividadActivity.ARG_TITULO, agt.getNombreTarea());
+        startActivity(intent);
+    }
+
     public void showTareaActualizacion(AgendaTarea agt)
     {
         if(!clienteNull) {
@@ -823,6 +836,8 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                                     showTareaTexto(ata, setter);
                             }
                         }
+                        if (setter.getTipoTarea().equalsIgnoreCase("C"))
+                            showTareaCotizacion(setter);
                         if (setter.getTipoTarea().equalsIgnoreCase("E"))
                             showTareaGrupo(setter);
                         if (setter.getTipoTarea().equalsIgnoreCase("ADC") && !soloVista)

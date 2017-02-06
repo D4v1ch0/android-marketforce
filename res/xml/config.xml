@@ -516,6 +516,13 @@
                     <webMethod>GET</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>
+                <!--AUNA-->
+                <method>
+                    <name>GetCotizacion</name>
+                    <action>auna/GetCotizacion</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
             </methods>     
         </webServiceData>
            <webServiceData>

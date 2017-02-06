@@ -450,4 +450,6 @@
     <string name="label_pago_mensual">Pago Mensual</string>
     <string name="label_con_tarjeta_credito">con tarjeta de crédito</string>
     <string name="label_con_tarjeta_debito">con tarjeta de débito</string>
+    <string name="label_consultar_cotizacion">Consultar Cotización</string>
+    <string name="message_generando_cotizacion">Generando Cotización</string>
 </resources>

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import rp3.auna.models.auna.ClienteTarjeta;
 import rp3.data.entity.EntityBase;
 import rp3.db.QueryDir;
 import rp3.db.sqlite.DataBase;
