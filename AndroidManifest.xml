@@ -186,8 +186,10 @@
         <activity android:name="rp3.auna.actividades.SeleccionActivity"></activity>
         <activity android:name="rp3.auna.actividades.GrupoActivity"></activity>
         <activity android:name="rp3.auna.actividades.NumericoActivity" android:theme="@style/ActivityPopupTheme"></activity>
+        <activity android:name="rp3.auna.actividades.CotizacionActivity"></activity>
         <activity android:name="rp3.auna.ruta.ReprogramarActivity"></activity>
         <activity android:name="rp3.auna.ruta.CrearVisitaActivity"></activity>
+
         
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"

@@ -380,6 +380,23 @@ public class Cliente {
 					jArrayContactos.put(jObjectCont);
 				}
 				jObject.put("ClienteContactos", jArrayContactos);
+
+				JSONArray jArrayTarjetas = new JSONArray();
+				for(int i = 0; i < cl.getClienteTarjetas().size(); i++)
+				{
+					/*JSONObject jObjectCont = new JSONObject();
+					jObjectCont.put("IdInterno", cl.getContactos().get(i).getID());
+					jObjectCont.put("IdClienteDireccion", cl.getContactos().get(i).getIdClienteDireccion());
+					jObjectCont.put("Nombre", cl.getContactos().get(i).getNombre());
+					jObjectCont.put("Apellido", cl.getContactos().get(i).getApellido());
+					jObjectCont.put("Cargo", cl.getContactos().get(i).getCargo());
+					jObjectCont.put("Telefono1", cl.getContactos().get(i).getTelefono1());
+					jObjectCont.put("Telefono2", cl.getContactos().get(i).getTelefono2());
+					jObjectCont.put("CorreoElectronico", cl.getContactos().get(i).getCorreo());
+					jObjectCont.put("Foto", cl.getContactos().get(i).getURLFoto());
+					jArrayTarjetas.put(jObjectCont);*/
+				}
+				jObject.put("ClienteTarjetas", jArrayTarjetas);
 				
 				jArray.put(jObject);
 			}
@@ -573,6 +590,23 @@ public class Cliente {
 					jArrayContactos.put(jObjectCont);
 				}
 				jObject.put("ClienteContactos", jArrayContactos);
+
+				JSONArray jArrayTarjetas = new JSONArray();
+				for(int i = 0; i < cl.getClienteTarjetas().size(); i++)
+				{
+					/*JSONObject jObjectCont = new JSONObject();
+					jObjectCont.put("IdInterno", cl.getContactos().get(i).getID());
+					jObjectCont.put("IdClienteDireccion", cl.getContactos().get(i).getIdClienteDireccion());
+					jObjectCont.put("Nombre", cl.getContactos().get(i).getNombre());
+					jObjectCont.put("Apellido", cl.getContactos().get(i).getApellido());
+					jObjectCont.put("Cargo", cl.getContactos().get(i).getCargo());
+					jObjectCont.put("Telefono1", cl.getContactos().get(i).getTelefono1());
+					jObjectCont.put("Telefono2", cl.getContactos().get(i).getTelefono2());
+					jObjectCont.put("CorreoElectronico", cl.getContactos().get(i).getCorreo());
+					jObjectCont.put("Foto", cl.getContactos().get(i).getURLFoto());
+					jArrayTarjetas.put(jObjectCont);*/
+				}
+				jObject.put("ClienteTarjetas", jArrayTarjetas);
 				
 				jArray.put(jObject);
 			}
@@ -704,7 +738,7 @@ public class Cliente {
 				try
 				{
 					jObject = new JSONObject();
-					
+
 					jObject.put("Apellido1", cl.getApellido1());
 					jObject.put("Apellido2", cl.getApellido2());
 					jObject.put("CorreoElectronico", cl.getCorreoElectronico());
@@ -753,7 +787,7 @@ public class Cliente {
 						jArrayDirecciones.put(jObjectDir);
 					}
 					jObject.put("ClienteDirecciones", jArrayDirecciones);
-					
+
 					JSONArray jArrayContactos = new JSONArray();
 					for(int i = 0; i < cl.getContactos().size(); i++)
 					{
@@ -773,6 +807,22 @@ public class Cliente {
 						jArrayContactos.put(jObjectCont);
 					}
 					jObject.put("ClienteContactos", jArrayContactos);
+
+					JSONArray jArrayTarjetas = new JSONArray();
+					for(int i = 0; i < cl.getClienteTarjetas().size(); i++) {
+					/*JSONObject jObjectCont = new JSONObject();
+					jObjectCont.put("IdInterno", cl.getContactos().get(i).getID());
+					jObjectCont.put("IdClienteDireccion", cl.getContactos().get(i).getIdClienteDireccion());
+					jObjectCont.put("Nombre", cl.getContactos().get(i).getNombre());
+					jObjectCont.put("Apellido", cl.getContactos().get(i).getApellido());
+					jObjectCont.put("Cargo", cl.getContactos().get(i).getCargo());
+					jObjectCont.put("Telefono1", cl.getContactos().get(i).getTelefono1());
+					jObjectCont.put("Telefono2", cl.getContactos().get(i).getTelefono2());
+					jObjectCont.put("CorreoElectronico", cl.getContactos().get(i).getCorreo());
+					jObjectCont.put("Foto", cl.getContactos().get(i).getURLFoto());
+					jArrayTarjetas.put(jObjectCont);*/
+					}
+					jObject.put("ClienteTarjetas", jArrayTarjetas);
 					
 					jArray.put(jObject);
 				}
@@ -979,6 +1029,23 @@ public class Cliente {
 						jArrayContactos.put(jObjectCont);
 					}
 					jObject.put("ClienteContactos", jArrayContactos);
+
+					JSONArray jArrayTarjetas = new JSONArray();
+					for(int i = 0; i < cl.getClienteTarjetas().size(); i++)
+					{
+					/*JSONObject jObjectCont = new JSONObject();
+					jObjectCont.put("IdInterno", cl.getContactos().get(i).getID());
+					jObjectCont.put("IdClienteDireccion", cl.getContactos().get(i).getIdClienteDireccion());
+					jObjectCont.put("Nombre", cl.getContactos().get(i).getNombre());
+					jObjectCont.put("Apellido", cl.getContactos().get(i).getApellido());
+					jObjectCont.put("Cargo", cl.getContactos().get(i).getCargo());
+					jObjectCont.put("Telefono1", cl.getContactos().get(i).getTelefono1());
+					jObjectCont.put("Telefono2", cl.getContactos().get(i).getTelefono2());
+					jObjectCont.put("CorreoElectronico", cl.getContactos().get(i).getCorreo());
+					jObjectCont.put("Foto", cl.getContactos().get(i).getURLFoto());
+					jArrayTarjetas.put(jObjectCont);*/
+					}
+					jObject.put("ClienteTarjetas", jArrayTarjetas);
 					
 					jArray.put(jObject);
 				}

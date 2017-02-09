@@ -197,7 +197,7 @@ public class Contants {
     public final static String AUNA_ID_WALLET = "606";
 
     public final static String COTIZADOR_PROCEDENCIA_BASE = "01";
-    public final static String COTIZADOR_CODIGO_PROGRAMA = "10";
-    public final static String COTIZADOR_ORIGEN_SOLICITUD = "02";
+    public final static String COTIZADOR_CODIGO_PROGRAMA = "60";
+    public final static String COTIZADOR_ORIGEN_SOLICITUD = "01";
 
 }

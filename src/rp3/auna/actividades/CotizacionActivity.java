@@ -16,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +40,7 @@ public class CotizacionActivity extends ActividadActivity {
     private List<LinearLayout> afiliadosLayouts;
     private View EmptyView, ResponseView;
     private String ultimaConsultaParams;
+    private TextView TotalAnual, TotalTC, TotalTD;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,12 +58,15 @@ public class CotizacionActivity extends ActividadActivity {
         EmptyView = findViewById(R.id.cotizacion_resp_empty);
         ResponseView = findViewById(R.id.cotizacion_resp_scroll);
         afiliadosLayouts = new ArrayList<>();
+        TotalAnual=(TextView)ResponseView.findViewById(R.id.cotizacion_anual_total);
+        TotalTC=(TextView)ResponseView.findViewById(R.id.cotizacion_mensual_credito);
+        TotalTD=(TextView)ResponseView.findViewById(R.id.cotizacion_mensual_debito);
 
         //Configuro boton para agregar afiliado
         findViewById(R.id.agregar_afiliado).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final LinearLayout afiliado = (LinearLayout) LayoutInflater.from(getApplicationContext()).inflate(R.layout.layout_afiliado, null);
+                final LinearLayout afiliado = (LinearLayout) LayoutInflater.from(getBaseContext()).inflate(R.layout.layout_afiliado, null);
                 final int pos = afiliadosLayouts.size() + 1;
                 ((TextView) afiliado.findViewById(R.id.afiliado_numero)).setText("AFILIADO # " + pos);
                 ((Button) afiliado.findViewById(R.id.eliminar_afiliado)).setOnClickListener(new View.OnClickListener() {
@@ -73,7 +78,7 @@ public class CotizacionActivity extends ActividadActivity {
                     }
                 });
 
-                SimpleGeneralValueAdapter tipoGeneroAdapter = new SimpleGeneralValueAdapter(getApplicationContext(), getDataBase(), rp3.auna.Contants.GENERAL_TABLE_GENERO);
+                SimpleGeneralValueAdapter tipoGeneroAdapter = new SimpleGeneralValueAdapter(getBaseContext(), getDataBase(), rp3.auna.Contants.GENERAL_TABLE_GENERO);
                 ((Spinner) afiliado.findViewById(R.id.afiliado_sexo)).setAdapter(tipoGeneroAdapter);
                 ((Spinner) afiliado.findViewById(R.id.afiliado_sexo)).setPrompt("Seleccione un género");
 
@@ -163,7 +168,7 @@ public class CotizacionActivity extends ActividadActivity {
             LinearLayout afiliado = afiliadosLayouts.get(i);
             if(((TextView) afiliado.findViewById(R.id.afiliado_edad)).length() <= 0)
             {
-                Toast.makeText(CotizacionActivity.this, "Debe ingresar al menos un afiliado", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CotizacionActivity.this, "El afiliado # "+(i+1)+" no tiene ingresado una edad.", Toast.LENGTH_SHORT).show();
                 return false;
             }
         }
@@ -177,34 +182,83 @@ public class CotizacionActivity extends ActividadActivity {
             if(messages.hasErrorMessage()){
                 showDialogMessage(messages);
             }else{
+                ContainerAnual.removeAllViews();
+                ContainerTD.removeAllViews();
+                ContainerTC.removeAllViews();
                 ultimaConsultaParams = generaJson();
-                for(int i = 0; i < afiliadosLayouts.size(); i++)
-                {
-                    LinearLayout afiliado = afiliadosLayouts.get(i);
-                    LinearLayout AfiliadoAnual = (LinearLayout) LayoutInflater.from(getApplicationContext()).inflate(R.layout.layout_afiliado_cotizacion, null);
-                    LinearLayout AfiliadoTC = (LinearLayout) LayoutInflater.from(getApplicationContext()).inflate(R.layout.layout_afiliado_cotizacion, null);
-                    LinearLayout AfiliadoTD = (LinearLayout) LayoutInflater.from(getApplicationContext()).inflate(R.layout.layout_afiliado_cotizacion, null);
+                try {
+                    JSONArray jsonArray = new JSONArray(data.getString(ARG_RESPONSE));
+                    //Control de errores
+                    NumberFormat numberFormat;
+                    numberFormat = NumberFormat.getInstance();
+                    numberFormat.setMaximumFractionDigits(2);
+                    numberFormat.setMinimumFractionDigits(2);
 
-                    ((TextView) AfiliadoAnual.findViewById(R.id.afiliado_cotizacion_numero)).setText("AFILIADO # " + (i+1));
-                    ((TextView) AfiliadoTC.findViewById(R.id.afiliado_cotizacion_numero)).setText("AFILIADO # " + (i+1));
-                    ((TextView) AfiliadoTD.findViewById(R.id.afiliado_cotizacion_numero)).setText("AFILIADO # " + (i+1));
+                    double totalAnual = 0;
+                    double totalTC = 0;
+                    double totalTD = 0;
+                    boolean hayError = false;
 
-                    ((TextView) AfiliadoAnual.findViewById(R.id.afiliado_cotizacion_edad)).setText(((TextView) afiliado.findViewById(R.id.afiliado_edad)).getText().toString() + " años");
-                    ((TextView) AfiliadoTC.findViewById(R.id.afiliado_cotizacion_edad)).setText(((TextView) afiliado.findViewById(R.id.afiliado_edad)).getText().toString() + " años");
-                    ((TextView) AfiliadoTD.findViewById(R.id.afiliado_cotizacion_edad)).setText(((TextView) afiliado.findViewById(R.id.afiliado_edad)).getText().toString() + " años");
+                    for (int i = 0; i < afiliadosLayouts.size(); i++) {
+                        LinearLayout afiliado = afiliadosLayouts.get(i);
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-                    ((TextView) AfiliadoAnual.findViewById(R.id.afiliado_cotizacion_sexo)).setText(((GeneralValue)((Spinner)afiliado.findViewById(R.id.afiliado_sexo)).getSelectedItem()).getValue());
-                    ((TextView) AfiliadoTC.findViewById(R.id.afiliado_cotizacion_sexo)).setText(((GeneralValue)((Spinner)afiliado.findViewById(R.id.afiliado_sexo)).getSelectedItem()).getValue());
-                    ((TextView) AfiliadoTD.findViewById(R.id.afiliado_cotizacion_sexo)).setText(((GeneralValue)((Spinner)afiliado.findViewById(R.id.afiliado_sexo)).getSelectedItem()).getValue());
+                        if (jsonObject.getString("Result").equalsIgnoreCase("1")) {
+                            hayError = true;
+                            break;
+                        }
+                        LinearLayout AfiliadoAnual = (LinearLayout) LayoutInflater.from(getBaseContext()).inflate(R.layout.layout_afiliado_cotizacion, null);
+                        LinearLayout AfiliadoTC = (LinearLayout) LayoutInflater.from(getBaseContext()).inflate(R.layout.layout_afiliado_cotizacion, null);
+                        LinearLayout AfiliadoTD = (LinearLayout) LayoutInflater.from(getBaseContext()).inflate(R.layout.layout_afiliado_cotizacion, null);
 
-                    ((TextView) AfiliadoAnual.findViewById(R.id.afiliado_cotizacion_fumador)).setText(((CheckBox) afiliado.findViewById(R.id.afiliado_es_fumador)).isChecked() ? "Es fumador" : "No es fumador");
-                    ((TextView) AfiliadoTC.findViewById(R.id.afiliado_cotizacion_fumador)).setText(((CheckBox) afiliado.findViewById(R.id.afiliado_es_fumador)).isChecked() ? "Es fumador" : "No es fumador");
-                    ((TextView) AfiliadoTD.findViewById(R.id.afiliado_cotizacion_fumador)).setText(((CheckBox) afiliado.findViewById(R.id.afiliado_es_fumador)).isChecked() ? "Es fumador" : "No es fumador");
+                        ((TextView) AfiliadoAnual.findViewById(R.id.afiliado_cotizacion_numero)).setText("AFILIADO # " + (i + 1));
+                        ((TextView) AfiliadoTC.findViewById(R.id.afiliado_cotizacion_numero)).setText("AFILIADO # " + (i + 1));
+                        ((TextView) AfiliadoTD.findViewById(R.id.afiliado_cotizacion_numero)).setText("AFILIADO # " + (i + 1));
 
-                    ((TextView) AfiliadoAnual.findViewById(R.id.afiliado_cotizacion_precio)).setText("S/. " + (i+1));
-                    ((TextView) AfiliadoTC.findViewById(R.id.afiliado_cotizacion_precio)).setText("S/. " + (i+1));
-                    ((TextView) AfiliadoTD.findViewById(R.id.afiliado_cotizacion_precio)).setText("S/. " + (i+1));
+                        ((TextView) AfiliadoAnual.findViewById(R.id.afiliado_cotizacion_edad)).setText(((TextView) afiliado.findViewById(R.id.afiliado_edad)).getText().toString() + " años");
+                        ((TextView) AfiliadoTC.findViewById(R.id.afiliado_cotizacion_edad)).setText(((TextView) afiliado.findViewById(R.id.afiliado_edad)).getText().toString() + " años");
+                        ((TextView) AfiliadoTD.findViewById(R.id.afiliado_cotizacion_edad)).setText(((TextView) afiliado.findViewById(R.id.afiliado_edad)).getText().toString() + " años");
+
+                        ((TextView) AfiliadoAnual.findViewById(R.id.afiliado_cotizacion_sexo)).setText(((GeneralValue) ((Spinner) afiliado.findViewById(R.id.afiliado_sexo)).getSelectedItem()).getValue());
+                        ((TextView) AfiliadoTC.findViewById(R.id.afiliado_cotizacion_sexo)).setText(((GeneralValue) ((Spinner) afiliado.findViewById(R.id.afiliado_sexo)).getSelectedItem()).getValue());
+                        ((TextView) AfiliadoTD.findViewById(R.id.afiliado_cotizacion_sexo)).setText(((GeneralValue) ((Spinner) afiliado.findViewById(R.id.afiliado_sexo)).getSelectedItem()).getValue());
+
+                        ((TextView) AfiliadoAnual.findViewById(R.id.afiliado_cotizacion_fumador)).setText(((CheckBox) afiliado.findViewById(R.id.afiliado_es_fumador)).isChecked() ? "Es fumador" : "No es fumador");
+                        ((TextView) AfiliadoTC.findViewById(R.id.afiliado_cotizacion_fumador)).setText(((CheckBox) afiliado.findViewById(R.id.afiliado_es_fumador)).isChecked() ? "Es fumador" : "No es fumador");
+                        ((TextView) AfiliadoTD.findViewById(R.id.afiliado_cotizacion_fumador)).setText(((CheckBox) afiliado.findViewById(R.id.afiliado_es_fumador)).isChecked() ? "Es fumador" : "No es fumador");
+
+
+
+
+                        ((TextView) AfiliadoAnual.findViewById(R.id.afiliado_cotizacion_precio)).setText("S/. " + numberFormat.format(Double.parseDouble(jsonObject.getString("Anual"))));
+                        ((TextView) AfiliadoTC.findViewById(R.id.afiliado_cotizacion_precio)).setText("S/. " + numberFormat.format(Double.parseDouble(jsonObject.getString("TC"))));
+                        ((TextView) AfiliadoTD.findViewById(R.id.afiliado_cotizacion_precio)).setText("S/. " + numberFormat.format(Double.parseDouble(jsonObject.getString("TD"))));
+                        totalAnual = totalAnual + Double.parseDouble(jsonObject.getString("Anual"));
+                        totalTC = totalTC + Double.parseDouble(jsonObject.getString("TC"));
+                        totalTD = totalTD + Double.parseDouble(jsonObject.getString("TD"));
+
+                        ContainerAnual.addView(AfiliadoAnual);
+                        ContainerTC.addView(AfiliadoTC);
+                        ContainerTD.addView(AfiliadoTD);
+                    }
+
+                    if (!hayError) {
+                        TotalAnual.setText("S/. " + numberFormat.format(totalAnual)+" anual");
+                        TotalTC.setText("S/. " + numberFormat.format(totalTC)+" al mes");
+                        TotalTD.setText("S/. " + numberFormat.format(totalTD)+" al mes");
+                        //Mostrar resultado de cotizacion
+                        ResponseView.setVisibility(View.VISIBLE);
+                        EmptyView.setVisibility(View.GONE);
+                    } else
+                    {
+                        //SE DEBE MOSTRAR EL ERROR QUE RETORNA EL SERVICIO
+                    }
                 }
+                catch (Exception ex)
+                {
+
+                }
+
             }
         }
     }
