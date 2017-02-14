@@ -594,6 +594,7 @@ public class Oportunidad {
             long fecha = rp3.util.Convert.getDotNetTicksFromDate(fechaUlt.getTime());
             webService.addParameter("@ultimaactualizacion", fecha);
             webService.addCurrentAuthToken();
+            webService.setTimeOut(30000);
 
             try {
                 webService.invokeWebService();
