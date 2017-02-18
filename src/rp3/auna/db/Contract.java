@@ -1230,6 +1230,7 @@ public final class Contract {
 		public static final String COLUMN_PARAMETROS = "Parametros";
 		public static final String COLUMN_RESPONSE = "Response";
 		public static final String COLUMN_OPCION = "Opcion";
+		public static final String COLUMN_VALOR = "Valor";
 
 	}
 }

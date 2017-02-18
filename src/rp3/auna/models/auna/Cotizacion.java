@@ -24,6 +24,7 @@ public class Cotizacion extends rp3.data.entity.EntityBase<Cotizacion> {
     private String parametros;
     private String response;
     private int opcion;
+    private double valor;
 
     @Override
     public long getID() {
@@ -77,6 +78,14 @@ public class Cotizacion extends rp3.data.entity.EntityBase<Cotizacion> {
         this.opcion = opcion;
     }
 
+    public double getValor() {
+        return valor;
+    }
+
+    public void setValor(double valor) {
+        this.valor = valor;
+    }
+
     @Override
     public void setValues() {
 
@@ -87,6 +96,7 @@ public class Cotizacion extends rp3.data.entity.EntityBase<Cotizacion> {
         setValue(Contract.Cotizacion.COLUMN_PARAMETROS, this.parametros);
         setValue(Contract.Cotizacion.COLUMN_RESPONSE, this.response);
         setValue(Contract.Cotizacion.COLUMN_OPCION, this.opcion);
+        setValue(Contract.Cotizacion.COLUMN_VALOR, this.valor);
     }
 
     @Override
@@ -127,7 +137,7 @@ public class Cotizacion extends rp3.data.entity.EntityBase<Cotizacion> {
 
         Cursor c = db.query(Contract.Cotizacion.TABLE_NAME, new String[] {Contract.Cotizacion._ID, Contract.Cotizacion.COLUMN_AGENDA_ID,
                         Contract.Cotizacion.COLUMN_PARAMETROS, Contract.Cotizacion.COLUMN_RUTA_ID, Contract.Cotizacion.COLUMN_AGENDA_ID_EXT,
-                        Contract.Cotizacion.COLUMN_TAREA_ID, Contract.Cotizacion.COLUMN_RESPONSE, Contract.Cotizacion.COLUMN_OPCION},
+                        Contract.Cotizacion.COLUMN_TAREA_ID, Contract.Cotizacion.COLUMN_RESPONSE, Contract.Cotizacion.COLUMN_OPCION, Contract.Cotizacion.COLUMN_VALOR},
                 Contract.Cotizacion.COLUMN_AGENDA_ID + " = ? AND " +
                         Contract.Cotizacion.COLUMN_RUTA_ID + " = ? AND " +
                         Contract.Cotizacion.COLUMN_TAREA_ID + " = ? ", new String[] { idAgenda + "", idRuta + "", idTarea + ""});
@@ -144,6 +154,7 @@ public class Cotizacion extends rp3.data.entity.EntityBase<Cotizacion> {
             cotizacion.setParametros(CursorUtils.getString(c, Contract.Cotizacion.COLUMN_PARAMETROS));
             cotizacion.setResponse(CursorUtils.getString(c, Contract.Cotizacion.COLUMN_RESPONSE));
             cotizacion.setOpcion(CursorUtils.getInt(c, Contract.Cotizacion.COLUMN_OPCION));
+            cotizacion.setValor(CursorUtils.getDouble(c, Contract.Cotizacion.COLUMN_VALOR));
 
         }
         c.close();

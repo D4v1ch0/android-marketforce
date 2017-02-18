@@ -24,6 +24,9 @@ import rp3.app.BaseActivity;
 import rp3.auna.Contants;
 import rp3.auna.R;
 import rp3.auna.cliente.CrearClienteFragment;
+import rp3.auna.models.Agenda;
+import rp3.auna.models.AgendaTarea;
+import rp3.auna.models.auna.Cotizacion;
 import rp3.auna.sync.SyncAdapter;
 import rp3.content.SimpleGeneralValueAdapter;
 import rp3.data.MessageCollection;
@@ -41,6 +44,7 @@ public class CotizacionActivity extends ActividadActivity {
     private View EmptyView, ResponseView;
     private String ultimaConsultaParams;
     private TextView TotalAnual, TotalTC, TotalTD;
+    private Cotizacion cotizacion;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,6 +65,11 @@ public class CotizacionActivity extends ActividadActivity {
         TotalAnual=(TextView)ResponseView.findViewById(R.id.cotizacion_anual_total);
         TotalTC=(TextView)ResponseView.findViewById(R.id.cotizacion_mensual_credito);
         TotalTD=(TextView)ResponseView.findViewById(R.id.cotizacion_mensual_debito);
+
+        //Cargo cotización en el caso de que exista
+        cotizacion = Cotizacion.getCotizacion(getDataBase(), id_agenda, id_ruta, id_tarea);
+        if(cotizacion.getID() != 0)
+            cargaCotizacion();
 
         //Configuro boton para agregar afiliado
         findViewById(R.id.agregar_afiliado).setOnClickListener(new View.OnClickListener() {
@@ -86,6 +95,11 @@ public class CotizacionActivity extends ActividadActivity {
                 afiliadosLayouts.add(afiliado);
             }
         });
+    }
+
+    private void cargaCotizacion()
+    {
+        ultimaConsultaParams = cotizacion.getParametros();
     }
 
     @Override
@@ -265,6 +279,9 @@ public class CotizacionActivity extends ActividadActivity {
 
     @Override
     public void aceptarCambios(View v) {
-
+        AgendaTarea agt = AgendaTarea.getTarea(getDataBase(), id_agenda, id_ruta, id_actividad);
+        agt.setEstadoTarea("R");
+        AgendaTarea.update(getDataBase(), agt);
+        finish();
     }
 }

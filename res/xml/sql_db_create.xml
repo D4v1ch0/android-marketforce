@@ -719,7 +719,8 @@
         IdTarea INTEGER,
         Parametros TEXT,
         Response TEXT,
-        Opcion INTEGER
+        Opcion INTEGER,
+        Valor REAL
         )
     </statement>
 
