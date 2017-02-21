@@ -1000,7 +1000,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         }
 
         setTransaccionValues();
-
+        //prueba
     }
 
     public static int getPedidoCantidad(List<PedidoDetalle> detalles)
