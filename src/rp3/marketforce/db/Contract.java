@@ -454,7 +454,7 @@ public final class Contract {
 		public static final String FIELD_PENDIENTES = COLUMN_PENDIENTES;
 		
 		public static final String QUERY_RESUMEN = "ResumenAgentes";
-
+	   public static final String QUERY_RESUMEN_ALL = "ResumenAgentesAll";
 	}
    
    public static abstract class Ubicacion implements BaseColumns {

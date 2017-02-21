@@ -12,6 +12,7 @@ import java.util.List;
 import rp3.app.BaseFragment;
 import rp3.marketforce.R;
 import rp3.marketforce.db.Contract;
+import rp3.marketforce.models.AgenteResumen;
 import rp3.marketforce.models.AgenteUbicacion;
 
 /**
@@ -48,7 +49,17 @@ public class AgenteRadarFragment extends BaseFragment {
     public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
 
-        List<AgenteUbicacion> list_ubicaciones = AgenteUbicacion.getResumen(getDataBase());
+        //List<AgenteUbicacion> list_ubicaciones = AgenteUbicacion.getResumen(getDataBase());
+        List<AgenteUbicacion> list_ubicaciones = new ArrayList<>();
+        List<AgenteResumen> list_resumen = AgenteResumen.getResumenAll(getDataBase());
+        for (AgenteResumen res : list_resumen) {
+            AgenteUbicacion agd = new AgenteUbicacion();
+            agd.setNombres(res.getNombres());
+            agd.setApellidos(res.getApellidos()==null?"":res.getApellidos());
+            agd.setIdAgente(res.getIdAgente());
+            list_ubicaciones.add(agd);
+        }
+
         adapter = new AgenteRadarAdapter(this.getContext(), list_ubicaciones, ids);
         ((ListView) rootView.findViewById(R.id.agentes_list)).setAdapter(adapter);
         ((CheckBox) rootView.findViewById(R.id.import_seleccionar_todos)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -57,7 +68,7 @@ public class AgenteRadarFragment extends BaseFragment {
                 adapter.SelectAll(isChecked);
             }
         });
-        if(ids.size() == list_ubicaciones.size())
+        if (ids.size() == list_ubicaciones.size())
             ((CheckBox) rootView.findViewById(R.id.import_seleccionar_todos)).setChecked(false);
 
         rootView.findViewById(R.id.agente_aceptar).setOnClickListener(new View.OnClickListener() {

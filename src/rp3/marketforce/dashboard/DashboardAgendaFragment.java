@@ -204,6 +204,13 @@ public class DashboardAgendaFragment extends BaseFragment {
                                 (ImageView) agenda_layout.findViewById(R.id.dashboard_agenda_imagen));
                     }
 
+                    ((ImageView) agenda_layout.findViewById(R.id.dashboard_agenda_gestionando)).setVisibility(View.GONE);
+
+                    if(agd.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO)) {
+                        ((ImageView) agenda_layout.findViewById(R.id.dashboard_agenda_gestionando)).setVisibility(View.VISIBLE);
+                        ((ImageView) agenda_layout.findViewById(R.id.dashboard_agenda_gestionando)).setImageResource(R.drawable.circle_in_process);
+                    }
+
                     cal = Calendar.getInstance();
                     Calendar cal_init = Calendar.getInstance();
                     cal_init.setTime(agd.getFechaInicio());
