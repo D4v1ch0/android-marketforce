@@ -137,7 +137,11 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         tryEnableGooglePlayServices(true);
-        setContentView(R.layout.fragment_crear_pedido, R.menu.fragment_crear_pedido);
+        tipo = getArguments().getString(ARG_TIPO_DOCUMENTO, "FA");
+        if(tipo.equalsIgnoreCase("FA"))
+            setContentView(R.layout.fragment_crear_pedido, R.menu.fragment_crear_pedido);
+        else
+            setContentView(R.layout.fragment_crear_pedido, R.menu.fragment_crear_transaccion);
         setRetainInstance(true);
     }
 
@@ -945,7 +949,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     @Override
     public void onAfterCreateOptionsMenu(Menu menu) {
         this.menu = menu;
-        menu.findItem(R.id.action_forma_pago).setVisible(tipo.equalsIgnoreCase("FA"));
+        //menu.findItem(R.id.action_forma_pago).setVisible(tipo.equalsIgnoreCase("FA"));
     }
 
 
