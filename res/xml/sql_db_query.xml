@@ -1194,32 +1194,56 @@
      </statement>
      
 	 <statement name="ResumenAgentes">
-       SELECT tbAgentesUbicacion.IdAgente,
-         tbAgentesUbicacion.Nombres,
-         tbAgentesUbicacion.Apellidos,
+       SELECT tbAgentesResumen.IdAgente,
+         tbAgentesResumen.Nombres,
+         tbAgentesResumen.Apellidos,
 		SUM(tbAgentesResumen.Gestionados) as Gestionados,
 		SUM(tbAgentesResumen.NoGestionados) as NoGestionados,
 		SUM(tbAgentesResumen.Pendientes) as Pendientes
-		FROM tbAgentesUbicacion
-        LEFT JOIN tbAgentesResumen
-        ON tbAgentesUbicacion.IdAgente = tbAgentesResumen.IdAgente
+		FROM tbAgentesResumen
+        LEFT JOIN tbAgentesUbicacion
+        ON tbAgentesResumen.IdAgente = tbAgentesUbicacion.IdAgente
 		WHERE tbAgentesResumen.Fecha &gt;= ?
 		AND tbAgentesResumen.Fecha &lt; ?
-		GROUP BY tbAgentesUbicacion.IdAgente
+		GROUP BY tbAgentesResumen.IdAgente
          UNION ALL
-         SELECT tbAgentesUbicacion.IdAgente,
-         tbAgentesUbicacion.Nombres,
-         tbAgentesUbicacion.Apellidos,
+         SELECT tbAgentesResumen.IdAgente,
+         tbAgentesResumen.Nombres,
+         tbAgentesResumen.Apellidos,
          0 as Gestionados,
          0 as NoGestionados,
          0 as Pendientes
-         FROM tbAgentesUbicacion
-         LEFT JOIN tbAgentesResumen
-         ON tbAgentesUbicacion.IdAgente = tbAgentesResumen.IdAgente
+         FROM tbAgentesResumen
+         LEFT JOIN tbAgentesUbicacion
+         ON tbAgentesResumen.IdAgente = tbAgentesUbicacion.IdAgente
          AND tbAgentesResumen.Fecha &gt;= ?
          AND tbAgentesResumen.Fecha &lt; ?
-         GROUP BY tbAgentesUbicacion.IdAgente
+         GROUP BY tbAgentesResumen.IdAgente
      </statement>
+
+    <statement name="ResumenAgentesAll">
+        SELECT tbAgentesResumen.IdAgente,
+        tbAgentesResumen.Nombres,
+        tbAgentesResumen.Apellidos,
+        SUM(tbAgentesResumen.Gestionados) as Gestionados,
+        SUM(tbAgentesResumen.NoGestionados) as NoGestionados,
+        SUM(tbAgentesResumen.Pendientes) as Pendientes
+        FROM tbAgentesResumen
+        LEFT JOIN tbAgentesUbicacion
+        ON tbAgentesResumen.IdAgente = tbAgentesUbicacion.IdAgente
+        GROUP BY tbAgentesResumen.IdAgente
+        UNION ALL
+        SELECT tbAgentesResumen.IdAgente,
+        tbAgentesResumen.Nombres,
+        tbAgentesResumen.Apellidos,
+        0 as Gestionados,
+        0 as NoGestionados,
+        0 as Pendientes
+        FROM tbAgentesResumen
+        LEFT JOIN tbAgentesUbicacion
+        ON tbAgentesResumen.IdAgente = tbAgentesUbicacion.IdAgente
+        GROUP BY tbAgentesResumen.IdAgente
+    </statement>
 
     <!-- Modulo Oportunidades -->
     <statement name="OportunidadesNoFilter">
