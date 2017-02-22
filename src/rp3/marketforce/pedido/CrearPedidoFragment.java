@@ -143,6 +143,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         else
             setContentView(R.layout.fragment_crear_pedido, R.menu.fragment_crear_transaccion);
         setRetainInstance(true);
+        //
     }
 
     @Override
