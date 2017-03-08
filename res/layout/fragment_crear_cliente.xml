@@ -340,7 +340,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:paddingRight="5dp"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <EditText
                     android:id="@+id/cliente_fecha_nacimiento"
@@ -360,7 +360,7 @@
                     android:paddingRight="10dp"
                     android:paddingBottom="10dp"
                     android:hint="@string/label_fecha_nacimiento"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
             </LinearLayout>
 
             <LinearLayout
@@ -368,7 +368,7 @@
                 android:layout_height="1dp"
                 android:background="@color/color_grey_lines"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible">
             </LinearLayout>
 
             <LinearLayout
@@ -377,7 +377,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:paddingRight="5dp"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <Spinner
                     android:id="@+id/cliente_genero"
@@ -385,7 +385,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.6"
                     android:background="@color/caldroid_transparent"
-                    android:spinnerMode="dialog" />
+                    android:spinnerMode="dialog"
+                    android:visibility="visible" />
             </LinearLayout>
 
             <LinearLayout
@@ -393,7 +394,7 @@
                 android:layout_height="1dp"
                 android:background="@color/color_grey_lines"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible">
             </LinearLayout>
 
             <LinearLayout
@@ -632,6 +633,41 @@
             android:layout_weight="1"
             android:gravity="center"
             android:paddingRight="5dp"
+            android:visibility="visible" >
+
+            <EditText
+                android:id="@+id/cliente_solicitud"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.6"
+                android:ems="10"
+                android:textSize="@dimen/text_medium_size"
+                android:background="@color/caldroid_transparent"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:paddingLeft="15dp"
+                android:paddingTop="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp"
+                android:hint="@string/label_solicitud"
+                android:inputType="number"
+                android:visibility="visible" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="@color/color_grey_lines"
+            android:orientation="vertical"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingRight="5dp"
             android:visibility="gone">
 
             <EditText
@@ -791,7 +827,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <TextView
             android:layout_width="fill_parent"
@@ -812,7 +848,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp" >
+            android:layout_marginRight="5dp"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/agregar_direccion"

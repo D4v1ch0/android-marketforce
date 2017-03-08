@@ -20,7 +20,7 @@
         <webServiceData>
             <name>Core</name>
             <!--url>[@server:http://www.rp3marketforce.com/Rp3MarketForce]/api</url-->
-            <url>http://10.10.0.125/AgendaComercial/api</url>
+            <url>http://10.10.0.119/AgendaComercial/api</url>
             <type>REST</type>
             <oAuthClientId>android-app-marketforce</oAuthClientId>
             <oAuthClientSecret>rp3-marketforce2014</oAuthClientSecret>
@@ -66,7 +66,7 @@
            <webServiceData>
             <name>MartketForce</name>
             <!--url>[@server:http://www.rp3marketforce.com/Rp3MarketForce]/api</url-->
-               <url>http://10.10.0.125/AgendaComercial/api</url>
+               <url>http://10.10.0.119/AgendaComercial/api</url>
             <type>REST</type>
             <oAuthClientId>android-app-marketforce</oAuthClientId>
             <oAuthClientSecret>rp3-marketforce2014</oAuthClientSecret>
@@ -520,6 +520,18 @@
                 <method>
                     <name>GetCotizacion</name>
                     <action>auna/GetCotizacion</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetSolicitud</name>
+                    <action>auna/GetSolicitud</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>RegistrarPago</name>
+                    <action>auna/RegistrarPago</action>
                     <webMethod>POST</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>

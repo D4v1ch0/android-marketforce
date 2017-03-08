@@ -29,7 +29,7 @@ public class Cliente {
 				webService.addCurrentAuthToken();
 				long fecha = rp3.util.Convert.getDotNetTicksFromDate(SyncAudit.getLastSyncDate(rp3.auna.sync.SyncAdapter.SYNC_TYPE_CLIENTE_UPDATE, SyncAdapter.SYNC_EVENT_SUCCESS));
 				webService.addLongParameter("@ultimaactualizacion", fecha);
-				webService.setTimeOut(30000);
+				webService.setTimeOut(60000);
 				
 				try {
 					webService.invokeWebService();

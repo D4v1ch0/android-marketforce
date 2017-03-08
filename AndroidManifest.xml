@@ -239,6 +239,9 @@
                 android:value="rp3.marketforce.SearchableActivity"
                 />
         </activity>
+
+        <!--AUNA -->
+        <activity android:name="pe.solera.api_payme_android.classes.activities.CardsAct" android:theme="@style/Theme.AppCompat.Light"></activity>
     </application>
 
 </manifest>

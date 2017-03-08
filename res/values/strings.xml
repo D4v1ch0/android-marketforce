@@ -452,4 +452,6 @@
     <string name="label_con_tarjeta_debito">con tarjeta de débito</string>
     <string name="label_consultar_cotizacion">Consultar Cotización</string>
     <string name="message_generando_cotizacion">Generando Cotización</string>
+    <string name="message_validando_solicitud">Validando Solicitud</string>
+    <string name="label_solicitud">Número Solicitud</string>
 </resources>

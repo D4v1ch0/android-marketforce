@@ -37,7 +37,7 @@ import rp3.data.models.GeneralValue;
 /**
  * Created by magno_000 on 17/01/2017.
  */
-public class AgregarTarjetaFragment extends BaseFragment implements HTTPRequestInterface {
+public class AgregarTarjetaFragment extends BaseFragment {
 
     public static String ARG_POS = "posicion";
 
@@ -77,7 +77,7 @@ public class AgregarTarjetaFragment extends BaseFragment implements HTTPRequestI
                     clienteTarjeta.setCodigoSeguridad(((EditText) view.findViewById(R.id.cliente_cod_seguridad)).getText().toString());
                     clienteTarjeta.setEsPrincipal(((CheckBox) view.findViewById(R.id.cliente_es_principal_tarjeta)).isChecked());
                     ((ActualizacionFragment) getParentFragment()).onFinishAgregarTarjetaDialog(clienteTarjeta);
-                    dismiss();
+                    //dismiss();
                 }
             }});
 
@@ -119,149 +119,6 @@ public class AgregarTarjetaFragment extends BaseFragment implements HTTPRequestI
             return false;
         }
         return true;
-    }
-
-    private boolean ValidarAlignet(ClienteTarjeta tarjeta)
-    {
-        /*try {
-        JSONObject jsonObjectAuthorize = new JSONObject();
-        jsonObjectAuthorize.put("idAcquirer", Contants.AUNA_ID_ADQUIRER);
-        jsonObjectAuthorize.put("idEntCommerce", Contants.AUNA_ID_WALLET);
-        jsonObjectAuthorize.put("tokken", this.consultResponse.getTokken());
-        jsonObjectAuthorize.put("typeOperation", PGPUtils.encrypt("1", this.getContext()));
-        jsonObjectAuthorize.put("codAsoCardHolderWallet", this.consultResponse.getCodAsoCardHolderWallet());
-        jsonObjectAuthorize.put("codCardHolderCommerce", PGPUtils.encrypt(this.transactionInformation.getCodCardHolderCommerce(), this));
-        jsonObjectAuthorize.put("registerCard", registerCard);
-        //jsonObjectAuthorize.put("additionalObservations", PGPUtils.encrypt("-", this.getContext()));
-        //jsonObjectAuthorize.put("billingData", arrDicBilling);
-        jsonObjectAuthorize.put("shippingData", arrDicShipping1);
-        jsonObjectAuthorize.put("purchaseData", arrDicPurchase2);
-        jsonObjectAuthorize.put("taxes", arrDicTaxes3);
-        jsonObjectAuthorize.put("products", arrDicProducts4);
-        jsonObjectAuthorize.put("reservedFields", new JSONArray());
-        jsonObjectAuthorize.put("typeCVV2", typeCVV2);
-        jsonObjectAuthorize.put("CVV2", CVV2);
-        jsonObjectAuthorize.put("expiryDate", expiryDate);
-        jsonObjectAuthorize.put("typeOperationCard", typeOperationCard);
-        jsonObjectAuthorize.put("idCard", idCard);
-        jsonObjectAuthorize.put("cardNumberMask", cardNumberMask);
-        jsonObjectAuthorize.put("cardNumber", cardNumber);
-        jsonObjectAuthorize.put("brand", brand);
-        jsonObjectAuthorize.put("macAddress", PGPUtils.encrypt(macAddress2, this));
-        jsonObjectAuthorize.put("latitude", PGPUtils.encrypt(latitude1, this));
-        jsonObjectAuthorize.put("longitude", PGPUtils.encrypt(longitude1, this));
-        jsonObjectAuthorize.put("nameDevice", PGPUtils.encrypt(nameDevice1, this));
-        jsonObjectAuthorize.put("modelDevice", PGPUtils.encrypt(modelDevice, this));
-        Services.getInstance(this.getContext()).ws_authorize(this, jsonObjectAuthorize);
-        }catch (Exception ex)
-        {
-
-        }*/
-        return false;
-    }
-
-    @Override
-    public void onResponse(JSONObject response, int identifierWS) {
-        String ansDescription;
-        if(identifierWS == 2) {
-            try {
-                //final Card e = (Card)this.arrCards.get(this.indexCard);
-                AuthorizeResponse ansCode = ParseServices.getInstance().parseAuthorize(response, this.getContext());
-                ansDescription = ansCode.getErrorCode();
-                String errorMessage = ansCode.getErrorMessage();
-                if(!ansDescription.equalsIgnoreCase("999") && !ansDescription.equalsIgnoreCase("001") && !ansDescription.equalsIgnoreCase("022")) {
-                    ansDescription = PGPUtils.decrypt(ansCode.getErrorCode(), "", this.getContext());
-                    errorMessage = PGPUtils.decrypt(ansCode.getErrorMessage(), "", this.getContext());
-                } else {
-                    ansDescription = ansCode.getErrorCode();
-                    errorMessage = ansCode.getErrorMessage();
-                }
-
-                String date = PGPUtils.decrypt(ansCode.getDate(), "", this.getContext());
-                String hour = PGPUtils.decrypt(ansCode.getHour(), "", this.getContext());
-                PayMeResponse payMeResponse = new PayMeResponse();
-                payMeResponse.setErrorCode(ansDescription);
-                payMeResponse.setErrorMessage(errorMessage);
-                payMeResponse.setDate(date);
-                payMeResponse.setHour(hour);
-                //payMeResponse.setCodAsoCardHolderWallet(PGPUtils.decrypt(this.consultResponse.getCodAsoCardHolderWallet(), "", this));
-                String idTransaction;
-                if(ansDescription.equalsIgnoreCase("000")) {
-                    idTransaction = ansCode.getCardNumber();
-                    String i = ansCode.getAuthorizedAmount();
-                    final String CVV2mask = ansCode.getCVV2mask();
-                    final String idCard = ansCode.getIdCard();
-                    String operationNumber = ansCode.getOperationNumber();
-                    String idTransaction1 = ansCode.getIdTransaction();
-                    payMeResponse.setOperationNumber(operationNumber);
-                    payMeResponse.setIdTransaction(idTransaction1);
-                    payMeResponse.setCardNumber(idTransaction);
-                    Handler handler = new Handler();
-                    /*Runnable runnable = new Runnable() {
-                        public void run() {
-                            if(e.isNew()) {
-                                e.setIdCard(idCard);
-                                CardDAO.getInstance().insertCard(e, e.getExpiryDate(), CVV2mask, false);
-                            } else if(e.isEdited()) {
-                                CardDAO.getInstance().updateCard(e, CVV2mask);
-                            }
-
-                            CardDAO.getInstance().updateLastUserCard(e, true);
-                        }
-                    };
-                    handler.post(runnable);*/
-                    //PAGO EXITOSO
-                    //this.animatePayMeEndAuthorize(true, false, payMeResponse, this.getString(pe.solera.api_payme_android.R.string.buying_processed));
-                } else {
-                    //PAGO FALLIDO
-                    //this.animatePayMeEndAuthorize(false, false, payMeResponse, this.getString(pe.solera.api_payme_android.R.string.buying_unprocessed));
-                }
-            } catch (Exception var19) {
-                var19.printStackTrace();
-                //PAGO FALLIDO
-                //this.animatePayMeEndAuthorize(false, false, (PayMeResponse)null, this.getString(pe.solera.api_payme_android.R.string.buying_unprocessed));
-            }
-        } /*else if(identifierWS == 1) {
-            try {
-                ConsultResponse var20 = ParseServices.getInstance().parseConsult(response, this);
-                String var21 = var20.getAnsCode();
-                ansDescription = var20.getAnsDescription();
-                if(var21.equalsIgnoreCase("999")) {
-                    var21 = var20.getAnsCode();
-                    ansDescription = var20.getAnsDescription();
-                } else {
-                    var21 = PGPUtils.decrypt(var20.getAnsCode(), "", this);
-                    ansDescription = PGPUtils.decrypt(var20.getAnsDescription(), "", this);
-                }
-
-                Log.d(this.TAG, "ansCode: " + var21);
-                Log.d(this.TAG, "ansDescription: " + ansDescription);
-                if(var21.equalsIgnoreCase("000")) {
-                    this.consultResponse.setTokken(var20.getTokken());
-                    this.consultResponse.setCodAsoCardHolderWallet(var20.getCodAsoCardHolderWallet());
-                    this.lblMessage.setTextColor(this.getResources().getColor(pe.solera.api_payme_android.R.color.redValidation));
-                    this.lblMessage.setText(pe.solera.api_payme_android.R.string.try_again_tokken);
-                } else {
-                    this.lblMessage.setTextColor(this.getResources().getColor(pe.solera.api_payme_android.R.color.redValidation));
-                    this.lblMessage.setText(this.getResources().getString(pe.solera.api_payme_android.R.string.generic_problem));
-                    this.runnableGoCommerce(false, (PayMeResponse)null);
-                }
-            } catch (Exception var18) {
-                var18.printStackTrace();
-            }
-        }*/
-    }
-
-    @Override
-    public void onErrorResponse(VolleyError volleyError, int identifierWS) {
-        if(identifierWS == 2) {
-            //CONEXIÓN FALLIDA
-            //this.animatePayMeEndAuthorize(false, false, (PayMeResponse)null, this.getString(pe.solera.api_payme_android.R.string.buying_unprocessed));
-        } /*else if(identifierWS == 1) {
-            this.lblMessage.setTextColor(this.getResources().getColor(pe.solera.api_payme_android.R.color.redValidation));
-            this.lblMessage.setText(this.getResources().getString(pe.solera.api_payme_android.R.string.generic_problem));
-            this.runnableGoCommerce(false, (PayMeResponse)null);
-        }*/
     }
 
 }

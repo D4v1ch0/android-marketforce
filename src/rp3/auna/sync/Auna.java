@@ -8,6 +8,7 @@ import org.ksoap2.transport.HttpResponseException;
 
 import java.util.List;
 
+import rp3.auna.actividades.ActualizacionFragment;
 import rp3.auna.actividades.CotizacionActivity;
 import rp3.auna.models.marcacion.Justificacion;
 import rp3.connection.HttpConnection;
@@ -57,4 +58,82 @@ public class Auna {
 
         return bundle;
     }
+
+    public static Bundle executeSolicitud(String parametros) {
+        Bundle bundle = new Bundle();
+        WebService webService = new WebService("MartketForce", "GetSolicitud");
+        webService.setTimeOut(20000);
+
+        JSONObject jObject = null;
+        try {
+            jObject = new JSONObject(parametros);
+        } catch (Exception ex) {
+
+        }
+
+        webService.addParameter("model", jObject);
+
+        try {
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+                bundle.putString(ActualizacionFragment.ARG_RESPONSE, webService.getJSONObjectResponse().toString());
+                bundle.putInt("Status", SyncAdapter.SYNC_EVENT_SUCCESS);
+
+            } catch (HttpResponseException e) {
+                if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    bundle.putInt("Status", rp3.auna.sync.SyncAdapter.SYNC_EVENT_AUTH_ERROR);
+                bundle.putInt("Status", rp3.auna.sync.SyncAdapter.SYNC_EVENT_HTTP_ERROR);;
+            } catch (Exception e) {
+                bundle.putInt("Status", rp3.auna.sync.SyncAdapter.SYNC_EVENT_ERROR);
+            }
+
+        } finally {
+            webService.close();
+        }
+
+
+        return bundle;
+    }
+
+    public static Bundle executePago(String parametros) {
+        Bundle bundle = new Bundle();
+        WebService webService = new WebService("MartketForce", "RegistrarPago");
+        webService.setTimeOut(20000);
+
+        JSONObject jObject = null;
+        try {
+            jObject = new JSONObject(parametros);
+        } catch (Exception ex) {
+
+        }
+
+        webService.addParameter("model", jObject);
+
+        try {
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+                bundle.putString(ActualizacionFragment.ARG_RESPONSE, webService.getJSONObjectResponse().toString());
+                bundle.putInt("Status", SyncAdapter.SYNC_EVENT_SUCCESS);
+
+            } catch (HttpResponseException e) {
+                if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    bundle.putInt("Status", rp3.auna.sync.SyncAdapter.SYNC_EVENT_AUTH_ERROR);
+                bundle.putInt("Status", rp3.auna.sync.SyncAdapter.SYNC_EVENT_HTTP_ERROR);;
+            } catch (Exception e) {
+                bundle.putInt("Status", rp3.auna.sync.SyncAdapter.SYNC_EVENT_ERROR);
+            }
+
+        } finally {
+            webService.close();
+        }
+
+
+        return bundle;
+    }
+
+
 }

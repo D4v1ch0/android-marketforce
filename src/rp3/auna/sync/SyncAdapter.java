@@ -1,6 +1,7 @@
 package rp3.auna.sync;
 
 import rp3.accounts.ServerAuthenticate;
+import rp3.auna.actividades.ActualizacionFragment;
 import rp3.auna.actividades.CotizacionActivity;
 import rp3.configuration.PreferenceManager;
 import rp3.db.sqlite.DataBase;
@@ -78,6 +79,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
     public static String SYNC_TYPE_CANCELAR_NC = "cancelar_nc";
 
     public static String SYNC_TYPE_CONSULTA_COTIZACION = "cotizacion";
+    public static String SYNC_TYPE_VALIDA_SOLICITUD = "solicitud";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -499,6 +501,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     Bundle bundle = Auna.executeCotizacion(params);
                     addDefaultMessage(bundle.getInt("Status"));
                     putData(CotizacionActivity.ARG_RESPONSE, bundle.getString(CotizacionActivity.ARG_RESPONSE));
+                } else if (syncType.equals(SYNC_TYPE_VALIDA_SOLICITUD)) {
+                    String params = extras.getString(ActualizacionFragment.ARG_PARAMS);
+                    Bundle bundle = Auna.executeSolicitud(params);
+                    addDefaultMessage(bundle.getInt("Status"));
+                    putData(ActualizacionFragment.ARG_RESPONSE, bundle.getString(ActualizacionFragment.ARG_RESPONSE));
                 } else if (syncType.equals(SYNC_TYPE_BATCH)) {
                     result = Cliente.executeSyncInserts(db);
                     addDefaultMessage(result);

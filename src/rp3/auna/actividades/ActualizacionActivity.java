@@ -20,7 +20,7 @@ public class ActualizacionActivity extends ActividadActivity {
         setHomeAsUpEnabled(true, true);
         setContentView(R.layout.layout_simple_content);
         if (!hasFragment(rp3.core.R.id.content)) {
-            ActualizacionFragment newFragment = ActualizacionFragment.newInstance(id_agenda_int, Contants.IS_GESTION, id_actividad);
+            ActualizacionFragment newFragment = ActualizacionFragment.newInstance(id_agenda_int, Contants.IS_GESTION, id_actividad, id_ruta);
             setFragment(rp3.core.R.id.content, newFragment);
         }
     }

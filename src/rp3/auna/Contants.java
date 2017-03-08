@@ -103,6 +103,7 @@ public class Contants {
     public final static String KEY_TRANSACCION_NOTA_CREDITO = "NC";
     public final static String KEY_TRANSACCION_COTIZACION = "CT";
     public final static String KEY_TRANSACCION_PEDIDO = "PD";
+    public final static String KEY_AGENTE_IDENTIFICACION = "AgenteIdentificacion";
 
     public final static String CAMPO_FECHA_NACIMIENTO = "FecNac";
     public final static String CAMPO_GENERO = "Gen";

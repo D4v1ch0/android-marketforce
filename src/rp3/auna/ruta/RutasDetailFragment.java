@@ -700,7 +700,8 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
         intent.putExtra(ARG_ITEM_ID, agt.getIdTarea());
         intent.putExtra(ARG_AGENDA_ID, agt.getIdAgenda());
         intent.putExtra(ARG_RUTA_ID, agt.getIdRuta());
-        intent.putExtra(ActividadActivity.ARG_AGENDA_INT, agt.get_idAgenda());
+        intent.putExtra(ActividadActivity.ARG_TAREA, agt.getIdTarea());
+        intent.putExtra(ActividadActivity.ARG_AGENDA_INT, agenda.getID());
         intent.putExtra(ActividadActivity.ARG_VISTA, soloVista);
         intent.putExtra(ActividadActivity.ARG_TITULO, agt.getNombreTarea());
         startActivity(intent);

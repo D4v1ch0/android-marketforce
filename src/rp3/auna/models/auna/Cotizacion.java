@@ -139,8 +139,34 @@ public class Cotizacion extends rp3.data.entity.EntityBase<Cotizacion> {
                         Contract.Cotizacion.COLUMN_PARAMETROS, Contract.Cotizacion.COLUMN_RUTA_ID, Contract.Cotizacion.COLUMN_AGENDA_ID_EXT,
                         Contract.Cotizacion.COLUMN_TAREA_ID, Contract.Cotizacion.COLUMN_RESPONSE, Contract.Cotizacion.COLUMN_OPCION, Contract.Cotizacion.COLUMN_VALOR},
                 Contract.Cotizacion.COLUMN_AGENDA_ID + " = ? AND " +
-                        Contract.Cotizacion.COLUMN_RUTA_ID + " = ? AND " +
-                        Contract.Cotizacion.COLUMN_TAREA_ID + " = ? ", new String[] { idAgenda + "", idRuta + "", idTarea + ""});
+                        Contract.Cotizacion.COLUMN_RUTA_ID + " = ? ", new String[] { idAgenda + "", idRuta + ""});
+
+
+        Cotizacion cotizacion = new Cotizacion();
+        if(c.moveToFirst()){
+
+            cotizacion.setID(CursorUtils.getInt(c, Contract.Cotizacion._ID));
+            cotizacion.setIdRuta(CursorUtils.getInt(c, Contract.Cotizacion.COLUMN_RUTA_ID));
+            cotizacion.setIdTarea(CursorUtils.getInt(c, Contract.Cotizacion.COLUMN_TAREA_ID));
+            cotizacion.setIdAgenda(CursorUtils.getLong(c, Contract.Cotizacion.COLUMN_AGENDA_ID));
+            cotizacion.set_idAgenda(CursorUtils.getInt(c, Contract.Cotizacion.COLUMN_AGENDA_ID_EXT));
+            cotizacion.setParametros(CursorUtils.getString(c, Contract.Cotizacion.COLUMN_PARAMETROS));
+            cotizacion.setResponse(CursorUtils.getString(c, Contract.Cotizacion.COLUMN_RESPONSE));
+            cotizacion.setOpcion(CursorUtils.getInt(c, Contract.Cotizacion.COLUMN_OPCION));
+            cotizacion.setValor(CursorUtils.getDouble(c, Contract.Cotizacion.COLUMN_VALOR));
+
+        }
+        c.close();
+        return cotizacion;
+    }
+
+    public static Cotizacion getCotizacionInt(DataBase db, long idAgenda, int idRuta, int idTarea){
+
+        Cursor c = db.query(Contract.Cotizacion.TABLE_NAME, new String[] {Contract.Cotizacion._ID, Contract.Cotizacion.COLUMN_AGENDA_ID,
+                        Contract.Cotizacion.COLUMN_PARAMETROS, Contract.Cotizacion.COLUMN_RUTA_ID, Contract.Cotizacion.COLUMN_AGENDA_ID_EXT,
+                        Contract.Cotizacion.COLUMN_TAREA_ID, Contract.Cotizacion.COLUMN_RESPONSE, Contract.Cotizacion.COLUMN_OPCION, Contract.Cotizacion.COLUMN_VALOR},
+                Contract.Cotizacion.COLUMN_AGENDA_ID_EXT + " = ? AND " +
+                        Contract.Cotizacion.COLUMN_RUTA_ID + " = ? ", new String[] { idAgenda + "", idRuta + ""});
 
 
         Cotizacion cotizacion = new Cotizacion();
