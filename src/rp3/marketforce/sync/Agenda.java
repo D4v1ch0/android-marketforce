@@ -48,6 +48,7 @@ public class Agenda {
             jObject.put("DistanciaUbicacion", agendaUpload.getDistancia());
             jObject.put("MotivoReprogramacion", agendaUpload.getIdMotivoReprogramacion());
             jObject.put("MotivoReprogramacionTabla", Contants.GENERAL_TABLE_MOTIVOS_REPROGRAMACION);
+            //jObject.put("FechaCreacionTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaCreacion()));
 
             JSONArray jArrayTareas = new JSONArray();
             for (AgendaTarea agt : agendaUpload.getAgendaTareas()) {
