@@ -46,11 +46,12 @@ import rp3.util.StringUtils;
 public class EtapaFragment extends BaseFragment {
     public final static String ARG_ETAPA = "etapa";
     public final static String ARG_OPORTUNIDAD = "oportunidad";
+    public final static String ARG_ID_AGENDA = "id_agenda";
     public final static int REQ_CODE_SPEECH_INPUT = 1200;
 
     public static final String ARG_ITEM_ID = "idagenda";
 
-    private int idEtapa;
+    private int idEtapa,idAgenda;
     private long idOportunidad;
     private List<OportunidadTarea> tareas;
     private SubEtapaAdapter adapter;
@@ -60,10 +61,11 @@ public class EtapaFragment extends BaseFragment {
     SimpleDateFormat format2 = new SimpleDateFormat("MM");
     SimpleDateFormat format3 = new SimpleDateFormat("yyyy");
 
-    public static EtapaFragment newInstance(int idEtapa, long idOportunidad) {
+    public static EtapaFragment newInstance(int idEtapa, long idOportunidad, int idAgenda) {
         Bundle arguments = new Bundle();
         arguments.putInt(ARG_ETAPA, idEtapa);
         arguments.putLong(ARG_OPORTUNIDAD, idOportunidad);
+        arguments.putInt(ARG_ID_AGENDA, idAgenda);
         EtapaFragment fragment = new EtapaFragment();
         fragment.setArguments(arguments);
         return fragment;
@@ -81,6 +83,9 @@ public class EtapaFragment extends BaseFragment {
         }
         if (getArguments().containsKey(ARG_OPORTUNIDAD)) {
             idOportunidad = getArguments().getLong(ARG_OPORTUNIDAD);
+        }
+        if (getArguments().containsKey(ARG_ID_AGENDA)) {
+            idAgenda = getArguments().getInt(ARG_ID_AGENDA);
         }
 
         if (idEtapa != 0) {
@@ -106,7 +111,7 @@ public class EtapaFragment extends BaseFragment {
         opt.setPendiente(true);
         Oportunidad.update(getDataBase(), opt);
 
-        if(etapa.getIdEtapa() != opt.getIdEtapa()) {
+        if(etapa.getIdEtapa() != opt.getIdEtapa() && idAgenda != 0) {
             getRootView().findViewById(R.id.finalizar_etapa).setVisibility(View.GONE);
             esActiva = false;
         }
@@ -253,6 +258,7 @@ public class EtapaFragment extends BaseFragment {
 
                 oportunidadEtapa.setFechaFin(Calendar.getInstance().getTime());
                 oportunidadEtapa.setEstado("R");
+                oportunidadEtapa.setIdAgenda(idAgenda);
                 OportunidadEtapa.update(getDataBase(), oportunidadEtapa);
 
                 Etapa next = Etapa.getEtapaNext(getDataBase(), etapa.getOrden() + 1, opt.getIdOportunidadTipo());
@@ -263,6 +269,7 @@ public class EtapaFragment extends BaseFragment {
                 bitacora.setFecha(Calendar.getInstance().getTime());
                 bitacora.setIdOportunidad(opt.getIdOportunidad());
                 bitacora.set_idOportunidad((int) opt.getID());
+                bitacora.setIdAgenda(idAgenda);
                 bitacora.setDetalle("Se finalizó etapa " + etapa.getOrden() + ": " + etapa.getDescripcion());
                 OportunidadBitacora.insert(getDataBase(), bitacora);
 

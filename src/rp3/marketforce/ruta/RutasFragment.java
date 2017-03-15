@@ -377,6 +377,20 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
     	setFragment(R.id.content_transaction_detail, rutasDetailfragment);           					
 	}
 
+    @Override
+    public void onProspectoSelected(long id) {
+        if(!mTwoPane) {
+            isMainFragment = false;
+            slidingPane.closePane();
+        }
+
+        selectedTransactionId = id;
+        RefreshMenu();
+
+        rutasDetailfragment = RutasDetailFragment.newInstance(selectedTransactionId);
+        setFragment(R.id.content_transaction_detail, rutasDetailfragment);
+    }
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		return true;

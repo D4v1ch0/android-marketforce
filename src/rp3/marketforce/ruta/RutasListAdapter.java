@@ -96,7 +96,10 @@ public class RutasListAdapter extends BaseAdapter{
 				((TextView) convertView.findViewById(R.id.textView_nombre)).setText(""+agd.getNombreCompleto().trim());
 				try
 				{
-					((TextView) convertView.findViewById(R.id.textView_cargo_canal)).setText(""+agd.getCliente().getCanalDescripcion());
+					if(agd.getTipoAgenda().equalsIgnoreCase(Contants.TIPO_AGENDA_CLIENTE))
+						((TextView) convertView.findViewById(R.id.textView_cargo_canal)).setText(""+agd.getCliente().getCanalDescripcion());
+					else
+						((TextView) convertView.findViewById(R.id.textView_cargo_canal)).setText("PROSPECTO");
 				}
 				catch(Exception ex)
 				{
@@ -114,7 +117,7 @@ public class RutasListAdapter extends BaseAdapter{
 				((TextView) convertView.findViewById(R.id.textView_cargo_canal)).setText(""+cargo + agd.getNombreCompleto());
 			}
 
-            if(agd.isEnviado())
+            if((agd.isEnviado() && agd.getTipoAgenda().equalsIgnoreCase(Contants.TIPO_AGENDA_CLIENTE)) || (!agd.isEnviado() && agd.getTipoAgenda().equalsIgnoreCase(Contants.TIPO_AGENDA_OPORTUNIDAD)))
                 convertView.findViewById(R.id.itemlist_sincronizar).setVisibility(View.INVISIBLE);
 			if(agd.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO))
 				((ImageView) convertView.findViewById(R.id.itemlist_rutas_estado)).setImageResource(R.drawable.circle_in_process);

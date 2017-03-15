@@ -296,6 +296,7 @@ public final class Contract {
 		public static final String FIELD_CLIENTE_CIUDAD = Contract.AgendaExt.TABLE_NAME + "_" + Contract.AgendaExt.COLUMN_CIUDAD;
 		public static final String FIELD_CLIENTE_CORREO_ELECTRONICO = Contract.ClientExt.TABLE_NAME + "_" + Contract.ClientExt.COLUMN_CORREO_ELECTRONICO;
 		public static final String FIELD_ESTADO_AGENDA_DESCRIPCION = "tbEstadoAgenda_" + rp3.data.models.Contract.GeneralValue.COLUMN_VALUE;
+		public static final String FIELD_TIPO_AGENDA = "TipoAgenda";
 		
 		public static final String QUERY_AGENDA = "AgendaByCliente";
         public static final String QUERY_AGENDA_UPLOAD = "AgendaUpload";
@@ -572,6 +573,8 @@ public final class Contract {
         public static final String COLUMN_PENDIENTE = "Pendiente";
         public static final String COLUMN_FECHA_CREACION = "FechaCreacion";
 		public static final String COLUMN_ID_OPORTUNIDAD_TIPO = "IdOportunidadTipo";
+		public static final String COLUMN_ID_CANAL = "IdCanal";
+		public static final String COLUMN_TIPO_PERSONA = "TipoPersona";
 
         public static final String FIELD_ID_OPORTUNIDAD = COLUMN_ID_OPORTUNIDAD;
         public static final String FIELD_PROBABILIDAD = COLUMN_PROBABILIDAD;
@@ -587,6 +590,8 @@ public final class Contract {
         public static final String FIELD_PENDIENTE = COLUMN_PENDIENTE;
         public static final String FIELD_FECHA_CREACION = COLUMN_FECHA_CREACION;
 		public static final String FIELD_ID_OPORTUNIDAD_TIPO = COLUMN_ID_OPORTUNIDAD_TIPO;
+		public static final String FIELD_ID_CANAL = COLUMN_ID_CANAL;
+		public static final String FIELD_TIPO_PERSONA = COLUMN_TIPO_PERSONA;
 
         public static final String FIELD_DESCRIPCION = Contract.OportunidadExt.TABLE_NAME + "_" + Contract.OportunidadExt.COLUMN_DESCRIPCION;
         public static final String FIELD_DIRECCION = Contract.OportunidadExt.TABLE_NAME + "_" + Contract.OportunidadExt.COLUMN_DIRECCION;
@@ -597,6 +602,7 @@ public final class Contract {
         public static final String FIELD_PAGINA_WEB = Contract.OportunidadExt.TABLE_NAME + "_" + Contract.OportunidadExt.COLUMN_PAGINA_WEB;
         public static final String FIELD_CORREO = Contract.OportunidadExt.TABLE_NAME + "_" + Contract.OportunidadExt.COLUMN_CORREO;
         public static final String FIELD_TIPO_EMPRESA = Contract.OportunidadExt.TABLE_NAME + "_" + Contract.OportunidadExt.COLUMN_TIPO_EMPRESA;
+		public static final String FIELD_CANAL = Contract.OportunidadExt.TABLE_NAME + "_" + Contract.OportunidadExt.COLUMN_CANAL;
 
         public static final String QUERY_LIST_NO_FILTER= "OportunidadesNoFilter";
         public static final String QUERY_LIST_BY_IDS= "OportunidadesByIds";
@@ -619,6 +625,7 @@ public final class Contract {
         public static final String COLUMN_PAGINA_WEB = "PaginaWeb";
         public static final String COLUMN_CORREO = "Correo";
         public static final String COLUMN_TIPO_EMPRESA = "TipoEmpresa";
+		public static final String COLUMN_CANAL = "Canal";
     }
 
     public static abstract class OportunidadFoto implements BaseColumns {
@@ -735,6 +742,7 @@ public final class Contract {
         public static final String COLUMN_ESTADO = "Estado";
         public static final String COLUMN_ID_ETAPA_PADRE = "IdEtapaPadre";
 		public static final String COLUMN_FECHA_FIN_PLAN = "FechaFinPlan";
+		public static final String COLUMN_ID_AGENDA = "IdAgenda";
 
         public static final String FIELD_ID_OPORTUNIDAD = COLUMN_ID_OPORTUNIDAD;
         public static final String FIELD_ID_OPORTUNIDAD_INT = COLUMN_ID_OPORTUNIDAD_INT;
@@ -795,6 +803,7 @@ public final class Contract {
 		public static final String COLUMN_ID_AGENTE = "IdAgente";
 		public static final String COLUMN_DETALLE = "Detalle";
 		public static final String COLUMN_FECHA = "FechaInicio";
+		public static final String COLUMN_ID_AGENDA = "IdAgenda";
 
 		public static final String FIELD_ID_OPORTUNIDAD = COLUMN_ID_OPORTUNIDAD;
 		public static final String FIELD_ID_OPORTUNIDAD_INT = COLUMN_ID_OPORTUNIDAD_INT;
@@ -1185,5 +1194,45 @@ public final class Contract {
 
 		public static final String COLUMN_ID_VENDEDOR = "IdVendedor";
 
+	}
+
+	//GRUPO BERLIN
+	public static abstract class AgendaOportunidad implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbAgendaOportunidad";
+
+		public static final String COLUMN_ID_OPORTUNIDAD = "IdOportunidad";
+		public static final String COLUMN_ID_AGENDA = "IdAgenda";
+		public static final String COLUMN_ESTADO = "EstadoAgenda";
+		public static final String COLUMN_FECHA_INICIO = "FechaInicio";
+		public static final String COLUMN_FECHA_FIN = "FechaFin";
+		public static final String COLUMN_LATITUD = "Latitud";
+		public static final String COLUMN_LONGITUD = "Longitud";
+		public static final String COLUMN_PENDIENTE = "Pendiente";
+		public static final String COLUMN_ID_OPORTUNIDAD_INT = "_IdOportunidad";
+
+		public static final String FIELD_ID_OPORTUNIDAD = COLUMN_ID_OPORTUNIDAD;
+		public static final String FIELD_ID_AGENDA= COLUMN_ID_AGENDA;
+		public static final String FIELD_ESTADO = COLUMN_ESTADO;
+		public static final String FIELD_FECHA_INICIO = COLUMN_FECHA_INICIO;
+		public static final String FIELD_FECHA_FIN = COLUMN_FECHA_FIN;
+		public static final String FIELD_LATITUD = COLUMN_LATITUD;
+		public static final String FIELD_LONGITUD = COLUMN_LONGITUD;
+		public static final String FIELD_PENDIENTE = COLUMN_PENDIENTE;
+		public static final String FIELD_ID_OPORTUNIDAD_INT = COLUMN_ID_OPORTUNIDAD_INT;
+
+		public static final String FIELD_DESCRIPCION = Contract.AgendaOportunidadExt.TABLE_NAME + "_" + Contract.AgendaOportunidadExt.COLUMN_DESCRIPCION;
+		public static final String FIELD_DIRECCION = Contract.AgendaOportunidadExt.TABLE_NAME + "_" + Contract.AgendaOportunidadExt.COLUMN_DIRECCION;
+		public static final String FIELD_CORREO = Contract.AgendaOportunidadExt.TABLE_NAME + "_" + Contract.AgendaOportunidadExt.COLUMN_CORREO;
+
+		public static final String QUERY_GET_BY_ID = "AgendaOportunidadByID";
+	}
+
+	public static abstract class AgendaOportunidadExt implements BaseColumns {
+		public static final String TABLE_NAME = "tbAgendaOportunidadExt";
+		public static final String COLUMN_ID = "docid";
+		public static final String COLUMN_DESCRIPCION = "Descripcion";
+		public static final String COLUMN_DIRECCION = "Direccion";
+		public static final String COLUMN_CORREO = "Correo";
 	}
 }

@@ -20,6 +20,7 @@ import java.util.List;
 import rp3.app.BaseFragment;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agente;
+import rp3.marketforce.models.oportunidad.AgendaOportunidad;
 import rp3.marketforce.models.oportunidad.Oportunidad;
 import rp3.marketforce.models.oportunidad.OportunidadBitacora;
 import rp3.marketforce.sync.SyncAdapter;
@@ -71,6 +72,8 @@ public class OportunidadBitacoraListFragment extends BaseFragment implements Opo
     public void onResume() {
         super.onResume();
         oportunidad = Oportunidad.getOportunidadId(getDataBase(), idOportunidad);
+
+        AgendaOportunidad agd = AgendaOportunidad.getAgendaOportunidadGestionado(getDataBase());
 
         list = OportunidadBitacora.getBitacoraOportunidad(getDataBase(), oportunidad.getIdOportunidad());
         if(list.size() == 0)

@@ -185,5 +185,9 @@ public class Contants {
     public final static float SCALE_IMAGE = 0.9f;
 
     public final static String SQLITE_VERSION_SEARCH = "3.8.4";
+
+    //GRUPO BERLÍN
+    public final static String TIPO_AGENDA_CLIENTE = "C";
+    public final static String TIPO_AGENDA_OPORTUNIDAD = "O";
 	
 }

@@ -290,7 +290,9 @@
         Estado TEXT,
         FechaCreacion INTEGER,
         Pendiente BOOLEAN,
-        IdOportunidadTipo INTEGER
+        IdOportunidadTipo INTEGER,
+        IdCanal INTEGER,
+        TipoPersona TEXT
         )
     </statement>
     <statement>
@@ -304,6 +306,7 @@
         PaginaWeb,
         Correo,
         TipoEmpresa,
+        Canal
         tokenize=porter
         );
     </statement>
@@ -361,7 +364,8 @@
         FechaFin INTEGER,
         Observacion TEXT,
         Estado TEXT,
-        FechaFinPlan INTEGER
+        FechaFinPlan INTEGER,
+        IdAgenda INTEGER
         )
     </statement>
     <statement>
@@ -405,7 +409,8 @@
         IdOportunidadBitacora INTEGER,
         IdAgente INTEGER,
         Detalle TEXT,
-        FechaInicio INTEGER
+        FechaInicio INTEGER,
+        IdAgenda INTEGER
         )
     </statement>
     <statement>
@@ -681,5 +686,26 @@
         IdVendedor TEXT PRIMARY KEY
         )
     </statement>
+    <!--GRUPO BERLÍN -->
+    <statement>
+        CREATE TABLE tbAgendaOportunidad(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdAgenda INTEGER,
+        _IdOportunidad INTEGER,
+        IdOportunidad INTEGER,
+        EstadoAgenda TEXT,
+        FechaInicio INTEGER,
+        FechaFin INTEGER,
+        Latitud REAL,
+        Longitud REAL,
+        Pendiente BOOLEAN
+        )
+    </statement>
+    CREATE VIRTUAL TABLE tbAgendaOportunidadExt USING fts4 (
+    Descripcion,
+    Direccion,
+    Correo,
+    tokenize=porter
+    );
 
 </sql>

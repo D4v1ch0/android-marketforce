@@ -201,14 +201,14 @@
     <string name="label_información_max">INFORMACIÓN</string>
     <string name="label_contactos_max">CONTACTOS</string>
     <!-- Modulo Oportunidad -->
-    <string name="title_option_oportunidad">Oportunidades</string>
+    <string name="title_option_oportunidad">Prospectos</string>
     <string name="label_crear_oportunidad">Crear</string>
     <string name="label_filtro">Filtro</string>
-    <string name="label_oportunidades">Oportunidades:</string>
+    <string name="label_oportunidades">Prospectos:</string>
     <string name="label_meta">Meta:</string>
     <string name="label_probabilidad">PROBABILIDAD DE VENTAS</string>
     <string name="label_etapas">ETAPAS</string>
-    <string name="label_oportunidad_venta">Oportunidad de venta</string>
+    <string name="label_oportunidad_venta">Prospección de venta</string>
     <string name="label_primer_contacto">Primer contacto</string>
     <string name="label_solucion_propuesta">Solución propuesta</string>
     <string name="label_negociacion">Negociación</string>
@@ -246,12 +246,12 @@
     <string name="message_desde_hasta">Fecha desde no puede ser mayor a fecha hasta.</string>
     <string name="message_desde_hasta_cantidad">Valor desde no puede ser mayor a valor hasta.</string>
     <string name="message_un_estado">Mínimo debe de escoger un estado.</string>
-    <string name="message_sin_descripcion">Debe escribir el nombre de la oportunidad.</string>
-    <string name="message_sin_tipo_oportunidad">Debe seleccionar un tipo de oportunidad.</string>
+    <string name="message_sin_descripcion">Debe escribir el nombre del prospecto.</string>
+    <string name="message_sin_tipo_oportunidad">Debe seleccionar un tipo de prospecto.</string>
     <string name="message_una_etapa">Mínimo debe de escoger una etapa.</string>
-    <string name="label_no_oportunidades">No hay oportunidades</string>
+    <string name="label_no_oportunidades">No hay prospectos</string>
     <string name="label_informacion_max">INFORMACIÓN</string>
-    <string name="label_nombre_oportunidad">Nombre de oportunidad</string>
+    <string name="label_nombre_oportunidad">Nombre de prospecto</string>
     <string name="label_tipo_empresa">Tipo de empresa</string>
     <string name="label_medio_referencia">Medio de referencia</string>
     <string name="label_datos_venta">DATOS DE VENTA</string>
@@ -426,4 +426,9 @@
     <string name="label_precio">Precio:</string>
     <string name="label_descuento_percentage">Descuento (%):</string>
     <string name="label_total_upper">TOTAL:</string>
+    <string name="label_finalizar_gestion">Finalizar Gestión</string>
+    <string name="label_etapas_realizadas">ETAPAS REALIZADAS</string>
+    <string name="label_bitacora_max">BITÁCORA</string>
+    <string name="label_no_etapas_realizadas">No hay etapas realizadas</string>
+    <string name="label_sin_registros">Sin Registros</string>
 </resources>
