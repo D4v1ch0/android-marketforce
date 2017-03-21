@@ -300,13 +300,13 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	    			}
 	    			return true;
 	    		case R.id.action_no_visita:
-	    			if(selectedTransactionId != 0)
-	    			{
-	    				if(Agenda.getAgendaEstado(getDataBase(), selectedTransactionId).equalsIgnoreCase(Contants.ESTADO_PENDIENTE) ||
-	    				   Agenda.getAgendaEstado(getDataBase(), selectedTransactionId).equalsIgnoreCase(Contants.ESTADO_REPROGRAMADO))
-                           motivoNoVisitaFragment = MotivoNoVisitaFragment.newInstance(selectedTransactionId);
-	    					this.showDialogFragment(motivoNoVisitaFragment, MotivoNoVisitaFragment.TAG);
-	    			}
+	    			if(selectedTransactionId != 0) {
+                        if (Agenda.getAgendaEstado(getDataBase(), selectedTransactionId).equalsIgnoreCase(Contants.ESTADO_PENDIENTE) ||
+                                Agenda.getAgendaEstado(getDataBase(), selectedTransactionId).equalsIgnoreCase(Contants.ESTADO_REPROGRAMADO) ||
+                                Agenda.getAgendaEstado(getDataBase(), selectedTransactionId).equalsIgnoreCase(Contants.ESTADO_GESTIONANDO))
+                            motivoNoVisitaFragment = MotivoNoVisitaFragment.newInstance(selectedTransactionId);
+                        this.showDialogFragment(motivoNoVisitaFragment, MotivoNoVisitaFragment.TAG);
+                    }
 	    			else
 	    			{
 	    				Toast.makeText(getContext(), R.string.warning_seleccionar_agenda, Toast.LENGTH_LONG).show();

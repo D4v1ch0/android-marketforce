@@ -153,9 +153,9 @@ public class Rutas {
 
 								if (agenda.getID() == 0) {
 									rp3.auna.models.Agenda.insert(db, agenda);
-								} else {
+								} /*else {
 									rp3.auna.models.Agenda.update(db, agenda);
-								}
+								}*/
 
 								JSONArray strs = type.getJSONArray("AgendaTareas");
 

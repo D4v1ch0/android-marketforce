@@ -29,8 +29,10 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.orm.SugarContext;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -53,7 +55,9 @@ import pe.solera.api_payme_android.util.Constants;
 import pe.solera.api_payme_android.util.Util;
 import rp3.app.BaseActivity;
 import rp3.app.BaseFragment;
+import rp3.auna.models.auna.AgendaLlamada;
 import rp3.auna.models.auna.Cotizacion;
+import rp3.auna.ruta.RutasDetailFragment;
 import rp3.configuration.PreferenceManager;
 import rp3.content.GeopoliticalStructureAdapter;
 import rp3.content.SimpleDictionaryAdapter;
@@ -80,6 +84,7 @@ import rp3.auna.sync.SyncAdapter;
 import rp3.auna.utils.DrawableManager;
 import rp3.auna.utils.NothingSelectedSpinnerAdapter;
 import rp3.auna.utils.Utils;
+import rp3.maps.utils.SphericalUtil;
 import rp3.util.ConnectionUtils;
 import rp3.util.GooglePlayServicesUtils;
 import rp3.util.IdentificationValidator;
@@ -117,6 +122,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
     }
 
     private NumberFormat numberFormat;
+    private boolean puedeFinalizar = false;
     public static String ARG_AGENDA = "cliente";
     public static String ARG_TIPO = "tipo";
     public static String ARG_TAREA = "tarea";
@@ -142,6 +148,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
     private AgregarTarjetaFragment tarjetaFragment;
     private ClienteTarjeta agregarTarjeta;
     private String response, idOperacion = "";
+    private Agenda agenda;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -173,8 +180,21 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
             case R.id.action_save:
                 if(Validaciones())
                 {
-                    Grabar();
-                    finish();
+                    if(puedeFinalizar) {
+                        Grabar();
+                        finish();
+                    }
+                    else
+                    {
+                        if(cotizacion.getOpcion() != 2)
+                        {
+                            validarSolicitud();
+                        }
+                        else
+                        {
+                            Toast.makeText(this.getContext(), "Debe realizar la venta para poder finalizar esta tarea.", Toast.LENGTH_LONG).show();
+                        }
+                    }
                 }
                 break;
             case R.id.action_cancel:
@@ -378,7 +398,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
-                if (position == 1) {
+                if (position == 1 && cotizacion.getOpcion() == 2) {
                     getRootView().findViewById(R.id.agregar_tarjeta).setVisibility(View.VISIBLE);
                     TarjetasContainer.setVisibility(View.VISIBLE);
                 } else {
@@ -394,6 +414,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
 
             }
         });
+
         ((Spinner) getRootView().findViewById(R.id.cliente_estado_civil)).setAdapter(tipoEstadoCivilAdapter);
         ((Spinner) getRootView().findViewById(R.id.cliente_estado_civil)).setPrompt("Seleccione un estado civil");
         ((Spinner) getRootView().findViewById(R.id.cliente_genero)).setAdapter(tipoGeneroAdapter);
@@ -442,10 +463,43 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
             idRuta = getArguments().getInt(ARG_RUTA);
 
         cotizacion = Cotizacion.getCotizacionInt(getDataBase(), idAgenda, idRuta, idTarea);
+        if(cotizacion != null && cotizacion.getID() != 0)
+        {
+            try {
+                NumberFormat numberFormat;
+                numberFormat = NumberFormat.getInstance();
+                numberFormat.setMaximumFractionDigits(2);
+                numberFormat.setMinimumFractionDigits(2);
+                //Se carga programa
+                JSONArray jsonArray = new JSONArray(cotizacion.getParametros());
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    ((Spinner) getRootView().findViewById(R.id.cliente_programa)).setSelection(getPosition(((Spinner) getRootView().findViewById(R.id.cliente_programa)).getAdapter(), jsonObject.getString("CodigoPrograma")));
+                }
+
+                //Se carga valor de cotizacion
+                ((EditText) getRootView().findViewById(R.id.cliente_valor)).setText(numberFormat.format(cotizacion.getValor()));
+
+            } catch (Exception ex) {
+
+            }
+
+            //Valido que forma de pago aparece a partir de la cotizacion
+            if(cotizacion.getOpcion() == 2)
+                ((Spinner) getRootView().findViewById(R.id.cliente_forma_pago)).setSelection(1);
+            if(cotizacion.getOpcion() == 3)
+                ((Spinner) getRootView().findViewById(R.id.cliente_forma_pago)).setSelection(0);
+            if(cotizacion.getOpcion() != 1)
+                ((Spinner) getRootView().findViewById(R.id.cliente_forma_pago)).setEnabled(false);
+
+        }
+        ((Spinner) getRootView().findViewById(R.id.cliente_programa)).setEnabled(false);
+
     }
 
     private void SetCampos() {
-        List<Campo> campos = Campo.getCampos(getDataBase(), tipo);
+        /*List<Campo> campos = Campo.getCampos(getDataBase(), tipo);
         Cliente cli = agd.getCliente();
         Contacto cont = agd.getContacto();
         getRootView().findViewById(R.id.agregar_direccion).setVisibility(View.GONE);
@@ -529,7 +583,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
                     listViewContactos.get(0).findViewById(R.id.cliente_contacto_foto).setEnabled(false);
             }
 
-        }
+        }*/
     }
 
     private void setDatosClientes() {
@@ -793,13 +847,21 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
                 boolean successful = data.getBooleanExtra("successful", false);
                 PayMeResponse payMeResponse = (PayMeResponse) data.getSerializableExtra("payMeResponse");
                 if (successful) {
-                    Toast.makeText(this.getActivity(), "Transacción exitosa - Response: " + payMeResponse.toString(), Toast.LENGTH_LONG).show();
-                    agregaTarjeta();
+                    registrarPagoOncosys(payMeResponse);
+                    if(cotizacion.getOpcion() == 2)
+                        agregaTarjeta();
+                    else
+                    {
+                        puedeFinalizar = true;
+                        Grabar();
+                        finishAgenda();
+                        finish();
+                    }
                 } else {
                     if (payMeResponse != null) {
                         Toast.makeText(this.getActivity(), "Transacción rechazada - Response: " + payMeResponse.toString(), Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(this.getActivity(), "Transacción rechazada - Response: " + payMeResponse.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(this.getActivity(), "Transacción rechazada - Response: No se obtuvo respuesta", Toast.LENGTH_LONG).show();
                     }
                 }
             } else {
@@ -987,8 +1049,12 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
         int position = -1;
         for(int f = 0; f < spinnerAdapter.getCount(); f++)
         {
-            if(((GeneralValue)spinnerAdapter.getItem(f)).getCode().equals(i))
-                position = f;
+            try {
+                if (((GeneralValue) spinnerAdapter.getItem(f)).getCode().equals(i))
+                    position = f;
+            }
+            catch (Exception ex)
+            {}
         }
         return position;
     }
@@ -1012,6 +1078,9 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
                 TarjetasContainer.removeView(tarjeta);
             }
         });
+
+        ((Button) tarjeta.findViewById(R.id.eliminar_tarjeta)).setVisibility(View.GONE);
+        ((TextView) getRootView().findViewById(R.id.agregar_tarjeta)).setVisibility(View.GONE);
 
         List<GeneralValue> marcas = GeneralValue.getGeneralValues(getDataBase(), Contants.GENERAL_TABLE_PROCESADORA);
         SimpleGeneralValueAdapter procesadorasAdapter = new SimpleGeneralValueAdapter(getContext(), getDataBase(), Contants.GENERAL_TABLE_PROCESADORA);
@@ -1046,6 +1115,8 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
                 tarjetaFragment.dismissAllowingStateLoss();
             }
         }, 1000);
+        Grabar();
+        finishAgenda();
 
     }
 
@@ -1062,10 +1133,76 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
         }
     }
 
+    private void finishAgenda()
+    {
+        agenda = Agenda.getAgenda(getDataBase(), idAgenda);
+        if (agenda == null)
+            agenda = Agenda.getAgendaClienteNull(getDataBase(), idAgenda);
+        if (agenda.getClienteDireccion() != null && agenda.getClienteDireccion().getTelefono1() != null && agenda.getClienteDireccion().getTelefono1().length() > 0) {
+            List<AgendaLlamada> llamadas = RutasDetailFragment.getCallDetails(getContext(), agenda.getClienteDireccion().getTelefono1(), agenda);
+            for (AgendaLlamada llamada : llamadas)
+                AgendaLlamada.insert(getDataBase(), llamada);
+        }
+
+        agenda.setEstadoAgenda(Contants.ESTADO_VISITADO);
+        agenda.setEstadoAgendaDescripcion(Contants.DESC_VISITADO);
+        agenda.setFechaFinReal(Calendar.getInstance().getTime());
+        final Context ctx = getContext();
+        if (agenda.getLatitud() == 0 && agenda.getLongitud() == 0) {
+            Location location = LocationUtils.getLastLocation(ctx);
+            if (location != null) {
+                agenda.setLatitud(location.getLatitude());
+                agenda.setLongitud(location.getLongitude());
+                LatLng pos = new LatLng(agenda.getLatitud(), agenda.getLongitud());
+                LatLng cli = new LatLng(agenda.getClienteDireccion().getLatitud(), agenda.getClienteDireccion().getLongitud());
+                agenda.setDistancia((long) SphericalUtil.computeDistanceBetween(pos, cli));
+            }
+        }
+        agenda.setEnviado(false);
+        Agenda.update(getDataBase(), agenda);
+        Bundle bundle = new Bundle();
+        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ENVIAR_AGENDA);
+        bundle.putInt(RutasDetailFragment.ARG_AGENDA_ID, (int) idAgenda);
+        requestSync(bundle);
+        //new AsyncUpdater.UpdateAgenda().execute((int) idAgenda);
+        if (agenda.getLatitud() == 0 && agenda.getLongitud() == 0) {
+            try {
+                LocationUtils.getLocation(ctx, new LocationUtils.OnLocationResultListener() {
+
+                    @Override
+                    public void getLocationResult(Location location) {
+                        if (location != null) {
+                            agenda.setLatitud(location.getLatitude());
+                            agenda.setLongitud(location.getLongitude());
+                        }
+                        agenda.setEnviado(false);
+                        LatLng pos = new LatLng(agenda.getLatitud(), agenda.getLongitud());
+                        LatLng cli = new LatLng(agenda.getClienteDireccion().getLatitud(), agenda.getClienteDireccion().getLongitud());
+                        agenda.setDistancia((long) SphericalUtil.computeDistanceBetween(pos, cli));
+                        BaseActivity act = (BaseActivity) ctx;
+                        Agenda.update(act.getDataBase(), agenda);
+                        Bundle bundle = new Bundle();
+                        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_AGENDA_GEOLOCATION);
+                        bundle.putInt(RutasDetailFragment.ARG_AGENDA_ID, (int) idAgenda);
+                        bundle.putDouble(RutasDetailFragment.ARG_LONGITUD, location.getLongitude());
+                        bundle.putDouble(RutasDetailFragment.ARG_LATITUD, location.getLatitude());
+                        act.requestSync(bundle);
+
+                    }
+                });
+            } catch (Exception ex) {
+            }
+        }
+    }
+
     //region Registro Pago
     public void registrarPagoOncosys(PayMeResponse response)
     {
-
+        Bundle bundle = new Bundle();
+        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_REGISTRAR_PAGO);
+        bundle.putString(ARG_PARAMS, generaJSONPago(response));
+        requestSync(bundle);
+        puedeFinalizar = true;
     }
 
     public String generaJSONPago(PayMeResponse response) {
@@ -1076,8 +1213,8 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
             jsonObject.put("IdOperacion", response.getOperationNumber());
             jsonObject.put("Tarjeta", response.getCardNumber());
             jsonObject.put("Monto", numberFormat.format(cotizacion.getValor()));
-            jsonObject.put("Moneda", "604");
-            jsonObject.put("EntidadProcesadora", agregarTarjeta.getIdMarcaTarjeta());
+            jsonObject.put("Moneda", "PEN");
+            jsonObject.put("EntidadProcesadora", cotizacion.getOpcion() == 2 ? "" + agregarTarjeta.getIdMarcaTarjeta() : "02");
             jsonObject.put("CodAut", response.getIdTransaction());
 
         } catch (Exception ex) {
@@ -1109,13 +1246,21 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
                 }
                 else
                 {
-                    //SI ES PAGO EN EFECTIVO
+                    puedeFinalizar = true;
+                    Grabar();
+                    finishAgenda();
+                    finish();
                 }
+            }
+            else
+            {
+                Toast.makeText(this.getActivity(), "Ocurrio un error al intentar validar su solicitud. Por favor vuelva a intentarlo o comuníquese con un administrador", Toast.LENGTH_LONG).show();
+                return false;
             }
         }
         catch (Exception ex)
         {
-            Toast.makeText(this.getActivity(), "Ocurrio un error.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this.getActivity(), "Ocurrio un error al intentar validar su solicitud. Por favor vuelva a intentarlo o comuníquese con un administrador", Toast.LENGTH_LONG).show();
             return false;
         }
         return true;
@@ -1255,16 +1400,16 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
         //transactionInformation.setCodAsoCardHolderWallet("36--220--2909");
         transactionInformation.setCodAsoCardHolderWallet("");
         transactionInformation.setCodCardHolderCommerce("ABC120");
-        transactionInformation.setMail("epariasca.20170101@gmail.com");
-        transactionInformation.setNameCardholder("Enrique");
-        transactionInformation.setLastNameCardholder("Pariasca");
+        transactionInformation.setMail(((EditText) getRootView().findViewById(R.id.cliente_correo)).getText().toString());
+        transactionInformation.setNameCardholder(((EditText)getRootView().findViewById(R.id.cliente_primer_nombre)).getText().toString());
+        transactionInformation.setLastNameCardholder(((EditText)getRootView().findViewById(R.id.cliente_primer_apellido)).getText().toString());
 
         //
         personsBilling.clear();
 
         Person personBilling = new Person();
-        personBilling.setFirstName("Enrique");
-        personBilling.setLastName("Pariasca");
+        personBilling.setFirstName(((EditText)getRootView().findViewById(R.id.cliente_primer_nombre)).getText().toString());
+        personBilling.setLastName(((EditText)getRootView().findViewById(R.id.cliente_primer_apellido)).getText().toString());
 
         Address addressBilling = new Address();
         addressBilling.setAddress("las flores");
@@ -1273,7 +1418,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
         addressBilling.setCountryCode("PE");
         addressBilling.setZipCode("Lima 18");
         addressBilling.setPhoneNumber("999111999");
-        addressBilling.setEmail("epariasca.2010@gmail.com");
+        addressBilling.setEmail(((EditText) getRootView().findViewById(R.id.cliente_correo)).getText().toString());
 
         ArrayList<Address> addressesBilling = new ArrayList<Address>();
         addressesBilling.add(addressBilling);
@@ -1286,8 +1431,8 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
         personsShipping.clear();
 
         Person personShipping = new Person();
-        personShipping.setFirstName("Enrique");
-        personShipping.setLastName("Pariasca");
+        personShipping.setFirstName(((EditText)getRootView().findViewById(R.id.cliente_primer_nombre)).getText().toString());
+        personShipping.setLastName(((EditText)getRootView().findViewById(R.id.cliente_primer_apellido)).getText().toString());
 
         Address addressShipping = new Address();
         addressShipping.setAddress("las flores");
@@ -1296,7 +1441,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
         addressShipping.setCountryCode("PE");
         addressShipping.setZipCode("Lima 18");
         addressShipping.setPhoneNumber("999111999");
-        addressShipping.setEmail("epariasca.2010@gmail.com");
+        addressShipping.setEmail(((EditText) getRootView().findViewById(R.id.cliente_correo)).getText().toString());
 
         ArrayList<Address> addressesShipping = new ArrayList<Address>();
         addressesShipping.add(addressShipping);

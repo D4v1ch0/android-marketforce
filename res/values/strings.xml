@@ -79,7 +79,7 @@
     <string name="label_como_llegar">Como Llegar</string>
     <string name="label_posicion">Ubicación</string>
     <string name="abreviatura_visitado">Visitado</string>
-    <string name="abreviatura_no_visitado">No visitado</string>
+    <string name="abreviatura_no_visitado">No Venta</string>
     <string name="abreviatura_pendiente">Próximo</string>
     <string name="label_efectividad">Efectividad:</string>
     <string name="label_hoy">Hoy</string>
@@ -118,9 +118,9 @@
     <string name="label_eliminar_contacto">Eliminar</string>
     <string name="label_grabar">Grabar</string>
     <string name="label_cancelar">Cancelar</string>
-    <string name="label_action_motivos_no_visita">Marcar Como No Visitado</string>
+    <string name="label_action_motivos_no_visita">Marcar Como No Venta</string>
     <string name="label_sin_observaciones">(Sin Observaciones)</string>
-    <string name="label_motivo_no_visita">Motivo De No Visita</string>
+    <string name="label_motivo_no_visita">Motivo De No Venta</string>
     <string name="label_agente">Agentes</string>
     <string name="label_asignar_imagen">Asignar Imagen</string>
     <string name="label_numero">Número</string>
@@ -131,7 +131,7 @@
     <string name="label_inicio_server">Antes de empezar, escoja el servidor.</string>
     <string name="label_demo">¡Gracias por utilizar Market Force!</string>
     <string name="label_ingreso_server">Tengo un código de licencia</string>
-    <string name="warning_modificar_contacto_no_visitada">No puede modificar o asignar un contacto, a una agenda no visitada.</string>
+    <string name="warning_modificar_contacto_no_visitada">No puede modificar o asignar un contacto, a una agenda no venta.</string>
     <string name="warning_seleccionar_agenda">Debe seleccionar una agenda</string>
     <string name="warning_seleccionar_cliente">Debe seleccionar un cliente</string>
     <string name="warning_gestionar_agenda">La agenda debe de tener el estado Gestionando para poder modificarla.</string>
@@ -428,7 +428,7 @@
     <string name="label_total_upper">TOTAL:</string>
 
     <!-- AUNA -->
-    <string name="message_crear_cliente_visita">El cliente mencionado no existe en su cartera de clientes. Desea ingresarlo como un nuevo prospecto?</string>
+    <string name="message_crear_cliente_visita">No ha especificado el cliente o el mencionado no existe en su cartera. Desea ingresarlo como un nuevo prospecto?</string>
     <string name="title_crear_cliente_visita">Crear Cliente</string>
     <string name="warning_falta_nombre">Falta primer nombre del cliente</string>
     <string name="warning_falta_apellido">Falta primer apellido del cliente</string>
@@ -445,13 +445,14 @@
     <string name="label_agregar_afiliado">Agregar afiliado</string>
     <string name="label_edad">Edad</string>
     <string name="label_es_fumador">Es Fumador?</string>
-    <string name="label_pago_anual">Pago Anual</string>
+    <string name="label_pago_anual">Anual</string>
     <string name="label_con_todas_tarjetas">con todas las tarjetas</string>
-    <string name="label_pago_mensual">Pago Mensual</string>
+    <string name="label_pago_mensual">Mensual</string>
     <string name="label_con_tarjeta_credito">con tarjeta de crédito</string>
     <string name="label_con_tarjeta_debito">con tarjeta de débito</string>
     <string name="label_consultar_cotizacion">Consultar Cotización</string>
     <string name="message_generando_cotizacion">Generando Cotización</string>
     <string name="message_validando_solicitud">Validando Solicitud</string>
     <string name="label_solicitud">Número Solicitud</string>
+    <string name="label_valor_cotizacion">Valor Cotizacion</string>
 </resources>

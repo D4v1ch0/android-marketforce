@@ -1,14 +1,20 @@
 package rp3.auna.ruta;
 
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 import rp3.app.BaseActivity;
 import rp3.auna.actividades.CotizacionActivity;
+import rp3.auna.models.auna.AgendaLlamada;
+import rp3.auna.models.auna.Cotizacion;
 import rp3.configuration.PreferenceManager;
+import rp3.data.models.GeneralValue;
 import rp3.db.sqlite.DataBase;
 import rp3.maps.utils.SphericalUtil;
 import rp3.auna.Contants;
@@ -45,11 +51,13 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CallLog;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -57,12 +65,17 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class RutasDetailFragment extends rp3.app.BaseFragment implements ObservacionesFragmentListener {
     
@@ -158,106 +171,142 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
     
     @Override
     public void onResume() {
-    	super.onResume();
-    	agenda = Agenda.getAgenda(getDataBase(), idAgenda);
-        if(agenda == null) {
+        super.onResume();
+        agenda = Agenda.getAgenda(getDataBase(), idAgenda);
+        if (agenda == null) {
             agenda = Agenda.getAgendaClienteNull(getDataBase(), idAgenda);
             clienteNull = true;
         }
         if (agenda.getIdContacto() != 0) {
-                String apellido = "";
-                if (agenda.getContacto().getApellido() != null)
-                    apellido = agenda.getContacto().getApellido();
-                setTextViewText(R.id.textView_name, agenda.getContacto().getNombre() + " " + apellido);
-                ((ImageView) this.getRootView().findViewById(R.id.map_image)).setImageBitmap(BitmapUtils.getRoundedRectBitmap(
-                        BitmapFactory.decodeResource(getResources(), R.drawable.user),
-                        getResources().getDimensionPixelOffset(R.dimen.image_size)));
-                DManager.fetchDrawableOnThreadRounded(PreferenceManager.getString("server") +
-                                rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + agenda.getContacto().getURLFoto(),
-                        (ImageView) this.getRootView().findViewById(R.id.map_image));
-                if (agenda.getContacto().getCargo() != null)
-                    setTextViewText(R.id.textView_tipo_canal, agenda.getContacto().getCargo().trim());
-                else
-                    setTextViewText(R.id.textView_tipo_canal, "");
-                setTextViewText(R.id.textView_tipo_cliente, agenda.getContacto().getEmpresa().trim());
-            } else {
-                ((ImageView) this.getRootView().findViewById(R.id.map_image)).setImageBitmap(BitmapUtils.getRoundedRectBitmap(
-                        BitmapFactory.decodeResource(getResources(), R.drawable.user),
-                        getResources().getDimensionPixelOffset(R.dimen.image_size)));
-                DManager.fetchDrawableOnThreadRounded(PreferenceManager.getString("server") +
-                                rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + agenda.getCliente().getURLFoto(),
-                        (ImageView) this.getRootView().findViewById(R.id.map_image));
-
-                setTextViewText(R.id.textView_name, agenda.getCliente().getNombreCompleto());
-                if(agenda.getCliente() != null)
-                {
-                    setTextViewText(R.id.textView_tipo_canal, agenda.getCliente().getCanalDescripcion());
-                    setTextViewText(R.id.textView_tipo_cliente, agenda.getCliente().getTipoClienteDescripcion());
-                }
-                else
-                {
-                    setTextViewText(R.id.textView_tipo_canal, "");
-                    setTextViewText(R.id.textView_tipo_cliente, "");
-                }
-
-            }
-            if (agenda.getObservaciones() != null && agenda.getObservaciones().length() > 0) {
-                setTextViewText(R.id.detail_agenda_observacion, agenda.getObservaciones());
-                ((TextView) getRootView().findViewById(R.id.detail_agenda_observacion)).setTextColor(getResources().getColor(R.color.default_text));
-            }
+            String apellido = "";
+            if (agenda.getContacto().getApellido() != null)
+                apellido = agenda.getContacto().getApellido();
+            setTextViewText(R.id.textView_name, agenda.getContacto().getNombre() + " " + apellido);
+            ((ImageView) this.getRootView().findViewById(R.id.map_image)).setImageBitmap(BitmapUtils.getRoundedRectBitmap(
+                    BitmapFactory.decodeResource(getResources(), R.drawable.user),
+                    getResources().getDimensionPixelOffset(R.dimen.image_size)));
+            DManager.fetchDrawableOnThreadRounded(PreferenceManager.getString("server") +
+                            rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + agenda.getContacto().getURLFoto(),
+                    (ImageView) this.getRootView().findViewById(R.id.map_image));
+            if (agenda.getContacto().getCargo() != null)
+                setTextViewText(R.id.textView_tipo_canal, agenda.getContacto().getCargo().trim());
             else
-            {
-                if (!agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO))
-                    setTextViewText(R.id.detail_agenda_observacion, getString(R.string.label_sin_observaciones));
+                setTextViewText(R.id.textView_tipo_canal, "");
+            setTextViewText(R.id.textView_tipo_cliente, agenda.getContacto().getEmpresa().trim());
+        } else {
+            ((ImageView) this.getRootView().findViewById(R.id.map_image)).setImageBitmap(BitmapUtils.getRoundedRectBitmap(
+                    BitmapFactory.decodeResource(getResources(), R.drawable.user),
+                    getResources().getDimensionPixelOffset(R.dimen.image_size)));
+            DManager.fetchDrawableOnThreadRounded(PreferenceManager.getString("server") +
+                            rp3.configuration.Configuration.getAppConfiguration().get(Contants.IMAGE_FOLDER) + agenda.getCliente().getURLFoto(),
+                    (ImageView) this.getRootView().findViewById(R.id.map_image));
+
+            setTextViewText(R.id.textView_name, agenda.getCliente().getNombreCompleto());
+            if (agenda.getCliente() != null) {
+                setTextViewText(R.id.textView_tipo_canal, agenda.getCliente().getCanalDescripcion());
+                setTextViewText(R.id.textView_tipo_cliente, agenda.getCliente().getTipoClienteDescripcion());
+            } else {
+                setTextViewText(R.id.textView_tipo_canal, "");
+                setTextViewText(R.id.textView_tipo_cliente, "");
             }
 
+        }
+        if (agenda.getObservaciones() != null && agenda.getObservaciones().length() > 0) {
+            setTextViewText(R.id.detail_agenda_observacion, agenda.getObservaciones());
+            ((TextView) getRootView().findViewById(R.id.detail_agenda_observacion)).setTextColor(getResources().getColor(R.color.default_text));
+        } else {
+            if (!agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO))
+                setTextViewText(R.id.detail_agenda_observacion, getString(R.string.label_sin_observaciones));
+        }
 
-            if (agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO)) {
-                ((ImageView) getRootView().findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_in_process);
-                setViewVisibility(R.id.detail_agenda_button_iniciar, View.GONE);
-                setViewVisibility(R.id.detail_agenda_button_fin, View.VISIBLE);
-                setViewVisibility(R.id.detail_agenda_button_cancelar, View.VISIBLE);
-            }
-            if (agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_NO_VISITADO)) {
-                ((ImageView) getRootView().findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_unvisited);
-                setViewVisibility(R.id.detail_agenda_button_iniciar, View.GONE);
-                setViewVisibility(R.id.detail_agenda_button_fin, View.GONE);
-                setViewVisibility(R.id.detail_agenda_button_cancelar, View.GONE);
-            }
-            if (agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_PENDIENTE)) {
-                ((ImageView) getRootView().findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_pending);
-                //getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(false);
-            }
-            if (agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_REPROGRAMADO)) {
-                ((ImageView) getRootView().findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_reprogramed);
-                //getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(false);
-            }
-            if (agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_VISITADO)) {
-                //getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(false);
-                ((ImageView) getRootView().findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_visited);
-                setViewVisibility(R.id.detail_agenda_button_iniciar, View.GONE);
-                setViewVisibility(R.id.detail_agenda_button_fin, View.GONE);
-                setViewVisibility(R.id.detail_agenda_button_cancelar, View.GONE);
-                setViewVisibility(R.id.detail_agenda_button_modificar, View.VISIBLE);
-            }
-            setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());
 
-            if (!ValidarAgendas()) {
-                setViewVisibility(R.id.detail_agenda_button_iniciar, View.GONE);
-                setViewVisibility(R.id.detail_agenda_button_modificar, View.GONE);
+        if (agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO)) {
+            ((ImageView) getRootView().findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_in_process);
+            setViewVisibility(R.id.detail_agenda_button_iniciar, View.GONE);
+            setViewVisibility(R.id.detail_agenda_button_fin, View.VISIBLE);
+            setViewVisibility(R.id.detail_agenda_button_cancelar, View.VISIBLE);
+        }
+        if (agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_NO_VISITADO)) {
+            ((ImageView) getRootView().findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_unvisited);
+            setViewVisibility(R.id.detail_agenda_button_iniciar, View.GONE);
+            setViewVisibility(R.id.detail_agenda_button_fin, View.GONE);
+            setViewVisibility(R.id.detail_agenda_button_cancelar, View.GONE);
+        }
+        if (agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_PENDIENTE)) {
+            ((ImageView) getRootView().findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_pending);
+            //getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(false);
+        }
+        if (agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_REPROGRAMADO)) {
+            ((ImageView) getRootView().findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_reprogramed);
+            //getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(false);
+        }
+        if (agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_VISITADO)) {
+            //getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(false);
+            ((ImageView) getRootView().findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_visited);
+            setViewVisibility(R.id.detail_agenda_button_iniciar, View.GONE);
+            setViewVisibility(R.id.detail_agenda_button_fin, View.GONE);
+            setViewVisibility(R.id.detail_agenda_button_cancelar, View.GONE);
+            setViewVisibility(R.id.detail_agenda_button_modificar, View.VISIBLE);
+        }
+        setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());
+
+        if (!ValidarAgendas()) {
+            setViewVisibility(R.id.detail_agenda_button_iniciar, View.GONE);
+            setViewVisibility(R.id.detail_agenda_button_modificar, View.GONE);
+        }
+
+        ((ImageView) this.getRootView().findViewById(R.id.map_image)).setClickable(true);
+        ((ImageView) this.getRootView().findViewById(R.id.map_image)).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), FotoActivity.class);
+                intent.putExtra(ARG_ITEM_ID, agenda.getID());
+                startActivity(intent);
+            }
+        });
+        ValidateTareas();
+
+        //Se visualiza plan y valor
+        int id_tarea = 0;
+        for(AgendaTarea tarea : agenda.getAgendaTareas())
+        {
+            if(tarea.getTipoTarea() != null && tarea.getTipoTarea().equalsIgnoreCase("C"))
+                id_tarea = tarea.getIdTarea();
+        }
+
+        Cotizacion cotizacion = Cotizacion.getCotizacion(getDataBase(), agenda.getIdAgenda(), agenda.getIdRuta(), id_tarea);
+        if(cotizacion.getID() != 0)
+            cargaCotizacion(cotizacion);
+        else
+        {
+            cotizacion = Cotizacion.getCotizacionInt(getDataBase(), agenda.getID(), agenda.getIdRuta(), id_tarea);
+            if(cotizacion.getID() != 0)
+                cargaCotizacion(cotizacion);
+        }
+    }
+
+    private void cargaCotizacion(Cotizacion cotizacion)
+    {
+        try {
+            NumberFormat numberFormat;
+            numberFormat = NumberFormat.getInstance();
+            numberFormat.setMaximumFractionDigits(2);
+            numberFormat.setMinimumFractionDigits(2);
+            //Se carga programa
+            JSONArray jsonArray = new JSONArray(cotizacion.getParametros());
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                GeneralValue programa = GeneralValue.getGeneralValue(getDataBase(), Contants.GENERAL_TABLE_PROGRAMAS, jsonObject.getString("CodigoPrograma"));
+                setTextViewText(R.id.textView_tipo_cliente, programa.getValue());
             }
 
-            ((ImageView) this.getRootView().findViewById(R.id.map_image)).setClickable(true);
-            ((ImageView) this.getRootView().findViewById(R.id.map_image)).setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getContext(), FotoActivity.class);
-                    intent.putExtra(ARG_ITEM_ID, agenda.getID());
-                    startActivity(intent);
-                }
-            });
-            ValidateTareas();
+            //Se carga valor de cotizacion
+            setTextViewText(R.id.textView_tipo_canal, "S/. " + numberFormat.format(cotizacion.getValor()));
 
+        } catch (Exception ex) {
+
+        }
     }
 
     @Override
@@ -367,6 +416,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                    agenda.setEstadoAgenda(Contants.ESTADO_GESTIONANDO);
                    agenda.setEstadoAgendaDescripcion(Contants.DESC_GESTIONANDO);
                    agenda.setFechaInicioReal(Calendar.getInstance().getTime());
+                   agenda.setEnviado(true);
                    Agenda.update(getDataBase(), agenda);
                    agenda = Agenda.getAgenda(getDataBase(), idAgenda);
                    if (agenda == null)
@@ -416,6 +466,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                    agenda.setEstadoAgendaDescripcion(Contants.DESC_GESTIONANDO);
                    getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(true);
                    //agenda.setFechaInicioReal(Calendar.getInstance().getTime());
+                   agenda.setEnviado(true);
                    Agenda.update(getDataBase(), agenda);
                    ((ImageView) rootView.findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_in_process);
                    setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());
@@ -469,6 +520,14 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                    agenda = Agenda.getAgenda(getDataBase(), idAgenda);
                    if (agenda == null)
                        agenda = Agenda.getAgendaClienteNull(getDataBase(), idAgenda);
+
+                   //Se revisan las llamadas
+                   if (agenda.getClienteDireccion() != null && agenda.getClienteDireccion().getTelefono1() != null && agenda.getClienteDireccion().getTelefono1().length() > 0) {
+                       List<AgendaLlamada> llamadas = getCallDetails(getContext(), agenda.getClienteDireccion().getTelefono1(), agenda);
+                       for (AgendaLlamada llamada : llamadas)
+                           AgendaLlamada.insert(getDataBase(), llamada);
+                   }
+
                    agenda.setEstadoAgenda(Contants.ESTADO_VISITADO);
                    agenda.setEstadoAgendaDescripcion(Contants.DESC_VISITADO);
                    agenda.setFechaFinReal(Calendar.getInstance().getTime());
@@ -554,8 +613,8 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
            });
 
             ValidateTareas();
-		   
-		}
+
+        }
     }
 
     @Override
@@ -837,11 +896,11 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                                     showTareaTexto(ata, setter);
                             }
                         }
-                        if (setter.getTipoTarea().equalsIgnoreCase("C"))
+                        if (setter.getTipoTarea().equalsIgnoreCase("C") && agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO))
                             showTareaCotizacion(setter);
                         if (setter.getTipoTarea().equalsIgnoreCase("E"))
                             showTareaGrupo(setter);
-                        if (setter.getTipoTarea().equalsIgnoreCase("ADC") && !soloVista)
+                        if (setter.getTipoTarea().equalsIgnoreCase("ADC") && !soloVista && agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO))
                             showTareaActualizacion(setter);
                     }
                 }});
@@ -964,7 +1023,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                             LatLng partida = new LatLng(Double.parseDouble(PreferenceManager.getString(Contants.KEY_LATITUD_PARTIDA, "0")),
                                     Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA, "0")));
                             double distance = 0;
-                            if(agenda.getClienteDireccion().getLatitud() != 0) {
+                            if (agenda.getClienteDireccion().getLatitud() != 0) {
                                 partida = new LatLng(agenda.getClienteDireccion().getLatitud(),
                                         agenda.getClienteDireccion().getLongitud());
                                 distance = SphericalUtil.computeDistanceBetween(pos, partida);
@@ -977,7 +1036,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                                 marc.setLatitud(location.getLatitude());
                                 marc.setLongitud(location.getLongitude());
                                 pos = new LatLng(location.getLatitude(), location.getLongitude());
-                                if(agenda.getClienteDireccion().getLatitud() != 0) {
+                                if (agenda.getClienteDireccion().getLatitud() != 0) {
                                     partida = new LatLng(agenda.getClienteDireccion().getLatitud(),
                                             agenda.getClienteDireccion().getLongitud());
                                     distance = SphericalUtil.computeDistanceBetween(pos, partida);
@@ -1010,7 +1069,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                                         cal_hoy.setTime(format.parse(dia.getHoraFin2().replace("h", ":")));
                                 } catch (Exception ex) {
                                 }
-                                cal_hoy.add(Calendar.MINUTE, - 30);
+                                cal_hoy.add(Calendar.MINUTE, -30);
                                 int atraso = CheckMinutes(cal_hoy);
                                 if (atraso < 0) {
                                     marc.setMintutosAtraso(atraso * (-1));
@@ -1117,5 +1176,33 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
         System.out.println(Math.toDegrees(lat3) + " " + Math.toDegrees(lon3));
         return new LatLng(Math.toDegrees(lat3), Math.toDegrees(lon3));
 
+    }
+
+    public static List<AgendaLlamada> getCallDetails(Context context, String phone, Agenda agenda) {
+        List<AgendaLlamada> resp = new ArrayList<>();
+        StringBuffer stringBuffer = new StringBuffer();
+        Cursor cursor = context.getContentResolver().query(CallLog.Calls.CONTENT_URI,
+                null, CallLog.Calls.NUMBER + " = '" + phone + "' AND " + CallLog.Calls.DATE + " >= " + agenda.getFechaInicioReal().getTime() +
+                " AND " + CallLog.Calls.DATE + " <= " + Calendar.getInstance().getTime().getTime() + ""
+                , null, CallLog.Calls.DATE + " DESC");
+        int number = cursor.getColumnIndex(CallLog.Calls.NUMBER);
+        int type = cursor.getColumnIndex(CallLog.Calls.TYPE);
+        int date = cursor.getColumnIndex(CallLog.Calls.DATE);
+        int duration = cursor.getColumnIndex(CallLog.Calls.DURATION);
+        int id = 1;
+        while (cursor.moveToNext()) {
+            AgendaLlamada llamada = new AgendaLlamada();
+            llamada.setIdAgendaLlamada(id);
+            llamada.setNumero(cursor.getString(number));
+            llamada.setDuracion(Integer.parseInt(cursor.getString(duration)));
+            String callDate = cursor.getString(date);
+            Date callDayTime = new Date(Long.valueOf(callDate));
+            llamada.setFecha(callDayTime);
+            llamada.setIdAgenda(agenda.getIdAgenda());
+            llamada.set_idAgenda(agenda.getID());
+            resp.add(llamada);
+        }
+        cursor.close();
+        return resp;
     }
 }

@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import rp3.auna.models.auna.AgendaLlamada;
 import rp3.data.entity.EntityBase;
 import rp3.db.QueryDir;
 import rp3.db.sqlite.DataBase;
@@ -58,6 +59,8 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 	private long TiempoViaje;
 	private String idMotivoReprogramacion;
 	private Date fechaCreacion;
+
+	private List<AgendaLlamada> agendaLlamadas;
 
 	public Pedido getPedido() {
 		return pedido;
@@ -440,6 +443,14 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 		this._idCliente = _idCliente;
 	}
 
+	public List<AgendaLlamada> getAgendaLlamadas() {
+		return agendaLlamadas;
+	}
+
+	public void setAgendaLlamadas(List<AgendaLlamada> agendaLlamadas) {
+		this.agendaLlamadas = agendaLlamadas;
+	}
+
 	public static List<Agenda> getAgenda(DataBase db){
 		String query = QueryDir.getQuery( Contract.Agenda.QUERY_AGENDA );
 
@@ -596,6 +607,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			else
 				agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getIdAgenda(), agd.getIdRuta(), false));
 
+			agd.setAgendaLlamadas(AgendaLlamada.getLlamadasByIdAgenda(db, agd.getID()));
 			//agd.setPedido(Pedido.getPedidoByAgenda(db, agd.getID()));
 
 		}
@@ -786,9 +798,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 		Cursor c = db.rawQuery(query,""+id);
 
 		Agenda agd = null;
-		if(c.moveToFirst())
-		{
-
+		while (c.moveToNext()){
 			agd = new Agenda();
 			agd.setID(CursorUtils.getInt(c, Contract.Agenda._ID));
 			agd.setIdRuta(CursorUtils.getInt(c, Contract.Agenda.COLUMN_RUTA_ID));
@@ -830,6 +840,8 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 				agd.setNombreCompleto(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_NOMBRE));
 				agd.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
 			}
+
+			agd.setAgendaLlamadas(AgendaLlamada.getLlamadasByIdAgenda(db, agd.getID()));
 
 		}
 		c.close();
@@ -937,9 +949,16 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 				agd.setIdMotivoNoVisita(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_NO_VISITA_ID));
 				agd.setLatitud(CursorUtils.getDouble(c, Contract.Agenda.COLUMN_LATITUD));
 				agd.setLongitud(CursorUtils.getDouble(c, Contract.Agenda.COLUMN_LONGITUD));
-				agd.setCliente(rp3.auna.models.Cliente.getClienteIDServer(db, agd.getIdCliente(), false));
+				if(agd.getIdCliente() != 0)
+					agd.setCliente(rp3.auna.models.Cliente.getClienteIDServer(db, agd.getIdCliente(), false));
+				else
+					agd.setCliente(rp3.auna.models.Cliente.getClienteID(db, agd.get_idCliente(), true));
+
 				agd.setNombreCompleto(agd.getCliente().getNombreCompleto());
-				agd.setClienteDireccion(rp3.auna.models.ClienteDireccion.getClienteDireccionIdDireccion(db, agd.getIdCliente(), agd.getIdClienteDireccion()));
+				if(agd.getIdCliente() != 0)
+					agd.setClienteDireccion(rp3.auna.models.ClienteDireccion.getClienteDireccionIdDireccion(db, agd.getIdCliente(), agd.getIdClienteDireccion()));
+				else
+					agd.setClienteDireccion(agd.getCliente().getClienteDirecciones().get(0));
 				agd.setDireccion(agd.getClienteDireccion().getDireccion());
 				agd.setDuracion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DURACION));
 				agd.setDistancia(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DISTANCIA));
@@ -951,6 +970,8 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 					agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getID(), agd.getIdRuta(), true));
 				else
 					agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getIdAgenda(), agd.getIdRuta(), false));
+
+				agd.setAgendaLlamadas(AgendaLlamada.getLlamadasByIdAgenda(db, agd.getID()));
 
 				list_agenda.add(agd);
 			}while(c.moveToNext());
@@ -1005,6 +1026,8 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 					agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getID(), agd.getIdRuta(), true));
 				else
 					agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getIdAgenda(), agd.getIdRuta(), false));
+
+				agd.setAgendaLlamadas(AgendaLlamada.getLlamadasByIdAgenda(db, agd.getID()));
 
 				list_agenda.add(agd);
 			}while(c.moveToNext());

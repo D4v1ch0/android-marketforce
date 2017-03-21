@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.ksoap2.transport.HttpResponseException;
 
+import rp3.auna.models.auna.AgendaLlamada;
 import rp3.configuration.PreferenceManager;
 import rp3.connection.HttpConnection;
 import rp3.connection.WebService;
@@ -45,6 +46,26 @@ public class Agenda {
             jObject.put("DistanciaUbicacion", agendaUpload.getDistancia());
             jObject.put("MotivoReprogramacion", agendaUpload.getIdMotivoReprogramacion());
             jObject.put("MotivoReprogramacionTabla", Contants.GENERAL_TABLE_MOTIVOS_REPROGRAMACION);
+            if(agendaUpload.getIdCliente() == 0)
+            {
+                rp3.auna.models.Cliente newCliente = rp3.auna.models.Cliente.getClienteID(db, agendaUpload.get_idCliente(), false);
+                if(newCliente.getIdCliente() != 0)
+                {
+                    jObject.put("IdCliente", newCliente.getIdCliente());
+                    agendaUpload.setIdCliente((int)newCliente.getIdCliente());
+                }
+                else {
+                    Cliente.executeSyncCreate(db, agendaUpload.get_idCliente());
+                    newCliente = rp3.auna.models.Cliente.getClienteID(db, agendaUpload.get_idCliente(), false);
+                    if (newCliente.getIdCliente() != 0)
+                        jObject.put("IdCliente", newCliente.getIdCliente());
+                    else
+                        return SyncAdapter.SYNC_EVENT_ERROR;
+                }
+            }
+            else {
+                jObject.put("IdCliente", agendaUpload.getIdCliente());
+            }
 
             JSONArray jArrayTareas = new JSONArray();
             for (AgendaTarea agt : agendaUpload.getAgendaTareas()) {
@@ -87,6 +108,19 @@ public class Agenda {
             }
 
             jObject.put("AgendaTareas", jArrayTareas);
+
+            JSONArray jArrayLlamadas = new JSONArray();
+            for (AgendaLlamada agt : agendaUpload.getAgendaLlamadas()) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("Numero", agt.getNumero());
+                jsonObject.put("IdLlamada", agt.getIdAgendaLlamada());
+                jsonObject.put("FechaTicks", Convert.getDotNetTicksFromDate(agt.getFecha()));
+                jsonObject.put("Duracion", agt.getDuracion());
+                jArrayLlamadas.put(jsonObject);
+            }
+
+            jObject.put("AgendaLlamadas", jArrayLlamadas);
+
             jArray.put(jObject);
         } catch (Exception ex) {
 
@@ -372,12 +406,20 @@ public class Agenda {
             jObject.put("FechaCreacionTicks", Convert.getDotNetTicksFromDate(agenda.getFechaCreacion()));
             if(agenda.getIdCliente() == 0)
             {
-                Cliente.executeSyncCreate(db, agenda.get_idCliente());
                 rp3.auna.models.Cliente newCliente = rp3.auna.models.Cliente.getClienteID(db, agenda.get_idCliente(), false);
                 if(newCliente.getIdCliente() != 0)
+                {
                     jObject.put("IdCliente", newCliente.getIdCliente());
-                else
-                    return SyncAdapter.SYNC_EVENT_ERROR;
+                    agenda.setIdCliente((int)newCliente.getIdCliente());
+                }
+                else {
+                    Cliente.executeSyncCreate(db, agenda.get_idCliente());
+                    newCliente = rp3.auna.models.Cliente.getClienteID(db, agenda.get_idCliente(), false);
+                    if (newCliente.getIdCliente() != 0)
+                        jObject.put("IdCliente", newCliente.getIdCliente());
+                    else
+                        return SyncAdapter.SYNC_EVENT_ERROR;
+                }
             }
             else {
                 jObject.put("IdCliente", agenda.getIdCliente());
@@ -402,6 +444,19 @@ public class Agenda {
             }
 
             jObject.put("AgendaTareas", jArrayTareas);
+
+            JSONArray jArrayLlamadas = new JSONArray();
+            for (AgendaLlamada agt : agenda.getAgendaLlamadas()) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("Numero", agt.getNumero());
+                jsonObject.put("IdLlamada", agt.getIdAgendaLlamada());
+                jsonObject.put("FechaTicks", Convert.getDotNetTicksFromDate(agt.getFecha()));
+                jsonObject.put("Duracion", agt.getDuracion());
+                jArrayLlamadas.put(jsonObject);
+            }
+
+            jObject.put("AgendaLlamadas", jArrayLlamadas);
+
         } catch (Exception ex) {
             if(agenda != null) {
                 agenda.setEnviado(false);
@@ -468,12 +523,20 @@ public class Agenda {
                 jObject.put("IdRuta", agendaUpload.getIdRuta());
                 if(agendaUpload.getIdCliente() == 0)
                 {
-                    Cliente.executeSyncCreate(db, agendaUpload.get_idCliente());
                     rp3.auna.models.Cliente newCliente = rp3.auna.models.Cliente.getClienteID(db, agendaUpload.get_idCliente(), false);
                     if(newCliente.getIdCliente() != 0)
+                    {
                         jObject.put("IdCliente", newCliente.getIdCliente());
-                    else
-                        continue;
+                        agendaUpload.setIdCliente((int)newCliente.getIdCliente());
+                    }
+                    else {
+                        Cliente.executeSyncCreate(db, agendaUpload.get_idCliente());
+                        newCliente = rp3.auna.models.Cliente.getClienteID(db, agendaUpload.get_idCliente(), false);
+                        if (newCliente.getIdCliente() != 0)
+                            jObject.put("IdCliente", newCliente.getIdCliente());
+                        else
+                            return SyncAdapter.SYNC_EVENT_ERROR;
+                    }
                 }
                 else {
                     jObject.put("IdCliente", agendaUpload.getIdCliente());
@@ -539,6 +602,19 @@ public class Agenda {
                 }
 
                 jObject.put("AgendaTareas", jArrayTareas);
+
+                JSONArray jArrayLlamadas = new JSONArray();
+                for (AgendaLlamada agt : agendaUpload.getAgendaLlamadas()) {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("Numero", agt.getNumero());
+                    jsonObject.put("IdLlamada", agt.getIdAgendaLlamada());
+                    jsonObject.put("FechaTicks", Convert.getDotNetTicksFromDate(agt.getFecha()));
+                    jsonObject.put("Duracion", agt.getDuracion());
+                    jArrayLlamadas.put(jsonObject);
+                }
+
+                jObject.put("AgendaLlamadas", jArrayLlamadas);
+
                 jArray.put(jObject);
             } catch (Exception ex) {
 
@@ -720,12 +796,20 @@ public class Agenda {
                 jObject.put("IdRuta", agendaUpload.getIdRuta());
                 if(agendaUpload.getIdCliente() == 0)
                 {
-                    Cliente.executeSyncCreate(db, agendaUpload.get_idCliente());
                     rp3.auna.models.Cliente newCliente = rp3.auna.models.Cliente.getClienteID(db, agendaUpload.get_idCliente(), false);
                     if(newCliente.getIdCliente() != 0)
+                    {
                         jObject.put("IdCliente", newCliente.getIdCliente());
-                    else
-                        return SyncAdapter.SYNC_EVENT_ERROR;
+                        agendaUpload.setIdCliente((int)newCliente.getIdCliente());
+                    }
+                    else {
+                        Cliente.executeSyncCreate(db, agendaUpload.get_idCliente());
+                        newCliente = rp3.auna.models.Cliente.getClienteID(db, agendaUpload.get_idCliente(), false);
+                        if (newCliente.getIdCliente() != 0)
+                            jObject.put("IdCliente", newCliente.getIdCliente());
+                        else
+                            return SyncAdapter.SYNC_EVENT_ERROR;
+                    }
                 }
                 else {
                     jObject.put("IdCliente", agendaUpload.getIdCliente());
@@ -792,6 +876,19 @@ public class Agenda {
                 }
 
                 jObject.put("AgendaTareas", jArrayTareas);
+
+                JSONArray jArrayLlamadas = new JSONArray();
+                for (AgendaLlamada agt : agendaUpload.getAgendaLlamadas()) {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("Numero", agt.getNumero());
+                    jsonObject.put("IdLlamada", agt.getIdAgendaLlamada());
+                    jsonObject.put("FechaTicks", Convert.getDotNetTicksFromDate(agt.getFecha()));
+                    jsonObject.put("Duracion", agt.getDuracion());
+                    jArrayLlamadas.put(jsonObject);
+                }
+
+                jObject.put("AgendaLlamadas", jArrayLlamadas);
+
                 jArray.put(jObject);
             } catch (Exception ex) {
 

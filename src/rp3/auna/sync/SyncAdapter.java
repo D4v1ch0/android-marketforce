@@ -80,6 +80,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 
     public static String SYNC_TYPE_CONSULTA_COTIZACION = "cotizacion";
     public static String SYNC_TYPE_VALIDA_SOLICITUD = "solicitud";
+    public static String SYNC_TYPE_REGISTRAR_PAGO = "registro_pago";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -504,6 +505,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                 } else if (syncType.equals(SYNC_TYPE_VALIDA_SOLICITUD)) {
                     String params = extras.getString(ActualizacionFragment.ARG_PARAMS);
                     Bundle bundle = Auna.executeSolicitud(params);
+                    addDefaultMessage(bundle.getInt("Status"));
+                    putData(ActualizacionFragment.ARG_RESPONSE, bundle.getString(ActualizacionFragment.ARG_RESPONSE));
+                } else if (syncType.equals(SYNC_TYPE_REGISTRAR_PAGO)) {
+                    String params = extras.getString(ActualizacionFragment.ARG_PARAMS);
+                    Bundle bundle = Auna.executePago(params);
                     addDefaultMessage(bundle.getInt("Status"));
                     putData(ActualizacionFragment.ARG_RESPONSE, bundle.getString(ActualizacionFragment.ARG_RESPONSE));
                 } else if (syncType.equals(SYNC_TYPE_BATCH)) {

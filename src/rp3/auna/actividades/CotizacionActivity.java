@@ -10,6 +10,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +30,7 @@ import rp3.auna.models.Agenda;
 import rp3.auna.models.AgendaTarea;
 import rp3.auna.models.auna.Cotizacion;
 import rp3.auna.sync.SyncAdapter;
+import rp3.auna.utils.NothingSelectedSpinnerAdapter;
 import rp3.content.SimpleGeneralValueAdapter;
 import rp3.data.MessageCollection;
 import rp3.data.models.GeneralValue;
@@ -75,6 +77,12 @@ public class CotizacionActivity extends ActividadActivity {
         TotalTD=(TextView)ResponseView.findViewById(R.id.cotizacion_mensual_debito);
 
         //Cargo cotización en el caso de que exista
+        SimpleGeneralValueAdapter programaAdapter = new SimpleGeneralValueAdapter(this, getDataBase(), Contants.GENERAL_TABLE_PROGRAMAS);
+        ((Spinner) getRootView().findViewById(R.id.cotizacion_programa)).setAdapter(new NothingSelectedSpinnerAdapter(
+                programaAdapter,
+                R.layout.spinner_empty_selected,
+                this, "Seleccione un programa"));
+        ((Spinner) getRootView().findViewById(R.id.cotizacion_programa)).setPrompt("Seleccione un programa");
         cotizacion = Cotizacion.getCotizacion(getDataBase(), id_agenda, id_ruta, id_tarea);
         if(cotizacion.getID() != 0)
             cargaCotizacion();
@@ -166,7 +174,8 @@ public class CotizacionActivity extends ActividadActivity {
                 ((Spinner) afiliado.findViewById(R.id.afiliado_sexo)).setAdapter(tipoGeneroAdapter);
                 ((Spinner) afiliado.findViewById(R.id.afiliado_sexo)).setPrompt("Seleccione un género");
 
-                ((Spinner) afiliado.findViewById(R.id.afiliado_sexo)).setSelection(jsonObject.getString("Sexo").equalsIgnoreCase("M") ? 1 : 0);
+                ((Spinner) findViewById(R.id.cotizacion_programa)).setSelection(getPosition(((Spinner) findViewById(R.id.cotizacion_programa)).getAdapter(), jsonObject.getString("CodigoPrograma")));
+                ((Spinner) afiliado.findViewById(R.id.afiliado_sexo)).setSelection(getPosition(((Spinner) afiliado.findViewById(R.id.afiliado_sexo)).getAdapter(), jsonObject.getString("Sexo")));
                 ((CheckBox) afiliado.findViewById(R.id.afiliado_es_fumador)).setChecked(jsonObject.getBoolean("FlagFumador"));
                 ((EditText) afiliado.findViewById(R.id.afiliado_edad)).setText(jsonObject.getString("Edad"));
 
@@ -259,7 +268,7 @@ public class CotizacionActivity extends ActividadActivity {
             try
             {
                 jsonObject.put("CodigoProcedenciaBase", Contants.COTIZADOR_PROCEDENCIA_BASE);
-                jsonObject.put("CodigoPrograma", Contants.COTIZADOR_CODIGO_PROGRAMA);
+                jsonObject.put("CodigoPrograma", ((GeneralValue)((Spinner) findViewById(R.id.cotizacion_programa)).getSelectedItem()).getCode());
                 jsonObject.put("Edad", ((TextView) afiliado.findViewById(R.id.afiliado_edad)).getText().toString());
                 jsonObject.put("FlagFumador", ((CheckBox) afiliado.findViewById(R.id.afiliado_es_fumador)).isChecked());
                 jsonObject.put("IdRegistro", "00" + (i+1));
@@ -278,6 +287,11 @@ public class CotizacionActivity extends ActividadActivity {
         if(afiliadosLayouts.size() == 0)
         {
             Toast.makeText(CotizacionActivity.this, "Debe ingresar al menos un afiliado", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(((Spinner) getRootView().findViewById(R.id.cotizacion_programa)).getSelectedItemPosition() == 0)
+        {
+            Toast.makeText(this, "Debe escoger un programa.", Toast.LENGTH_LONG).show();
             return false;
         }
         for(int i = 0; i < afiliadosLayouts.size(); i++)
@@ -448,5 +462,30 @@ public class CotizacionActivity extends ActividadActivity {
             Cotizacion.update(getDataBase(),cotizacion);
         }
 
+    }
+
+    private int getPosition(SpinnerAdapter spinnerAdapter, int i)
+    {
+        int position = -1;
+        for(int f = 0; f < spinnerAdapter.getCount(); f++)
+        {
+            if(spinnerAdapter.getItemId(f) == i)
+                position = f;
+        }
+        return position;
+    }
+    private int getPosition(SpinnerAdapter spinnerAdapter, String i)
+    {
+        int position = -1;
+        for(int f = 0; f < spinnerAdapter.getCount(); f++)
+        {
+            try {
+                if (((GeneralValue) spinnerAdapter.getItem(f)).getCode().equals(i))
+                    position = f;
+            }
+            catch (Exception ex)
+            {}
+        }
+        return position;
     }
 }
