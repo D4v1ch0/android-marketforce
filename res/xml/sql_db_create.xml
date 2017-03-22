@@ -306,7 +306,7 @@
         PaginaWeb,
         Correo,
         TipoEmpresa,
-        Canal
+        Canal,
         tokenize=porter
         );
     </statement>
@@ -701,11 +701,13 @@
         Pendiente BOOLEAN
         )
     </statement>
-    CREATE VIRTUAL TABLE tbAgendaOportunidadExt USING fts4 (
-    Descripcion,
-    Direccion,
-    Correo,
-    tokenize=porter
-    );
+    <statement>
+        CREATE VIRTUAL TABLE tbAgendaOportunidadExt USING fts4 (
+        Descripcion,
+        Direccion,
+        Correo,
+        tokenize=porter
+        );
+    </statement>
 
 </sql>

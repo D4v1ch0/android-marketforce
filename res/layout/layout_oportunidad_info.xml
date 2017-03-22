@@ -369,7 +369,8 @@
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_margin="5dp" >
+        android:layout_margin="5dp"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="0dp"
@@ -392,6 +393,81 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/oportunidad_referencia"
+            android:layout_weight="0.66"
+            android:layout_marginLeft="5dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_grey_lines"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_margin="5dp" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_tipo"
+            android:id="@+id/textView104"
+            android:layout_weight="0.33"
+            android:textColor="@color/color_text_sky_blue"
+            android:paddingLeft="6dp" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="1dp"
+            android:layout_height="fill_parent"
+            android:background="@color/color_grey_lines" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/oportunidad_tipo_persona"
+            android:layout_weight="0.66"
+            android:layout_marginLeft="5dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_grey_lines" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_margin="5dp" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/label_canal"
+            android:id="@+id/textView124"
+            android:layout_weight="0.33"
+            android:textColor="@color/color_text_sky_blue"
+            android:paddingLeft="6dp" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="1dp"
+            android:layout_height="fill_parent"
+            android:background="@color/color_grey_lines" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/oportunidad_canal"
             android:layout_weight="0.66"
             android:layout_marginLeft="5dp" />
     </LinearLayout>

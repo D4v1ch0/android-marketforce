@@ -321,6 +321,8 @@ public class OportunidadDetailFragment extends BaseFragment {
             //((ProgressBar) view_info.findViewById(R.id.oportunidad_probabilidad_progress)).setProgress(opt.getProbabilidad());
             ((TextView) view_info.findViewById(R.id.oportunidad_importe)).setText(numberFormat.format(opt.getImporte()));
             ((TextView) view_info.findViewById(R.id.oportunidad_movil)).setText(opt.getTelefono1());
+            ((TextView) view_info.findViewById(R.id.oportunidad_canal)).setText(opt.getCanal());
+            ((TextView) view_info.findViewById(R.id.oportunidad_tipo_persona)).setText(opt.getTipoPersona().equals("N") ? "Natural" : "Jurídica");
             if (((TextView) view_info.findViewById(R.id.oportunidad_movil)).length() > 0) {
                 ViewUtils.setPhoneActionClickListener(view_info.findViewById(R.id.oportunidad_movil), Utils.convertToSMSNumber(opt.getTelefono1()));
                 ((TextView) view_info.findViewById(R.id.oportunidad_movil)).setPaintFlags(((TextView) view_info.findViewById(R.id.oportunidad_movil)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -777,7 +779,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                             intent.putExtra(EtapaActivity.ARG_ETAPA, view.getId());
                             intent.putExtra(EtapaActivity.ARG_OPORTUNIDAD, clientId);
                             if(agd.getIdOportunidad() == opt.getIdOportunidad())
-                                intent.putExtra(EtapaActivity.ARG_ID_AGENDA, agd.getID());
+                                intent.putExtra(EtapaActivity.ARG_ID_AGENDA, (int) agd.getID());
                             else
                                 intent.putExtra(EtapaActivity.ARG_ID_AGENDA, 0);
                             startActivity(intent);
@@ -928,16 +930,25 @@ public class OportunidadDetailFragment extends BaseFragment {
                 agd.setDireccion(opt.getDireccion());
                 agd.setEmail(opt.getCorreo());
                 AgendaOportunidad.insert(getDataBase(), agd);
+                getRootView().findViewById(R.id.oportunidad_inicio_gestion).setVisibility(View.GONE);
+                getRootView().findViewById(R.id.oportunidad_cancelar_gestion).setVisibility(View.VISIBLE);
+                getRootView().findViewById(R.id.oportunidad_finalizar_gestion).setVisibility(View.VISIBLE);
             }
         });
 
         ((Button) getRootView().findViewById(R.id.oportunidad_finalizar_gestion)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                agd.setDescripcion(opt.getDescripcion());
+                agd.setDireccion(opt.getDireccion());
+                agd.setEmail(opt.getCorreo());
                 agd.setPendiente(true);
                 agd.setEstado(Contants.ESTADO_VISITADO);
                 agd.setFechaFin(Calendar.getInstance().getTime());
                 AgendaOportunidad.update(getDataBase(), agd);
+                getRootView().findViewById(R.id.oportunidad_inicio_gestion).setVisibility(View.VISIBLE);
+                getRootView().findViewById(R.id.oportunidad_cancelar_gestion).setVisibility(View.GONE);
+                getRootView().findViewById(R.id.oportunidad_finalizar_gestion).setVisibility(View.GONE);
             }
         });
 
@@ -948,6 +959,9 @@ public class OportunidadDetailFragment extends BaseFragment {
                 agd.setEstado(Contants.ESTADO_ELIMINADO);
                 //agd.setFechaFin(Calendar.getInstance().getTime());
                 AgendaOportunidad.update(getDataBase(), agd);
+                getRootView().findViewById(R.id.oportunidad_inicio_gestion).setVisibility(View.VISIBLE);
+                getRootView().findViewById(R.id.oportunidad_cancelar_gestion).setVisibility(View.GONE);
+                getRootView().findViewById(R.id.oportunidad_finalizar_gestion).setVisibility(View.GONE);
             }
         });
 

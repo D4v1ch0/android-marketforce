@@ -81,6 +81,9 @@ public class OportunidadBitacoraListFragment extends BaseFragment implements Opo
 
         OportunidadBitacoraAdapter adapter = new OportunidadBitacoraAdapter(this.getContext(), list);
 
+        if(agd.getID() == 0 || agd.get_idOportunidad() != oportunidad.getID())
+            getRootView().findViewById(R.id.bitacora_agregar).setVisibility(View.GONE);
+
         ((ListView) getRootView().findViewById(R.id.bitacora_list)).setAdapter(adapter);
         getRootView().findViewById(R.id.bitacora_agregar).setOnClickListener(new View.OnClickListener() {
             @Override

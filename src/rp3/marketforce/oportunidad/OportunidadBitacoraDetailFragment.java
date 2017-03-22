@@ -26,6 +26,8 @@ import rp3.app.BaseFragment;
 import rp3.configuration.PreferenceManager;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
+import rp3.marketforce.db.Contract;
+import rp3.marketforce.models.oportunidad.AgendaOportunidad;
 import rp3.marketforce.models.oportunidad.Oportunidad;
 import rp3.marketforce.models.oportunidad.OportunidadBitacora;
 import rp3.marketforce.resumen.AgenteDetalleFragment;
@@ -120,11 +122,13 @@ public class OportunidadBitacoraDetailFragment extends BaseFragment {
                 @Override
                 public void onClick(View v) {
                     if (((EditText) rootView.findViewById(R.id.actividad_texto_respuesta)).getText().toString().trim().length() > 0) {
+                        AgendaOportunidad agd = AgendaOportunidad.getAgendaOportunidadGestionado(getDataBase());
                         bitacora = new OportunidadBitacora();
                         bitacora.setIdAgente(PreferenceManager.getInt(Contants.KEY_IDAGENTE));
                         bitacora.setFecha(Calendar.getInstance().getTime());
                         bitacora.setIdOportunidad(oportunidad.getIdOportunidad());
                         bitacora.set_idOportunidad((int) oportunidad.getID());
+                        bitacora.setIdAgenda((int) agd.getID());
                         bitacora.setDetalle(((EditText) rootView.findViewById(R.id.actividad_texto_respuesta)).getText().toString());
                         OportunidadBitacora.insert(getDataBase(), bitacora);
                         oportunidad.setPendiente(true);

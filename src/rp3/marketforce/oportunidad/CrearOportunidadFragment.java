@@ -32,6 +32,7 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,10 +55,13 @@ import java.util.Locale;
 import rp3.app.BaseActivity;
 import rp3.app.BaseFragment;
 import rp3.configuration.PreferenceManager;
+import rp3.content.SimpleGeneralValueAdapter;
+import rp3.content.SimpleIdentifiableAdapter;
 import rp3.data.models.GeneralValue;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agente;
+import rp3.marketforce.models.Canal;
 import rp3.marketforce.models.oportunidad.Etapa;
 import rp3.marketforce.models.oportunidad.EtapaTarea;
 import rp3.marketforce.models.oportunidad.Oportunidad;
@@ -233,9 +237,12 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
         opt.setDireccionReferencia(((EditText) view.findViewById(R.id.oportunidad_direccion_referencia)).getText().toString());
         opt.setPaginaWeb(((EditText) view.findViewById(R.id.oportunidad_pagina_web)).getText().toString());
         opt.setCorreo(((EditText) view.findViewById(R.id.oportunidad_email)).getText().toString());
+        opt.setIdCanal((int) ((Spinner) getRootView().findViewById(R.id.oportunidad_canal)).getAdapter().getItemId(((Spinner) getRootView().findViewById(R.id.oportunidad_canal)).getSelectedItemPosition()));
+        opt.setTipoPersona(((GeneralValue) ((Spinner) getRootView().findViewById(R.id.oportunidad_tipo_persona)).getSelectedItem()).getCode());
         opt.setLongitud(oportunidad.getLongitud());
         opt.setLatitud(oportunidad.getLatitud());
         opt.setProbabilidad(((SeekBar) view.findViewById(R.id.oportunidad_probabilidad)).getProgress());
+        opt.setCanal(Canal.getCanal(getDataBase(), opt.getIdCanal()).getDescripcion());
         opt.setPendiente(true);
 
 
@@ -622,6 +629,9 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
             tipos.add(oportunidadTipo.getDescripcion());
         }
 
+        SimpleIdentifiableAdapter tipoCanal = new SimpleIdentifiableAdapter(getContext(), Canal.getCanal(getDataBase(), ""));
+        SimpleGeneralValueAdapter tipoPersonaAdapter = new SimpleGeneralValueAdapter(getContext(), getDataBase(), rp3.marketforce.Contants.GENERAL_TABLE_TIPO_PERSONA);
+
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_spinner_dropdown_item, tipos.toArray(new String[tipos.size()]));
         ((Spinner) view.findViewById(R.id.oportunidad_tipo_etapas)).setAdapter(adapter);
         ((Spinner) view.findViewById(R.id.oportunidad_tipo_etapas)).setAdapter(new NothingSelectedSpinnerAdapter(
@@ -629,6 +639,15 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
                 R.layout.spinner_empty_selected,
                 this.getContext()));
         ((Spinner) view.findViewById(R.id.oportunidad_tipo_etapas)).setPrompt(" Seleccione un tipo");
+        ((Spinner) getRootView().findViewById(R.id.oportunidad_canal)).setAdapter(tipoCanal);
+        ((Spinner) getRootView().findViewById(R.id.oportunidad_canal)).setAdapter(new NothingSelectedSpinnerAdapter(
+                tipoCanal,
+                R.layout.spinner_empty_selected,
+                this.getContext(), "Canal"));
+        ((Spinner) getRootView().findViewById(R.id.oportunidad_canal)).setPrompt("Seleccione un canal");
+        ((Spinner) getRootView().findViewById(R.id.oportunidad_tipo_persona)).setAdapter(tipoPersonaAdapter);
+        ((Spinner) getRootView().findViewById(R.id.oportunidad_tipo_persona)).setPrompt("Seleccione un tipo de persona");
+
         if(idTipoOportunidad >= 0)
             ((Spinner) view.findViewById(R.id.oportunidad_tipo_etapas)).setSelection(idTipoOportunidad);
 
@@ -728,6 +747,9 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
                 }
             }
             view.findViewById(R.id.oportunidad_tipo_etapas).setEnabled(false);
+
+            ((Spinner)getRootView().findViewById(R.id.oportunidad_canal)).setSelection(getPosition(((Spinner) getRootView().findViewById(R.id.oportunidad_canal)).getAdapter(), opt.getIdCanal()));
+            ((Spinner)getRootView().findViewById(R.id.oportunidad_tipo_persona)).setSelection(getPosition(((Spinner) getRootView().findViewById(R.id.oportunidad_tipo_persona)).getAdapter(), opt.getTipoPersona()));
 
             for (int i = 0; i < opt.getOportunidadFotos().size(); i++) {
                 photos.set(i, opt.getOportunidadFotos().get(i).getURLFoto());
@@ -1063,5 +1085,26 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
         listEtapas = etapas;
         Grabar();
         finish();
+    }
+
+    private int getPosition(SpinnerAdapter spinnerAdapter, int i)
+    {
+        int position = -1;
+        for(int f = 0; f < spinnerAdapter.getCount(); f++)
+        {
+            if(spinnerAdapter.getItemId(f) == i)
+                position = f;
+        }
+        return position;
+    }
+    private int getPosition(SpinnerAdapter spinnerAdapter, String i)
+    {
+        int position = -1;
+        for(int f = 0; f < spinnerAdapter.getCount(); f++)
+        {
+            if(((GeneralValue)spinnerAdapter.getItem(f)).getCode().equals(i))
+                position = f;
+        }
+        return position;
     }
 }

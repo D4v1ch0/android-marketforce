@@ -27,9 +27,9 @@ public class CrearOportunidadActivity extends BaseActivity  {
         if(getIntent().getExtras() != null && getIntent().getExtras().containsKey(ARG_ID))
             id = getIntent().getExtras().getLong(ARG_ID);
         if(id == 0)
-            setTitle("Crear Oportunidad");
+            setTitle("Crear Prospecto");
         else
-            setTitle("Editar Oportunidad");
+            setTitle("Editar Prospecto");
         if (!hasFragment(rp3.core.R.id.content)) {
             newFragment = CrearOportunidadFragment.newInstance(id);
             setFragment(rp3.core.R.id.content, newFragment);

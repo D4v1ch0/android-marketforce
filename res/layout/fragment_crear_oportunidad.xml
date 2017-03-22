@@ -53,6 +53,36 @@
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="1dp"
+        android:background="@color/color_grey_lines" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/oportunidad_canal"
+        android:background="@color/caldroid_transparent"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="5dp"
+        android:spinnerMode="dialog" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_grey_lines" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/oportunidad_tipo_persona"
+        android:background="@color/caldroid_transparent"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="5dp"
+        android:spinnerMode="dialog" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
         android:background="@color/color_grey_lines"></LinearLayout>
 
     <EditText
@@ -73,7 +103,8 @@
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="@color/color_grey_lines" />
+        android:background="@color/color_grey_lines"
+        android:visibility="gone" />
 
     <EditText
         android:layout_width="match_parent"
@@ -87,7 +118,8 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="5dp"
         android:paddingTop="10dp"
-        android:paddingBottom="10dp" />
+        android:paddingBottom="10dp"
+        android:visibility="gone" />
 
     <LinearLayout
         android:orientation="vertical"

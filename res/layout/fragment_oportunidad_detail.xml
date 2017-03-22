@@ -74,7 +74,7 @@
                 style="@style/Widget.Button.Theme"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/label_finalizar_gestion"
+                android:text="@string/label_finalizar"
                 android:id="@+id/oportunidad_finalizar_gestion"
                 android:layout_weight="1"
                 android:visibility="gone" />

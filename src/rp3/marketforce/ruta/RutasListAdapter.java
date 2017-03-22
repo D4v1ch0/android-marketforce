@@ -133,6 +133,11 @@ public class RutasListAdapter extends BaseAdapter{
 			
 			if(agd.getClienteDireccion() != null)
 				((TextView) convertView.findViewById(R.id.textView_address)).setText(""+agd.getClienteDireccion().getDireccion());
+			else if(agd.getDireccion() != null && agd.getDireccion().length() > 0)
+				((TextView) convertView.findViewById(R.id.textView_address)).setText(""+agd.getDireccion());
+
+			if(((TextView) convertView.findViewById(R.id.textView_address)).getText().toString().trim().length() <= 0)
+				((TextView) convertView.findViewById(R.id.textView_address)).setText("(Sin descripción)");
 
             Calendar hoy = Calendar.getInstance();
             Calendar diaAgenda = Calendar.getInstance();

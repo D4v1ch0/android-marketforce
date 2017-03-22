@@ -13,11 +13,13 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +30,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Random;
 
 import rp3.app.BaseActivity;
@@ -53,6 +56,7 @@ import rp3.marketforce.models.DiaLaboral;
 import rp3.marketforce.models.marcacion.Marcacion;
 import rp3.marketforce.models.marcacion.Permiso;
 import rp3.marketforce.models.oportunidad.AgendaOportunidad;
+import rp3.marketforce.models.oportunidad.OportunidadEtapa;
 import rp3.marketforce.ruta.FotoActivity;
 import rp3.marketforce.ruta.ListaTareasAdapter;
 import rp3.marketforce.ruta.ObservacionesActivity;
@@ -62,6 +66,7 @@ import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.DrawableManager;
 import rp3.marketforce.utils.Utils;
 import rp3.util.BitmapUtils;
+import rp3.util.CalendarUtils;
 import rp3.util.GooglePlayServicesUtils;
 import rp3.util.LocationUtils;
 
@@ -88,9 +93,6 @@ public class AgendaProspectoFragment extends rp3.app.BaseFragment{
 
     private long idAgenda;
     private AgendaOportunidad agenda;
-    private ListaTareasAdapter adapter;
-    private ListView lista_tarea;
-    private DrawableManager DManager;
     private boolean soloVista = true, clienteNull = false;
     private SimpleDateFormat format1;
     private SimpleDateFormat format2;
@@ -98,8 +100,11 @@ public class AgendaProspectoFragment extends rp3.app.BaseFragment{
     Uri photo = Utils.getOutputMediaFileUri(Utils.MEDIA_TYPE_IMAGE);
     private Menu menuRutas;
     DateFormat format;
+    private LinearLayout etapas_layout;
+    private ListView bitacoraListView;
     private LocationUtils locationUtils;
-    private double DISTANCE = 0;
+    private LayoutInflater inflater;
+    private OportunidadBitacoraDetailFragment subFragment;
 
     public static AgendaProspectoFragment newInstance(long idAgenda){
         Bundle arguments = new Bundle();
@@ -159,7 +164,7 @@ public class AgendaProspectoFragment extends rp3.app.BaseFragment{
 
         setTextViewText(R.id.prospecto_descripcion, agenda.getDescripcion());
         setTextViewText(R.id.prospecto_canal, agenda.getOportunidad().getCanal());
-        setTextViewText(R.id.prospecto_tipo_cliente, agenda.getOportunidad().getTipoPersona());
+        setTextViewText(R.id.prospecto_tipo_cliente, agenda.getOportunidad().getTipoPersona().equalsIgnoreCase("N") ? "Natural" : "Jurídica");
 
 
         if (agenda.getEstado().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO)) {
@@ -186,11 +191,19 @@ public class AgendaProspectoFragment extends rp3.app.BaseFragment{
     @Override
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
 
+        inflater = (LayoutInflater) this.getActivity().getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE);
+
+        //Seteo layouts
+        etapas_layout = (LinearLayout) getRootView().findViewById(R.id.prospecto_etapas_content);
+        bitacoraListView = (ListView) getRootView().findViewById(R.id.prospecto_bitacora);
+
+
         agenda = AgendaOportunidad.getAgendaById(getDataBase(), idAgenda);
 
         setTextViewText(R.id.prospecto_descripcion, agenda.getDescripcion());
         setTextViewText(R.id.prospecto_canal, agenda.getOportunidad().getCanal());
-        setTextViewText(R.id.prospecto_tipo_cliente, agenda.getOportunidad().getTipoPersona());
+        setTextViewText(R.id.prospecto_tipo_cliente, agenda.getOportunidad().getTipoPersona().equalsIgnoreCase("N") ? "Natural" : "Jurídica");
 
 
         if (agenda.getEstado().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO)) {
@@ -253,16 +266,106 @@ public class AgendaProspectoFragment extends rp3.app.BaseFragment{
                     setTextViewText(R.id.textView_movil, getResources().getString(R.string.label_sin_especificar));
                     ((TextView) rootView.findViewById(R.id.textView_movil)).setClickable(false);
                 }
-                setTextViewText(R.id.textView_address, agenda.getDireccion());
+                setTextViewText(R.id.textView_address, agenda.getDireccion().equalsIgnoreCase("") ? "(Sin Descripción)" : agenda.getDireccion());
 
             setTextViewText(R.id.textView_fecha, format1.format(agenda.getFechaInicio()) + " - " + format2.format(agenda.getFechaFin()));
 
             setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgenda());
 
             //Agregar Etapas
+            etapas_layout.removeAllViews();
+            for (OportunidadEtapa etp : agenda.getOportunidadEtapas()) {
+                if (etp.getEtapa().getIdEtapaPadre() == 0) {
+                    View row_etapa = inflater.inflate(R.layout.rowlist_oportunidad_etapa, null);
+                    getRootView().findViewById(R.id.detail_agenda_empty_tareas).setVisibility(View.GONE);
+                    getRootView().findViewById(R.id.prospecto_etapas_scroll).setVisibility(View.VISIBLE);
+
+                    int id_icon = R.drawable.x_red;
+                    if (etp.getEstado().equalsIgnoreCase("R"))
+                        id_icon = R.drawable.check;
+
+                    ((TextView) row_etapa.findViewById(R.id.map_phone)).setCompoundDrawablesWithIntrinsicBounds(0, 0, id_icon, 0);
+                    ((TextView) row_etapa.findViewById(R.id.detail_agenda_estado)).setText(etp.getEtapa().getDescripcion());
+                    ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setText(etp.getEtapa().getOrden() + 1 + "");
+                    if (etp.getEtapa().getOrden() == 0) {
+                        ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa1));
+                        final long idOptEtp = etp.getID();
+                        final String nameEtp = etp.getEtapa().getDescripcion();
+
+                        Calendar thisDay = Calendar.getInstance();
+                        if (etp.getFechaFin().getTime() > 0)
+                            thisDay.setTime(etp.getFechaFin());
+                    }
+                    if (etp.getEtapa().getOrden() == 1) {
+                        ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa2));
+                        final long idOptEtp = etp.getID();
+                        final String nameEtp = etp.getEtapa().getDescripcion();
+                        Calendar thisDay = Calendar.getInstance();
+                        if (etp.getFechaFin().getTime() > 0)
+                            thisDay.setTime(etp.getFechaFin());
+                    }
+                    if (etp.getEtapa().getOrden() == 2) {
+                        ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa3));
+                        final long idOptEtp = etp.getID();
+                        final String nameEtp = etp.getEtapa().getDescripcion();
+                        Calendar thisDay = Calendar.getInstance();
+                        if (etp.getFechaFin().getTime() > 0)
+                            thisDay.setTime(etp.getFechaFin());
+
+                    }
+                    if (etp.getEtapa().getOrden() == 3) {
+                        ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa4));
+                        final long idOptEtp = etp.getID();
+                        final String nameEtp = etp.getEtapa().getDescripcion();
+                        Calendar thisDay = Calendar.getInstance();
+                        if (etp.getFechaFin().getTime() > 0)
+                            thisDay.setTime(etp.getFechaFin());
+                    }
+                    if (etp.getEtapa().getOrden() == 4) {
+                        ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa5));
+                        final long idOptEtp = etp.getID();
+                        final String nameEtp = etp.getEtapa().getDescripcion();
+                        Calendar thisDay = Calendar.getInstance();
+                        if (etp.getFechaFin().getTime() > 0)
+                            thisDay.setTime(etp.getFechaFin());
+
+                        row_etapa.findViewById(R.id.grey_line).setVisibility(View.GONE);
+                    }
+                    row_etapa.setId(etp.getIdEtapa());
+
+                    row_etapa.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(getContext(), EtapaActivity.class);
+                            intent.putExtra(EtapaActivity.ARG_ETAPA, view.getId());
+                            intent.putExtra(EtapaActivity.ARG_OPORTUNIDAD, (long) agenda.get_idOportunidad());
+                            intent.putExtra(EtapaActivity.ARG_ID_AGENDA, 0);
+                            startActivity(intent);
+                        }
+                    });
+
+                    etapas_layout.addView(row_etapa);
+                }
+            }
 
             //Agregar Bitacora
+            OportunidadBitacoraAdapter adapter = new OportunidadBitacoraAdapter(this.getContext(), agenda.getOportunidadBitacoras());
 
+            bitacoraListView.setAdapter(adapter);
+
+            bitacoraListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    subFragment = OportunidadBitacoraDetailFragment.newInstance(agenda.get_idOportunidad(), (int) agenda.getOportunidadBitacoras().get(position).getID());
+                    showDialogFragment(subFragment, "Bitácora", agenda.getOportunidad().getDescripcion());
+                }
+            });
+
+            if(agenda.getOportunidadBitacoras().size() > 0)
+            {
+                getRootView().findViewById(R.id.prospecto_sin_bitacora).setVisibility(View.GONE);
+                getRootView().findViewById(R.id.prospecto_bitacora).setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -271,12 +374,6 @@ public class AgendaProspectoFragment extends rp3.app.BaseFragment{
         super.onPositiveConfirmation(id);
         switch (id)
         {
-            case DIALOG_INICIO_JORNADA:
-                SetMarcacion();
-                break;
-            case DIALOG_FIN_JORNADA:
-                SetMarcacionFin();
-                break;
             default:
                 break;
         }
@@ -471,338 +568,5 @@ public class AgendaProspectoFragment extends rp3.app.BaseFragment{
                 }
             }
         }
-    }
-
-    public void ValidateTareas()
-    {
-        if(agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO) || agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_PENDIENTE) || agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_REPROGRAMADO))
-        {
-            if(agenda.getAgendaTareas() == null)
-                agenda.setAgendaTareaList(new ArrayList<AgendaTarea>());
-
-            AgendaTarea agregarTareas = new AgendaTarea();
-            agregarTareas.setIdAgenda(agenda.getIdAgenda());
-            agregarTareas.set_idAgenda(agenda.getID());
-            agregarTareas.setEstadoTarea("A");
-            agregarTareas.setIdRuta(0);
-            agregarTareas.setIdTarea(0);
-            agenda.getAgendaTareas().add(agregarTareas);
-        }
-
-        if(agenda.getAgendaTareas() != null){
-            adapter = new ListaTareasAdapter(getActivity(), agenda.getAgendaTareas());
-            lista_tarea = (ListView) getRootView().findViewById(R.id.listView_tareas);
-            lista_tarea.setAdapter(adapter);
-            lista_tarea.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view,
-                                        int position, long id) {
-
-                    if(agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO))
-                        soloVista = false;
-                    else
-                        soloVista = true;
-
-                    if(soloVista)
-                        Toast.makeText(getContext(), R.string.message_solo_vista_tarea, Toast.LENGTH_LONG).show();
-
-                    AgendaTarea setter = adapter.getItem(position);
-                    if(setter.getIdTarea() == 0)
-                    {
-                        showDialogFragment(TareasFragment.newInstance(agenda.getAgendaTareas(), agenda.getID()), "Tareas");
-                    }
-                    else {
-                        if (setter.getTipoTarea().equalsIgnoreCase("A") || setter.getTipoTarea().equalsIgnoreCase("R")) {
-                            Actividad ata = Actividad.getActividadSimple(getDataBase(), setter.getIdTarea());
-                            if (ata.getTipo() != null) {
-                                if (ata.getTipo().equalsIgnoreCase("C") || ata.getTipo().equalsIgnoreCase("V"))
-                                    showTareaCheckbox(ata, setter);
-                                if (ata.getTipo().equalsIgnoreCase("M"))
-                                    showTareaMultiSeleccion(ata, setter);
-                                if (ata.getTipo().equalsIgnoreCase("S"))
-                                    showTareaSeleccion(ata, setter);
-                                if (ata.getTipo().equalsIgnoreCase("T"))
-                                    showTareaTexto(ata, setter);
-                            }
-                        }
-                        if (setter.getTipoTarea().equalsIgnoreCase("E"))
-                            showTareaGrupo(setter);
-                        if (setter.getTipoTarea().equalsIgnoreCase("ADC") && !soloVista)
-                            showTareaActualizacion(setter);
-                    }
-                }});
-
-            if(agenda.getAgendaTareas().size() == 0)
-            {
-                getRootView().findViewById(R.id.listView_tareas).setVisibility(View.GONE);
-                getRootView().findViewById(R.id.detail_agenda_empty_tareas).setVisibility(View.VISIBLE);
-            }
-        }
-        else
-        {
-            getRootView().findViewById(R.id.listView_tareas).setVisibility(View.GONE);
-            getRootView().findViewById(R.id.detail_agenda_empty_tareas).setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void SetMarcacion()
-    {
-        final Marcacion marc = new Marcacion();
-        marc.setTipo("J1");
-        marc.setPendiente(true);
-        if (GooglePlayServicesUtils.servicesConnected((BaseActivity) getActivity())) {
-
-            try {
-                ((BaseActivity) getActivity()).showDialogProgress("GPS", "Obteniendo Posición");
-                LocationUtils.getLocation(getContext(), new LocationUtils.OnLocationResultListener() {
-
-                    @Override
-                    public void getLocationResult(Location location) {
-                        if (location != null) {
-                            marc.setLatitud(location.getLatitude());
-                            marc.setLongitud(location.getLongitude());
-                            LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
-                            double distance = 0;
-                            marc.setEnUbicacion(true);
-                            if(agenda.getClienteDireccion().getLatitud() != 0) {
-                                LatLng partida = new LatLng(agenda.getClienteDireccion().getLatitud(),
-                                        agenda.getClienteDireccion().getLongitud());
-                                distance = SphericalUtil.computeDistanceBetween(pos, partida);
-                                marc.setEnUbicacion(distance < 30);
-                            }
-                            marc.setFecha(Calendar.getInstance().getTime());
-                            Marcacion.insert(getDataBase(), marc);
-                            JustificacionFragment fragment = new JustificacionFragment();
-                            if (distance < 30) {
-                                DiaLaboral dia = DiaLaboral.getDia(getDataBase(), Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1);
-                                Calendar cal_hoy = Calendar.getInstance();
-                                try {
-                                    cal_hoy.setTime(format.parse(dia.getHoraInicio1().replace("h", ":")));
-                                } catch (Exception ex) {
-                                }
-                                int atraso = CheckMinutes(cal_hoy);
-                                if (atraso > 0) {
-                                    marc.setMintutosAtraso(atraso);
-                                    Marcacion.update(getDataBase(), marc);
-                                    Permiso permiso = Permiso.getPermisoMarcacion(getDataBase(), 0);
-                                    if (permiso == null) {
-                                        fragment.idMarcacion = marc.getID();
-                                        showDialogFragment(fragment, "Justificacion");
-                                        Toast.makeText(getContext(), "Usted esta marcando atrasado. Indique su justificación", Toast.LENGTH_LONG).show();
-                                    } else {
-                                        permiso.setIdMarcacion(marc.getID());
-                                        Permiso.update(getDataBase(), permiso);
-                                        Bundle bundle = new Bundle();
-                                        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
-                                        requestSync(bundle);
-                                        Toast.makeText(getContext(), "Se ha iniciado la Jornada.", Toast.LENGTH_LONG).show();
-                                    }
-                                } else {
-                                    Bundle bundle = new Bundle();
-                                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
-                                    requestSync(bundle);
-                                }
-                            } else {
-                                DiaLaboral dia = DiaLaboral.getDia(getDataBase(), Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1);
-                                Calendar cal_hoy = Calendar.getInstance();
-                                try {
-                                    cal_hoy.setTime(format.parse(dia.getHoraInicio1().replace("h", ":")));
-                                } catch (Exception ex) {
-                                }
-                                int atraso = CheckMinutes(cal_hoy);
-                                if(atraso > 0) {
-                                    marc.setMintutosAtraso(atraso);
-                                    Marcacion.update(getDataBase(), marc);
-                                }
-                                fragment.idMarcacion = marc.getID();
-                                showDialogFragment(fragment, "Justificacion");
-                                Toast.makeText(getContext(), R.string.message_fuera_posicion_agenda, Toast.LENGTH_LONG).show();
-                            }
-                        } else {
-                            Toast.makeText(getContext(), "Debe de activar su GPS.", Toast.LENGTH_SHORT).show();
-                        }
-                        ((BaseActivity) getActivity()).closeDialogProgress();
-                    }
-                });
-            } catch (Exception ex) {
-                ((BaseActivity) getActivity()).closeDialogProgress();
-            }
-            setServiceRecurring();
-        }
-    }
-
-    public void SetMarcacionFin()
-    {
-        final Marcacion marc = new Marcacion();
-        marc.setTipo("J4"); //falta tipo
-        marc.setFecha(Calendar.getInstance().getTime());
-        marc.setPendiente(true);
-        if (GooglePlayServicesUtils.servicesConnected((BaseActivity) getActivity())) {
-
-            try {
-                ((BaseActivity) getActivity()).showDialogProgress("GPS", "Obteniendo Posición");
-                locationUtils.getLocationReference(getContext(), new LocationUtils.OnLocationResultListener() {
-
-                    @Override
-                    public void getLocationResult(Location location) {
-                        if (location != null) {
-                            LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
-                            LatLng partida = new LatLng(Double.parseDouble(PreferenceManager.getString(Contants.KEY_LATITUD_PARTIDA, "0")),
-                                    Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA, "0")));
-                            double distance = 0;
-                            if(agenda.getClienteDireccion().getLatitud() != 0) {
-                                partida = new LatLng(agenda.getClienteDireccion().getLatitud(),
-                                        agenda.getClienteDireccion().getLongitud());
-                                distance = SphericalUtil.computeDistanceBetween(pos, partida);
-                                marc.setEnUbicacion(distance < DISTANCE);
-                            }
-                            if (partida.latitude != 0 || partida.longitude != 0) {
-                                if (distance > DISTANCE) {
-                                    location = getAproximatelyLocation(location, partida, distance);
-                                }
-                                marc.setLatitud(location.getLatitude());
-                                marc.setLongitud(location.getLongitude());
-                                pos = new LatLng(location.getLatitude(), location.getLongitude());
-                                if(agenda.getClienteDireccion().getLatitud() != 0) {
-                                    partida = new LatLng(agenda.getClienteDireccion().getLatitud(),
-                                            agenda.getClienteDireccion().getLongitud());
-                                    distance = SphericalUtil.computeDistanceBetween(pos, partida);
-                                    marc.setEnUbicacion(distance < DISTANCE);
-                                }
-                                //distance = SphericalUtil.computeDistanceBetween(pos, partida);
-                            } else {
-                                marc.setLatitud(location.getLatitude());
-                                marc.setLongitud(location.getLongitude());
-                                distance = 0;
-                            }
-                            marc.setEnUbicacion(distance < DISTANCE);
-                            try {
-                                Marcacion.insert(getDataBase(), marc);
-                            } catch (Exception ex) {
-                                DataBase db = DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class);
-                                Marcacion.insert(db, marc);
-                            }
-                            if (marc.getID() == 0)
-                                marc.setID(Marcacion.getUltimaMarcacion(getDataBase()).getID());
-                            Toast.makeText(getContext(), "Se ha finalizado la Jornada.", Toast.LENGTH_LONG).show();
-                            JustificacionFragment fragment = new JustificacionFragment();
-                            if (distance < DISTANCE) {
-                                DiaLaboral dia = DiaLaboral.getDia(getDataBase(), Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1);
-                                Calendar cal_hoy = Calendar.getInstance();
-                                try {
-                                    if (dia.getHoraFin2() == null)
-                                        cal_hoy.setTime(format.parse(dia.getHoraFin1().replace("h", ":")));
-                                    else
-                                        cal_hoy.setTime(format.parse(dia.getHoraFin2().replace("h", ":")));
-                                } catch (Exception ex) {
-                                }
-                                cal_hoy.add(Calendar.MINUTE, - 30);
-                                int atraso = CheckMinutes(cal_hoy);
-                                if (atraso < 0) {
-                                    marc.setMintutosAtraso(atraso * (-1));
-                                    Marcacion.update(getDataBase(), marc);
-                                    fragment = new JustificacionFragment();
-                                    fragment.idMarcacion = marc.getID();
-                                    showDialogFragment(fragment, "Justificacion");
-                                    Toast.makeText(getContext(), "Usted esta finalizando su jornada por adelantado. Indique su justificación", Toast.LENGTH_LONG).show();
-                                } else {
-                                    marc.setPendiente(true);
-                                    Marcacion.update(getDataBase(), marc);
-                                    Bundle bundle = new Bundle();
-                                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_MARCACION);
-                                    requestSync(bundle);
-                                }
-                            } else {
-                                fragment = new JustificacionFragment();
-                                fragment.idMarcacion = marc.getID();
-                                showDialogFragment(fragment, "Justificacion");
-                                Toast.makeText(getContext(), R.string.message_fuera_posicion, Toast.LENGTH_LONG).show();
-                            }
-                        } else {
-                            Toast.makeText(getContext(), "Debe de activar su GPS.", Toast.LENGTH_SHORT).show();
-                        }
-                        ((BaseActivity) getActivity()).closeDialogProgress();
-                    }
-                });
-            } catch (Exception ex) {
-                ((BaseActivity) getActivity()).closeDialogProgress();
-            }
-        }
-    }
-
-    public int CheckMinutes(Calendar cal1)
-    {
-        Calendar hoy = Calendar.getInstance();
-        int horas = hoy.get(Calendar.HOUR_OF_DAY) - cal1.get(Calendar.HOUR_OF_DAY);
-        int minutos = hoy.get(Calendar.MINUTE) - cal1.get(Calendar.MINUTE);
-        return (horas * 60) + minutos;
-    }
-    private void setServiceRecurring(){
-        Intent i = new Intent(this.getContext(), EnviarUbicacionReceiver.class);
-        PendingIntent pi = PendingIntent.getBroadcast(this.getContext(), 0, i, 0);
-
-        // Set the alarm to start at 8:30 a.m.
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        Calendar cal = Calendar.getInstance();
-        long time = PreferenceManager.getLong(Contants.KEY_ALARMA_INICIO);
-        cal.setTimeInMillis(time);
-        calendar.set(Calendar.HOUR_OF_DAY, cal.get(Calendar.HOUR_OF_DAY));
-        calendar.set(Calendar.MINUTE, cal.get(Calendar.MINUTE));
-
-        String prueba = cal.getTime().toString();
-        String prueba2 = calendar.getTime().toString();
-
-        Random r = new Random();
-        int i1 = r.nextInt(5);
-
-        AlarmManager am = (AlarmManager) getContext().getSystemService(getContext().ALARM_SERVICE);
-        //am.cancel(pi); // cancel any existing alarms
-        am.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-                calendar.getTimeInMillis() + (i1 * 1000 * 5),
-                1000 * 60 * PreferenceManager.getInt(Contants.KEY_ALARMA_INTERVALO), pi);
-
-    }
-
-    public Location getAproximatelyLocation(Location gpsLocation, LatLng reference, double distanceBetween)
-    {
-        if(distanceBetween < (gpsLocation.getAccuracy() + DISTANCE)) {
-            Location aproxLoc = new Location("");
-            LatLng midpoint = new LatLng(gpsLocation.getLatitude(), gpsLocation.getLongitude());
-            double pars = 0;
-            do {
-                midpoint = midPoint(midpoint.latitude, midpoint.longitude, reference.latitude, reference.longitude);
-                aproxLoc.setLatitude(midpoint.latitude);
-                aproxLoc.setLongitude(midpoint.longitude);
-                pars = SphericalUtil.computeDistanceBetween(midpoint, reference);
-            } while (SphericalUtil.computeDistanceBetween(reference, midpoint) > DISTANCE);
-            aproxLoc.setAccuracy((float) SphericalUtil.computeDistanceBetween(reference, midpoint));
-            return aproxLoc;
-        }
-        else
-        {
-            return gpsLocation;
-        }
-    }
-
-    public static LatLng midPoint(double lat1,double lon1,double lat2,double lon2){
-
-        double dLon = Math.toRadians(lon2 - lon1);
-
-        //convert to radians
-        lat1 = Math.toRadians(lat1);
-        lat2 = Math.toRadians(lat2);
-        lon1 = Math.toRadians(lon1);
-
-        double Bx = Math.cos(lat2) * Math.cos(dLon);
-        double By = Math.cos(lat2) * Math.sin(dLon);
-        double lat3 = Math.atan2(Math.sin(lat1) + Math.sin(lat2), Math.sqrt((Math.cos(lat1) + Bx) * (Math.cos(lat1) + Bx) + By * By));
-        double lon3 = lon1 + Math.atan2(By, Math.cos(lat1) + Bx);
-
-        //print out in degrees
-        System.out.println(Math.toDegrees(lat3) + " " + Math.toDegrees(lon3));
-        return new LatLng(Math.toDegrees(lat3), Math.toDegrees(lon3));
-
     }
 }

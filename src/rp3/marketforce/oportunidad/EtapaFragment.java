@@ -111,7 +111,7 @@ public class EtapaFragment extends BaseFragment {
         opt.setPendiente(true);
         Oportunidad.update(getDataBase(), opt);
 
-        if(etapa.getIdEtapa() != opt.getIdEtapa() && idAgenda != 0) {
+        if(etapa.getIdEtapa() != opt.getIdEtapa() || idAgenda == 0) {
             getRootView().findViewById(R.id.finalizar_etapa).setVisibility(View.GONE);
             esActiva = false;
         }

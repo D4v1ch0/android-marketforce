@@ -5,6 +5,7 @@ import rp3.configuration.PreferenceManager;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
+import rp3.marketforce.oportunidad.AgendaProspectoFragment;
 import rp3.marketforce.pedido.CrearPedidoActivity;
 import rp3.marketforce.resumen.AgenteDetalleFragment;
 import rp3.marketforce.sync.SyncAdapter;
@@ -48,6 +49,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	
 	private RutasListFragment rutasListFragment;
 	private RutasDetailFragment rutasDetailfragment;
+    private AgendaProspectoFragment prospectoDetailfragment;
 	private ObservacionesFragment obsFragment;
     private MotivoNoVisitaFragment motivoNoVisitaFragment;
 	private SlidingPaneLayout slidingPane;
@@ -387,8 +389,8 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
         selectedTransactionId = id;
         RefreshMenu();
 
-        rutasDetailfragment = RutasDetailFragment.newInstance(selectedTransactionId);
-        setFragment(R.id.content_transaction_detail, rutasDetailfragment);
+        prospectoDetailfragment = AgendaProspectoFragment.newInstance(selectedTransactionId);
+        setFragment(R.id.content_transaction_detail, prospectoDetailfragment);
     }
 
 	@Override

@@ -185,7 +185,7 @@ public class AgendaOportunidad extends EntityBase<AgendaOportunidad> {
 
     @Override
     public String getTableName() {
-        return Contract.Oportunidad.TABLE_NAME;
+        return Contract.AgendaOportunidad.TABLE_NAME;
     }
 
     @Override

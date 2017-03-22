@@ -460,6 +460,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 
 			Agenda agd = new Agenda();
 			agd.setID(CursorUtils.getInt(c, Contract.Agenda._ID));
+			agd.set_idCliente(CursorUtils.getLong(c, Contract.Agenda.COLUMN_AGENDA_ID));
 			agd.setFechaInicio(CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_INCICIO));
 			agd.setFechaFin(CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_FIN));
 			agd.setEstadoAgenda(CursorUtils.getString(c, Contract.Agenda.FIELD_ESTADO_AGENDA));
@@ -473,16 +474,19 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
 			agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
 			agd.setEnviado(CursorUtils.getBoolean(c, Contract.Agenda.COLUMN_ENVIADO));
+			agd.setTipoAgenda(CursorUtils.getString(c, Contract.Agenda.FIELD_TIPO_AGENDA));
 
-			ClienteDireccion cld = new ClienteDireccion();
-			cld.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
-			agd.setCiudad(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_CIUDAD));
-			agd.setClienteDireccion(cld);
+			if(agd.getTipoAgenda().equalsIgnoreCase(Contants.TIPO_AGENDA_CLIENTE)) {
+				ClienteDireccion cld = new ClienteDireccion();
+				cld.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
+				agd.setCiudad(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_CIUDAD));
+				agd.setClienteDireccion(cld);
 
-			agd.setIdContacto(CursorUtils.getInt(c, Contract.Agenda.FIELD_CONTACTO_ID));
-			agd.setIdCliente(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_ID));
-			agd.setCliente(rp3.marketforce.models.Cliente.getClienteIDServer(db, agd.getIdCliente(), false));
-			agd.setContacto(Contacto.getContactoId(db, agd.getIdContacto(), agd.getIdCliente()));
+				agd.setIdContacto(CursorUtils.getInt(c, Contract.Agenda.FIELD_CONTACTO_ID));
+				agd.setIdCliente(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_ID));
+				agd.setCliente(rp3.marketforce.models.Cliente.getClienteIDServer(db, agd.getIdCliente(), false));
+				agd.setContacto(Contacto.getContactoId(db, agd.getIdContacto(), agd.getIdCliente()));
+			}
 
 			list.add(agd);
 		}
@@ -498,7 +502,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
 
-		Cursor c = db.rawQuery(query, Convert.getTicksFromDate(cal.getTime()));
+		Cursor c = db.rawQuery(query, new String[] {Convert.getTicksFromDate(cal.getTime()) + "" , Convert.getTicksFromDate(cal.getTime()) + "" });
 
 		List<Agenda> list = new ArrayList<Agenda>();
 		while (c.moveToNext()){

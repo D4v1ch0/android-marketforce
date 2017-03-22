@@ -220,7 +220,7 @@ public class OportunidadListFragment extends BaseFragment {
                 list.setVisibility(View.GONE);
                 getRootView().findViewById(R.id.oportunidad_empty).setVisibility(View.VISIBLE);
                 ((TextView) getRootView().findViewById(R.id.oportunidad_meta)).setText("Meta: $ 0");
-                ((TextView) getRootView().findViewById(R.id.oportunidad_numero)).setText("Oportunidades: 0");
+                ((TextView) getRootView().findViewById(R.id.oportunidad_numero)).setText("Prospectos: 0");
                 return;
             }
 
@@ -228,7 +228,7 @@ public class OportunidadListFragment extends BaseFragment {
                 list.setVisibility(View.GONE);
                 getRootView().findViewById(R.id.oportunidad_empty).setVisibility(View.VISIBLE);
                 ((TextView) getRootView().findViewById(R.id.oportunidad_meta)).setText("Meta: $ 0");
-                ((TextView) getRootView().findViewById(R.id.oportunidad_numero)).setText("Oportunidades: 0");
+                ((TextView) getRootView().findViewById(R.id.oportunidad_numero)).setText("Prospectos: 0");
                 return;
             }
 
@@ -252,7 +252,7 @@ public class OportunidadListFragment extends BaseFragment {
             for(List<Oportunidad> optList : lista.values())
                 optSize = optSize + optList.size();
 
-            ((TextView) getRootView().findViewById(R.id.oportunidad_numero)).setText("Oportunidades: " + optSize);
+            ((TextView) getRootView().findViewById(R.id.oportunidad_numero)).setText("Prospectos: " + optSize);
 
             ((TextView) getRootView().findViewById(R.id.oportunidad_meta)).setText("Meta: $ " + numberFormat.format(monto));
             list.setSelector(getActivity().getResources().getDrawable(R.drawable.bkg));

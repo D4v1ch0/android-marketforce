@@ -431,4 +431,5 @@
     <string name="label_bitacora_max">BITÁCORA</string>
     <string name="label_no_etapas_realizadas">No hay etapas realizadas</string>
     <string name="label_sin_registros">Sin Registros</string>
+    <string name="label_finalizar">Finalizar</string>
 </resources>

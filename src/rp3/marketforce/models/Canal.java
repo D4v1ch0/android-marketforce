@@ -78,5 +78,21 @@ public class Canal extends rp3.data.entity.EntityBase<Canal>{
 		return list;
 	}
 
+	public static Canal getCanal(DataBase db, int code){
+		Cursor c = db.query(Contract.Canal.TABLE_NAME, new String[]{
+				Contract.Canal._ID,
+				Contract.Canal.COLUMN_DESCRIPCION
+		}, Contract.Canal._ID + " = ?" , new String[] {code + ""});
+
+		Canal tpcl = new Canal();
+		while(c.moveToNext()){
+
+			tpcl.setID(CursorUtils.getLong(c, Contract.Canal._ID));
+			tpcl.setDescripcion(CursorUtils.getString(c, Contract.Canal.FIELD_DESCRIPCION));
+		}
+		c.close();
+		return tpcl;
+	}
+
 	
 }
