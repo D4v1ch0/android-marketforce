@@ -19,9 +19,8 @@
     <webServiceConfiguration>                
         <webServiceData>
             <name>Core</name>
-            <url>[@server:http://www.rp3marketforce.com/Rp3MarketForce]/api</url>
-            <!--url>http://190.216.215.133/Rp3Retail/api</url-->
-
+            <!--url>[@server:http://www.rp3marketforce.com/Rp3MarketForce]/api</url-->
+            <url>http://10.10.0.119/Berlin/api</url>
             <type>REST</type>
             <oAuthClientId>android-app-marketforce</oAuthClientId>
             <oAuthClientSecret>rp3-marketforce2014</oAuthClientSecret>
@@ -66,10 +65,8 @@
         </webServiceData>
            <webServiceData>
             <name>MartketForce</name>
-           <url>[@server:http://www.rp3marketforce.com/Rp3MarketForce]/api</url>
-            <!--url>http://190.216.215.133/Rp3Retail/api</url-->
-              <!-- <url>http://10.10.0.232/Rp3MarketForce/api</url>-->
-
+           <!--url>[@server:http://www.rp3marketforce.com/Rp3MarketForce]/api</url-->
+            <url>http://10.10.0.119/Berlin/api</url>
                <type>REST</type>
             <oAuthClientId>android-app-marketforce</oAuthClientId>
             <oAuthClientSecret>rp3-marketforce2014</oAuthClientSecret>
@@ -517,6 +514,13 @@
                     <name>GetMarcacionesHoy</name>
                     <action>marcacion/getmarcacioneshoy</action>
                     <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <!-- GRUPO BERLIN -->
+                <method>
+                    <name>SaveAgendaOportunidad</name>
+                    <action>oportunidad/saveAgenda</action>
+                    <webMethod>POST</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>
             </methods>     

@@ -77,6 +77,8 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
     public static String SYNC_TYPE_AUTORIZAR_DESC = "autorizar_desc";
     public static String SYNC_TYPE_VALIDAR_NC = "validar_nc";
     public static String SYNC_TYPE_CANCELAR_NC = "cancelar_nc";
+
+    public static String SYNC_TYPE_AGENDA_OPORTUNIDAD = "agenda_oportunidad";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -482,6 +484,15 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                 } else if (syncType.equals(SYNC_TYPE_UPLOAD_MARCACION)) {
                     result = Marcaciones.executeSync(db);
                     addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_AGENDA_OPORTUNIDAD)) {
+                    result = Oportunidad.executeSyncInserts(db);
+                    addDefaultMessage(result);
+
+                    result = Oportunidad.executeSyncPendientes(db);
+                    addDefaultMessage(result);
+
+                    result = Oportunidad.executeSyncAgendas(db);
+                    addDefaultMessage(result);
                 } else if (syncType.equals(SYNC_TYPE_ACTUALIZAR_AGENDA)) {
                     long inicio = extras.getLong(RutasListFragment.ARG_INICIO);
                     long fin = extras.getLong(RutasListFragment.ARG_FIN);
@@ -543,6 +554,16 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                             SyncAudit.insert(SYNC_TYPE_ACT_AGENDA, SYNC_EVENT_SUCCESS);
                         }
                     }
+
+                    result = Oportunidad.executeSyncInserts(db);
+                    addDefaultMessage(result);
+
+                    result = Oportunidad.executeSyncPendientes(db);
+                    addDefaultMessage(result);
+
+                    result = Oportunidad.executeSyncAgendas(db);
+                    addDefaultMessage(result);
+
                 } else if (syncType.equals(SYNC_TYPE_NOTIFICATION_OPORTUNIDAD)) {
                     int idOportunidad = extras.getInt(AgenteDetalleFragment.ARG_AGENTE);
                     String title = extras.getString(AgenteDetalleFragment.ARG_TITLE);

@@ -28,6 +28,7 @@ import rp3.marketforce.models.Cliente;
 import rp3.marketforce.models.DiaLaboral;
 import rp3.marketforce.models.marcacion.Marcacion;
 import rp3.marketforce.models.marcacion.Permiso;
+import rp3.marketforce.models.oportunidad.AgendaOportunidad;
 import rp3.marketforce.ruta.ObservacionesFragment.ObservacionesFragmentListener;
 import rp3.marketforce.sync.AsyncUpdater;
 import rp3.marketforce.sync.SyncAdapter;
@@ -575,7 +576,8 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
     }
 
     protected boolean ValidarAgendas() {
-		if(Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_GESTIONANDO, 0, Agenda.getLastAgenda(getDataBase())) > 0 && !agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO))
+		if((Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_GESTIONANDO, 0, Agenda.getLastAgenda(getDataBase())) > 0 && !agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO))
+                || AgendaOportunidad.getAgendaOportunidadGestionado(getDataBase()).getID() != 0)
 		{
 			Toast.makeText(getContext(), "No puede gestionar otra agenda, si existe otra con estado Gestionando.", Toast.LENGTH_LONG).show();
 			return false;

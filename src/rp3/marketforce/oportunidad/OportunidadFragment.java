@@ -15,9 +15,13 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import rp3.app.BaseFragment;
+import rp3.marketforce.Contants;
 import rp3.marketforce.R;
+import rp3.marketforce.models.Agenda;
+import rp3.marketforce.models.oportunidad.AgendaOportunidad;
 import rp3.marketforce.models.oportunidad.Oportunidad;
 import rp3.widget.SlidingPaneLayout;
 
@@ -248,8 +252,14 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.action_crear_oportunidad:
-                Intent intent2 = new Intent(getContext(), CrearOportunidadActivity.class);
-                startActivity(intent2);
+                if(AgendaOportunidad.getAgendaOportunidadGestionado(getDataBase()).getID() == 0 && Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_GESTIONANDO, 0, Agenda.getLastAgenda(getDataBase())) == 0) {
+                    Intent intent2 = new Intent(getContext(), CrearOportunidadActivity.class);
+                    startActivity(intent2);
+                }
+                else
+                {
+                    showDialogMessage("Para crear un nuevo prospecto, debe finalizar la gestión activa.");
+                }
                 break;
             case R.id.action_edit:
                 Intent intent3 = new Intent(getContext(), CrearOportunidadActivity.class);
@@ -295,6 +305,11 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
     @Override
     public void onFinalizaConsulta() {
 
+    }
+
+    @Override
+    public void onFinalizaGestion() {
+        slidingPane.openPane();
     }
 
     @Override

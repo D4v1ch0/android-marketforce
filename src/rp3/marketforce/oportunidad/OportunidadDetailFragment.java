@@ -38,11 +38,13 @@ import rp3.marketforce.R;
 import rp3.marketforce.cliente.ClienteEditActivity;
 import rp3.marketforce.cliente.ClienteEditFragment;
 import rp3.marketforce.cliente.CrearClienteActivity;
+import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.Agente;
 import rp3.marketforce.models.oportunidad.AgendaOportunidad;
 import rp3.marketforce.models.oportunidad.Oportunidad;
 import rp3.marketforce.models.oportunidad.OportunidadEtapa;
 import rp3.marketforce.resumen.AgenteDetalleFragment;
+import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.DetailsPageAdapter;
 import rp3.marketforce.utils.DonutChart;
 import rp3.marketforce.utils.DrawableManager;
@@ -78,6 +80,7 @@ public class OportunidadDetailFragment extends BaseFragment {
     private ImageButton TabContactos;
     private ImageView ArrowInfo, ArrowDir, ArrowCont;
     public AgenteDetalleFragment agenteDetalleFragment;
+    private OportunidadListFragment.OportunidadListFragmentListener oportunidadListFragmentCallback;
 
     private String str_titulo;
     private final int REQUEST_CODE_DETAIL_EDIT = 3;
@@ -222,7 +225,12 @@ public class OportunidadDetailFragment extends BaseFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
+        if(getParentFragment()!=null){
+            oportunidadListFragmentCallback = (OportunidadListFragment.OportunidadListFragmentListener)getParentFragment();
+        }else{
+            oportunidadListFragmentCallback = (OportunidadListFragment.OportunidadListFragmentListener) activity;
+            setRetainInstance(true);
+        }
         //setRetainInstance(true);
     }
 
@@ -900,12 +908,12 @@ public class OportunidadDetailFragment extends BaseFragment {
         //GESTION DE OPORTUNIDADES
         //Se valida si existen agendas de oportunidades gestionando
         agd = AgendaOportunidad.getAgendaOportunidadGestionado(getDataBase());
-        if (agd.getID() == 0) {
+        if (Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_GESTIONANDO, 0, Agenda.getLastAgenda(getDataBase())) == 0 && agd.getID() == 0) {
             getRootView().findViewById(R.id.oportunidad_inicio_gestion).setVisibility(View.VISIBLE);
             getRootView().findViewById(R.id.oportunidad_cancelar_gestion).setVisibility(View.GONE);
             getRootView().findViewById(R.id.oportunidad_finalizar_gestion).setVisibility(View.GONE);
         } else {
-            if (agd.getIdOportunidad() == opt.getIdOportunidad()) {
+            if (agd.get_idOportunidad() == opt.getID()) {
                 getRootView().findViewById(R.id.oportunidad_inicio_gestion).setVisibility(View.GONE);
                 getRootView().findViewById(R.id.oportunidad_cancelar_gestion).setVisibility(View.VISIBLE);
                 getRootView().findViewById(R.id.oportunidad_finalizar_gestion).setVisibility(View.VISIBLE);
@@ -949,6 +957,11 @@ public class OportunidadDetailFragment extends BaseFragment {
                 getRootView().findViewById(R.id.oportunidad_inicio_gestion).setVisibility(View.VISIBLE);
                 getRootView().findViewById(R.id.oportunidad_cancelar_gestion).setVisibility(View.GONE);
                 getRootView().findViewById(R.id.oportunidad_finalizar_gestion).setVisibility(View.GONE);
+
+                Bundle bundle = new Bundle();
+                bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_AGENDA_OPORTUNIDAD);
+                requestSync(bundle);
+                oportunidadListFragmentCallback.onFinalizaGestion();
             }
         });
 

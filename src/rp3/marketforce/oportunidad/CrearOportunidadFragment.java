@@ -62,6 +62,7 @@ import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agente;
 import rp3.marketforce.models.Canal;
+import rp3.marketforce.models.oportunidad.AgendaOportunidad;
 import rp3.marketforce.models.oportunidad.Etapa;
 import rp3.marketforce.models.oportunidad.EtapaTarea;
 import rp3.marketforce.models.oportunidad.Oportunidad;
@@ -254,7 +255,19 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
             bitacora.setIdOportunidad(opt.getIdOportunidad());
             bitacora.set_idOportunidad((int) opt.getID());
             bitacora.setDetalle("Se creó oportunidad");
+            bitacora.setIdOportunidadBitacora(1);
             OportunidadBitacora.insert(getDataBase(), bitacora);
+
+            AgendaOportunidad agd = new AgendaOportunidad();
+            agd.set_idOportunidad((int)opt.getID());
+            agd.setIdOportunidad(opt.getIdOportunidad());
+            agd.setPendiente(true);
+            agd.setEstado(Contants.ESTADO_GESTIONANDO);
+            agd.setFechaInicio(Calendar.getInstance().getTime());
+            agd.setDescripcion(opt.getDescripcion());
+            agd.setDireccion(opt.getDireccion());
+            agd.setEmail(opt.getCorreo());
+            AgendaOportunidad.insert(getDataBase(), agd);
         }
         else {
             Oportunidad.update(getDataBase(), opt);
@@ -264,6 +277,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
             bitacora.setIdOportunidad(opt.getIdOportunidad());
             bitacora.set_idOportunidad((int) opt.getID());
             bitacora.setDetalle("Se actualizó oportunidad");
+            bitacora.setIdOportunidadBitacora(opt.getOportunidadBitacoras().size() + 1);
             OportunidadBitacora.insert(getDataBase(), bitacora);
         }
 
@@ -1007,6 +1021,11 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
         if(((TextView) view.findViewById(R.id.oportunidad_nombre)).length() <= 0)
         {
             Toast.makeText(getContext(), R.string.message_sin_descripcion, Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if(((TextView) view.findViewById(R.id.oportunidad_direccion)).length() <= 0)
+        {
+            Toast.makeText(getContext(), R.string.message_sin_direccion, Toast.LENGTH_LONG).show();
             return false;
         }
         if(((Spinner) view.findViewById(R.id.oportunidad_tipo_etapas)).getSelectedItemPosition() == 0)

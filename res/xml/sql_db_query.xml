@@ -2273,4 +2273,28 @@
         AND tbAgendaOportunidad.EstadoAgenda = tbEstadoAgenda.Code
         WHERE tbAgendaOportunidad._id = ?
     </statement>
+    <statement name="AgendaOportunidadPendientes">
+        SELECT
+        tbAgendaOportunidad._id,
+        tbAgendaOportunidad.IdAgenda,
+        tbAgendaOportunidad._IdOportunidad,
+        tbAgendaOportunidad.IdOportunidad,
+        tbAgendaOportunidad.EstadoAgenda,
+        tbAgendaOportunidad.FechaInicio,
+        tbAgendaOportunidad.FechaFin,
+        tbAgendaOportunidad.Latitud,
+        tbAgendaOportunidad.Longitud,
+        tbAgendaOportunidad.Pendiente,
+        tbAgendaOportunidadExt.Descripcion AS tbAgendaOportunidadExt_Descripcion,
+        tbAgendaOportunidadExt.Direccion AS tbAgendaOportunidadExt_Direccion,
+        tbAgendaOportunidadExt.Correo AS tbAgendaOportunidadExt_Correo,
+        tbEstadoAgenda.Value AS tbEstadoAgenda_Value
+        FROM tbAgendaOportunidad
+        JOIN tbAgendaOportunidadExt
+        ON tbAgendaOportunidad._id = tbAgendaOportunidadExt.docid
+        JOIN tbGeneralValue tbEstadoAgenda
+        ON tbEstadoAgenda.GeneralTableId = 1013
+        AND tbAgendaOportunidad.EstadoAgenda = tbEstadoAgenda.Code
+        WHERE tbAgendaOportunidad.Pendiente = 1 AND tbAgendaOportunidad.EstadoAgenda = 'V'
+    </statement>
 </sql>

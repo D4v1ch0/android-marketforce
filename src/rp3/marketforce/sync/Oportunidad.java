@@ -69,6 +69,8 @@ public class Oportunidad {
                 jObject.put("Telefono1", oportunidadUpload.getTelefono1());
                 jObject.put("Telefono2", oportunidadUpload.getTelefono2());
                 jObject.put("PaginaWeb", oportunidadUpload.getPaginaWeb());
+                jObject.put("IdCanal", oportunidadUpload.getIdCanal());
+                jObject.put("TipoPersona", oportunidadUpload.getTipoPersona());
 
                 JSONArray jArrayTareas = new JSONArray();
                 for (OportunidadTarea agt : oportunidadUpload.getOportunidadTareas()) {
@@ -356,6 +358,8 @@ public class Oportunidad {
                 jObject.put("Telefono1", oportunidadUpload.getTelefono1());
                 jObject.put("Telefono2", oportunidadUpload.getTelefono2());
                 jObject.put("PaginaWeb", oportunidadUpload.getPaginaWeb());
+                jObject.put("IdCanal", oportunidadUpload.getIdCanal());
+                jObject.put("TipoPersona", oportunidadUpload.getTipoPersona());
 
                 JSONArray jArrayTareas = new JSONArray();
                 for (OportunidadTarea agt : oportunidadUpload.getOportunidadTareas()) {
@@ -588,6 +592,102 @@ public class Oportunidad {
         return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
     }
 
+    public static int executeSyncAgendas(DataBase db) {
+        WebService webService = new WebService("MartketForce", "SaveAgendaOportunidad");
+        webService.setTimeOut(30000);
+
+        List<AgendaOportunidad> oportunidades = AgendaOportunidad.getAgendaOportunidadPendientes(db);
+        if (oportunidades.size() == 0)
+            return SyncAdapter.SYNC_EVENT_SUCCESS;
+
+        JSONArray jArray = new JSONArray();
+        for (int i = 0; i < oportunidades.size(); i++) {
+            webService = new WebService("MartketForce", "SaveAgendaOportunidad");
+            webService.setTimeOut(30000);
+            AgendaOportunidad oportunidadUpload = oportunidades.get(i);
+            JSONObject jObject = new JSONObject();
+            try {
+                if (oportunidadUpload.getIdOportunidad() == 0) {
+                    rp3.marketforce.models.oportunidad.Oportunidad opt = rp3.marketforce.models.oportunidad.Oportunidad.getOportunidadId(db, oportunidadUpload.get_idOportunidad());
+                    if (opt.getIdOportunidad() != 0) {
+                        oportunidadUpload.setIdOportunidad(opt.getIdOportunidad());
+                        jObject.put("IdOportunidad", opt.getIdOportunidad());
+                    } else {
+                        Oportunidad.executeSyncInserts(db);
+                        opt = rp3.marketforce.models.oportunidad.Oportunidad.getOportunidadId(db, oportunidadUpload.get_idOportunidad());
+                        if (opt.getIdOportunidad() != 0) {
+                            oportunidadUpload.setIdOportunidad(opt.getIdOportunidad());
+                            jObject.put("IdOportunidad", opt.getIdOportunidad());
+                        } else
+                            continue;
+                    }
+                } else {
+                    jObject.put("IdOportunidad", oportunidadUpload.getIdOportunidad());
+                }
+
+                jObject.put("IdAgenda", oportunidadUpload.getIdAgenda());
+                jObject.put("Estado", oportunidadUpload.getEstado());
+                jObject.put("IdInterno", oportunidadUpload.getID());
+                jObject.put("Descripcion", oportunidadUpload.getDescripcion());
+                jObject.put("Direccion", oportunidadUpload.getDireccion());
+                jObject.put("Email", oportunidadUpload.getEmail());
+                jObject.put("Latitud", oportunidadUpload.getLatitud());
+                jObject.put("Longitud", oportunidadUpload.getLongitud());
+                jObject.put("FechaInicioTicks", Convert.getDotNetTicksFromDate(oportunidadUpload.getFechaInicio()));
+                jObject.put("FechaFinTicks", Convert.getDotNetTicksFromDate(oportunidadUpload.getFechaFin()));
+
+                JSONArray jArrayBitacora = new JSONArray();
+                for (OportunidadBitacora bit : oportunidadUpload.getOportunidadBitacoras()) {
+                    JSONObject jObjectBitacora = new JSONObject();
+                    jObjectBitacora.put("IdOportunidadBitacora", bit.getIdOportunidadBitacora());
+
+                    jArrayBitacora.put(jObjectBitacora);
+                }
+                jObject.put("OportunidadBitacoras", jArrayBitacora);
+
+                JSONArray jArrayEtapas = new JSONArray();
+                for (OportunidadEtapa etapa : oportunidadUpload.getOportunidadEtapas()) {
+                    JSONObject jObjectEtapa = new JSONObject();
+                    jObjectEtapa.put("IdEtapa", etapa.getIdEtapa());
+
+                    jArrayEtapas.put(jObjectEtapa);
+                }
+                jObject.put("OportunidadEtapas", jArrayEtapas);
+
+                //jArray.put(jObject);
+            } catch (Exception ex) {
+
+            }
+
+
+            webService.addParameter("agenda", jObject);
+
+            try {
+                webService.addCurrentAuthToken();
+
+                try {
+                    webService.invokeWebService();
+                    int id = webService.getIntegerResponse();
+                    oportunidadUpload.setIdAgenda(id);
+                    oportunidadUpload.setPendiente(false);
+                    AgendaOportunidad.update(db, oportunidadUpload);
+
+                } catch (HttpResponseException e) {
+                    if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                        return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                    return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+                } catch (Exception e) {
+                    return SyncAdapter.SYNC_EVENT_ERROR;
+                }
+
+            } finally {
+                webService.close();
+            }
+        }
+
+        return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
     public static int executeSync(DataBase db){
         WebService webService = new WebService("MartketForce","GetOportunidades");
         try
@@ -642,6 +742,8 @@ public class Oportunidad {
                     opt.setProbabilidad(type.getInt("Probabilidad"));
                     opt.setCalificacion(type.getInt("Calificacion"));
                     opt.setIdAgente(type.getInt("IdAgente"));
+                    opt.setIdCanal(type.getInt("IdCanal"));
+                    opt.setTipoPersona(type.getString("TipoPersona"));
                     opt.setFechaCreacion(Convert.getDateFromDotNetTicks(type.getLong("FechaCreacionTicks")));
                     opt.setFechaUltimaGestion(Convert.getDateFromDotNetTicks(type.getLong("FechaUltimaGestionTicks")));
                     if (!type.isNull("Observacion"))

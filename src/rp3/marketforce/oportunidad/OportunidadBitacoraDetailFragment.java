@@ -130,6 +130,7 @@ public class OportunidadBitacoraDetailFragment extends BaseFragment {
                         bitacora.set_idOportunidad((int) oportunidad.getID());
                         bitacora.setIdAgenda((int) agd.getID());
                         bitacora.setDetalle(((EditText) rootView.findViewById(R.id.actividad_texto_respuesta)).getText().toString());
+                        bitacora.setIdOportunidadBitacora(oportunidad.getOportunidadBitacoras().size() + 1);
                         OportunidadBitacora.insert(getDataBase(), bitacora);
                         oportunidad.setPendiente(true);
                         Oportunidad.update(getDataBase(), oportunidad);

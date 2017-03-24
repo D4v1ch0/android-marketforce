@@ -271,6 +271,7 @@ public class EtapaFragment extends BaseFragment {
                 bitacora.set_idOportunidad((int) opt.getID());
                 bitacora.setIdAgenda(idAgenda);
                 bitacora.setDetalle("Se finalizó etapa " + etapa.getOrden() + ": " + etapa.getDescripcion());
+                bitacora.setIdOportunidadBitacora(opt.getOportunidadBitacoras().size() + 1);
                 OportunidadBitacora.insert(getDataBase(), bitacora);
 
                 if(next.getID() != 0 && etapa.getOrden() < 5)

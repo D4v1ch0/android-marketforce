@@ -266,6 +266,38 @@ public class AgendaOportunidad extends EntityBase<AgendaOportunidad> {
         return agendaOportunidad;
     }
 
+    public static List<AgendaOportunidad> getAgendaOportunidadPendientes(DataBase db){
+
+        String query = QueryDir.getQuery(Contract.AgendaOportunidad.QUERY_GET_PENDIENTES);
+        Cursor c = db.rawQuery(query);
+
+        List<AgendaOportunidad> list = new ArrayList<AgendaOportunidad>();
+        while(c.moveToNext()){
+            AgendaOportunidad agendaOportunidad = new AgendaOportunidad();
+            agendaOportunidad.setID(CursorUtils.getInt(c, Contract.AgendaOportunidad._ID));
+            agendaOportunidad.setIdOportunidad(CursorUtils.getInt(c, Contract.AgendaOportunidad.COLUMN_ID_OPORTUNIDAD));
+            agendaOportunidad.setIdAgenda(CursorUtils.getInt(c, Contract.AgendaOportunidad.COLUMN_ID_AGENDA));
+            agendaOportunidad.setEstado(CursorUtils.getString(c, Contract.AgendaOportunidad.COLUMN_ESTADO));
+            agendaOportunidad.setFechaInicio(CursorUtils.getDate(c, Contract.AgendaOportunidad.COLUMN_FECHA_INICIO));
+            agendaOportunidad.setFechaFin(CursorUtils.getDate(c, Contract.AgendaOportunidad.COLUMN_FECHA_FIN));
+            agendaOportunidad.setLongitud(CursorUtils.getDouble(c, Contract.AgendaOportunidad.COLUMN_LONGITUD));
+            agendaOportunidad.setLatitud(CursorUtils.getDouble(c, Contract.AgendaOportunidad.COLUMN_LATITUD));
+            agendaOportunidad.setPendiente(CursorUtils.getBoolean(c, Contract.AgendaOportunidad.COLUMN_PENDIENTE));
+            agendaOportunidad.set_idOportunidad(CursorUtils.getInt(c, Contract.AgendaOportunidad.COLUMN_ID_OPORTUNIDAD_INT));
+            agendaOportunidad.setDescripcion(CursorUtils.getString(c, Contract.AgendaOportunidad.FIELD_DESCRIPCION));
+            agendaOportunidad.setDireccion(CursorUtils.getString(c, Contract.AgendaOportunidad.FIELD_DIRECCION));
+            agendaOportunidad.setEmail(CursorUtils.getString(c, Contract.AgendaOportunidad.FIELD_CORREO));
+            agendaOportunidad.setEstadoAgenda(CursorUtils.getString(c, Contract.Agenda.FIELD_ESTADO_AGENDA_DESCRIPCION));
+
+            agendaOportunidad.setOportunidad(Oportunidad.getOportunidadId(db, agendaOportunidad.get_idOportunidad()));
+            agendaOportunidad.setOportunidadEtapas(OportunidadEtapa.getEtapasOportunidadByAgenda(db, agendaOportunidad.getID()));
+            agendaOportunidad.setOportunidadBitacoras(OportunidadBitacora.getBitacoraOportunidadByAgenda(db, agendaOportunidad.getID()));
+            list.add(agendaOportunidad);
+        }
+        c.close();
+        return list;
+    }
+
     protected boolean insertDb(DataBase db) {
         boolean result = false;
 
