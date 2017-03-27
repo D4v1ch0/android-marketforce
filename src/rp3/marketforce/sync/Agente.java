@@ -364,6 +364,12 @@ public class Agente {
                     PreferenceManager.setValue(Contants.KEY_MODULO_POS, jObject.getBoolean(Contants.KEY_MODULO_POS));
                 if(!jObject.isNull(Contants.KEY_MARACIONES_DISTANCIA))
                     PreferenceManager.setValue(Contants.KEY_MARACIONES_DISTANCIA, jObject.getDouble(Contants.KEY_MARACIONES_DISTANCIA) + "");
+                if(!jObject.isNull(Contants.KEY_GOOGLE_CALENDAR_LOGIN))
+                    PreferenceManager.setValue(Contants.KEY_GOOGLE_CALENDAR_LOGIN, jObject.getString(Contants.KEY_GOOGLE_CALENDAR_LOGIN));
+                if(!jObject.isNull(Contants.KEY_GOOGLE_CALENDAR_PASS))
+                    PreferenceManager.setValue(Contants.KEY_GOOGLE_CALENDAR_PASS, jObject.getString(Contants.KEY_GOOGLE_CALENDAR_PASS));
+                if(!jObject.isNull(Contants.KEY_CLIENTE_DEFAULT))
+                    PreferenceManager.setValue(Contants.KEY_CLIENTE_DEFAULT, jObject.getInt(Contants.KEY_CLIENTE_DEFAULT));
 			} catch (HttpResponseException e) {
 				if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
 					return SyncAdapter.SYNC_EVENT_AUTH_ERROR;

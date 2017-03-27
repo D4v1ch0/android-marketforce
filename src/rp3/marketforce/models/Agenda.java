@@ -1034,6 +1034,62 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 		return list_agenda;
 	}
 
+	public static Agenda getAgendaSyncGoogle(DataBase db, String obs){
+		Cursor c = db.query(Contract.Agenda.TABLE_NAME, new String[]{Contract.Agenda._ID, Contract.Agenda.COLUMN_AGENDA_ID, Contract.Agenda.COLUMN_CLIENTE_ID,
+						Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID, Contract.Agenda.COLUMN_RUTA_ID, Contract.Agenda.COLUMN_FECHA_INICIO_REAL, Contract.Agenda.COLUMN_FECHA_FIN_REAL,
+						Contract.Agenda.COLUMN_ESTADO_AGENDA, Contract.Agenda.COLUMN_CONTACTO_ID, Contract.Agenda.COLUMN_FECHA_INICIO,
+						Contract.Agenda.COLUMN_FECHA_FIN, Contract.Agenda.COLUMN_OBSERVACIONES, Contract.Agenda.COLUMN_CONTACTO_ID,
+						Contract.Agenda.COLUMN_FOTO1_INT, Contract.Agenda.COLUMN_FOTO2_INT, Contract.Agenda.COLUMN_FOTO3_INT,
+						Contract.Agenda.COLUMN_MOTIVO_NO_VISITA_ID, Contract.Agenda.COLUMN_LATITUD, Contract.Agenda.COLUMN_LONGITUD, Contract.Agenda.COLUMN_DISTANCIA,
+						Contract.Agenda.COLUMN_DURACION, Contract.Agenda.COLUMN_TIEMPO_VIAJE, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION, Contract.Agenda.COLUMN_FECHA_CREACION},
+				Contract.Agenda.COLUMN_OBSERVACIONES + " = ? ", new String[]{obs});
+		Agenda agd = new Agenda();
+		if(c.moveToFirst())
+		{
+			do
+			{
+
+				agd.setID(CursorUtils.getInt(c, Contract.Agenda._ID));
+				agd.setIdRuta(CursorUtils.getInt(c, Contract.Agenda.COLUMN_RUTA_ID));
+				agd.setIdContacto(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CONTACTO_ID));
+				agd.setIdAgenda(CursorUtils.getInt(c, Contract.Agenda.COLUMN_AGENDA_ID));
+				agd.setIdCliente(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_ID));
+				agd.setIdClienteDireccion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID));
+				agd.setFechaInicioReal(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_INICIO_REAL));
+				agd.setFechaFinReal(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_FIN_REAL));
+				agd.setEstadoAgenda(CursorUtils.getString(c, Contract.Agenda.COLUMN_ESTADO_AGENDA));
+				agd.setFechaInicio(Convert.getDateFromTicks(CursorUtils.getLong(c, Contract.Agenda.COLUMN_FECHA_INICIO)));
+				agd.setFechaFin(Convert.getDateFromTicks(CursorUtils.getLong(c, Contract.Agenda.COLUMN_FECHA_FIN)));
+				agd.setObservaciones(CursorUtils.getString(c, Contract.Agenda.COLUMN_OBSERVACIONES));
+				agd.setIdContacto(CursorUtils.getInt(c, Contract.Agenda.COLUMN_CONTACTO_ID));
+				agd.setFoto1Int(CursorUtils.getString(c, Contract.Agenda.COLUMN_FOTO1_INT));
+				agd.setFoto2Int(CursorUtils.getString(c, Contract.Agenda.COLUMN_FOTO2_INT));
+				agd.setFoto3Int(CursorUtils.getString(c, Contract.Agenda.COLUMN_FOTO3_INT));
+				agd.setIdMotivoNoVisita(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_NO_VISITA_ID));
+				agd.setLatitud(CursorUtils.getDouble(c, Contract.Agenda.COLUMN_LATITUD));
+				agd.setLongitud(CursorUtils.getDouble(c, Contract.Agenda.COLUMN_LONGITUD));
+				agd.setCliente(rp3.marketforce.models.Cliente.getClienteIDServer(db, agd.getIdCliente(), false));
+				agd.setNombreCompleto(agd.getCliente().getNombreCompleto());
+				agd.setClienteDireccion(rp3.marketforce.models.ClienteDireccion.getClienteDireccionIdDireccion(db, agd.getIdCliente(), agd.getIdClienteDireccion()));
+				agd.setDireccion(agd.getClienteDireccion().getDireccion());
+				agd.setDuracion(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DURACION));
+				agd.setDistancia(CursorUtils.getInt(c, Contract.Agenda.COLUMN_DISTANCIA));
+				agd.setTiempoViaje(CursorUtils.getInt(c, Contract.Agenda.COLUMN_TIEMPO_VIAJE));
+				agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
+				agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
+
+				if(agd.getIdAgenda() == 0)
+					agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getID(), agd.getIdRuta(), true));
+				else
+					agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getIdAgenda(), agd.getIdRuta(), false));
+
+			}while(c.moveToNext());
+		}
+		c.close();
+		return agd;
+	}
+
+
 	public static List<Agenda> getAgendaSearch(DataBase db, String termSearch) {
 		String query = QueryDir.getQuery(Contract.Agenda.QUERY_AGENDA_SEARCH);
 		String version = db.getSQLiteVersion();

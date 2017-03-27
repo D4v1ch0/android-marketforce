@@ -15,6 +15,7 @@
               <item android:id="@+id/action_ver_ruta" android:title="@string/label_menu_ver_rutas"></item>
 		      <item android:id="@+id/action_ver_posicion" android:title="@string/label_menu_ver_posicion"></item>
 		      <item android:id="@+id/action_como_llegar" android:title="@string/label_menu_como_llegar"></item>
+              <item android:id="@+id/action_sync_google" android:title="@string/label_google_calendar"></item>
           </menu>
       </item>
     <item android:id="@+id/submenu_agenda" android:showAsAction="ifRoom" android:title="Otras opciones" android:icon="@drawable/ic_action_overflow">

@@ -1,25 +1,33 @@
 package rp3.marketforce.ruta;
 
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 import rp3.app.BaseFragment;
 import rp3.configuration.PreferenceManager;
 import rp3.marketforce.Contants;
+import rp3.marketforce.Manifest;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
+import rp3.marketforce.models.Cliente;
+import rp3.marketforce.models.Contacto;
 import rp3.marketforce.oportunidad.AgendaProspectoFragment;
-import rp3.marketforce.pedido.CrearPedidoActivity;
 import rp3.marketforce.resumen.AgenteDetalleFragment;
 import rp3.marketforce.sync.SyncAdapter;
+import rp3.marketforce.utils.Utils;
 import rp3.util.ConnectionUtils;
-import rp3.util.Screen;
 import rp3.widget.SlidingPaneLayout;
 import rp3.widget.SlidingPaneLayout.PanelSlideListener;
-import android.annotation.SuppressLint;
+
+import android.accounts.AccountManager;
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.MenuItemCompat;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -29,15 +37,33 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
-import android.widget.TextView;
+
 import android.widget.Toast;
 
-import java.lang.reflect.Field;
-import java.sql.Ref;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.extensions.android.json.AndroidJsonFactory;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.util.DateTime;
+import com.google.api.client.util.ExponentialBackOff;
+import com.google.api.services.calendar.CalendarScopes;
+import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.Events;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.List;
 
-public class RutasFragment extends BaseFragment implements RutasListFragment.TransactionListFragmentListener, ContactsAgendaFragment.SaveContactsListener{
-
+public class RutasFragment extends BaseFragment implements RutasListFragment.TransactionListFragmentListener, ContactsAgendaFragment.SaveContactsListener, EasyPermissions.PermissionCallbacks {
+    GoogleAccountCredential mCredential;
 	public static final String ARG_TRANSACTIONTYPEID = "transactionTypeId";
 	private static final int PARALLAX_SIZE = 0;
 	
@@ -46,7 +72,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	private String textSearch;
 //	private MenuItem menuItemActionEdit;
 //    private MenuItem menuItemActionDiscard;
-	
+
 	private RutasListFragment rutasListFragment;
 	private RutasDetailFragment rutasDetailfragment;
     private AgendaProspectoFragment prospectoDetailfragment;
@@ -60,6 +86,15 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
     public SimpleDateFormat format2 = new SimpleDateFormat("dd");
     public SimpleDateFormat format3 = new SimpleDateFormat("MMMM");
 
+    //Parametros para Google Calendar
+    static final int REQUEST_ACCOUNT_PICKER = 1000;
+    static final int REQUEST_AUTHORIZATION = 1001;
+    static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
+    static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
+
+    private static final String BUTTON_TEXT = "Call Google Calendar API";
+    private static final String PREF_ACCOUNT_NAME = "accountName";
+    private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };
 
     public static RutasFragment newInstance(int transactionTypeId) {
 		RutasFragment fragment = new RutasFragment();
@@ -153,6 +188,14 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
         }
 		else
 			mTwoPane = false;
+
+        /*FloatingActionButton fabGoogle = (FloatingActionButton) getRootView().findViewById(R.id.fab_ruta);
+        fabGoogle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SyncGoogle();
+            }
+        });*/
 	}	
 
 	@Override
@@ -210,6 +253,9 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	    public boolean onOptionsItemSelected(MenuItem item) {
 	    	switch(item.getItemId())
 	    	{
+                case R.id.action_sync_google:
+                    SyncGoogle();
+                    return true;
 	    		case R.id.action_search_ruta:    	
 	    			return true;
 	    		case R.id.action_crear_visita:
@@ -361,7 +407,42 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 		 }
          else
          {
-             motivoNoVisitaFragment.onActivityResult(requestCode, resultCode, data);
+             switch(requestCode) {
+                 case REQUEST_GOOGLE_PLAY_SERVICES:
+                     if (resultCode != RESULT_OK) {
+                         /*mOutputText.setText(
+                                 "This app requires Google Play Services. Please install " +
+                                         "Google Play Services on your device and relaunch this app.");*/
+                     } else {
+                         getResultsFromApi();
+                     }
+                     break;
+                 case REQUEST_ACCOUNT_PICKER:
+                     if (resultCode == RESULT_OK && data != null &&
+                             data.getExtras() != null) {
+                         String accountName =
+                                 data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+                         if (accountName != null) {
+                             SharedPreferences settings =
+                                     this.getActivity().getPreferences(Context.MODE_PRIVATE);
+                             SharedPreferences.Editor editor = settings.edit();
+                             editor.putString(PREF_ACCOUNT_NAME, accountName);
+                             editor.apply();
+                             mCredential.setSelectedAccountName(accountName);
+                             getResultsFromApi();
+                         }
+                     }
+                     break;
+                 case REQUEST_AUTHORIZATION:
+                     if (resultCode == RESULT_OK) {
+                         getResultsFromApi();
+                     }
+                     break;
+                 default:
+                     if(motivoNoVisitaFragment != null)
+                        motivoNoVisitaFragment.onActivityResult(requestCode, resultCode, data);
+                     break;
+             }
          }
 	}
 
@@ -579,4 +660,258 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
                 rutasDetailfragment.reDoMenu = true;
         }
     }
+
+    //region Google Calendar
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+
+    }
+
+    private void SyncGoogle()
+    {
+        mCredential = GoogleAccountCredential.usingOAuth2(
+                getContext(), Arrays.asList(SCOPES))
+                .setBackOff(new ExponentialBackOff());
+
+        getResultsFromApi();
+    }
+
+    private void getResultsFromApi() {
+        if (! isGooglePlayServicesAvailable()) {
+            acquireGooglePlayServices();
+        } else if (mCredential.getSelectedAccountName() == null) {
+            chooseAccount();
+        } else if (!ConnectionUtils.isNetAvailable(this.getContext())) {
+            Toast.makeText(getContext(),"No network connection available.", Toast.LENGTH_LONG).show();
+        } else {
+            new MakeRequestTask(mCredential).execute();
+        }
+    }
+
+    @AfterPermissionGranted(REQUEST_PERMISSION_GET_ACCOUNTS)
+    private void chooseAccount() {
+        if (EasyPermissions.hasPermissions(
+                this.getContext(), android.Manifest.permission.GET_ACCOUNTS)) {
+            String accountName = this.getActivity().getPreferences(Context.MODE_PRIVATE)
+                    .getString(PREF_ACCOUNT_NAME, null);
+            if (accountName != null) {
+                mCredential.setSelectedAccountName(accountName);
+                getResultsFromApi();
+            } else {
+                // Start a dialog from which the user can choose an account
+                startActivityForResult(
+                        mCredential.newChooseAccountIntent(),
+                        REQUEST_ACCOUNT_PICKER);
+            }
+        } else {
+            // Request the GET_ACCOUNTS permission via a user dialog
+            EasyPermissions.requestPermissions(
+                    this,
+                    "This app needs to access your Google account (via Contacts).",
+                    REQUEST_PERMISSION_GET_ACCOUNTS,
+                    android.Manifest.permission.GET_ACCOUNTS);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(
+                requestCode, permissions, grantResults, this);
+    }
+
+    private boolean isGooglePlayServicesAvailable() {
+        GoogleApiAvailability apiAvailability =
+                GoogleApiAvailability.getInstance();
+        final int connectionStatusCode =
+                apiAvailability.isGooglePlayServicesAvailable(this.getContext());
+        return connectionStatusCode == ConnectionResult.SUCCESS;
+    }
+
+    private void acquireGooglePlayServices() {
+        GoogleApiAvailability apiAvailability =
+                GoogleApiAvailability.getInstance();
+        final int connectionStatusCode =
+                apiAvailability.isGooglePlayServicesAvailable(this.getContext());
+        if (apiAvailability.isUserResolvableError(connectionStatusCode)) {
+            showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode);
+        }
+    }
+
+    void showGooglePlayServicesAvailabilityErrorDialog(
+            final int connectionStatusCode) {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        Dialog dialog = apiAvailability.getErrorDialog(
+                this.getActivity(),
+                connectionStatusCode,
+                REQUEST_GOOGLE_PLAY_SERVICES);
+        dialog.show();
+    }
+
+    private class MakeRequestTask extends AsyncTask<Void, Void, List<String>> {
+        private com.google.api.services.calendar.Calendar mService = null;
+        private Exception mLastError = null;
+
+        MakeRequestTask(GoogleAccountCredential credential) {
+            HttpTransport transport = AndroidHttp.newCompatibleTransport();
+            JsonFactory jsonFactory = new AndroidJsonFactory();
+            mService = new com.google.api.services.calendar.Calendar.Builder(
+                    transport, jsonFactory, credential)
+                    .setApplicationName("Google Calendar API Android Quickstart")
+                    .build();
+        }
+
+        /**
+         * Background task to call Google Calendar API.
+         * @param params no parameters needed for this task.
+         */
+        @Override
+        protected List<String> doInBackground(Void... params) {
+            try {
+                return getDataFromApi();
+            } catch (Exception e) {
+                mLastError = e;
+                cancel(true);
+                return null;
+            }
+        }
+
+        /**
+         * Fetch a list of the next 10 events from the primary calendar.
+         * @return List of Strings describing returned events.
+         * @throws IOException
+         */
+        private List<String> getDataFromApi() throws IOException {
+            // List the next 10 events from the primary calendar.
+            DateTime now = new DateTime(System.currentTimeMillis());
+            List<String> eventStrings = new ArrayList<String>();
+            Events events = mService.events().list("primary")
+                    .setMaxResults(10)
+                    .setTimeMin(now)
+                    .setOrderBy("startTime")
+                    .setSingleEvents(true)
+                    .execute();
+            List<Event> items = events.getItems();
+
+            for (Event event : items) {
+                Agenda agenda = new Agenda();
+                DateTime start = event.getStart().getDateTime();
+                if(start == null)
+                    start = event.getStart().getDate();
+                DateTime end = null;
+                if(event.getEnd() != null)
+                {
+                    end = event.getEnd().getDateTime();
+                }
+
+                //agenda.setDuracion(duracion);
+                //agenda.setTiempoViaje(tiempo);
+
+                Calendar cal_hoy = Calendar.getInstance();
+                //if((fecha.get(Calendar.YEAR) < cal_hoy.get(Calendar.YEAR)) || (fecha.get(Calendar.MONTH) < cal_hoy.get(Calendar.MONTH))
+                //		|| (fecha.get(Calendar.DATE) < cal_hoy.get(Calendar.DATE)) )
+                //{
+                //	Toast.makeText(getActivity(), "Fecha no puede ser anterior a hoy.", Toast.LENGTH_LONG).show();
+                //	return true;
+                //}
+
+                Calendar cal = Calendar.getInstance();
+                Calendar calFin = Calendar.getInstance();
+
+                cal.setTimeInMillis(start.getValue());
+                if(end != null)
+                {
+                    calFin.setTimeInMillis(end.getValue());
+                }
+                else
+                {
+                    calFin.setTimeInMillis(cal.getTimeInMillis());
+                    calFin.set(Calendar.HOUR_OF_DAY, 23);
+                    calFin.set(Calendar.MINUTE, 59);
+                }
+
+
+                agenda.setFechaInicio(cal.getTime());
+                agenda.setFechaFin(calFin.getTime());
+
+                Cliente defaultCliente = Cliente.getClienteIDServer(getDataBase(), PreferenceManager.getInt(Contants.KEY_CLIENTE_DEFAULT), true);
+                if(defaultCliente == null)
+                {
+                    showDialogMessage("El cliente default no lo tiene configurado en su ruta. Por favor, consulte con su administrador del sistema.");
+                }
+                agenda.setCliente(defaultCliente);
+                agenda.setClienteDireccion(agenda.getCliente().getClienteDirecciones().get(0));
+                agenda.setCiudad(agenda.getCliente().getClienteDirecciones().get(0).getCiudadDescripcion());
+                agenda.setDireccion(agenda.getCliente().getClienteDirecciones().get(0).getDireccion());
+                agenda.setEstadoAgenda(Contants.ESTADO_PENDIENTE);
+                agenda.setEstadoAgendaDescripcion(Contants.DESC_PENDIENTE);
+                agenda.setIdCliente((int) agenda.getCliente().getIdCliente());
+                agenda.set_idCliente(agenda.getCliente().getID());
+                agenda.setIdClienteDireccion(agenda.getClienteDireccion().getIdClienteDireccion());
+                agenda.set_idClienteDireccion(agenda.getClienteDireccion().getID());
+                agenda.setIdRuta(0);
+                agenda.setNombreCompleto(agenda.getCliente().getNombreCompleto().trim());
+                agenda.setObservaciones(event.getSummary());
+                Calendar fc = Calendar.getInstance();
+                fc.set(Calendar.MILLISECOND, 0);
+                agenda.setFechaCreacion(fc.getTime());
+                //agenda.setID(0);
+                agenda.setIdAgenda(0);
+
+                agenda.setEnviado(false);
+                if(Agenda.getAgendaSyncGoogle(getDataBase(), event.getSummary()).getID() == 0)
+                    Agenda.insert(getDataBase(), agenda);
+            }
+            return eventStrings;
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            showDialogProgress("Sincronizando", "Sincronizando con cuenta de Google");
+        }
+
+        @Override
+        protected void onPostExecute(List<String> output) {
+            if (output == null || output.size() == 0) {
+                //mOutputText.setText("No results returned.");
+            } else {
+                output.add(0, "Data retrieved using the Google Calendar API:");
+                //mOutputText.setText(TextUtils.join("\n", output));
+            }
+            closeDialogProgress();
+            rutasListFragment.onResume();
+        }
+
+        @Override
+        protected void onCancelled() {
+            closeDialogProgress();
+            if (mLastError != null) {
+                if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
+                    showGooglePlayServicesAvailabilityErrorDialog(
+                            ((GooglePlayServicesAvailabilityIOException) mLastError)
+                                    .getConnectionStatusCode());
+                } else if (mLastError instanceof UserRecoverableAuthIOException) {
+                    startActivityForResult(
+                            ((UserRecoverableAuthIOException) mLastError).getIntent(),
+                            RutasFragment.REQUEST_AUTHORIZATION);
+                } else {
+                    //mOutputText.setText("The following error occurred:\n"
+                    //        + mLastError.getMessage());
+                }
+            } else {
+                //mOutputText.setText("Request cancelled.");
+            }
+        }
+    }
+
+
+    //endregion
 }

@@ -71,6 +71,9 @@ public class Contants {
 	public final static String KEY_CLIENT = "ClientName";
     public final static String KEY_APP_INSTANCE_ID = "TokenId";
     public final static String KEY_MARACIONES_DISTANCIA = "MarcacionDistance";
+    public final static String KEY_GOOGLE_CALENDAR_LOGIN = "GoogleCalendarLogin";
+    public final static String KEY_GOOGLE_CALENDAR_PASS = "GoogleCalendarPass";
+    public final static String KEY_CLIENTE_DEFAULT = "ClienteDefault";
     public final static String KEY_MONEDA_SIMBOLO = "Simbolo";
     public final static String KEY_ID_MONEDA = "IdMoneda";
     public final static String KEY_ID_CAJA = "IdCaja";

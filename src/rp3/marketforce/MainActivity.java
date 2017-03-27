@@ -471,7 +471,8 @@ public class MainActivity extends rp3.app.NavActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		List<android.support.v4.app.Fragment> frags = getSupportFragmentManager().getFragments();
 		for (android.support.v4.app.Fragment fr : frags) {
-			fr.onActivityResult(requestCode, resultCode, data);
+			if(fr != null)
+				fr.onActivityResult(requestCode, resultCode, data);
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}

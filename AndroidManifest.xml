@@ -5,7 +5,7 @@
     android:versionName="1.5d">
 
     <uses-sdk
-        android:minSdkVersion="13"
+        android:minSdkVersion="14"
         android:targetSdkVersion="19" />
     
     
@@ -17,8 +17,8 @@
         android:name="rp3.marketforce.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
     <uses-permission android:name="rp3.marketforce.permission.C2D_MESSAGE" />
-    
-    
+
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />

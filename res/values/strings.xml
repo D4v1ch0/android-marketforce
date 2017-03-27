@@ -434,4 +434,5 @@
     <string name="label_sin_registros">Sin Registros</string>
     <string name="label_finalizar">Finalizar</string>
     <string name="label_gestionando">GESTIONANDO</string>
+    <string name="label_google_calendar">Sync Google</string>
 </resources>
