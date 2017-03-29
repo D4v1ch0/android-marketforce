@@ -33,6 +33,19 @@ public class Agenda {
         JSONObject jObject = new JSONObject();
         try {
             jObject.put("IdAgenda", agendaUpload.getIdAgenda());
+            if(agendaUpload.getIdCliente() == 0)
+            {
+                Cliente.executeSyncCreate(db, agendaUpload.get_idCliente());
+                rp3.marketforce.models.Cliente newCliente = rp3.marketforce.models.Cliente.getClienteID(db, agendaUpload.get_idCliente(), false);
+                if(newCliente.getIdCliente() != 0)
+                    jObject.put("IdCliente", newCliente.getIdCliente());
+                else
+                    return SyncAdapter.SYNC_EVENT_ERROR;
+            }
+            else {
+                jObject.put("IdCliente", agendaUpload.getIdCliente());
+            }
+            jObject.put("IdClienteDireccion", agendaUpload.getIdClienteDireccion());
             jObject.put("IdRuta", PreferenceManager.getInt(Contants.KEY_IDRUTA));
             jObject.put("IdClienteContacto", agendaUpload.getIdContacto());
             jObject.put("EstadoAgenda", agendaUpload.getEstadoAgenda());
@@ -41,6 +54,8 @@ public class Agenda {
             jObject.put("FechaFinTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaFin()));
             jObject.put("FechaInicioGestionTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaInicioReal()));
             jObject.put("FechaFinGestionTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaFinReal()));
+            jObject.put("FechaInicioOriginalTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaInicio()));
+            jObject.put("FechaFinOriginalTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaFin()));
             jObject.put("Latitud", agendaUpload.getLatitud());
             jObject.put("Longitud", agendaUpload.getLongitud());
             jObject.put("Duracion", agendaUpload.getDuracion());

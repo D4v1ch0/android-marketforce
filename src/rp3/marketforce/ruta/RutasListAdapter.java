@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import rp3.configuration.PreferenceManager;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
@@ -83,6 +84,9 @@ public class RutasListAdapter extends BaseAdapter{
 		{
 		
 			convertView = (View) inflater.inflate(this.contex.getApplicationContext().getResources().getLayout(R.layout.rowlist_rutas_list), null);
+
+			if(agd.getIdCliente() == PreferenceManager.getInt(Contants.KEY_CLIENTE_DEFAULT,0))
+				agd.setNombreCompleto(agd.getObservaciones());
 			
 			date = agd.getFechaInicio();
 			 hour_inicio = format4.format(date);

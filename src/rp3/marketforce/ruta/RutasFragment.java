@@ -800,6 +800,8 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
                     .execute();
             List<Event> items = events.getItems();
 
+            Agenda.deleteAgendaSyncGoogle(getDataBase(), PreferenceManager.getInt(Contants.KEY_CLIENTE_DEFAULT));
+
             for (Event event : items) {
                 Agenda agenda = new Agenda();
                 DateTime start = event.getStart().getDateTime();
@@ -811,16 +813,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
                     end = event.getEnd().getDateTime();
                 }
 
-                //agenda.setDuracion(duracion);
-                //agenda.setTiempoViaje(tiempo);
-
                 Calendar cal_hoy = Calendar.getInstance();
-                //if((fecha.get(Calendar.YEAR) < cal_hoy.get(Calendar.YEAR)) || (fecha.get(Calendar.MONTH) < cal_hoy.get(Calendar.MONTH))
-                //		|| (fecha.get(Calendar.DATE) < cal_hoy.get(Calendar.DATE)) )
-                //{
-                //	Toast.makeText(getActivity(), "Fecha no puede ser anterior a hoy.", Toast.LENGTH_LONG).show();
-                //	return true;
-                //}
 
                 Calendar cal = Calendar.getInstance();
                 Calendar calFin = Calendar.getInstance();

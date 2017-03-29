@@ -526,6 +526,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setEnviado(CursorUtils.getBoolean(c, Contract.Agenda.COLUMN_ENVIADO));
 			agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
 			agd.setTipoAgenda(CursorUtils.getString(c, Contract.Agenda.FIELD_TIPO_AGENDA));
+			agd.setObservaciones(CursorUtils.getString(c, Contract.Agenda.COLUMN_OBSERVACIONES));
 
 			ClienteDireccion cld = new ClienteDireccion();
 			cld.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
@@ -1114,6 +1115,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setEstadoAgendaDescripcion(CursorUtils.getString(c, Contract.Agenda.FIELD_ESTADO_AGENDA_DESCRIPCION));
 			agd.setEnviado(CursorUtils.getBoolean(c, Contract.Agenda.COLUMN_ENVIADO));
 			agd.setTipoAgenda(CursorUtils.getString(c, Contract.Agenda.FIELD_TIPO_AGENDA));
+			agd.setObservaciones(CursorUtils.getString(c, Contract.Agenda.COLUMN_OBSERVACIONES));
 
 			ClienteDireccion cld = new ClienteDireccion();
 			cld.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
@@ -1210,6 +1212,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 				agd.setNombreCompleto(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_NOMBRE));
 				agd.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
 				agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
+				agd.setObservaciones(CursorUtils.getString(c, Contract.Agenda.COLUMN_OBSERVACIONES));
 
 				if(agd.getIdCliente() == 0)
 					agd.setCliente(rp3.marketforce.models.Cliente.getClienteID(db, agd.get_idCliente(), true));
@@ -1273,6 +1276,11 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 	public static void deleteAgendaIdServer(DataBase db, int idServer)
 	{
 		db.delete(Contract.Agenda.TABLE_NAME, Contract.Agenda.COLUMN_AGENDA_ID + " = ?", idServer);
+	}
+
+	public static void deleteAgendaSyncGoogle(DataBase db, int idCliente)
+	{
+		db.delete(Contract.Agenda.TABLE_NAME, Contract.Agenda.COLUMN_CLIENTE_ID + " = ?", idCliente);
 	}
 
 	public static int getCountVisitados(DataBase db, String estado, long inicio, long fin)
