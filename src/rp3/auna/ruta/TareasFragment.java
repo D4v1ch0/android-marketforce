@@ -95,7 +95,7 @@ public class TareasFragment extends BaseFragment {
 			public void onClick(View v) {
 				List<Tarea> respuestasTareas = new ArrayList<Tarea>();
 				for (int i = 0; i < Grupo.getChildCount(); i++) {
-					if (((CheckBox) Grupo.getChildAt(i)).isChecked() && !existeRespuesta(tareas.get(i).getNombreTarea())) {
+					if (((CheckBox) Grupo.getChildAt(i)).isChecked() && (idAgenda == 0 || !existeRespuesta(tareas.get(i).getNombreTarea()))) {
 						respuestasTareas.add(tareas.get(i));
 					}
 				}

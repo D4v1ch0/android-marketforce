@@ -10,6 +10,8 @@ import rp3.auna.Contants;
 import rp3.auna.R;
 import rp3.auna.models.Agenda;
 import rp3.auna.ruta.RutasListFragment.TransactionListFragmentListener;
+import rp3.configuration.PreferenceManager;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;

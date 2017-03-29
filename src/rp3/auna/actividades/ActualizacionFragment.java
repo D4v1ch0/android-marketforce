@@ -55,6 +55,7 @@ import pe.solera.api_payme_android.util.Constants;
 import pe.solera.api_payme_android.util.Util;
 import rp3.app.BaseActivity;
 import rp3.app.BaseFragment;
+import rp3.auna.models.AgendaTareaActividades;
 import rp3.auna.models.auna.AgendaLlamada;
 import rp3.auna.models.auna.Cotizacion;
 import rp3.auna.ruta.RutasDetailFragment;
@@ -305,6 +306,28 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
         AgendaTarea agt = AgendaTarea.getTarea(getDataBase(), agd.getIdAgenda(), agd.getIdRuta(), idTarea);
         agt.setEstadoTarea("R");
         AgendaTarea.update(getDataBase(), agt);
+
+        //Grabo detalle de tarea
+        AgendaTareaActividades act = null;
+        if(agd.getIdAgenda() != 0)
+            act = AgendaTareaActividades.getActividadSimple(getDataBase(), agd.getIdRuta(), agd.getIdAgenda(), idTarea, 1);
+        else
+            act = AgendaTareaActividades.getActividadSimpleIdIntern(getDataBase(), agd.getID(), idTarea, 1);
+        if(act == null)
+        {
+            act = new AgendaTareaActividades();
+            act.setIdAgenda((int) agd.getIdAgenda());
+            act.setIdTarea(idTarea);
+            act.setIdRuta(agd.getIdRuta());
+            act.setIdTareaActividad(1);
+            act.set_idAgenda(agd.getID());
+            AgendaTareaActividades.insert(getDataBase(), act);
+        }
+
+        act.setResultado("Venta Realizada\n" + " - Forma de Pago: " + ((GeneralValue)((Spinner)getRootView().findViewById(R.id.cliente_forma_pago)).getSelectedItem()).getValue() + "\n"
+                    + " - Solicitud: " + ((EditText) getRootView().findViewById(R.id.cliente_solicitud)).getText().toString() + "\n"
+                    + " - Valor: S/. " + numberFormat.format(cotizacion.getValor()));
+        AgendaTareaActividades.update(getDataBase(), act);
     }
 
     @Override
@@ -1159,6 +1182,9 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
             }
         }
         agenda.setEnviado(false);
+        if(idOperacion.trim().length()>0)
+            agenda.setObservaciones("# de Operación: " + idOperacion);
+
         Agenda.update(getDataBase(), agenda);
         Bundle bundle = new Bundle();
         bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ENVIAR_AGENDA);

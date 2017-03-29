@@ -5,7 +5,7 @@
     android:versionName="AUNA">
 
     <uses-sdk
-        android:minSdkVersion="13"
+        android:minSdkVersion="14"
         android:targetSdkVersion="19"
         tools:overrideLibrary="pe.solera.api_payme_android"/>
     
@@ -59,6 +59,7 @@
         android:label="@string/app_name"
         android:theme="@style/MyAppTheme"
         android:largeHeap="true"
+        android:name="android.support.multidex.MultiDexApplication"
         tools:replace="android:icon, android:theme"
         
         >

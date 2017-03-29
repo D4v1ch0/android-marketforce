@@ -1,4 +1,4 @@
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
@@ -6,7 +6,7 @@ dependencies {
     compile 'com.joooonho:selectableroundedimageview:1.0.1'
     compile 'com.mcxiaoke.volley:library:1.0.19'
     compile 'com.google.code.gson:gson:2.3.1'
-    compile 'com.github.satyan:sugar:b16e65326a'
+    compile 'com.github.satyan:sugar:1.5'
     compile 'com.github.lzyzsd:circleprogress:1.1.0@aar'
     // PGP
     compile 'com.madgag.spongycastle:core:1.50.0.0'
@@ -15,19 +15,28 @@ dependencies {
     compile 'com.madgag.spongycastle:pg:1.50.0.0'
     compile 'com.android.support:recyclerview-v7:23.3.0'
     compile 'commons-io:commons-io:2.4'
+    compile project(':Payme_Plugin')
     compile project(':android-core')
     compile project(':AndroidGraphView')
     compile project(':main')
     compile 'com.github.lzyzsd:circleprogress:1.1.0@aar'
-    compile project(':Payme_Test')
 
 }
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion '20.0.0'
+    compileSdkVersion 25
+    buildToolsVersion '25.0.0'
     compileOptions.encoding = 'UTF-8'
     android.enforceUniquePackageName = false
+    useLibrary 'org.apache.http.legacy'
+
+    defaultConfig {
+        multiDexEnabled true
+    }
+
+    dexOptions {
+        javaMaxHeapSize "2g"
+    }
 
     dexOptions {
         jumboMode true

@@ -28,6 +28,7 @@ import rp3.auna.R;
 import rp3.auna.cliente.CrearClienteFragment;
 import rp3.auna.models.Agenda;
 import rp3.auna.models.AgendaTarea;
+import rp3.auna.models.AgendaTareaActividades;
 import rp3.auna.models.auna.Cotizacion;
 import rp3.auna.sync.SyncAdapter;
 import rp3.auna.utils.NothingSelectedSpinnerAdapter;
@@ -417,6 +418,10 @@ public class CotizacionActivity extends ActividadActivity {
 
     public void Grabar()
     {
+        NumberFormat numberFormat = NumberFormat.getInstance();
+        numberFormat.setMaximumFractionDigits(0);
+        numberFormat.setMinimumFractionDigits(0);
+        String plan = "";
         if(cotizacion.getID() == 0)
         {
             Cotizacion cot = new Cotizacion();
@@ -430,12 +435,15 @@ public class CotizacionActivity extends ActividadActivity {
             switch (select)
             {
                 case 1:
+                    plan = "Anual";
                     cot.setValor(totalAnual);
                     break;
                 case 2:
+                    plan = "Mensual Tarjeta de Crédito";
                     cot.setValor(totalTC);
                     break;
                 case 3:
+                    plan = "Mensual Tarjeta de Débito";
                     cot.setValor(totalTD);
                     break;
             }
@@ -450,17 +458,42 @@ public class CotizacionActivity extends ActividadActivity {
             switch (select)
             {
                 case 1:
+                    plan = "Anual";
                     cotizacion.setValor(totalAnual);
                     break;
                 case 2:
+                    plan = "Mensual Tarjeta de Crédito";
                     cotizacion.setValor(totalTC);
                     break;
                 case 3:
+                    plan = "Mensual Tarjeta de Débito";
                     cotizacion.setValor(totalTD);
                     break;
             }
             Cotizacion.update(getDataBase(),cotizacion);
         }
+
+        AgendaTareaActividades act = null;
+        if(id_agenda != 0)
+            act = AgendaTareaActividades.getActividadSimple(getDataBase(), id_ruta, id_agenda, id_tarea, 1);
+        else
+            act = AgendaTareaActividades.getActividadSimpleIdIntern(getDataBase(), id_agenda_int, id_tarea, 1);
+        if(act == null)
+        {
+            act = new AgendaTareaActividades();
+            act.setIdAgenda((int) id_agenda);
+            act.setIdTarea(id_tarea);
+            act.setIdRuta(id_ruta);
+            act.setIdTareaActividad(1);
+            act.set_idAgenda(id_agenda_int);
+            AgendaTareaActividades.insert(getDataBase(), act);
+        }
+
+        act.setResultado("Venta Realizada\n" + " - Programa: " + ((GeneralValue)((Spinner) findViewById(R.id.cotizacion_programa)).getSelectedItem()).getValue() + "\n"
+                + " - Plan Escogido: " + plan + "\n"
+                + " - Número de Afiliados: " + afiliadosLayouts.size()
+                + " - Valor: S/. " + numberFormat.format(cotizacion.getValor()));
+        AgendaTareaActividades.update(getDataBase(), act);
 
     }
 

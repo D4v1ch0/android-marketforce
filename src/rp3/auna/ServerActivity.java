@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.orm.SugarContext;
+
 public class ServerActivity extends BaseActivity {
 	
 	public static String SERVER_CODE = "serverCode";

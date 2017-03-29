@@ -606,7 +606,10 @@
 	 
 	  <statement name="AgendaByCliente">
        SELECT  
-        tbAgenda._id, 
+        tbAgenda._id,
+          tbAgenda._IdCliente,
+          tbAgenda._IdContacto,
+          tbAgenda._IdClienteDireccion,
         tbAgenda.IdRuta,
         tbAgenda.IdAgenda,        
         tbAgenda.FechaInicio,

@@ -258,7 +258,7 @@
     <string name="label_valor_proyecto">Valor del proyecto</string>
     <string name="label_importancia_estrategica">Importancia Estratégica</string>
     <string name="label_anadir_foto">Añadir Fotos</string>
-    <string name="label_tarjeta">Tarjeta</string>
+    <string name="label_tarjeta">Tarjeta de Beneficios</string>
     <string name="label_workflow_max">WORKFLOW</string>
     <string name="label_timeline_max">TIMELINE</string>
     <string name="label_sin_iniciar">sin iniciar</string>

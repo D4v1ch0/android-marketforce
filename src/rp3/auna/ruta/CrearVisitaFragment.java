@@ -101,8 +101,28 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 
         String lastText = "";
         list_nombres = new ArrayList<String>();
-        if (list_tareas == null)
+
+        //Inicializo con tareas default
+        if (list_tareas == null) {
             list_tareas = new ArrayList<Tarea>();
+            List<Tarea> vigentes = Tarea.getTareasVigentes(getDataBase());
+            for (Tarea vig : vigentes) {
+                if (vig.getTipoTarea().equalsIgnoreCase("C"))
+                    list_tareas.add(vig);
+                if (vig.getTipoTarea().equalsIgnoreCase("ADC"))
+                    list_tareas.add(vig);
+            }
+        }
+        String tarea_string = "";
+        if (list_tareas.size() > 0) {
+            for (Tarea tarea : list_tareas)
+                tarea_string = tarea_string + tarea.getNombreTarea() + ", ";
+
+            tarea_string = tarea_string.substring(0, tarea_string.length() - 2);
+        } else
+            tarea_string = getResources().getString(R.string.label_conf_tareas);
+
+        ((Button) getRootView().findViewById(R.id.crear_visita_conf_tarea)).setText(tarea_string);
 
         if (cliente_auto != null)
             lastText = cliente_auto.getText().toString();
