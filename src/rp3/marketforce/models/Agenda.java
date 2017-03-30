@@ -1039,11 +1039,11 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 		Cursor c = db.query(Contract.Agenda.TABLE_NAME, new String[]{Contract.Agenda._ID, Contract.Agenda.COLUMN_AGENDA_ID, Contract.Agenda.COLUMN_CLIENTE_ID,
 						Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID, Contract.Agenda.COLUMN_RUTA_ID, Contract.Agenda.COLUMN_FECHA_INICIO_REAL, Contract.Agenda.COLUMN_FECHA_FIN_REAL,
 						Contract.Agenda.COLUMN_ESTADO_AGENDA, Contract.Agenda.COLUMN_CONTACTO_ID, Contract.Agenda.COLUMN_FECHA_INICIO,
-						Contract.Agenda.COLUMN_FECHA_FIN, Contract.Agenda.COLUMN_OBSERVACIONES, Contract.Agenda.COLUMN_CONTACTO_ID,
+						Contract.Agenda.COLUMN_FECHA_FIN, Contract.Agenda.COLUMN_OBSERVACIONES, Contract.Agenda.COLUMN_CONTACTO_ID, Contract.Agenda.COLUMN_FOTO1_EXT,
 						Contract.Agenda.COLUMN_FOTO1_INT, Contract.Agenda.COLUMN_FOTO2_INT, Contract.Agenda.COLUMN_FOTO3_INT,
 						Contract.Agenda.COLUMN_MOTIVO_NO_VISITA_ID, Contract.Agenda.COLUMN_LATITUD, Contract.Agenda.COLUMN_LONGITUD, Contract.Agenda.COLUMN_DISTANCIA,
 						Contract.Agenda.COLUMN_DURACION, Contract.Agenda.COLUMN_TIEMPO_VIAJE, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION, Contract.Agenda.COLUMN_FECHA_CREACION},
-				Contract.Agenda.COLUMN_OBSERVACIONES + " = ? ", new String[]{obs});
+				Contract.Agenda.COLUMN_FOTO1_EXT + " = ? ", new String[]{obs});
 		Agenda agd = new Agenda();
 		if(c.moveToFirst())
 		{
@@ -1280,7 +1280,8 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 
 	public static void deleteAgendaSyncGoogle(DataBase db, int idCliente)
 	{
-		db.delete(Contract.Agenda.TABLE_NAME, Contract.Agenda.COLUMN_CLIENTE_ID + " = ?", idCliente);
+		db.execSQL("UPDATE " + Contract.Agenda.TABLE_NAME + " SET " + Contract.Agenda.COLUMN_ESTADO_AGENDA + " = '" + Contants.ESTADO_ELIMINADO +
+                "', " + Contract.Agenda.COLUMN_ENVIADO + " = 0 WHERE " + Contract.Agenda.COLUMN_CLIENTE_ID + " = " + idCliente);
 	}
 
 	public static int getCountVisitados(DataBase db, String estado, long inicio, long fin)

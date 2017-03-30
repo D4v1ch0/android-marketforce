@@ -803,7 +803,9 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
             Agenda.deleteAgendaSyncGoogle(getDataBase(), PreferenceManager.getInt(Contants.KEY_CLIENTE_DEFAULT));
 
             for (Event event : items) {
-                Agenda agenda = new Agenda();
+                Agenda agenda = Agenda.getAgendaSyncGoogle(getDataBase(), event.getId());
+                if(agenda.getID() != 0)
+                    agenda = Agenda.getAgenda(getDataBase(), agenda.getID());
                 DateTime start = event.getStart().getDateTime();
                 if(start == null)
                     start = event.getStart().getDate();
@@ -857,10 +859,13 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
                 agenda.setFechaCreacion(fc.getTime());
                 //agenda.setID(0);
                 agenda.setIdAgenda(0);
+                agenda.setFoto1Ext(event.getId());
 
                 agenda.setEnviado(false);
-                if(Agenda.getAgendaSyncGoogle(getDataBase(), event.getSummary()).getID() == 0)
+                if(agenda.getID() == 0)
                     Agenda.insert(getDataBase(), agenda);
+                else
+                    Agenda.update(getDataBase(), agenda);
             }
             return eventStrings;
         }

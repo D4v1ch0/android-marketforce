@@ -847,7 +847,7 @@
         FROM tbAgenda
         JOIN tbAgendaExt
         ON tbAgenda._id = tbAgendaExt.docid
-        WHERE tbAgenda.FechaInicio >= ?
+        WHERE tbAgenda.FechaInicio >= ? AND tbAgenda.EstadoAgenda &lt;&gt; 'ELIM'
           UNION ALL
           SELECT
           tbAgendaOportunidad._id,
@@ -1081,7 +1081,7 @@
   		count(*) as conteo 
   		FROM tbAgenda
 		WHERE EstadoAgenda = ? AND FechaInicio >= ?
-		AND FechaFin &lt;= ?
+		AND FechaFin &lt;= ? AND tbAgenda.EstadoAgenda &lt;&gt; 'ELIM'
      </statement>
 	  
 	 <statement name="SimpleRutaSearch">
@@ -1124,7 +1124,7 @@
          ON tbAgenda.IdCliente = tbCliente.IdCliente OR tbAgenda._idCliente = tbCliente._id
          JOIN tbClienteDireccion
          ON tbAgenda.IdCliente = tbClienteDireccion.IdCliente
-         AND tbAgenda.IdClienteDireccion = tbClienteDireccion.IdClienteDireccion
+         AND tbAgenda.IdClienteDireccion = tbClienteDireccion.IdClienteDireccion AND tbAgenda.EstadoAgenda &lt;&gt; 'ELIM'
          ORDER BY tbRutaSearch.Rank DESC
          UNION ALL
          SELECT
