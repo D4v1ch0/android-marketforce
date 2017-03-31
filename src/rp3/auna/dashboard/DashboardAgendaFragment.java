@@ -35,6 +35,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.ListView;
 
+@SuppressWarnings("ResourceType")
 public class DashboardAgendaFragment extends BaseFragment {
 	
 	DashboardAgendaAdapter adapter;

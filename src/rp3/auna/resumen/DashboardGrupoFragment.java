@@ -33,6 +33,7 @@ import rp3.auna.R;
 import rp3.auna.models.AgenteResumen;
 import rp3.auna.utils.DetailsPageAdapter;
 
+@SuppressWarnings("ResourceType")
 public class DashboardGrupoFragment extends BaseFragment {
 
 	public static int NUM_VERTICAL_LABELS = 6;

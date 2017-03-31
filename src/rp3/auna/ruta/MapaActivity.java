@@ -74,6 +74,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+@SuppressWarnings("ResourceType")
 public class MapaActivity extends BaseActivity {
 	
 	public static String ACTION_TYPE = "type";

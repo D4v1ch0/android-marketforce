@@ -281,7 +281,8 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
 
 	}
-	
+
+	@SuppressWarnings("ResourceType")
 	private void setPageConfig(int page){
 		curentPage = page;
 		String title = pagerAdapter.getPageTitle(page).toString();
@@ -313,7 +314,8 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 			ArrowCont.setVisibility(View.VISIBLE);
 		}
 	}
-	
+
+	@SuppressWarnings("ResourceType")
 	private void renderClienteNatural(View rootView)
 	{
 		boolean telf = false, email = false;
@@ -635,7 +637,8 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 		
 		PagerDetalles.setAdapter(pagerAdapter);		
 	}
-	
+
+	@SuppressWarnings("ResourceType")
 	private void renderClienteJuridico(View rootView)
 	{
 		boolean telf = false, email = false, pagina_web = false;
@@ -970,7 +973,8 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 		}
 		
 	}
-	
+
+	@SuppressWarnings("ResourceType")
 	private void renderContacto(View rootView)
 	{
 		boolean telf = false, email = false;

@@ -50,6 +50,7 @@ import rp3.widget.ViewPager;
 /**
  * Created by magno_000 on 15/05/2015.
  */
+@SuppressWarnings("ResourceType")
 public class OportunidadDetailFragment extends BaseFragment {
     public static final String ARG_ITEM_ID = "rp3.pos.transactionid";
 

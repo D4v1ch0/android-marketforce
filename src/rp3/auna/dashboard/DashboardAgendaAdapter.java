@@ -59,6 +59,7 @@ public class DashboardAgendaAdapter extends BaseAdapter{
 		return 0;
 	}
 
+    @SuppressWarnings("ResourceType")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 

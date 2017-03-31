@@ -1278,6 +1278,11 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
                     finish();
                 }
             }
+            else if(jsonObject.getString("Result").equalsIgnoreCase("2"))
+            {
+                Toast.makeText(this.getActivity(), jsonObject.getString("Info"), Toast.LENGTH_LONG).show();
+                return false;
+            }
             else
             {
                 Toast.makeText(this.getActivity(), "Ocurrio un error al intentar validar su solicitud. Por favor vuelva a intentarlo o comuníquese con un administrador", Toast.LENGTH_LONG).show();
@@ -1381,6 +1386,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
             jsonObject.put("FechaNacimiento", format1.format(cliente.getFechaNacimiento()));
             jsonObject.put("Sexo", ((GeneralValue)((Spinner)getRootView().findViewById(R.id.cliente_genero)).getSelectedItem()).getCode());
             jsonObject.put("Correo", ((EditText) getRootView().findViewById(R.id.cliente_correo)).getText().toString());
+            jsonObject.put("TarjetaBeneficios", ((EditText) getRootView().findViewById(R.id.cliente_tarjeta)).getText().toString());
         }
         catch (Exception ex)
         {}

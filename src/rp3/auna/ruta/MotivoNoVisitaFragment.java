@@ -37,7 +37,7 @@ public class MotivoNoVisitaFragment extends BaseFragment {
 	}
 
 	public static String ARG_AGENDA = "idAgenda";
-	public static String TAG = "Motivo de No Visita";
+	public static String TAG = "Motivo de No Venta";
 	private long idAgenda;
 	private Agenda agenda;
 	private SaveContactsListener saveListener;
@@ -73,7 +73,7 @@ public class MotivoNoVisitaFragment extends BaseFragment {
 	@Override
 	public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
 		super.onFragmentCreateView(rootView, savedInstanceState);
-		getDialog().setTitle("Motivo de No Visita");
+		getDialog().setTitle("Motivo de No Venta");
 		saveListener = (SaveContactsListener) getParentFragment();
 		SimpleGeneralValueAdapter motivosNoVisitaAdapter= new SimpleGeneralValueAdapter(getContext(), getDataBase(), rp3.auna.Contants.GENERAL_TABLE_MOTIVOS_NO_VISITA);
 		((Spinner) rootView.findViewById(R.id.no_visita_motivos)).setAdapter(motivosNoVisitaAdapter);

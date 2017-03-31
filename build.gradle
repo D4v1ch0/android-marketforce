@@ -42,6 +42,10 @@ android {
         jumboMode true
     }
 
+    lintOptions {
+        checkReleaseBuilds false
+    }
+
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'

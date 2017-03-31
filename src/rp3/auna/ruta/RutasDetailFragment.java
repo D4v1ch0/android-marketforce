@@ -77,6 +77,7 @@ import com.google.android.gms.maps.model.LatLng;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+@SuppressWarnings("ResourceType")
 public class RutasDetailFragment extends rp3.app.BaseFragment implements ObservacionesFragmentListener {
     
     public static final String ARG_ITEM_ID = "idagenda";

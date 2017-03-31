@@ -213,7 +213,8 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
 			renderContacto(getRootView());
 		}
 	}
-    
+
+	@SuppressWarnings("ResourceType")
     private void setPageConfig(int page){
 		curentPage = page;
 		String title = pagerAdapter.getPageTitle(page).toString();
@@ -236,7 +237,8 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
 			TabContactos.setBackgroundColor(getResources().getColor(R.color.tab_activated));
 		}
 	}
-	
+
+	@SuppressWarnings("ResourceType")
 	private void renderClienteNatural(View rootView)
 	{
 		hideDialogConfirmation();
@@ -510,7 +512,8 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
 		
 		PagerDetalles.setAdapter(pagerAdapter);		
 	}
-	
+
+	@SuppressWarnings("ResourceType")
 	private void renderClienteJuridico(View rootView)
 	{
 		hideDialogConfirmation();
@@ -743,7 +746,8 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
 		PagerDetalles.setAdapter(pagerAdapter);
 		
 	}
-	
+
+	@SuppressWarnings("ResourceType")
 	private void renderContacto(View rootView)
 	{
         boolean telf = false, email = false;

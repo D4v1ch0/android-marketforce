@@ -102,7 +102,7 @@ public class AgenteDetalleFragment extends BaseFragment {
                     }
                 });
                 ((TextView) rootView.findViewById(R.id.agente_movil)).setPaintFlags(((TextView) rootView.findViewById(R.id.agente_movil)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-                ((TextView) rootView.findViewById(R.id.agente_movil)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
+                //((TextView) rootView.findViewById(R.id.agente_movil)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
             } else
                 ((TextView) rootView.findViewById(R.id.agente_movil)).setClickable(false);
 
@@ -118,7 +118,7 @@ public class AgenteDetalleFragment extends BaseFragment {
                     }
                 });
                 ((TextView) rootView.findViewById(R.id.agente_correo)).setPaintFlags(((TextView) rootView.findViewById(R.id.agente_correo)).getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-                ((TextView) rootView.findViewById(R.id.agente_correo)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
+                //((TextView) rootView.findViewById(R.id.agente_correo)).setTextColor(getResources().getColorStateList(R.drawable.text_link));
             } else
                 ((TextView) rootView.findViewById(R.id.agente_correo)).setClickable(false);
         }
