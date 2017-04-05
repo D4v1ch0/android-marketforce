@@ -286,8 +286,8 @@ public class AgendaProspectoFragment extends rp3.app.BaseFragment{
 
                     ((TextView) row_etapa.findViewById(R.id.map_phone)).setCompoundDrawablesWithIntrinsicBounds(0, 0, id_icon, 0);
                     ((TextView) row_etapa.findViewById(R.id.detail_agenda_estado)).setText(etp.getEtapa().getDescripcion());
-                    ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setText(etp.getEtapa().getOrden() + 1 + "");
-                    if (etp.getEtapa().getOrden() == 0) {
+                    ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setText(etp.getEtapa().getOrden() + "");
+                    if (etp.getEtapa().getOrden() == 1) {
                         ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa1));
                         final long idOptEtp = etp.getID();
                         final String nameEtp = etp.getEtapa().getDescripcion();
@@ -296,7 +296,7 @@ public class AgendaProspectoFragment extends rp3.app.BaseFragment{
                         if (etp.getFechaFin().getTime() > 0)
                             thisDay.setTime(etp.getFechaFin());
                     }
-                    if (etp.getEtapa().getOrden() == 1) {
+                    if (etp.getEtapa().getOrden() == 2) {
                         ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa2));
                         final long idOptEtp = etp.getID();
                         final String nameEtp = etp.getEtapa().getDescripcion();
@@ -304,7 +304,7 @@ public class AgendaProspectoFragment extends rp3.app.BaseFragment{
                         if (etp.getFechaFin().getTime() > 0)
                             thisDay.setTime(etp.getFechaFin());
                     }
-                    if (etp.getEtapa().getOrden() == 2) {
+                    if (etp.getEtapa().getOrden() == 3) {
                         ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa3));
                         final long idOptEtp = etp.getID();
                         final String nameEtp = etp.getEtapa().getDescripcion();
@@ -313,7 +313,7 @@ public class AgendaProspectoFragment extends rp3.app.BaseFragment{
                             thisDay.setTime(etp.getFechaFin());
 
                     }
-                    if (etp.getEtapa().getOrden() == 3) {
+                    if (etp.getEtapa().getOrden() == 4) {
                         ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa4));
                         final long idOptEtp = etp.getID();
                         final String nameEtp = etp.getEtapa().getDescripcion();
@@ -321,7 +321,7 @@ public class AgendaProspectoFragment extends rp3.app.BaseFragment{
                         if (etp.getFechaFin().getTime() > 0)
                             thisDay.setTime(etp.getFechaFin());
                     }
-                    if (etp.getEtapa().getOrden() == 4) {
+                    if (etp.getEtapa().getOrden() == 5) {
                         ((TextView) row_etapa.findViewById(R.id.detail_tarea_num)).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa5));
                         final long idOptEtp = etp.getID();
                         final String nameEtp = etp.getEtapa().getDescripcion();

@@ -867,6 +867,9 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
                 else
                     Agenda.update(getDataBase(), agenda);
             }
+            Bundle bundle = new Bundle();
+            bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_AGENDAS);
+            requestSync(bundle);
             return eventStrings;
         }
 

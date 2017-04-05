@@ -79,12 +79,16 @@ public class OportunidadBitacoraDetailFragment extends BaseFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         setContentView(R.layout.fragment_oportunidad_bitacora_detail);
-        if(getParentFragment()!=null){
-            OportunidadBitacoraListCallback = (OportunidadBitacoraListListener)getParentFragment();
-        }else{
-            OportunidadBitacoraListCallback = (OportunidadBitacoraListListener) activity;
-            setRetainInstance(true);
+        try {
+            if (getParentFragment() != null) {
+                OportunidadBitacoraListCallback = (OportunidadBitacoraListListener) getParentFragment();
+            } else {
+                OportunidadBitacoraListCallback = (OportunidadBitacoraListListener) activity;
+                setRetainInstance(true);
+            }
         }
+        catch (Exception ex)
+        {}
     }
 
     @Override

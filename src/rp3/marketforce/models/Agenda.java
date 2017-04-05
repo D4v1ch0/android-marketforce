@@ -475,6 +475,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
 			agd.setEnviado(CursorUtils.getBoolean(c, Contract.Agenda.COLUMN_ENVIADO));
 			agd.setTipoAgenda(CursorUtils.getString(c, Contract.Agenda.FIELD_TIPO_AGENDA));
+			agd.setObservaciones(CursorUtils.getString(c, Contract.Agenda.COLUMN_OBSERVACIONES));
 
 			if(agd.getTipoAgenda().equalsIgnoreCase(Contants.TIPO_AGENDA_CLIENTE)) {
 				ClienteDireccion cld = new ClienteDireccion();
