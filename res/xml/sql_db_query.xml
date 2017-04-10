@@ -19,6 +19,14 @@
         tbCliente.ExentoImpuesto,
         tbCliente.CiudadanoOro,
         tbCliente.Tarjeta,
+        tbCliente.TipoPartner,
+        tbCliente.CanalPartner,
+        tbCliente.Aviso,
+        tbCliente.IndiceSolvencia,
+        tbCliente.LimiteCredito,
+        tbCliente.ListaPrecio,
+        tbCliente.CondicionPago,
+        tbClienteExt.IdExterno AS tbClienteExt_IdExterno,
         tbClienteExt.Nombre1 AS tbClienteExt_Nombre1,
         tbClienteExt.Nombre2 AS tbClienteExt_Nombre2,
        	tbClienteExt.Apellido1 AS tbClienteExt_Apellido1,
@@ -70,6 +78,14 @@
         tbCliente.ExentoImpuesto,
         tbCliente.CiudadanoOro,
         tbCliente.Tarjeta,
+        tbCliente.TipoPartner,
+        tbCliente.CanalPartner,
+        tbCliente.Aviso,
+        tbCliente.IndiceSolvencia,
+        tbCliente.LimiteCredito,
+        tbCliente.ListaPrecio,
+        tbCliente.CondicionPago,
+        tbClienteExt.IdExterno AS tbClienteExt_IdExterno,
         tbClienteExt.Nombre1 AS tbClienteExt_Nombre1,
         tbClienteExt.Nombre2 AS tbClienteExt_Nombre2,
         tbClienteExt.Apellido1 AS tbClienteExt_Apellido1,
@@ -125,6 +141,14 @@
         tbCliente.ExentoImpuesto,
         tbCliente.CiudadanoOro,
         tbCliente.Tarjeta,
+        tbCliente.TipoPartner,
+        tbCliente.CanalPartner,
+        tbCliente.Aviso,
+        tbCliente.IndiceSolvencia,
+        tbCliente.LimiteCredito,
+        tbCliente.ListaPrecio,
+        tbCliente.CondicionPago,
+        tbClienteExt.IdExterno AS tbClienteExt_IdExterno,
         tbClienteExt.Nombre1 AS tbClienteExt_Nombre1,
         tbClienteExt.Nombre2 AS tbClienteExt_Nombre2,
        	tbClienteExt.Apellido1 AS tbClienteExt_Apellido1,
@@ -182,6 +206,14 @@
         tbCliente.ExentoImpuesto,
         tbCliente.CiudadanoOro,
         tbCliente.Tarjeta,
+        tbCliente.TipoPartner,
+        tbCliente.CanalPartner,
+        tbCliente.Aviso,
+        tbCliente.IndiceSolvencia,
+        tbCliente.LimiteCredito,
+        tbCliente.ListaPrecio,
+        tbCliente.CondicionPago,
+        tbClienteExt.IdExterno AS tbClienteExt_IdExterno,
         tbClienteExt.Nombre1 AS tbClienteExt_Nombre1,
         tbClienteExt.Nombre2 AS tbClienteExt_Nombre2,
        	tbClienteExt.Apellido1 AS tbClienteExt_Apellido1,
@@ -238,6 +270,14 @@
         tbCliente.ExentoImpuesto,
         tbCliente.CiudadanoOro,
         tbCliente.Tarjeta,
+        tbCliente.TipoPartner,
+        tbCliente.CanalPartner,
+        tbCliente.Aviso,
+        tbCliente.IndiceSolvencia,
+        tbCliente.LimiteCredito,
+        tbCliente.ListaPrecio,
+        tbCliente.CondicionPago,
+        tbClienteExt.IdExterno AS tbClienteExt_IdExterno,
         tbClienteExt.Nombre1 AS tbClienteExt_Nombre1,
         tbClienteExt.Nombre2 AS tbClienteExt_Nombre2,
        	tbClienteExt.Apellido1 AS tbClienteExt_Apellido1,
@@ -294,6 +334,14 @@
         tbCliente.ExentoImpuesto,
         tbCliente.CiudadanoOro,
         tbCliente.Tarjeta,
+        tbCliente.TipoPartner,
+        tbCliente.CanalPartner,
+        tbCliente.Aviso,
+        tbCliente.IndiceSolvencia,
+        tbCliente.LimiteCredito,
+        tbCliente.ListaPrecio,
+        tbCliente.CondicionPago,
+        tbClienteExt.IdExterno AS tbClienteExt_IdExterno,
         tbClienteExt.Nombre1 AS tbClienteExt_Nombre1,
         tbClienteExt.Nombre2 AS tbClienteExt_Nombre2,
        	tbClienteExt.Apellido1 AS tbClienteExt_Apellido1,
@@ -560,7 +608,8 @@
        	tbClienteExt.Identificacion ,
        	tbClienteExt.CorreoElectronico,
        	tbClienteExt.Direccion,
-       	tbClienteExt.Telefono
+       	tbClienteExt.Telefono,
+         tbClienteExt.IdExterno
        	FROM tbClienteExt       	 
        	INNER JOIN tbCliente 
        	ON tbCliente._id = tbClienteExt.docid
@@ -584,7 +633,8 @@
         '' AS Identificacion,
         tbContactoExt.Correo AS CorreoElectronico,
         tbClienteDireccion.Direccion AS Direccion,
-        tbContactoExt.Telefono1 AS Telefono
+        tbContactoExt.Telefono1 AS Telefono,
+         '' AS IdExterno
         FROM tbContactoExt
         INNER JOIN tbContacto
         ON tbContacto._id = tbContactoExt.docid
@@ -1658,7 +1708,9 @@
         tbProducto.PorcentajeImpuesto,
         tbProducto.PrecioConImpuesto,
         tbProducto.IdBeneficio,
-        tbProductoExt.Descripcion AS tbProductoExt_Descripcion
+        tbProductoExt.Descripcion AS tbProductoExt_Descripcion,
+        tbProductoExt.IdExterno1 AS tbProductoExt_IdExterno1,
+        tbProductoExt.IdExterno2 AS tbProductoExt_IdExterno2
         FROM tbProducto
         LEFT JOIN tbProductoExt
         ON tbProducto._id = tbProductoExt.docid
@@ -1680,7 +1732,9 @@
         tbProducto.PorcentajeImpuesto,
         tbProducto.PrecioConImpuesto,
         tbProducto.IdBeneficio,
-        tbProductoExt.Descripcion AS tbProductoExt_Descripcion
+        tbProductoExt.Descripcion AS tbProductoExt_Descripcion,
+        tbProductoExt.IdExterno1 AS tbProductoExt_IdExterno1,
+        tbProductoExt.IdExterno2 AS tbProductoExt_IdExterno2
         FROM tbProducto
         LEFT JOIN tbProductoExt
         ON tbProducto._id = tbProductoExt.docid
@@ -1722,7 +1776,9 @@
         tbProducto.PorcentajeImpuesto,
         tbProducto.PrecioConImpuesto,
         tbProducto.IdBeneficio,
-        tbProductoExt.Descripcion AS tbProductoExt_Descripcion
+        tbProductoExt.Descripcion AS tbProductoExt_Descripcion,
+        tbProductoExt.IdExterno1 AS tbProductoExt_IdExterno1,
+        tbProductoExt.IdExterno2 AS tbProductoExt_IdExterno2
         FROM tbProducto
         LEFT JOIN tbProductoExt
         ON tbProducto._id = tbProductoExt.docid
@@ -1747,8 +1803,10 @@
     <statement name="ProductoSearchBulkInsert">
         INSERT OR REPLACE INTO tbProductoExt
         (docid,
-        Descripcion)
-        VALUES (?,?)
+        Descripcion,
+        IdExterno1,
+        IdExterno2)
+        VALUES (?,?,?,?)
     </statement>
     <statement name="ProductoCodigoBulkInsert">
         INSERT OR REPLACE INTO tbProductoCodigo
@@ -1770,7 +1828,9 @@
         tbProducto.PorcentajeImpuesto,
         tbProducto.PrecioConImpuesto,
         tbProducto.IdBeneficio,
-        tbProductoExt.Descripcion AS tbProductoExt_Descripcion
+        tbProductoExt.Descripcion AS tbProductoExt_Descripcion,
+        tbProductoExt.IdExterno1 AS tbProductoExt_IdExterno1,
+        tbProductoExt.IdExterno2 AS tbProductoExt_IdExterno2
         FROM tbProductoExt
         INNER JOIN tbProducto
         ON tbProducto._id = tbProductoExt.docid
@@ -1803,7 +1863,9 @@
         tbProducto.PorcentajeImpuesto,
         tbProducto.PrecioConImpuesto,
         tbProducto.IdBeneficio,
-        tbProductoExt.Descripcion AS tbProductoExt_Descripcion
+        tbProductoExt.Descripcion AS tbProductoExt_Descripcion,
+        tbProductoExt.IdExterno1 AS tbProductoExt_IdExterno1,
+        tbProductoExt.IdExterno2 AS tbProductoExt_IdExterno2
         FROM tbProductoExt
         INNER JOIN tbProducto
         ON tbProducto._id = tbProductoExt.docid
@@ -1837,7 +1899,9 @@
         tbProducto.PorcentajeImpuesto,
         tbProducto.PrecioConImpuesto,
         tbProducto.IdBeneficio,
-        tbProductoExt.Descripcion AS tbProductoExt_Descripcion
+        tbProductoExt.Descripcion AS tbProductoExt_Descripcion,
+        tbProductoExt.IdExterno1 AS tbProductoExt_IdExterno1,
+        tbProductoExt.IdExterno2 AS tbProductoExt_IdExterno2
         FROM tbProducto
         LEFT JOIN tbProductoExt
         ON tbProducto._id = tbProductoExt.docid
@@ -2303,5 +2367,17 @@
         ON tbEstadoAgenda.GeneralTableId = 1013
         AND tbAgendaOportunidad.EstadoAgenda = tbEstadoAgenda.Code
         WHERE tbAgendaOportunidad.Pendiente = 1 AND tbAgendaOportunidad.EstadoAgenda = 'V'
+    </statement>
+    <statement name="LibroPrecioBulkInsert">
+        INSERT OR REPLACE INTO tbLibroPrecio
+        (_id ,
+        IdLibro,
+        Item,
+        Divisa,
+        Precio,
+        Medida,
+        FechaEfectiva,
+        FechaVencimiento)
+        VALUES (?,?,?,?,?,?,?,?)
     </statement>
 </sql>

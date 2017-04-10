@@ -57,11 +57,14 @@ import rp3.marketforce.db.Contract;
 import rp3.marketforce.models.Cliente;
 import rp3.marketforce.models.pedido.Categoria;
 import rp3.marketforce.models.pedido.ControlCaja;
+import rp3.marketforce.models.pedido.LibroPrecio;
+import rp3.marketforce.models.pedido.MatrizPrecio;
 import rp3.marketforce.models.pedido.Pago;
 import rp3.marketforce.models.pedido.Pedido;
 import rp3.marketforce.models.pedido.Producto;
 import rp3.marketforce.models.pedido.ProductoCodigo;
 import rp3.marketforce.models.pedido.ProductoPromocion;
+import rp3.marketforce.models.pedido.SecuenciaMatriz;
 import rp3.marketforce.models.pedido.SubCategoria;
 import rp3.marketforce.ruta.MapaActivity;
 import rp3.marketforce.sync.Agenda;
@@ -676,22 +679,14 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
 
                                 stmtSearch.bindLong(1, descargados - 1);
                                 stmtSearch.bindString(2, type.getString("D"));
+                                stmtSearch.bindString(3, type.getString("Ex"));
+                                stmtSearch.bindString(4, type.getString("Ex").trim().replace(" ",""));
 
                                 stmtSearch.execute();
                                 stmtSearch.clearBindings();
 
                                 stmt.execute();
                                 stmt.clearBindings();
-
-                                JSONArray strs = type.getJSONArray("PC");
-
-                                for (int j = 0; j < strs.length(); j++) {
-                                    JSONObject str = strs.getJSONObject(j);
-                                    stmtCod.bindString(1, str.getString("Ex"));
-                                    stmtCod.bindString(2, str.getString("C"));
-                                    stmtCod.execute();
-                                    stmtCod.clearBindings();
-                                }
 
                             } else {
                                 Producto.deleteProducto(getDataBase(), type.getInt("Id"));
@@ -737,73 +732,6 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
             {}
             db.endTransaction();
 
-
-                /*while (total != 0 && total > descargados) {
-                    Bundle bundle = Productos.executeSync(getDataBase(), pagina, 3000);
-                    pagina++;
-                    if (bundle != null && bundle.getInt(SyncAdapter.ARG_SYNC_TYPE) == rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS) {
-                        try {
-                            JSONArray types = new JSONArray(bundle.getString("Productos"));
-                            int length = types.length();
-                            for (int i = 0; i < length; i++) {
-                                descargados++;
-                                publishProgress(new Integer[]{total, descargados, R.string.message_actualizar_productos});
-
-                                JSONObject type = types.getJSONObject(i);
-                                if (type.getString("E").equalsIgnoreCase("A")) {
-                                    rp3.marketforce.models.pedido.Producto producto = rp3.marketforce.models.pedido.Producto.getProductoIdServer(getDataBase(), type.getInt("Id"));
-
-                                    producto.setIdProducto(type.getInt("Id"));
-                                    producto.setDescripcion(type.getString("D"));
-                                    producto.setUrlFoto(type.getString("U"));
-                                    producto.setValorUnitario(type.getDouble("P"));
-                                    producto.setCodigoExterno(type.getString("Ex"));
-                                    producto.setPrecioDescuento(Float.parseFloat(type.getString("PCD")));
-                                    producto.setPrecioImpuesto(Float.parseFloat(type.getString("PCI")));
-                                    if (!type.isNull("PDO"))
-                                        producto.setPorcentajeDescuentoOro(Float.parseFloat(type.getString("PDO")));
-                                    else
-                                        producto.setPorcentajeDescuentoOro(0);
-                                    producto.setPorcentajeDescuento(Float.parseFloat(type.getString("PD")));
-                                    producto.setPorcentajeImpuesto(Float.parseFloat(type.getString("PI")));
-                                    producto.setIdBeneficio(type.getInt("B"));
-                                    if (type.isNull("IdS"))
-                                        producto.setIdSubCategoria(0);
-                                    else
-                                        producto.setIdSubCategoria(type.getInt("IdS"));
-
-                                    if (producto.getID() == 0)
-                                        rp3.marketforce.models.pedido.Producto.insert(getDataBase(), producto);
-                                    else
-                                        rp3.marketforce.models.pedido.Producto.update(getDataBase(), producto);
-
-                                    ProductoCodigo.deleteCodigos(getDataBase(), producto.getCodigoExterno());
-                                    JSONArray strs = type.getJSONArray("PC");
-
-                                    for (int j = 0; j < strs.length(); j++) {
-                                        JSONObject str = strs.getJSONObject(j);
-
-                                        ProductoCodigo productoCodigo = new ProductoCodigo();
-                                        productoCodigo.setCodigoExterno(str.getString("Ex"));
-                                        productoCodigo.setCodigo(str.getString("C"));
-                                        ProductoCodigo.insert(getDataBase(), productoCodigo);
-                                    }
-
-                                } else {
-                                    Producto.deleteProducto(getDataBase(), type.getInt("Id"));
-                                }
-
-
-                            }
-                        } catch (JSONException e) {
-                            Log.e("Entro", "Error: " + e.toString());
-                            return getString(rp3.core.R.string.message_error_sync_connection_http_error);
-                        }
-                    } else {
-                        return getString(rp3.core.R.string.message_error_sync_connection_http_error);
-                    }
-                }*/
-
             publishProgress(new Integer[]{1, 0, R.string.message_descarga_promociones});
             Bundle bundle = Productos.executeSyncPromociones(getDataBase());
             if (bundle != null && bundle.getInt(SyncAdapter.ARG_SYNC_TYPE) == rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS) {
@@ -835,6 +763,152 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
             } else {
                 return getString(rp3.core.R.string.message_error_sync_connection_http_error);
             }
+            //Secuencias
+            publishProgress(new Integer[]{1, 0, R.string.message_descarga_secuencias});
+            bundle = Productos.executeSyncSecuencia(getDataBase());
+            if (bundle != null && bundle.getInt(SyncAdapter.ARG_SYNC_TYPE) == rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS) {
+                try {
+                    JSONArray types = new JSONArray(bundle.getString("Secuencias"));
+                    int length = types.length();
+                    SecuenciaMatriz.deleteAll(getDataBase(), Contract.SecuenciaMatriz.TABLE_NAME);
+                    for (int i = 0; i < length; i++) {
+                        publishProgress(new Integer[]{length, i, R.string.message_descarga_secuencias});
+
+                        JSONObject type = types.getJSONObject(i);
+
+                        SecuenciaMatriz secuenciaMatriz = new SecuenciaMatriz();
+
+                        secuenciaMatriz.setIdJerarquia(type.getInt("IdJerarquia"));
+                        secuenciaMatriz.setMatriz(type.getString("Matriz"));
+                        secuenciaMatriz.setFechaEfectiva(Convert.getDateFromDotNetTicks(type.getLong("FechaEfectivaTicks")));
+                        secuenciaMatriz.setFechaVencimiento(Convert.getDateFromDotNetTicks(type.getLong("FechaVencimientoTicks")));
+                        SecuenciaMatriz.insert(getDataBase(), secuenciaMatriz);
+                    }
+                } catch (JSONException e) {
+                    return getString(rp3.core.R.string.message_error_sync_connection_http_error);
+                }
+            } else {
+                return getString(rp3.core.R.string.message_error_sync_connection_http_error);
+            }
+            //Matrices
+            publishProgress(new Integer[]{1, 0, R.string.message_descarga_matrices});
+            bundle = Productos.executeSyncMatrices(getDataBase());
+            if (bundle != null && bundle.getInt(SyncAdapter.ARG_SYNC_TYPE) == rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS) {
+                try {
+                    JSONArray types = new JSONArray(bundle.getString("Matrices"));
+                    int length = types.length();
+                    MatrizPrecio.deleteAll(getDataBase(), Contract.MatrizPrecio.TABLE_NAME);
+                    for (int i = 0; i < length; i++) {
+                        publishProgress(new Integer[]{length, i, R.string.message_descarga_matrices});
+
+                        JSONObject type = types.getJSONObject(i);
+
+                        MatrizPrecio matrizPrecio = new MatrizPrecio();
+
+                        matrizPrecio.setIdCliente(type.getString("IC"));
+                        matrizPrecio.setIdLibro(type.getString("IL"));
+                        matrizPrecio.setIdListaPrecio(type.getString("ILP"));
+                        matrizPrecio.setIdMatriz(type.getString("IM"));
+                        matrizPrecio.setParametroDesc(type.getInt("P"));
+                        matrizPrecio.setSecuencia(type.getInt("S"));
+                        matrizPrecio.setFechaEfectiva(Convert.getDateFromDotNetTicks(type.getLong("ET")));
+                        matrizPrecio.setFechaVencimiento(Convert.getDateFromDotNetTicks(type.getLong("VT")));
+                        MatrizPrecio.insert(getDataBase(), matrizPrecio);
+                    }
+                } catch (JSONException e) {
+                    return getString(rp3.core.R.string.message_error_sync_connection_http_error);
+                }
+            } else {
+                return getString(rp3.core.R.string.message_error_sync_connection_http_error);
+            }
+
+            //Se llama a conteo de precios
+            publishProgress(new Integer[]{1, 0, R.string.message_descarga_precios});
+            conteo = Productos.executeSyncConteoPrecios(getDataBase());
+            total = 0; descargados = 0; pagina = 0;
+            if (conteo != null && conteo.getInt(SyncAdapter.ARG_SYNC_TYPE) == rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS)
+                total = conteo.getInt("ConteoPrecios", 0);
+            else {
+                return getString(rp3.core.R.string.message_error_sync_connection_http_error);
+            }
+            publishProgress(new Integer[]{total, 0, R.string.message_descarga_precios});
+
+            //Elimino Precios
+            LibroPrecio.deleteAll(getDataBase(), Contract.LibroPrecio.TABLE_NAME);
+            sql = QueryDir.getQuery(Contract.LibroPrecio.BULK_INSERT);
+            db = getDataBase();
+            db.beginTransactionNonExclusive();
+            stmt = db.compileStatement(sql);
+            while (total != 0 && total > descargados) {
+                bundle = Productos.executeSyncPrecios(getDataBase(), pagina, 3000);
+                pagina++;
+                if (bundle != null && bundle.getInt(SyncAdapter.ARG_SYNC_TYPE) == rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS) {
+                    try {
+                        JSONArray types = new JSONArray(bundle.getString("Precios"));
+                        int length = types.length();
+                        for (int i = 0; i < length; i++) {
+                            descargados++;
+                            publishProgress(new Integer[]{total, descargados, R.string.message_descarga_precios});
+
+                            JSONObject type = types.getJSONObject(i);
+
+
+                            stmt.bindLong(1, descargados - 1);
+                            stmt.bindString(2, type.getString("IL"));
+                            stmt.bindString(3, type.getString("I"));
+                            stmt.bindString(4, type.getString("D"));
+                            if (!type.isNull("P"))
+                                stmt.bindDouble(5, Float.parseFloat(type.getString("P")));
+                            else
+                                stmt.bindDouble(5, 0);
+
+                            stmt.bindString(6, type.getString("M"));
+                            stmt.bindLong(7, Convert.getDateFromDotNetTicks(type.getLong("ET")).getTime());
+                            stmt.bindLong(8, Convert.getDateFromDotNetTicks(type.getLong("VT")).getTime());
+
+                            stmt.execute();
+                            stmt.clearBindings();
+
+
+                        }
+                    } catch (JSONException e) {
+                        try {
+                            pagina--;
+                            //db.setTransactionSuccessful();
+                            //db.endTransaction();
+                            Log.e("Entro", "Error: " + e.toString());
+                            Log.e("Entro", "JSON ERROR. Se quedo en pagina " + pagina);
+                            //return getString(rp3.core.R.string.message_error_sync_connection_http_error);
+                        }
+                        catch (Exception ex)
+                        {
+                            return getString(rp3.core.R.string.message_error_sync_connection_http_error);
+                        }
+
+                    }
+                } else {
+                    try {
+                        pagina--;
+                        //db.setTransactionSuccessful();
+                        //db.endTransaction();
+                        Log.e("Entro", "Se quedo en pagina " + pagina);
+                        //return getString(rp3.core.R.string.message_error_sync_connection_http_error);
+                    }
+                    catch (Exception ex)
+                    {
+                        return getString(rp3.core.R.string.message_error_sync_connection_http_error);
+                    }
+
+                }
+            }
+            try {
+                db.setTransactionSuccessful();
+                db.endTransaction();
+            }
+            catch (Exception ex)
+            {}
+            db.endTransaction();
+
             publishProgress(new Integer[]{1, 0, R.string.message_descarga_categorias});
             bundle = Productos.executeSyncCategorias(getDataBase());
             if (bundle != null && bundle.getInt(SyncAdapter.ARG_SYNC_TYPE) == rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS) {

@@ -45,6 +45,13 @@ public final class Contract {
 		public static final String COLUMN_EXENTO_IMPUESTO = "ExentoImpuesto";
 		public static final String COLUMN_CIUDADANO_ORO = "CiudadanoOro";
 		public static final String COLUMN_TARJETA = "Tarjeta";
+		public static final String COLUMN_TIPO_PARTNER = "TipoPartner";
+		public static final String COLUMN_CANAL_PARTNER = "CanalPartner";
+		public static final String COLUMN_AVISO = "Aviso";
+		public static final String COLUMN_INDICE_SOLVENCIA = "IndiceSolvencia";
+		public static final String COLUMN_LIMITE_CREDITO = "LimiteCredito";
+		public static final String COLUMN_LISTA_PRECIO = "ListaPrecio";
+		public static final String COLUMN_CONDICION_PAGO = "CondicionPago";
 				
 		public static final String FIELD_ID_TIPO_IDENTIFICACION = COLUMN_ID_TIPO_IDENTIFICACION;	
 		public static final String FIELD_ID_CLIENTE = COLUMN_ID_CLIENTE;	
@@ -61,6 +68,13 @@ public final class Contract {
 		public static final String FIELD_EXENTO_IMPUESTO = COLUMN_EXENTO_IMPUESTO;
 		public static final String FIELD_CIUDADANO_ORO = COLUMN_CIUDADANO_ORO;
 		public static final String FIELD_TARJETA = COLUMN_TARJETA;
+		public static final String FIELD_TIPO_PARTNER = COLUMN_TIPO_PARTNER;
+		public static final String FIELD_CANAL_PARTNER = COLUMN_CANAL_PARTNER;
+		public static final String FIELD_AVISO = COLUMN_AVISO;
+		public static final String FIELD_INDICE_SOLVENCIA = COLUMN_INDICE_SOLVENCIA;
+		public static final String FIELD_LIMITE_CREDITO = COLUMN_LIMITE_CREDITO;
+		public static final String FIELD_LISTA_PRECIO = COLUMN_LISTA_PRECIO;
+		public static final String FIELD_CONDICION_PAGO = COLUMN_CONDICION_PAGO;
         public static final String FIELD_FECHA_ULTIMA_VISITA = COLUMN_FECHA_ULTIMA_VISITA;
         public static final String FIELD_AGENTE_ULTIMA_VISITA = COLUMN_AGENTE_ULTIMA_VISITA;
         public static final String FIELD_FECHA_PROXIMA_VISITA = COLUMN_FECHA_PROXIMA_VISITA;
@@ -77,6 +91,7 @@ public final class Contract {
 		public static final String FIELD_PAGINA_WEB = Contract.ClientExt.TABLE_NAME + "_" + Contract.ClientExt.COLUMN_PAGINA_WEB;
 		public static final String FIELD_RAZON_SOCIAL = Contract.ClientExt.TABLE_NAME + "_" + Contract.ClientExt.COLUMN_RAZON_SOCIAL;
 		public static final String FIELD_ACTIVIDAD_ECONOMICA = Contract.ClientExt.TABLE_NAME + "_" + Contract.ClientExt.COLUMN_ACTIVIDAD_ECONOMICA;
+		public static final String FIELD_ID_EXTERNO = Contract.ClientExt.TABLE_NAME + "_" + Contract.ClientExt.COLUMN_ID_EXTERNO;
 		public static final String FIELD_ESTADO_CIVIL_DESCRIPCION = "tbEstadoCivil_Value";
 		public static final String FIELD_GENERO_DESCRIPCION = "tbGenero_Value";
 		public static final String FIELD_TIPO_CLIENTE_DESCRIPCION = Contract.TipoCliente.TABLE_NAME + "_" + Contract.TipoCliente.COLUMN_DESCRIPCION;
@@ -92,65 +107,28 @@ public final class Contract {
 		public static final String QUERY_CLIENTE_BY_ID_SERVER = "ClienteByIdServer";
 		public static final String QUERY_CLIENT_SEARCH = "SimpleClientSearch";
 		
-//		 private static final String QUERY_TRANSACTION_MAINFIELDS = 
-//	        		"SELECT " + 
-//	        				TABLE_NAME + "." + _ID + DataBase.COMMA_SEP +	        				
-//	        				TABLE_NAME + "." + COLUMN_IDENTIFICATION_TYPE_ID + DataBase.COMMA_SEP +
-//	        				TABLE_NAME + "." + COLUMN_IDENTIFICACION + DataBase.COMMA_SEP +
-//	        				TABLE_NAME + "." + COLUMN_NOMBRE1 + DataBase.COMMA_SEP +
-//	        				TABLE_NAME + "." + COLUMN_NOMBRE2 + DataBase.COMMA_SEP +
-//	        				TABLE_NAME + "." + COLUMN_APELLIDO1 + DataBase.COMMA_SEP +
-//	        				TABLE_NAME + "." + COLUMN_APELLIDO2 + DataBase.COMMA_SEP +
-//	        				TABLE_NAME + "." + COLUMN_NOMBRE_COMPLETO + DataBase.COMMA_SEP +
-//	        				TABLE_NAME + "." + COLUMN_CORREO_ELECTRONICO + DataBase.COMMA_SEP +
-//	        				TABLE_NAME + "." + COLUMN_GENERO + DataBase.COMMA_SEP +
-//	        				TABLE_NAME + "." + COLUMN_ESTADO_CIVIL + DataBase.COMMA_SEP +
-//	        				TABLE_NAME + "." + COLUMN_FECHA_NACIMIENTO + DataBase.COMMA_SEP +
-//	        				TABLE_NAME + "." + COLUMN_TIPO_CLIENTE_ID + DataBase.COMMA_SEP +
-//	        				TABLE_NAME + "." + COLUMN_CANAL_ID + DataBase.COMMA_SEP +
-//	        				TABLE_NAME + "." + COLUMN_CALIFICACION;	        				
-//		
-//		 private static final String QUERY_TRANSACTION_MAINFROM = 
-//	        		" FROM " + TABLE_NAME;
-//	        		
-//		 
-//		private static final String QUERY_FULL_FIELDS = 
-//				QUERY_TRANSACTION_MAINFIELDS;
-//		
-//		 private static final String QUERY_TRANSACTION_FULL = 
-//	        		QUERY_FULL_FIELDS;
-//		 
-//		 private static final String QUERY_FILTER_TRANSACTIONID = " WHERE " +  
-//	        		Contract.Cliente.TABLE_NAME + "." + Contract.Cliente._ID +
-//	        		" = ?";
-//		
-//		public static final String QUERY_TRANSACTION_BY_ID = 
-//        		QUERY_TRANSACTION_FULL +
-//        		QUERY_TRANSACTION_MAINFROM + 
-//        		QUERY_FILTER_TRANSACTIONID;
-		
 	}
 	
 	 public static abstract class ClientExt implements BaseColumns {
-	    	public static final String TABLE_NAME = "tbClienteExt";
-	    	public static final String COLUMN_ID = "docid";
-	    	public static final String COLUMN_IDENTIFICACION = "Identificacion";
-			public static final String COLUMN_NOMBRE1 = "Nombre1";
-			public static final String COLUMN_NOMBRE2 = "Nombre2";
-			public static final String COLUMN_APELLIDO1 = "Apellido1";
-			public static final String COLUMN_APELLIDO2 = "Apellido2";
-			public static final String COLUMN_NOMBRE_COMPLETO = "NombreCompleto";
-			public static final String COLUMN_CORREO_ELECTRONICO = "CorreoElectronico";	        
-	        public static final String COLUMN_MAIL = "CorreoElectronico";	        
-	        public static final String COLUMN_DIRECCION = "Direccion";
-	        public static final String COLUMN_TELEFONO = "Telefono";
-	        public static final String COLUMN_RAZON_SOCIAL = "RazonSocial";
-	        public static final String COLUMN_PAGINA_WEB = "PaginaWeb";
-	        public static final String COLUMN_ACTIVIDAD_ECONOMICA = "ActividadEconomica";
-	        
-	        
-	        
-	    }
+		 public static final String TABLE_NAME = "tbClienteExt";
+		 public static final String COLUMN_ID = "docid";
+		 public static final String COLUMN_IDENTIFICACION = "Identificacion";
+		 public static final String COLUMN_NOMBRE1 = "Nombre1";
+		 public static final String COLUMN_NOMBRE2 = "Nombre2";
+		 public static final String COLUMN_APELLIDO1 = "Apellido1";
+		 public static final String COLUMN_APELLIDO2 = "Apellido2";
+		 public static final String COLUMN_NOMBRE_COMPLETO = "NombreCompleto";
+		 public static final String COLUMN_CORREO_ELECTRONICO = "CorreoElectronico";
+		 public static final String COLUMN_MAIL = "CorreoElectronico";
+		 public static final String COLUMN_DIRECCION = "Direccion";
+		 public static final String COLUMN_TELEFONO = "Telefono";
+		 public static final String COLUMN_RAZON_SOCIAL = "RazonSocial";
+		 public static final String COLUMN_PAGINA_WEB = "PaginaWeb";
+		 public static final String COLUMN_ACTIVIDAD_ECONOMICA = "ActividadEconomica";
+		 public static final String COLUMN_ID_EXTERNO= "IdExterno";
+
+
+	 }
 	
 	public static abstract class ClienteDireccion implements BaseColumns {
 		
@@ -1021,6 +999,8 @@ public final class Contract {
 		public static final String COLUMN_ID_BENEFICIO = "IdBeneficio";
 
 		public static final String FIELD_DESCRIPCION = Contract.ProductoExt.TABLE_NAME + "_" + Contract.ProductoExt.COLUMN_DESCRIPCION;
+		public static final String FIELD_EXTERNO_1 = Contract.ProductoExt.TABLE_NAME + "_" + Contract.ProductoExt.COLUMN_ID_EXTERNO_1;
+		public static final String FIELD_EXTERNO_2 = Contract.ProductoExt.TABLE_NAME + "_" + Contract.ProductoExt.COLUMN_ID_EXTERNO_2;
 
 		public static final String QUERY_PRODUCTOS = "Productos";
 		public static final String QUERY_PRODUCTOS_BY_CATEGORIA = "ProductosByCategoria";
@@ -1037,6 +1017,8 @@ public final class Contract {
 		public static final String TABLE_NAME = "tbProductoExt";
 		public static final String COLUMN_ID = "docid";
 		public static final String COLUMN_DESCRIPCION = "Descripcion";
+		public static final String COLUMN_ID_EXTERNO_1 = "IdExterno1";
+		public static final String COLUMN_ID_EXTERNO_2 = "IdExterno2";
 
 		public static final String BULK_INSERT = "ProductoSearchBulkInsert";
 
@@ -1235,5 +1217,47 @@ public final class Contract {
 		public static final String COLUMN_DESCRIPCION = "Descripcion";
 		public static final String COLUMN_DIRECCION = "Direccion";
 		public static final String COLUMN_CORREO = "Correo";
+	}
+
+	public static abstract class LibroPrecio implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbLibroPrecio";
+
+		public static final String COLUMN_ID_LIBRO = "IdLibro";
+		public static final String COLUMN_ITEM = "Item";
+		public static final String COLUMN_DIVISA = "Divisa";
+		public static final String COLUMN_PRECIO = "Precio";
+		public static final String COLUMN_MEDIDA = "Medida";
+		public static final String COLUMN_FECHA_EFECTIVA = "FechaEfectiva";
+		public static final String COLUMN_FECHA_VENCIMIENTO = "FechaVencimiento";
+
+		public static final String BULK_INSERT = "LibroPrecioBulkInsert";
+
+	}
+
+	public static abstract class MatrizPrecio implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbMatrizPrecio";
+
+		public static final String COLUMN_ID_MATRIZ = "IdMatriz";
+		public static final String COLUMN_ID_LIBRO = "IdLibro";
+		public static final String COLUMN_ID_CLIENTE = "IdCliente";
+		public static final String COLUMN_ID_SECUENCIA = "Secuencia";
+		public static final String COLUMN_ID_LISTA_PRECIO = "IdListaPrecio";
+		public static final String COLUMN_PARAMETRO_DESC = "ParametroDesc";
+		public static final String COLUMN_FECHA_EFECTIVA = "FechaEfectiva";
+		public static final String COLUMN_FECHA_VENCIMIENTO = "FechaVencimiento";
+
+	}
+
+	public static abstract class SecuenciaMatriz implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbSecuenciaMatriz";
+
+		public static final String COLUMN_ID_JERARQUIA = "IdJerarquia";
+		public static final String COLUMN_MATRIZ = "Matriz";
+		public static final String COLUMN_FECHA_EFECTIVA = "FechaEfectiva";
+		public static final String COLUMN_FECHA_VENCIMIENTO = "FechaVencimiento";
+
 	}
 }

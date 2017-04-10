@@ -44,6 +44,13 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 	private boolean exentoImpuesto;
 	private boolean ciudadanoOro;
 	private String tarjeta;
+	private String tipoPartner;
+	private String canalPartner;
+	private String aviso;
+	private String indiceSolvencia;
+	private double limiteCredito;
+	private String listPrecio;
+	private String condicionPago;
 	
 	private String direccion;
 	private String telefono;
@@ -54,6 +61,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 	private String tipoIdentificacionDescripcion;
 	private String URLFoto;
 	private String tipoPersona;
+	private String idExterno;
 
 	private List<Contacto> contactos;
 	private List<ClienteDireccion> clienteDirecciones;
@@ -153,6 +161,13 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 		setValue(Contract.Cliente.COLUMN_EXENTO_IMPUESTO, this.exentoImpuesto);
 		setValue(Contract.Cliente.COLUMN_CIUDADANO_ORO, this.ciudadanoOro);
 		setValue(Contract.Cliente.COLUMN_TARJETA, this.tarjeta);
+		setValue(Contract.Cliente.COLUMN_AVISO, this.aviso);
+		setValue(Contract.Cliente.COLUMN_TIPO_PARTNER, this.tipoPartner);
+		setValue(Contract.Cliente.COLUMN_CANAL_PARTNER, this.canalPartner);
+		setValue(Contract.Cliente.COLUMN_INDICE_SOLVENCIA, this.indiceSolvencia);
+		setValue(Contract.Cliente.COLUMN_LIMITE_CREDITO, this.limiteCredito);
+		setValue(Contract.Cliente.COLUMN_LISTA_PRECIO, this.listPrecio);
+		setValue(Contract.Cliente.COLUMN_CONDICION_PAGO, this.condicionPago);
 	}
 
 	@Override
@@ -408,6 +423,70 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 		this.actividadEconomica = actividadEconomica;
 	}
 
+	public String getTipoPartner() {
+		return tipoPartner;
+	}
+
+	public void setTipoPartner(String tipoPartner) {
+		this.tipoPartner = tipoPartner;
+	}
+
+	public String getCanalPartner() {
+		return canalPartner;
+	}
+
+	public void setCanalPartner(String canalPartner) {
+		this.canalPartner = canalPartner;
+	}
+
+	public String getAviso() {
+		return aviso;
+	}
+
+	public void setAviso(String aviso) {
+		this.aviso = aviso;
+	}
+
+	public String getIndiceSolvencia() {
+		return indiceSolvencia;
+	}
+
+	public void setIndiceSolvencia(String indiceSolvencia) {
+		this.indiceSolvencia = indiceSolvencia;
+	}
+
+	public double getLimiteCredito() {
+		return limiteCredito;
+	}
+
+	public void setLimiteCredito(double limiteCredito) {
+		this.limiteCredito = limiteCredito;
+	}
+
+	public String getListPrecio() {
+		return listPrecio;
+	}
+
+	public void setListPrecio(String listPrecio) {
+		this.listPrecio = listPrecio;
+	}
+
+	public String getCondicionPago() {
+		return condicionPago;
+	}
+
+	public void setCondicionPago(String condicionPago) {
+		this.condicionPago = condicionPago;
+	}
+
+	public String getIdExterno() {
+		return idExterno;
+	}
+
+	public void setIdExterno(String idExterno) {
+		this.idExterno = idExterno;
+	}
+
 	public static List<Long> getIDSCliente(DataBase db){
 		Cursor c = db.query(Contract.Cliente.TABLE_NAME, Contract.Cliente._ID);
 		List<Long> result = new ArrayList<Long>();
@@ -453,8 +532,16 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			cl.setFechaNacimiento(CursorUtils.getDate(c, Contract.Cliente.FIELD_FECHA_NACIMIENTO));
 			cl.setIdTipoCliente(CursorUtils.getInt(c, Contract.Cliente.FIELD_TIPO_CLIENTE_ID));
 			cl.setIdCanal(CursorUtils.getInt(c, Contract.Cliente.FIELD_CANAL_ID));
-			cl.setCalificacion(CursorUtils.getInt(c, Contract.Cliente.FIELD_CALIFICACION));		
-			
+			cl.setCalificacion(CursorUtils.getInt(c, Contract.Cliente.FIELD_CALIFICACION));
+			cl.setCanalPartner(CursorUtils.getString(c, Contract.Cliente.FIELD_CANAL_PARTNER));
+			cl.setTipoPartner(CursorUtils.getString(c, Contract.Cliente.FIELD_TIPO_PARTNER));
+			cl.setLimiteCredito(CursorUtils.getDouble(c, Contract.Cliente.FIELD_LIMITE_CREDITO));
+			cl.setListPrecio(CursorUtils.getString(c, Contract.Cliente.FIELD_LISTA_PRECIO));
+			cl.setAviso(CursorUtils.getString(c, Contract.Cliente.FIELD_AVISO));
+			cl.setCondicionPago(CursorUtils.getString(c, Contract.Cliente.FIELD_CONDICION_PAGO));
+			cl.setIndiceSolvencia(CursorUtils.getString(c, Contract.Cliente.FIELD_INDICE_SOLVENCIA));
+
+			cl.setIdExterno(CursorUtils.getString(c, Contract.Cliente.FIELD_ID_EXTERNO));
 			cl.setTelefono(CursorUtils.getString(c, Contract.Cliente.FIELD_TELEFONO));
 			cl.setDireccion(CursorUtils.getString(c, Contract.Cliente.FIELD_DIRECCION));
 			cl.setEstadoCivilDescripcion(CursorUtils.getString(c, Contract.Cliente.FIELD_ESTADO_CIVIL_DESCRIPCION));
@@ -548,7 +635,15 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			client.setIdTipoCliente(CursorUtils.getInt(c, Contract.Cliente.FIELD_TIPO_CLIENTE_ID));
 			client.setIdCanal(CursorUtils.getInt(c, Contract.Cliente.FIELD_CANAL_ID));
 			client.setCalificacion(CursorUtils.getInt(c, Contract.Cliente.FIELD_CALIFICACION));
-			
+			client.setCanalPartner(CursorUtils.getString(c, Contract.Cliente.FIELD_CANAL_PARTNER));
+			client.setTipoPartner(CursorUtils.getString(c, Contract.Cliente.FIELD_TIPO_PARTNER));
+			client.setLimiteCredito(CursorUtils.getDouble(c, Contract.Cliente.FIELD_LIMITE_CREDITO));
+			client.setListPrecio(CursorUtils.getString(c, Contract.Cliente.FIELD_LISTA_PRECIO));
+			client.setAviso(CursorUtils.getString(c, Contract.Cliente.FIELD_AVISO));
+			client.setCondicionPago(CursorUtils.getString(c, Contract.Cliente.FIELD_CONDICION_PAGO));
+			client.setIndiceSolvencia(CursorUtils.getString(c, Contract.Cliente.FIELD_INDICE_SOLVENCIA));
+
+			client.setIdExterno(CursorUtils.getString(c, Contract.Cliente.FIELD_ID_EXTERNO));
 			client.setTelefono(CursorUtils.getString(c, Contract.Cliente.FIELD_TELEFONO));
 			client.setDireccion(CursorUtils.getString(c, Contract.Cliente.FIELD_DIRECCION));
 			client.setTelefono(CursorUtils.getString(c, Contract.Cliente.FIELD_TELEFONO));
@@ -608,7 +703,15 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			client.setIdTipoCliente(CursorUtils.getInt(c, Contract.Cliente.FIELD_TIPO_CLIENTE_ID));
 			client.setIdCanal(CursorUtils.getInt(c, Contract.Cliente.FIELD_CANAL_ID));
 			client.setCalificacion(CursorUtils.getInt(c, Contract.Cliente.FIELD_CALIFICACION));
+			client.setCanalPartner(CursorUtils.getString(c, Contract.Cliente.FIELD_CANAL_PARTNER));
+			client.setTipoPartner(CursorUtils.getString(c, Contract.Cliente.FIELD_TIPO_PARTNER));
+			client.setLimiteCredito(CursorUtils.getDouble(c, Contract.Cliente.FIELD_LIMITE_CREDITO));
+			client.setListPrecio(CursorUtils.getString(c, Contract.Cliente.FIELD_LISTA_PRECIO));
+			client.setAviso(CursorUtils.getString(c, Contract.Cliente.FIELD_AVISO));
+			client.setCondicionPago(CursorUtils.getString(c, Contract.Cliente.FIELD_CONDICION_PAGO));
+			client.setIndiceSolvencia(CursorUtils.getString(c, Contract.Cliente.FIELD_INDICE_SOLVENCIA));
 
+			client.setIdExterno(CursorUtils.getString(c, Contract.Cliente.FIELD_ID_EXTERNO));
 			client.setTelefono(CursorUtils.getString(c, Contract.Cliente.FIELD_TELEFONO));
 			client.setDireccion(CursorUtils.getString(c, Contract.Cliente.FIELD_DIRECCION));
 			client.setTelefono(CursorUtils.getString(c, Contract.Cliente.FIELD_TELEFONO));
@@ -662,7 +765,15 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			client.setIdTipoCliente(CursorUtils.getInt(c, Contract.Cliente.FIELD_TIPO_CLIENTE_ID));
 			client.setIdCanal(CursorUtils.getInt(c, Contract.Cliente.FIELD_CANAL_ID));
 			client.setCalificacion(CursorUtils.getInt(c, Contract.Cliente.FIELD_CALIFICACION));
-			
+			client.setCanalPartner(CursorUtils.getString(c, Contract.Cliente.FIELD_CANAL_PARTNER));
+			client.setTipoPartner(CursorUtils.getString(c, Contract.Cliente.FIELD_TIPO_PARTNER));
+			client.setLimiteCredito(CursorUtils.getDouble(c, Contract.Cliente.FIELD_LIMITE_CREDITO));
+			client.setListPrecio(CursorUtils.getString(c, Contract.Cliente.FIELD_LISTA_PRECIO));
+			client.setAviso(CursorUtils.getString(c, Contract.Cliente.FIELD_AVISO));
+			client.setCondicionPago(CursorUtils.getString(c, Contract.Cliente.FIELD_CONDICION_PAGO));
+			client.setIndiceSolvencia(CursorUtils.getString(c, Contract.Cliente.FIELD_INDICE_SOLVENCIA));
+
+			client.setIdExterno(CursorUtils.getString(c, Contract.Cliente.FIELD_ID_EXTERNO));
 			client.setTelefono(CursorUtils.getString(c, Contract.Cliente.FIELD_TELEFONO));
 			client.setDireccion(CursorUtils.getString(c, Contract.Cliente.FIELD_DIRECCION));
 			client.setTelefono(CursorUtils.getString(c, Contract.Cliente.FIELD_TELEFONO));
@@ -725,7 +836,15 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 				client.setIdCanal(CursorUtils.getInt(c, Contract.Cliente.FIELD_CANAL_ID));
 				client.setCalificacion(CursorUtils.getInt(c, Contract.Cliente.FIELD_CALIFICACION));
 				client.setPendiente(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_PENDIENTE));
-				
+				client.setCanalPartner(CursorUtils.getString(c, Contract.Cliente.FIELD_CANAL_PARTNER));
+				client.setTipoPartner(CursorUtils.getString(c, Contract.Cliente.FIELD_TIPO_PARTNER));
+				client.setLimiteCredito(CursorUtils.getDouble(c, Contract.Cliente.FIELD_LIMITE_CREDITO));
+				client.setListPrecio(CursorUtils.getString(c, Contract.Cliente.FIELD_LISTA_PRECIO));
+				client.setAviso(CursorUtils.getString(c, Contract.Cliente.FIELD_AVISO));
+				client.setCondicionPago(CursorUtils.getString(c, Contract.Cliente.FIELD_CONDICION_PAGO));
+				client.setIndiceSolvencia(CursorUtils.getString(c, Contract.Cliente.FIELD_INDICE_SOLVENCIA));
+
+				client.setIdExterno(CursorUtils.getString(c, Contract.Cliente.FIELD_ID_EXTERNO));
 				client.setTelefono(CursorUtils.getString(c, Contract.Cliente.FIELD_TELEFONO));
 				client.setDireccion(CursorUtils.getString(c, Contract.Cliente.FIELD_DIRECCION));
 				client.setTelefono(CursorUtils.getString(c, Contract.Cliente.FIELD_TELEFONO));
@@ -790,7 +909,15 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 				client.setIdCanal(CursorUtils.getInt(c, Contract.Cliente.FIELD_CANAL_ID));
 				client.setCalificacion(CursorUtils.getInt(c, Contract.Cliente.FIELD_CALIFICACION));
 				client.setPendiente(CursorUtils.getBoolean(c, Contract.Cliente.FIELD_PENDIENTE));
-				
+				client.setCanalPartner(CursorUtils.getString(c, Contract.Cliente.FIELD_CANAL_PARTNER));
+				client.setTipoPartner(CursorUtils.getString(c, Contract.Cliente.FIELD_TIPO_PARTNER));
+				client.setLimiteCredito(CursorUtils.getDouble(c, Contract.Cliente.FIELD_LIMITE_CREDITO));
+				client.setListPrecio(CursorUtils.getString(c, Contract.Cliente.FIELD_LISTA_PRECIO));
+				client.setAviso(CursorUtils.getString(c, Contract.Cliente.FIELD_AVISO));
+				client.setCondicionPago(CursorUtils.getString(c, Contract.Cliente.FIELD_CONDICION_PAGO));
+				client.setIndiceSolvencia(CursorUtils.getString(c, Contract.Cliente.FIELD_INDICE_SOLVENCIA));
+
+				client.setIdExterno(CursorUtils.getString(c, Contract.Cliente.FIELD_ID_EXTERNO));
 				client.setTelefono(CursorUtils.getString(c, Contract.Cliente.FIELD_TELEFONO));
 				client.setDireccion(CursorUtils.getString(c, Contract.Cliente.FIELD_DIRECCION));
 				client.setTelefono(CursorUtils.getString(c, Contract.Cliente.FIELD_TELEFONO));
@@ -942,6 +1069,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			setValue(Contract.ClientExt.COLUMN_RAZON_SOCIAL, razonSocial);
 			setValue(Contract.ClientExt.COLUMN_ACTIVIDAD_ECONOMICA, actividadEconomica);
 			setValue(Contract.ClientExt.COLUMN_PAGINA_WEB, paginaWeb);
+			setValue(Contract.ClientExt.COLUMN_ID_EXTERNO, idExterno);
 		}
 
 		@Override
@@ -981,6 +1109,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			cl.setDireccion(CursorUtils.getString(c,Contract.ClientExt.COLUMN_DIRECCION));
 			cl.setTelefono(CursorUtils.getString(c,Contract.ClientExt.COLUMN_TELEFONO));
 			cl.setTipoPersona(CursorUtils.getString(c, Contract.Cliente.COLUMN_TIPO_PERSONA));
+			cl.setIdExterno(CursorUtils.getString(c, Contract.ClientExt.COLUMN_ID_EXTERNO));
 			
 			ClienteDireccion cd = new ClienteDireccion();
 			cd.setDireccion(CursorUtils.getString(c,Contract.ClientExt.COLUMN_DIRECCION));

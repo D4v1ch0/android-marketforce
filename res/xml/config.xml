@@ -19,8 +19,8 @@
     <webServiceConfiguration>                
         <webServiceData>
             <name>Core</name>
-            <url>[@server:http://www.rp3marketforce.com/Rp3MarketForce]/api</url>
-            <!--url>http://10.10.0.119/Berlin/api</url-->
+            <!--url>[@server:http://www.rp3marketforce.com/Rp3MarketForce]/api</url-->
+            <url>http://10.10.0.119/Berlin/api</url>
             <type>REST</type>
             <oAuthClientId>android-app-marketforce</oAuthClientId>
             <oAuthClientSecret>rp3-marketforce2014</oAuthClientSecret>
@@ -65,8 +65,8 @@
         </webServiceData>
            <webServiceData>
             <name>MartketForce</name>
-           <url>[@server:http://www.rp3marketforce.com/Rp3MarketForce]/api</url>
-            <!--url>http://10.10.0.119/Berlin/api</url-->
+           <!--url>[@server:http://www.rp3marketforce.com/Rp3MarketForce]/api</url-->
+            <url>http://10.10.0.119/Berlin/api</url>
                <type>REST</type>
             <oAuthClientId>android-app-marketforce</oAuthClientId>
             <oAuthClientSecret>rp3-marketforce2014</oAuthClientSecret>
@@ -521,6 +521,30 @@
                     <name>SaveAgendaOportunidad</name>
                     <action>oportunidad/saveAgenda</action>
                     <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetSecuencia</name>
+                    <action>producto/GetSecuencia</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetMatriz</name>
+                    <action>producto/GetMatriz</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetLibroPrecios</name>
+                    <action>producto/GetLibroPrecios?ultimaFechaActualizacion=@ultimaFechaActualizacion&amp;pagina=@pagina&amp;tamano=@tamano</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetPreciosCount</name>
+                    <action>producto/GetPreciosCount?ultimaFechaActualizacion=@ultimaFechaActualizacion</action>
+                    <webMethod>GET</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>
             </methods>     

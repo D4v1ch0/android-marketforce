@@ -31,7 +31,14 @@
       FechaProximaVisita INTEGER,
         ExentoImpuesto BOOLEAN,
         CiudadanoOro BOOLEAN,
-        Tarjeta TEXT
+        Tarjeta TEXT,
+        TipoPartner TEXT,
+        CanalPartner TEXT,
+        Aviso TEXT,
+        IndiceSolvencia TEXT,
+        LimiteCredito REAL,
+        ListaPrecio TEXT,
+        CondicionPago TEXT
       )
 	</statement>
 	<statement>
@@ -48,6 +55,7 @@
         PaginaWeb,
         RazonSocial,
         ActividadEconomica,
+        IdExterno,
         tokenize=porter
         );
     </statement>   
@@ -566,6 +574,8 @@
     <statement>
         CREATE VIRTUAL TABLE tbProductoExt USING fts4 (
         Descripcion,
+        IdExterno1,
+        IdExterno2,
         tokenize=porter
         )
     </statement>
@@ -708,6 +718,40 @@
         Correo,
         tokenize=porter
         );
+    </statement>
+    <statement>
+        CREATE TABLE tbLibroPrecio(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdLibro TEXT,
+        Item TEXT,
+        Divisa TEXT,
+        Precio REAL,
+        Medida TEXT,
+        FechaEfectiva INTEGER,
+        FechaVencimiento INTEGER
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbMatrizPrecio(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdMatriz TEXT,
+        IdLibro TEXT,
+        IdCliente TEXT,
+        Secuencia INTEGER,
+        IdListaPrecio TEXT,
+        ParametroDesc INTEGER,
+        FechaEfectiva INTEGER,
+        FechaVencimiento INTEGER
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbSecuenciaMatriz(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdJerarquia INTEGER,
+        Matriz TEXT,
+        FechaEfectiva INTEGER,
+        FechaVencimiento INTEGER
+        )
     </statement>
 
 </sql>

@@ -139,6 +139,16 @@ public class Cliente {
 							else
 								cl.setTarjeta("");
 
+							//Campos de Berlín
+							cl.setIdExterno(type.getString("IdExterno"));
+							cl.setCanalPartner(type.getString("CanalPartner"));
+							cl.setTipoPartner(type.getString("TipoPartner"));
+							cl.setLimiteCredito(type.getDouble("LimiteCredito"));
+							cl.setListPrecio(type.getString("ListaPrecio"));
+							cl.setAviso(type.getString("Aviso"));
+							cl.setIndiceSolvencia(type.getString("IndiceSolvencia"));
+							cl.setCondicionPago(type.getString("CondicionPago"));
+
                             JSONArray strs = type.getJSONArray("ClienteDirecciones");
 
                             rp3.marketforce.models.ClienteDireccion.deleteClienteDireccionIdCliente(db, cl.getIdCliente());

@@ -435,4 +435,8 @@
     <string name="label_finalizar">Finalizar</string>
     <string name="label_gestionando">GESTIONANDO</string>
     <string name="label_google_calendar">Sync Google</string>
+    <string name="message_descarga_secuencias">Descargando secuencias</string>
+    <string name="message_descarga_matrices">Descargando matriz</string>
+    <string name="message_descarga_precios">Descargando libros de precios</string>
+    <string name="label_serie">Serie</string>
 </resources>
