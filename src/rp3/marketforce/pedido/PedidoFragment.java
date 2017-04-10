@@ -65,6 +65,7 @@ import rp3.marketforce.models.pedido.Producto;
 import rp3.marketforce.models.pedido.ProductoCodigo;
 import rp3.marketforce.models.pedido.ProductoPromocion;
 import rp3.marketforce.models.pedido.SecuenciaMatriz;
+import rp3.marketforce.models.pedido.Serie;
 import rp3.marketforce.models.pedido.SubCategoria;
 import rp3.marketforce.ruta.MapaActivity;
 import rp3.marketforce.sync.Agenda;
@@ -254,36 +255,36 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
             pagoNC = Pago.getPagoNC(getDataBase(), ped.getNumeroDocumento());
         }
         if(!mTwoPane){
-            menu.findItem(R.id.action_arqueo_caja).setVisible(isActiveListFragment);
-            menu.findItem(R.id.action_crear_pedido).setVisible(isActiveListFragment && control != null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calApe) == 0 && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA));
+            //menu.findItem(R.id.action_arqueo_caja).setVisible(isActiveListFragment);
+            menu.findItem(R.id.action_crear_pedido).setVisible(isActiveListFragment);
             menu.findItem(R.id.action_sincronizar_productos).setVisible(isActiveListFragment);
-            menu.findItem(R.id.action_cancelar_transaccion).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && control != null && !ped.isTieneNotaCreditoRP3POS() && pagoNC == null
-                    && ref == null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calPed) == 0 && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA) && ped.getTipoDocumento().equalsIgnoreCase("NC"));
-            menu.findItem(R.id.action_anular_pedido).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && control != null && !ped.isTieneNotaCreditoRP3POS() && pagoNC == null
-                    && ref == null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calPed) == 0 && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA));
-            menu.findItem(R.id.action_nota_credito).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && ped.getTipoDocumento().equalsIgnoreCase("FA") && control != null
-                    && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calApe) == 0 && PreferenceManager.getBoolean(Contants.KEY_TRANSACCION_NOTA_CREDITO, true) && !ped.isTieneNotaCreditoRP3POS() && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA));
-            menu.findItem(R.id.action_aperturar_caja).setVisible(isActiveListFragment && control == null && PreferenceManager.getInt(Contants.KEY_ID_CAJA,0) != 0);
-            menu.findItem(R.id.action_cerrar_caja).setVisible(isActiveListFragment && control != null);
+            //menu.findItem(R.id.action_cancelar_transaccion).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && control != null && !ped.isTieneNotaCreditoRP3POS() && pagoNC == null
+            //        && ref == null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calPed) == 0 && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA) && ped.getTipoDocumento().equalsIgnoreCase("NC"));
+            //menu.findItem(R.id.action_anular_pedido).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && control != null && !ped.isTieneNotaCreditoRP3POS() && pagoNC == null
+            //        && ref == null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calPed) == 0 && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA));
+            //menu.findItem(R.id.action_nota_credito).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && ped.getTipoDocumento().equalsIgnoreCase("FA") && control != null
+            //        && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calApe) == 0 && PreferenceManager.getBoolean(Contants.KEY_TRANSACCION_NOTA_CREDITO, true) && !ped.isTieneNotaCreditoRP3POS() && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA));
+            //menu.findItem(R.id.action_aperturar_caja).setVisible(isActiveListFragment && control == null && PreferenceManager.getInt(Contants.KEY_ID_CAJA,0) != 0);
+            //menu.findItem(R.id.action_cerrar_caja).setVisible(isActiveListFragment && control != null);
             menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
-            menu.findItem(R.id.action_ver_pagos).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getTipoDocumento().equalsIgnoreCase("FA"));
-            menu.findItem(R.id.action_reimpresion).setVisible(!isActiveListFragment && selectedClientId!=0 && control != null);
-            menu.findItem(R.id.action_cotización_a_factura).setVisible(!isActiveListFragment && selectedClientId!=0 && control != null && ped.getTipoDocumento().equalsIgnoreCase("CT") && ref == null && PreferenceManager.getBoolean(Contants.KEY_TRANSACCION_FACTURA, true) && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA));
+            //menu.findItem(R.id.action_ver_pagos).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getTipoDocumento().equalsIgnoreCase("FA"));
+            //menu.findItem(R.id.action_reimpresion).setVisible(!isActiveListFragment && selectedClientId!=0 && control != null);
+            menu.findItem(R.id.action_cotización_a_factura).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getTipoDocumento().equalsIgnoreCase("CT") && ref == null && PreferenceManager.getBoolean(Contants.KEY_TRANSACCION_PEDIDO, true));
             //menu.findItem(R.id.action_nota_credito).setVisible(false);
         }
         else{
             //menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
             //menu.findItem(R.id.action_arqueo_caja).setVisible(isActiveListFragment);
-            menu.findItem(R.id.action_crear_pedido).setVisible(control != null && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA));
-            menu.findItem(R.id.action_cancelar_transaccion).setVisible(selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && control != null && !ped.isTieneNotaCreditoRP3POS() && pagoNC == null
-                    && ref == null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calPed) == 0 && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA) && ped.getTipoDocumento().equalsIgnoreCase("NC"));
-            menu.findItem(R.id.action_anular_pedido).setVisible(selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && control != null && ref == null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calPed) == 0 && PreferenceManager.getBoolean(Contants.KEY_TRANSACCION_NOTA_CREDITO, true) && !ped.isTieneNotaCreditoRP3POS() && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA));
-            menu.findItem(R.id.action_nota_credito).setVisible(selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && ped.getTipoDocumento().equalsIgnoreCase("FA") && control != null && !ped.isTieneNotaCreditoRP3POS() && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA));
-            menu.findItem(R.id.action_aperturar_caja).setVisible(control == null && PreferenceManager.getInt(Contants.KEY_ID_CAJA, 0) != 0);
-            menu.findItem(R.id.action_cerrar_caja).setVisible(control != null);
-            menu.findItem(R.id.action_reimpresion).setVisible(selectedClientId != 0 && control != null);
-            menu.findItem(R.id.action_ver_pagos).setVisible(selectedClientId != 0 && ped.getTipoDocumento().equalsIgnoreCase("FA"));
-            menu.findItem(R.id.action_cotización_a_factura).setVisible( selectedClientId != 0 && control != null && ped.getTipoDocumento().equalsIgnoreCase("CT") && PreferenceManager.getBoolean(Contants.KEY_TRANSACCION_FACTURA, true) && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA));
+            //menu.findItem(R.id.action_crear_pedido).setVisible(control != null && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA));
+            //menu.findItem(R.id.action_cancelar_transaccion).setVisible(selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && control != null && !ped.isTieneNotaCreditoRP3POS() && pagoNC == null
+            //        && ref == null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calPed) == 0 && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA) && ped.getTipoDocumento().equalsIgnoreCase("NC"));
+            //menu.findItem(R.id.action_anular_pedido).setVisible(selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && control != null && ref == null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calPed) == 0 && PreferenceManager.getBoolean(Contants.KEY_TRANSACCION_NOTA_CREDITO, true) && !ped.isTieneNotaCreditoRP3POS() && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA));
+            //menu.findItem(R.id.action_nota_credito).setVisible(selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && ped.getTipoDocumento().equalsIgnoreCase("FA") && control != null && !ped.isTieneNotaCreditoRP3POS() && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA));
+            //menu.findItem(R.id.action_aperturar_caja).setVisible(control == null && PreferenceManager.getInt(Contants.KEY_ID_CAJA, 0) != 0);
+            //menu.findItem(R.id.action_cerrar_caja).setVisible(control != null);
+            //menu.findItem(R.id.action_reimpresion).setVisible(selectedClientId != 0 && control != null);
+            //menu.findItem(R.id.action_ver_pagos).setVisible(selectedClientId != 0 && ped.getTipoDocumento().equalsIgnoreCase("FA"));
+            menu.findItem(R.id.action_cotización_a_factura).setVisible( selectedClientId != 0 && ped.getTipoDocumento().equalsIgnoreCase("CT") && PreferenceManager.getBoolean(Contants.KEY_TRANSACCION_PEDIDO, true));
             //menu.findItem(R.id.action_nota_credito).setVisible(false);
 
         }
@@ -293,7 +294,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
-            case R.id.action_arqueo_caja:
+            /*case R.id.action_arqueo_caja:
                 Intent intent = new Intent(getContext(), ArqueoCajaActivity.class);
                 startActivity(intent);
                 break;
@@ -322,7 +323,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                     anulaFragment = AnularTransaccionFragment.newInstance(selectedClientId);
                     showDialogFragment(anulaFragment, "Anular", "Anular Transacción");
                 }
-                break;
+                break;*/
             case R.id.action_cotización_a_factura:
                 if(PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA, -1) != -1) {
                     if(ValidateSecuencia("FA")) {
@@ -342,7 +343,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                     Toast.makeText(this.getContext(), "Su usuario no tiene asignado una caja.", Toast.LENGTH_LONG).show();
                 }
                 break;
-            case R.id.action_nota_credito:
+            /*case R.id.action_nota_credito:
                 if(PreferenceManager.getInt(Contants.KEY_SECUENCIA_NOTA_CREDITO, -1) != -1) {
                     if(ValidateSecuencia("NC")) {
                         Intent intent2 = new Intent(getContext(), CrearPedidoActivity.class);
@@ -360,9 +361,8 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                 {
                     Toast.makeText(this.getContext(), "Su usuario no tiene asignado una caja.", Toast.LENGTH_LONG).show();
                 }
-                break;
+                break;*/
             case R.id.action_crear_pedido:
-                if(PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA, -1) != -1) {
                     AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
 
                     final SimpleGeneralValueAdapter adapter = new SimpleGeneralValueAdapter(this.getContext(), GeneralValue.getGeneralValues(getDataBase(), Contants.GENERAL_TABLE_TIPOS_TRANSACCION, "NC"));
@@ -374,16 +374,8 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     if(PreferenceManager.getBoolean(adapter.getGeneralValue(which).getCode(), true)) {
-                                        if(ValidateSecuencia(adapter.getGeneralValue(which).getCode()))
-                                        {
-                                            Intent intent = new Intent(getContext(), CrearPedidoActivity.class);
-                                            intent.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, adapter.getGeneralValue(which).getCode());
-                                            startActivity(intent);
-                                        }
-                                        else
-                                        {
-                                            Toast.makeText(getContext(), "Número de documento de transacción ya existe. Por favor, comunicarse con el administrador del sistema.", Toast.LENGTH_LONG).show();
-                                        }
+                                        PedidoParametrosFragment pedidoParametrosFragment = PedidoParametrosFragment.newInstance(adapter.getGeneralValue(which).getCode());
+                                        showDialogFragment(pedidoParametrosFragment, "Cabecera", adapter.getGeneralValue(which).getValue());
                                     }
                                     else
                                     {
@@ -392,11 +384,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                                 }
                             });
                     builderSingle.show();
-                }
-                else
-                {
-                    Toast.makeText(this.getContext(), "Su usuario no tiene asignado una caja.", Toast.LENGTH_LONG).show();
-                }
+
                 break;
             case R.id.action_sincronizar_productos:
                 if(!ConnectionUtils.isNetAvailable(this.getContext()))
@@ -731,8 +719,33 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
             catch (Exception ex)
             {}
             db.endTransaction();
+            //Series
+            publishProgress(new Integer[]{1, 0, R.string.message_descarga_series});
+            Bundle bundle = Productos.executeSyncSeries(getDataBase());
+            if (bundle != null && bundle.getInt(SyncAdapter.ARG_SYNC_TYPE) == rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS) {
+                try {
+                    JSONArray types = new JSONArray(bundle.getString("Series"));
+                    int length = types.length();
+                    Serie.deleteAll(getDataBase(), Contract.Serie.TABLE_NAME);
+                    for (int i = 0; i < length; i++) {
+                        publishProgress(new Integer[]{length, i, R.string.message_descarga_series});
 
-            publishProgress(new Integer[]{1, 0, R.string.message_descarga_promociones});
+                        JSONObject type = types.getJSONObject(i);
+
+                        Serie serie = new Serie();
+
+                        serie.setSerie(type.getString("IdSerie"));
+                        serie.setGrupoEstadistico(type.getString("IdGrupoEstadistico"));
+                        Serie.insert(getDataBase(), serie);
+                    }
+                } catch (JSONException e) {
+                    return getString(rp3.core.R.string.message_error_sync_connection_http_error);
+                }
+            } else {
+                return getString(rp3.core.R.string.message_error_sync_connection_http_error);
+            }
+
+            /*publishProgress(new Integer[]{1, 0, R.string.message_descarga_promociones});
             Bundle bundle = Productos.executeSyncPromociones(getDataBase());
             if (bundle != null && bundle.getInt(SyncAdapter.ARG_SYNC_TYPE) == rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS) {
                 try {
@@ -762,7 +775,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                 }
             } else {
                 return getString(rp3.core.R.string.message_error_sync_connection_http_error);
-            }
+            }*/
             //Secuencias
             publishProgress(new Integer[]{1, 0, R.string.message_descarga_secuencias});
             bundle = Productos.executeSyncSecuencia(getDataBase());

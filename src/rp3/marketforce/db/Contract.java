@@ -1260,4 +1260,13 @@ public final class Contract {
 		public static final String COLUMN_FECHA_VENCIMIENTO = "FechaVencimiento";
 
 	}
+
+	public static abstract class Serie implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbSerie";
+
+		public static final String COLUMN_ID_SERIE = "IdSerie";
+		public static final String COLUMN_GRUPO_ESTADISTICO = "GrupoEstadistico";
+
+	}
 }

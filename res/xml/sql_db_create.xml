@@ -753,5 +753,12 @@
         FechaVencimiento INTEGER
         )
     </statement>
+    <statement>
+        CREATE TABLE tbSerie(
+        _id INTEGER PRIMARY KEY,
+        IdSerie TEXT,
+        GrupoEstadistico TEXT
+        )
+    </statement>
 
 </sql>

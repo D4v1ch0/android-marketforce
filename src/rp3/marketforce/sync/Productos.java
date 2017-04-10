@@ -337,4 +337,35 @@ public class Productos {
         return resp;
     }
 
+    public static Bundle executeSyncSeries(DataBase db){
+        Bundle resp = new Bundle();
+        WebService webService = new WebService("MartketForce","GetSeries");
+        try
+        {
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED) {
+                    resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE, rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR);
+                }
+                resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_HTTP_ERROR);
+                return resp;
+            } catch (Exception e) {
+                resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_ERROR);
+                return resp;
+            }
+
+            JSONArray types = webService.getJSONArrayResponse();
+            resp.putString("Series", types.toString());
+            resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS);
+
+            //rp3.marketforce.models.pedido.Producto.deleteAll(db, Contract.Canal.TABLE_NAME);
+        }finally{
+            webService.close();
+        }
+        return resp;
+    }
+
 }

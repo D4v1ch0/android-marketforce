@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -36,6 +37,7 @@ import java.util.List;
 
 import rp3.app.BaseFragment;
 import rp3.content.SimpleGeneralValueAdapter;
+import rp3.data.models.GeneralValue;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
@@ -63,18 +65,8 @@ public class PedidoParametrosFragment extends BaseFragment{
     private ArrayList<String> list_nombres;
     private List<Cliente> list_cliente;
     private List<Tarea> list_tareas;
-    private TimePicker desdePicker;
-    private Calendar fecha, fecha_hora;
-    private TextView Duracion, TiempoViaje, DesdeText;
-    private int TIME_PICKER_INTERVAL = 5;
-    NumberPicker minutePicker;
-    List<String> displayedValues;
-    SimpleDateFormat format1 = new SimpleDateFormat("HH:mm");
-    private int duracion = 0, tiempo = 0;
-
-    protected boolean mIgnoreEvent;
-    private CaldroidFragment caldroidFragment;
-    private String[] arrayDuracion;
+    private String transaccion;
+    private SimpleGeneralValueAdapter seriesAdapter;
 
     public static PedidoParametrosFragment newInstance(String text) {
         Bundle arguments = new Bundle();
@@ -94,7 +86,9 @@ public class PedidoParametrosFragment extends BaseFragment{
         super.onFragmentCreateView(rootView, savedInstanceState);
 
         String lastText = "";
+        transaccion = getArguments().getString(ARG_TIPO_TRANS);
         list_nombres = new ArrayList<String>();
+        List<String> list_ciudad = new ArrayList<String>();
         if (list_tareas == null)
             list_tareas = new ArrayList<Tarea>();
 
@@ -102,7 +96,6 @@ public class PedidoParametrosFragment extends BaseFragment{
             lastText = cliente_auto.getText().toString();
 
         cliente_auto = (AutoCompleteTextView) rootView.findViewById(R.id.crear_pedido_cliente);
-        fecha_hora = Calendar.getInstance();
 
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -112,6 +105,11 @@ public class PedidoParametrosFragment extends BaseFragment{
             list_nombres.add(cli.getIdExterno() + " - " + cli.getNombreCompleto().trim());
         }
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(), R.layout.spinner_small_text, list_nombres);
+
+        list_ciudad.add("Guayaquil");
+        list_ciudad.add("Quito");
+        final ArrayAdapter<String> ciudadAdapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_spinner_dropdown_item, list_ciudad);
+        ((Spinner) getRootView().findViewById(R.id.crear_pedido_ciudad)).setAdapter(ciudadAdapter);
 
 
         cliente_auto.setAdapter(adapter);
@@ -172,10 +170,22 @@ public class PedidoParametrosFragment extends BaseFragment{
 
             @Override
             public void onClick(View v) {
-                //se crea pedido
+                long idCliente = 0;
+                int position = list_nombres.indexOf(cliente_auto.getText().toString());
+                if (position != -1) {
+                    idCliente = list_cliente.get(position).getID();
+                }
+                Intent intent = new Intent(getContext(), CrearPedidoActivity.class);
+                intent.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, transaccion);
+                intent.putExtra(CrearPedidoActivity.ARG_CLIENTE, idCliente);
+                intent.putExtra(CrearPedidoActivity.ARG_SERIE, seriesAdapter.getCode(((Spinner) getRootView().findViewById(R.id.crear_pedido_serie)).getSelectedItemPosition()));
+                dismiss();
+                startActivity(intent);
             }
         });
 
+        seriesAdapter = new SimpleGeneralValueAdapter(this.getContext(), GeneralValue.getGeneralValues(getDataBase(), Contants.GENERAL_TABLE_SERIES_BERLIN));
+        ((Spinner) getRootView().findViewById(R.id.crear_pedido_serie)).setAdapter(seriesAdapter);
 
     }
     @Override

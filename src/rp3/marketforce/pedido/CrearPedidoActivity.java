@@ -19,13 +19,17 @@ public class CrearPedidoActivity extends BaseActivity {
 
     public static String ARG_TIPO_DOCUMENTO = "tipo_documento";
     public static String ARG_IDPEDIDO = "idcliente";
+    public static String ARG_CLIENTE = "cliente";
+    public static String ARG_SERIE = "serie";
     public static String ARG_IDAGENDA = "idagenda";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         long id_pedido = 0;
         long id_agenda = 0;
+        long id_cliente = 0;
         String tipo = "FA";
+        String serie = "";
         if(getIntent().getExtras() != null && getIntent().getExtras().containsKey(ARG_IDPEDIDO))
         {
             id_pedido = getIntent().getExtras().getLong(ARG_IDPEDIDO);
@@ -37,12 +41,14 @@ public class CrearPedidoActivity extends BaseActivity {
         if(getIntent().getExtras() != null) {
             id_agenda = getIntent().getExtras().getLong(ARG_IDAGENDA, 0);
             tipo = getIntent().getExtras().getString(ARG_TIPO_DOCUMENTO, "FA");
+            id_cliente = getIntent().getExtras().getLong(ARG_CLIENTE, 0);
+            serie = getIntent().getExtras().getString(ARG_SERIE, "");
         }
 
         setHomeAsUpEnabled(true, true);
         setContentView(R.layout.layout_simple_content);
         if (!hasFragment(rp3.core.R.id.content)) {
-            CrearPedidoFragment newFragment = CrearPedidoFragment.newInstance(id_pedido, id_agenda, tipo);
+            CrearPedidoFragment newFragment = CrearPedidoFragment.newInstance(id_pedido, id_agenda, tipo, id_cliente, serie);
             setFragment(rp3.core.R.id.content, newFragment);
         }
     }

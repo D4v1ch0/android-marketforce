@@ -81,6 +81,8 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     private List<Cliente> list_cliente;
 
     public static String ARG_PEDIDO = "cliente";
+    public static String ARG_CLIENTE = "idcliente";
+    public static String ARG_SERIE = "serie";
     public static String ARG_AGENDA = "agenda";
     public static String ARG_TIPO_DOCUMENTO = "tipo_documento";
     public static final int REQUEST_BUSQUEDA = 3;
@@ -106,13 +108,15 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     private Menu menu;
     private PagosListFragment fragment;
 
-    public static CrearPedidoFragment newInstance(long id_pedido, long id_agenda, String tipo)
+    public static CrearPedidoFragment newInstance(long id_pedido, long id_agenda, String tipo, long idCliente, String serie)
     {
         CrearPedidoFragment fragment = new CrearPedidoFragment();
         Bundle args = new Bundle();
         args.putLong(ARG_PEDIDO, id_pedido);
         args.putLong(ARG_AGENDA, id_agenda);
         args.putString(ARG_TIPO_DOCUMENTO, tipo);
+        args.putLong(ARG_CLIENTE, idCliente);
+        args.putString(ARG_SERIE, serie);
         fragment.setArguments(args);
         return fragment;
     }
@@ -490,9 +494,9 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                         android.R.layout.select_dialog_item);
                 //arrayAdapter.add("Desde Código QR");
                 arrayAdapter.add("Desde Búsqueda de Productos");
-                arrayAdapter.add("Desde Categorías");
+                /*arrayAdapter.add("Desde Categorías");
                 arrayAdapter.add("Desde SKU");
-                arrayAdapter.add("Desde Código de Barras");
+                arrayAdapter.add("Desde Código de Barras");*/
 
                 builderSingle.setAdapter(
                         arrayAdapter,
@@ -507,7 +511,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                                         Intent intent = new Intent(getContext(), ProductoListActivity.class);
                                         startActivityForResult(intent, REQUEST_BUSQUEDA);
                                         break;
-                                    case 1:
+                                    /*case 1:
                                         Intent intent2 = new Intent(getContext(), CategoriaActivity.class);
                                         startActivityForResult(intent2, REQUEST_BUSQUEDA);
                                         break;
@@ -517,7 +521,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                                         startActivityForResult(intent3, REQUEST_BUSQUEDA);
                                         break;
                                     case 3:
-                                        showDialogFragment(new CodeReaderFragment(), "Código de Barras", "Código de Barras");
+                                        showDialogFragment(new CodeReaderFragment(), "Código de Barras", "Código de Barras");*/
                                 }
 
                             }
@@ -530,18 +534,10 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
         if (getArguments().containsKey(ARG_TIPO_DOCUMENTO) && !rotated) {
             tipo = getArguments().getString(ARG_TIPO_DOCUMENTO);
-            if (tipo.equalsIgnoreCase("FA"))
-                this.getActivity().setTitle("Factura No. " + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO)), 3) + "-" + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_SERIE)), 3) +
-                        "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA) + 1, 9));
-            if (tipo.equalsIgnoreCase("NC"))
-                this.getActivity().setTitle("Nota de Crédito No. " + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO)), 3) + "-" + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_SERIE)), 3) +
-                        "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_NOTA_CREDITO) + 1, 9));
             if (tipo.equalsIgnoreCase("PD"))
-                this.getActivity().setTitle("Pedido No. " + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO)), 3) + "-" + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_SERIE)), 3) +
-                        "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_PEDIDO) + 1, 9));
+                this.getActivity().setTitle("Nuevo Pedido");
             if (tipo.equalsIgnoreCase("CT"))
-                this.getActivity().setTitle("Cotización No. " + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO)), 3) + "-" + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_SERIE)), 3) +
-                        "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_COTIZACION) + 1, 9));
+                this.getActivity().setTitle("Nueva Cotización");
         }
 
         ((TextView) getRootView().findViewById(R.id.pedido_total)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(0));

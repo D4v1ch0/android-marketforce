@@ -140,14 +140,38 @@ public class Cliente {
 								cl.setTarjeta("");
 
 							//Campos de Berlín
-							cl.setIdExterno(type.getString("IdExterno"));
-							cl.setCanalPartner(type.getString("CanalPartner"));
-							cl.setTipoPartner(type.getString("TipoPartner"));
-							cl.setLimiteCredito(type.getDouble("LimiteCredito"));
-							cl.setListPrecio(type.getString("ListaPrecio"));
-							cl.setAviso(type.getString("Aviso"));
-							cl.setIndiceSolvencia(type.getString("IndiceSolvencia"));
-							cl.setCondicionPago(type.getString("CondicionPago"));
+							if(!type.isNull("IdExterno"))
+								cl.setIdExterno(type.getString("IdExterno"));
+							else
+								cl.setIdExterno("");
+							if(!type.isNull("CanalPartner"))
+								cl.setCanalPartner(type.getString("CanalPartner"));
+							else
+								cl.setCanalPartner("");
+							if(!type.isNull("TipoPartner"))
+								cl.setTipoPartner(type.getString("TipoPartner"));
+							else
+								cl.setTipoPartner("");
+							if(!type.isNull("LimiteCredito"))
+								cl.setLimiteCredito(type.getDouble("LimiteCredito"));
+							else
+								cl.setLimiteCredito(0);
+							if(!type.isNull("ListaPrecio"))
+								cl.setListPrecio(type.getString("ListaPrecio"));
+							else
+								cl.setListPrecio("");
+							if(!type.isNull("Aviso"))
+								cl.setAviso(type.getString("Aviso"));
+							else
+								cl.setAviso("");
+							if(!type.isNull("IndiceSolvencia"))
+								cl.setIndiceSolvencia(type.getString("IndiceSolvencia"));
+							else
+								cl.setIndiceSolvencia("");
+							if(!type.isNull("Tarjeta"))
+								cl.setCondicionPago(type.getString("CondicionPago"));
+							else
+								cl.setCondicionPago("");
 
                             JSONArray strs = type.getJSONArray("ClienteDirecciones");
 
