@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="rp3.auna"
-    android:versionCode="5"
+    android:versionCode="6"
     android:versionName="AUNA">
 
     <uses-sdk
@@ -189,7 +189,7 @@
         <activity android:name="rp3.auna.actividades.SeleccionActivity"></activity>
         <activity android:name="rp3.auna.actividades.GrupoActivity"></activity>
         <activity android:name="rp3.auna.actividades.NumericoActivity" android:theme="@style/ActivityPopupTheme"></activity>
-        <activity android:name="rp3.auna.actividades.CotizacionActivity"></activity>
+        <activity android:name="rp3.auna.actividades.CotizacionActivity" android:screenOrientation="portrait"></activity>
         <activity android:name="rp3.auna.ruta.ReprogramarActivity"></activity>
         <activity android:name="rp3.auna.ruta.CrearVisitaActivity"></activity>
 

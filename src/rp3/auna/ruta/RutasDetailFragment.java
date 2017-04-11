@@ -434,6 +434,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                    });
 
                 ValidateTareas();
+                   RefreshMenu();
 
                    if(PreferenceManager.getBoolean(Contants.KEY_APLICA_MARCACION) && PreferenceManager.getBoolean(Contants.KEY_MODULO_MARCACIONES, true)) {
                        Marcacion ultimaMarcacion = Marcacion.getUltimaMarcacion(getDataBase());
@@ -475,6 +476,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                        setTextViewText(R.id.detail_agenda_observacion, getString(R.string.label_agregue_observacion));
 
                    ValidateTareas();
+                   RefreshMenu();
 
                }
            });
@@ -506,6 +508,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                        agenda = Agenda.getAgendaClienteNull(getDataBase(), idAgenda);
 
                    ValidateTareas();
+                   RefreshMenu();
                }
            });
 		   
@@ -586,6 +589,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                    setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());
 
                    ValidateTareas();
+                   RefreshMenu();
 
                    if (PreferenceManager.getBoolean(Contants.KEY_APLICA_MARCACION) && PreferenceManager.getBoolean(Contants.KEY_MODULO_MARCACIONES, true)) {
                        Marcacion ultimaMarcacion = Marcacion.getUltimaMarcacion(getDataBase());
@@ -901,7 +905,8 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                             showTareaCotizacion(setter);
                         if (setter.getTipoTarea().equalsIgnoreCase("E"))
                             showTareaGrupo(setter);
-                        if (setter.getTipoTarea().equalsIgnoreCase("ADC") && !soloVista && agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO))
+                        if (setter.getTipoTarea().equalsIgnoreCase("ADC") && !soloVista && agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO)
+                                && setter.getEstadoTarea().equalsIgnoreCase("P"))
                             showTareaActualizacion(setter);
                     }
                 }});

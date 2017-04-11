@@ -980,6 +980,11 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
                 Toast.makeText(getContext(), "Falta primer apellido de cliente.", Toast.LENGTH_LONG).show();
                 return false;
             }
+            if(getRootView().findViewById(R.id.cliente_fecha_nacimiento).isEnabled() && cliente.getFechaNacimiento() == null)
+            {
+                Toast.makeText(getContext(), "Debe ingresar una fecha de nacimiento.", Toast.LENGTH_LONG).show();
+                return false;
+            }
             if(getRootView().findViewById(R.id.cliente_fecha_nacimiento).isEnabled() && cliente.getFechaNacimiento().getTime() >= Calendar.getInstance().getTime().getTime())
             {
                 Toast.makeText(getContext(), "Fecha de nacimiento no puede ser mayor a hoy.", Toast.LENGTH_LONG).show();
