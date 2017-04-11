@@ -669,6 +669,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                                 stmtSearch.bindString(2, type.getString("D"));
                                 stmtSearch.bindString(3, type.getString("Ex"));
                                 stmtSearch.bindString(4, type.getString("Ex").trim().replace(" ",""));
+                                stmtSearch.bindString(5, type.getString("GE").trim());
 
                                 stmtSearch.execute();
                                 stmtSearch.clearBindings();
@@ -735,7 +736,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                         Serie serie = new Serie();
 
                         serie.setSerie(type.getString("IdSerie"));
-                        serie.setGrupoEstadistico(type.getString("IdGrupoEstadistico"));
+                        serie.setGrupoEstadistico(type.getString("IdGrupoEstadistico").trim());
                         Serie.insert(getDataBase(), serie);
                     }
                 } catch (JSONException e) {

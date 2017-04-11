@@ -174,13 +174,18 @@ public class PedidoParametrosFragment extends BaseFragment{
                 int position = list_nombres.indexOf(cliente_auto.getText().toString());
                 if (position != -1) {
                     idCliente = list_cliente.get(position).getID();
+                    Intent intent = new Intent(getContext(), CrearPedidoActivity.class);
+                    intent.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, transaccion);
+                    intent.putExtra(CrearPedidoActivity.ARG_CLIENTE, idCliente);
+                    intent.putExtra(CrearPedidoActivity.ARG_SERIE, seriesAdapter.getCode(((Spinner) getRootView().findViewById(R.id.crear_pedido_serie)).getSelectedItemPosition()));
+                    dismiss();
+                    startActivity(intent);
                 }
-                Intent intent = new Intent(getContext(), CrearPedidoActivity.class);
-                intent.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, transaccion);
-                intent.putExtra(CrearPedidoActivity.ARG_CLIENTE, idCliente);
-                intent.putExtra(CrearPedidoActivity.ARG_SERIE, seriesAdapter.getCode(((Spinner) getRootView().findViewById(R.id.crear_pedido_serie)).getSelectedItemPosition()));
-                dismiss();
-                startActivity(intent);
+                else
+                {
+                    Toast.makeText(getContext(), "Debe seleccionar un cliente", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 

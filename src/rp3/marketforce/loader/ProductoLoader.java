@@ -15,16 +15,17 @@ public class ProductoLoader  extends
         rp3.content.SimpleObjectLoader<List<Producto>> {
 
     private DataBase db;
-    private String search;
+    private String search, serie;
     private int idSubCategoria;
     private String tipo;
 
-    public ProductoLoader(Context context, DataBase db, String search, int idSubCategoria, String tipo) {
+    public ProductoLoader(Context context, DataBase db, String search, int idSubCategoria, String tipo, String serie) {
         super(context);
         this.db = db;
         this.search = search;
         this.idSubCategoria = idSubCategoria;
         this.tipo = tipo;
+        this.serie = serie;
     }
 
     @Override
@@ -33,18 +34,18 @@ public class ProductoLoader  extends
 
         if(tipo.equalsIgnoreCase("sku") && search != null)
         {
-            result = Producto.getProductoByCodigoExterno(db, search);
+            result = Producto.getProductoByCodigoExterno(db, search, serie);
         }
         else {
             if (search == null || search.length() <= 0)
                 if (idSubCategoria == -1)
-                    result = Producto.getProductos(db);
+                    result = Producto.getProductos(db, serie);
                 else
-                    result = Producto.getProductos(db, idSubCategoria);
+                    result = Producto.getProductos(db, idSubCategoria, serie);
             else if (idSubCategoria == -1)
-                result = Producto.getProductoSearch(db, search);
+                result = Producto.getProductoSearch(db, search, serie);
             else
-                result = Producto.getProductoSearch(db, search, idSubCategoria);
+                result = Producto.getProductoSearch(db, search, idSubCategoria, serie);
         }
 
         return result;

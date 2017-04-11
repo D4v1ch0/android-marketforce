@@ -100,7 +100,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     private String tipo = "FA";
     private Pedido pedido;
     public ProductFragment productFragment;
-    private String code;
+    private String code, serie;
     private PedidoDetalleAdapter adapter;
     private NumberFormat numberFormat;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -397,6 +397,8 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     @Override
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
+        idCliente = getArguments().getLong(ARG_CLIENTE, 0);
+        serie = getArguments().getString(ARG_SERIE, "");
         cliente_auto = (AutoCompleteTextView) rootView.findViewById(R.id.pedido_cliente);
         list_nombres = new ArrayList<String>();
 
@@ -413,7 +415,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         list_cliente = Cliente.getCliente(getDataBase());
         list_cliente.add(consumidorFinal);
         for (Cliente cli : list_cliente) {
-            list_nombres.add(cli.getNombreCompleto().trim());
+            list_nombres.add(cli.getIdExterno() + " - " + cli.getNombreCompleto().trim());
         }
         //Se agrega Consumidor Final
         //list_nombres.add("Consumidor Final");
@@ -509,6 +511,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                                         break;*/
                                     case 0:
                                         Intent intent = new Intent(getContext(), ProductoListActivity.class);
+                                        intent.putExtra(ProductoListFragment.ARG_SERIE, serie);
                                         startActivityForResult(intent, REQUEST_BUSQUEDA);
                                         break;
                                     /*case 1:
@@ -627,6 +630,26 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
             }
         });
+        if(idCliente != 0)
+        {
+            //Cargo Info de Cliente
+            for(Cliente cli: list_cliente)
+                if(cli.getID() == idCliente)
+                {
+                    cliente_auto.setText(cli.getIdExterno() + " - " + cli.getNombreCompleto());
+                    if(cli.getCorreoElectronico() != null)
+                        ((EditText) getRootView().findViewById(R.id.pedido_email)).setText(cli.getCorreoElectronico());
+                    if(cli.getAviso()!= null && cli.getAviso().trim().length() > 0)
+                    {
+                        //Muestro aviso en el caso que tenga
+                        GeneralValue aviso = GeneralValue.getGeneralValue(getDataBase(), Contants.GENERAL_TABLE_AVISOS_BERLIN, cli.getAviso());
+                        if(aviso != null)
+                            showDialogMessage(aviso.getValue());
+                    }
+                    cliente_auto.setEnabled(false);
+                    ((EditText) getRootView().findViewById(R.id.pedido_email)).setEnabled(false);
+                }
+        }
         if (pedido.getPedidoDetalles() == null)
             pedido.setPedidoDetalles(new ArrayList<PedidoDetalle>());
         if(savedInstanceState != null)

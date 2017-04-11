@@ -1001,6 +1001,7 @@ public final class Contract {
 		public static final String FIELD_DESCRIPCION = Contract.ProductoExt.TABLE_NAME + "_" + Contract.ProductoExt.COLUMN_DESCRIPCION;
 		public static final String FIELD_EXTERNO_1 = Contract.ProductoExt.TABLE_NAME + "_" + Contract.ProductoExt.COLUMN_ID_EXTERNO_1;
 		public static final String FIELD_EXTERNO_2 = Contract.ProductoExt.TABLE_NAME + "_" + Contract.ProductoExt.COLUMN_ID_EXTERNO_2;
+		public static final String FIELD_GRUPO_ESTADISTICO = Contract.ProductoExt.TABLE_NAME + "_" + ProductoExt.COLUMN_GRUPO_ESTADISTICO;
 
 		public static final String QUERY_PRODUCTOS = "Productos";
 		public static final String QUERY_PRODUCTOS_BY_CATEGORIA = "ProductosByCategoria";
@@ -1019,6 +1020,7 @@ public final class Contract {
 		public static final String COLUMN_DESCRIPCION = "Descripcion";
 		public static final String COLUMN_ID_EXTERNO_1 = "IdExterno1";
 		public static final String COLUMN_ID_EXTERNO_2 = "IdExterno2";
+		public static final String COLUMN_GRUPO_ESTADISTICO = "GrupoEstadistico";
 
 		public static final String BULK_INSERT = "ProductoSearchBulkInsert";
 

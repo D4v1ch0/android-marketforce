@@ -33,21 +33,23 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
 
     public static final String ARG_PRODUCTO = "Producto";
     public static final String ARG_BUSQUEDA = "busqueda";
+    public static final String ARG_SERIE = "serie";
 
     private JSONObject jsonObject;
     private LoaderProductos loaderProductos;
     private ProductoAdapter adapter;
     private boolean currentTransactionBoolean;
     private ListView headerList;
-    private String currentTransactionSearch;
+    private String currentTransactionSearch, serie;
     private ProductFragment productFragment;
     private int idSubCategoria = -1;
     private String tipoBusqueda = "default";
 
-    public static ProductoListFragment newInstance(int idCategoria)
+    public static ProductoListFragment newInstance(int idCategoria, String serie)
     {
         Bundle bundle = new Bundle();
         bundle.putInt(CategoriaFragment.ARG_IDCATEGORIA, idCategoria);
+        bundle.putString(ARG_SERIE, serie);
         ProductoListFragment fragment = new ProductoListFragment();
         fragment.setArguments(bundle);
         return fragment;
@@ -83,6 +85,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
         {
             Bundle args = new Bundle();
             args.putString(LoaderProductos.STRING_SEARCH, currentTransactionSearch);
+            args.putString(LoaderProductos.STRING_SERIE, serie);
 
             loaderProductos = new LoaderProductos();
 
@@ -93,6 +96,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
         Bundle args = new Bundle();
         args.putInt(LoaderProductos.INT_CATEGORIA, idSubCategoria);
         args.putString(LoaderProductos.STRING_BUSQUEDA, tipoBusqueda);
+        args.putString(LoaderProductos.STRING_SERIE, serie);
         if(loaderProductos == null)
             loaderProductos = new LoaderProductos();
         executeLoader(0, args, loaderProductos);
@@ -101,6 +105,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
     @Override
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
+        serie = getArguments().getString(ARG_SERIE, "");
         headerList = (ListView) rootView.findViewById(R.id.list_productos);
         headerList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
@@ -154,6 +159,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
                     args.putString(LoaderProductos.STRING_SEARCH, query);
                     args.putInt(LoaderProductos.INT_CATEGORIA, idSubCategoria);
                     args.putString(LoaderProductos.STRING_BUSQUEDA, tipoBusqueda);
+                    args.putString(LoaderProductos.STRING_SERIE, serie);
                     executeLoader(0, args, loaderProductos);
                     return true;
                 }
@@ -167,6 +173,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
                             args.putString(LoaderProductos.STRING_SEARCH, "");
                             args.putInt(LoaderProductos.INT_CATEGORIA, idSubCategoria);
                             args.putString(LoaderProductos.STRING_BUSQUEDA, tipoBusqueda);
+                            args.putString(LoaderProductos.STRING_SERIE, serie);
                             executeLoader(0, args, loaderProductos);
                         } catch (Exception ex) {
 
@@ -226,8 +233,9 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
 
         public static final String STRING_SEARCH = "string_search";
         public static final String STRING_BUSQUEDA = "tipo_busqueda";
+        public static final String STRING_SERIE = "serie";
         public static final String INT_CATEGORIA = "int_categoria";
-        private String Search, tipo;
+        private String Search, tipo, serie;
         private int idSubCategoria;
 
         @Override
@@ -237,7 +245,8 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
             Search = bundle.getString(STRING_SEARCH);
             idSubCategoria = bundle.getInt(INT_CATEGORIA);
             tipo = bundle.getString(STRING_BUSQUEDA);
-            return new ProductoLoader(getActivity(), getDataBase(), Search, idSubCategoria, tipo);
+            serie = bundle.getString(STRING_SERIE);
+            return new ProductoLoader(getActivity(), getDataBase(), Search, idSubCategoria, tipo, serie);
 
         }
 

@@ -33,6 +33,9 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
     private float porcentajeDescuentoOro;
     private int idBeneficio;
 
+    private String idExterno2;
+    private String grupoEstadistico;
+
 
     @Override
     public long getID() {
@@ -167,6 +170,22 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
         this.urlFoto = urlFoto;
     }
 
+    public String getIdExterno2() {
+        return idExterno2;
+    }
+
+    public void setIdExterno2(String idExterno2) {
+        this.idExterno2 = idExterno2;
+    }
+
+    public String getGrupoEstadistico() {
+        return grupoEstadistico;
+    }
+
+    public void setGrupoEstadistico(String grupoEstadistico) {
+        this.grupoEstadistico = grupoEstadistico;
+    }
+
     public int getIdSubCategoria() {
         return idSubCategoria;
     }
@@ -175,11 +194,11 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
         this.idSubCategoria = idSubCategoria;
     }
 
-    public static List<Producto> getProductos(DataBase db){
+    public static List<Producto> getProductos(DataBase db, String serie){
 
         String query = QueryDir.getQuery(Contract.Producto.QUERY_PRODUCTOS);
 
-        Cursor c = db.rawQuery(query);
+        Cursor c = db.rawQuery(query, new String[]{serie});
 
         List<Producto> list = new ArrayList<Producto>();
         while(c.moveToNext()){
@@ -197,17 +216,18 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
             prod.setPrecioDescuento(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_DESCUENTO));
             prod.setPrecioImpuesto(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_IMPUESTO));
             prod.setDescripcion(CursorUtils.getString(c, Contract.Producto.FIELD_DESCRIPCION));
+            prod.setGrupoEstadistico(CursorUtils.getString(c, Contract.Producto.FIELD_EXTERNO_2));
             list.add(prod);
         }
         c.close();
         return list;
     }
 
-    public static List<Producto> getProductos(DataBase db, int idSubCategoria){
+    public static List<Producto> getProductos(DataBase db, int idSubCategoria, String serie){
 
         String query = QueryDir.getQuery(Contract.Producto.QUERY_PRODUCTOS_BY_CATEGORIA);
 
-        Cursor c = db.rawQuery(query, new String[]{ idSubCategoria + ""});
+        Cursor c = db.rawQuery(query, new String[]{ idSubCategoria + "", serie});
 
         List<Producto> list = new ArrayList<Producto>();
         while(c.moveToNext()){
@@ -364,14 +384,14 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
         }
     }
 
-    public static List<Producto> getProductoSearch(DataBase db, String termSearch)
+    public static List<Producto> getProductoSearch(DataBase db, String termSearch, String serie)
     {
         String query = QueryDir.getQuery( Contract.Producto.QUERY_SEARCH );
         //String version = db.getSQLiteVersion();
         //int compare = Convert.versionCompare(version, Contants.SQLITE_VERSION_SEARCH);
         Cursor c = null;
 
-        c = db.rawQuery(query, new String[]{termSearch + "*"});
+        c = db.rawQuery(query, new String[]{termSearch + "*", serie});
 
 
         List<Producto> list = new ArrayList<Producto>();
@@ -396,14 +416,14 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
         return list;
     }
 
-    public static List<Producto> getProductoSearch(DataBase db, String termSearch, int idSubCategoria)
+    public static List<Producto> getProductoSearch(DataBase db, String termSearch, int idSubCategoria, String serie)
     {
         String query = QueryDir.getQuery( Contract.Producto.QUERY_SEARCH_BY_CATEGORIA );
         //String version = db.getSQLiteVersion();
         //int compare = Convert.versionCompare(version, Contants.SQLITE_VERSION_SEARCH);
         Cursor c = null;
 
-        c = db.rawQuery(query, new String[]{termSearch + "*", idSubCategoria + ""});
+        c = db.rawQuery(query, new String[]{termSearch + "*", idSubCategoria + "", serie});
 
 
         List<Producto> list = new ArrayList<Producto>();
@@ -428,14 +448,14 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
         return list;
     }
 
-    public static List<Producto> getProductoByCodigoExterno(DataBase db, String codigoExterno)
+    public static List<Producto> getProductoByCodigoExterno(DataBase db, String codigoExterno, String serie)
     {
         String query = QueryDir.getQuery( Contract.Producto.QUERY_SEARCH_BY_CODIGO_EXTERNO );
         //String version = db.getSQLiteVersion();
         //int compare = Convert.versionCompare(version, Contants.SQLITE_VERSION_SEARCH);
         Cursor c = null;
 
-        c = db.rawQuery(query, new String[]{codigoExterno});
+        c = db.rawQuery(query, new String[]{codigoExterno, serie});
 
 
         List<Producto> list = new ArrayList<Producto>();

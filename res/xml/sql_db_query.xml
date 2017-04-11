@@ -1710,11 +1710,15 @@
         tbProducto.IdBeneficio,
         tbProductoExt.Descripcion AS tbProductoExt_Descripcion,
         tbProductoExt.IdExterno1 AS tbProductoExt_IdExterno1,
-        tbProductoExt.IdExterno2 AS tbProductoExt_IdExterno2
+        tbProductoExt.IdExterno2 AS tbProductoExt_IdExterno2,
+        tbProductoExt.GrupoEstadistico AS tbProductoExt_GrupoEstadistico
         FROM tbProducto
         LEFT JOIN tbProductoExt
         ON tbProducto._id = tbProductoExt.docid
+        INNER JOIN tbSerie
+        ON tbSerie.GrupoEstadistico = tbProductoExt.GrupoEstadistico
         WHERE tbProducto.IdBeneficio &lt;&gt; -1
+        AND tbSerie.IdSerie = ?
         ORDER BY tbProductoExt.Descripcion
         LIMIT 100
     </statement>
@@ -1738,8 +1742,11 @@
         FROM tbProducto
         LEFT JOIN tbProductoExt
         ON tbProducto._id = tbProductoExt.docid
+        INNER JOIN tbSerie
+        ON tbSerie.GrupoEstadistico = tbProductoExt.GrupoEstadistico
         WHERE tbProducto.IdSubCategoria = ?
         AND tbProducto.IdBeneficio &lt;&gt; -1
+        AND tbSerie.IdSerie = ?
         LIMIT 100
     </statement>
     <statement name="ProductoByID">
@@ -1805,8 +1812,9 @@
         (docid,
         Descripcion,
         IdExterno1,
-        IdExterno2)
-        VALUES (?,?,?,?)
+        IdExterno2,
+        GrupoEstadistico)
+        VALUES (?,?,?,?,?)
     </statement>
     <statement name="ProductoCodigoBulkInsert">
         INSERT OR REPLACE INTO tbProductoCodigo
@@ -1841,11 +1849,14 @@
         matchinfo( tbProductoExt ) AS Rank
         FROM tbProductoExt
         WHERE tbProductoExt MATCH ?
-        ORDER BY rank DESC LIMIT 30 OFFSET 0
+        ORDER BY rank DESC
 
         ) AS tbProductoSearch
         ON tbProductoExt.docid = tbProductoSearch.docid
+        INNER JOIN tbSerie
+        ON tbSerie.GrupoEstadistico = tbProductoExt.GrupoEstadistico
         WHERE tbProducto.IdBeneficio &lt;&gt; -1
+        AND tbSerie.IdSerie = ?
         ORDER BY tbProductoExt.Descripcion, tbProductoSearch.Rank DESC
         LIMIT 100
     </statement>
@@ -1876,12 +1887,15 @@
         matchinfo( tbProductoExt ) AS Rank
         FROM tbProductoExt
         WHERE tbProductoExt MATCH ?
-        ORDER BY rank DESC LIMIT 30 OFFSET 0
+        ORDER BY rank DESC
 
         ) AS tbProductoSearch
         ON tbProductoExt.docid = tbProductoSearch.docid
+        INNER JOIN tbSerie
+        ON tbSerie.GrupoEstadistico = tbProductoExt.GrupoEstadistico
         WHERE tbProducto.IdSubCategoria = ?
         AND tbProducto.IdBeneficio &lt;&gt; -1
+        AND tbSerie.IdSerie = ?
         ORDER BY tbProductoExt.Descripcion, tbProductoSearch.Rank DESC
         LIMIT 200
     </statement>
@@ -1905,8 +1919,11 @@
         FROM tbProducto
         LEFT JOIN tbProductoExt
         ON tbProducto._id = tbProductoExt.docid
+        INNER JOIN tbSerie
+        ON tbSerie.GrupoEstadistico = tbProductoExt.GrupoEstadistico
         WHERE tbProducto.CodigoExterno = ?
         AND tbProducto.IdBeneficio &lt;&gt; -1
+        AND tbSerie.IdSerie = ?
     </statement>
     <statement name="ArqueoCajaQuery">
         SELECT 1 as _count,

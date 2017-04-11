@@ -25,9 +25,11 @@ public class ProductoListActivity extends BaseActivity {
 
         int idCategoria = -1;
         String tipo = "default";
+        String serie = "";
         if(getIntent().getExtras() != null) {
             idCategoria = getIntent().getExtras().getInt(CategoriaFragment.ARG_IDCATEGORIA, -1);
             tipo = getIntent().getExtras().getString(ProductoListFragment.ARG_BUSQUEDA, "default");
+            serie = getIntent().getExtras().getString(ProductoListFragment.ARG_SERIE, "");
         }
 
 
@@ -39,7 +41,7 @@ public class ProductoListActivity extends BaseActivity {
             }
             else
             {
-                ProductoListFragment newFragment = ProductoListFragment.newInstance(idCategoria);
+                ProductoListFragment newFragment = ProductoListFragment.newInstance(idCategoria, serie);
                 setFragment(rp3.core.R.id.content, newFragment);
             }
         }

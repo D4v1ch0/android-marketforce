@@ -24,11 +24,11 @@
             android:id="@+id/pedido_cliente"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="0.70"
+            android:background="@android:color/transparent"
             android:ems="10"
             android:hint="@string/hint_nombre_razon_social"
-            android:textSize="@dimen/text_medium_small_size"
-            android:layout_weight="0.70"
-            android:background="@color/caldroid_white" />
+            android:textSize="@dimen/text_medium_small_size" />
 
         <ImageButton
             android:layout_width="0dp"
@@ -69,15 +69,15 @@
             android:textSize="@dimen/text_medium_small_size" />
 
         <EditText
+            android:id="@+id/pedido_email"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:ems="10"
-            android:id="@+id/pedido_email"
             android:layout_weight="0.8"
-            android:background="@color/caldroid_white"
-            android:textSize="@dimen/text_medium_small_size"
-            android:hint="@string/hint_email" />
+            android:background="@android:color/transparent"
+            android:ems="10"
+            android:hint="@string/hint_email"
+            android:inputType="textEmailAddress"
+            android:textSize="@dimen/text_medium_small_size" />
 
     </LinearLayout>
 
