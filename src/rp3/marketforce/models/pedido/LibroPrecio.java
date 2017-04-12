@@ -1,9 +1,17 @@
 package rp3.marketforce.models.pedido;
 
+import android.database.Cursor;
+
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import rp3.data.entity.EntityBase;
+import rp3.db.QueryDir;
+import rp3.db.sqlite.DataBase;
 import rp3.marketforce.db.Contract;
+import rp3.util.CursorUtils;
 
 /**
  * Created by magno_000 on 06/04/2017.
@@ -19,6 +27,9 @@ public class LibroPrecio extends EntityBase<LibroPrecio> {
     private String medida;
     private Date fechaEfectiva;
     private Date fechaVencimiento;
+    private double valorEscalado;
+    private int tipoEscalado;
+    private String libroEstandar;
 
 
     @Override
@@ -97,6 +108,30 @@ public class LibroPrecio extends EntityBase<LibroPrecio> {
         this.fechaVencimiento = fechaVencimiento;
     }
 
+    public double getValorEscalado() {
+        return valorEscalado;
+    }
+
+    public void setValorEscalado(double valorEscalado) {
+        this.valorEscalado = valorEscalado;
+    }
+
+    public int getTipoEscalado() {
+        return tipoEscalado;
+    }
+
+    public void setTipoEscalado(int tipoEscalado) {
+        this.tipoEscalado = tipoEscalado;
+    }
+
+    public String getLibroEstandar() {
+        return libroEstandar;
+    }
+
+    public void setLibroEstandar(String libroEstandar) {
+        this.libroEstandar = libroEstandar;
+    }
+
     @Override
     public void setValues() {
         setValue(Contract.LibroPrecio.COLUMN_FECHA_EFECTIVA, this.fechaEfectiva);
@@ -106,6 +141,9 @@ public class LibroPrecio extends EntityBase<LibroPrecio> {
         setValue(Contract.LibroPrecio.COLUMN_ITEM, this.item);
         setValue(Contract.LibroPrecio.COLUMN_MEDIDA, this.medida);
         setValue(Contract.LibroPrecio.COLUMN_PRECIO, this.precio);
+        setValue(Contract.LibroPrecio.COLUMN_VALOR_ESCALADO, this.valorEscalado);
+        setValue(Contract.LibroPrecio.COLUMN_TIPO_ESCALADO, this.tipoEscalado);
+        setValue(Contract.LibroPrecio.COLUMN_LIBRO_ESTANDAR, this.libroEstandar);
     }
 
     @Override
@@ -118,18 +156,31 @@ public class LibroPrecio extends EntityBase<LibroPrecio> {
         return item;
     }
 
-    /*public static List<Banco> getBancos(DataBase db) {
-        Cursor c = db.query(Contract.Banco.TABLE_NAME, new String[] {Contract.Banco._ID, Contract.Banco.COLUMN_ID_BANCO, Contract.Banco.COLUMN_DESCRIPCION});
+    public static LibroPrecio getPrecio(DataBase db, String item, String cliente, String listaPrecio) {
+        String query = QueryDir.getQuery(Contract.LibroPrecio.QUERY_LIBRO_PRECIO);
+        Calendar cal = Calendar.getInstance();
 
-        List<Banco> list = new ArrayList<Banco>();
+        Cursor c = db.rawQuery(query, new String[]{item, cliente, listaPrecio, cal.getTimeInMillis() + "", cal.getTimeInMillis() + ""} );
+
+        LibroPrecio precio = new LibroPrecio();
         while(c.moveToNext()){
-            Banco banco = new Banco();
-            banco.setID(CursorUtils.getInt(c, Contract.Banco._ID));
-            banco.setIdBanco(CursorUtils.getInt(c, Contract.Banco.COLUMN_ID_BANCO));
-            banco.setDescripcion(CursorUtils.getString(c, Contract.Banco.COLUMN_DESCRIPCION));
-            list.add(banco);
+            precio.setItem(CursorUtils.getString(c, Contract.LibroPrecio.COLUMN_ITEM));
+            precio.setPrecio(CursorUtils.getDouble(c, Contract.LibroPrecio.COLUMN_PRECIO));
         }
         c.close();
-        return list;
-    }*/
+
+        if(precio.getItem() == null)
+        {
+            query = QueryDir.getQuery(Contract.LibroPrecio.QUERY_LIBRO_PRECIO_ESTANDAR);
+
+            Cursor d = db.rawQuery(query, new String[]{item} );
+
+            while(d.moveToNext()){
+                precio.setItem(CursorUtils.getString(d, Contract.LibroPrecio.COLUMN_ITEM));
+                precio.setPrecio(CursorUtils.getDouble(d, Contract.LibroPrecio.COLUMN_PRECIO));
+            }
+            d.close();
+        }
+        return precio;
+    }
 }

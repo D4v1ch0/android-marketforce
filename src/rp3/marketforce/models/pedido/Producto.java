@@ -32,6 +32,10 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
     private float porcentajeDescuento;
     private float porcentajeDescuentoOro;
     private int idBeneficio;
+    private String aplicacion;
+    private String grupoComision;
+    private String linea;
+    private String familia;
 
     private String idExterno2;
     private String grupoEstadistico;
@@ -194,6 +198,38 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
         this.idSubCategoria = idSubCategoria;
     }
 
+    public String getAplicacion() {
+        return aplicacion;
+    }
+
+    public void setAplicacion(String aplicacion) {
+        this.aplicacion = aplicacion;
+    }
+
+    public String getGrupoComision() {
+        return grupoComision;
+    }
+
+    public void setGrupoComision(String grupoComision) {
+        this.grupoComision = grupoComision;
+    }
+
+    public String getLinea() {
+        return linea;
+    }
+
+    public void setLinea(String linea) {
+        this.linea = linea;
+    }
+
+    public String getFamilia() {
+        return familia;
+    }
+
+    public void setFamilia(String familia) {
+        this.familia = familia;
+    }
+
     public static List<Producto> getProductos(DataBase db, String serie){
 
         String query = QueryDir.getQuery(Contract.Producto.QUERY_PRODUCTOS);
@@ -273,6 +309,10 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
             prod.setPrecioDescuento(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_DESCUENTO));
             prod.setPrecioImpuesto(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_IMPUESTO));
             prod.setDescripcion(CursorUtils.getString(c, Contract.Producto.FIELD_DESCRIPCION));
+            prod.setAplicacion(CursorUtils.getString(c, Contract.Producto.COLUMN_APLICACION));
+            prod.setGrupoComision(CursorUtils.getString(c, Contract.Producto.COLUMN_GRUPO_COMISION));
+            prod.setLinea(CursorUtils.getString(c, Contract.Producto.COLUMN_LINEA));
+            prod.setFamilia(CursorUtils.getString(c, Contract.Producto.COLUMN_FAMILIA));
         }
         c.close();
         return prod;

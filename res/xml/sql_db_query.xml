@@ -1763,6 +1763,10 @@
         tbProducto.PorcentajeImpuesto,
         tbProducto.PrecioConImpuesto,
         tbProducto.IdBeneficio,
+        tbProducto.GrupoComision,
+        tbProducto.Familia,
+        tbProducto.Linea,
+        tbProducto.Aplicacion,
         tbProductoExt.Descripcion AS tbProductoExt_Descripcion
         FROM tbProducto
         LEFT JOIN tbProductoExt
@@ -1804,8 +1808,12 @@
         PrecioConDescuento,
         PorcentajeImpuesto,
         PrecioConImpuesto,
-        IdBeneficio)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
+        IdBeneficio,
+        GrupoComision,
+        Familia,
+        Linea,
+        Aplicacion)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
     </statement>
     <statement name="ProductoSearchBulkInsert">
         INSERT OR REPLACE INTO tbProductoExt
@@ -2394,7 +2402,37 @@
         Precio,
         Medida,
         FechaEfectiva,
-        FechaVencimiento)
-        VALUES (?,?,?,?,?,?,?,?)
+        FechaVencimiento,
+        ValorEscalado,
+        TipoEscalado,
+        LibroEstandar)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?)
+    </statement>
+    <statement name="LibroPrecio">
+        SELECT
+        tbLibroPrecio.Item,
+        tbLibroPrecio.Precio
+        from tbLibroPrecio
+        INNER JOIN tbMatrizPrecio
+        ON tbMatrizPrecio.IdLibro = tbLibroPrecio.IdLibro
+        INNER JOIN tbSecuenciaMatriz
+        ON tbSecuenciaMatriz.Matriz = tbMatrizPrecio.IdMatriz
+        where tbLibroPrecio.Item = ?
+        AND (tbMatrizPrecio.IdCliente = ? OR tbMatrizPrecio.IdCliente = '')
+        AND (tbMatrizPrecio.IdListaPrecio = ? OR tbMatrizPrecio.IdListaPrecio = '')
+        AND (tbLibroPrecio.FechaVencimiento = 18000000 OR tbLibroPrecio.FechaVencimiento &gt; ?)
+        AND (tbLibroPrecio.FechaEfectiva &lt; ?)
+        ORDER BY tbLibroPrecio.FechaEfectiva DESC, tbMatrizPrecio.Secuencia, tbSecuenciaMatriz.IdJerarquia
+        LIMIT 1
+    </statement>
+    <statement name="LibroPrecioEstandar">
+        SELECT
+        tbLibroPrecio.Item,
+        tbLibroPrecio.Precio
+        from tbLibroPrecio
+        WHERE item = ?
+        AND LibroEstandar = 'S'
+        ORDER BY tbLibroPrecio.FechaEfectiva DESC
+        LIMIT 1
     </statement>
 </sql>

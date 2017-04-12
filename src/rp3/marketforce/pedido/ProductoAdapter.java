@@ -65,7 +65,8 @@ public class ProductoAdapter extends BaseAdapter {
             impuesto = "*";
 
         ((TextView) convertView.findViewById(R.id.producto_descripcion)).setText(producto.getDescripcion() + impuesto);
-        ((TextView) convertView.findViewById(R.id.producto_precio)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(producto.getValorUnitario()));
+        //((TextView) convertView.findViewById(R.id.producto_precio)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(producto.getValorUnitario()));
+        ((TextView) convertView.findViewById(R.id.producto_precio)).setText("");
         ((TextView) convertView.findViewById(R.id.producto_codigo)).setText(producto.getCodigoExterno());
 
         return convertView;

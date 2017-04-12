@@ -568,7 +568,11 @@
         PrecioConDescuento REAL,
         PorcentajeImpuesto REAL,
         PrecioConImpuesto REAL,
-        IdBeneficio INTEGER
+        IdBeneficio INTEGER,
+        GrupoComision TEXT,
+        Familia TEXT,
+        Linea TEXT,
+        Aplicacion TEXT
         )
     </statement>
     <statement>
@@ -729,7 +733,10 @@
         Precio REAL,
         Medida TEXT,
         FechaEfectiva INTEGER,
-        FechaVencimiento INTEGER
+        FechaVencimiento INTEGER,
+        ValorEscalado REAL,
+        TipoEscalado INTEGER,
+        LibroEstandar TEXT
         )
     </statement>
     <statement>

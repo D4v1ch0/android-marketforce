@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import org.json.JSONObject;
 
@@ -22,6 +23,8 @@ import java.util.List;
 import rp3.app.BaseFragment;
 import rp3.marketforce.R;
 import rp3.marketforce.loader.ProductoLoader;
+import rp3.marketforce.models.Cliente;
+import rp3.marketforce.models.pedido.LibroPrecio;
 import rp3.marketforce.models.pedido.PedidoDetalle;
 import rp3.marketforce.models.pedido.Producto;
 import rp3.marketforce.models.pedido.ProductoPromocion;
@@ -34,6 +37,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
     public static final String ARG_PRODUCTO = "Producto";
     public static final String ARG_BUSQUEDA = "busqueda";
     public static final String ARG_SERIE = "serie";
+    public static final String ARG_CLIENTE = "cliente";
 
     private JSONObject jsonObject;
     private LoaderProductos loaderProductos;
@@ -43,13 +47,15 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
     private String currentTransactionSearch, serie;
     private ProductFragment productFragment;
     private int idSubCategoria = -1;
+    private long idCliente;
     private String tipoBusqueda = "default";
 
-    public static ProductoListFragment newInstance(int idCategoria, String serie)
+    public static ProductoListFragment newInstance(int idCategoria, String serie, long idCliente)
     {
         Bundle bundle = new Bundle();
         bundle.putInt(CategoriaFragment.ARG_IDCATEGORIA, idCategoria);
         bundle.putString(ARG_SERIE, serie);
+        bundle.putLong(ARG_CLIENTE, idCliente);
         ProductoListFragment fragment = new ProductoListFragment();
         fragment.setArguments(bundle);
         return fragment;
@@ -106,6 +112,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
         serie = getArguments().getString(ARG_SERIE, "");
+        idCliente = getArguments().getLong(ARG_CLIENTE, 0);
         headerList = (ListView) rootView.findViewById(R.id.list_productos);
         headerList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
@@ -267,35 +274,42 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
                 public void onItemClick(AdapterView<?> parent,
                                         View view, int position, long id) {
                     Producto prod = adapter.getItem(position);
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("d", prod.getDescripcion());
-                        jsonObject.put("p", prod.getValorUnitario());
-                        jsonObject.put("id", prod.getIdProducto());
-                        jsonObject.put("f", prod.getUrlFoto());
-                        jsonObject.put("ce", prod.getCodigoExterno());
-                        jsonObject.put("b", prod.getIdBeneficio());
-                        jsonObject.put("pdo", prod.getPorcentajeDescuentoOro() + "");
-                        ProductoPromocion productoPromocion = ProductoPromocion.getProductoPromocion(getDataBase(), prod.getIdProducto());
-                        if(productoPromocion == null) {
-                            jsonObject.put("pd", 0 + "");
-                            jsonObject.put("ib", 0 + "");
-                        }
-                        else {
-                            jsonObject.put("pd", productoPromocion.getPorcentajeDescuento() + "");
-                            jsonObject.put("ib", productoPromocion.getIdBeneficio() + "");
-                        }
-                        jsonObject.put("pi", prod.getPorcentajeImpuesto());
-                        jsonObject.put("vd", prod.getPrecioDescuento());
-                        jsonObject.put("vi", prod.getPrecioImpuesto());
+                    prod = Producto.getProductoID(getDataBase(), prod.getID());
+                    Cliente cliente = Cliente.getClienteID(getDataBase(), idCliente, false);
+                    LibroPrecio precio = LibroPrecio.getPrecio(getDataBase(), prod.getCodigoExterno(), cliente.getIdExterno(), cliente.getListPrecio());
+                    if(precio.getPrecio() > 0) {
+                        try {
+                            JSONObject jsonObject = new JSONObject();
+                            jsonObject.put("d", prod.getDescripcion());
+                            jsonObject.put("p", precio.getPrecio());
+                            jsonObject.put("id", prod.getIdProducto());
+                            jsonObject.put("f", prod.getUrlFoto());
+                            jsonObject.put("ce", prod.getCodigoExterno());
+                            jsonObject.put("b", prod.getIdBeneficio());
+                            jsonObject.put("pdo", prod.getPorcentajeDescuentoOro() + "");
+                            ProductoPromocion productoPromocion = ProductoPromocion.getProductoPromocion(getDataBase(), prod.getIdProducto());
+                            if (productoPromocion == null) {
+                                jsonObject.put("pd", 0 + "");
+                                jsonObject.put("ib", 0 + "");
+                            } else {
+                                jsonObject.put("pd", productoPromocion.getPorcentajeDescuento() + "");
+                                jsonObject.put("ib", productoPromocion.getIdBeneficio() + "");
+                            }
+                            jsonObject.put("pi", prod.getPorcentajeImpuesto());
+                            jsonObject.put("vd", precio.getPrecio());
+                            jsonObject.put("vi", precio.getPrecio());
+                            jsonObject.put("a", prod.getAplicacion());
 
-                        productFragment = ProductFragment.newInstance(jsonObject.toString());
-                        productFragment.setCancelable(false);
-                        showDialogFragment(productFragment, "Producto", "Editar Producto");
+                            productFragment = ProductFragment.newInstance(jsonObject.toString());
+                            productFragment.setCancelable(false);
+                            showDialogFragment(productFragment, "Producto", "Editar Producto");
+                        } catch (Exception ex) {
+
+                        }
                     }
-                    catch (Exception ex)
+                    else
                     {
-
+                        Toast.makeText(getContext(), "El producto debe tener precio para poder ingresar el registro", Toast.LENGTH_LONG).show();
                     }
 
                 }

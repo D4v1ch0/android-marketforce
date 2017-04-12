@@ -997,6 +997,10 @@ public final class Contract {
 		public static final String COLUMN_PORCENTAJE_IMPUESTO = "PorcentajeImpuesto";
 		public static final String COLUMN_PORCENTAJE_DESCUENTO = "PorcentajeDescuento";
 		public static final String COLUMN_ID_BENEFICIO = "IdBeneficio";
+		public static final String COLUMN_FAMILIA = "Familia";
+		public static final String COLUMN_LINEA = "Linea";
+		public static final String COLUMN_GRUPO_COMISION= "GrupoComision";
+		public static final String COLUMN_APLICACION = "Aplicacion";
 
 		public static final String FIELD_DESCRIPCION = Contract.ProductoExt.TABLE_NAME + "_" + Contract.ProductoExt.COLUMN_DESCRIPCION;
 		public static final String FIELD_EXTERNO_1 = Contract.ProductoExt.TABLE_NAME + "_" + Contract.ProductoExt.COLUMN_ID_EXTERNO_1;
@@ -1232,8 +1236,13 @@ public final class Contract {
 		public static final String COLUMN_MEDIDA = "Medida";
 		public static final String COLUMN_FECHA_EFECTIVA = "FechaEfectiva";
 		public static final String COLUMN_FECHA_VENCIMIENTO = "FechaVencimiento";
+		public static final String COLUMN_VALOR_ESCALADO = "ValorEscalado";
+		public static final String COLUMN_TIPO_ESCALADO = "TipoEscalado";
+		public static final String COLUMN_LIBRO_ESTANDAR = "LibroEstandar";
 
 		public static final String BULK_INSERT = "LibroPrecioBulkInsert";
+        public static final String QUERY_LIBRO_PRECIO = "LibroPrecio";
+        public static final String QUERY_LIBRO_PRECIO_ESTANDAR = "LibroPrecioEstandar";
 
 	}
 

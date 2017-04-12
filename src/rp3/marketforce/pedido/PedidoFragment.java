@@ -664,6 +664,13 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                                 stmt.bindDouble(10, Float.parseFloat(type.getString("PI")));
                                 stmt.bindDouble(11, Float.parseFloat(type.getString("PCI")));
                                 stmt.bindLong(12, type.getInt("B"));
+                                stmt.bindString(13, type.getString("GC"));
+                                stmt.bindString(14, type.getString("F"));
+                                stmt.bindString(15, type.getString("L"));
+                                if (!type.isNull("A"))
+                                    stmt.bindString(16, type.getString("A"));
+                                else
+                                    stmt.bindString(16, "(Sin Descripción)");
 
                                 stmtSearch.bindLong(1, descargados - 1);
                                 stmtSearch.bindString(2, type.getString("D"));
@@ -819,9 +826,9 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
 
                         MatrizPrecio matrizPrecio = new MatrizPrecio();
 
-                        matrizPrecio.setIdCliente(type.getString("IC"));
+                        matrizPrecio.setIdCliente(type.getString("IC").trim());
                         matrizPrecio.setIdLibro(type.getString("IL"));
-                        matrizPrecio.setIdListaPrecio(type.getString("ILP"));
+                        matrizPrecio.setIdListaPrecio(type.getString("ILP").trim());
                         matrizPrecio.setIdMatriz(type.getString("IM"));
                         matrizPrecio.setParametroDesc(type.getInt("P"));
                         matrizPrecio.setSecuencia(type.getInt("S"));
@@ -879,6 +886,9 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                             stmt.bindString(6, type.getString("M"));
                             stmt.bindLong(7, Convert.getDateFromDotNetTicks(type.getLong("ET")).getTime());
                             stmt.bindLong(8, Convert.getDateFromDotNetTicks(type.getLong("VT")).getTime());
+                            stmt.bindDouble(9, Float.parseFloat(type.getString("VE")));
+                            stmt.bindLong(10, type.getInt("T"));
+                            stmt.bindString(11, type.getString("L"));
 
                             stmt.execute();
                             stmt.clearBindings();

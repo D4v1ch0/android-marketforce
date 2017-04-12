@@ -103,7 +103,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     private String code, serie;
     private PedidoDetalleAdapter adapter;
     private NumberFormat numberFormat;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyyHHmmss");
     double descuentos = 0, subtotal = 0, valorTotal = 0, impuestos = 0, base0 = 0, baseImponible = 0, redondeo = 0, neto = 0;
     private Menu menu;
     private PagosListFragment fragment;
@@ -227,7 +227,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         if(tipo.equalsIgnoreCase("NC"))
             docRef = Pedido.getPedido(getDataBase(), pedido.get_idDocumentoRef(), true);
 
-        if (idCliente == 0)
+        if (pedido.getID() == 0)
             pedido.setFechaCreacion(Calendar.getInstance().getTime());
 
         if(!cliente_auto.getText().toString().equalsIgnoreCase("Consumidor Final"))
@@ -243,7 +243,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         pedido.set_idAgenda((int) idAgenda);
 
         ControlCaja control = ControlCaja.getControlCajaActiva(getDataBase());
-        pedido.set_idControlCaja(control.getID());
+        //pedido.set_idControlCaja(control.getID());
         pedido.setNombre(cliente_auto.getText().toString());
 
         pedido.setTipoDocumento(tipo);
@@ -256,12 +256,10 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                     "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_NOTA_CREDITO) + 1, 9));
         }
         if (tipo.equalsIgnoreCase("PD")) {
-            pedido.setNumeroDocumento(getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO)), 3) + "-" + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_SERIE)), 3) +
-                    "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_PEDIDO) + 1, 9));
+            pedido.setNumeroDocumento("PD" + dateFormat.format(Calendar.getInstance().getTime()));
         }
         if (tipo.equalsIgnoreCase("CT")) {
-            pedido.setNumeroDocumento(getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO)), 3) + "-" + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_SERIE)), 3) +
-                    "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_COTIZACION) + 1, 9));
+            pedido.setNumeroDocumento("CT" + dateFormat.format(Calendar.getInstance().getTime()));
         }
 
 
@@ -471,13 +469,13 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             });
         }
 
-        rootView.findViewById(R.id.pedido_crear_cliente).setOnClickListener(new View.OnClickListener() {
+        /*rootView.findViewById(R.id.pedido_crear_cliente).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), CrearClienteActivity.class);
                 startActivityForResult(intent, REQUEST_CLIENTE);
             }
-        });
+        });*/
 
         ((ImageView) rootView.findViewById(R.id.actividad_voice_to_text)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -489,49 +487,10 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         ((Button) rootView.findViewById(R.id.pedido_agregar_producto)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
-
-                final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                        getContext(),
-                        android.R.layout.select_dialog_item);
-                //arrayAdapter.add("Desde Código QR");
-                arrayAdapter.add("Desde Búsqueda de Productos");
-                /*arrayAdapter.add("Desde Categorías");
-                arrayAdapter.add("Desde SKU");
-                arrayAdapter.add("Desde Código de Barras");*/
-
-                builderSingle.setAdapter(
-                        arrayAdapter,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                switch (which) {
-                                    /*case 0:
-                                        scanQR();
-                                        break;*/
-                                    case 0:
-                                        Intent intent = new Intent(getContext(), ProductoListActivity.class);
-                                        intent.putExtra(ProductoListFragment.ARG_SERIE, serie);
-                                        startActivityForResult(intent, REQUEST_BUSQUEDA);
-                                        break;
-                                    /*case 1:
-                                        Intent intent2 = new Intent(getContext(), CategoriaActivity.class);
-                                        startActivityForResult(intent2, REQUEST_BUSQUEDA);
-                                        break;
-                                    case 2:
-                                        Intent intent3 = new Intent(getContext(), ProductoListActivity.class);
-                                        intent3.putExtra(ProductoListFragment.ARG_BUSQUEDA, "sku");
-                                        startActivityForResult(intent3, REQUEST_BUSQUEDA);
-                                        break;
-                                    case 3:
-                                        showDialogFragment(new CodeReaderFragment(), "Código de Barras", "Código de Barras");*/
-                                }
-
-                            }
-                        });
-                builderSingle.setTitle("Agregar Producto");
-                builderSingle.show();
-
+                Intent intent = new Intent(getContext(), ProductoListActivity.class);
+                intent.putExtra(ProductoListFragment.ARG_SERIE, serie);
+                intent.putExtra(ProductoListFragment.ARG_CLIENTE, idCliente);
+                startActivityForResult(intent, REQUEST_BUSQUEDA);
             }
         });
 

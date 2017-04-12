@@ -24,12 +24,14 @@ public class ProductoListActivity extends BaseActivity {
         setHomeAsUpEnabled(true, true);
 
         int idCategoria = -1;
+        long idCliente = 0;
         String tipo = "default";
         String serie = "";
         if(getIntent().getExtras() != null) {
             idCategoria = getIntent().getExtras().getInt(CategoriaFragment.ARG_IDCATEGORIA, -1);
             tipo = getIntent().getExtras().getString(ProductoListFragment.ARG_BUSQUEDA, "default");
             serie = getIntent().getExtras().getString(ProductoListFragment.ARG_SERIE, "");
+            idCliente = getIntent().getExtras().getLong(ProductoListFragment.ARG_CLIENTE, 0);
         }
 
 
@@ -41,7 +43,7 @@ public class ProductoListActivity extends BaseActivity {
             }
             else
             {
-                ProductoListFragment newFragment = ProductoListFragment.newInstance(idCategoria, serie);
+                ProductoListFragment newFragment = ProductoListFragment.newInstance(idCategoria, serie, idCliente);
                 setFragment(rp3.core.R.id.content, newFragment);
             }
         }
