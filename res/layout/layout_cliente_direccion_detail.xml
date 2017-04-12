@@ -153,13 +153,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="@string/label_ciudad"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp"
-                    android:textSize="@dimen/text_medium_size"
                     android:background="@color/caldroid_transparent"
+                    android:hint="@string/label_ciudad_distrito"
+                    android:paddingBottom="10dp"
                     android:paddingLeft="15dp"
-                    android:paddingRight="10dp" />
+                    android:paddingRight="10dp"
+                    android:paddingTop="10dp"
+                    android:textSize="@dimen/text_medium_size" />
 
             </LinearLayout>
 

@@ -138,8 +138,7 @@ public class Cotizacion extends rp3.data.entity.EntityBase<Cotizacion> {
         Cursor c = db.query(Contract.Cotizacion.TABLE_NAME, new String[] {Contract.Cotizacion._ID, Contract.Cotizacion.COLUMN_AGENDA_ID,
                         Contract.Cotizacion.COLUMN_PARAMETROS, Contract.Cotizacion.COLUMN_RUTA_ID, Contract.Cotizacion.COLUMN_AGENDA_ID_EXT,
                         Contract.Cotizacion.COLUMN_TAREA_ID, Contract.Cotizacion.COLUMN_RESPONSE, Contract.Cotizacion.COLUMN_OPCION, Contract.Cotizacion.COLUMN_VALOR},
-                Contract.Cotizacion.COLUMN_AGENDA_ID + " = ? AND " +
-                        Contract.Cotizacion.COLUMN_RUTA_ID + " = ? ", new String[] { idAgenda + "", idRuta + ""});
+                Contract.Cotizacion.COLUMN_AGENDA_ID + " = ?  ", new String[] { idAgenda + ""});
 
 
         Cotizacion cotizacion = new Cotizacion();
@@ -165,8 +164,7 @@ public class Cotizacion extends rp3.data.entity.EntityBase<Cotizacion> {
         Cursor c = db.query(Contract.Cotizacion.TABLE_NAME, new String[] {Contract.Cotizacion._ID, Contract.Cotizacion.COLUMN_AGENDA_ID,
                         Contract.Cotizacion.COLUMN_PARAMETROS, Contract.Cotizacion.COLUMN_RUTA_ID, Contract.Cotizacion.COLUMN_AGENDA_ID_EXT,
                         Contract.Cotizacion.COLUMN_TAREA_ID, Contract.Cotizacion.COLUMN_RESPONSE, Contract.Cotizacion.COLUMN_OPCION, Contract.Cotizacion.COLUMN_VALOR},
-                Contract.Cotizacion.COLUMN_AGENDA_ID_EXT + " = ? AND " +
-                        Contract.Cotizacion.COLUMN_RUTA_ID + " = ? ", new String[] { idAgenda + "", idRuta + ""});
+                Contract.Cotizacion.COLUMN_AGENDA_ID_EXT + " = ? ", new String[] { idAgenda + ""});
 
 
         Cotizacion cotizacion = new Cotizacion();

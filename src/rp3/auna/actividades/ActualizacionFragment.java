@@ -321,13 +321,19 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
             act.setIdRuta(agd.getIdRuta());
             act.setIdTareaActividad(1);
             act.set_idAgenda(agd.getID());
-            AgendaTareaActividades.insert(getDataBase(), act);
-        }
-
-        act.setResultado("Venta Realizada\n" + " - Forma de Pago: " + ((GeneralValue)((Spinner)getRootView().findViewById(R.id.cliente_forma_pago)).getSelectedItem()).getValue() + "\n"
+            act.setResultado("Venta Realizada\n" + " - Forma de Pago: " + ((GeneralValue)((Spinner)getRootView().findViewById(R.id.cliente_forma_pago)).getSelectedItem()).getValue() + "\n"
                     + " - Solicitud: " + ((EditText) getRootView().findViewById(R.id.cliente_solicitud)).getText().toString() + "\n"
                     + " - Valor: S/. " + numberFormat.format(cotizacion.getValor()));
-        AgendaTareaActividades.update(getDataBase(), act);
+            act.setIdsResultado(idOperacion);
+            AgendaTareaActividades.insert(getDataBase(), act);
+        }
+        else {
+            act.setResultado("Venta Realizada\n" + " - Forma de Pago: " + ((GeneralValue) ((Spinner) getRootView().findViewById(R.id.cliente_forma_pago)).getSelectedItem()).getValue() + "\n"
+                    + " - Solicitud: " + ((EditText) getRootView().findViewById(R.id.cliente_solicitud)).getText().toString() + "\n"
+                    + " - Valor: S/. " + numberFormat.format(cotizacion.getValor()));
+            act.setIdsResultado(idOperacion);
+            AgendaTareaActividades.update(getDataBase(), act);
+        }
     }
 
     @Override
@@ -509,7 +515,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
             }
 
             //Valido que forma de pago aparece a partir de la cotizacion
-            if(cotizacion.getOpcion() == 2)
+            if(cotizacion.getOpcion() == 2 || cotizacion.getOpcion() == 1)
                 ((Spinner) getRootView().findViewById(R.id.cliente_forma_pago)).setSelection(1);
             if(cotizacion.getOpcion() == 3)
                 ((Spinner) getRootView().findViewById(R.id.cliente_forma_pago)).setSelection(0);
@@ -882,9 +888,9 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
                     }
                 } else {
                     if (payMeResponse != null) {
-                        Toast.makeText(this.getActivity(), "Transacción rechazada - Response: " + payMeResponse.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(this.getActivity(), "Transacción rechazada: Por favor intente nuevamente", Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(this.getActivity(), "Transacción rechazada - Response: No se obtuvo respuesta", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this.getActivity(), "Transacción rechazada: Por favor intente nuevamente", Toast.LENGTH_LONG).show();
                     }
                 }
             } else {

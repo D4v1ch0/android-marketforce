@@ -455,4 +455,5 @@
     <string name="message_validando_solicitud">Validando Solicitud</string>
     <string name="label_solicitud">Número Solicitud</string>
     <string name="label_valor_cotizacion">Valor Cotizacion</string>
+    <string name="label_ciudad_distrito">Ciudad o Distrito</string>
 </resources>

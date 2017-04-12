@@ -275,13 +275,18 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                 id_tarea = tarea.getIdTarea();
         }
 
-        Cotizacion cotizacion = Cotizacion.getCotizacion(getDataBase(), agenda.getIdAgenda(), agenda.getIdRuta(), id_tarea);
-        if(cotizacion.getID() != 0)
-            cargaCotizacion(cotizacion);
-        else
-        {
-            cotizacion = Cotizacion.getCotizacionInt(getDataBase(), agenda.getID(), agenda.getIdRuta(), id_tarea);
-            if(cotizacion.getID() != 0)
+        if(agenda.getIdAgenda() != 0) {
+            Cotizacion cotizacion = Cotizacion.getCotizacion(getDataBase(), agenda.getIdAgenda(), agenda.getIdRuta(), id_tarea);
+            if (cotizacion.getID() != 0)
+                cargaCotizacion(cotizacion);
+            else {
+                cotizacion = Cotizacion.getCotizacionInt(getDataBase(), agenda.getID(), agenda.getIdRuta(), id_tarea);
+                if (cotizacion.getID() != 0)
+                    cargaCotizacion(cotizacion);
+            }
+        }else {
+            Cotizacion cotizacion = Cotizacion.getCotizacionInt(getDataBase(), agenda.getID(), agenda.getIdRuta(), id_tarea);
+            if (cotizacion.getID() != 0)
                 cargaCotizacion(cotizacion);
         }
     }
@@ -485,17 +490,18 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 
                @Override
                public void onClick(View v) {
-                   setViewVisibility(R.id.detail_agenda_button_iniciar, View.VISIBLE);
                    setViewVisibility(R.id.detail_agenda_button_fin, View.GONE);
                    setViewVisibility(R.id.detail_agenda_button_cancelar, View.GONE);
                    //getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(false);
                    if (agenda.getFechaFinReal() == null || agenda.getFechaFinReal().getTime() < 0) {
                        agenda.setEstadoAgenda(Contants.ESTADO_PENDIENTE);
                        agenda.setEstadoAgendaDescripcion(Contants.DESC_PENDIENTE);
+                       setViewVisibility(R.id.detail_agenda_button_iniciar, View.VISIBLE);
                        ((ImageView) rootView.findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_pending);
                    } else {
                        agenda.setEstadoAgenda(Contants.ESTADO_VISITADO);
                        agenda.setEstadoAgendaDescripcion(Contants.DESC_VISITADO);
+                       setViewVisibility(R.id.detail_agenda_button_modificar, View.VISIBLE);
                        ((ImageView) rootView.findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_visited);
                    }
                    Agenda.update(getDataBase(), agenda);
@@ -873,6 +879,13 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
+                    boolean cierreVenta = false;
+                    for(int i = 0; i < adapter.getCount(); i++)
+                    {
+                        AgendaTarea getter = adapter.getItem(i);
+                        if(getter.getIdTarea() != 0 && getter.getTipoTarea().equalsIgnoreCase("ADC") && getter.getEstadoTarea().equalsIgnoreCase("R"))
+                            cierreVenta = true;
+                    }
 
                     if(agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO))
                         soloVista = false;
@@ -901,7 +914,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                                     showTareaTexto(ata, setter);
                             }
                         }
-                        if (setter.getTipoTarea().equalsIgnoreCase("C") && agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO))
+                        if (setter.getTipoTarea().equalsIgnoreCase("C") && agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO) && !cierreVenta)
                             showTareaCotizacion(setter);
                         if (setter.getTipoTarea().equalsIgnoreCase("E"))
                             showTareaGrupo(setter);

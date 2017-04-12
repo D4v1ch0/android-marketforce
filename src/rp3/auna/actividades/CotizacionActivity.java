@@ -84,13 +84,20 @@ public class CotizacionActivity extends ActividadActivity {
                 R.layout.spinner_empty_selected,
                 this, "Seleccione un programa"));
         ((Spinner) getRootView().findViewById(R.id.cotizacion_programa)).setPrompt("Seleccione un programa");
-        cotizacion = Cotizacion.getCotizacion(getDataBase(), id_agenda, id_ruta, id_tarea);
-        if(cotizacion.getID() != 0)
-            cargaCotizacion();
+        if(id_agenda != 0) {
+            cotizacion = Cotizacion.getCotizacion(getDataBase(), id_agenda, id_ruta, id_tarea);
+            if (cotizacion.getID() != 0)
+                cargaCotizacion();
+            else {
+                cotizacion = Cotizacion.getCotizacionInt(getDataBase(), id_agenda_int, id_ruta, id_tarea);
+                if (cotizacion.getID() != 0)
+                    cargaCotizacion();
+            }
+        }
         else
         {
             cotizacion = Cotizacion.getCotizacionInt(getDataBase(), id_agenda_int, id_ruta, id_tarea);
-            if(cotizacion.getID() != 0)
+            if (cotizacion.getID() != 0)
                 cargaCotizacion();
         }
 
@@ -230,10 +237,13 @@ public class CotizacionActivity extends ActividadActivity {
                     consultaContizacion();
                 }
                 break;
+            case android.R.id.home:
+                finish();
+                break;
             default:
                 break;
         }
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     private boolean ValidarConsulta() {
@@ -486,14 +496,19 @@ public class CotizacionActivity extends ActividadActivity {
             act.setIdRuta(id_ruta);
             act.setIdTareaActividad(1);
             act.set_idAgenda(id_agenda_int);
+            act.setResultado("Venta Realizada\n" + " - Programa: " + ((GeneralValue) ((Spinner) findViewById(R.id.cotizacion_programa)).getSelectedItem()).getValue() + "\n"
+                    + " - Plan Escogido: " + plan + "\n"
+                    + " - Número de Afiliados: " + afiliadosLayouts.size()
+                    + " - Valor: S/. " + numberFormat.format(cotizacion.getValor()));
             AgendaTareaActividades.insert(getDataBase(), act);
         }
-
-        act.setResultado("Venta Realizada\n" + " - Programa: " + ((GeneralValue)((Spinner) findViewById(R.id.cotizacion_programa)).getSelectedItem()).getValue() + "\n"
-                + " - Plan Escogido: " + plan + "\n"
-                + " - Número de Afiliados: " + afiliadosLayouts.size()
-                + " - Valor: S/. " + numberFormat.format(cotizacion.getValor()));
-        AgendaTareaActividades.update(getDataBase(), act);
+        else {
+            act.setResultado("Venta Realizada\n" + " - Programa: " + ((GeneralValue) ((Spinner) findViewById(R.id.cotizacion_programa)).getSelectedItem()).getValue() + "\n"
+                    + " - Plan Escogido: " + plan + "\n"
+                    + " - Número de Afiliados: " + afiliadosLayouts.size()
+                    + " - Valor: S/. " + numberFormat.format(cotizacion.getValor()));
+            AgendaTareaActividades.update(getDataBase(), act);
+        }
 
     }
 

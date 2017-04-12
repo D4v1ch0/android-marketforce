@@ -81,6 +81,14 @@ public class AgregarTarjetaFragment extends BaseFragment {
                 }
             }});
 
+        ((Button) view.findViewById(R.id.eliminar_tarjeta)).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+
         if(pos == 0)
             ((CheckBox) view.findViewById(R.id.cliente_es_principal_tarjeta)).setChecked(true);
 
