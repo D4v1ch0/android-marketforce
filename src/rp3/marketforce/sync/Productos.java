@@ -18,6 +18,7 @@ import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
 import rp3.marketforce.db.Contract;
 import rp3.marketforce.models.pedido.ProductoCodigo;
+import rp3.marketforce.pedido.ProductoListFragment;
 import rp3.sync.SyncAudit;
 
 /**
@@ -255,6 +256,106 @@ public class Productos {
 
             JSONArray types = webService.getJSONArrayResponse();
             resp.putString("Matrices", types.toString());
+            resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS);
+        }finally{
+            webService.close();
+        }
+        return resp;
+    }
+
+    public static Bundle executeSyncSustitutos(DataBase db){
+        Bundle resp = new Bundle();
+        WebService webService = new WebService("MartketForce","GetAlternativos");
+        try
+        {
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED) {
+                    resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE, rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR);
+                }
+                resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_HTTP_ERROR);
+                return resp;
+            } catch (Exception e) {
+                resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_ERROR);
+                return resp;
+            }
+
+            JSONArray types = webService.getJSONArrayResponse();
+            resp.putString("Sustitutos", types.toString());
+            resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS);
+        }finally{
+            webService.close();
+        }
+        return resp;
+    }
+
+    public static Bundle executeSyncDescuento(String linea, String cliente, String tipoOrden, String familia, String listaPrecio){
+        Bundle resp = new Bundle();
+        WebService webService = new WebService("MartketForce","GetMatrizDescuento");
+        try
+        {
+            webService.addParameter("@linea", linea);
+            webService.addParameter("@cliente", cliente);
+            webService.addParameter("@tipoOrden", tipoOrden);
+            webService.addParameter("@familia", familia);
+            webService.addParameter("@listaPrecio", listaPrecio);
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED) {
+                    resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE, rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR);
+                }
+                resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_HTTP_ERROR);
+                return resp;
+            } catch (Exception e) {
+                resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_ERROR);
+                return resp;
+            }
+
+            JSONArray types = webService.getJSONArrayResponse();
+            if(types != null)
+                resp.putString(Agente.KEY_DESCUENTO, types.toString());
+            else
+                resp.putString(Agente.KEY_DESCUENTO, "");
+            resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS);
+        }finally{
+            webService.close();
+        }
+        return resp;
+    }
+
+    public static Bundle executeSyncStock(String item){
+        Bundle resp = new Bundle();
+        WebService webService = new WebService("MartketForce","GetStock");
+        try
+        {
+            item = item.replace(" ", "%20");
+            webService.addParameter("@item", item);
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED) {
+                    resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE, rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR);
+                }
+                resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_HTTP_ERROR);
+                return resp;
+            } catch (Exception e) {
+                resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_ERROR);
+                return resp;
+            }
+
+            JSONArray types = webService.getJSONArrayResponse();
+            if(types != null)
+                resp.putString(ProductoListFragment.ARG_ITEM, types.toString());
+            else
+                resp.putString(ProductoListFragment.ARG_ITEM, "");
             resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS);
         }finally{
             webService.close();

@@ -14,6 +14,7 @@ import rp3.marketforce.models.Tarea;
 import rp3.marketforce.pedido.AgregarPagoFragment;
 import rp3.marketforce.pedido.ControlCajaFragment;
 import rp3.marketforce.pedido.CrearPedidoFragment;
+import rp3.marketforce.pedido.ProductoListFragment;
 import rp3.marketforce.resumen.AgenteDetalleFragment;
 import rp3.marketforce.ruta.CrearVisitaFragment;
 import rp3.marketforce.ruta.MotivoNoVisitaFragment;
@@ -79,6 +80,8 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
     public static String SYNC_TYPE_CANCELAR_NC = "cancelar_nc";
 
     public static String SYNC_TYPE_AGENDA_OPORTUNIDAD = "agenda_oportunidad";
+    public static String SYNC_TYPE_GET_DESCUENTO = "get_descuento";
+    public static String SYNC_TYPE_GET_STOCK= "get_stock";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -504,6 +507,20 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     double longitud = extras.getInt(RutasDetailFragment.ARG_LONGITUD);
                     result = Agenda.executeSyncGeolocation(db, id, latitud, longitud);
                     addDefaultMessage(result);
+                } else if (syncType.equals(SYNC_TYPE_GET_DESCUENTO)) {
+                    String cliente = extras.getString(ProductoListFragment.ARG_CLIENTE).trim();
+                    String tipoOrden = extras.getString(ProductoListFragment.ARG_TIPO_ORDEN).trim();
+                    String linea = extras.getString(ProductoListFragment.ARG_LINEA).trim();
+                    String familia = extras.getString(ProductoListFragment.ARG_FAMILIA).trim();
+                    String listaPrecio = extras.getString(ProductoListFragment.ARG_LISTA_PRECIO).trim();
+                    Bundle bundle = Productos.executeSyncDescuento(linea, cliente, tipoOrden, familia, listaPrecio);
+                    addDefaultMessage(bundle.getInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE));
+                    putData(Agente.KEY_DESCUENTO, bundle.getString(Agente.KEY_DESCUENTO));
+                } else if (syncType.equals(SYNC_TYPE_GET_STOCK)) {
+                    String item = extras.getString(ProductoListFragment.ARG_ITEM).trim();
+                    Bundle bundle = Productos.executeSyncStock(item);
+                    addDefaultMessage(bundle.getInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE));
+                    putData(ProductoListFragment.ARG_ITEM, bundle.getString(ProductoListFragment.ARG_ITEM));
                 } else if (syncType.equals(SYNC_TYPE_BATCH)) {
                     result = Cliente.executeSyncInserts(db);
                     addDefaultMessage(result);

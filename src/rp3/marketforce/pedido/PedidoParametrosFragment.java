@@ -58,15 +58,26 @@ import rp3.util.Convert;
 
 public class PedidoParametrosFragment extends BaseFragment{
     public static String ARG_TIPO_TRANS = "trans";
+    public static String ARG_TIPO_FROM = "from";
 
 
-    private AutoCompleteTextView cliente_auto;
-    private SimpleGeneralValueAdapter adapterDuracion;
-    private ArrayList<String> list_nombres;
+    private AutoCompleteTextView cliente_auto, serie_auto;
+    private ArrayList<String> list_nombres, list_nombres_series;
     private List<Cliente> list_cliente;
+    private List<GeneralValue> list_serie;
     private List<Tarea> list_tareas;
     private String transaccion;
-    private SimpleGeneralValueAdapter seriesAdapter;
+    private SimpleGeneralValueAdapter tipoOrdenAdapter;
+    private int from;
+
+    public static PedidoParametrosFragment newInstance(String text, int from) {
+        Bundle arguments = new Bundle();
+        arguments.putString(ARG_TIPO_TRANS, text);
+        arguments.putInt(ARG_TIPO_FROM, from);
+        PedidoParametrosFragment fragment = new PedidoParametrosFragment();
+        fragment.setArguments(arguments);
+        return fragment;
+    }
 
     public static PedidoParametrosFragment newInstance(String text) {
         Bundle arguments = new Bundle();
@@ -87,7 +98,9 @@ public class PedidoParametrosFragment extends BaseFragment{
 
         String lastText = "";
         transaccion = getArguments().getString(ARG_TIPO_TRANS);
+        from = getArguments().getInt(ARG_TIPO_FROM , 0);
         list_nombres = new ArrayList<String>();
+        list_nombres_series = new ArrayList<String>();
         List<String> list_ciudad = new ArrayList<String>();
         if (list_tareas == null)
             list_tareas = new ArrayList<Tarea>();
@@ -96,6 +109,7 @@ public class PedidoParametrosFragment extends BaseFragment{
             lastText = cliente_auto.getText().toString();
 
         cliente_auto = (AutoCompleteTextView) rootView.findViewById(R.id.crear_pedido_cliente);
+        serie_auto = (AutoCompleteTextView) rootView.findViewById(R.id.crear_pedido_serie);
 
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -106,14 +120,25 @@ public class PedidoParametrosFragment extends BaseFragment{
         }
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(), R.layout.spinner_small_text, list_nombres);
 
+        list_serie = GeneralValue.getGeneralValues(getDataBase(), Contants.GENERAL_TABLE_SERIES_BERLIN);
+        for (GeneralValue gv : list_serie) {
+            list_nombres_series.add(gv.getValue());
+        }
+        final ArrayAdapter<String> adapterSeries = new ArrayAdapter<String>(this.getContext(), R.layout.spinner_small_text, list_nombres_series);
+
+        tipoOrdenAdapter = new SimpleGeneralValueAdapter(getContext(), GeneralValue.getGeneralValues(getDataBase(), Contants.GENERAL_TABLE_TIPO_ORDEN_BERLIN));
+        ((Spinner) getRootView().findViewById(R.id.crear_pedido_tipo_orden)).setAdapter(tipoOrdenAdapter);
+
         list_ciudad.add("Guayaquil");
         list_ciudad.add("Quito");
         final ArrayAdapter<String> ciudadAdapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_spinner_dropdown_item, list_ciudad);
         ((Spinner) getRootView().findViewById(R.id.crear_pedido_ciudad)).setAdapter(ciudadAdapter);
 
-
         cliente_auto.setAdapter(adapter);
         cliente_auto.setThreshold(1);
+
+        serie_auto.setAdapter(adapterSeries);
+        serie_auto.setThreshold(1);
 
         if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.JELLY_BEAN) {
             cliente_auto.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -171,15 +196,27 @@ public class PedidoParametrosFragment extends BaseFragment{
             @Override
             public void onClick(View v) {
                 long idCliente = 0;
+                String idSerie = "";
                 int position = list_nombres.indexOf(cliente_auto.getText().toString());
+                int position_series = list_nombres_series.indexOf(serie_auto.getText().toString());
                 if (position != -1) {
-                    idCliente = list_cliente.get(position).getID();
-                    Intent intent = new Intent(getContext(), CrearPedidoActivity.class);
-                    intent.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, transaccion);
-                    intent.putExtra(CrearPedidoActivity.ARG_CLIENTE, idCliente);
-                    intent.putExtra(CrearPedidoActivity.ARG_SERIE, seriesAdapter.getCode(((Spinner) getRootView().findViewById(R.id.crear_pedido_serie)).getSelectedItemPosition()));
-                    dismiss();
-                    startActivity(intent);
+                    if (position_series != -1) {
+                        idCliente = list_cliente.get(position).getID();
+                        idSerie = list_serie.get(position_series).getCode();
+                        Intent intent = new Intent(getContext(), CrearPedidoActivity.class);
+                        intent.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, transaccion);
+                        intent.putExtra(CrearPedidoActivity.ARG_CLIENTE, idCliente);
+                        intent.putExtra(CrearPedidoActivity.ARG_SERIE, idSerie);
+                        intent.putExtra(CrearPedidoActivity.ARG_TIPO_ORDEN, tipoOrdenAdapter.getCode(((Spinner) getRootView().findViewById(R.id.crear_pedido_tipo_orden)).getSelectedItemPosition()));
+                        dismiss();
+                        if(from == 1)
+                            getActivity().finish();
+                        startActivity(intent);
+                    }
+                    else
+                    {
+                        Toast.makeText(getContext(), "Debe seleccionar una serie", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else
                 {
@@ -188,9 +225,6 @@ public class PedidoParametrosFragment extends BaseFragment{
 
             }
         });
-
-        seriesAdapter = new SimpleGeneralValueAdapter(this.getContext(), GeneralValue.getGeneralValues(getDataBase(), Contants.GENERAL_TABLE_SERIES_BERLIN));
-        ((Spinner) getRootView().findViewById(R.id.crear_pedido_serie)).setAdapter(seriesAdapter);
 
     }
     @Override

@@ -20,8 +20,10 @@ public class CrearPedidoActivity extends BaseActivity {
     public static String ARG_TIPO_DOCUMENTO = "tipo_documento";
     public static String ARG_IDPEDIDO = "idcliente";
     public static String ARG_CLIENTE = "cliente";
+    public static String ARG_TIPO_ORDEN = "tipo_orden";
     public static String ARG_SERIE = "serie";
     public static String ARG_IDAGENDA = "idagenda";
+    private CrearPedidoFragment newFragment;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +32,7 @@ public class CrearPedidoActivity extends BaseActivity {
         long id_cliente = 0;
         String tipo = "FA";
         String serie = "";
+        String tipoorden = "";
         if(getIntent().getExtras() != null && getIntent().getExtras().containsKey(ARG_IDPEDIDO))
         {
             id_pedido = getIntent().getExtras().getLong(ARG_IDPEDIDO);
@@ -43,12 +46,13 @@ public class CrearPedidoActivity extends BaseActivity {
             tipo = getIntent().getExtras().getString(ARG_TIPO_DOCUMENTO, "FA");
             id_cliente = getIntent().getExtras().getLong(ARG_CLIENTE, 0);
             serie = getIntent().getExtras().getString(ARG_SERIE, "");
+            tipoorden = getIntent().getExtras().getString(ARG_TIPO_ORDEN, "");
         }
 
         setHomeAsUpEnabled(true, true);
         setContentView(R.layout.layout_simple_content);
         if (!hasFragment(rp3.core.R.id.content)) {
-            CrearPedidoFragment newFragment = CrearPedidoFragment.newInstance(id_pedido, id_agenda, tipo, id_cliente, serie);
+            newFragment = CrearPedidoFragment.newInstance(id_pedido, id_agenda, tipo, id_cliente, serie, tipoorden);
             setFragment(rp3.core.R.id.content, newFragment);
         }
     }
@@ -67,7 +71,7 @@ public class CrearPedidoActivity extends BaseActivity {
         switch (item.getItemId())
         {
             case android.R.id.home:
-                showDialogConfirmation(CrearPedidoFragment.DIALOG_SAVE_CANCEL, R.string.message_guardar_pedido, R.string.title_abandonar_transaccion);
+                showDialogConfirmation(CrearPedidoFragment.DIALOG_SAVE_CANCEL, R.string.message_guardar_pedido, R.string.title_abandonar_transaccion, true);
                 break;
             default:
                 break;
@@ -77,12 +81,25 @@ public class CrearPedidoActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        showDialogConfirmation(CrearPedidoFragment.DIALOG_SAVE_CANCEL, R.string.message_guardar_pedido, R.string.title_abandonar_transaccion);
+        showDialogConfirmation(CrearPedidoFragment.DIALOG_SAVE_CANCEL, R.string.message_guardar_pedido, R.string.title_abandonar_transaccion, true);
         //super.onBackPressed();
     }
 
     @Override
     public void onPositiveConfirmation(int id) {
+        switch (id)
+        {
+            case CrearPedidoFragment.DIALOG_SAVE_CANCEL:
+                newFragment.onPositiveConfirmation(id);
+                break;
+            default:
+                break;
+        }
+        super.onPositiveConfirmation(id);
+    }
+
+    @Override
+    public void onNegativeConfirmation(int id) {
         switch (id)
         {
             case CrearPedidoFragment.DIALOG_SAVE_CANCEL:
@@ -92,5 +109,6 @@ public class CrearPedidoActivity extends BaseActivity {
                 break;
         }
         super.onPositiveConfirmation(id);
+
     }
 }

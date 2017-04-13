@@ -304,7 +304,7 @@
     <string name="label_cantidad_items"># de Items:</string>
     <string name="label_total_pedido">Total:</string>
     <string name="label_agregar_producto">+ Agregar Producto</string>
-    <string name="message_guardar_pedido">Esta seguro que desea salir?</string>
+    <string name="message_guardar_pedido">Al salir de la transacción se perderán los datos. Desea guardar la transacción como inconclusa?</string>
     <string name="title_abandonar_transaccion">Abandonar Transacción</string>
     <string name="message_guardar_pedido_accept">Desea guardar los datos de la transacción y darlo por cerrado?</string>
     <string name="message_sin_productos">Debido a que no tiene ningun producto guardado en el dispositivo, este proceso tardará en terminarse. Desea continuar?</string>
@@ -437,7 +437,15 @@
     <string name="label_google_calendar">Sync Google</string>
     <string name="message_descarga_secuencias">Descargando secuencias</string>
     <string name="message_descarga_matrices">Descargando matriz</string>
+    <string name="message_descarga_sustitutos">Descargando sustitutos</string>
     <string name="message_descarga_series">Descargando series</string>
     <string name="message_descarga_precios">Descargando libros de precios</string>
+    <string name="title_stock_faltante">Sin Stock</string>
+    <string name="message_stock_faltante">Actualmente no tenemos stock disponible de este producto en bodega. Desea ordenarlo de todas formas?</string>
+    <string name="message_limpiar_cabecera">Esta seguro que quiere cambiar la cabecera del pedido? Si lo hace, se borrarán los datos actuales del pedido</string>
+    <string name="title_limipiar_cabecera">Cambiar Cabecera</string>
     <string name="label_serie">Serie</string>
+    <string name="label_porc_desc_auto">% Auto:</string>
+    <string name="label_porc_desc_manual">% Manual:</string>
+    <string name="label_tipo_orden">Tipo de Orden</string>
 </resources>

@@ -27,11 +27,13 @@ public class ProductoListActivity extends BaseActivity {
         long idCliente = 0;
         String tipo = "default";
         String serie = "";
+        String tipoOrden = "";
         if(getIntent().getExtras() != null) {
             idCategoria = getIntent().getExtras().getInt(CategoriaFragment.ARG_IDCATEGORIA, -1);
             tipo = getIntent().getExtras().getString(ProductoListFragment.ARG_BUSQUEDA, "default");
             serie = getIntent().getExtras().getString(ProductoListFragment.ARG_SERIE, "");
             idCliente = getIntent().getExtras().getLong(ProductoListFragment.ARG_CLIENTE, 0);
+            tipoOrden = getIntent().getExtras().getString(ProductoListFragment.ARG_TIPO_ORDEN, "");
         }
 
 
@@ -43,7 +45,7 @@ public class ProductoListActivity extends BaseActivity {
             }
             else
             {
-                ProductoListFragment newFragment = ProductoListFragment.newInstance(idCategoria, serie, idCliente);
+                ProductoListFragment newFragment = ProductoListFragment.newInstance(idCategoria, serie, idCliente, tipoOrden);
                 setFragment(rp3.core.R.id.content, newFragment);
             }
         }

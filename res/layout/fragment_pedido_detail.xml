@@ -4,33 +4,35 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp">
+        android:layout_margin="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/textView52"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/label_cliente_2"
-            android:id="@+id/textView52"
             android:layout_weight="0.25"
+            android:text="@string/label_cliente_2"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/caldroid_holo_blue_light"
             android:textSize="@dimen/text_medium_small_size" />
 
         <TextView
+            android:id="@+id/pedido_cliente"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Rp3 Retail"
-            android:id="@+id/pedido_cliente"
             android:layout_weight="0.8"
+            android:text="Rp3 Retail"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/text_medium_small_size" />
+
         <ImageView
+            android:id="@+id/pedido_estado"
             android:layout_width="14dp"
             android:layout_height="14dp"
-            android:id="@+id/pedido_estado"
             android:src="@drawable/circle_unvisited" />
     </LinearLayout>
 

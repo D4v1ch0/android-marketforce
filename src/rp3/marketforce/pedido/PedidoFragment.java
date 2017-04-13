@@ -55,6 +55,7 @@ import rp3.marketforce.cliente.ClientListFragment;
 import rp3.marketforce.cliente.CrearClienteActivity;
 import rp3.marketforce.db.Contract;
 import rp3.marketforce.models.Cliente;
+import rp3.marketforce.models.pedido.Alternativo;
 import rp3.marketforce.models.pedido.Categoria;
 import rp3.marketforce.models.pedido.ControlCaja;
 import rp3.marketforce.models.pedido.LibroPrecio;
@@ -671,6 +672,10 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                                     stmt.bindString(16, type.getString("A"));
                                 else
                                     stmt.bindString(16, "(Sin Descripción)");
+                                if (!type.isNull("AV"))
+                                    stmt.bindString(17, type.getString("AV"));
+                                else
+                                    stmt.bindString(17, "");
 
                                 stmtSearch.bindLong(1, descargados - 1);
                                 stmtSearch.bindString(2, type.getString("D"));
@@ -727,9 +732,36 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
             catch (Exception ex)
             {}
             db.endTransaction();
+            //Alternos
+            publishProgress(new Integer[]{1, 0, R.string.message_descarga_sustitutos});
+            Bundle bundle = Productos.executeSyncSustitutos(getDataBase());
+            if (bundle != null && bundle.getInt(SyncAdapter.ARG_SYNC_TYPE) == rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS) {
+                try {
+                    JSONArray types = new JSONArray(bundle.getString("Sustitutos"));
+                    int length = types.length();
+                    Alternativo.deleteAll(getDataBase(), Contract.Alternativo.TABLE_NAME);
+                    for (int i = 0; i < length; i++) {
+                        publishProgress(new Integer[]{length, i, R.string.message_descarga_sustitutos});
+
+                        JSONObject type = types.getJSONObject(i);
+
+                        Alternativo alternativo = new Alternativo();
+
+                        alternativo.setItem(type.getString("I"));
+                        alternativo.setAlterno(type.getString("A"));
+                        alternativo.setFechaIngreso(Convert.getDateFromDotNetTicks(type.getLong("FIT")));
+                        alternativo.setFechaVencimiento(Convert.getDateFromDotNetTicks(type.getLong("FVT")));
+                        Alternativo.insert(getDataBase(), alternativo);
+                    }
+                } catch (JSONException e) {
+                    return getString(rp3.core.R.string.message_error_sync_connection_http_error);
+                }
+            } else {
+                return getString(rp3.core.R.string.message_error_sync_connection_http_error);
+            }
             //Series
             publishProgress(new Integer[]{1, 0, R.string.message_descarga_series});
-            Bundle bundle = Productos.executeSyncSeries(getDataBase());
+            bundle = Productos.executeSyncSeries(getDataBase());
             if (bundle != null && bundle.getInt(SyncAdapter.ARG_SYNC_TYPE) == rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS) {
                 try {
                     JSONArray types = new JSONArray(bundle.getString("Series"));

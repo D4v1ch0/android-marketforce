@@ -117,8 +117,11 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
                 ((EditText)rootView.findViewById(R.id.producto_cantidad)).setText(jsonObject.getString("c"));
             if(!jsonObject.isNull("udm"))
                 usrDescManual = jsonObject.getString("udm");
+            porcentajeDescAuto = jsonObject.getDouble("pd");
+            porcentajeDescAuto = porcentajeDescAuto * 100;
             ((TextView)rootView.findViewById(R.id.producto_aplicacion)).setText(jsonObject.getString("a"));
             ((TextView)rootView.findViewById(R.id.producto_descripcion)).setText(jsonObject.getString("d"));
+            ((TextView)rootView.findViewById(R.id.producto_descuento_auto)).setText(numberFormat.format(porcentajeDescAuto) + "%");
             ((TextView)rootView.findViewById(R.id.producto_precio)).setText("" + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(jsonObject.getDouble("vi")));
             ((TextView)rootView.findViewById(R.id.producto_precio_final)).setText("" + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " 0");
             List<Vendedor> list_vendedores = Vendedor.getVendedores(getDataBase());

@@ -36,6 +36,7 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
     private String grupoComision;
     private String linea;
     private String familia;
+    private String aviso;
 
     private String idExterno2;
     private String grupoEstadistico;
@@ -230,6 +231,14 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
         this.familia = familia;
     }
 
+    public String getAviso() {
+        return aviso;
+    }
+
+    public void setAviso(String aviso) {
+        this.aviso = aviso;
+    }
+
     public static List<Producto> getProductos(DataBase db, String serie){
 
         String query = QueryDir.getQuery(Contract.Producto.QUERY_PRODUCTOS);
@@ -313,6 +322,7 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
             prod.setGrupoComision(CursorUtils.getString(c, Contract.Producto.COLUMN_GRUPO_COMISION));
             prod.setLinea(CursorUtils.getString(c, Contract.Producto.COLUMN_LINEA));
             prod.setFamilia(CursorUtils.getString(c, Contract.Producto.COLUMN_FAMILIA));
+            prod.setAviso(CursorUtils.getString(c, Contract.Producto.COLUMN_AVISO));
         }
         c.close();
         return prod;
@@ -340,6 +350,7 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
             prod.setPrecioDescuento(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_DESCUENTO));
             prod.setPrecioImpuesto(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_IMPUESTO));
             prod.setDescripcion(CursorUtils.getString(c, Contract.Producto.FIELD_DESCRIPCION));
+            prod.setAplicacion(CursorUtils.getString(c, Contract.Producto.COLUMN_APLICACION));
         }
         c.close();
         return prod;
@@ -430,8 +441,9 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
         //String version = db.getSQLiteVersion();
         //int compare = Convert.versionCompare(version, Contants.SQLITE_VERSION_SEARCH);
         Cursor c = null;
+        termSearch = getSearchString(termSearch);
 
-        c = db.rawQuery(query, new String[]{termSearch + "*", serie});
+        c = db.rawQuery(query, new String[]{termSearch + "*" , serie});
 
 
         List<Producto> list = new ArrayList<Producto>();
@@ -462,6 +474,7 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
         //String version = db.getSQLiteVersion();
         //int compare = Convert.versionCompare(version, Contants.SQLITE_VERSION_SEARCH);
         Cursor c = null;
+        termSearch = getSearchString(termSearch);
 
         c = db.rawQuery(query, new String[]{termSearch + "*", idSubCategoria + "", serie});
 
@@ -522,7 +535,7 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
 
     public static Producto getProductoSingleByCodigoExterno(DataBase db, String codigoExterno)
     {
-        String query = QueryDir.getQuery( Contract.Producto.QUERY_SEARCH_BY_CODIGO_EXTERNO );
+        String query = QueryDir.getQuery( Contract.Producto.QUERY_SEARCH_BY_CODIGO_EXTERNO_NO_SERIE );
         //String version = db.getSQLiteVersion();
         //int compare = Convert.versionCompare(version, Contants.SQLITE_VERSION_SEARCH);
         Cursor c = null;
@@ -546,6 +559,10 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
             prod.setPorcentajeDescuentoOro(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_DESCUENTO_ORO));
             prod.setPrecioDescuento(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_DESCUENTO));
             prod.setPrecioImpuesto(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_IMPUESTO));
+            prod.setAplicacion(CursorUtils.getString(c, Contract.Producto.COLUMN_APLICACION));
+            prod.setGrupoComision(CursorUtils.getString(c, Contract.Producto.COLUMN_GRUPO_COMISION));
+            prod.setLinea(CursorUtils.getString(c, Contract.Producto.COLUMN_LINEA));
+            prod.setFamilia(CursorUtils.getString(c, Contract.Producto.COLUMN_FAMILIA));
         }
         c.close();
         return prod;
@@ -580,5 +597,24 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
         }
         c.close();
         return cont;
+    }
+
+    public static String getSearchString(String code)
+    {
+        if(!code.contains(" ")) {
+            if (code.length() > 1)
+            {
+                code = code.substring(0,1) + " " + code.substring(1, code.length()-1);
+            }
+            if (code.length() > 5)
+            {
+                code = code.substring(0,5) + " " + code.substring(5, code.length()-1);
+            }
+            if (code.length() > 9)
+            {
+                code = code.substring(0,9) + " " + code.substring(9, code.length()-1);
+            }
+        }
+        return code;
     }
 }

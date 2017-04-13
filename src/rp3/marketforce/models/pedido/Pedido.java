@@ -53,6 +53,9 @@ public class Pedido extends EntityBase<Pedido> {
     private long _idControlCaja;
     private boolean pendiente;
     private boolean tieneNotaCreditoRP3POS;
+    private String serie;
+    private String tipoOrden;
+    private String ciudad;
 
     private List<PedidoDetalle> pedidoDetalles;
     private List<Pago> pagos;
@@ -374,6 +377,30 @@ public class Pedido extends EntityBase<Pedido> {
 
     public void setPagos(List<Pago> pagos) {
         this.pagos = pagos;
+    }
+
+    public String getSerie() {
+        return serie;
+    }
+
+    public void setSerie(String serie) {
+        this.serie = serie;
+    }
+
+    public String getTipoOrden() {
+        return tipoOrden;
+    }
+
+    public void setTipoOrden(String tipoOrden) {
+        this.tipoOrden = tipoOrden;
+    }
+
+    public String getCiudad() {
+        return ciudad;
+    }
+
+    public void setCiudad(String ciudad) {
+        this.ciudad = ciudad;
     }
 
     @Override

@@ -82,6 +82,63 @@
             android:layout_weight="0.55">
 
             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/material_blue_grey_800"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/material_blue_grey_800"
+                    android:orientation="vertical" />
+
+                <TextView
+                    android:id="@+id/textView91"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/color_grey"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="0dp"
+                    android:paddingTop="6dp"
+                    android:text="@string/label_precio"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/color_text_sky_blue"
+                    android:textSize="@dimen/text_small_size"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/material_blue_grey_800"
+                    android:orientation="vertical" />
+
+                <TextView
+                    android:id="@+id/producto_precio"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|right"
+                    android:paddingRight="10dp"
+                    android:text="₡ 120.000"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="@dimen/text_small_size" />
+
+                <LinearLayout
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/material_blue_grey_800"
+                    android:orientation="vertical" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -99,20 +156,20 @@
                     android:background="@color/material_blue_grey_800" />
 
                 <TextView
+                    android:id="@+id/textView91"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/label_precio"
-                    android:id="@+id/textView91"
                     android:layout_weight="1"
-                    android:paddingLeft="5dp"
-                    android:paddingTop="6dp"
-                    android:paddingRight="0dp"
-                    android:paddingBottom="5dp"
                     android:background="@color/color_grey"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="0dp"
+                    android:paddingTop="6dp"
+                    android:text="@string/label_porc_desc_auto"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/color_text_sky_blue"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/text_small_size" />
+                    android:textSize="@dimen/text_small_size"
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:orientation="vertical"
@@ -121,14 +178,14 @@
                     android:background="@color/material_blue_grey_800" />
 
                 <TextView
+                    android:id="@+id/producto_descuento_auto"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="₡ 120.000"
-                    android:id="@+id/producto_precio"
                     android:layout_weight="1"
                     android:gravity="center_vertical|right"
                     android:paddingRight="10dp"
+                    android:text="₡ 120.000"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textSize="@dimen/text_small_size" />
 
                 <LinearLayout
@@ -215,23 +272,23 @@
                     android:background="@color/material_blue_grey_800" />
 
                 <TextView
+                    android:id="@+id/textView118"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/label_descuento_points"
-                    android:id="@+id/textView118"
                     android:layout_weight="1"
-                    android:paddingLeft="5dp"
-                    android:paddingTop="6dp"
-                    android:paddingBottom="5dp"
                     android:background="@color/color_grey"
-                    android:textColor="@color/color_text_sky_blue"
-                    android:textStyle="bold"
                     android:ellipsize="end"
                     android:lines="1"
                     android:maxLines="1"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="0dp"
+                    android:paddingTop="6dp"
+                    android:text="@string/label_porc_desc_manual"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/color_text_sky_blue"
                     android:textSize="@dimen/text_small_size"
-                    android:paddingRight="0dp" />
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:orientation="vertical"

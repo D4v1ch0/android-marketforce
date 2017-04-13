@@ -1767,6 +1767,7 @@
         tbProducto.Familia,
         tbProducto.Linea,
         tbProducto.Aplicacion,
+        tbProducto.Aviso,
         tbProductoExt.Descripcion AS tbProductoExt_Descripcion
         FROM tbProducto
         LEFT JOIN tbProductoExt
@@ -1787,6 +1788,7 @@
         tbProducto.PorcentajeImpuesto,
         tbProducto.PrecioConImpuesto,
         tbProducto.IdBeneficio,
+        tbProducto.Aplicacion,
         tbProductoExt.Descripcion AS tbProductoExt_Descripcion,
         tbProductoExt.IdExterno1 AS tbProductoExt_IdExterno1,
         tbProductoExt.IdExterno2 AS tbProductoExt_IdExterno2
@@ -1812,8 +1814,9 @@
         GrupoComision,
         Familia,
         Linea,
-        Aplicacion)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+        Aplicacion,
+        Aviso)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
     </statement>
     <statement name="ProductoSearchBulkInsert">
         INSERT OR REPLACE INTO tbProductoExt
@@ -1932,6 +1935,33 @@
         WHERE tbProducto.CodigoExterno = ?
         AND tbProducto.IdBeneficio &lt;&gt; -1
         AND tbSerie.IdSerie = ?
+    </statement>
+    <statement name="ProductoSearchCodigoSinSerie">
+        SELECT
+        tbProducto._id AS _id,
+        tbProducto.IdProducto,
+        tbProducto.ValorUnitario,
+        tbProducto.URLFoto,
+        tbProducto.IdSubCategoria,
+        tbProducto.CodigoExterno,
+        tbProducto.PorcentajeDescuentoOro,
+        tbProducto.PorcentajeDescuento,
+        tbProducto.PrecioConDescuento,
+        tbProducto.PorcentajeImpuesto,
+        tbProducto.PrecioConImpuesto,
+        tbProducto.IdBeneficio,
+        tbProducto.GrupoComision,
+        tbProducto.Familia,
+        tbProducto.Linea,
+        tbProducto.Aplicacion,
+        tbProductoExt.Descripcion AS tbProductoExt_Descripcion,
+        tbProductoExt.IdExterno1 AS tbProductoExt_IdExterno1,
+        tbProductoExt.IdExterno2 AS tbProductoExt_IdExterno2
+        FROM tbProducto
+        LEFT JOIN tbProductoExt
+        ON tbProducto._id = tbProductoExt.docid
+        WHERE tbProducto.CodigoExterno = ?
+        AND tbProducto.IdBeneficio &lt;&gt; -1
     </statement>
     <statement name="ArqueoCajaQuery">
         SELECT 1 as _count,

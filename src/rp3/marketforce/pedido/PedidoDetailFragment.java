@@ -103,8 +103,8 @@ public class PedidoDetailFragment extends BaseFragment {
         if(pedido.getTipoDocumento().equalsIgnoreCase("PD"))
             this.getActivity().setTitle("Pedido No. " + pedido.getNumeroDocumento());
 
-        if (pedido.getEstado().equals("N")) {
-            ((ImageView) getRootView().findViewById(R.id.pedido_estado)).setImageDrawable(this.getResources().getDrawable(R.drawable.circle_pending));
+        if (pedido.getEstado().equals("P")) {
+            ((ImageView) getRootView().findViewById(R.id.pedido_estado)).setImageDrawable(this.getResources().getDrawable(R.drawable.circle_in_process));
         } else if (pedido.getEstado().equals("C")) {
             ((ImageView) getRootView().findViewById(R.id.pedido_estado)).setImageDrawable(this.getResources().getDrawable(R.drawable.circle_visited));
         } else {

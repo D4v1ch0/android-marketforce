@@ -509,7 +509,10 @@
         TotalImpuesto4 REAL,
         _IdControlCaja INTEGER,
         Pendiente BOOLEAN,
-        TieneNotaCreditoPOSRP3 BOOLEAN
+        TieneNotaCreditoPOSRP3 BOOLEAN,
+        Serie TEXT,
+        TipoOrden TEXT,
+        Ciudad TEXT
         )
     </statement>
     <statement>
@@ -572,7 +575,8 @@
         GrupoComision TEXT,
         Familia TEXT,
         Linea TEXT,
-        Aplicacion TEXT
+        Aplicacion TEXT,
+        Aviso TEXT
         )
     </statement>
     <statement>
@@ -766,6 +770,15 @@
         _id INTEGER PRIMARY KEY,
         IdSerie TEXT,
         GrupoEstadistico TEXT
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbAlternativo(
+        _id INTEGER PRIMARY KEY,
+        Item TEXT,
+        Alterno TEXT,
+        FechaIngreso INTEGER,
+        FechaVencimiento INTEGER
         )
     </statement>
 

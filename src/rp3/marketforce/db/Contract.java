@@ -921,6 +921,9 @@ public final class Contract {
 		public static final String COLUMN_ID_CONTROL_CAJA_INT = "_IdControlCaja";
 		public static final String COLUMN_PENDIENTE = "Pendiente";
 		public static final String COLUMN_TIENE_NOTA_CREDITO_RP3 = "TieneNotaCreditoPOSRP3";
+		public static final String COLUMN_SERIE = "Serie";
+		public static final String COLUMN_TIPO_ORDEN = "TipoOrden";
+		public static final String COLUMN_CIUDAD_DESPACHO = "Ciudad";
 
 		public static final String FIELD_NUMERO_DOCUMENTO = Contract.PedidoExt.TABLE_NAME + "_" + Contract.PedidoExt.COLUMN_NUMERO_DOCUMENTO;
 		public static final String FIELD_NOMBRE = Contract.PedidoExt.TABLE_NAME + "_" + Contract.PedidoExt.COLUMN_NOMBRE;
@@ -1001,6 +1004,7 @@ public final class Contract {
 		public static final String COLUMN_LINEA = "Linea";
 		public static final String COLUMN_GRUPO_COMISION= "GrupoComision";
 		public static final String COLUMN_APLICACION = "Aplicacion";
+		public static final String COLUMN_AVISO = "Aviso";
 
 		public static final String FIELD_DESCRIPCION = Contract.ProductoExt.TABLE_NAME + "_" + Contract.ProductoExt.COLUMN_DESCRIPCION;
 		public static final String FIELD_EXTERNO_1 = Contract.ProductoExt.TABLE_NAME + "_" + Contract.ProductoExt.COLUMN_ID_EXTERNO_1;
@@ -1014,6 +1018,7 @@ public final class Contract {
 		public static final String QUERY_SEARCH = "SimpleProductoSearch";
 		public static final String QUERY_SEARCH_BY_CATEGORIA = "SimpleProductoSearchByCategoria";
 		public static final String QUERY_SEARCH_BY_CODIGO_EXTERNO = "ProductoSearchCodigo";
+		public static final String QUERY_SEARCH_BY_CODIGO_EXTERNO_NO_SERIE = "ProductoSearchCodigoSinSerie";
 		public static final String BULK_INSERT = "ProductoBulkInsert";
 	}
 
@@ -1278,6 +1283,17 @@ public final class Contract {
 
 		public static final String COLUMN_ID_SERIE = "IdSerie";
 		public static final String COLUMN_GRUPO_ESTADISTICO = "GrupoEstadistico";
+
+	}
+
+	public static abstract class Alternativo implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbAlternativo";
+
+		public static final String COLUMN_ITEM = "Item";
+		public static final String COLUMN_ALTERNO = "Alterno";
+		public static final String COLUMN_FECHA_INGRESO = "FechaIngreso";
+		public static final String COLUMN_FECHA_VENCIMIENTO = "FechaVencimiento";
 
 	}
 }

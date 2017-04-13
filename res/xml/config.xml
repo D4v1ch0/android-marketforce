@@ -553,6 +553,24 @@
                     <webMethod>GET</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>
+                <method>
+                    <name>GetAlternativos</name>
+                    <action>producto/GetAlternativos</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetMatrizDescuento</name>
+                    <action>producto/GetDescuento?linea=@linea&amp;cliente=@cliente&amp;tipoOrden=@tipoOrden&amp;familia=@familia&amp;listaPrecio=@listaPrecio</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetStock</name>
+                    <action>producto/GetStock?item=@item</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
             </methods>     
         </webServiceData>
            <webServiceData>

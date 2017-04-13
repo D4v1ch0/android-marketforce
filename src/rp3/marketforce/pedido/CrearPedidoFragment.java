@@ -85,12 +85,14 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     public static String ARG_SERIE = "serie";
     public static String ARG_AGENDA = "agenda";
     public static String ARG_TIPO_DOCUMENTO = "tipo_documento";
+    public static String ARG_TIPO_ORDEN = "tipo_orden";
     public static final int REQUEST_BUSQUEDA = 3;
     public static final int REQUEST_CLIENTE = 4;
     public static final int REQUEST_REPRINT= 5;
 
     public static final int DIALOG_SAVE_CANCEL = 1;
     public static final int DIALOG_SAVE_ACCEPT = 2;
+    public static final int DIALOG_SAVE_CLEAN = 3;
     static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
 
     private Cliente consumidorFinal = new Cliente();
@@ -100,7 +102,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     private String tipo = "FA";
     private Pedido pedido;
     public ProductFragment productFragment;
-    private String code, serie;
+    private String code, serie, tipoOrden;
     private PedidoDetalleAdapter adapter;
     private NumberFormat numberFormat;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyyHHmmss");
@@ -108,7 +110,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     private Menu menu;
     private PagosListFragment fragment;
 
-    public static CrearPedidoFragment newInstance(long id_pedido, long id_agenda, String tipo, long idCliente, String serie)
+    public static CrearPedidoFragment newInstance(long id_pedido, long id_agenda, String tipo, long idCliente, String serie, String tipoOrden)
     {
         CrearPedidoFragment fragment = new CrearPedidoFragment();
         Bundle args = new Bundle();
@@ -117,6 +119,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         args.putString(ARG_TIPO_DOCUMENTO, tipo);
         args.putLong(ARG_CLIENTE, idCliente);
         args.putString(ARG_SERIE, serie);
+        args.putString(ARG_TIPO_ORDEN, tipoOrden);
         fragment.setArguments(args);
         return fragment;
     }
@@ -176,11 +179,14 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             case R.id.action_save:
                 if(Validaciones())
                 {
-                    showDialogConfirmation(DIALOG_SAVE_ACCEPT, R.string.message_guardar_pedido_accept, R.string.title_guardar_transaccion);
+                    showDialogConfirmation(DIALOG_SAVE_ACCEPT, R.string.message_guardar_pedido_accept, R.string.title_guardar_transaccion, false);
                 }
                 break;
             case R.id.action_cancel:
-                showDialogConfirmation(DIALOG_SAVE_CANCEL, R.string.message_guardar_pedido, R.string.title_abandonar_transaccion);
+                showDialogConfirmation(DIALOG_SAVE_CANCEL, R.string.message_guardar_pedido, R.string.title_abandonar_transaccion, true);
+                break;
+            case R.id.action_clean:
+                showDialogConfirmation(DIALOG_SAVE_CLEAN, R.string.message_limpiar_cabecera, R.string.title_limipiar_cabecera);
                 break;
             default:
                 break;
@@ -197,6 +203,9 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             case DIALOG_SAVE_ACCEPT:
                 break;
             case DIALOG_SAVE_CANCEL:
+                finish();
+                break;
+            case DIALOG_SAVE_CLEAN:
                 break;
         }
     }
@@ -212,12 +221,15 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                 generarFacturaFísica();
                 break;
             case DIALOG_SAVE_CANCEL:
-                /*if(Validaciones())
+                if(Validaciones())
                 {
                     Grabar(true);
                     finish();
-                }*/
-                finish();
+                }
+                break;
+            case DIALOG_SAVE_CLEAN:
+                PedidoParametrosFragment pedidoParametrosFragment = PedidoParametrosFragment.newInstance(tipo, 1);
+                showDialogFragment(pedidoParametrosFragment, "Cabecera", GeneralValue.getGeneralValue(getDataBase(), Contants.GENERAL_TABLE_TIPOS_TRANSACCION, tipo).getValue());
                 break;
         }
     }
@@ -397,6 +409,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         super.onFragmentCreateView(rootView, savedInstanceState);
         idCliente = getArguments().getLong(ARG_CLIENTE, 0);
         serie = getArguments().getString(ARG_SERIE, "");
+        tipoOrden = getArguments().getString(ARG_TIPO_ORDEN, "");
         cliente_auto = (AutoCompleteTextView) rootView.findViewById(R.id.pedido_cliente);
         list_nombres = new ArrayList<String>();
 
@@ -490,6 +503,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                 Intent intent = new Intent(getContext(), ProductoListActivity.class);
                 intent.putExtra(ProductoListFragment.ARG_SERIE, serie);
                 intent.putExtra(ProductoListFragment.ARG_CLIENTE, idCliente);
+                intent.putExtra(ProductoListFragment.ARG_TIPO_ORDEN, tipoOrden);
                 startActivityForResult(intent, REQUEST_BUSQUEDA);
             }
         });
@@ -575,6 +589,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                     jsonObject.put("ib", prod.getIdBeneficio());
                     jsonObject.put("co", pedido.getPedidoDetalles().get(position).getCantidadOriginal());
                     jsonObject.put("ven", pedido.getPedidoDetalles().get(position).getIdVendedor());
+                    jsonObject.put("a", prod.getAplicacion());
                     if (pedido.getPedidoDetalles().get(position).getUsrDescManual() != null && !pedido.getPedidoDetalles().get(position).getUsrDescManual().equalsIgnoreCase(""))
                         jsonObject.put("udm", pedido.getPedidoDetalles().get(position).getUsrDescManual());
                     jsonObject.put("tipo", tipo);
@@ -1106,11 +1121,11 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         }
         else {
             finish();
-            if(!tipo.equalsIgnoreCase("NC")) {
+            /*if(!tipo.equalsIgnoreCase("NC")) {
                 Intent intent = new Intent(getContext(), CrearPedidoActivity.class);
                 intent.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, tipo);
                 startActivity(intent);
-            }
+            }*/
         }
     }
 
