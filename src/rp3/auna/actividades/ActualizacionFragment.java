@@ -1398,6 +1398,8 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
             jsonObject.put("Sexo", ((GeneralValue)((Spinner)getRootView().findViewById(R.id.cliente_genero)).getSelectedItem()).getCode());
             jsonObject.put("Correo", ((EditText) getRootView().findViewById(R.id.cliente_correo)).getText().toString());
             jsonObject.put("TarjetaBeneficios", ((EditText) getRootView().findViewById(R.id.cliente_tarjeta)).getText().toString());
+            jsonObject.put("Plan", cotizacion.getOpcion() + "");
+            jsonObject.put("FormaPago", ((GeneralValue)((Spinner)getRootView().findViewById(R.id.cliente_forma_pago)).getSelectedItem()).getCode());
         }
         catch (Exception ex)
         {}
