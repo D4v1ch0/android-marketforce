@@ -63,7 +63,7 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
 	public void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
 		
-		setRetainInstance(true);		
+		//setRetainInstance(true);
 		transactionListFragment = ClientListFragment.newInstance(true, null);					
 		
 	}

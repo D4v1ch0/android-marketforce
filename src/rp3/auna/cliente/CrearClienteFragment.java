@@ -221,7 +221,7 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
     private void SetCamposDireccion(){
         List<Campo> campos = Campo.getCampos(getDataBase(), tipo);
         for(Campo campo : campos) {
-            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_DIRECCION_DESCRIPCION))
+            /*if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_DIRECCION_DESCRIPCION))
                 listViewDirecciones.get(listViewDirecciones.size() -1).findViewById(R.id.cliente_direccion).setEnabled(false);
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_REFERENCIA))
                 listViewDirecciones.get(listViewDirecciones.size() -1).findViewById(R.id.cliente_referencia).setEnabled(false);
@@ -232,13 +232,13 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_DIRECCION_FIJO))
                 listViewDirecciones.get(listViewDirecciones.size() -1).findViewById(R.id.cliente_telefono2).setEnabled(false);
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_POSICION_GEO))
-                listViewDirecciones.get(listViewDirecciones.size() -1).findViewById(R.id.cliente_ubicacion).setEnabled(false);
+                listViewDirecciones.get(listViewDirecciones.size() -1).findViewById(R.id.cliente_ubicacion).setEnabled(false);*/
         }
     }
     private void SetCamposContactos() {
         List<Campo> campos = Campo.getCampos(getDataBase(), tipo);
         for(Campo campo : campos) {
-            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_NOMBRE_CONTACTO))
+            /*if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_NOMBRE_CONTACTO))
                 listViewContactos.get(listViewContactos.size()-1).findViewById(R.id.cliente_nombres).setEnabled(false);
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_APELLIDO_CONTACTO))
                 listViewContactos.get(listViewContactos.size()-1).findViewById(R.id.cliente_apellidos).setEnabled(false);
@@ -253,7 +253,7 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_CORREO_CONTACTO))
                 listViewContactos.get(listViewContactos.size()-1).findViewById(R.id.cliente_correo_contacto).setEnabled(false);
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_FOTO_CONTACTO))
-                listViewContactos.get(listViewContactos.size()-1).findViewById(R.id.cliente_contacto_foto).setEnabled(false);
+                listViewContactos.get(listViewContactos.size()-1).findViewById(R.id.cliente_contacto_foto).setEnabled(false);*/
         }
     }
 
@@ -273,15 +273,15 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
                 getRootView().findViewById(R.id.cliente_tipo_identificacion).setEnabled(false);
                 if(campo.isObligatorio()) ((TextView)getRootView().findViewById(R.id.tipo_identificacion_label)).append(wordtoSpan);
             }*/
-            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_IDENTIFICACION)) {
+            /*if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_IDENTIFICACION)) {
                 getRootView().findViewById(R.id.cliente_identificacion).setEnabled(false);
                 if(campo.isObligatorio()) setSpannable((EditText)getRootView().findViewById(R.id.cliente_identificacion));
-            }
+            }*/
             /*if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_TIPO_CLI)) {
                 getRootView().findViewById(R.id.cliente_tipo_cliente).setEnabled(false);
                 if(campo.isObligatorio()) ((TextView)getRootView().findViewById(R.id.tipo_cliente_label)).append(wordtoSpan);
             }*/
-            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_CANAL))
+            /*if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_CANAL))
                 getRootView().findViewById(R.id.cliente_canal).setEnabled(false);
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_FOTO))
                 getRootView().findViewById(R.id.cliente_foto).setEnabled(false);
@@ -311,27 +311,27 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_ACTIVIDAD_ECONOMICA))
                 getRootView().findViewById(R.id.cliente_actividad_economica).setEnabled(false);
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_CORREO))
-                getRootView().findViewById(R.id.cliente_correo_juridico).setEnabled(false);
+                getRootView().findViewById(R.id.cliente_correo_juridico).setEnabled(false);*/
         }
         campos = Campo.getCamposObligatorios(getDataBase(), tipo);
         for(Campo campo : campos) {
             //if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_TIPO_IDENTIFICACION))
             //    ((TextView)getRootView().findViewById(R.id.tipo_identificacion_label)).append(wordtoSpan);
-            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_IDENTIFICACION))
-                setSpannable(((TextView) getRootView().findViewById(R.id.cliente_identificacion)));
+            /*if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_IDENTIFICACION))
+                setSpannable(((TextView) getRootView().findViewById(R.id.cliente_identificacion)));*/
             //if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_TIPO_CLI))
             //    ((TextView)getRootView().findViewById(R.id.tipo_cliente_label)).append(wordtoSpan);
             //if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_CANAL))
             //    ((TextView)getRootView().findViewById(R.id.canal_label)).append(wordtoSpan);
-            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_FOTO))
+            /*if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_FOTO))
                 ((TextView)getRootView().findViewById(R.id.foto_label)).append(wordtoSpan);
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_FECHA_NACIMIENTO))
-                setSpannable((EditText)getRootView().findViewById(R.id.cliente_fecha_nacimiento));
+                setSpannable((EditText)getRootView().findViewById(R.id.cliente_fecha_nacimiento));*/
             //if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_GENERO))
             //    ((TextView)getRootView().findViewById(R.id.genero_label)).append(wordtoSpan);
             //if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_ESTADO_CIVIL))
             //    ((TextView)getRootView().findViewById(R.id.estado_civil_label)).append(wordtoSpan);
-            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_PRIMER_NOMBRE_NATURAL))
+            /*if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_PRIMER_NOMBRE_NATURAL))
                 setSpannable((EditText) getRootView().findViewById(R.id.cliente_primer_nombre));
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_SEGUNDO_NOMBRE_NATURAL))
                 setSpannable((EditText) getRootView().findViewById(R.id.cliente_segundo_nombre));
@@ -351,7 +351,7 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_ACTIVIDAD_ECONOMICA))
                 setSpannable((EditText) getRootView().findViewById(R.id.cliente_actividad_economica));
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_CORREO))
-                setSpannable((EditText) getRootView().findViewById(R.id.cliente_correo_juridico));
+                setSpannable((EditText) getRootView().findViewById(R.id.cliente_correo_juridico));*/
         }
 
     }
