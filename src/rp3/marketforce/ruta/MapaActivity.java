@@ -42,6 +42,8 @@ import rp3.marketforce.models.ClienteDireccion;
 import rp3.marketforce.utils.DrawableManager;
 import rp3.marketforce.utils.Utils;
 import rp3.util.LocationUtils;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -78,6 +80,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+@SuppressLint("ResourceType")
 public class MapaActivity extends BaseActivity {
 	
 	public static String ACTION_TYPE = "type";

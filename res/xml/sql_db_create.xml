@@ -512,7 +512,8 @@
         TieneNotaCreditoPOSRP3 BOOLEAN,
         Serie TEXT,
         TipoOrden TEXT,
-        Ciudad TEXT
+        Ciudad TEXT,
+        IdDireccion INTEGER
         )
     </statement>
     <statement>

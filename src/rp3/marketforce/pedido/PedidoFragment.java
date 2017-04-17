@@ -263,8 +263,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
             //        && ref == null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calPed) == 0 && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA) && ped.getTipoDocumento().equalsIgnoreCase("NC"));
             //menu.findItem(R.id.action_anular_pedido).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && control != null && !ped.isTieneNotaCreditoRP3POS() && pagoNC == null
             //        && ref == null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calPed) == 0 && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA));
-            //menu.findItem(R.id.action_nota_credito).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && ped.getTipoDocumento().equalsIgnoreCase("FA") && control != null
-            //        && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calApe) == 0 && PreferenceManager.getBoolean(Contants.KEY_TRANSACCION_NOTA_CREDITO, true) && !ped.isTieneNotaCreditoRP3POS() && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA));
+            menu.findItem(R.id.action_edit).setVisible(!isActiveListFragment && selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("P") && ped.getTipoDocumento().equalsIgnoreCase("PD") && PreferenceManager.getBoolean(Contants.KEY_TRANSACCION_PEDIDO, true));
             //menu.findItem(R.id.action_aperturar_caja).setVisible(isActiveListFragment && control == null && PreferenceManager.getInt(Contants.KEY_ID_CAJA,0) != 0);
             //menu.findItem(R.id.action_cerrar_caja).setVisible(isActiveListFragment && control != null);
             menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
@@ -280,7 +279,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
             //menu.findItem(R.id.action_cancelar_transaccion).setVisible(selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && control != null && !ped.isTieneNotaCreditoRP3POS() && pagoNC == null
             //        && ref == null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calPed) == 0 && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA) && ped.getTipoDocumento().equalsIgnoreCase("NC"));
             //menu.findItem(R.id.action_anular_pedido).setVisible(selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && control != null && ref == null && CalendarUtils.DayDiffTruncate(Calendar.getInstance(), calPed) == 0 && PreferenceManager.getBoolean(Contants.KEY_TRANSACCION_NOTA_CREDITO, true) && !ped.isTieneNotaCreditoRP3POS() && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA));
-            //menu.findItem(R.id.action_nota_credito).setVisible(selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("C") && ped.getTipoDocumento().equalsIgnoreCase("FA") && control != null && !ped.isTieneNotaCreditoRP3POS() && control.getIdCaja() == PreferenceManager.getInt(Contants.KEY_ID_CAJA));
+            menu.findItem(R.id.action_edit).setVisible(selectedClientId!=0 && ped.getEstado().equalsIgnoreCase("P") && ped.getTipoDocumento().equalsIgnoreCase("PD") && PreferenceManager.getBoolean(Contants.KEY_TRANSACCION_PEDIDO, true));
             //menu.findItem(R.id.action_aperturar_caja).setVisible(control == null && PreferenceManager.getInt(Contants.KEY_ID_CAJA, 0) != 0);
             //menu.findItem(R.id.action_cerrar_caja).setVisible(control != null);
             //menu.findItem(R.id.action_reimpresion).setVisible(selectedClientId != 0 && control != null);
@@ -326,81 +325,49 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                 }
                 break;*/
             case R.id.action_cotización_a_factura:
-                if(PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA, -1) != -1) {
-                    if(ValidateSecuencia("FA")) {
-                        Intent intent2 = new Intent(getContext(), CrearPedidoActivity.class);
-                        intent2.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, "FA");
-                        intent2.putExtra(CrearPedidoActivity.ARG_IDPEDIDO, selectedClientId);
-                        startActivity(intent2);
-                        break;
-                    }
-                    else
-                    {
-                        Toast.makeText(getContext(), "Número de documento de transacción ya existe. Por favor, comunicarse con el administrador del sistema.", Toast.LENGTH_LONG).show();
-                    }
-                }
-                else
-                {
-                    Toast.makeText(this.getContext(), "Su usuario no tiene asignado una caja.", Toast.LENGTH_LONG).show();
-                }
+
+                Intent intent3 = new Intent(getContext(), CrearPedidoActivity.class);
+                intent3.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, "PD");
+                intent3.putExtra(CrearPedidoActivity.ARG_IDPEDIDO, selectedClientId);
+                startActivity(intent3);
                 break;
-            /*case R.id.action_nota_credito:
-                if(PreferenceManager.getInt(Contants.KEY_SECUENCIA_NOTA_CREDITO, -1) != -1) {
-                    if(ValidateSecuencia("NC")) {
-                        Intent intent2 = new Intent(getContext(), CrearPedidoActivity.class);
-                        intent2.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, "NC");
-                        intent2.putExtra(CrearPedidoActivity.ARG_IDPEDIDO, selectedClientId);
-                        startActivity(intent2);
-                        break;
-                    }
-                    else
-                    {
-                        Toast.makeText(getContext(), "Número de documento de transacción ya existe. Por favor, comunicarse con el administrador del sistema.", Toast.LENGTH_LONG).show();
-                    }
-                }
-                else
-                {
-                    Toast.makeText(this.getContext(), "Su usuario no tiene asignado una caja.", Toast.LENGTH_LONG).show();
-                }
-                break;*/
+            case R.id.action_edit:
+                Intent intent2 = new Intent(getContext(), CrearPedidoActivity.class);
+                intent2.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, "PD");
+                intent2.putExtra(CrearPedidoActivity.ARG_IDPEDIDO, selectedClientId);
+                startActivity(intent2);
+                break;
             case R.id.action_crear_pedido:
-                    AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
+                AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
 
-                    final SimpleGeneralValueAdapter adapter = new SimpleGeneralValueAdapter(this.getContext(), GeneralValue.getGeneralValues(getDataBase(), Contants.GENERAL_TABLE_TIPOS_TRANSACCION, "NC"));
-                    builderSingle.setTitle("Seleccione tipo de transacción");
+                final SimpleGeneralValueAdapter adapter = new SimpleGeneralValueAdapter(this.getContext(), GeneralValue.getGeneralValues(getDataBase(), Contants.GENERAL_TABLE_TIPOS_TRANSACCION, "NC"));
+                builderSingle.setTitle("Seleccione tipo de transacción");
 
-                    builderSingle.setAdapter(
-                            adapter,
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    if(PreferenceManager.getBoolean(adapter.getGeneralValue(which).getCode(), true)) {
-                                        PedidoParametrosFragment pedidoParametrosFragment = PedidoParametrosFragment.newInstance(adapter.getGeneralValue(which).getCode());
-                                        showDialogFragment(pedidoParametrosFragment, "Cabecera", adapter.getGeneralValue(which).getValue());
-                                    }
-                                    else
-                                    {
-                                        Toast.makeText(getContext(), "No tiene permisos para realizar esta transacción.", Toast.LENGTH_LONG).show();
-                                    }
+                builderSingle.setAdapter(
+                        adapter,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (PreferenceManager.getBoolean(adapter.getGeneralValue(which).getCode(), true)) {
+                                    PedidoParametrosFragment pedidoParametrosFragment = PedidoParametrosFragment.newInstance(adapter.getGeneralValue(which).getCode());
+                                    showDialogFragment(pedidoParametrosFragment, "Cabecera", adapter.getGeneralValue(which).getValue());
+                                } else {
+                                    Toast.makeText(getContext(), "No tiene permisos para realizar esta transacción.", Toast.LENGTH_LONG).show();
                                 }
-                            });
-                    builderSingle.show();
+                            }
+                        });
+                builderSingle.show();
 
                 break;
             case R.id.action_sincronizar_productos:
-                if(!ConnectionUtils.isNetAvailable(this.getContext()))
-                {
+                if (!ConnectionUtils.isNetAvailable(this.getContext())) {
                     Toast.makeText(this.getContext(), "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
-                }
-                else {
+                } else {
                     int conteo = Producto.conteoProductos(getDataBase());
-                    if(conteo  <= 0)
-                    {
+                    if (conteo <= 0) {
                         allProducts = true;
                         showDialogConfirmation(DIALOG_SYNC_PRODUCTOS, R.string.message_sin_productos, R.string.action_sincronizar_productos);
-                    }
-                    else
-                    {
+                    } else {
                         showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait, false, ProgressDialog.STYLE_HORIZONTAL);
                         setDialogProgressMax(1);
                         new UpdateProductos().execute();

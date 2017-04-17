@@ -1,5 +1,6 @@
 package rp3.marketforce.oportunidad;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -73,6 +74,7 @@ import rp3.util.LocationUtils;
 /**
  * Created by magno_000 on 14/03/2017.
  */
+@SuppressLint("ResourceType")
 public class AgendaProspectoFragment extends rp3.app.BaseFragment{
 
     public static final String ARG_ITEM_ID = "idagenda";

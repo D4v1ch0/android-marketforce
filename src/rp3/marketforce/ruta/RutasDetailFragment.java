@@ -39,6 +39,7 @@ import rp3.util.GooglePlayServicesUtils;
 import rp3.util.LocationUtils;
 import rp3.util.LocationUtils.OnLocationResultListener;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -65,6 +66,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
+@SuppressLint("ResourceType")
 public class RutasDetailFragment extends rp3.app.BaseFragment implements ObservacionesFragmentListener {
     
     public static final String ARG_ITEM_ID = "idagenda";

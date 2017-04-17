@@ -388,7 +388,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
                     if(existeStock)
                         ValidarSustituto(seleccionado);
                     else
-                        Toast.makeText(getContext(), "Artículo fuera de producción y sin stock en bodega", Toast.LENGTH_LONG).show();
+                        showDialogMessage("Artículo fuera de producción y sin stock en bodega");
                 }
             }
         }
@@ -448,7 +448,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
             if (precio.getPrecio() > 0) {
                 GetStock(prod);
             } else {
-                Toast.makeText(getContext(), "El producto debe tener precio para poder ingresar el registro", Toast.LENGTH_LONG).show();
+                showDialogMessage("El producto debe tener precio para poder ingresar el registro");
             }
         }
         if(list_alternativo.size() == 1)
@@ -460,7 +460,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
             if (precio.getPrecio() > 0) {
                 GetStock(prod);
             } else {
-                Toast.makeText(getContext(), "El producto debe tener precio para poder ingresar el registro", Toast.LENGTH_LONG).show();
+                showDialogMessage("El producto debe tener precio para poder ingresar el registro");
             }
         }
         if(list_alternativo.size() > 1)
@@ -485,7 +485,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
                             if (precio.getPrecio() > 0) {
                                 GetStock(seleccionado);
                             } else {
-                                Toast.makeText(getContext(), "El producto debe tener precio para poder ingresar el registro", Toast.LENGTH_LONG).show();
+                                showDialogMessage("El producto debe tener precio para poder ingresar el registro");
                             }
                         }
                     });
@@ -546,7 +546,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
         }
         else
         {
-            Toast.makeText(getContext(), "El producto debe tener precio para poder ingresar el registro", Toast.LENGTH_LONG).show();
+            showDialogMessage("El producto debe tener precio para poder ingresar el registro");
         }
     }
 }

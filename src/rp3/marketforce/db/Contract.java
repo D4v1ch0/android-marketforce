@@ -924,6 +924,7 @@ public final class Contract {
 		public static final String COLUMN_SERIE = "Serie";
 		public static final String COLUMN_TIPO_ORDEN = "TipoOrden";
 		public static final String COLUMN_CIUDAD_DESPACHO = "Ciudad";
+		public static final String COLUMN_ID_DIRECCION = "IdDireccion";
 
 		public static final String FIELD_NUMERO_DOCUMENTO = Contract.PedidoExt.TABLE_NAME + "_" + Contract.PedidoExt.COLUMN_NUMERO_DOCUMENTO;
 		public static final String FIELD_NOMBRE = Contract.PedidoExt.TABLE_NAME + "_" + Contract.PedidoExt.COLUMN_NOMBRE;

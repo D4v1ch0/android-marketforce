@@ -38,14 +38,14 @@ public class Pedido {
         webService.setTimeOut(20000);
 
         rp3.marketforce.models.pedido.Pedido pedidoUpload = rp3.marketforce.models.pedido.Pedido.getPedido(db, idPedido, true);
-        ControlCaja controlCaja = ControlCaja.getControlCajaActiva(db);
+        /*ControlCaja controlCaja = ControlCaja.getControlCajaActiva(db);
         if(controlCaja.getIdControlCaja() == 0) {
             Caja.executeSyncInsertControl(db, controlCaja.getID());
             controlCaja = ControlCaja.getControlCajaActiva(db);
         }
 
         if(controlCaja.getIdControlCaja() == 0)
-            return SyncAdapter.SYNC_EVENT_ERROR;
+            return SyncAdapter.SYNC_EVENT_ERROR;*/
 
         JSONObject jObject = new JSONObject();
         try {
@@ -74,10 +74,10 @@ public class Pedido {
             jObject.put("Cambio", removeCommas(df.format(pedidoUpload.getExcedente())));
 
             jObject.put("IdEmpresa", PreferenceManager.getInt(Contants.KEY_ID_EMPRESA));
-            jObject.put("IdEstablecimiento", PreferenceManager.getInt(Contants.KEY_ID_ESTABLECIMIENTO));
+            jObject.put("IdEstablecimiento", PreferenceManager.getInt(Contants.KEY_ID_ESTABLECIMIENTO, 0));
             jObject.put("IdMoneda", PreferenceManager.getInt(Contants.KEY_ID_MONEDA));
-            jObject.put("IdNumeroCaja", PreferenceManager.getInt(Contants.KEY_ID_CAJA));
-            jObject.put("IdPuntoOperacion", PreferenceManager.getInt(Contants.KEY_ID_PUNTO_OPERACION));
+            jObject.put("IdNumeroCaja", PreferenceManager.getInt(Contants.KEY_ID_CAJA, 0));
+            jObject.put("IdPuntoOperacion", PreferenceManager.getInt(Contants.KEY_ID_PUNTO_OPERACION, 0));
             jObject.put("NumeroDocumento", pedidoUpload.getNumeroDocumento());
             jObject.put("Observacion", pedidoUpload.getObservaciones());
             jObject.put("Redondeo", removeCommas(df.format(pedidoUpload.getRedondeo())));
@@ -87,17 +87,21 @@ public class Pedido {
             jObject.put("TipoTransaccion", pedidoUpload.getTipoDocumento());
             jObject.put("ValorDescAutomatico", removeCommas(df.format(pedidoUpload.getTotalDescuentos())));
             jObject.put("ValorImpuestoIvaVenta", removeCommas(df.format(pedidoUpload.getTotalImpuestos())));
-            jObject.put("IdControlCaja", controlCaja.getIdControlCaja());
+            jObject.put("IdControlCaja", 0);
             jObject.put("IdDocumentoRef", pedidoUpload.getIdDocumentoRef());
             jObject.put("TotalImpuesto2", removeCommas(df.format(pedidoUpload.getTotalImpuesto2())));
             jObject.put("TotalImpuesto3", removeCommas(df.format(pedidoUpload.getTotalImpuesto3())));
             jObject.put("TotalImpuesto4", removeCommas(df.format(pedidoUpload.getTotalImpuesto4())));
-            jObject.put("IdNumeroLocalSRI", Integer.parseInt(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO)));
-            jObject.put("IdNumeroCajaSRI", Integer.parseInt(PreferenceManager.getString(Contants.KEY_SERIE)));
-            if(pedidoUpload.getTipoDocumento().equalsIgnoreCase("FA"))
+            jObject.put("IdNumeroLocalSRI", 0);
+            jObject.put("IdNumeroCajaSRI", 0);
+            jObject.put("Serie", pedidoUpload.getSerie());
+            jObject.put("TipoOrden", pedidoUpload.getTipoOrden());
+            jObject.put("IdDireccion", pedidoUpload.getIdDireccion());
+            jObject.put("Ciudad", pedidoUpload.getCiudad());
+            /*if(pedidoUpload.getTipoDocumento().equalsIgnoreCase("FA"))
                 jObject.put("Secuencia", PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA));
             if(pedidoUpload.getTipoDocumento().equalsIgnoreCase("NC"))
-                jObject.put("Secuencia", PreferenceManager.getInt(Contants.KEY_SECUENCIA_NOTA_CREDITO));
+                jObject.put("Secuencia", PreferenceManager.getInt(Contants.KEY_SECUENCIA_NOTA_CREDITO));*/
 
 
             JSONArray jArrayDetalle = new JSONArray();
@@ -243,10 +247,10 @@ public class Pedido {
                 jObject.put("Cambio", removeCommas(df.format(NumberUtils.Round(pedidoUpload.getExcedente(), 2))));
 
                 jObject.put("IdEmpresa", PreferenceManager.getInt(Contants.KEY_ID_EMPRESA));
-                jObject.put("IdEstablecimiento", PreferenceManager.getInt(Contants.KEY_ID_ESTABLECIMIENTO));
+                jObject.put("IdEstablecimiento", PreferenceManager.getInt(Contants.KEY_ID_ESTABLECIMIENTO, 0));
                 jObject.put("IdMoneda", PreferenceManager.getInt(Contants.KEY_ID_MONEDA));
-                jObject.put("IdNumeroCaja", PreferenceManager.getInt(Contants.KEY_ID_CAJA));
-                jObject.put("IdPuntoOperacion", PreferenceManager.getInt(Contants.KEY_ID_PUNTO_OPERACION));
+                jObject.put("IdNumeroCaja", PreferenceManager.getInt(Contants.KEY_ID_CAJA, 0));
+                jObject.put("IdPuntoOperacion", PreferenceManager.getInt(Contants.KEY_ID_PUNTO_OPERACION, 0));
                 jObject.put("NumeroDocumento", pedidoUpload.getNumeroDocumento());
                 jObject.put("Observacion", pedidoUpload.getObservaciones());
                 jObject.put("Redondeo", removeCommas(df.format(NumberUtils.Round(pedidoUpload.getRedondeo(), 2))));
@@ -256,15 +260,15 @@ public class Pedido {
                 jObject.put("TipoTransaccion", pedidoUpload.getTipoDocumento());
                 jObject.put("ValorDescAutomatico", removeCommas(df.format(NumberUtils.Round(pedidoUpload.getTotalDescuentos(), 2))));
                 jObject.put("ValorImpuestoIvaVenta", removeCommas(df.format(NumberUtils.Round(pedidoUpload.getTotalImpuestos(), 2))));
-                ControlCaja controlCaja = ControlCaja.getControlCaja(db, pedidoUpload.get_idControlCaja());
+                /*ControlCaja controlCaja = ControlCaja.getControlCaja(db, pedidoUpload.get_idControlCaja());
                 if (controlCaja.getIdControlCaja() == 0) {
                     Caja.executeSyncInsertControl(db, controlCaja.getID());
                     controlCaja = ControlCaja.getControlCaja(db, pedidoUpload.get_idControlCaja());
                 }
 
                 if (controlCaja.getIdControlCaja() == 0)
-                    continue;
-                jObject.put("IdControlCaja", controlCaja.getIdControlCaja());
+                    continue;*/
+                jObject.put("IdControlCaja", 0);
                 if(pedidoUpload.getTipoDocumento().equalsIgnoreCase("NC") && pedidoUpload.getIdDocumentoRef() == 0)
                 {
                     rp3.marketforce.models.pedido.Pedido pedidoRef = rp3.marketforce.models.pedido.Pedido.getPedido(db, pedidoUpload.get_idDocumentoRef(), false);
@@ -278,16 +282,20 @@ public class Pedido {
                 jObject.put("TotalImpuesto2", removeCommas(df.format(NumberUtils.Round(pedidoUpload.getTotalImpuesto2(), 2))));
                 jObject.put("TotalImpuesto3", removeCommas(df.format(NumberUtils.Round(pedidoUpload.getTotalImpuesto3(), 2))));
                 jObject.put("TotalImpuesto4", removeCommas(df.format(NumberUtils.Round(pedidoUpload.getTotalImpuesto4(), 2))));
-                jObject.put("IdNumeroLocalSRI", Integer.parseInt(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO)));
-                jObject.put("IdNumeroCajaSRI", Integer.parseInt(PreferenceManager.getString(Contants.KEY_SERIE)));
-                if (pedidoUpload.getTipoDocumento().equalsIgnoreCase("FA"))
+                jObject.put("IdNumeroLocalSRI", 0);
+                jObject.put("IdNumeroCajaSRI", 0);
+                jObject.put("Serie", pedidoUpload.getSerie());
+                jObject.put("TipoOrden", pedidoUpload.getTipoOrden());
+                jObject.put("IdDireccion", pedidoUpload.getIdDireccion());
+                jObject.put("Ciudad", pedidoUpload.getCiudad());
+                /*if (pedidoUpload.getTipoDocumento().equalsIgnoreCase("FA"))
                     jObject.put("Secuencia", PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA));
                 if (pedidoUpload.getTipoDocumento().equalsIgnoreCase("NC"))
                     jObject.put("Secuencia", PreferenceManager.getInt(Contants.KEY_SECUENCIA_NOTA_CREDITO));
                 if (pedidoUpload.getTipoDocumento().equalsIgnoreCase("CT"))
                     jObject.put("Secuencia", PreferenceManager.getInt(Contants.KEY_SECUENCIA_COTIZACION));
                 if (pedidoUpload.getTipoDocumento().equalsIgnoreCase("PD"))
-                    jObject.put("Secuencia", PreferenceManager.getInt(Contants.KEY_SECUENCIA_PEDIDO));
+                    jObject.put("Secuencia", PreferenceManager.getInt(Contants.KEY_SECUENCIA_PEDIDO));*/
 
 
                 JSONArray jArrayDetalle = new JSONArray();

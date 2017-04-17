@@ -98,6 +98,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     private Cliente consumidorFinal = new Cliente();
     private long idCliente = 0;
     private long idAgenda = 0;
+    private long idPedido = 0;
     private boolean saved = false;
     private String tipo = "FA";
     private Pedido pedido;
@@ -236,6 +237,10 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
     private void Grabar(boolean pendiente) {
         Pedido docRef = null;
+        if(idPedido != 0)
+            pedido.setID(idPedido);
+        if(pedido.getTipoDocumento() != null && !pedido.getTipoDocumento().equalsIgnoreCase(tipo))
+            pedido.setID(0);
         if(tipo.equalsIgnoreCase("NC"))
             docRef = Pedido.getPedido(getDataBase(), pedido.get_idDocumentoRef(), true);
 
@@ -258,7 +263,6 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         //pedido.set_idControlCaja(control.getID());
         pedido.setNombre(cliente_auto.getText().toString());
 
-        pedido.setTipoDocumento(tipo);
         if (tipo.equalsIgnoreCase("FA")) {
             pedido.setNumeroDocumento(getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_ESTABLECIMIENTO)), 3) + "-" + getSecuencia(Integer.parseInt(PreferenceManager.getString(Contants.KEY_SERIE)), 3) +
                     "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_FACTURA) + 1, 9));
@@ -269,12 +273,21 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         }
         if (tipo.equalsIgnoreCase("PD")) {
             pedido.setNumeroDocumento("PD" + dateFormat.format(Calendar.getInstance().getTime()));
+            if(pedido.getTipoDocumento() != null && pedido.getTipoDocumento().equalsIgnoreCase(tipo)) {
+                pedido.setIdDocumentoRef(0);
+                pedido.set_idDocumentoRef(0);
+            }
+            else
+            {
+                pedido.set_idDocumentoRef(idPedido);
+            }
         }
         if (tipo.equalsIgnoreCase("CT")) {
             pedido.setNumeroDocumento("CT" + dateFormat.format(Calendar.getInstance().getTime()));
         }
 
 
+        pedido.setTipoDocumento(tipo);
         pedido.setObservaciones(((EditText) getRootView().findViewById(R.id.actividad_texto_respuesta)).getText().toString());
         pedido.setValorTotal(NumberUtils.Round(valorTotal, 2));
         pedido.setSubtotal(NumberUtils.Round(subtotal, 2));
@@ -290,6 +303,11 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             }
         pedido.setExcedente(NumberUtils.Round(valorTotal - pagado, 2));
         pedido.setSubtotalSinDescuento(NumberUtils.Round(subtotal, 2));
+
+        pedido.setCiudad("Guayaquil");
+        pedido.setSerie(serie);
+        pedido.setTipoOrden(tipoOrden);
+        pedido.setIdDireccion(1);
 
         if (pendiente)
             pedido.setEstado("P");
@@ -407,6 +425,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     @Override
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
+        idPedido = getArguments().getLong(ARG_PEDIDO, 0);
         idCliente = getArguments().getLong(ARG_CLIENTE, 0);
         serie = getArguments().getString(ARG_SERIE, "");
         tipoOrden = getArguments().getString(ARG_TIPO_ORDEN, "");
@@ -511,7 +530,12 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         if (getArguments().containsKey(ARG_TIPO_DOCUMENTO) && !rotated) {
             tipo = getArguments().getString(ARG_TIPO_DOCUMENTO);
             if (tipo.equalsIgnoreCase("PD"))
-                this.getActivity().setTitle("Nuevo Pedido");
+                if(idPedido != 0) {
+                    this.getActivity().setTitle("Editar Pedido");
+                }
+                else {
+                    this.getActivity().setTitle("Nuevo Pedido");
+                }
             if (tipo.equalsIgnoreCase("CT"))
                 this.getActivity().setTitle("Nueva Cotización");
         }
@@ -545,7 +569,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         }
 
         if (getArguments().containsKey(ARG_PEDIDO) && getArguments().getLong(ARG_PEDIDO) != 0 && !rotated) {
-            idCliente = getArguments().getLong(ARG_PEDIDO);
+            idPedido = getArguments().getLong(ARG_PEDIDO);
             setDatosPedidos();
         }
 
@@ -655,10 +679,14 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     }
 
     private void setDatosPedidos() {
-        if(pedido != null && pedido.getPedidoDetalles() == null)
-            pedido = Pedido.getPedido(getDataBase(), idCliente, true);
+        if(idPedido != 0)
+            pedido = Pedido.getPedido(getDataBase(), idPedido, true);
         Cliente cl = null;
+        serie = pedido.getSerie();
+        tipoOrden = pedido.getTipoOrden();
+        idCliente = pedido.get_idCliente();
         if(pedido.get_idCliente() != 0) {
+            idCliente = pedido.get_idCliente();
             cl = Cliente.getClienteID(getDataBase(), pedido.get_idCliente(), false);
             cliente_auto.setText(cl.getNombreCompleto().trim());
             cliente_auto.setEnabled(false);
@@ -674,7 +702,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         list_cliente = Cliente.getCliente(getDataBase());
         list_nombres = new ArrayList<String>();
         for (Cliente cli : list_cliente) {
-            list_nombres.add(cli.getNombreCompleto().trim());
+            list_nombres.add(cli.getIdExterno() + " - " + cli.getNombreCompleto().trim());
         }
         list_nombres.add("Consumidor Final");
 
@@ -761,7 +789,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             pedido.set_idDocumentoRef(idCliente);
             pedido.setIdDocumentoRef(pedido.getIdPedido());
         }
-        idCliente = 0;
+        //idCliente = 0;
         pedido.setID(0);
         pedido.setIdPedido(0);
 

@@ -79,7 +79,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/map_phone"
+            android:id="@+id/tipo_orden_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_tipo_orden"
@@ -109,7 +109,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/map_phone"
+            android:id="@+id/ciudad_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_ciudad"
@@ -139,7 +139,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/map_phone"
+            android:id="@+id/direcciones_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_direcciones"

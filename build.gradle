@@ -23,6 +23,10 @@ android {
     android.enforceUniquePackageName = false
     useLibrary 'org.apache.http.legacy'
 
+    lintOptions {
+        checkReleaseBuilds false
+    }
+
     defaultConfig {
         multiDexEnabled true
     }

@@ -1,5 +1,6 @@
 package rp3.marketforce.resumen;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -34,6 +35,7 @@ import rp3.util.StringUtils;
 /**
  * Created by magno_000 on 03/07/2015.
  */
+@SuppressLint("ResourceType")
 public class AgenteDetalleFragment extends BaseFragment {
 
     public int idAgente;

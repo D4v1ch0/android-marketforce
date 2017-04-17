@@ -19,6 +19,7 @@ import rp3.marketforce.utils.Utils;
 import rp3.util.BitmapUtils;
 import rp3.util.Convert;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -37,6 +38,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.ListView;
 
+@SuppressLint("ResourceType")
 public class DashboardAgendaFragment extends BaseFragment {
 	
 	DashboardAgendaAdapter adapter;

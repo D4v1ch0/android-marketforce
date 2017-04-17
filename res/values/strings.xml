@@ -292,8 +292,8 @@
     <!-- Modulo Pedidos -->
     <string name="action_crear_pedido">Crear Transacción</string>
     <string name="action_sincronizar_productos">Sincronizar Productos</string>
-    <string name="action_editar_pedido">Editar Transaccipon</string>
-    <string name="action_cotizacion_a_factura">Facturar Cotización</string>
+    <string name="action_editar_pedido">Editar Transacción</string>
+    <string name="action_cotizacion_a_factura">Generar Pedido</string>
     <string name="label_sin_pedidos">No tiene transacciones</string>
     <string name="label_cantidad2">Cantidad:</string>
     <string name="label_cliente_2">Cliente:</string>

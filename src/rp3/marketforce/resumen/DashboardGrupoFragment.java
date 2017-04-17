@@ -13,6 +13,7 @@ import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 import com.jjoe64.graphview.ValueDependentColor;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -38,6 +39,7 @@ import rp3.marketforce.models.AgenteResumen;
 import rp3.marketforce.utils.DetailsPageAdapter;
 import rp3.util.Convert;
 
+@SuppressLint("ResourceType")
 public class DashboardGrupoFragment extends BaseFragment {
 
 	public static int NUM_VERTICAL_LABELS = 6;

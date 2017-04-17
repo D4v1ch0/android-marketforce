@@ -38,6 +38,7 @@ import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+@SuppressLint("ResourceType")
 public class ClientDetailActivity extends rp3.app.BaseActivity implements ClienteDetailFragmentListener {
 
 	private long transactionId;

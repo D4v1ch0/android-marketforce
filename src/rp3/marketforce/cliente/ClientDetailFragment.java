@@ -37,7 +37,7 @@ import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-@SuppressLint("ResourceAsColor")
+@SuppressLint("ResourceType")
 public class ClientDetailFragment extends rp3.app.BaseFragment implements ClienteEditFragment.OnClienteEditListener {
 	/**
 	 * The fragment argument representing the item ID that this fragment

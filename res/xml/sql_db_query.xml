@@ -2185,6 +2185,10 @@
         tbPedido._IdControlCaja,
         tbPedido.Pendiente,
         tbPedido.TieneNotaCreditoPOSRP3,
+        tbPedido.Serie,
+        tbPedido.TipoOrden,
+        tbPedido.Ciudad,
+        tbPedido.IdDireccion,
         tbPedidoExt.Nombre AS tbPedidoExt_Nombre,
         tbPedidoExt.NumeroDocumento AS tbPedidoExt_NumeroDocumento
         FROM tbPedidoExt
@@ -2224,6 +2228,10 @@
         tbPedido.TotalImpuesto4,
         tbPedido._IdControlCaja,
         tbPedido.Pendiente,
+        tbPedido.Serie,
+        tbPedido.TipoOrden,
+        tbPedido.Ciudad,
+        tbPedido.IdDireccion,
         tbPedido.TieneNotaCreditoPOSRP3,
         tbPedidoExt.Nombre AS tbPedidoExt_Nombre,
         tbPedidoExt.NumeroDocumento AS tbPedidoExt_NumeroDocumento
@@ -2266,6 +2274,10 @@
         tbPedido._IdControlCaja,
         tbPedido.Pendiente,
         tbPedido.TieneNotaCreditoPOSRP3,
+        tbPedido.Serie,
+        tbPedido.TipoOrden,
+        tbPedido.Ciudad,
+        tbPedido.IdDireccion,
         tbPedidoExt.Nombre AS tbPedidoExt_Nombre,
         tbPedidoExt.NumeroDocumento AS tbPedidoExt_NumeroDocumento
         FROM tbPedidoExt
@@ -2306,6 +2318,10 @@
         tbPedido._IdControlCaja,
         tbPedido.Pendiente,
         tbPedido.TieneNotaCreditoPOSRP3,
+        tbPedido.Serie,
+        tbPedido.TipoOrden,
+        tbPedido.Ciudad,
+        tbPedido.IdDireccion,
         tbPedidoExt.Nombre AS tbPedidoExt_Nombre,
         tbPedidoExt.NumeroDocumento AS tbPedidoExt_NumeroDocumento
         FROM tbPedidoExt
@@ -2346,6 +2362,10 @@
         tbPedido._IdControlCaja,
         tbPedido.Pendiente,
         tbPedido.TieneNotaCreditoPOSRP3,
+        tbPedido.Serie,
+        tbPedido.TipoOrden,
+        tbPedido.Ciudad,
+        tbPedido.IdDireccion,
         tbPedidoExt.Nombre AS tbPedidoExt_Nombre,
         tbPedidoExt.NumeroDocumento AS tbPedidoExt_NumeroDocumento
         FROM tbPedidoExt

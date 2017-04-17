@@ -56,6 +56,7 @@ public class Pedido extends EntityBase<Pedido> {
     private String serie;
     private String tipoOrden;
     private String ciudad;
+    private int idDireccion;
 
     private List<PedidoDetalle> pedidoDetalles;
     private List<Pago> pagos;
@@ -403,6 +404,14 @@ public class Pedido extends EntityBase<Pedido> {
         this.ciudad = ciudad;
     }
 
+    public int getIdDireccion() {
+        return idDireccion;
+    }
+
+    public void setIdDireccion(int idDireccion) {
+        this.idDireccion = idDireccion;
+    }
+
     @Override
     public void setValues() {
         setValue(Contract.Pedido.COLUMN_ID_PEDIDO, this.idPedido);
@@ -436,6 +445,10 @@ public class Pedido extends EntityBase<Pedido> {
         setValue(Contract.Pedido.COLUMN_ID_CONTROL_CAJA_INT, this._idControlCaja);
         setValue(Contract.Pedido.COLUMN_PENDIENTE, this.pendiente);
         setValue(Contract.Pedido.COLUMN_TIENE_NOTA_CREDITO_RP3, this.tieneNotaCreditoRP3POS);
+        setValue(Contract.Pedido.COLUMN_SERIE, this.serie);
+        setValue(Contract.Pedido.COLUMN_CIUDAD_DESPACHO, this.ciudad);
+        setValue(Contract.Pedido.COLUMN_TIPO_ORDEN, this.tipoOrden);
+        setValue(Contract.Pedido.COLUMN_ID_DIRECCION, this.idDireccion);
     }
 
     @Override
@@ -546,6 +559,10 @@ public class Pedido extends EntityBase<Pedido> {
             pedido.set_idDocumentoRef(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_DOCUMENTO_REF_INT));
             pedido.setIdDocumentoRef(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_DOCUMENTO_REF));
             pedido.setTieneNotaCreditoRP3POS(CursorUtils.getBoolean(c, Contract.Pedido.COLUMN_TIENE_NOTA_CREDITO_RP3));
+            pedido.setIdDireccion(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_DIRECCION));
+            pedido.setTipoOrden(CursorUtils.getString(c, Contract.Pedido.COLUMN_TIPO_ORDEN));
+            pedido.setSerie(CursorUtils.getString(c, Contract.Pedido.COLUMN_SERIE));
+            pedido.setCiudad(CursorUtils.getString(c, Contract.Pedido.COLUMN_CIUDAD_DESPACHO));
             pedido.set_idControlCaja(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_CONTROL_CAJA_INT));
             if(pedido.getIdCliente() != 0)
                 pedido.setCliente(Cliente.getClienteIDServer(db, pedido.getIdCliente(), false));
@@ -743,6 +760,10 @@ public class Pedido extends EntityBase<Pedido> {
             pedido.setTieneNotaCreditoRP3POS(CursorUtils.getBoolean(c, Contract.Pedido.COLUMN_TIENE_NOTA_CREDITO_RP3));
             pedido.setNombre(CursorUtils.getString(c, Contract.Pedido.FIELD_NOMBRE));
             pedido.setTransaccion(GeneralValue.getGeneralValue(db, Contants.GENERAL_TABLE_TIPOS_TRANSACCION, pedido.getTipoDocumento()));
+            pedido.setIdDireccion(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_DIRECCION));
+            pedido.setTipoOrden(CursorUtils.getString(c, Contract.Pedido.COLUMN_TIPO_ORDEN));
+            pedido.setSerie(CursorUtils.getString(c, Contract.Pedido.COLUMN_SERIE));
+            pedido.setCiudad(CursorUtils.getString(c, Contract.Pedido.COLUMN_CIUDAD_DESPACHO));
 
         }
         c.close();
@@ -806,6 +827,10 @@ public class Pedido extends EntityBase<Pedido> {
             pedido.setTieneNotaCreditoRP3POS(CursorUtils.getBoolean(c, Contract.Pedido.COLUMN_TIENE_NOTA_CREDITO_RP3));
             pedido.setNombre(CursorUtils.getString(c, Contract.Pedido.FIELD_NOMBRE));
             pedido.setTransaccion(GeneralValue.getGeneralValue(db, Contants.GENERAL_TABLE_TIPOS_TRANSACCION, pedido.getTipoDocumento()));
+            pedido.setIdDireccion(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_DIRECCION));
+            pedido.setTipoOrden(CursorUtils.getString(c, Contract.Pedido.COLUMN_TIPO_ORDEN));
+            pedido.setSerie(CursorUtils.getString(c, Contract.Pedido.COLUMN_SERIE));
+            pedido.setCiudad(CursorUtils.getString(c, Contract.Pedido.COLUMN_CIUDAD_DESPACHO));
 
         }
         c.close();
@@ -869,6 +894,10 @@ public class Pedido extends EntityBase<Pedido> {
             pedido.setTieneNotaCreditoRP3POS(CursorUtils.getBoolean(c, Contract.Pedido.COLUMN_TIENE_NOTA_CREDITO_RP3));
             pedido.setNombre(CursorUtils.getString(c, Contract.Pedido.FIELD_NOMBRE));
             pedido.setTransaccion(GeneralValue.getGeneralValue(db, Contants.GENERAL_TABLE_TIPOS_TRANSACCION, pedido.getTipoDocumento()));
+            pedido.setIdDireccion(CursorUtils.getInt(c, Contract.Pedido.COLUMN_ID_DIRECCION));
+            pedido.setTipoOrden(CursorUtils.getString(c, Contract.Pedido.COLUMN_TIPO_ORDEN));
+            pedido.setSerie(CursorUtils.getString(c, Contract.Pedido.COLUMN_SERIE));
+            pedido.setCiudad(CursorUtils.getString(c, Contract.Pedido.COLUMN_CIUDAD_DESPACHO));
 
         }
         c.close();
