@@ -165,7 +165,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         tryEnableGooglePlayServices(true);
-        setContentView(R.layout.fragment_crear_cliente, R.menu.fragment_crear_cliente);
+        setContentView(R.layout.fragment_cierre_venta, R.menu.fragment_crear_cliente);
         setRetainInstance(true);
     }
 
@@ -888,9 +888,9 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
                     }
                 } else {
                     if (payMeResponse != null) {
-                        Toast.makeText(this.getActivity(), "Transacción rechazada: Por favor intente nuevamente", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this.getActivity(), "Transacción rechazada: Tarjeta Invalida. Por favor intentar con otra tarjeta.", Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(this.getActivity(), "Transacción rechazada: Por favor intente nuevamente", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this.getActivity(), "Transacción rechazada: No se obtuvo respuesta", Toast.LENGTH_LONG).show();
                     }
                 }
             } else {
@@ -1518,7 +1518,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
         product1.setItem("001");
         product1.setCode(((GeneralValue)((Spinner)getRootView().findViewById(R.id.cliente_programa)).getSelectedItem()).getCode());
         product1.setName(((GeneralValue)((Spinner)getRootView().findViewById(R.id.cliente_programa)).getSelectedItem()).getValue());
-        product1.setUnitPrice(numberFormat.format(cotizacion.getValor()));
+        product1.setUnitPrice(removeCommas(numberFormat.format(cotizacion.getValor())));
         product1.setQuantity("1");
 
         products.add(product1);
@@ -1529,7 +1529,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
 
         PurchaseInformation purchaseInformation = new PurchaseInformation();
         purchaseInformation.setCurrencyCode("604");
-        purchaseInformation.setPurchaseAmount(numberFormat.format(cotizacion.getValor())+"00");
+        purchaseInformation.setPurchaseAmount(removeCommas(numberFormat.format(cotizacion.getValor())+"00"));
         purchaseInformation.setOperationNumber(idOperacion);
         purchaseInformation.setCallerPhoneNumber("999111999");
         purchaseInformation.setTerminalCode("414");
@@ -1548,6 +1548,10 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
         return true;
     }
 
+    private static String removeCommas(String value)
+    {
+        return value.replace(",","").replace(".","");
+    }
     //endregion
 
 }

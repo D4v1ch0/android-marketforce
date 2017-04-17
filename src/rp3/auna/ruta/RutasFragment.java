@@ -67,7 +67,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	public void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
 		
-		setRetainInstance(true);
+		//setRetainInstance(true);
         setHasOptionsMenu(true);
 			
 		rutasListFragment = RutasListFragment.newInstance();
