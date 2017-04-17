@@ -1309,7 +1309,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                 det.setValorDescuentoOroTotal(det.getValorDescuentoOro() * det.getCantidad());
                 det.setValorDescuentoAutomatico((det.getValorUnitario() - det.getValorDescuentoOro()) * det.getPorcentajeDescuentoAutomatico());
                 det.setValorDescuentoAutomaticoTotal(det.getValorDescuentoAutomatico() * det.getCantidad());
-                det.setValorDescuentoManual((det.getValorUnitario() - det.getValorDescuentoAutomatico() - det.getValorDescuentoOro()) * det.getPorcentajeDescuentoManual());
+                det.setValorDescuentoManual((det.getValorUnitario()) * det.getPorcentajeDescuentoManual());
                 det.setValorDescuentoManualTotal(det.getValorDescuentoManual() * det.getCantidad());
             }
             else
@@ -1318,7 +1318,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                 det.setValorDescuentoOroTotal(0);
                 det.setValorDescuentoAutomatico(det.getValorUnitario() * det.getPorcentajeDescuentoAutomatico());
                 det.setValorDescuentoAutomaticoTotal(det.getValorDescuentoAutomatico() * det.getCantidad());
-                det.setValorDescuentoManual((det.getValorUnitario() - det.getValorDescuentoAutomatico()) * det.getPorcentajeDescuentoManual());
+                det.setValorDescuentoManual((det.getValorUnitario()) * det.getPorcentajeDescuentoManual());
                 det.setValorDescuentoManualTotal(det.getValorDescuentoManual() * det.getCantidad());
             }
             det.setValorImpuesto((det.getValorUnitario()- det.getValorDescuentoManual() - det.getValorDescuentoAutomatico() - det.getValorDescuentoOro()) * det.getPorcentajeImpuesto());

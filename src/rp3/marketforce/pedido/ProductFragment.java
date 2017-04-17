@@ -170,7 +170,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
                         porcentajeDescAuto = jsonObject.getDouble("pd");
                         valorDescAuto = jsonObject.getDouble("p") * porcentajeDescAuto;
                         valorDescAutoTotal = valorDescAuto * cantidad;
-                        valorDescManual = (jsonObject.getDouble("p") - valorDescAuto) * porcentajeDescManual;
+                        valorDescManual = (jsonObject.getDouble("p")) * porcentajeDescManual;
                         double precio_total = cantidad * jsonObject.getDouble("p");
                         valorDescManualTotal = valorDescManual * cantidad;
                         precio_total = precio_total - valorDescManualTotal - valorDescAutoTotal;
@@ -204,7 +204,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
                             porcentajeDescAuto = jsonObject.getDouble("pd");
                             valorDescAuto = jsonObject.getDouble("p") * porcentajeDescAuto;
                             valorDescAutoTotal = valorDescAuto * cantidad;
-                            valorDescManual = (jsonObject.getDouble("p") - valorDescAuto) * porcentajeDescManual;
+                            valorDescManual = (jsonObject.getDouble("p")) * porcentajeDescManual;
                             double precio_total = cantidad * jsonObject.getDouble("p");
                             valorDescManualTotal = valorDescManual * cantidad;
                             precio_total = precio_total - valorDescManualTotal - valorDescAutoTotal;
@@ -238,7 +238,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
                     porcentajeDescAuto = jsonObject.getDouble("pd");
                     valorDescAuto = jsonObject.getDouble("p") * porcentajeDescAuto;
                     valorDescAutoTotal = valorDescAuto * cantidad;
-                    valorDescManual = (jsonObject.getDouble("p") - valorDescAuto) * porcentajeDescManual;
+                    valorDescManual = (jsonObject.getDouble("p")) * porcentajeDescManual;
                     double precio_total = cantidad * jsonObject.getDouble("p");
                     valorDescManualTotal = valorDescManual * cantidad;
                     precio_total = precio_total - valorDescManualTotal - valorDescAutoTotal;
@@ -296,11 +296,11 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
                                         (!jsonObject.isNull("c") && (Integer.parseInt(((EditText) getRootView().findViewById(R.id.producto_cantidad)).getText().toString()) > jsonObject.getInt("c") &&
                                                 Integer.parseInt(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).getText().toString()) >= (jsonObject.getDouble("pdm") * 100)) ||
                                                 Integer.parseInt(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).getText().toString()) > (jsonObject.getDouble("pdm") * 100)))) {
-                            //Toast.makeText(getContext(), "Su máximo descuento permitido es del " + PreferenceManager.getInt(Contants.KEY_DESCUENTO_MAXIMO) + "%.", Toast.LENGTH_LONG).show();
-                            signInFragment = new SignInFragment();
-                            signInFragment.type = "AuthDesc";
-                            showDialogFragment(signInFragment, "Autorizar Descuento", "Autorizar Descuento");
-                            return;
+                            if(((Integer.parseInt(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).getText().toString())) + (porcentajeDescAuto*100)) >= 100)
+                            {
+                                Toast.makeText(getContext(), "La suma de porcentajes de descuento no puede ser mayor o igual al 100%", Toast.LENGTH_LONG).show();
+                                return;
+                            }
                         }
                         saveDetail();
                     } else {
