@@ -351,6 +351,7 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
             prod.setPrecioImpuesto(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_IMPUESTO));
             prod.setDescripcion(CursorUtils.getString(c, Contract.Producto.FIELD_DESCRIPCION));
             prod.setAplicacion(CursorUtils.getString(c, Contract.Producto.COLUMN_APLICACION));
+            prod.setLinea(CursorUtils.getString(c, Contract.Producto.COLUMN_LINEA));
         }
         c.close();
         return prod;

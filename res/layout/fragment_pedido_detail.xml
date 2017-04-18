@@ -77,16 +77,16 @@
         android:paddingBottom="5dp">
 
         <TextView
+            android:id="@+id/textView96"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/label_sku"
-            android:id="@+id/textView96"
             android:layout_weight="0.15"
+            android:gravity="center"
+            android:text="@string/label_linea"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/color_text_sky_blue"
-            android:textStyle="bold"
             android:textSize="@dimen/text_small_size"
-            android:gravity="center" />
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="0dp"
@@ -101,16 +101,16 @@
             android:gravity="center" />
 
         <TextView
+            android:id="@+id/textView81"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/label_cant_short"
-            android:id="@+id/textView81"
             android:layout_weight="0.1"
+            android:text="@string/label_cant_short"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/color_text_sky_blue"
-            android:textStyle="bold"
             android:textSize="@dimen/text_small_size"
-            android:visibility="gone" />
+            android:textStyle="bold"
+            android:visibility="visible" />
 
         <TextView
             android:layout_width="0dp"
@@ -126,17 +126,17 @@
             android:visibility="gone" />
 
         <TextView
+            android:id="@+id/textView97"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/label_descuento"
-            android:id="@+id/textView97"
-            android:layout_weight="0.2"
-            android:textColor="@color/color_text_sky_blue"
-            android:textStyle="bold"
-            android:textSize="@dimen/text_small_size"
+            android:layout_weight="0.18"
             android:gravity="right"
-            android:visibility="gone" />
+            android:text="@string/label_descuento"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/color_text_sky_blue"
+            android:textSize="@dimen/text_small_size"
+            android:textStyle="bold"
+            android:visibility="visible" />
 
         <TextView
             android:layout_width="0dp"
@@ -172,33 +172,80 @@
         android:layout_weight="1" />
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/caldroid_black"
+        android:orientation="vertical" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:visibility="gone">
+        android:orientation="horizontal"
+        android:visibility="visible">
 
         <TextView
+            android:id="@+id/text_fjfjfj"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:gravity="right"
+            android:text="¢ 0.00"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/label_subtotal_points"
+            android:textSize="@dimen/text_medium_small_size"
+            android:visibility="gone" />
+
+        <TextView
             android:id="@+id/textView115"
-            android:layout_weight="0.75"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:gravity="right"
+            android:paddingRight="5dp"
+            android:text="@string/label_subtotal_points"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/color_text_sky_blue"
             android:textStyle="bold"
-            android:gravity="right"
-            android:paddingRight="5dp" />
+            android:visibility="invisible" />
+
+        <LinearLayout
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/material_blue_grey_800"
+            android:orientation="vertical" />
 
         <TextView
+            android:id="@+id/textView104"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="¢ 0.00"
-            android:id="@+id/pedido_subtotal"
             android:layout_weight="0.25"
-            android:textSize="@dimen/text_medium_small_size"
-            android:gravity="right" />
+            android:background="@color/color_grey"
+            android:gravity="left"
+            android:paddingBottom="5dp"
+            android:paddingLeft="5dp"
+            android:paddingTop="6dp"
+            android:text="@string/label_saldo"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/color_text_sky_blue"
+            android:textSize="@dimen/text_small_size"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/material_blue_grey_800"
+            android:orientation="vertical" />
+
+        <TextView
+            android:id="@+id/pedido_subtotal"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.25"
+            android:gravity="center_vertical|right"
+            android:paddingRight="3dp"
+            android:text="¢ 0.00"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/text_small_size" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -295,14 +342,14 @@
             android:paddingRight="5dp" />
 
         <TextView
+            android:id="@+id/pedido_saldo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="¢ 0.00"
-            android:id="@+id/pedido_impuestos"
             android:layout_weight="1"
-            android:textSize="@dimen/text_medium_small_size"
-            android:gravity="right" />
+            android:gravity="right"
+            android:text="¢ 0.00"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/text_medium_small_size" />
     </LinearLayout>
 
     <LinearLayout
@@ -405,15 +452,15 @@
                 android:background="@color/material_blue_grey_800" />
 
             <TextView
+                android:id="@+id/pedido_impuestos"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="¢ 0.00"
-                android:id="@+id/pedido_saldo"
                 android:layout_weight="1"
-                android:textSize="@dimen/text_small_size"
                 android:gravity="center_vertical|right"
-                android:paddingRight="3dp" />
+                android:paddingRight="3dp"
+                android:text="¢ 0.00"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="@dimen/text_small_size" />
 
             <LinearLayout
                 android:orientation="vertical"

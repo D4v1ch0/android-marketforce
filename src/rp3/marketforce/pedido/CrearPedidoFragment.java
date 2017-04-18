@@ -432,13 +432,13 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         cliente_auto = (AutoCompleteTextView) rootView.findViewById(R.id.pedido_cliente);
         list_nombres = new ArrayList<String>();
 
-        try {
+        /*try {
             GeneralValue imp = GeneralValue.getGeneralValue(getDataBase(), Contants.POS_PORCIMP);
             if(imp != null)
                 ((TextView) rootView.findViewById(R.id.pedido_impuestos_label)).setText("Impuestos " + imp.getValue() + "%");
         }
         catch(Exception ex)
-        {}
+        {}*/
 
 
 
@@ -597,7 +597,8 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                     jsonObject.put("vda", pedido.getPedidoDetalles().get(position).getValorDescuentoAutomatico());
                     jsonObject.put("vdat", pedido.getPedidoDetalles().get(position).getValorDescuentoAutomaticoTotal());
                     jsonObject.put("pi", pedido.getPedidoDetalles().get(position).getPorcentajeImpuesto());
-                    jsonObject.put("vi", pedido.getPedidoDetalles().get(position).getValorImpuesto() + pedido.getPedidoDetalles().get(position).getValorUnitario());
+                    jsonObject.put("vi", pedido.getPedidoDetalles().get(position).getValorImpuesto() + pedido.getPedidoDetalles().get(position).getValorUnitario() -
+                            (pedido.getPedidoDetalles().get(position).getValorDescuentoAutomatico() + pedido.getPedidoDetalles().get(position).getValorDescuentoManual()));
                     jsonObject.put("vit", pedido.getPedidoDetalles().get(position).getValorImpuestoTotal());
                     jsonObject.put("bi", pedido.getPedidoDetalles().get(position).getBaseImponible());
                     jsonObject.put("bic", pedido.getPedidoDetalles().get(position).getBaseImponibleCero());
@@ -608,7 +609,8 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                     jsonObject.put("id", pedido.getPedidoDetalles().get(position).getIdProducto());
                     jsonObject.put("f", pedido.getPedidoDetalles().get(position).getUrlFoto());
                     jsonObject.put("c", pedido.getPedidoDetalles().get(position).getCantidad());
-                    jsonObject.put("vd", prod.getPrecioDescuento());
+                    jsonObject.put("vd", pedido.getPedidoDetalles().get(position).getValorUnitario() -
+                            (pedido.getPedidoDetalles().get(position).getValorDescuentoAutomatico() + pedido.getPedidoDetalles().get(position).getValorDescuentoManual()));
                     jsonObject.put("pd", pedido.getPedidoDetalles().get(position).getPorcentajeDescuentoAutomatico());
                     jsonObject.put("ib", prod.getIdBeneficio());
                     jsonObject.put("co", pedido.getPedidoDetalles().get(position).getCantidadOriginal());

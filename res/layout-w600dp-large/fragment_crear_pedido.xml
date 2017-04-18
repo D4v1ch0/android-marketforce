@@ -39,18 +39,19 @@
         </AutoCompleteTextView>
 
         <ImageButton
+            android:id="@+id/pedido_crear_cliente"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:id="@+id/pedido_crear_cliente"
-            android:layout_weight="0.05"
-            android:gravity="center"
-            android:textStyle="bold"
             android:layout_gravity="center"
+            android:layout_weight="0.05"
+            android:adjustViewBounds="false"
+            android:background="@color/caldroid_transparent"
+            android:gravity="center"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:src="@drawable/ic_new_item"
-            android:adjustViewBounds="false"
-            android:background="@color/caldroid_transparent" />
+            android:textStyle="bold"
+            android:visibility="invisible" />
 
     </LinearLayout>
 
@@ -100,16 +101,16 @@
         android:paddingBottom="5dp">
 
         <TextView
+            android:id="@+id/textView108"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/label_sku"
-            android:id="@+id/textView108"
             android:layout_weight="0.12"
+            android:gravity="center"
+            android:text="@string/label_linea"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/color_text_sky_blue"
-            android:textStyle="bold"
             android:textSize="@dimen/text_medium_size"
-            android:gravity="center" />
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="0dp"

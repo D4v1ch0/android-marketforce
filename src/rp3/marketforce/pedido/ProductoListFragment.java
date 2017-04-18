@@ -72,6 +72,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
     private List<Producto> list_alternativo;
     private boolean fueraProduccion = false;
     private String tipoOrden;
+    private LibroPrecio precio;
 
     public static ProductoListFragment newInstance(int idCategoria, String serie, long idCliente, String tipoOrden)
     {
@@ -304,6 +305,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
                     Producto prod = adapter.getItem(position);
                     prod = Producto.getProductoID(getDataBase(), prod.getID());
                     seleccionado = prod;
+                    precio = null;
                     if(prod.getAviso().trim().length() == 0)
                         ValidarSustituto(prod);
                     else
@@ -444,7 +446,9 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
         GetSustitutos(prod);
         if(list_alternativo.size() == 0)
         {
-            LibroPrecio precio = LibroPrecio.getPrecio(getDataBase(), seleccionado.getCodigoExterno(), cliente.getIdExterno(), cliente.getListPrecio());
+            showDialogProgress("Cargando", "Consultando Precio");
+            precio = LibroPrecio.getPrecio(getDataBase(), seleccionado.getCodigoExterno(), cliente.getIdExterno(), cliente.getListPrecio());
+            closeDialogProgress();
             if (precio.getPrecio() > 0) {
                 GetStock(prod);
             } else {
@@ -456,7 +460,9 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
             Toast.makeText(getContext(), "Item " + prod.getCodigoExterno() + " ha sido sustituido por el item " + list_alternativo.get(0).getCodigoExterno(), Toast.LENGTH_LONG).show();
             prod = Producto.getProductoSingleByCodigoExterno(getDataBase(), list_alternativo.get(0).getCodigoExterno());
             seleccionado = prod;
-            LibroPrecio precio = LibroPrecio.getPrecio(getDataBase(), seleccionado.getCodigoExterno(), cliente.getIdExterno(), cliente.getListPrecio());
+            showDialogProgress("Cargando", "Consultando Precio");
+            precio = LibroPrecio.getPrecio(getDataBase(), seleccionado.getCodigoExterno(), cliente.getIdExterno(), cliente.getListPrecio());
+            closeDialogProgress();
             if (precio.getPrecio() > 0) {
                 GetStock(prod);
             } else {
@@ -481,7 +487,9 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             seleccionado = Producto.getProductoSingleByCodigoExterno(getDataBase(), list_alternativo.get(which).getCodigoExterno());
-                            LibroPrecio precio = LibroPrecio.getPrecio(getDataBase(), seleccionado.getCodigoExterno(), cliente.getIdExterno(), cliente.getListPrecio());
+                            showDialogProgress("Cargando", "Consultando Precio");
+                            precio = LibroPrecio.getPrecio(getDataBase(), seleccionado.getCodigoExterno(), cliente.getIdExterno(), cliente.getListPrecio());
+                            closeDialogProgress();
                             if (precio.getPrecio() > 0) {
                                 GetStock(seleccionado);
                             } else {
@@ -514,12 +522,22 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
     public void ShowProducto(double descuento)
     {
         Cliente cliente = Cliente.getClienteID(getDataBase(), idCliente, false);
-        LibroPrecio precio = LibroPrecio.getPrecio(getDataBase(), seleccionado.getCodigoExterno(), cliente.getIdExterno(), cliente.getListPrecio());
+        if(precio != null) {
+            showDialogProgress("Cargando", "Consultando Precio");
+            precio = LibroPrecio.getPrecio(getDataBase(), seleccionado.getCodigoExterno(), cliente.getIdExterno(), cliente.getListPrecio());
+            closeDialogProgress();
+        }
         if(precio.getPrecio() > 0) {
             try {
                 double valor = precio.getPrecio();
                 if(descuento != 0)
                     valor = (valor) - (valor * descuento);
+
+                double valorImpuesto = valor;
+                if(seleccionado.getPorcentajeImpuesto() > 0)
+                {
+                    valorImpuesto = (valor) + (valor * seleccionado.getPorcentajeImpuesto());
+                }
 
 
                 JSONObject jsonObject = new JSONObject();
@@ -534,7 +552,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
                 jsonObject.put("ib", 0 + "");
                 jsonObject.put("pi", seleccionado.getPorcentajeImpuesto());
                 jsonObject.put("vd", valor);
-                jsonObject.put("vi", valor);
+                jsonObject.put("vi", valorImpuesto);
                 jsonObject.put("a", seleccionado.getAplicacion());
 
                 productFragment = ProductFragment.newInstance(jsonObject.toString());

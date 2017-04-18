@@ -1789,6 +1789,8 @@
         tbProducto.PrecioConImpuesto,
         tbProducto.IdBeneficio,
         tbProducto.Aplicacion,
+        tbProducto.Familia,
+        tbProducto.Linea,
         tbProductoExt.Descripcion AS tbProductoExt_Descripcion,
         tbProductoExt.IdExterno1 AS tbProductoExt_IdExterno1,
         tbProductoExt.IdExterno2 AS tbProductoExt_IdExterno2

@@ -340,7 +340,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
             detalle.setSubtotalSinDescuento(detalle.getSubtotal());
             detalle.setSubtotalSinImpuesto(detalle.getSubtotal() - detalle.getValorDescuentoAutomaticoTotal() - detalle.getValorDescuentoManualTotal());
             detalle.setIdBeneficio(jsonObject.getInt("ib"));
-            detalle.setIdVendedor(User.getCurrentUser(this.getContext()).getLogonName());
+            detalle.setIdVendedor(detalle.getProducto().getLinea());
             if(usrDescManual != null && !usrDescManual.equalsIgnoreCase(""))
                 detalle.setUsrDescManual(usrDescManual);
 
