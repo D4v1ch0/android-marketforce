@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -385,6 +386,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
         super.onPositiveConfirmation(id);
         switch (id) {
             case DIALOG_SYNC_PRODUCTOS:
+                getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait, false, ProgressDialog.STYLE_HORIZONTAL);
                 setDialogProgressMax(1);
                 new UpdateProductos().execute();
@@ -878,7 +880,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                             stmt.bindString(3, type.getString("I"));
                             stmt.bindString(4, type.getString("D"));
                             if (!type.isNull("P"))
-                                stmt.bindDouble(5, Float.parseFloat(type.getString("P")));
+                                stmt.bindDouble(5, type.getDouble("P"));
                             else
                                 stmt.bindDouble(5, 0);
 

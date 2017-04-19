@@ -156,31 +156,37 @@ public class LibroPrecio extends EntityBase<LibroPrecio> {
         return item;
     }
 
-    public static LibroPrecio getPrecio(DataBase db, String item, String cliente, String listaPrecio) {
+    public static List<LibroPrecio> getPrecio(DataBase db, String item, String cliente, String listaPrecio) {
         String query = QueryDir.getQuery(Contract.LibroPrecio.QUERY_LIBRO_PRECIO);
         Calendar cal = Calendar.getInstance();
 
         Cursor c = db.rawQuery(query, new String[]{item, cliente, listaPrecio, cal.getTimeInMillis() + "", cal.getTimeInMillis() + ""} );
 
-        LibroPrecio precio = new LibroPrecio();
+        List<LibroPrecio> list = new ArrayList<>();
         while(c.moveToNext()){
+            LibroPrecio precio = new LibroPrecio();
             precio.setItem(CursorUtils.getString(c, Contract.LibroPrecio.COLUMN_ITEM));
             precio.setPrecio(CursorUtils.getDouble(c, Contract.LibroPrecio.COLUMN_PRECIO));
+            precio.setValorEscalado(CursorUtils.getDouble(c, Contract.LibroPrecio.COLUMN_VALOR_ESCALADO));
+            list.add(precio);
         }
         c.close();
 
-        if(precio.getItem() == null)
+        if(list.size() == 0)
         {
             query = QueryDir.getQuery(Contract.LibroPrecio.QUERY_LIBRO_PRECIO_ESTANDAR);
 
             Cursor d = db.rawQuery(query, new String[]{item} );
 
             while(d.moveToNext()){
+                LibroPrecio precio = new LibroPrecio();
                 precio.setItem(CursorUtils.getString(d, Contract.LibroPrecio.COLUMN_ITEM));
                 precio.setPrecio(CursorUtils.getDouble(d, Contract.LibroPrecio.COLUMN_PRECIO));
+                precio.setValorEscalado(CursorUtils.getDouble(c, Contract.LibroPrecio.COLUMN_VALOR_ESCALADO));
+                list.add(precio);
             }
             d.close();
         }
-        return precio;
+        return list;
     }
 }

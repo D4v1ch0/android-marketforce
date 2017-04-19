@@ -289,20 +289,20 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
         pedido.setTipoDocumento(tipo);
         pedido.setObservaciones(((EditText) getRootView().findViewById(R.id.actividad_texto_respuesta)).getText().toString());
-        pedido.setValorTotal(NumberUtils.Round(valorTotal, 2));
-        pedido.setSubtotal(NumberUtils.Round(subtotal, 2));
-        pedido.setTotalDescuentos(NumberUtils.Round(descuentos, 2));
-        pedido.setTotalImpuestos(NumberUtils.Round(impuestos, 2));
-        pedido.setBaseImponible(NumberUtils.Round(baseImponible, 2));
-        pedido.setBaseImponibleCero(NumberUtils.Round(base0, 2));
-        pedido.setRedondeo(NumberUtils.Round(redondeo, 2));
+        pedido.setValorTotal(NumberUtils.Round(valorTotal, 4));
+        pedido.setSubtotal(NumberUtils.Round(subtotal, 4));
+        pedido.setTotalDescuentos(NumberUtils.Round(descuentos, 4));
+        pedido.setTotalImpuestos(NumberUtils.Round(impuestos, 4));
+        pedido.setBaseImponible(NumberUtils.Round(baseImponible, 4));
+        pedido.setBaseImponibleCero(NumberUtils.Round(base0, 4));
+        pedido.setRedondeo(NumberUtils.Round(redondeo, 4));
         float pagado = 0;
         if (pedido.getPagos() != null)
             for (Pago pago : pedido.getPagos()) {
                 pagado = pagado + pago.getValor();
             }
-        pedido.setExcedente(NumberUtils.Round(valorTotal - pagado, 2));
-        pedido.setSubtotalSinDescuento(NumberUtils.Round(subtotal, 2));
+        pedido.setExcedente(NumberUtils.Round(valorTotal - pagado, 4));
+        pedido.setSubtotalSinDescuento(NumberUtils.Round(subtotal, 4));
 
         pedido.setCiudad("Guayaquil");
         pedido.setSerie(serie);

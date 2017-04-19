@@ -4,31 +4,31 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/pedido_detalle_sku"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/pedido_detalle_sku"
         android:layout_weight="0.12"
-        android:textSize="@dimen/text_small_size"
-        android:lines="1"
-        android:maxLines="1"
+        android:ellipsize="end"
         android:gravity="center"
+        android:lines="1"
+        android:maxLines="2"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/material_blue_grey_800"
-        android:ellipsize="end" />
+        android:textSize="@dimen/text_small_size" />
 
     <TextView
+        android:id="@+id/pedido_detalle_descripcion"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/pedido_detalle_descripcion"
-        android:layout_weight="0.45"
-        android:textSize="@dimen/text_small_size"
-        android:lines="1"
-        android:maxLines="1"
-        android:gravity="center|center_vertical|center_horizontal"
         android:layout_gravity="center"
+        android:layout_weight="0.45"
+        android:ellipsize="end"
+        android:gravity="center|center_vertical|center_horizontal"
+        android:lines="1"
+        android:maxLines="2"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/material_blue_grey_800"
-        android:ellipsize="end" />
+        android:textSize="@dimen/text_small_size" />
 
     <TextView
         android:layout_width="0dp"

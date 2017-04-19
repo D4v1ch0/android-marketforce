@@ -40,8 +40,8 @@ public class PedidoDetalleAdapter extends BaseAdapter {
         df = new DecimalFormat("#.##");
         df.setRoundingMode(RoundingMode.CEILING);
         numberFormat = NumberFormat.getInstance();
-        numberFormat.setMaximumFractionDigits(2);
-        numberFormat.setMinimumFractionDigits(2);
+        numberFormat.setMaximumFractionDigits(4);
+        numberFormat.setMinimumFractionDigits(4);
     }
 
     public boolean isDetail() {
@@ -98,7 +98,7 @@ public class PedidoDetalleAdapter extends BaseAdapter {
             ((TextView) convertView.findViewById(R.id.pedido_detalle_cantidad)).setText((detalle.getCantidad()) + "");
 
             ((TextView) convertView.findViewById(R.id.pedido_detalle_unitario)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(detalle.getValorUnitario()));
-            ((TextView) convertView.findViewById(R.id.pedido_detalle_valor_total)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(detalle.getValorTotal()));
+            ((TextView) convertView.findViewById(R.id.pedido_detalle_valor_total)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(detalle.getSubtotalSinImpuesto()));
         }
         else
         {

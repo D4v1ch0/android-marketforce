@@ -2463,7 +2463,9 @@
     <statement name="LibroPrecio">
         SELECT
         tbLibroPrecio.Item,
-        tbLibroPrecio.Precio
+        tbLibroPrecio.Precio,
+        tbLibroPrecio.ValorEscalado,
+        tbLibroPrecio.FechaEfectiva
         from tbLibroPrecio
         INNER JOIN tbMatrizPrecio
         ON tbMatrizPrecio.IdLibro = tbLibroPrecio.IdLibro
@@ -2475,12 +2477,13 @@
         AND (tbLibroPrecio.FechaVencimiento = 18000000 OR tbLibroPrecio.FechaVencimiento &gt; ?)
         AND (tbLibroPrecio.FechaEfectiva &lt; ?)
         ORDER BY tbLibroPrecio.FechaEfectiva DESC, tbMatrizPrecio.Secuencia, tbSecuenciaMatriz.IdJerarquia
-        LIMIT 1
     </statement>
     <statement name="LibroPrecioEstandar">
         SELECT
         tbLibroPrecio.Item,
-        tbLibroPrecio.Precio
+        tbLibroPrecio.Precio,
+        tbLibroPrecio.ValorEscalado,
+        tbLibroPrecio.FechaEfectiva
         from tbLibroPrecio
         WHERE item = ?
         AND LibroEstandar = 'S'

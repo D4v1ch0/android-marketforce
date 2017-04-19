@@ -10,12 +10,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import rp3.accounts.User;
@@ -28,6 +31,7 @@ import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.cliente.SignInFragment;
 import rp3.marketforce.models.TipoCliente;
+import rp3.marketforce.models.pedido.LibroPrecio;
 import rp3.marketforce.models.pedido.PedidoDetalle;
 import rp3.marketforce.models.pedido.Producto;
 import rp3.marketforce.models.pedido.Vendedor;
@@ -49,6 +53,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
     private NumberFormat numberFormat, numberFormatInteger;
     private SignInFragment signInFragment;
     private String usrDescManual;
+    private List<LibroPrecio> libroPrecios;
 
     public static ProductFragment newInstance(String jcode)
     {
@@ -102,8 +107,8 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
         df = new DecimalFormat("#.##");
         df.setRoundingMode(RoundingMode.CEILING);
         numberFormat = NumberFormat.getInstance();
-        numberFormat.setMaximumFractionDigits(2);
-        numberFormat.setMinimumFractionDigits(2);
+        numberFormat.setMaximumFractionDigits(4);
+        numberFormat.setMinimumFractionDigits(4);
 
         numberFormatInteger = NumberFormat.getInstance();
         numberFormatInteger.setMaximumFractionDigits(0);
@@ -122,7 +127,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
             ((TextView)rootView.findViewById(R.id.producto_aplicacion)).setText(jsonObject.getString("a"));
             ((TextView)rootView.findViewById(R.id.producto_descripcion)).setText(jsonObject.getString("d"));
             ((TextView)rootView.findViewById(R.id.producto_descuento_auto)).setText(numberFormat.format(porcentajeDescAuto) + "%");
-            ((TextView)rootView.findViewById(R.id.producto_precio)).setText("" + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(jsonObject.getDouble("vi")));
+            ((TextView)rootView.findViewById(R.id.producto_precio)).setText("" + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(jsonObject.getDouble("vd")));
             ((TextView)rootView.findViewById(R.id.producto_precio_final)).setText("" + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " 0");
             List<Vendedor> list_vendedores = Vendedor.getVendedores(getDataBase());
             SimpleIdentifiableAdapter vendedores = new SimpleIdentifiableAdapter(getContext(), list_vendedores);
@@ -174,7 +179,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
                         double precio_total = cantidad * jsonObject.getDouble("p");
                         valorDescManualTotal = valorDescManual * cantidad;
                         precio_total = precio_total - valorDescManualTotal - valorDescAutoTotal;
-                        precio_total = precio_total * (1 + Float.parseFloat(jsonObject.getString("pi")));
+                        //precio_total = precio_total * (1 + Float.parseFloat(jsonObject.getString("pi")));
                         ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("" + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(precio_total));
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -208,7 +213,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
                             double precio_total = cantidad * jsonObject.getDouble("p");
                             valorDescManualTotal = valorDescManual * cantidad;
                             precio_total = precio_total - valorDescManualTotal - valorDescAutoTotal;
-                            precio_total = precio_total * (1 + Float.parseFloat(jsonObject.getString("pi")));
+                            //precio_total = precio_total * (1 + Float.parseFloat(jsonObject.getString("pi")));
                             ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("" + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(precio_total));
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -242,7 +247,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
                     double precio_total = cantidad * jsonObject.getDouble("p");
                     valorDescManualTotal = valorDescManual * cantidad;
                     precio_total = precio_total - valorDescManualTotal - valorDescAutoTotal;
-                    precio_total = precio_total * (1 + Float.parseFloat(jsonObject.getString("pi")));
+                    //precio_total = precio_total * (1 + Float.parseFloat(jsonObject.getString("pi")));
                     ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("" + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(precio_total));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -254,6 +259,20 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
             {
                 ((EditText)rootView.findViewById(R.id.producto_descuento_manual)).setEnabled(false);
                 rootView.findViewById(R.id.producto_vendedor).setEnabled(false);
+            }
+
+            //Instancio precios
+            libroPrecios = new ArrayList<>();
+            JSONArray jLibros = jsonObject.getJSONArray("lp");
+            for(int i = 0; i < jLibros.length(); i ++)
+            {
+                JSONObject jPrecio = jLibros.getJSONObject(i);
+                LibroPrecio libroPrecio = new LibroPrecio();
+                libroPrecio.setItem(jPrecio.getString("i"));
+                libroPrecio.setPrecio(jPrecio.getDouble("p"));
+                libroPrecio.setValorEscalado(jPrecio.getDouble("e"));
+                libroPrecio.setFechaEfectiva(new Date(jPrecio.getLong("f")));
+                libroPrecios.add(libroPrecio);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -360,5 +379,21 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
 
         createFragmentListener.onAcceptSuccess(detalle);
         dismiss();
+    }
+
+    public LibroPrecio evaluatePrecio(int cantidad)
+    {
+        LibroPrecio resp = null;
+        for(LibroPrecio libroPrecio : libroPrecios)
+        {
+            if(resp == null && libroPrecio.getValorEscalado() == 0)
+                resp = libroPrecio;
+            else
+            {
+                if(libroPrecio.getValorEscalado() == 0 && libroPrecio.getFechaEfectiva().getTime() > resp.getFechaEfectiva().getTime())
+                    resp = libroPrecio;
+            }
+        }
+        return resp;
     }
 }

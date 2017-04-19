@@ -223,7 +223,7 @@
             android:paddingBottom="5dp"
             android:paddingLeft="5dp"
             android:paddingTop="6dp"
-            android:text="@string/label_saldo"
+            android:text="@string/label_subtotal_points"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/color_text_sky_blue"
             android:textSize="@dimen/text_small_size"
@@ -430,20 +430,20 @@
                 android:background="@color/material_blue_grey_800" />
 
             <TextView
+                android:id="@+id/textView117"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/label_saldo"
-                android:id="@+id/textView117"
                 android:layout_weight="1"
-                android:textColor="@color/color_text_sky_blue"
-                android:textStyle="bold"
+                android:background="@color/color_grey"
                 android:gravity="left"
+                android:paddingBottom="5dp"
                 android:paddingLeft="5dp"
                 android:paddingTop="6dp"
-                android:paddingBottom="5dp"
-                android:background="@color/color_grey"
-                android:textSize="@dimen/text_small_size" />
+                android:text="@string/label_total_impuestos"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/color_text_sky_blue"
+                android:textSize="@dimen/text_small_size"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:orientation="vertical"

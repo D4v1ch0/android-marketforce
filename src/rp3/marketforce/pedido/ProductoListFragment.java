@@ -72,7 +72,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
     private List<Producto> list_alternativo;
     private boolean fueraProduccion = false;
     private String tipoOrden;
-    private LibroPrecio precio;
+    private List<LibroPrecio> precio;
 
     public static ProductoListFragment newInstance(int idCategoria, String serie, long idCliente, String tipoOrden)
     {
@@ -449,7 +449,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
             showDialogProgress("Cargando", "Consultando Precio");
             precio = LibroPrecio.getPrecio(getDataBase(), seleccionado.getCodigoExterno(), cliente.getIdExterno(), cliente.getListPrecio());
             closeDialogProgress();
-            if (precio.getPrecio() > 0) {
+            if (evaluatePrecio().getPrecio() > 0) {
                 GetStock(prod);
             } else {
                 showDialogMessage("El producto debe tener precio para poder ingresar el registro");
@@ -463,7 +463,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
             showDialogProgress("Cargando", "Consultando Precio");
             precio = LibroPrecio.getPrecio(getDataBase(), seleccionado.getCodigoExterno(), cliente.getIdExterno(), cliente.getListPrecio());
             closeDialogProgress();
-            if (precio.getPrecio() > 0) {
+            if (evaluatePrecio().getPrecio() > 0) {
                 GetStock(prod);
             } else {
                 showDialogMessage("El producto debe tener precio para poder ingresar el registro");
@@ -490,7 +490,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
                             showDialogProgress("Cargando", "Consultando Precio");
                             precio = LibroPrecio.getPrecio(getDataBase(), seleccionado.getCodigoExterno(), cliente.getIdExterno(), cliente.getListPrecio());
                             closeDialogProgress();
-                            if (precio.getPrecio() > 0) {
+                            if (evaluatePrecio().getPrecio() > 0) {
                                 GetStock(seleccionado);
                             } else {
                                 showDialogMessage("El producto debe tener precio para poder ingresar el registro");
@@ -522,14 +522,14 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
     public void ShowProducto(double descuento)
     {
         Cliente cliente = Cliente.getClienteID(getDataBase(), idCliente, false);
-        if(precio != null) {
+        if(precio == null) {
             showDialogProgress("Cargando", "Consultando Precio");
             precio = LibroPrecio.getPrecio(getDataBase(), seleccionado.getCodigoExterno(), cliente.getIdExterno(), cliente.getListPrecio());
             closeDialogProgress();
         }
-        if(precio.getPrecio() > 0) {
+        if(evaluatePrecio().getPrecio() > 0) {
             try {
-                double valor = precio.getPrecio();
+                double valor = evaluatePrecio().getPrecio();
                 if(descuento != 0)
                     valor = (valor) - (valor * descuento);
 
@@ -542,7 +542,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
 
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("d", seleccionado.getDescripcion());
-                jsonObject.put("p", precio.getPrecio());
+                jsonObject.put("p", evaluatePrecio().getPrecio());
                 jsonObject.put("id", seleccionado.getIdProducto());
                 jsonObject.put("f", seleccionado.getUrlFoto());
                 jsonObject.put("ce", seleccionado.getCodigoExterno());
@@ -555,6 +555,19 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
                 jsonObject.put("vi", valorImpuesto);
                 jsonObject.put("a", seleccionado.getAplicacion());
 
+                //Envío lista de precio para no cargarla de nuevo
+                JSONArray jArrayLibro = new JSONArray();
+                for(LibroPrecio libroPrecio : precio)
+                {
+                    JSONObject jsonLibro = new JSONObject();
+                    jsonLibro.put("i", libroPrecio.getItem());
+                    jsonLibro.put("p", libroPrecio.getPrecio());
+                    jsonLibro.put("e", libroPrecio.getValorEscalado());
+                    jsonLibro.put("f", libroPrecio.getFechaEfectiva().getTime());
+                    jArrayLibro.put(jsonLibro);
+                }
+                jsonObject.put("lp", jArrayLibro);
+
                 productFragment = ProductFragment.newInstance(jsonObject.toString());
                 productFragment.setCancelable(false);
                 showDialogFragment(productFragment, "Producto", "Agregar Producto - " + seleccionado.getCodigoExterno());
@@ -566,5 +579,21 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
         {
             showDialogMessage("El producto debe tener precio para poder ingresar el registro");
         }
+    }
+
+    public LibroPrecio evaluatePrecio()
+    {
+        LibroPrecio resp = null;
+        for(LibroPrecio libroPrecio : precio)
+        {
+            if(resp == null && libroPrecio.getValorEscalado() == 0)
+                resp = libroPrecio;
+            else
+            {
+                if(libroPrecio.getValorEscalado() == 0 && libroPrecio.getFechaEfectiva().getTime() > resp.getFechaEfectiva().getTime())
+                    resp = libroPrecio;
+            }
+        }
+        return resp;
     }
 }
