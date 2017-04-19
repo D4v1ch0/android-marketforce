@@ -113,6 +113,7 @@ public class Rutas {
 						rp3.marketforce.models.Agenda agenda = rp3.marketforce.models.Agenda.getAgendaServer(db, (int) type.getLong("IdAgenda"));
 						if(agenda == null) {
 							if (!type.isNull("Origen") && type.getString("Origen").equalsIgnoreCase("M")) {
+								Date vares = Convert.getDateFromDotNetTicks(type.getLong("FechaCreacionTicks"));
 								agenda = rp3.marketforce.models.Agenda.getAgendaServerByTicks(db, Convert.getDateFromDotNetTicks(type.getLong("FechaCreacionTicks")).getTime());
 								if (agenda == null)
 									agenda = new Agenda();

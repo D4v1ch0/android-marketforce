@@ -13,6 +13,19 @@ android {
     buildToolsVersion '25.0.0'
     compileOptions.encoding = 'UTF-8'
     android.enforceUniquePackageName = false
+    useLibrary 'org.apache.http.legacy'
+
+    lintOptions {
+        checkReleaseBuilds false
+    }
+
+    defaultConfig {
+        multiDexEnabled true
+    }
+
+    dexOptions {
+        javaMaxHeapSize "2g"
+    }
 
     sourceSets {
         main {
