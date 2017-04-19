@@ -95,9 +95,10 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/transforms" />
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
+      <excludeFolder url="file://$MODULE_DIR$/build/reports" />
       <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
     </content>
-    <orderEntry type="jdk" jdkName="Android API 21 Platform" jdkType="Android SDK" />
+    <orderEntry type="jdk" jdkName="Android API 25 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="play-services-base-10.2.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-tasks-10.2.1" level="project" />
@@ -124,5 +125,9 @@
     <orderEntry type="module" module-name="AndroidGraphView" exported="" />
     <orderEntry type="module" module-name="main" exported="" />
     <orderEntry type="module" module-name="android-core" exported="" />
+    <orderEntry type="library" exported="" name="support-annotations-25.3.0" level="project" />
+    <orderEntry type="library" exported="" name="nineoldandroids-2.4.0" level="project" />
+    <orderEntry type="library" exported="" name="pothoview" level="project" />
+    <orderEntry type="library" exported="" name="ksoap2-android-assembly-3.2.0-jar-with-dependencies" level="project" />
   </component>
 </module>
