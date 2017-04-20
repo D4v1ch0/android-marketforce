@@ -203,10 +203,12 @@ public class PedidoParametrosFragment extends BaseFragment{
                     if (position_series != -1) {
                         idCliente = list_cliente.get(position).getID();
                         idSerie = list_serie.get(position_series).getCode();
+                        int idDireccion = list_cliente.get(position).getClienteDirecciones().get(((Spinner) rootView.findViewById(R.id.crear_pedido_direccion)).getSelectedItemPosition()).getIdClienteDireccion();
                         Intent intent = new Intent(getContext(), CrearPedidoActivity.class);
                         intent.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, transaccion);
                         intent.putExtra(CrearPedidoActivity.ARG_CLIENTE, idCliente);
                         intent.putExtra(CrearPedidoActivity.ARG_SERIE, idSerie);
+                        intent.putExtra(CrearPedidoActivity.ARG_DIRECCION, idDireccion);
                         intent.putExtra(CrearPedidoActivity.ARG_TIPO_ORDEN, tipoOrdenAdapter.getCode(((Spinner) getRootView().findViewById(R.id.crear_pedido_tipo_orden)).getSelectedItemPosition()));
                         dismiss();
                         if(from == 1)

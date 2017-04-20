@@ -168,6 +168,7 @@ public class LibroPrecio extends EntityBase<LibroPrecio> {
             precio.setItem(CursorUtils.getString(c, Contract.LibroPrecio.COLUMN_ITEM));
             precio.setPrecio(CursorUtils.getDouble(c, Contract.LibroPrecio.COLUMN_PRECIO));
             precio.setValorEscalado(CursorUtils.getDouble(c, Contract.LibroPrecio.COLUMN_VALOR_ESCALADO));
+            precio.setFechaEfectiva(CursorUtils.getDate(c, Contract.LibroPrecio.COLUMN_FECHA_EFECTIVA));
             list.add(precio);
         }
         c.close();
@@ -182,7 +183,8 @@ public class LibroPrecio extends EntityBase<LibroPrecio> {
                 LibroPrecio precio = new LibroPrecio();
                 precio.setItem(CursorUtils.getString(d, Contract.LibroPrecio.COLUMN_ITEM));
                 precio.setPrecio(CursorUtils.getDouble(d, Contract.LibroPrecio.COLUMN_PRECIO));
-                precio.setValorEscalado(CursorUtils.getDouble(c, Contract.LibroPrecio.COLUMN_VALOR_ESCALADO));
+                precio.setValorEscalado(CursorUtils.getDouble(d, Contract.LibroPrecio.COLUMN_VALOR_ESCALADO));
+                precio.setFechaEfectiva(CursorUtils.getDate(d, Contract.LibroPrecio.COLUMN_FECHA_EFECTIVA));
                 list.add(precio);
             }
             d.close();

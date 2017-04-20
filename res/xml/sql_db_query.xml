@@ -2488,6 +2488,5 @@
         WHERE item = ?
         AND LibroEstandar = 'S'
         ORDER BY tbLibroPrecio.FechaEfectiva DESC
-        LIMIT 1
     </statement>
 </sql>

@@ -583,10 +583,10 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
 
     public LibroPrecio evaluatePrecio()
     {
-        LibroPrecio resp = null;
+        LibroPrecio resp = new LibroPrecio();
         for(LibroPrecio libroPrecio : precio)
         {
-            if(resp == null && libroPrecio.getValorEscalado() == 0)
+            if(resp.getItem() == null && libroPrecio.getValorEscalado() == 0)
                 resp = libroPrecio;
             else
             {

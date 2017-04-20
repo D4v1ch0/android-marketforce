@@ -30,6 +30,7 @@ import com.starmicronics.stario.PortInfo;
 import com.starmicronics.stario.StarIOPort;
 import com.starmicronics.stario.StarIOPortException;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -53,6 +54,7 @@ import rp3.marketforce.db.Contract;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.Cliente;
 import rp3.marketforce.models.pedido.ControlCaja;
+import rp3.marketforce.models.pedido.LibroPrecio;
 import rp3.marketforce.models.pedido.Pago;
 import rp3.marketforce.models.pedido.Pedido;
 import rp3.marketforce.models.pedido.PedidoDetalle;
@@ -86,6 +88,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     public static String ARG_AGENDA = "agenda";
     public static String ARG_TIPO_DOCUMENTO = "tipo_documento";
     public static String ARG_TIPO_ORDEN = "tipo_orden";
+    public static String ARG_DIRECCION = "direccion";
     public static final int REQUEST_BUSQUEDA = 3;
     public static final int REQUEST_CLIENTE = 4;
     public static final int REQUEST_REPRINT= 5;
@@ -99,6 +102,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     private long idCliente = 0;
     private long idAgenda = 0;
     private long idPedido = 0;
+    private int idDireccion = 0;
     private boolean saved = false;
     private String tipo = "FA";
     private Pedido pedido;
@@ -111,7 +115,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     private Menu menu;
     private PagosListFragment fragment;
 
-    public static CrearPedidoFragment newInstance(long id_pedido, long id_agenda, String tipo, long idCliente, String serie, String tipoOrden)
+    public static CrearPedidoFragment newInstance(long id_pedido, long id_agenda, String tipo, long idCliente, String serie, String tipoOrden, int idDireccion)
     {
         CrearPedidoFragment fragment = new CrearPedidoFragment();
         Bundle args = new Bundle();
@@ -121,6 +125,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         args.putLong(ARG_CLIENTE, idCliente);
         args.putString(ARG_SERIE, serie);
         args.putString(ARG_TIPO_ORDEN, tipoOrden);
+        args.putInt(ARG_DIRECCION, idDireccion);
         fragment.setArguments(args);
         return fragment;
     }
@@ -307,7 +312,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         pedido.setCiudad("Guayaquil");
         pedido.setSerie(serie);
         pedido.setTipoOrden(tipoOrden);
-        pedido.setIdDireccion(1);
+        pedido.setIdDireccion(idDireccion);
 
         if (pendiente)
             pedido.setEstado("P");
@@ -429,6 +434,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         idCliente = getArguments().getLong(ARG_CLIENTE, 0);
         serie = getArguments().getString(ARG_SERIE, "");
         tipoOrden = getArguments().getString(ARG_TIPO_ORDEN, "");
+        idDireccion = getArguments().getInt(ARG_DIRECCION, 0);
         cliente_auto = (AutoCompleteTextView) rootView.findViewById(R.id.pedido_cliente);
         list_nombres = new ArrayList<String>();
 
@@ -620,6 +626,20 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                         jsonObject.put("udm", pedido.getPedidoDetalles().get(position).getUsrDescManual());
                     jsonObject.put("tipo", tipo);
 
+                    JSONArray jArrayLibro = new JSONArray();
+                    Cliente cliente = Cliente.getClienteID(getDataBase(), idCliente, false);
+                    List<LibroPrecio> precio = LibroPrecio.getPrecio(getDataBase(), prod.getCodigoExterno(), cliente.getIdExterno(), cliente.getListPrecio());
+                    for(LibroPrecio libroPrecio : precio)
+                    {
+                        JSONObject jsonLibro = new JSONObject();
+                        jsonLibro.put("i", libroPrecio.getItem());
+                        jsonLibro.put("p", libroPrecio.getPrecio());
+                        jsonLibro.put("e", libroPrecio.getValorEscalado());
+                        jsonLibro.put("f", libroPrecio.getFechaEfectiva().getTime());
+                        jArrayLibro.put(jsonLibro);
+                    }
+                    jsonObject.put("lp", jArrayLibro);
+
                     productFragment = ProductFragment.newInstance(jsonObject.toString());
                     productFragment.setCancelable(false);
                     showDialogFragment(productFragment, "Producto", "Editar Producto");
@@ -687,6 +707,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         serie = pedido.getSerie();
         tipoOrden = pedido.getTipoOrden();
         idCliente = pedido.get_idCliente();
+        idDireccion = pedido.getIdDireccion();
         if(pedido.get_idCliente() != 0) {
             idCliente = pedido.get_idCliente();
             cl = Cliente.getClienteID(getDataBase(), pedido.get_idCliente(), false);

@@ -20,6 +20,7 @@ public class CrearPedidoActivity extends BaseActivity {
     public static String ARG_TIPO_DOCUMENTO = "tipo_documento";
     public static String ARG_IDPEDIDO = "idcliente";
     public static String ARG_CLIENTE = "cliente";
+    public static String ARG_DIRECCION = "direccion";
     public static String ARG_TIPO_ORDEN = "tipo_orden";
     public static String ARG_SERIE = "serie";
     public static String ARG_IDAGENDA = "idagenda";
@@ -30,6 +31,7 @@ public class CrearPedidoActivity extends BaseActivity {
         long id_pedido = 0;
         long id_agenda = 0;
         long id_cliente = 0;
+        int id_direccion = 0;
         String tipo = "FA";
         String serie = "";
         String tipoorden = "";
@@ -47,12 +49,13 @@ public class CrearPedidoActivity extends BaseActivity {
             id_cliente = getIntent().getExtras().getLong(ARG_CLIENTE, 0);
             serie = getIntent().getExtras().getString(ARG_SERIE, "");
             tipoorden = getIntent().getExtras().getString(ARG_TIPO_ORDEN, "");
+            id_direccion = getIntent().getExtras().getInt(ARG_DIRECCION, 0);
         }
 
         setHomeAsUpEnabled(true, true);
         setContentView(R.layout.layout_simple_content);
         if (!hasFragment(rp3.core.R.id.content)) {
-            newFragment = CrearPedidoFragment.newInstance(id_pedido, id_agenda, tipo, id_cliente, serie, tipoorden);
+            newFragment = CrearPedidoFragment.newInstance(id_pedido, id_agenda, tipo, id_cliente, serie, tipoorden, id_direccion);
             setFragment(rp3.core.R.id.content, newFragment);
         }
     }
