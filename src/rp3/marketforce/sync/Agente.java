@@ -39,6 +39,7 @@ import rp3.marketforce.R;
 import rp3.marketforce.db.Contract;
 import rp3.marketforce.models.AgenteResumen;
 import rp3.marketforce.models.AgenteUbicacion;
+import rp3.marketforce.models.pedido.AgenteDescuento;
 import rp3.runtime.Session;
 import rp3.sync.TestConnection;
 import rp3.util.Convert;
@@ -470,5 +471,40 @@ public class Agente {
         }
 
         return rp3.marketforce.sync.SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
+    public static int executeSyncGetAgenteDescuento(DataBase db){
+        WebService webService = new WebService("MartketForce","GetTopes");
+
+        try
+        {
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+                JSONArray jArray = webService.getJSONArrayResponse();
+                AgenteDescuento.deleteAll(db, Contract.AgenteDescuento.TABLE_NAME);
+                for(int i = 0 ; i < jArray.length(); i ++)
+                {
+                    JSONObject jObject = jArray.getJSONObject(i);
+                    AgenteDescuento resumen = new AgenteDescuento();
+                    resumen.setLinea(jObject.getString("Linea"));
+                    resumen.setCanal(jObject.getString("Canal"));
+                    resumen.setTope(jObject.getDouble("PorcentajeDescuento"));
+                    AgenteDescuento.insert(db, resumen);
+                }
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return SyncAdapter.SYNC_EVENT_ERROR;
+            }
+
+        }finally{
+            webService.close();
+        }
+
+        return SyncAdapter.SYNC_EVENT_SUCCESS;
     }
 }

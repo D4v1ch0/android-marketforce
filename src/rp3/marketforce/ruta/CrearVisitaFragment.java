@@ -25,6 +25,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.SpinnerAdapter;
@@ -49,6 +50,7 @@ import rp3.marketforce.models.Cliente;
 import rp3.marketforce.models.ClienteDireccion;
 import rp3.marketforce.models.Contacto;
 import rp3.marketforce.models.Tarea;
+import rp3.marketforce.models.pedido.Pedido;
 import rp3.marketforce.ruta.TareasFragment.EditTareasDialogListener;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.util.ConnectionUtils;
@@ -63,6 +65,8 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 
     public static final int ID_DURACION = 0;
     public static final int ID_TIEMPO = 1;
+
+    public static final int DIALOG_PEDIDO_INCONCLUSO = 1;
 
     private AutoCompleteTextView cliente_auto;
     private SimpleGeneralValueAdapter adapterDuracion;
@@ -104,6 +108,11 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
         list_nombres = new ArrayList<String>();
         if (list_tareas == null)
             list_tareas = new ArrayList<Tarea>();
+
+        Tarea tareaDefault = Tarea.getTareaId(getDataBase(), 244);
+        list_tareas.add(tareaDefault);
+        onFinishTareasDialog(list_tareas);
+        getRootView().findViewById(R.id.crear_visita_valor_layout).setVisibility(View.VISIBLE);
 
         if (cliente_auto != null)
             lastText = cliente_auto.getText().toString();
@@ -302,11 +311,15 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 
     @Override
     public void onFinishTareasDialog(List<Tarea> tareas) {
+        getRootView().findViewById(R.id.crear_visita_valor_layout).setVisibility(View.GONE);
         this.list_tareas = tareas;
         String tarea_string = "";
         if (tareas.size() > 0) {
-            for (Tarea tarea : tareas)
+            for (Tarea tarea : tareas) {
+                if(tarea.getTipoTarea().equalsIgnoreCase("P"))
+                    getRootView().findViewById(R.id.crear_visita_valor_layout).setVisibility(View.VISIBLE);
                 tarea_string = tarea_string + tarea.getNombreTarea() + ", ";
+            }
 
             tarea_string = tarea_string.substring(0, tarea_string.length() - 2);
         } else
@@ -360,109 +373,55 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
     }
 
     @Override
+    public void onPositiveConfirmation(int id) {
+        super.onPositiveConfirmation(id);
+        switch (id)
+        {
+            case DIALOG_PEDIDO_INCONCLUSO:
+                SaveAgenda(true);
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onNegativeConfirmation(int id) {
+        super.onNegativeConfirmation(id);
+        switch (id)
+        {
+            case DIALOG_PEDIDO_INCONCLUSO:
+                SaveAgenda(false);
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_save:
-                Agenda agenda = new Agenda();
-                agenda.setDuracion(duracion);
-                agenda.setTiempoViaje(tiempo);
-
-                Calendar cal_hoy = Calendar.getInstance();
-                //if((fecha.get(Calendar.YEAR) < cal_hoy.get(Calendar.YEAR)) || (fecha.get(Calendar.MONTH) < cal_hoy.get(Calendar.MONTH))
-                //		|| (fecha.get(Calendar.DATE) < cal_hoy.get(Calendar.DATE)) )
-                //{
-                //	Toast.makeText(getActivity(), "Fecha no puede ser anterior a hoy.", Toast.LENGTH_LONG).show();
-                //	return true;
-                //}
-
-                Calendar cal = Calendar.getInstance();
-                Calendar calFin = Calendar.getInstance();
-
-                cal.set(Calendar.DATE, fecha.get(Calendar.DATE));
-                cal.set(Calendar.MONTH, fecha.get(Calendar.MONTH));
-                cal.set(Calendar.YEAR, fecha.get(Calendar.YEAR));
-
-                calFin.set(Calendar.DATE, fecha.get(Calendar.DATE));
-                calFin.set(Calendar.MONTH, fecha.get(Calendar.MONTH));
-                calFin.set(Calendar.YEAR, fecha.get(Calendar.YEAR));
-
-                cal.set(Calendar.HOUR_OF_DAY, fecha.get(Calendar.HOUR_OF_DAY));
-                cal.set(Calendar.MINUTE, fecha.get(Calendar.MINUTE));
-
-                if(duracion < 1440) {
-                    calFin.set(Calendar.HOUR_OF_DAY, fecha.get(Calendar.HOUR_OF_DAY));
-                    calFin.set(Calendar.MINUTE, fecha.get(Calendar.MINUTE));
-                    calFin.add(Calendar.MINUTE, (int) agenda.getDuracion());
-                }
-                else
+                boolean hasPedido = false;
+                for(Tarea tar : list_tareas)
                 {
-                    calFin.set(Calendar.HOUR_OF_DAY, 23);
-                    calFin.set(Calendar.MINUTE, 59);
+                    if(tar.getTipoTarea().equalsIgnoreCase("P"))
+                        hasPedido = true;
                 }
-
-                agenda.setFechaInicio(cal.getTime());
-                agenda.setFechaFin(calFin.getTime());
-
-                if (list_nombres.indexOf(cliente_auto.getText().toString()) == -1) {
-                    Toast.makeText(getContext(), "Nombre de Cliente o Contacto incorrecto.", Toast.LENGTH_LONG).show();
-                    return true;
+                if(hasPedido) {
+                    if (list_nombres.indexOf(cliente_auto.getText().toString()) == -1) {
+                        Toast.makeText(getContext(), "Nombre de Cliente incorrecto.", Toast.LENGTH_LONG).show();
+                        return true;
+                    }
+                    Cliente cli = list_cliente.get(list_nombres.indexOf(cliente_auto.getText().toString()));
+                    Pedido pedido = Pedido.getPedidoInconclusoCliente(getDataBase(), (int) cli.getIdCliente());
+                    if(pedido == null)
+                        SaveAgenda(false);
+                    else
+                        showDialogConfirmation(DIALOG_PEDIDO_INCONCLUSO, R.string.message_pedido_inconcluso, R.string.title_pedido_inconcluso);
                 }
-                Cliente cli = list_cliente.get(list_nombres.indexOf(cliente_auto.getText().toString()));
-                if (cli.getTipoPersona().equalsIgnoreCase("C")) {
-                    Contacto cont = Contacto.getContactoId(getDataBase(), cli.getID());
-                    agenda.setIdContacto((int) cont.getIdContacto());
-                    agenda.set_idContacto(cli.getID());
-                }
-                if (cli.getIdCliente() == 0)
-                    agenda.setCliente(Cliente.getClienteID(getDataBase(), cli.getID(), true));
                 else
-                    agenda.setCliente(Cliente.getClienteIDServer(getDataBase(), cli.getIdCliente(), true));
-                agenda.setClienteDireccion(agenda.getCliente().getClienteDirecciones().get(getSpinnerSelectedPosition(R.id.crear_visita_direccion)));
-                agenda.setCiudad(agenda.getCliente().getClienteDirecciones().get(getSpinnerSelectedPosition(R.id.crear_visita_direccion)).getCiudadDescripcion());
-                agenda.setDireccion(agenda.getCliente().getClienteDirecciones().get(getSpinnerSelectedPosition(R.id.crear_visita_direccion)).getDireccion());
-                agenda.setEstadoAgenda(Contants.ESTADO_PENDIENTE);
-                agenda.setEstadoAgendaDescripcion(Contants.DESC_PENDIENTE);
-                agenda.setIdCliente((int) agenda.getCliente().getIdCliente());
-                agenda.set_idCliente(agenda.getCliente().getID());
-                agenda.setIdClienteDireccion(agenda.getClienteDireccion().getIdClienteDireccion());
-                agenda.set_idClienteDireccion(agenda.getClienteDireccion().getID());
-                agenda.setIdRuta(0);
-                agenda.setNombreCompleto(agenda.getCliente().getNombreCompleto().trim());
-                Calendar fc = Calendar.getInstance();
-                fc.set(Calendar.MILLISECOND, 0);
-                agenda.setFechaCreacion(fc.getTime());
-                //agenda.setID(0);
-                agenda.setIdAgenda(0);
-
-                if(ConnectionUtils.isNetAvailable(this.getContext()))
-                    agenda.setEnviado(true);
-                else
-                    agenda.setEnviado(false);
-
-                Agenda.insert(getDataBase(), agenda);
-                int last = getDataBase().getIntLastInsertRowId();
-                long last2 = getDataBase().getLongLastInsertRowId();
-
-
-                for (Tarea tarea : list_tareas) {
-                    AgendaTarea agendaTarea = new AgendaTarea();
-                    agendaTarea.setIdAgenda(0);
-                    agendaTarea.set_idAgenda(agenda.getID());
-                    agendaTarea.setEstadoTarea("P");
-                    agendaTarea.setIdRuta(0);
-                    agendaTarea.setIdTarea(tarea.getIdTarea());
-                    AgendaTarea.insert(getDataBase(), agendaTarea);
-                }
-
-                //agenda.setAgendaTareaList(agendaTareas);
-                //String json = AgendaToJSON(agenda);
-
-                Bundle bundle = new Bundle();
-                bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_INSERTAR_AGENDA);
-                bundle.putLong(ARG_AGENDA, agenda.getID());
-                requestSync(bundle);
-
-                finish();
+                    SaveAgenda(false);
                 break;
             case R.id.action_cancel:
                 finish();
@@ -471,6 +430,126 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void SaveAgenda(boolean hasPedido)
+    {
+        Agenda agenda = new Agenda();
+        agenda.setDuracion(duracion);
+        agenda.setTiempoViaje(tiempo);
+
+        Calendar cal_hoy = Calendar.getInstance();
+        //if((fecha.get(Calendar.YEAR) < cal_hoy.get(Calendar.YEAR)) || (fecha.get(Calendar.MONTH) < cal_hoy.get(Calendar.MONTH))
+        //		|| (fecha.get(Calendar.DATE) < cal_hoy.get(Calendar.DATE)) )
+        //{
+        //	Toast.makeText(getActivity(), "Fecha no puede ser anterior a hoy.", Toast.LENGTH_LONG).show();
+        //	return true;
+        //}
+
+        Calendar cal = Calendar.getInstance();
+        Calendar calFin = Calendar.getInstance();
+
+        cal.set(Calendar.DATE, fecha.get(Calendar.DATE));
+        cal.set(Calendar.MONTH, fecha.get(Calendar.MONTH));
+        cal.set(Calendar.YEAR, fecha.get(Calendar.YEAR));
+
+        calFin.set(Calendar.DATE, fecha.get(Calendar.DATE));
+        calFin.set(Calendar.MONTH, fecha.get(Calendar.MONTH));
+        calFin.set(Calendar.YEAR, fecha.get(Calendar.YEAR));
+
+        cal.set(Calendar.HOUR_OF_DAY, fecha.get(Calendar.HOUR_OF_DAY));
+        cal.set(Calendar.MINUTE, fecha.get(Calendar.MINUTE));
+
+        if(duracion < 1440) {
+            calFin.set(Calendar.HOUR_OF_DAY, fecha.get(Calendar.HOUR_OF_DAY));
+            calFin.set(Calendar.MINUTE, fecha.get(Calendar.MINUTE));
+            calFin.add(Calendar.MINUTE, (int) agenda.getDuracion());
+        }
+        else
+        {
+            calFin.set(Calendar.HOUR_OF_DAY, 23);
+            calFin.set(Calendar.MINUTE, 59);
+        }
+
+        agenda.setFechaInicio(cal.getTime());
+        agenda.setFechaFin(calFin.getTime());
+
+        if (list_nombres.indexOf(cliente_auto.getText().toString()) == -1) {
+            Toast.makeText(getContext(), "Nombre de Cliente o Contacto incorrecto.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        Cliente cli = list_cliente.get(list_nombres.indexOf(cliente_auto.getText().toString()));
+        if (cli.getTipoPersona().equalsIgnoreCase("C")) {
+            Contacto cont = Contacto.getContactoId(getDataBase(), cli.getID());
+            agenda.setIdContacto((int) cont.getIdContacto());
+            agenda.set_idContacto(cli.getID());
+        }
+
+        if (cli.getIdCliente() == 0)
+            agenda.setCliente(Cliente.getClienteID(getDataBase(), cli.getID(), true));
+        else
+            agenda.setCliente(Cliente.getClienteIDServer(getDataBase(), cli.getIdCliente(), true));
+        agenda.setClienteDireccion(agenda.getCliente().getClienteDirecciones().get(getSpinnerSelectedPosition(R.id.crear_visita_direccion)));
+        agenda.setCiudad(agenda.getCliente().getClienteDirecciones().get(getSpinnerSelectedPosition(R.id.crear_visita_direccion)).getCiudadDescripcion());
+        agenda.setDireccion(agenda.getCliente().getClienteDirecciones().get(getSpinnerSelectedPosition(R.id.crear_visita_direccion)).getDireccion());
+        agenda.setEstadoAgenda(Contants.ESTADO_PENDIENTE);
+        agenda.setEstadoAgendaDescripcion(Contants.DESC_PENDIENTE);
+        agenda.setIdCliente((int) agenda.getCliente().getIdCliente());
+        agenda.set_idCliente(agenda.getCliente().getID());
+        agenda.setIdClienteDireccion(agenda.getClienteDireccion().getIdClienteDireccion());
+        agenda.set_idClienteDireccion(agenda.getClienteDireccion().getID());
+        agenda.setIdRuta(0);
+        agenda.setNombreCompleto(agenda.getCliente().getNombreCompleto().trim());
+        Calendar fc = Calendar.getInstance();
+        fc.set(Calendar.MILLISECOND, 0);
+        agenda.setFechaCreacion(fc.getTime());
+        //agenda.setID(0);
+        agenda.setIdAgenda(0);
+
+        //Agrego valor de venta en el caso que tenga tarea de pedido
+        for (Tarea tarea : list_tareas) {
+            if(tarea.getTipoTarea().equalsIgnoreCase("P"))
+                agenda.setValorVenta(Double.parseDouble(((EditText) getRootView().findViewById(R.id.crear_visita_valor_venta)).getText().toString()));
+        }
+
+        if(ConnectionUtils.isNetAvailable(this.getContext()))
+            agenda.setEnviado(true);
+        else
+            agenda.setEnviado(false);
+
+        Agenda.insert(getDataBase(), agenda);
+        int last = getDataBase().getIntLastInsertRowId();
+        long last2 = getDataBase().getLongLastInsertRowId();
+
+
+        for (Tarea tarea : list_tareas) {
+            AgendaTarea agendaTarea = new AgendaTarea();
+            agendaTarea.setIdAgenda(0);
+            agendaTarea.set_idAgenda(agenda.getID());
+            agendaTarea.setEstadoTarea("P");
+            agendaTarea.setIdRuta(0);
+            agendaTarea.setIdTarea(tarea.getIdTarea());
+            AgendaTarea.insert(getDataBase(), agendaTarea);
+        }
+
+        //Agrego pedido a agenda en el caso que lo tenga
+        if(hasPedido)
+        {
+            Pedido pedido = Pedido.getPedidoInconclusoCliente(getDataBase(), (int) cli.getIdCliente());
+            pedido = Pedido.getPedido(getDataBase(), pedido.getID(), false);
+            pedido.set_idAgenda((int)agenda.getID());
+            Pedido.update(getDataBase(), pedido);
+        }
+
+        //agenda.setAgendaTareaList(agendaTareas);
+        //String json = AgendaToJSON(agenda);
+
+        Bundle bundle = new Bundle();
+        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_INSERTAR_AGENDA);
+        bundle.putLong(ARG_AGENDA, agenda.getID());
+        requestSync(bundle);
+
+        finish();
     }
 
     public String AgendaToJSON(Agenda agenda) {

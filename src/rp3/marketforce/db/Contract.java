@@ -240,6 +240,7 @@ public final class Contract {
         public static final String COLUMN_TIEMPO_VIAJE= "TiempoViaje";
         public static final String COLUMN_MOTIVO_REPROGRAMACION= "IdMotivoReprogramar";
 		public static final String COLUMN_FECHA_CREACION= "FechaCreacion";
+		public static final String COLUMN_VALOR_VENTA= "ValorVenta";
 		
 		public static final String FIELD_RUTA_ID = COLUMN_RUTA_ID;
 		public static final String FIELD_AGENDA_ID = COLUMN_AGENDA_ID;
@@ -936,6 +937,7 @@ public final class Contract {
 		public static final String QUERY_PEDIDOS_BY_ID_SERVER = "PedidoByIdServer";
 		public static final String QUERY_PEDIDOS_BY_DOCUMENTO = "PedidoByDocumento";
 		public static final String QUERY_PEDIDOS_PENDIENTES = "PedidosPendientes";
+		public static final String QUERY_PEDIDO_BY_AGENDA = "PedidoByAgenda";
 
 	}
 
@@ -1296,5 +1298,14 @@ public final class Contract {
 		public static final String COLUMN_FECHA_INGRESO = "FechaIngreso";
 		public static final String COLUMN_FECHA_VENCIMIENTO = "FechaVencimiento";
 
+	}
+
+	public static abstract class AgenteDescuento implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbAgenteDescuento";
+
+		public static final String COLUMN_CANAL = "Canal";
+		public static final String COLUMN_LINEA = "Linea";
+		public static final String COLUMN_TOPE = "Tope";
 	}
 }

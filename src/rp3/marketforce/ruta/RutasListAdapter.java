@@ -10,6 +10,7 @@ import rp3.configuration.PreferenceManager;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
+import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.ruta.RutasListFragment.TransactionListFragmentListener;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -149,6 +150,14 @@ public class RutasListAdapter extends BaseAdapter{
             if(hoy.get(Calendar.DAY_OF_YEAR) == diaAgenda.get(Calendar.DAY_OF_YEAR))
                 convertView.findViewById(R.id.view_vertical).setVisibility(View.VISIBLE);
 
+			//Se evalua si tiene tareas pendientes
+			if(agd.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_VISITADO)) {
+				if (agd.getAgendaTareas() != null) {
+					for(AgendaTarea tarea : agd.getAgendaTareas())
+						if(!tarea.getEstadoTarea().equalsIgnoreCase("R"))
+							convertView.findViewById(R.id.itemlist_tarea).setVisibility(View.VISIBLE);
+				}
+			}
 			
 			//convertView.setBackgroundResource(R.drawable.border_bottom);
 		}

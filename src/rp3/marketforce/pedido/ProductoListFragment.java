@@ -30,8 +30,10 @@ import rp3.data.MessageCollection;
 import rp3.data.models.GeneralValue;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
+import rp3.marketforce.loader.LibroPrecioLoader;
 import rp3.marketforce.loader.ProductoLoader;
 import rp3.marketforce.models.Cliente;
+import rp3.marketforce.models.pedido.AgenteDescuento;
 import rp3.marketforce.models.pedido.Alternativo;
 import rp3.marketforce.models.pedido.LibroPrecio;
 import rp3.marketforce.models.pedido.PedidoDetalle;
@@ -73,6 +75,8 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
     private boolean fueraProduccion = false;
     private String tipoOrden;
     private List<LibroPrecio> precio;
+    private double descuento = 0;
+    private LoaderPrecio loaderPrecios;
 
     public static ProductoListFragment newInstance(int idCategoria, String serie, long idCliente, String tipoOrden)
     {
@@ -447,13 +451,14 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
         if(list_alternativo.size() == 0)
         {
             showDialogProgress("Cargando", "Consultando Precio");
-            precio = LibroPrecio.getPrecio(getDataBase(), seleccionado.getCodigoExterno(), cliente.getIdExterno(), cliente.getListPrecio());
-            closeDialogProgress();
-            if (evaluatePrecio().getPrecio() > 0) {
-                GetStock(prod);
-            } else {
-                showDialogMessage("El producto debe tener precio para poder ingresar el registro");
-            }
+            Bundle args = new Bundle();
+            args.putString(LoaderPrecio.STRING_CLIENTE, cliente.getIdExterno());
+            args.putString(LoaderPrecio.STRING_ITEM, seleccionado.getCodigoExterno());
+            args.putString(LoaderPrecio.STRING_LISTA_PRECIO, cliente.getListPrecio());
+            args.putString(LoaderPrecio.STRING_WHERE, "ValidarSubstituto");
+            if(loaderPrecios == null)
+                loaderPrecios = new LoaderPrecio();
+            executeLoader(0, args, loaderPrecios);
         }
         if(list_alternativo.size() == 1)
         {
@@ -461,13 +466,14 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
             prod = Producto.getProductoSingleByCodigoExterno(getDataBase(), list_alternativo.get(0).getCodigoExterno());
             seleccionado = prod;
             showDialogProgress("Cargando", "Consultando Precio");
-            precio = LibroPrecio.getPrecio(getDataBase(), seleccionado.getCodigoExterno(), cliente.getIdExterno(), cliente.getListPrecio());
-            closeDialogProgress();
-            if (evaluatePrecio().getPrecio() > 0) {
-                GetStock(prod);
-            } else {
-                showDialogMessage("El producto debe tener precio para poder ingresar el registro");
-            }
+            Bundle args = new Bundle();
+            args.putString(LoaderPrecio.STRING_CLIENTE, cliente.getIdExterno());
+            args.putString(LoaderPrecio.STRING_ITEM, seleccionado.getCodigoExterno());
+            args.putString(LoaderPrecio.STRING_LISTA_PRECIO, cliente.getListPrecio());
+            args.putString(LoaderPrecio.STRING_WHERE, "ValidarSubstituto");
+            if(loaderPrecios == null)
+                loaderPrecios = new LoaderPrecio();
+            executeLoader(0, args, loaderPrecios);
         }
         if(list_alternativo.size() > 1)
         {
@@ -511,7 +517,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
             bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_GET_DESCUENTO);
             bundle.putString(ARG_CLIENTE, cliente.getIdExterno());
             bundle.putString(ARG_LINEA, prod.getLinea());
-            bundle.putString(ARG_LISTA_PRECIO, cliente.getListPrecio());
+            bundle.putString(ARG_LISTA_PRECIO, prod.getCodigoExterno());
             bundle.putString(ARG_TIPO_ORDEN, tipoOrden);
             bundle.putString(ARG_FAMILIA, prod.getFamilia());
             requestSync(bundle);
@@ -521,25 +527,38 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
 
     public void ShowProducto(double descuento)
     {
+        this.descuento = descuento;
         Cliente cliente = Cliente.getClienteID(getDataBase(), idCliente, false);
         if(precio == null) {
             showDialogProgress("Cargando", "Consultando Precio");
-            precio = LibroPrecio.getPrecio(getDataBase(), seleccionado.getCodigoExterno(), cliente.getIdExterno(), cliente.getListPrecio());
-            closeDialogProgress();
+            Bundle args = new Bundle();
+            args.putString(LoaderPrecio.STRING_CLIENTE, cliente.getIdExterno());
+            args.putString(LoaderPrecio.STRING_ITEM, seleccionado.getCodigoExterno());
+            args.putString(LoaderPrecio.STRING_LISTA_PRECIO, cliente.getListPrecio());
+            args.putString(LoaderPrecio.STRING_WHERE, "ShowProducto");
+            if(loaderPrecios == null)
+                loaderPrecios = new LoaderPrecio();
+            executeLoader(0, args, loaderPrecios);
         }
-        if(evaluatePrecio().getPrecio() > 0) {
+        else
+        {
+            ShowFragmentProducto();
+        }
+
+    }
+
+    private void ShowFragmentProducto()
+    {
+        if (evaluatePrecio().getPrecio() > 0) {
             try {
                 double valor = evaluatePrecio().getPrecio();
-                if(descuento != 0)
+                if (descuento != 0)
                     valor = (valor) - (valor * descuento);
 
                 double valorImpuesto = valor;
-                if(seleccionado.getPorcentajeImpuesto() > 0)
-                {
+                if (seleccionado.getPorcentajeImpuesto() > 0) {
                     valorImpuesto = (valor) + (valor * seleccionado.getPorcentajeImpuesto());
                 }
-
-
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("d", seleccionado.getDescripcion());
                 jsonObject.put("p", evaluatePrecio().getPrecio());
@@ -557,8 +576,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
 
                 //Envío lista de precio para no cargarla de nuevo
                 JSONArray jArrayLibro = new JSONArray();
-                for(LibroPrecio libroPrecio : precio)
-                {
+                for (LibroPrecio libroPrecio : precio) {
                     JSONObject jsonLibro = new JSONObject();
                     jsonLibro.put("i", libroPrecio.getItem());
                     jsonLibro.put("p", libroPrecio.getPrecio());
@@ -568,15 +586,18 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
                 }
                 jsonObject.put("lp", jArrayLibro);
 
+                //Envío Tope de Descuento para no cargarlo de nuevo
+                AgenteDescuento agente = AgenteDescuento.getTopeDescuento(getDataBase(), cliente.getCanalPartner(), seleccionado.getLinea());
+                jsonObject.put("t", agente.getTope());
+
+
                 productFragment = ProductFragment.newInstance(jsonObject.toString());
                 productFragment.setCancelable(false);
                 showDialogFragment(productFragment, "Producto", "Agregar Producto - " + seleccionado.getCodigoExterno());
             } catch (Exception ex) {
 
             }
-        }
-        else
-        {
+        } else {
             showDialogMessage("El producto debe tener precio para poder ingresar el registro");
         }
     }
@@ -595,5 +616,55 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
             }
         }
         return resp;
+    }
+
+    public class LoaderPrecio implements LoaderManager.LoaderCallbacks<List<LibroPrecio>> {
+
+        public static final String STRING_CLIENTE = "cliente";
+        public static final String STRING_ITEM = "item";
+        public static final String STRING_LISTA_PRECIO = "lista_precio";
+        public static final String STRING_WHERE = "posicion";
+        private String item, cliente, lista_precio, where;
+
+        @Override
+        public Loader<List<LibroPrecio>> onCreateLoader(int arg0,
+                                                        Bundle bundle) {
+
+            item = bundle.getString(STRING_ITEM);
+            cliente = bundle.getString(STRING_CLIENTE);
+            lista_precio = bundle.getString(STRING_LISTA_PRECIO);
+            where = bundle.getString(STRING_WHERE);
+            return new LibroPrecioLoader(getActivity(), getDataBase(), item, cliente, lista_precio);
+
+        }
+
+        @Override
+        public void onLoadFinished(Loader<List<LibroPrecio>> arg0,
+                                   List<LibroPrecio> data) {
+
+            try {
+                precio = data;
+                if (where.equalsIgnoreCase("ShowProducto")) {
+                    ShowFragmentProducto();
+                }
+                else if(where.equalsIgnoreCase("ValidarSubstituto"))
+                {
+                    closeDialogProgress();
+                    if (evaluatePrecio().getPrecio() > 0) {
+                        GetStock(seleccionado);
+                    } else {
+                        showDialogMessage("El producto debe tener precio para poder ingresar el registro");
+                    }
+                }
+                closeDialogProgress();
+            } catch (Exception ex) {
+
+            }
+        }
+
+        @Override
+        public void onLoaderReset(Loader<List<LibroPrecio>> arg0) {
+
+        }
     }
 }

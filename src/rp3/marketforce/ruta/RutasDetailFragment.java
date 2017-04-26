@@ -29,6 +29,9 @@ import rp3.marketforce.models.DiaLaboral;
 import rp3.marketforce.models.marcacion.Marcacion;
 import rp3.marketforce.models.marcacion.Permiso;
 import rp3.marketforce.models.oportunidad.AgendaOportunidad;
+import rp3.marketforce.models.pedido.Pedido;
+import rp3.marketforce.pedido.CrearPedidoActivity;
+import rp3.marketforce.pedido.PedidoParametrosFragment;
 import rp3.marketforce.ruta.ObservacionesFragment.ObservacionesFragmentListener;
 import rp3.marketforce.sync.AsyncUpdater;
 import rp3.marketforce.sync.SyncAdapter;
@@ -828,6 +831,8 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                                     showTareaTexto(ata, setter);
                             }
                         }
+                        if (setter.getTipoTarea().equalsIgnoreCase("P"))
+                            showTareaPedido(setter);
                         if (setter.getTipoTarea().equalsIgnoreCase("E"))
                             showTareaGrupo(setter);
                         if (setter.getTipoTarea().equalsIgnoreCase("ADC") && !soloVista)
@@ -845,6 +850,30 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
         {
             getRootView().findViewById(R.id.listView_tareas).setVisibility(View.GONE);
             getRootView().findViewById(R.id.detail_agenda_empty_tareas).setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void showTareaPedido(AgendaTarea setter) {
+        Pedido pedido = Pedido.getPedidoByAgenda(getDataBase(), agenda.getID());
+        if(pedido.getID() == 0)
+        {
+            //Envío a crear pedido
+            if(agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO)) {
+                PedidoParametrosFragment pedidoParametrosFragment = PedidoParametrosFragment.newInstance("PD", agenda.getID());
+                showDialogFragment(pedidoParametrosFragment, "Cabecera", "Pedido");
+            }
+        }
+        else
+        {
+            if(!agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_PENDIENTE)) {
+                if (pedido.getEstado().equalsIgnoreCase("P")) {
+                    Intent intent2 = new Intent(getContext(), CrearPedidoActivity.class);
+                    intent2.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, "PD");
+                    intent2.putExtra(CrearPedidoActivity.ARG_IDAGENDA, agenda.getID());
+                    intent2.putExtra(CrearPedidoActivity.ARG_IDPEDIDO, pedido.getID());
+                    startActivity(intent2);
+                }
+            }
         }
     }
 

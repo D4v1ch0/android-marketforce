@@ -372,4 +372,15 @@ public class Utils {
             default: return 1;
         }
     }
+
+    public static double getDescuento(double auto, double manual)
+	{
+		double porc = 0;
+		double valor = 100;
+		valor = valor - (valor * auto);
+		valor = valor - (valor * manual);
+		valor = valor / 100;
+		valor = 1 - valor;
+		return valor;
+	}
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -26,6 +27,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.75"
             android:background="@android:color/transparent"
+            android:enabled="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:ems="10"
             android:hint="@string/hint_nombre_razon_social"
             android:textSize="@dimen/text_medium_small_size" />
@@ -51,7 +55,51 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/color_grey_lines" />
+        android:background="@color/color_grey_lines" >
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView124"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:text="@string/label_serie_points"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/caldroid_holo_blue_light"
+            android:textSize="@dimen/text_medium_small_size" />
+
+        <EditText
+            android:id="@+id/pedido_serie"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.75"
+            android:background="@android:color/transparent"
+            android:ems="10"
+            android:enabled="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:hint="@string/hint_email"
+            android:inputType="textEmailAddress"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:textSize="@dimen/text_medium_small_size" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_grey_lines"
+        android:orientation="vertical">
+
+    </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -60,14 +108,41 @@
         android:layout_margin="5dp" >
 
         <TextView
+            android:id="@+id/textView124"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/label_correo_2"
-            android:id="@+id/textView55"
             android:layout_weight="0.25"
+            android:text="@string/label_tipo_orden_points"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/caldroid_holo_blue_light"
             android:textSize="@dimen/text_medium_small_size" />
+
+        <EditText
+            android:id="@+id/pedido_tipo_orden"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.75"
+            android:background="@android:color/transparent"
+            android:ems="10"
+            android:enabled="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:hint="@string/hint_email"
+            android:inputType="textEmailAddress"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:textSize="@dimen/text_medium_small_size" />
+
+        <TextView
+            android:id="@+id/textView55"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:text="@string/label_correo_2"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/caldroid_holo_blue_light"
+            android:textSize="@dimen/text_medium_small_size"
+            android:visibility="gone" />
 
         <EditText
             android:id="@+id/pedido_email"
@@ -78,7 +153,8 @@
             android:ems="10"
             android:hint="@string/hint_email"
             android:inputType="textEmailAddress"
-            android:textSize="@dimen/text_medium_small_size" />
+            android:textSize="@dimen/text_medium_small_size"
+            android:visibility="gone" />
 
     </LinearLayout>
 
@@ -118,7 +194,7 @@
             android:id="@+id/textView109"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.1"
+            android:layout_weight="0.11"
             android:text="@string/label_cant_short"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/color_text_sky_blue"
@@ -143,7 +219,7 @@
             android:id="@+id/textView112"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.18"
+            android:layout_weight="0.17"
             android:gravity="right"
             android:text="@string/label_descuento"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -213,7 +289,6 @@
             android:layout_weight="1"
             android:gravity="right"
             android:paddingRight="5dp"
-            android:text="@string/label_base_imponible_cero"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/color_text_sky_blue"
             android:textStyle="bold"
@@ -384,7 +459,7 @@
         android:visibility="gone">
 
         <TextView
-            android:id="@+id/textView131"
+            android:id="@+id/pedido_saldo"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -471,7 +546,7 @@
             android:gravity="right"
             android:text="¢ 0.00"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="@dimen/text_medium_small_size" />
+            android:textSize="14sp" />
 
         <LinearLayout
             android:orientation="vertical"

@@ -19,6 +19,7 @@ import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.pedido.Pedido;
 import rp3.marketforce.models.pedido.PedidoDetalle;
+import rp3.marketforce.utils.Utils;
 import rp3.util.Screen;
 
 /**
@@ -30,7 +31,7 @@ public class PedidoDetalleAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private List<PedidoDetalle> detalles;
     private DecimalFormat df;
-    private NumberFormat numberFormat;
+    private NumberFormat numberFormat, numberFormatDiscount;
     private boolean isDetail = true;
 
     public PedidoDetalleAdapter(Context context, List<PedidoDetalle> detalles) {
@@ -42,6 +43,10 @@ public class PedidoDetalleAdapter extends BaseAdapter {
         numberFormat = NumberFormat.getInstance();
         numberFormat.setMaximumFractionDigits(4);
         numberFormat.setMinimumFractionDigits(4);
+
+        numberFormatDiscount = NumberFormat.getInstance();
+        numberFormatDiscount.setMaximumFractionDigits(2);
+        numberFormatDiscount.setMinimumFractionDigits(2);
     }
 
     public boolean isDetail() {
@@ -90,9 +95,8 @@ public class PedidoDetalleAdapter extends BaseAdapter {
 
         if(detalles != null && detalles.size() > position) {
             PedidoDetalle detalle = detalles.get(position);
-
             ((TextView) convertView.findViewById(R.id.pedido_detalle_sku)).setText(detalle.getIdVendedor());
-            ((TextView) convertView.findViewById(R.id.pedido_detalle_descuento)).setText(numberFormat.format((detalle.getPorcentajeDescuentoManual() + detalle.getPorcentajeDescuentoAutomatico())*100) + "%");
+            ((TextView) convertView.findViewById(R.id.pedido_detalle_descuento)).setText(numberFormatDiscount.format((Utils.getDescuento(detalle.getPorcentajeDescuentoAutomatico(), detalle.getPorcentajeDescuentoManual()))*100) + "%");
             ((TextView) convertView.findViewById(R.id.pedido_detalle_impuesto)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(detalle.getValorImpuestoTotal()));
             ((TextView) convertView.findViewById(R.id.pedido_detalle_descripcion)).setText(detalle.getCodigoExterno() + " - " + detalle.getDescripcion());
             ((TextView) convertView.findViewById(R.id.pedido_detalle_cantidad)).setText((detalle.getCantidad()) + "");

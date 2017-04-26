@@ -18,8 +18,8 @@ import rp3.connection.WebService;
 import rp3.content.*;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
-import rp3.marketforce.models.AgendaTarea;
-import rp3.marketforce.models.AgendaTareaActividades;
+import rp3.marketforce.models.*;
+import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.pedido.ControlCaja;
 import rp3.marketforce.models.pedido.Pago;
 import rp3.marketforce.models.pedido.PedidoDetalle;
@@ -60,8 +60,16 @@ public class Pedido {
             jObject.put("Email", pedidoUpload.getEmail());
             jObject.put("Estado", pedidoUpload.getEstado());
             jObject.put("FechaCreacionTicks", Convert.getDotNetTicksFromDate(pedidoUpload.getFechaCreacion()));
-            if(pedidoUpload.get_idAgenda() != 0)
-                jObject.put("IdAgenda", rp3.marketforce.models.Agenda.getAgenda(db, pedidoUpload.get_idAgenda()).getIdAgenda());
+            if(pedidoUpload.get_idAgenda() != 0) {
+                rp3.marketforce.models.Agenda agd = Agenda.getAgenda(db, pedidoUpload.get_idAgenda());
+                if(agd.getIdAgenda() != 0) {
+                    jObject.put("IdAgenda", agd.getIdAgenda());
+                }
+                else
+                {
+                    return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
+                }
+            }
             if(pedidoUpload.getEstado().equalsIgnoreCase("A")) {
                 jObject.put("Anulado", true);
                 jObject.put("FecAnula", pedidoUpload.getEstado());
@@ -234,8 +242,16 @@ public class Pedido {
                 jObject.put("Email", pedidoUpload.getEmail());
                 jObject.put("Estado", pedidoUpload.getEstado());
                 jObject.put("FechaCreacionTicks", Convert.getDotNetTicksFromDate(pedidoUpload.getFechaCreacion()));
-                if (pedidoUpload.get_idAgenda() != 0)
-                    jObject.put("IdAgenda", rp3.marketforce.models.Agenda.getAgenda(db, pedidoUpload.get_idAgenda()).getIdAgenda());
+                if(pedidoUpload.get_idAgenda() != 0) {
+                    rp3.marketforce.models.Agenda agd = Agenda.getAgenda(db, pedidoUpload.get_idAgenda());
+                    if(agd.getIdAgenda() != 0) {
+                        jObject.put("IdAgenda", agd.getIdAgenda());
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
                 if (pedidoUpload.getEstado().equalsIgnoreCase("A")) {
                     jObject.put("Anulado", true);
                     jObject.put("FecAnula", pedidoUpload.getEstado());

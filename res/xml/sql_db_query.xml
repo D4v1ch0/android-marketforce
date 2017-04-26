@@ -673,6 +673,7 @@
           tbAgenda.Enviado,
           tbAgenda.FechaCreacion,
           tbAgenda.Observaciones,
+          tbAgenda.ValorVenta,
           tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
           tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
           tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad,
@@ -699,6 +700,7 @@
           tbAgendaOportunidad.Pendiente AS Enviado,
           tbAgendaOportunidad.FechaInicio AS FechaCreacion,
           '' AS Observaciones,
+          0 AS ValorVenta,
           tbAgendaOportunidadExt.Descripcion AS tbAgendaExt_NombreCompleto,
           tbAgendaOportunidadExt.Direccion AS tbAgendaExt_Direccion,
           tbAgendaOportunidadExt.Correo AS tbAgendaExt_Ciudad,
@@ -738,6 +740,7 @@
         tbAgenda.FechaCreacion,
         tbAgenda.Latitud,
         tbAgenda.Longitud,
+        tbAgenda.ValorVenta,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
         tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad,
@@ -783,6 +786,7 @@
         tbAgenda.Latitud,
         tbAgenda.Longitud,
         tbAgenda.FechaCreacion,
+        tbAgenda.ValorVenta,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
         tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad,
@@ -828,6 +832,7 @@
         tbAgenda.Latitud,
         tbAgenda.Longitud,
         tbAgenda.FechaCreacion,
+        tbAgenda.ValorVenta,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
         tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad,
@@ -856,6 +861,7 @@
         tbAgenda.FechaFin,
         tbAgenda.EstadoAgenda,
         tbAgenda.FechaCreacion,
+        tbAgenda.ValorVenta,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
         tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad,
@@ -892,6 +898,7 @@
         tbAgenda.Enviado,
           tbAgenda.FechaCreacion,
           tbAgenda.Observaciones,
+          tbAgenda.ValorVenta,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
         tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad,
@@ -920,6 +927,7 @@
           tbAgendaOportunidad.Pendiente AS Enviado,
           tbAgendaOportunidad.FechaInicio AS FechaCreacion,
           '' AS Observaciones,
+          0 AS ValorVenta,
           tbAgendaOportunidadExt.Descripcion AS tbAgendaExt_NombreCompleto,
           tbAgendaOportunidadExt.Direccion AS tbAgendaExt_Direccion,
           tbAgendaOportunidadExt.Correo AS tbAgendaExt_Ciudad,
@@ -951,6 +959,7 @@
         tbAgenda.IdMotivoReprogramar,
         tbAgenda.FechaCreacion,
         tbAgenda.Observaciones,
+        tbAgenda.ValorVenta,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
         tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad
@@ -993,6 +1002,7 @@
           tbAgenda.FechaCreacion,
           tbAgenda.Latitud,
           tbAgenda.Longitud,
+          tbAgenda.ValorVenta,
         tbCliente.URLFoto AS tbCliente_URLFoto,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
@@ -1048,6 +1058,7 @@
         tbAgenda.IdMotivoReprogramar,
           tbAgenda.Enviado,
           tbAgenda.FechaCreacion,
+          tbAgenda.ValorVenta,
         tbCliente.URLFoto AS tbCliente_URLFoto,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
@@ -1102,6 +1113,7 @@
         tbAgenda.TiempoViaje,
         tbAgenda.IdMotivoReprogramar,
         tbAgenda.FechaCreacion,
+        tbAgenda.ValorVenta,
         tbCliente.URLFoto AS tbCliente_URLFoto,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
@@ -2487,6 +2499,52 @@
         from tbLibroPrecio
         WHERE item = ?
         AND LibroEstandar = 'S'
+        AND (tbLibroPrecio.FechaVencimiento = 18000000 OR tbLibroPrecio.FechaVencimiento &gt; ?)
+        AND (tbLibroPrecio.FechaEfectiva &lt; ?)
         ORDER BY tbLibroPrecio.FechaEfectiva DESC
+    </statement>
+    <statement name="PedidoByAgenda">
+        SELECT
+        tbPedido._id AS _id,
+        tbPedido.IdPedido,
+        tbPedido._IdAgenda,
+        tbPedido.IdAgenda,
+        tbPedido._IdCliente,
+        tbPedido.IdCliente,
+        tbPedido.ValorTotal,
+        tbPedido.Email,
+        tbPedido.Estado,
+        tbPedido.FechaCreacion,
+        tbPedido.TotalDescuentos,
+        tbPedido.TotalImpuestos,
+        tbPedido.Redondeo,
+        tbPedido.Subtotal,
+        tbPedido.SubtotalSinDescuento,
+        tbPedido.Excedente,
+        tbPedido.TipoDocumento,
+        tbPedido.BaseImponible,
+        tbPedido.BaseImponibleCero,
+        tbPedido.Observaciones,
+        tbPedido.MotivoAnulacion,
+        tbPedido.ObservacionAnulacion,
+        tbPedido._IdDocumentoRef,
+        tbPedido.IdDocumentoRef,
+        tbPedido.FechaAnulacion,
+        tbPedido.TotalImpuesto2,
+        tbPedido.TotalImpuesto3,
+        tbPedido.TotalImpuesto4,
+        tbPedido._IdControlCaja,
+        tbPedido.Pendiente,
+        tbPedido.TieneNotaCreditoPOSRP3,
+        tbPedido.Serie,
+        tbPedido.TipoOrden,
+        tbPedido.Ciudad,
+        tbPedido.IdDireccion,
+        tbPedidoExt.Nombre AS tbPedidoExt_Nombre,
+        tbPedidoExt.NumeroDocumento AS tbPedidoExt_NumeroDocumento
+        FROM tbPedidoExt
+        INNER JOIN tbPedido
+        ON tbPedido._id = tbPedidoExt.docid
+        WHERE tbPedido._IdAgenda = ?
     </statement>
 </sql>

@@ -40,7 +40,41 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/color_grey_lines" />
+        android:background="@color/color_grey_lines" >
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView55"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:text="@string/label_serie_points"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/caldroid_holo_blue_light"
+            android:textSize="@dimen/text_medium_small_size" />
+
+        <TextView
+            android:id="@+id/pedido_serie"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.82"
+            android:text="info@gmail.com"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/text_medium_small_size" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_grey_lines"
+        android:orientation="vertical" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -49,23 +83,44 @@
         android:layout_margin="5dp" >
 
         <TextView
+            android:id="@+id/textView132"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/label_correo_2"
-            android:id="@+id/textView55"
             android:layout_weight="0.25"
+            android:text="@string/label_tipo_orden_points"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/caldroid_holo_blue_light"
             android:textSize="@dimen/text_medium_small_size" />
 
         <TextView
+            android:id="@+id/pedido_tipo_orden"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="info@gmail.com"
-            android:id="@+id/pedido_email"
             android:layout_weight="0.82"
+            android:text="info@gmail.com"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/text_medium_small_size" />
+
+        <TextView
+            android:id="@+id/textView55"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:text="@string/label_correo_2"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/caldroid_holo_blue_light"
+            android:textSize="@dimen/text_medium_small_size"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/pedido_email"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.82"
+            android:text="info@gmail.com"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/text_medium_small_size"
+            android:visibility="gone" />
     </LinearLayout>
 
     <LinearLayout
@@ -104,7 +159,7 @@
             android:id="@+id/textView81"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.1"
+            android:layout_weight="0.11"
             android:text="@string/label_cant_short"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/color_text_sky_blue"
@@ -129,7 +184,7 @@
             android:id="@+id/textView97"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.18"
+            android:layout_weight="0.17"
             android:gravity="right"
             android:text="@string/label_descuento"
             android:textAppearance="?android:attr/textAppearanceMedium"

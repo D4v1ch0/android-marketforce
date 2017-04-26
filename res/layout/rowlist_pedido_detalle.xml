@@ -32,11 +32,10 @@
         android:id="@+id/pedido_detalle_cantidad"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.1"
+        android:layout_weight="0.11"
         android:gravity="center"
         android:lines="2"
         android:maxLines="2"
-        android:text="5"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="@dimen/text_xsmall_size"
         android:visibility="visible" />
@@ -56,9 +55,8 @@
         android:id="@+id/pedido_detalle_descuento"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.18"
+        android:layout_weight="0.17"
         android:gravity="center_vertical|right"
-        android:text="(₡ 10.000)"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="@dimen/text_xsmall_size"
         android:visibility="visible" />

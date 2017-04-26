@@ -130,7 +130,8 @@
       Duracion INTEGER,
       TiempoViaje INTEGER,
       IdMotivoReprogramar TEXT,
-        FechaCreacion INTEGER
+        FechaCreacion INTEGER,
+        ValorVenta REAL
       )
 	</statement>
 	
@@ -780,6 +781,14 @@
         Alterno TEXT,
         FechaIngreso INTEGER,
         FechaVencimiento INTEGER
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbAgenteDescuento(
+        _id INTEGER PRIMARY KEY,
+        Canal TEXT,
+        Linea TEXT,
+        Tope REAL
         )
     </statement>
 

@@ -60,6 +60,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 	private String idMotivoReprogramacion;
 	private Date fechaCreacion;
 	private String tipoAgenda;
+	private double valorVenta;
 
 	public Pedido getPedido() {
 		return pedido;
@@ -67,6 +68,14 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 
 	public void setPedido(Pedido pedido) {
 		this.pedido = pedido;
+	}
+
+	public double getValorVenta() {
+		return valorVenta;
+	}
+
+	public void setValorVenta(double valorVenta) {
+		this.valorVenta = valorVenta;
 	}
 
 	public String getIdMotivoReprogramacion() {
@@ -172,6 +181,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 		setValue(Contract.Agenda.COLUMN_TIEMPO_VIAJE, this.TiempoViaje);
 		setValue(Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION, this.idMotivoReprogramacion);
 		setValue(Contract.Agenda.COLUMN_FECHA_CREACION, this.fechaCreacion);
+		setValue(Contract.Agenda.COLUMN_VALOR_VENTA, this.valorVenta);
 	}
 
 	@Override
@@ -460,6 +470,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 
 			Agenda agd = new Agenda();
 			agd.setID(CursorUtils.getInt(c, Contract.Agenda._ID));
+			agd.setIdAgenda(CursorUtils.getInt(c, Contract.Agenda.COLUMN_AGENDA_ID));
 			agd.set_idCliente(CursorUtils.getLong(c, Contract.Agenda.COLUMN_AGENDA_ID));
 			agd.setFechaInicio(CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_INCICIO));
 			agd.setFechaFin(CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_FIN));
@@ -489,6 +500,11 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 				agd.setContacto(Contacto.getContactoId(db, agd.getIdContacto(), agd.getIdCliente()));
 			}
 
+			if(agd.getIdAgenda() == 0)
+				agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getID(), agd.getIdRuta(), true));
+			else
+				agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getIdAgenda(), agd.getIdRuta(), false));
+
 			list.add(agd);
 		}
 		c.close();
@@ -511,6 +527,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			Agenda agd = new Agenda();
 			agd.setID(CursorUtils.getInt(c, Contract.Agenda._ID));
 			agd.setIdAgenda(CursorUtils.getInt(c, Contract.Agenda.COLUMN_AGENDA_ID));
+			agd.setIdRuta(CursorUtils.getInt(c, Contract.Agenda.COLUMN_RUTA_ID));
 			agd.set_idCliente(CursorUtils.getLong(c, Contract.Agenda.COLUMN_AGENDA_ID));
 			agd.set_idClienteDireccion(CursorUtils.getLong(c, Contract.Agenda.COLUMN_AGENDA_ID));
 			agd.set_idContacto(CursorUtils.getLong(c, Contract.Agenda.COLUMN_AGENDA_ID));
@@ -528,6 +545,11 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
 			agd.setTipoAgenda(CursorUtils.getString(c, Contract.Agenda.FIELD_TIPO_AGENDA));
 			agd.setObservaciones(CursorUtils.getString(c, Contract.Agenda.COLUMN_OBSERVACIONES));
+			agd.setValorVenta(CursorUtils.getDouble(c, Contract.Agenda.COLUMN_VALOR_VENTA));
+			if(agd.getIdAgenda() == 0)
+				agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getID(), agd.getIdRuta(), true));
+			else
+				agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getIdAgenda(), agd.getIdRuta(), false));
 
 			ClienteDireccion cld = new ClienteDireccion();
 			cld.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
@@ -590,6 +612,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
 			agd.setLatitud(CursorUtils.getDouble(c, Contract.Agenda.COLUMN_LATITUD));
 			agd.setLongitud(CursorUtils.getDouble(c, Contract.Agenda.COLUMN_LONGITUD));
+			agd.setValorVenta(CursorUtils.getDouble(c, Contract.Agenda.COLUMN_VALOR_VENTA));
 
 			Cliente cl = new Cliente();
 			cl.setNombreCompleto(agd.getNombreCompleto());
@@ -664,6 +687,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
 			agd.setLatitud(CursorUtils.getDouble(c, Contract.Agenda.COLUMN_LATITUD));
 			agd.setLongitud(CursorUtils.getDouble(c, Contract.Agenda.COLUMN_LONGITUD));
+			agd.setValorVenta(CursorUtils.getDouble(c, Contract.Agenda.COLUMN_VALOR_VENTA));
 
 			Cliente cl = new Cliente();
 			cl.setNombreCompleto(agd.getNombreCompleto());
@@ -723,6 +747,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
 			agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
 			agd.setEnviado(CursorUtils.getBoolean(c, Contract.Agenda.COLUMN_ENVIADO));
+			agd.setValorVenta(CursorUtils.getDouble(c, Contract.Agenda.COLUMN_VALOR_VENTA));
 
 			Cliente cl = new Cliente();
 			cl.setNombreCompleto(agd.getNombreCompleto());
@@ -781,6 +806,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setTiempoViaje(CursorUtils.getInt(c, Contract.Agenda.COLUMN_TIEMPO_VIAJE));
 			agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
 			agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
+			agd.setValorVenta(CursorUtils.getDouble(c, Contract.Agenda.COLUMN_VALOR_VENTA));
 
 			Cliente cl = new Cliente();
 			cl.setNombreCompleto(agd.getNombreCompleto());
@@ -841,6 +867,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setTiempoViaje(CursorUtils.getInt(c, Contract.Agenda.COLUMN_TIEMPO_VIAJE));
 			agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
 			agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
+			agd.setValorVenta(CursorUtils.getDouble(c, Contract.Agenda.COLUMN_VALOR_VENTA));
 
 			agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getIdAgenda(), agd.getIdRuta(), false));
 			agd.setCliente(rp3.marketforce.models.Cliente.getClienteIDServer(db, agd.getIdCliente(), false));
@@ -1022,6 +1049,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 				agd.setNombreCompleto(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_NOMBRE));
 				agd.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
 				agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
+				agd.setValorVenta(CursorUtils.getDouble(c, Contract.Agenda.COLUMN_VALOR_VENTA));
 
 				if(agd.getIdAgenda() == 0)
 					agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getID(), agd.getIdRuta(), true));

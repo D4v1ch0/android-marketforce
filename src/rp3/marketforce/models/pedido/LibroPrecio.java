@@ -177,7 +177,7 @@ public class LibroPrecio extends EntityBase<LibroPrecio> {
         {
             query = QueryDir.getQuery(Contract.LibroPrecio.QUERY_LIBRO_PRECIO_ESTANDAR);
 
-            Cursor d = db.rawQuery(query, new String[]{item} );
+            Cursor d = db.rawQuery(query, new String[]{item, cal.getTimeInMillis() + "", cal.getTimeInMillis() + ""} );
 
             while(d.moveToNext()){
                 LibroPrecio precio = new LibroPrecio();

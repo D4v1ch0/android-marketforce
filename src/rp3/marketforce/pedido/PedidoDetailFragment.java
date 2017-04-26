@@ -141,6 +141,13 @@ public class PedidoDetailFragment extends BaseFragment {
             }
         }
 
+        //Se muestran series y tipo de orden
+        GeneralValue serieGeneral = GeneralValue.getGeneralValue(getDataBase(), Contants.GENERAL_TABLE_SERIES_BERLIN, pedido.getSerie());
+        GeneralValue tipoOrdenGeneral = GeneralValue.getGeneralValue(getDataBase(), Contants.GENERAL_TABLE_TIPO_ORDEN_BERLIN, pedido.getTipoOrden());
+
+        ((TextView) getRootView().findViewById(R.id.pedido_serie)).setText(serieGeneral.getValue());
+        ((TextView) getRootView().findViewById(R.id.pedido_tipo_orden)).setText(tipoOrdenGeneral.getValue());
+
     }
 
 

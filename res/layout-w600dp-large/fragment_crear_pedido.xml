@@ -11,31 +11,33 @@
         android:paddingTop="5dp">
 
         <TextView
+            android:id="@+id/textView52"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/label_cliente_2"
-            android:id="@+id/textView52"
-            android:layout_weight="0.25"
-            android:textColor="@color/caldroid_holo_blue_light"
+            android:layout_weight="0.20"
             android:gravity="center_vertical"
-            android:textSize="@dimen/text_medium_plus_size"
-            android:paddingLeft="5dp" />
+            android:paddingLeft="5dp"
+            android:text="@string/label_cliente_2"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/caldroid_holo_blue_light"
+            android:textSize="@dimen/text_medium_plus_size" />
 
         <AutoCompleteTextView
             android:id="@+id/pedido_cliente"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="0.8"
+            android:background="@color/caldroid_transparent"
+            android:enabled="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:ems="10"
             android:hint="@string/hint_nombre_razon_social"
-            android:textSize="@dimen/text_input_size"
-            android:layout_weight="0.80"
-            android:background="@color/caldroid_transparent"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:focusableInTouchMode="true"
-            android:focusable="true" >
-                    <requestFocus/>
+            android:textSize="@dimen/text_input_size">
+
+            <requestFocus />
         </AutoCompleteTextView>
 
         <ImageButton
@@ -51,7 +53,7 @@
             android:paddingRight="5dp"
             android:src="@drawable/ic_new_item"
             android:textStyle="bold"
-            android:visibility="invisible" />
+            android:visibility="gone" />
 
     </LinearLayout>
 
@@ -59,35 +61,106 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/color_grey_lines"></LinearLayout>
+        android:background="@color/color_grey_lines">
+
+    </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/textView131"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/label_correo_2"
-            android:id="@+id/textView55"
-            android:layout_weight="0.25"
-            android:textColor="@color/caldroid_holo_blue_light"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="0.2"
             android:gravity="center_vertical"
-            android:textSize="@dimen/text_medium_plus_size"
             android:paddingLeft="5dp"
-            android:layout_marginLeft="5dp" />
+            android:text="@string/label_serie_points"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/caldroid_holo_blue_light"
+            android:textSize="@dimen/text_medium_plus_size" />
 
         <EditText
+            android:id="@+id/pedido_serie"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
+            android:layout_weight="0.8"
+            android:background="@color/caldroid_transparent"
+            android:enabled="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:ems="10"
+            android:hint="@string/hint_email"
+            android:inputType="textEmailAddress" />
+
+        <TextView
+            android:id="@+id/textView55"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="0.25"
+            android:gravity="center_vertical"
+            android:paddingLeft="5dp"
+            android:text="@string/label_correo_2"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/caldroid_holo_blue_light"
+            android:textSize="@dimen/text_medium_plus_size"
+            android:visibility="gone" />
+
+        <EditText
             android:id="@+id/pedido_email"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="0.85"
             android:background="@color/caldroid_transparent"
-            android:hint="@string/hint_email" />
+            android:ems="10"
+            android:hint="@string/hint_email"
+            android:inputType="textEmailAddress"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_grey_lines"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView55"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="0.2"
+            android:gravity="center_vertical"
+            android:paddingLeft="5dp"
+            android:text="@string/label_tipo_orden_points"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/caldroid_holo_blue_light"
+            android:textSize="@dimen/text_medium_plus_size" />
+
+        <EditText
+            android:id="@+id/pedido_tipo_orden"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:background="@color/caldroid_transparent"
+            android:ems="10"
+            android:enabled="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:hint="@string/hint_email"
+            android:inputType="textEmailAddress" />
 
     </LinearLayout>
 

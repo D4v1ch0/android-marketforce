@@ -59,7 +59,7 @@ import rp3.util.Convert;
 public class PedidoParametrosFragment extends BaseFragment{
     public static String ARG_TIPO_TRANS = "trans";
     public static String ARG_TIPO_FROM = "from";
-
+    public static String ARG_ID_AGENDA = "id_agenda";
 
     private AutoCompleteTextView cliente_auto, serie_auto;
     private ArrayList<String> list_nombres, list_nombres_series;
@@ -69,6 +69,7 @@ public class PedidoParametrosFragment extends BaseFragment{
     private String transaccion;
     private SimpleGeneralValueAdapter tipoOrdenAdapter;
     private int from;
+    private long id_agenda;
 
     public static PedidoParametrosFragment newInstance(String text, int from) {
         Bundle arguments = new Bundle();
@@ -87,6 +88,15 @@ public class PedidoParametrosFragment extends BaseFragment{
         return fragment;
     }
 
+    public static PedidoParametrosFragment newInstance(String text, long id_agenda) {
+        Bundle arguments = new Bundle();
+        arguments.putString(ARG_TIPO_TRANS, text);
+        arguments.putLong(ARG_ID_AGENDA, id_agenda);
+        PedidoParametrosFragment fragment = new PedidoParametrosFragment();
+        fragment.setArguments(arguments);
+        return fragment;
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -99,6 +109,7 @@ public class PedidoParametrosFragment extends BaseFragment{
         String lastText = "";
         transaccion = getArguments().getString(ARG_TIPO_TRANS);
         from = getArguments().getInt(ARG_TIPO_FROM , 0);
+        id_agenda = getArguments().getLong(ARG_ID_AGENDA , 0);
         list_nombres = new ArrayList<String>();
         list_nombres_series = new ArrayList<String>();
         List<String> list_ciudad = new ArrayList<String>();
@@ -135,10 +146,10 @@ public class PedidoParametrosFragment extends BaseFragment{
         ((Spinner) getRootView().findViewById(R.id.crear_pedido_ciudad)).setAdapter(ciudadAdapter);
 
         cliente_auto.setAdapter(adapter);
-        cliente_auto.setThreshold(1);
+        cliente_auto.setThreshold(3);
 
         serie_auto.setAdapter(adapterSeries);
-        serie_auto.setThreshold(1);
+        serie_auto.setThreshold(3);
 
         if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.JELLY_BEAN) {
             cliente_auto.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -210,6 +221,7 @@ public class PedidoParametrosFragment extends BaseFragment{
                         intent.putExtra(CrearPedidoActivity.ARG_SERIE, idSerie);
                         intent.putExtra(CrearPedidoActivity.ARG_DIRECCION, idDireccion);
                         intent.putExtra(CrearPedidoActivity.ARG_TIPO_ORDEN, tipoOrdenAdapter.getCode(((Spinner) getRootView().findViewById(R.id.crear_pedido_tipo_orden)).getSelectedItemPosition()));
+                        intent.putExtra(CrearPedidoActivity.ARG_IDAGENDA, id_agenda);
                         dismiss();
                         if(from == 1)
                             getActivity().finish();
@@ -227,6 +239,29 @@ public class PedidoParametrosFragment extends BaseFragment{
 
             }
         });
+
+        //Seteo cliente en el caso de que se venga de una agenda
+        if(id_agenda != 0)
+        {
+            Agenda agd = Agenda.getAgenda(getDataBase(), id_agenda);
+            for(int i = 0; i < list_cliente.size(); i++)
+            {
+                Cliente cli = list_cliente.get(i);
+                if(cli.getIdCliente() == agd.getIdCliente())
+                {
+                    ArrayList<String> direcciones = new ArrayList<String>();
+                    cliente_auto.setText(list_nombres.get(i));
+                    for (ClienteDireccion cliDir : list_cliente.get(i).getClienteDirecciones()) {
+                        direcciones.add(cliDir.getDireccion());
+                    }
+                    ArrayAdapter<String> adapterDir = new ArrayAdapter<String>(getContext(), R.layout.spinner_small_text, direcciones);
+                    ((Spinner) rootView.findViewById(R.id.crear_pedido_direccion)).setAdapter(adapterDir);
+                    cliente_auto.setEnabled(false);
+                    cliente_auto.setFocusable(false);
+                    cliente_auto.setFocusableInTouchMode(false);
+                }
+            }
+        }
 
     }
     @Override

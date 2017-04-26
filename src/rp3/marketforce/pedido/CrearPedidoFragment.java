@@ -1,5 +1,6 @@
 package rp3.marketforce.pedido;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
@@ -12,6 +13,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.print.PrintManager;
 import android.speech.RecognizerIntent;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,8 +54,12 @@ import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.cliente.CrearClienteActivity;
 import rp3.marketforce.db.Contract;
+import rp3.marketforce.loader.LibroPrecioLoader;
+import rp3.marketforce.loader.ProductoLoader;
 import rp3.marketforce.models.Agenda;
+import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.Cliente;
+import rp3.marketforce.models.pedido.AgenteDescuento;
 import rp3.marketforce.models.pedido.ControlCaja;
 import rp3.marketforce.models.pedido.LibroPrecio;
 import rp3.marketforce.models.pedido.Pago;
@@ -96,6 +103,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     public static final int DIALOG_SAVE_CANCEL = 1;
     public static final int DIALOG_SAVE_ACCEPT = 2;
     public static final int DIALOG_SAVE_CLEAN = 3;
+    public static final int DIALOG_SAVE_SEND= 4;
     static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
 
     private Cliente consumidorFinal = new Cliente();
@@ -114,6 +122,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     double descuentos = 0, subtotal = 0, valorTotal = 0, impuestos = 0, base0 = 0, baseImponible = 0, redondeo = 0, neto = 0;
     private Menu menu;
     private PagosListFragment fragment;
+    private LoaderPrecio loaderPrecios;
 
     public static CrearPedidoFragment newInstance(long id_pedido, long id_agenda, String tipo, long idCliente, String serie, String tipoOrden, int idDireccion)
     {
@@ -182,10 +191,16 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                 fragment.pagos = pedido.getPagos();
                 showDialogFragment(fragment, "Pagos", "Pagos");
                 break;
+            case R.id.action_save_send:
+                if(Validaciones())
+                {
+                    showDialogConfirmation(DIALOG_SAVE_SEND, R.string.message_guardar_pedido_accept, R.string.title_guardar_transaccion, false);
+                }
+                break;
             case R.id.action_save:
                 if(Validaciones())
                 {
-                    showDialogConfirmation(DIALOG_SAVE_ACCEPT, R.string.message_guardar_pedido_accept, R.string.title_guardar_transaccion, false);
+                    showDialogConfirmation(DIALOG_SAVE_ACCEPT, R.string.message_guardar_pedido_save, R.string.title_guardar_transaccion, false);
                 }
                 break;
             case R.id.action_cancel:
@@ -209,7 +224,6 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             case DIALOG_SAVE_ACCEPT:
                 break;
             case DIALOG_SAVE_CANCEL:
-                finish();
                 break;
             case DIALOG_SAVE_CLEAN:
                 break;
@@ -219,19 +233,17 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     @Override
     public void onPositiveConfirmation(int id) {
         super.onPositiveConfirmation(id);
-        switch (id)
-        {
-            case DIALOG_SAVE_ACCEPT:
+        switch (id) {
+            case DIALOG_SAVE_SEND:
                 Grabar(false);
-
+                generarFacturaFísica();
+                break;
+            case DIALOG_SAVE_ACCEPT:
+                Grabar(true);
                 generarFacturaFísica();
                 break;
             case DIALOG_SAVE_CANCEL:
-                if(Validaciones())
-                {
-                    Grabar(true);
-                    finish();
-                }
+                finish();
                 break;
             case DIALOG_SAVE_CLEAN:
                 PedidoParametrosFragment pedidoParametrosFragment = PedidoParametrosFragment.newInstance(tipo, 1);
@@ -316,8 +328,18 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
         if (pendiente)
             pedido.setEstado("P");
-        else
+        else {
             pedido.setEstado("C");
+            Agenda agd = Agenda.getAgenda(getDataBase(), idAgenda);
+            for(AgendaTarea agdTar : agd.getAgendaTareas())
+            {
+                if(agdTar.getTipoTarea().equalsIgnoreCase("P"))
+                {
+                    agdTar.setEstadoTarea("R");
+                    AgendaTarea.update(getDataBase(), agdTar);
+                }
+            }
+        }
 
         if (pedido.getID() == 0)
             Pedido.insert(getDataBase(), pedido);
@@ -582,68 +604,28 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         if (getArguments().containsKey(ARG_AGENDA) && getArguments().getLong(ARG_AGENDA) != 0 && !rotated) {
             idAgenda = getArguments().getLong(ARG_AGENDA);
 
-            Agenda agd = Agenda.getAgenda(getDataBase(), idAgenda);
+            /*Agenda agd = Agenda.getAgenda(getDataBase(), idAgenda);
             cliente_auto.setText(agd.getCliente().getNombreCompleto().trim());
             cliente_auto.setEnabled(false);
-            ((TextView) rootView.findViewById(R.id.pedido_email)).setText(agd.getCliente().getCorreoElectronico());
+            ((TextView) rootView.findViewById(R.id.pedido_email)).setText(agd.getCliente().getCorreoElectronico());*/
         }
 
         ((ListView) getRootView().findViewById(R.id.pedido_detalles)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 try {
-                    JSONObject jsonObject = new JSONObject();
+                    showDialogProgress("Cargando", "Consultando Precio");
                     Producto prod = Producto.getProductoIdServer(getDataBase(), pedido.getPedidoDetalles().get(position).getIdProducto());
-                    jsonObject.put("v", pedido.getPedidoDetalles().get(position).getValorTotal());
-                    jsonObject.put("pdm", pedido.getPedidoDetalles().get(position).getPorcentajeDescuentoManual());
-                    jsonObject.put("vdm", pedido.getPedidoDetalles().get(position).getValorDescuentoManual());
-                    jsonObject.put("vdmt", pedido.getPedidoDetalles().get(position).getValorDescuentoManualTotal());
-                    jsonObject.put("pdo", pedido.getPedidoDetalles().get(position).getPorcentajeDescuentoOro());
-                    jsonObject.put("pda", pedido.getPedidoDetalles().get(position).getPorcentajeDescuentoAutomatico());
-                    jsonObject.put("vda", pedido.getPedidoDetalles().get(position).getValorDescuentoAutomatico());
-                    jsonObject.put("vdat", pedido.getPedidoDetalles().get(position).getValorDescuentoAutomaticoTotal());
-                    jsonObject.put("pi", pedido.getPedidoDetalles().get(position).getPorcentajeImpuesto());
-                    jsonObject.put("vi", pedido.getPedidoDetalles().get(position).getValorImpuesto() + pedido.getPedidoDetalles().get(position).getValorUnitario() -
-                            (pedido.getPedidoDetalles().get(position).getValorDescuentoAutomatico() + pedido.getPedidoDetalles().get(position).getValorDescuentoManual()));
-                    jsonObject.put("vit", pedido.getPedidoDetalles().get(position).getValorImpuestoTotal());
-                    jsonObject.put("bi", pedido.getPedidoDetalles().get(position).getBaseImponible());
-                    jsonObject.put("bic", pedido.getPedidoDetalles().get(position).getBaseImponibleCero());
-                    jsonObject.put("s", pedido.getPedidoDetalles().get(position).getSubtotal());
-                    jsonObject.put("cod", pedido.getPedidoDetalles().get(position).getCodigoExterno());
-                    jsonObject.put("d", pedido.getPedidoDetalles().get(position).getDescripcion());
-                    jsonObject.put("p", pedido.getPedidoDetalles().get(position).getValorUnitario());
-                    jsonObject.put("id", pedido.getPedidoDetalles().get(position).getIdProducto());
-                    jsonObject.put("f", pedido.getPedidoDetalles().get(position).getUrlFoto());
-                    jsonObject.put("c", pedido.getPedidoDetalles().get(position).getCantidad());
-                    jsonObject.put("vd", pedido.getPedidoDetalles().get(position).getValorUnitario() -
-                            (pedido.getPedidoDetalles().get(position).getValorDescuentoAutomatico() + pedido.getPedidoDetalles().get(position).getValorDescuentoManual()));
-                    jsonObject.put("pd", pedido.getPedidoDetalles().get(position).getPorcentajeDescuentoAutomatico());
-                    jsonObject.put("ib", prod.getIdBeneficio());
-                    jsonObject.put("co", pedido.getPedidoDetalles().get(position).getCantidadOriginal());
-                    jsonObject.put("ven", pedido.getPedidoDetalles().get(position).getIdVendedor());
-                    jsonObject.put("a", prod.getAplicacion());
-                    if (pedido.getPedidoDetalles().get(position).getUsrDescManual() != null && !pedido.getPedidoDetalles().get(position).getUsrDescManual().equalsIgnoreCase(""))
-                        jsonObject.put("udm", pedido.getPedidoDetalles().get(position).getUsrDescManual());
-                    jsonObject.put("tipo", tipo);
-
-                    JSONArray jArrayLibro = new JSONArray();
                     Cliente cliente = Cliente.getClienteID(getDataBase(), idCliente, false);
-                    List<LibroPrecio> precio = LibroPrecio.getPrecio(getDataBase(), prod.getCodigoExterno(), cliente.getIdExterno(), cliente.getListPrecio());
-                    for(LibroPrecio libroPrecio : precio)
-                    {
-                        JSONObject jsonLibro = new JSONObject();
-                        jsonLibro.put("i", libroPrecio.getItem());
-                        jsonLibro.put("p", libroPrecio.getPrecio());
-                        jsonLibro.put("e", libroPrecio.getValorEscalado());
-                        jsonLibro.put("f", libroPrecio.getFechaEfectiva().getTime());
-                        jArrayLibro.put(jsonLibro);
-                    }
-                    jsonObject.put("lp", jArrayLibro);
-
-                    productFragment = ProductFragment.newInstance(jsonObject.toString());
-                    productFragment.setCancelable(false);
-                    showDialogFragment(productFragment, "Producto", "Editar Producto");
-                    code = null;
+                    Bundle args = new Bundle();
+                    args.putString(LoaderPrecio.STRING_CLIENTE, cliente.getIdExterno());
+                    args.putString(LoaderPrecio.STRING_ITEM, prod.getCodigoExterno());
+                    args.putString(LoaderPrecio.STRING_LISTA_PRECIO, cliente.getListPrecio());
+                    args.putString(LoaderPrecio.STRING_CANAL, cliente.getCanalPartner());
+                    args.putInt(LoaderPrecio.INT_POSICION, position);
+                    if(loaderPrecios == null)
+                        loaderPrecios = new LoaderPrecio();
+                    executeLoader(0, args, loaderPrecios);
                 } catch (Exception ex) {
 
                 }
@@ -676,6 +658,13 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             this.adapter = null;
         if(pedido != null && pedido.getPedidoDetalles() != null)
             setTransaccionValues();
+
+        //Se muestran series y tipo de orden
+        GeneralValue serieGeneral = GeneralValue.getGeneralValue(getDataBase(), Contants.GENERAL_TABLE_SERIES_BERLIN, serie);
+        GeneralValue tipoOrdenGeneral = GeneralValue.getGeneralValue(getDataBase(), Contants.GENERAL_TABLE_TIPO_ORDEN_BERLIN, tipoOrden);
+
+        ((EditText) getRootView().findViewById(R.id.pedido_serie)).setText(serieGeneral.getValue());
+        ((EditText) getRootView().findViewById(R.id.pedido_tipo_orden)).setText(tipoOrdenGeneral.getValue());
     }
 
     public static String getSecuencia(int numero, int spaces) {
@@ -1332,7 +1321,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                 det.setValorDescuentoOroTotal(det.getValorDescuentoOro() * det.getCantidad());
                 det.setValorDescuentoAutomatico((det.getValorUnitario() - det.getValorDescuentoOro()) * det.getPorcentajeDescuentoAutomatico());
                 det.setValorDescuentoAutomaticoTotal(det.getValorDescuentoAutomatico() * det.getCantidad());
-                det.setValorDescuentoManual((det.getValorUnitario()) * det.getPorcentajeDescuentoManual());
+                det.setValorDescuentoManual((det.getValorUnitario() - det.getValorDescuentoAutomatico()) * det.getPorcentajeDescuentoManual());
                 det.setValorDescuentoManualTotal(det.getValorDescuentoManual() * det.getCantidad());
             }
             else
@@ -1341,7 +1330,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                 det.setValorDescuentoOroTotal(0);
                 det.setValorDescuentoAutomatico(det.getValorUnitario() * det.getPorcentajeDescuentoAutomatico());
                 det.setValorDescuentoAutomaticoTotal(det.getValorDescuentoAutomatico() * det.getCantidad());
-                det.setValorDescuentoManual((det.getValorUnitario()) * det.getPorcentajeDescuentoManual());
+                det.setValorDescuentoManual((det.getValorUnitario() - det.getValorDescuentoAutomatico()) * det.getPorcentajeDescuentoManual());
                 det.setValorDescuentoManualTotal(det.getValorDescuentoManual() * det.getCantidad());
             }
             det.setValorImpuesto((det.getValorUnitario()- det.getValorDescuentoManual() - det.getValorDescuentoAutomatico() - det.getValorDescuentoOro()) * det.getPorcentajeImpuesto());
@@ -1425,5 +1414,101 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         }
         //Retorno el saldo para que se presente en la forma de pago.
         return valorTotal;
+    }
+
+    public class LoaderPrecio implements LoaderManager.LoaderCallbacks<List<LibroPrecio>> {
+
+        public static final String STRING_CLIENTE = "cliente";
+        public static final String STRING_ITEM = "item";
+        public static final String STRING_LISTA_PRECIO = "lista_precio";
+        public static final String STRING_CANAL = "canal";
+        public static final String INT_POSICION = "posicion";
+        private String item, cliente, lista_precio, canal;
+        private int position;
+
+        @Override
+        public Loader<List<LibroPrecio>> onCreateLoader(int arg0,
+                                                     Bundle bundle) {
+
+            item = bundle.getString(STRING_ITEM);
+            cliente = bundle.getString(STRING_CLIENTE);
+            lista_precio = bundle.getString(STRING_LISTA_PRECIO);
+            canal = bundle.getString(STRING_CANAL);
+            position = bundle.getInt(INT_POSICION);
+            return new LibroPrecioLoader(getActivity(), getDataBase(), item, cliente, lista_precio);
+
+        }
+
+        @Override
+        public void onLoadFinished(Loader<List<LibroPrecio>> arg0,
+                                   List<LibroPrecio> data) {
+
+            try {
+                JSONObject jsonObject = new JSONObject();
+                Producto prod = Producto.getProductoIdServer(getDataBase(), pedido.getPedidoDetalles().get(position).getIdProducto());
+                jsonObject.put("v", pedido.getPedidoDetalles().get(position).getValorTotal());
+                jsonObject.put("pdm", pedido.getPedidoDetalles().get(position).getPorcentajeDescuentoManual());
+                jsonObject.put("vdm", pedido.getPedidoDetalles().get(position).getValorDescuentoManual());
+                jsonObject.put("vdmt", pedido.getPedidoDetalles().get(position).getValorDescuentoManualTotal());
+                jsonObject.put("pdo", pedido.getPedidoDetalles().get(position).getPorcentajeDescuentoOro());
+                jsonObject.put("pda", pedido.getPedidoDetalles().get(position).getPorcentajeDescuentoAutomatico());
+                jsonObject.put("vda", pedido.getPedidoDetalles().get(position).getValorDescuentoAutomatico());
+                jsonObject.put("vdat", pedido.getPedidoDetalles().get(position).getValorDescuentoAutomaticoTotal());
+                jsonObject.put("pi", pedido.getPedidoDetalles().get(position).getPorcentajeImpuesto());
+                jsonObject.put("vi", pedido.getPedidoDetalles().get(position).getValorImpuesto() + pedido.getPedidoDetalles().get(position).getValorUnitario() -
+                        (pedido.getPedidoDetalles().get(position).getValorDescuentoAutomatico() + pedido.getPedidoDetalles().get(position).getValorDescuentoManual()));
+                jsonObject.put("vit", pedido.getPedidoDetalles().get(position).getValorImpuestoTotal());
+                jsonObject.put("bi", pedido.getPedidoDetalles().get(position).getBaseImponible());
+                jsonObject.put("bic", pedido.getPedidoDetalles().get(position).getBaseImponibleCero());
+                jsonObject.put("s", pedido.getPedidoDetalles().get(position).getSubtotal());
+                jsonObject.put("cod", pedido.getPedidoDetalles().get(position).getCodigoExterno());
+                jsonObject.put("d", pedido.getPedidoDetalles().get(position).getDescripcion());
+                jsonObject.put("p", pedido.getPedidoDetalles().get(position).getValorUnitario());
+                jsonObject.put("id", pedido.getPedidoDetalles().get(position).getIdProducto());
+                jsonObject.put("f", pedido.getPedidoDetalles().get(position).getUrlFoto());
+                jsonObject.put("c", pedido.getPedidoDetalles().get(position).getCantidad());
+                jsonObject.put("vd", pedido.getPedidoDetalles().get(position).getValorUnitario() -
+                        (pedido.getPedidoDetalles().get(position).getValorDescuentoAutomatico() + pedido.getPedidoDetalles().get(position).getValorDescuentoManual()));
+                jsonObject.put("pd", pedido.getPedidoDetalles().get(position).getPorcentajeDescuentoAutomatico());
+                jsonObject.put("ib", prod.getIdBeneficio());
+                jsonObject.put("co", pedido.getPedidoDetalles().get(position).getCantidadOriginal());
+                jsonObject.put("ven", pedido.getPedidoDetalles().get(position).getIdVendedor());
+                jsonObject.put("a", prod.getAplicacion());
+                if (pedido.getPedidoDetalles().get(position).getUsrDescManual() != null && !pedido.getPedidoDetalles().get(position).getUsrDescManual().equalsIgnoreCase(""))
+                    jsonObject.put("udm", pedido.getPedidoDetalles().get(position).getUsrDescManual());
+                jsonObject.put("tipo", tipo);
+
+                JSONArray jArrayLibro = new JSONArray();
+                for (LibroPrecio libroPrecio : data) {
+                    JSONObject jsonLibro = new JSONObject();
+                    jsonLibro.put("i", libroPrecio.getItem());
+                    jsonLibro.put("p", libroPrecio.getPrecio());
+                    jsonLibro.put("e", libroPrecio.getValorEscalado());
+                    jsonLibro.put("f", libroPrecio.getFechaEfectiva().getTime());
+                    jArrayLibro.put(jsonLibro);
+                }
+                jsonObject.put("lp", jArrayLibro);
+
+                //Envío Tope de Descuento para no cargarlo de nuevo
+                AgenteDescuento agente = AgenteDescuento.getTopeDescuento(getDataBase(), canal, prod.getLinea());
+                jsonObject.put("t", agente.getTope());
+
+                closeDialogProgress();
+
+                productFragment = ProductFragment.newInstance(jsonObject.toString());
+                productFragment.setCancelable(false);
+                showDialogFragment(productFragment, "Producto", "Editar Producto");
+                code = null;
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        @Override
+        public void onLoaderReset(Loader<List<LibroPrecio>> arg0) {
+
+        }
     }
 }

@@ -250,6 +250,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     if(PreferenceManager.getBoolean(Contants.KEY_MODULO_POS, false)) {
 
                         if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Agente.executeSyncGetAgenteDescuento(db);
+                            addDefaultMessage(result);
+                        }
+
+                        if (result == SYNC_EVENT_SUCCESS) {
                             result = rp3.marketforce.sync.Caja.executeSync(db);
                             addDefaultMessage(result);
                         }
@@ -512,8 +517,8 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     String tipoOrden = extras.getString(ProductoListFragment.ARG_TIPO_ORDEN).trim();
                     String linea = extras.getString(ProductoListFragment.ARG_LINEA).trim();
                     String familia = extras.getString(ProductoListFragment.ARG_FAMILIA).trim();
-                    String listaPrecio = extras.getString(ProductoListFragment.ARG_LISTA_PRECIO).trim();
-                    Bundle bundle = Productos.executeSyncDescuento(linea, cliente, tipoOrden, familia, listaPrecio);
+                    String item = extras.getString(ProductoListFragment.ARG_LISTA_PRECIO).trim();
+                    Bundle bundle = Productos.executeSyncDescuento(linea, cliente, tipoOrden, familia, item);
                     addDefaultMessage(bundle.getInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE));
                     putData(Agente.KEY_DESCUENTO, bundle.getString(Agente.KEY_DESCUENTO));
                 } else if (syncType.equals(SYNC_TYPE_GET_STOCK)) {
@@ -717,6 +722,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     }
 
                     if(PreferenceManager.getBoolean(Contants.KEY_MODULO_POS, true)) {
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = rp3.marketforce.sync.Agente.executeSyncGetAgenteDescuento(db);
+                            addDefaultMessage(result);
+                        }
+
                         if (result == SYNC_EVENT_SUCCESS) {
                             result = rp3.marketforce.sync.Pedido.executeSyncPendientes(db);
                             addDefaultMessage(result);

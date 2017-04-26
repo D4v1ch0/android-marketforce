@@ -292,7 +292,7 @@ public class Productos {
         return resp;
     }
 
-    public static Bundle executeSyncDescuento(String linea, String cliente, String tipoOrden, String familia, String listaPrecio){
+    public static Bundle executeSyncDescuento(String linea, String cliente, String tipoOrden, String familia, String item){
         Bundle resp = new Bundle();
         WebService webService = new WebService("MartketForce","GetMatrizDescuento");
         try
@@ -301,7 +301,8 @@ public class Productos {
             webService.addParameter("@cliente", cliente);
             webService.addParameter("@tipoOrden", tipoOrden);
             webService.addParameter("@familia", familia);
-            webService.addParameter("@listaPrecio", listaPrecio);
+            item = item.replace(" ", "%20");
+            webService.addParameter("@item", item);
             webService.addCurrentAuthToken();
 
             try {

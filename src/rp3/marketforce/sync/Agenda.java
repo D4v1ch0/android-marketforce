@@ -1,5 +1,7 @@
 package rp3.marketforce.sync;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -31,6 +33,9 @@ public class Agenda {
 
         JSONArray jArray = new JSONArray();
         JSONObject jObject = new JSONObject();
+
+        DecimalFormat df = new DecimalFormat("#.##");
+        df.setRoundingMode(RoundingMode.CEILING);
         try {
             jObject.put("IdAgenda", agendaUpload.getIdAgenda());
             if(agendaUpload.getIdCliente() == 0)
@@ -63,7 +68,8 @@ public class Agenda {
             jObject.put("DistanciaUbicacion", agendaUpload.getDistancia());
             jObject.put("MotivoReprogramacion", agendaUpload.getIdMotivoReprogramacion());
             jObject.put("MotivoReprogramacionTabla", Contants.GENERAL_TABLE_MOTIVOS_REPROGRAMACION);
-            //jObject.put("FechaCreacionTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaCreacion()));
+            jObject.put("ValorVenderPlanificado", removeCommas(df.format(agendaUpload.getValorVenta())));
+            jObject.put("FechaCreacionTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaCreacion()));
 
             JSONArray jArrayTareas = new JSONArray();
             for (AgendaTarea agt : agendaUpload.getAgendaTareas()) {
@@ -381,6 +387,8 @@ public class Agenda {
         WebService webService = new WebService("MartketForce", "InsertarAgenda");
 
         rp3.marketforce.models.Agenda agenda = rp3.marketforce.models.Agenda.getAgenda(db, id_local);
+        DecimalFormat df = new DecimalFormat("#.##");
+        df.setRoundingMode(RoundingMode.CEILING);
 
         JSONObject jObject = new JSONObject();
         try {
@@ -412,6 +420,7 @@ public class Agenda {
             jObject.put("DistanciaUbicacion", agenda.getDistancia());
             jObject.put("MotivoReprogramacion", agenda.getIdMotivoReprogramacion());
             jObject.put("MotivoReprogramacionTabla", Contants.GENERAL_TABLE_MOTIVOS_REPROGRAMACION);
+            jObject.put("ValorVenderPlanificado", removeCommas(df.format(agenda.getValorVenta())));
 
             JSONArray jArrayTareas = new JSONArray();
             for (AgendaTarea agt : agenda.getAgendaTareas()) {
@@ -477,6 +486,8 @@ public class Agenda {
         if (agendas.size() == 0)
             return SyncAdapter.SYNC_EVENT_SUCCESS;
 
+        DecimalFormat df = new DecimalFormat("#.##");
+        df.setRoundingMode(RoundingMode.CEILING);
         JSONArray jArray = new JSONArray();
         for (int i = 0; i < agendas.size(); i++) {
             rp3.marketforce.models.Agenda agendaUpload = agendas.get(i);
@@ -516,6 +527,7 @@ public class Agenda {
                 jObject.put("MotivoReprogramacionTabla", Contants.GENERAL_TABLE_MOTIVOS_REPROGRAMACION);
                 jObject.put("FechaInicioOriginalTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaInicio()));
                 jObject.put("FechaFinOriginalTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaFin()));
+                jObject.put("ValorVenderPlanificado", removeCommas(df.format(agendaUpload.getValorVenta())));
 
                 JSONArray jArrayTareas = new JSONArray();
                 for (AgendaTarea agt : agendaUpload.getAgendaTareas()) {
@@ -729,6 +741,8 @@ public class Agenda {
         if (agendas.size() == 0)
             return SyncAdapter.SYNC_EVENT_SUCCESS;
 
+        DecimalFormat df = new DecimalFormat("#.##");
+        df.setRoundingMode(RoundingMode.CEILING);
         JSONArray jArray = new JSONArray();
         for (int i = 0; i < agendas.size(); i++) {
             rp3.marketforce.models.Agenda agendaUpload = agendas.get(i);
@@ -768,6 +782,7 @@ public class Agenda {
                 jObject.put("MotivoReprogramacionTabla", Contants.GENERAL_TABLE_MOTIVOS_REPROGRAMACION);
                 jObject.put("FechaInicioOriginalTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaInicio()));
                 jObject.put("FechaFinOriginalTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaFin()));
+                jObject.put("ValorVenderPlanificado", removeCommas(df.format(agendaUpload.getValorVenta())));
                 agendasConId.add(agendaUpload);
 
                 JSONArray jArrayTareas = new JSONArray();
@@ -959,6 +974,11 @@ public class Agenda {
         }
 
         return SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
+    private static String removeCommas(String value)
+    {
+        return value.replace(",",".");
     }
 }
 

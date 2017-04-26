@@ -304,9 +304,10 @@
     <string name="label_cantidad_items"># de Items:</string>
     <string name="label_total_pedido">Total:</string>
     <string name="label_agregar_producto">+ Agregar Producto</string>
-    <string name="message_guardar_pedido">Al salir de la transacción se perderán los datos. Desea guardar la transacción como inconclusa?</string>
+    <string name="message_guardar_pedido">Desea salir de la transacción? Los datos no se guardarán y se perderán.</string>
     <string name="title_abandonar_transaccion">Abandonar Transacción</string>
     <string name="message_guardar_pedido_accept">Desea guardar los datos de la transacción y darlo por cerrado?</string>
+    <string name="message_guardar_pedido_save">Desea guardar los datos de la transacción como inconclusa?</string>
     <string name="message_sin_productos">Debido a que no tiene ningun producto guardado en el dispositivo, este proceso tardará en terminarse. Desea continuar?</string>
     <string name="label_sin_productos">No tiene productos</string>
     <string name="menu_asignar_pedido">Asignar Transacción</string>
@@ -449,4 +450,11 @@
     <string name="label_porc_desc_manual">% Manual:</string>
     <string name="label_tipo_orden">Tipo de Orden</string>
     <string name="label_linea">Línea</string>
+    <string name="label_solo_guardar">Solo Guardar</string>
+    <string name="label_guardar_enviar">Guardar y Enviar</string>
+    <string name="label_serie_points">Serie:</string>
+    <string name="label_tipo_orden_points">T.Orden:</string>
+    <string name="title_pedido_inconcluso">Pedido Inconcluso</string>
+    <string name="message_pedido_inconcluso">Actualmente este cliente tiene un pedido inconcluso. Desea asignar el pedido a esta agenda?</string>
+    <string name="label_valor_venta">Valor Venta:</string>
 </resources>

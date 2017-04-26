@@ -45,12 +45,14 @@ import rp3.marketforce.utils.DrawableManager;
 public class ProductFragment extends BaseFragment implements SignInFragment.SignConfirmListener{
 
     public static String ARG_CODE = "Code";
+
+    public final static int DIALOG_DESC = 8;
     private ProductAcceptListener createFragmentListener;
     private JSONObject jsonObject;
     private DrawableManager DManager;
     private double porcentajeDescManual = 0, valorDescManual = 0, valorDescManualTotal = 0, porcentajeDescAuto = 0, valorDescAuto = 0, valorDescAutoTotal = 0;
     private DecimalFormat df;
-    private NumberFormat numberFormat, numberFormatInteger;
+    private NumberFormat numberFormat, numberFormatInteger, numberFormatDiscount;
     private SignInFragment signInFragment;
     private String usrDescManual;
     private List<LibroPrecio> libroPrecios;
@@ -114,6 +116,10 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
         numberFormatInteger.setMaximumFractionDigits(0);
         numberFormatInteger.setMinimumFractionDigits(0);
 
+        numberFormatDiscount = NumberFormat.getInstance();
+        numberFormatDiscount.setMaximumFractionDigits(2);
+        numberFormatDiscount.setMinimumFractionDigits(2);
+
         DManager = new DrawableManager();
         try {
         String code = getArguments().getString("Code");
@@ -126,7 +132,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
             porcentajeDescAuto = porcentajeDescAuto * 100;
             ((TextView)rootView.findViewById(R.id.producto_aplicacion)).setText(jsonObject.getString("a"));
             ((TextView)rootView.findViewById(R.id.producto_descripcion)).setText(jsonObject.getString("d"));
-            ((TextView)rootView.findViewById(R.id.producto_descuento_auto)).setText(numberFormat.format(porcentajeDescAuto) + "%");
+            ((TextView)rootView.findViewById(R.id.producto_descuento_auto)).setText(numberFormatDiscount.format(porcentajeDescAuto) + "%");
             ((TextView)rootView.findViewById(R.id.producto_precio)).setText("" + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(jsonObject.getDouble("vd")));
             ((TextView)rootView.findViewById(R.id.producto_precio_final)).setText("" + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " 0");
             List<Vendedor> list_vendedores = Vendedor.getVendedores(getDataBase());
@@ -177,7 +183,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
                         double precioDescuento = precioLibro - (precioLibro * porcentajeDescAuto);
                         valorDescAuto = precioLibro * porcentajeDescAuto;
                         valorDescAutoTotal = valorDescAuto * cantidad;
-                        valorDescManual = precioLibro * porcentajeDescManual;
+                        valorDescManual = (precioLibro - valorDescAuto) * porcentajeDescManual;
                         double precio_total = cantidad * precioLibro;
                         valorDescManualTotal = valorDescManual * cantidad;
                         precio_total = precio_total - valorDescManualTotal - valorDescAutoTotal;
@@ -214,7 +220,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
                             double precioDescuento = precioLibro - (precioLibro * porcentajeDescAuto);
                             valorDescAuto = precioLibro * porcentajeDescAuto;
                             valorDescAutoTotal = valorDescAuto * cantidad;
-                            valorDescManual = precioLibro * porcentajeDescManual;
+                            valorDescManual = (precioLibro - valorDescAuto) * porcentajeDescManual;
                             double precio_total = cantidad * precioLibro;
                             valorDescManualTotal = valorDescManual * cantidad;
                             precio_total = precio_total - valorDescManualTotal - valorDescAutoTotal;
@@ -259,7 +265,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
                     double precioDescuento = precioLibro - (precioLibro * porcentajeDescAuto);
                     valorDescAuto = precioLibro * porcentajeDescAuto;
                     valorDescAutoTotal = valorDescAuto * cantidad;
-                    valorDescManual = precioLibro * porcentajeDescManual;
+                    valorDescManual = (precioLibro - valorDescAuto) * porcentajeDescManual;
                     double precio_total = cantidad * precioLibro;
                     valorDescManualTotal = valorDescManual * cantidad;
                     precio_total = precio_total - valorDescManualTotal - valorDescAutoTotal;
@@ -323,6 +329,13 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
                                 Toast.makeText(getContext(), "La suma de porcentajes de descuento no puede ser mayor o igual al 100%", Toast.LENGTH_LONG).show();
                                 return;
                             }
+                            if(jsonObject.getDouble("t") <= ((Integer.parseInt(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).getText().toString())) + (porcentajeDescAuto*100)))
+                            {
+                                showDialogConfirmation(DIALOG_DESC, "El descuento ingresado para este producto (" + numberFormatDiscount.format(((Integer.parseInt(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).getText().toString())) + (porcentajeDescAuto*100))) +
+                                        "%), es mayor al que se le puede dar al canal del cliente y su línea de producto (" + numberFormatDiscount.format(jsonObject.getDouble("t"))+ "%);" +
+                                        " por ende este pedido será bloqueado hasta que reciba la aprobación de un supervisor. Desea continuar?", "Bloqueo de Pedido");
+                                return;
+                            }
                         }
                         saveDetail();
                     } else {
@@ -333,6 +346,31 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
                 }
             }
         });
+
+        View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (b) {
+                    ((EditText) view).setSelection(((EditText) view).getText().length());
+                }
+            }
+        };
+
+        ((EditText) getRootView().findViewById(R.id.producto_cantidad)).setOnFocusChangeListener(onFocusChangeListener);
+        ((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).setOnFocusChangeListener(onFocusChangeListener);
+    }
+
+    @Override
+    public void onPositiveConfirmation(int id) {
+        super.onPositiveConfirmation(id);
+        switch (id)
+        {
+            case DIALOG_DESC:
+                saveDetail();
+                break;
+            default:
+                break;
+        }
     }
 
     private void saveDetail()
