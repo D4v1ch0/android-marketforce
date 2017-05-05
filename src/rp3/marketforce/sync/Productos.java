@@ -364,6 +364,40 @@ public class Productos {
         return resp;
     }
 
+    public static Bundle executeSyncImportacion(String item){
+        Bundle resp = new Bundle();
+        WebService webService = new WebService("MartketForce","GetImportaciones");
+        try
+        {
+            item = item.replace(" ", "%20");
+            webService.addParameter("@item", item);
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED) {
+                    resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE, rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR);
+                }
+                resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_HTTP_ERROR);
+                return resp;
+            } catch (Exception e) {
+                resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_ERROR);
+                return resp;
+            }
+
+            JSONArray types = webService.getJSONArrayResponse();
+            if(types != null)
+                resp.putString(ProductoListFragment.ARG_ITEM, types.toString());
+            else
+                resp.putString(ProductoListFragment.ARG_ITEM, "");
+            resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS);
+        }finally{
+            webService.close();
+        }
+        return resp;
+    }
+
     public static Bundle executeSyncConteoPrecios(DataBase db){
         Bundle resp = new Bundle();
         WebService webService = new WebService("MartketForce","GetPreciosCount");

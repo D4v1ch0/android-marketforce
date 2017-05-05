@@ -338,6 +338,14 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                 intent2.putExtra(CrearPedidoActivity.ARG_IDPEDIDO, selectedClientId);
                 startActivity(intent2);
                 break;
+            case R.id.action_saldos_bodega:
+                BodegaFragment bodegaFragment = BodegaFragment.newInstance("");
+                showDialogFragment(bodegaFragment, "Saldos de Bodega", "Saldos de Bodega");
+                break;
+            case R.id.action_consulta_precio:
+                ConsultaPrecioFragment consultaPrecioFragment = new ConsultaPrecioFragment();
+                showDialogFragment(consultaPrecioFragment, "Consulta de Precios", "Consulta de Precios");
+                break;
             case R.id.action_crear_pedido:
                 AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
 
@@ -648,7 +656,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
 
                                 stmtSearch.bindLong(1, descargados - 1);
                                 stmtSearch.bindString(2, type.getString("D"));
-                                stmtSearch.bindString(3, type.getString("Ex"));
+                                stmtSearch.bindString(3, type.getString("Ex").trim().replace(" ",""));
                                 stmtSearch.bindString(4, type.getString("Ex").trim().replace(" ",""));
                                 stmtSearch.bindString(5, type.getString("GE").trim());
 

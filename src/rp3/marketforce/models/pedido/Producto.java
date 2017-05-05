@@ -469,6 +469,40 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
         return list;
     }
 
+    public static List<Producto> getProductoSearchNoSerie(DataBase db, String termSearch)
+    {
+        String query = QueryDir.getQuery( Contract.Producto.QUERY_SEARCH_NO_SERIE );
+        //String version = db.getSQLiteVersion();
+        //int compare = Convert.versionCompare(version, Contants.SQLITE_VERSION_SEARCH);
+        Cursor c = null;
+        String termSearchSpace = getSearchString(termSearch);
+        String parameter = termSearch.replace(" ", "").trim() + "*";
+
+        c = db.rawQuery(query, new String[]{parameter});
+
+
+        List<Producto> list = new ArrayList<Producto>();
+        while(c.moveToNext()){
+            Producto prod = new Producto();
+            prod.setID(c.getInt(0));
+            prod.setDescripcion(CursorUtils.getString(c, Contract.Producto.FIELD_DESCRIPCION));
+            prod.setIdSubCategoria(CursorUtils.getInt(c, Contract.Producto.COLUMN_ID_SUBCATEGORIA));
+            prod.setIdProducto(CursorUtils.getInt(c, Contract.Producto.COLUMN_ID_PRODUCTO));
+            prod.setValorUnitario(CursorUtils.getDouble(c, Contract.Producto.COLUMN_VALOR_UNITARIO));
+            prod.setUrlFoto(CursorUtils.getString(c, Contract.Producto.COLUMN_URL_FOTO));
+            prod.setIdBeneficio(CursorUtils.getInt(c, Contract.Producto.COLUMN_ID_BENEFICIO));
+            prod.setCodigoExterno(CursorUtils.getString(c, Contract.Producto.COLUMN_CODIGO_EXTERNO));
+            prod.setPorcentajeImpuesto(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_IMPUESTO));
+            prod.setPorcentajeDescuento(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_DESCUENTO));
+            prod.setPorcentajeDescuentoOro(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PORCENTAJE_DESCUENTO_ORO));
+            prod.setPrecioDescuento(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_DESCUENTO));
+            prod.setPrecioImpuesto(CursorUtils.getFloat(c, Contract.Producto.COLUMN_PRECIO_IMPUESTO));
+            list.add(prod);
+        }
+        c.close();
+        return list;
+    }
+
     public static List<Producto> getProductoSearch(DataBase db, String termSearch, int idSubCategoria, String serie)
     {
         String query = QueryDir.getQuery( Contract.Producto.QUERY_SEARCH_BY_CATEGORIA );
@@ -605,16 +639,20 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
         if(!code.contains(" ")) {
             if (code.length() > 1)
             {
-                code = code.substring(0,1) + " " + code.substring(1, code.length()-1);
+                code = code.substring(0,1) + "-" + code.substring(1, code.length());
             }
             if (code.length() > 5)
             {
-                code = code.substring(0,5) + " " + code.substring(5, code.length()-1);
+                code = code.substring(0,5) + "-" + code.substring(5, code.length());
             }
             if (code.length() > 9)
             {
-                code = code.substring(0,9) + " " + code.substring(9, code.length()-1);
+                code = code.substring(0,9) + "-" + code.substring(9, code.length());
             }
+        }
+        else
+        {
+            code.replace(" ", "-");
         }
         return code;
     }

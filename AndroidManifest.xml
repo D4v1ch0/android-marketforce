@@ -237,6 +237,9 @@
                 android:value="rp3.marketforce.SearchableActivity"
                 />
         </activity>
+
+        <!-- BERLIN -->
+        <activity android:name=".cliente.EstadoCuentaActivity" android:configChanges="orientation|keyboardHidden|screenSize"></activity>
     </application>
 
 </manifest>

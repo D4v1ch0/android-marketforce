@@ -401,6 +401,15 @@
             android:layout_weight="1" />
 
         <Button
+            android:id="@+id/producto_stock"
+            style="@style/Widget.Button.Theme"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:text="@string/label_consulta_stock" />
+
+        <Button
             style="@style/Widget.Button.Theme"
             android:layout_width="0dp"
             android:layout_height="match_parent"

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="3dp"
+    android:paddingBottom="3dp">
+
+    <TextView
+        android:id="@+id/estado_cuenta_documento"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:lines="2"
+        android:maxLines="2"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/estado_cuenta_emision"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:lines="2"
+        android:maxLines="2"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="9sp" />
+
+    <TextView
+        android:id="@+id/estado_cuenta_vence"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@color/color_fondo_total"
+        android:gravity="center"
+        android:paddingRight="3dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="9sp" />
+
+    <TextView
+        android:id="@+id/estado_cuenta_dias_vencido"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="0.8"
+        android:gravity="center"
+        android:lines="2"
+        android:maxLines="2"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/estado_cuenta_valor"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@color/color_fondo_total"
+        android:gravity="center"
+        android:paddingRight="3dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/estado_cuenta_abono"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:lines="2"
+        android:maxLines="2"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/estado_cuenta_saldo"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@color/color_fondo_total"
+        android:gravity="center"
+        android:paddingRight="3dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="10sp" />
+
+</LinearLayout>

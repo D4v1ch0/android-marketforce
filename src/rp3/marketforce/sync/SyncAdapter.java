@@ -8,6 +8,7 @@ import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
 import rp3.marketforce.ServerActivity;
 import rp3.marketforce.cliente.CrearClienteFragment;
+import rp3.marketforce.cliente.EstadoCuentaFragment;
 import rp3.marketforce.cliente.SignInFragment;
 import rp3.marketforce.marcaciones.JustificacionFragment;
 import rp3.marketforce.models.Tarea;
@@ -82,6 +83,9 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
     public static String SYNC_TYPE_AGENDA_OPORTUNIDAD = "agenda_oportunidad";
     public static String SYNC_TYPE_GET_DESCUENTO = "get_descuento";
     public static String SYNC_TYPE_GET_STOCK= "get_stock";
+    public static String SYNC_TYPE_GET_STOCK_CONSULTA= "get_stock_consulta";
+    public static String SYNC_TYPE_GET_IMPORTACIONES= "get_importaciones";
+    public static String SYNC_TYPE_ESTADO_CUENTA= "estado_cuenta";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -428,6 +432,9 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                 } else if (syncType.equals(SYNC_TYPE_PEDIDO_PENDIENTES)) {
                     result = Pedido.executeSyncPendientes(db);
                     addDefaultMessage(result);
+
+                    result = Pedido.executeSyncVentasPerdidas(db);
+                    addDefaultMessage(result);
                 } else if (syncType.equals(SYNC_TYPE_ANULAR_PEDIDO)) {
                     long id = extras.getLong(CrearPedidoFragment.ARG_PEDIDO);
                     result = Pedido.executeSyncAnular(db, id);
@@ -526,6 +533,21 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     Bundle bundle = Productos.executeSyncStock(item);
                     addDefaultMessage(bundle.getInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE));
                     putData(ProductoListFragment.ARG_ITEM, bundle.getString(ProductoListFragment.ARG_ITEM));
+                } else if (syncType.equals(SYNC_TYPE_GET_STOCK_CONSULTA)) {
+                    String item = extras.getString(ProductoListFragment.ARG_ITEM).trim();
+                    Bundle bundle = Productos.executeSyncStock(item);
+                    addDefaultMessage(bundle.getInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE));
+                    putData(ProductoListFragment.ARG_ITEM, bundle.getString(ProductoListFragment.ARG_ITEM));
+                } else if (syncType.equals(SYNC_TYPE_GET_IMPORTACIONES)) {
+                    String item = extras.getString(ProductoListFragment.ARG_ITEM).trim();
+                    Bundle bundle = Productos.executeSyncImportacion(item);
+                    addDefaultMessage(bundle.getInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE));
+                    putData(ProductoListFragment.ARG_ITEM, bundle.getString(ProductoListFragment.ARG_ITEM));
+                } else if (syncType.equals(SYNC_TYPE_ESTADO_CUENTA)) {
+                    String cliente = extras.getString(EstadoCuentaFragment.ARG_CLIENTE).trim();
+                    Bundle bundle = Cliente.executeSyncEstadoCuenta(cliente);
+                    addDefaultMessage(bundle.getInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE));
+                    putData(EstadoCuentaFragment.ARG_CLIENTE, bundle.getString(EstadoCuentaFragment.ARG_CLIENTE));
                 } else if (syncType.equals(SYNC_TYPE_BATCH)) {
                     result = Cliente.executeSyncInserts(db);
                     addDefaultMessage(result);

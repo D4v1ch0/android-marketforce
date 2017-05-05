@@ -10,6 +10,7 @@ import java.util.List;
 import rp3.data.entity.EntityBase;
 import rp3.db.QueryDir;
 import rp3.db.sqlite.DataBase;
+import rp3.marketforce.Contants;
 import rp3.marketforce.db.Contract;
 import rp3.util.CursorUtils;
 
@@ -22,6 +23,7 @@ public class LibroPrecio extends EntityBase<LibroPrecio> {
     private long id;
     private String idLibro;
     private String item;
+    private String descripcion;
     private String divisa;
     private double precio;
     private String medida;
@@ -132,6 +134,14 @@ public class LibroPrecio extends EntityBase<LibroPrecio> {
         this.libroEstandar = libroEstandar;
     }
 
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
     @Override
     public void setValues() {
         setValue(Contract.LibroPrecio.COLUMN_FECHA_EFECTIVA, this.fechaEfectiva);
@@ -189,6 +199,45 @@ public class LibroPrecio extends EntityBase<LibroPrecio> {
             }
             d.close();
         }
+        return list;
+    }
+
+    public static List<LibroPrecio> consultaPrecioGeneral(DataBase db, String libro, String item, String linea) {
+        String query = null;
+        if(libro.equalsIgnoreCase(Contants.LIBRO_ESTANDAR))
+            query = QueryDir.getQuery(Contract.LibroPrecio.QUERY_CONSULTA_STANDARD);
+        if(libro.equalsIgnoreCase(Contants.LIBRO_REMATE))
+            query = QueryDir.getQuery(Contract.LibroPrecio.QUERY_CONSULTA_REMATE);
+
+        Cursor c = db.rawQuery(query, new String[]{item, item, linea, linea} );
+
+        List<LibroPrecio> list = new ArrayList<>();
+        while(c.moveToNext()){
+            LibroPrecio precio = new LibroPrecio();
+            precio.setItem(CursorUtils.getString(c, Contract.LibroPrecio.COLUMN_ITEM));
+            precio.setDescripcion(CursorUtils.getString(c, Contract.ProductoExt.COLUMN_DESCRIPCION));
+            precio.setPrecio(CursorUtils.getDouble(c, Contract.LibroPrecio.COLUMN_PRECIO));
+            precio.setMedida(CursorUtils.getString(c, Contract.LibroPrecio.COLUMN_MEDIDA));
+            list.add(precio);
+        }
+        c.close();
+        return list;
+    }
+
+    public static List<LibroPrecio> consultaPrecioCliente(DataBase db, String item, String cliente) {
+        String query = QueryDir.getQuery(Contract.LibroPrecio.QUERY_CONSULTA_CLIENTE);
+        Cursor c = db.rawQuery(query, new String[]{cliente, cliente, item, item});
+
+        List<LibroPrecio> list = new ArrayList<>();
+        while (c.moveToNext()) {
+            LibroPrecio precio = new LibroPrecio();
+            precio.setItem(CursorUtils.getString(c, Contract.LibroPrecio.COLUMN_ITEM));
+            precio.setDescripcion(CursorUtils.getString(c, Contract.ProductoExt.COLUMN_DESCRIPCION));
+            precio.setPrecio(CursorUtils.getDouble(c, Contract.LibroPrecio.COLUMN_PRECIO));
+            precio.setMedida(CursorUtils.getString(c, Contract.LibroPrecio.COLUMN_MEDIDA));
+            list.add(precio);
+        }
+        c.close();
         return list;
     }
 }

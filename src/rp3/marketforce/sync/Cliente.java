@@ -14,10 +14,13 @@ import rp3.content.SyncAdapter;
 import rp3.data.Constants;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
+import rp3.marketforce.cliente.EstadoCuentaFragment;
 import rp3.marketforce.models.ClienteDireccion;
 import rp3.marketforce.utils.Utils;
 import rp3.sync.SyncAudit;
 import rp3.util.Convert;
+
+import android.os.Bundle;
 import android.util.Log;
 
 public class Cliente {
@@ -1146,6 +1149,39 @@ public class Cliente {
 			
 			return SyncAdapter.SYNC_EVENT_SUCCESS;		
 		}
-		
-	
+
+
+	public static Bundle executeSyncEstadoCuenta(String cliente){
+		Bundle resp = new Bundle();
+		WebService webService = new WebService("MartketForce","GetEstadoCuenta");
+		try
+		{
+			cliente = cliente.replace(" ", "%20");
+			webService.addParameter("@cliente", cliente);
+			webService.addCurrentAuthToken();
+
+			try {
+				webService.invokeWebService();
+			} catch (HttpResponseException e) {
+				if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED) {
+					resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE, rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR);
+				}
+				resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_HTTP_ERROR);
+				return resp;
+			} catch (Exception e) {
+				resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_ERROR);
+				return resp;
+			}
+
+			JSONArray types = webService.getJSONArrayResponse();
+			if(types != null)
+				resp.putString(EstadoCuentaFragment.ARG_CLIENTE, types.toString());
+			else
+				resp.putString(EstadoCuentaFragment.ARG_CLIENTE, "");
+			resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS);
+		}finally{
+			webService.close();
+		}
+		return resp;
+	}
 }

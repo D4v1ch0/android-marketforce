@@ -9,6 +9,7 @@ import org.ksoap2.transport.HttpResponseException;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -24,7 +25,9 @@ import rp3.marketforce.models.pedido.ControlCaja;
 import rp3.marketforce.models.pedido.Pago;
 import rp3.marketforce.models.pedido.PedidoDetalle;
 import rp3.marketforce.models.pedido.ProductoCodigo;
+import rp3.marketforce.models.pedido.VentaPerdida;
 import rp3.marketforce.utils.Utils;
+import rp3.runtime.Session;
 import rp3.sync.SyncAudit;
 import rp3.util.Convert;
 import rp3.util.NumberUtils;
@@ -557,6 +560,57 @@ public class Pedido {
         }finally{
             webService.close();
         }
+        return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
+    public static int executeSyncVentasPerdidas(DataBase db) {
+        WebService webService = new WebService("MartketForce", "InsertVentaPerdida");
+
+        List<VentaPerdida> ventas = VentaPerdida.getPendientes(db);
+        if (ventas.size() == 0)
+            return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
+
+        DecimalFormat df = new DecimalFormat("#.##");
+        df.setRoundingMode(RoundingMode.CEILING);
+        JSONArray jArray = new JSONArray();
+        for (int i = 0; i < ventas.size(); i++) {
+            VentaPerdida ventaUpload = ventas.get(i);
+            JSONObject jObject = new JSONObject();
+            try {
+                jObject.put("CodigoProducto", ventaUpload.getCodigoProducto());
+                jObject.put("Vendedor", Session.getUser().getLogonName());
+                jObject.put("FecIngTicks", Convert.getDotNetTicksFromDate(ventaUpload.getFecha()));
+
+                jArray.put(jObject);
+            } catch (Exception ex) {
+
+            }
+        }
+
+        webService.addParameter("ventas", jArray);
+
+        try {
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+                for (int i = 0; i < ventas.size(); i++) {
+                    VentaPerdida ventaUpload = ventas.get(i);
+                    ventaUpload.setPendiente(false);
+                    VentaPerdida.update(db, ventaUpload);
+                }
+            } catch (HttpResponseException e) {
+                if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return rp3.content.SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return rp3.content.SyncAdapter.SYNC_EVENT_ERROR;
+            }
+
+        } finally {
+            webService.close();
+        }
+
         return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
     }
 

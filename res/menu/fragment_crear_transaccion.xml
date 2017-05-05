@@ -6,4 +6,6 @@
         android:showAsAction="always|collapseActionView"     ></item>
     <item android:id="@+id/action_save_send" android:icon="@drawable/ic_action_accept_dark" android:title="@string/label_guardar_enviar"
         android:showAsAction="always|collapseActionView"     ></item>
+    <item android:id="@+id/action_estado_cuenta" android:icon="@drawable/ic_action_view_as_list" android:title="@string/label_estado_cuenta"
+        android:showAsAction="ifRoom|collapseActionView"     ></item>
 </menu>

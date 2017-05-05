@@ -289,6 +289,18 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
             dismiss();
         }
 
+        rootView.findViewById(R.id.producto_stock).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    BodegaFragment bodegaFragment = BodegaFragment.newInstance(jsonObject.getString("ce"));
+                    showDialogFragment(bodegaFragment, "Saldos de Bodega", "Saldos de Bodega");
+                }
+                catch (Exception ex)
+                {}
+            }
+        });
+
         rootView.findViewById(R.id.producto_cancelar).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -791,5 +791,23 @@
         Tope REAL
         )
     </statement>
+    <statement>
+        CREATE TABLE tbStock(
+        _id INTEGER PRIMARY KEY,
+        IdBodega TEXT,
+        Item TEXT,
+        StockDisponible REAL,
+        StockFisico REAL,
+        Fecha INTEGER
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbVentaPerdida(
+        _id INTEGER PRIMARY KEY,
+        CodigoProducto TEXT,
+        Fecha INTEGER,
+        Pendiente BOOLEAN
+        )
+    </statement>
 
 </sql>

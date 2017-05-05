@@ -19,7 +19,9 @@ public class Contants {
     public final static int GENERAL_TABLE_TIPO_MARCACION = 1044;
     public final static int GENERAL_TABLE_MOTIVOS_ANULACION = 1706;
     public final static int GENERAL_TABLE_TIPOS_TRANSACCION = 1621;
+    public final static int GENERAL_TABLE_BODEGAS_BERLIN = 2000;
     public final static int GENERAL_TABLE_AVISOS_BERLIN = 2001;
+    public final static int GENERAL_TABLE_LINEA_BERLIN = 2009;
     public final static int GENERAL_TABLE_SERIES_BERLIN = 2015;
     public final static int GENERAL_TABLE_TIPO_ORDEN_BERLIN = 2016;
     public final static int GENERAL_TABLE_AVISO_ITEM_BERLIN = 2017;
@@ -196,5 +198,9 @@ public class Contants {
     //GRUPO BERLÍN
     public final static String TIPO_AGENDA_CLIENTE = "C";
     public final static String TIPO_AGENDA_OPORTUNIDAD = "O";
+
+    public final static String LIBRO_ESTANDAR = "S";
+    public final static String LIBRO_REMATE = "R";
+    public final static String LIBRO_CLIENTE = "C";
 	
 }

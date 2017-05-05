@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="3dp"
+    android:paddingBottom="3dp">
+
+    <TextView
+        android:id="@+id/importacion_tipo_orden"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="0.33"
+        android:gravity="center"
+        android:lines="2"
+        android:maxLines="2"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="@dimen/text_xsmall_size" />
+
+    <TextView
+        android:id="@+id/importacion_procedencia"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="0.33"
+        android:gravity="center"
+        android:lines="2"
+        android:maxLines="2"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="@dimen/text_xsmall_size" />
+
+    <TextView
+        android:id="@+id/importacion_fecha_pedido"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="0.33"
+        android:gravity="center"
+        android:lines="2"
+        android:maxLines="2"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="@dimen/text_xsmall_size" />
+
+    <TextView
+        android:id="@+id/importacion_fecha_entrega"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.33"
+        android:background="@color/color_fondo_total"
+        android:gravity="center"
+        android:paddingRight="3dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="@dimen/text_xsmall_size" />
+
+    <TextView
+        android:id="@+id/importacion_cantidad"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.2"
+        android:background="@color/color_fondo_total"
+        android:gravity="center"
+        android:paddingRight="3dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="@dimen/text_xsmall_size" />
+
+</LinearLayout>

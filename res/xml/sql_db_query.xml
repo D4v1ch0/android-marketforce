@@ -1847,6 +1847,41 @@
         Codigo)
         VALUES (?,?)
     </statement>
+    <statement name="SimpleProductoSearchNoSerie">
+        SELECT
+        tbProducto._id AS _id,
+        tbProducto.IdProducto,
+        tbProducto.ValorUnitario,
+        tbProducto.URLFoto,
+        tbProducto.IdSubCategoria,
+        tbProducto.CodigoExterno,
+        tbProducto.PorcentajeDescuentoOro,
+        tbProducto.PorcentajeDescuento,
+        tbProducto.PrecioConDescuento,
+        tbProducto.PorcentajeImpuesto,
+        tbProducto.PrecioConImpuesto,
+        tbProducto.IdBeneficio,
+        tbProductoExt.Descripcion AS tbProductoExt_Descripcion,
+        tbProductoExt.IdExterno1 AS tbProductoExt_IdExterno1,
+        tbProductoExt.IdExterno2 AS tbProductoExt_IdExterno2
+        FROM tbProductoExt
+        INNER JOIN tbProducto
+        ON tbProducto._id = tbProductoExt.docid
+        INNER JOIN (
+
+        SELECT
+        tbProductoExt.docid,
+        matchinfo( tbProductoExt ) AS Rank
+        FROM tbProductoExt
+        WHERE tbProductoExt MATCH ?
+        ORDER BY rank DESC
+
+        ) AS tbProductoSearch
+        ON tbProductoExt.docid = tbProductoSearch.docid
+        WHERE tbProducto.IdBeneficio &lt;&gt; -1
+        ORDER BY tbProductoSearch.Rank DESC
+        LIMIT 10
+    </statement>
     <statement name="SimpleProductoSearch">
         SELECT
         tbProducto._id AS _id,
@@ -2503,6 +2538,58 @@
         AND (tbLibroPrecio.FechaEfectiva &lt; ?)
         ORDER BY tbLibroPrecio.FechaEfectiva DESC
     </statement>
+    <statement name="ConsultaPrecioRemate">
+        SELECT
+        tbLibroPrecio.Item,
+        tbProductoExt.Descripcion,
+        tbLibroPrecio.Medida,
+        tbLibroPrecio.Precio
+        from tbLibroPrecio
+        INNER JOIN tbMatrizPrecio
+        ON tbMatrizPrecio.IdLibro = tbLibroPrecio.IdLibro
+        INNER JOIN tbProducto
+        ON tbProducto.CodigoExterno = tbLibroPrecio.Item
+        INNER JOIN tbProductoExt
+        ON tbProductoExt.docid = tbProducto._id
+        where ( ? = ''  OR tbLibroPrecio.Item = ?)
+        AND tbMatrizPrecio.IdMatriz = '001000002'
+        AND (? = '' OR tbProducto.Linea = ?)
+        LIMIT 100
+    </statement>
+    <statement name="ConsultaPrecioStandart">
+        SELECT
+        tbLibroPrecio.Item,
+        tbProductoExt.Descripcion,
+        tbLibroPrecio.Medida,
+        tbLibroPrecio.Precio,
+        tbLibroPrecio.FechaEfectiva
+        from tbLibroPrecio
+        INNER JOIN tbProducto
+        ON tbProducto.CodigoExterno = tbLibroPrecio.Item
+        INNER JOIN tbProductoExt
+        ON tbProductoExt.docid = tbProducto._id
+        where ( ? = '' OR tbLibroPrecio.Item = ?)
+        AND (? = '' OR tbProducto.Linea = ?)
+        AND tbLibroPrecio.LibroEstandar = 'S'
+        LIMIT 100
+    </statement>
+    <statement name="ConsultaPrecioCliente">
+        SELECT
+        tbLibroPrecio.Item,
+        tbProductoExt.Descripcion,
+        tbLibroPrecio.Medida,
+        tbLibroPrecio.Precio
+        from tbLibroPrecio
+        INNER JOIN tbMatrizPrecio
+        ON tbMatrizPrecio.IdLibro = tbLibroPrecio.IdLibro
+        INNER JOIN tbProducto
+        ON tbProducto.CodigoExterno = tbLibroPrecio.Item
+        INNER JOIN tbProductoExt
+        ON tbProductoExt.docid = tbProducto._id
+        where ( ? = ''  OR tbMatrizPrecio.IdCliente = ?)
+        AND (? = '' OR tbLibroPrecio.Item = ?)
+        LIMIT 100
+    </statement>
     <statement name="PedidoByAgenda">
         SELECT
         tbPedido._id AS _id,
@@ -2546,5 +2633,20 @@
         INNER JOIN tbPedido
         ON tbPedido._id = tbPedidoExt.docid
         WHERE tbPedido._IdAgenda = ?
+    </statement>
+    <statement name="GetStock">
+        SELECT
+        tbStock._id AS _id,
+        tbStock.IdBodega,
+        tbStock.Item,
+        tbStock.StockDisponible,
+        tbStock.StockFisico,
+        tbStock.Fecha,
+        tbBodega.Value AS tbBodega_Value
+        FROM tbStock
+        LEFT JOIN tbGeneralValue tbBodega
+        ON tbBodega.GeneralTableId = 2000
+        AND tbBodega.Code = tbStock.IdBodega
+        WHERE tbStock.Item = ?
     </statement>
 </sql>

@@ -14,6 +14,8 @@
         /-->
 
     <item android:id="@+id/action_sincronizar_productos" android:title="@string/action_sincronizar_productos" android:icon="@drawable/ic_sincronizar" android:showAsAction="collapseActionView"></item>
+    <item android:id="@+id/action_saldos_bodega" android:title="@string/action_saldos_bodega" android:icon="@drawable/ic_sincronizar" android:showAsAction="collapseActionView"></item>
+    <item android:id="@+id/action_consulta_precio" android:title="@string/action_consulta_precio" android:icon="@drawable/ic_sincronizar" android:showAsAction="collapseActionView"></item>
     <!--item android:id="@+id/action_sincronizar_promociones" android:title="@string/action_sincronizar_promociones" android:icon="@drawable/ic_sincronizar" android:showAsAction="collapseActionView"></item-->
     <item android:id="@+id/action_cotización_a_factura" android:title="@string/action_cotizacion_a_factura" android:icon="@drawable/ic_sincronizar" android:showAsAction="collapseActionView"></item>
     <item android:id="@+id/action_crear_pedido" android:title="@string/action_crear_pedido" android:icon="@drawable/ic_action_new" android:showAsAction="ifRoom|collapseActionView"></item>

@@ -1022,6 +1022,7 @@ public final class Contract {
 		public static final String QUERY_SEARCH_BY_CATEGORIA = "SimpleProductoSearchByCategoria";
 		public static final String QUERY_SEARCH_BY_CODIGO_EXTERNO = "ProductoSearchCodigo";
 		public static final String QUERY_SEARCH_BY_CODIGO_EXTERNO_NO_SERIE = "ProductoSearchCodigoSinSerie";
+		public static final String QUERY_SEARCH_NO_SERIE = "SimpleProductoSearchNoSerie";
 		public static final String BULK_INSERT = "ProductoBulkInsert";
 	}
 
@@ -1251,6 +1252,9 @@ public final class Contract {
 		public static final String BULK_INSERT = "LibroPrecioBulkInsert";
         public static final String QUERY_LIBRO_PRECIO = "LibroPrecio";
         public static final String QUERY_LIBRO_PRECIO_ESTANDAR = "LibroPrecioEstandar";
+        public static final String QUERY_CONSULTA_REMATE = "ConsultaPrecioRemate";
+        public static final String QUERY_CONSULTA_STANDARD = "ConsultaPrecioStandart";
+        public static final String QUERY_CONSULTA_CLIENTE = "ConsultaPrecioCliente";
 
 	}
 
@@ -1307,5 +1311,29 @@ public final class Contract {
 		public static final String COLUMN_CANAL = "Canal";
 		public static final String COLUMN_LINEA = "Linea";
 		public static final String COLUMN_TOPE = "Tope";
+	}
+
+	public static abstract class Stock implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbStock";
+
+		public static final String COLUMN_ID_BODEGA = "IdBodega";
+		public static final String COLUMN_ITEM = "Item";
+		public static final String COLUMN_STOCK_DISPONIBLE = "StockDisponible";
+		public static final String COLUMN_STOCK_FISICO = "StockFisico";
+		public static final String COLUMN_FECHA = "Fecha";
+
+		public static final String FIELD_BODEGA_DESCRIPCION = "tbBodega_Value";
+
+		public static final String QUERY_GET_STOCK = "GetStock";
+	}
+
+	public static abstract class VentaPerdida implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbVentaPerdida";
+
+		public static final String COLUMN_CODIGO_PRODUCTO= "CodigoProducto";
+		public static final String COLUMN_FECHA = "Fecha";
+		public static final String COLUMN_PENDIENTE = "Pendiente";
 	}
 }

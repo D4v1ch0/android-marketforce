@@ -53,6 +53,7 @@ import rp3.data.models.GeneralValue;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.cliente.CrearClienteActivity;
+import rp3.marketforce.cliente.EstadoCuentaActivity;
 import rp3.marketforce.db.Contract;
 import rp3.marketforce.loader.LibroPrecioLoader;
 import rp3.marketforce.loader.ProductoLoader;
@@ -186,6 +187,11 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId())
         {
+            case R.id.action_estado_cuenta:
+                Intent intent = new Intent(getContext(), EstadoCuentaActivity.class);
+                intent.putExtra(EstadoCuentaActivity.ARG_ID_CLIENTE, idCliente);
+                startActivity(intent);
+                break;
             case R.id.action_forma_pago:
                 fragment = PagosListFragment.newInstance(valorTotal);
                 fragment.pagos = pedido.getPagos();
@@ -330,13 +336,13 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             pedido.setEstado("P");
         else {
             pedido.setEstado("C");
-            Agenda agd = Agenda.getAgenda(getDataBase(), idAgenda);
-            for(AgendaTarea agdTar : agd.getAgendaTareas())
-            {
-                if(agdTar.getTipoTarea().equalsIgnoreCase("P"))
-                {
-                    agdTar.setEstadoTarea("R");
-                    AgendaTarea.update(getDataBase(), agdTar);
+            if(idAgenda != 0) {
+                Agenda agd = Agenda.getAgenda(getDataBase(), idAgenda);
+                for (AgendaTarea agdTar : agd.getAgendaTareas()) {
+                    if (agdTar.getTipoTarea().equalsIgnoreCase("P")) {
+                        agdTar.setEstadoTarea("R");
+                        AgendaTarea.update(getDataBase(), agdTar);
+                    }
                 }
             }
         }

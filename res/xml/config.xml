@@ -577,6 +577,24 @@
                     <webMethod>GET</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>
+                <method>
+                    <name>GetImportaciones</name>
+                    <action>producto/GetImportaciones?item=@item</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>InsertVentaPerdida</name>
+                    <action>producto/InsertVentaPerdida</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>GetEstadoCuenta</name>
+                    <action>cliente/GetEstadoCuenta?cliente=@cliente</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
             </methods>     
         </webServiceData>
            <webServiceData>
