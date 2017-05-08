@@ -52,6 +52,8 @@ import rp3.configuration.PreferenceManager;
 import rp3.data.models.GeneralValue;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
+import rp3.marketforce.cliente.ComprasClienteActivity;
+import rp3.marketforce.cliente.ComprasClienteFragment;
 import rp3.marketforce.cliente.CrearClienteActivity;
 import rp3.marketforce.cliente.EstadoCuentaActivity;
 import rp3.marketforce.db.Contract;
@@ -191,6 +193,11 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                 Intent intent = new Intent(getContext(), EstadoCuentaActivity.class);
                 intent.putExtra(EstadoCuentaActivity.ARG_ID_CLIENTE, idCliente);
                 startActivity(intent);
+                break;
+            case R.id.action_compras_cliente:
+                Intent intent2 = new Intent(getContext(), ComprasClienteActivity.class);
+                intent2.putExtra(ComprasClienteActivity.ARG_ID_CLIENTE, idCliente);
+                startActivity(intent2);
                 break;
             case R.id.action_forma_pago:
                 fragment = PagosListFragment.newInstance(valorTotal);

@@ -14,6 +14,7 @@ import rp3.content.SyncAdapter;
 import rp3.data.Constants;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
+import rp3.marketforce.cliente.ComprasClienteFragment;
 import rp3.marketforce.cliente.EstadoCuentaFragment;
 import rp3.marketforce.models.ClienteDireccion;
 import rp3.marketforce.utils.Utils;
@@ -1178,6 +1179,40 @@ public class Cliente {
 				resp.putString(EstadoCuentaFragment.ARG_CLIENTE, types.toString());
 			else
 				resp.putString(EstadoCuentaFragment.ARG_CLIENTE, "");
+			resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS);
+		}finally{
+			webService.close();
+		}
+		return resp;
+	}
+
+	public static Bundle executeSyncCompras(String cliente){
+		Bundle resp = new Bundle();
+		WebService webService = new WebService("MartketForce","GetCompras");
+		try
+		{
+			cliente = cliente.replace(" ", "%20");
+			webService.addParameter("@cliente", cliente);
+			webService.addCurrentAuthToken();
+
+			try {
+				webService.invokeWebService();
+			} catch (HttpResponseException e) {
+				if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED) {
+					resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE, rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR);
+				}
+				resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_HTTP_ERROR);
+				return resp;
+			} catch (Exception e) {
+				resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_ERROR);
+				return resp;
+			}
+
+			JSONArray types = webService.getJSONArrayResponse();
+			if(types != null)
+				resp.putString(ComprasClienteFragment.ARG_CLIENTE, types.toString());
+			else
+				resp.putString(ComprasClienteFragment.ARG_CLIENTE, "");
 			resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS);
 		}finally{
 			webService.close();

@@ -494,4 +494,5 @@
     <string name="label_abono">Abono</string>
     <string name="label_saldo_no_points">Saldo</string>
     <string name="label_estado_cuenta">Estado de Cuenta</string>
+    <string name="label_compras_mes">Ultimas Compras</string>
 </resources>

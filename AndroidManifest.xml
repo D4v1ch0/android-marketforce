@@ -240,6 +240,7 @@
 
         <!-- BERLIN -->
         <activity android:name=".cliente.EstadoCuentaActivity" android:configChanges="orientation|keyboardHidden|screenSize"></activity>
+        <activity android:name=".cliente.ComprasClienteActivity" android:configChanges="orientation|keyboardHidden|screenSize"></activity>
     </application>
 
 </manifest>

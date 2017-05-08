@@ -7,6 +7,7 @@ import rp3.configuration.PreferenceManager;
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.Contants;
 import rp3.marketforce.ServerActivity;
+import rp3.marketforce.cliente.ComprasClienteFragment;
 import rp3.marketforce.cliente.CrearClienteFragment;
 import rp3.marketforce.cliente.EstadoCuentaFragment;
 import rp3.marketforce.cliente.SignInFragment;
@@ -86,6 +87,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
     public static String SYNC_TYPE_GET_STOCK_CONSULTA= "get_stock_consulta";
     public static String SYNC_TYPE_GET_IMPORTACIONES= "get_importaciones";
     public static String SYNC_TYPE_ESTADO_CUENTA= "estado_cuenta";
+    public static String SYNC_TYPE_COMPRAS_CLIENTE= "compras_cliente";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -548,6 +550,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     Bundle bundle = Cliente.executeSyncEstadoCuenta(cliente);
                     addDefaultMessage(bundle.getInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE));
                     putData(EstadoCuentaFragment.ARG_CLIENTE, bundle.getString(EstadoCuentaFragment.ARG_CLIENTE));
+                } else if (syncType.equals(SYNC_TYPE_COMPRAS_CLIENTE)) {
+                    String cliente = extras.getString(ComprasClienteFragment.ARG_CLIENTE).trim();
+                    Bundle bundle = Cliente.executeSyncCompras(cliente);
+                    addDefaultMessage(bundle.getInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE));
+                    putData(ComprasClienteFragment.ARG_CLIENTE, bundle.getString(ComprasClienteFragment.ARG_CLIENTE));
                 } else if (syncType.equals(SYNC_TYPE_BATCH)) {
                     result = Cliente.executeSyncInserts(db);
                     addDefaultMessage(result);
