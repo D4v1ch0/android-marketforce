@@ -586,8 +586,7 @@
         Descripcion,
         IdExterno1,
         IdExterno2,
-        GrupoEstadistico,
-        tokenize=porter
+        GrupoEstadistico
         )
     </statement>
     <statement>

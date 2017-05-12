@@ -32,6 +32,8 @@ import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -163,6 +165,12 @@ public class PedidoParametrosFragment extends BaseFragment{
                         for (ClienteDireccion cliDir : list_cliente.get(position).getClienteDirecciones()) {
                             direcciones.add(cliDir.getDireccion());
                         }
+                        Collections.sort(direcciones, new Comparator<String>() {
+                            @Override
+                            public int compare(final String object1, final String object2) {
+                                return object1.compareTo(object2);
+                            }
+                        });
                         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_small_text, direcciones);
                         ((Spinner) rootView.findViewById(R.id.crear_visita_direccion)).setAdapter(adapter);
                     }
@@ -182,6 +190,12 @@ public class PedidoParametrosFragment extends BaseFragment{
                         for (ClienteDireccion cliDir : list_cliente.get(position).getClienteDirecciones()) {
                             direcciones.add(cliDir.getDireccion());
                         }
+                        Collections.sort(direcciones, new Comparator<String>() {
+                            @Override
+                            public int compare(final String object1, final String object2) {
+                                return object1.compareTo(object2);
+                            }
+                        });
                         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_small_text, direcciones);
                         ((Spinner) rootView.findViewById(R.id.crear_pedido_direccion)).setAdapter(adapter);
                     }
@@ -254,6 +268,12 @@ public class PedidoParametrosFragment extends BaseFragment{
                     for (ClienteDireccion cliDir : list_cliente.get(i).getClienteDirecciones()) {
                         direcciones.add(cliDir.getDireccion());
                     }
+                    Collections.sort(direcciones, new Comparator<String>() {
+                        @Override
+                        public int compare(final String object1, final String object2) {
+                            return object1.compareTo(object2);
+                        }
+                    });
                     ArrayAdapter<String> adapterDir = new ArrayAdapter<String>(getContext(), R.layout.spinner_small_text, direcciones);
                     ((Spinner) rootView.findViewById(R.id.crear_pedido_direccion)).setAdapter(adapterDir);
                     cliente_auto.setEnabled(false);

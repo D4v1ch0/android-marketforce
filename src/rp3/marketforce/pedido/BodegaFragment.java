@@ -131,6 +131,13 @@ public class BodegaFragment extends BaseFragment {
             public void onClick(View view) {
                 if(((EditText) getRootView().findViewById(R.id.codigo_producto)).length() > 0)
                 {
+                    if(prod != null)
+                    {
+                        if(!prod.getCodigoExterno().equalsIgnoreCase(((EditText) getRootView().findViewById(R.id.codigo_producto)).getText().toString()))
+                        {
+                            getRootView().findViewById(R.id.importaciones_layout).setVisibility(View.GONE);
+                        }
+                    }
                     prod = Producto.getProductoSingleByCodigoExterno(getDataBase(), ((EditText) getRootView().findViewById(R.id.codigo_producto)).getText().toString());
                     if(prod != null)
                     {
@@ -160,6 +167,13 @@ public class BodegaFragment extends BaseFragment {
             public void onClick(View view) {
                 if(((EditText) getRootView().findViewById(R.id.codigo_producto)).length() > 0)
                 {
+                    if(prod != null)
+                    {
+                        if(!prod.getCodigoExterno().equalsIgnoreCase(((EditText) getRootView().findViewById(R.id.codigo_producto)).getText().toString()))
+                        {
+                            getRootView().findViewById(R.id.stock_layout).setVisibility(View.GONE);
+                        }
+                    }
                     prod = Producto.getProductoSingleByCodigoExterno(getDataBase(), ((EditText) getRootView().findViewById(R.id.codigo_producto)).getText().toString());
                     if(prod != null)
                     {

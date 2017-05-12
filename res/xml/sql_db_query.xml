@@ -1917,7 +1917,7 @@
         ON tbSerie.GrupoEstadistico = tbProductoExt.GrupoEstadistico
         WHERE tbProducto.IdBeneficio &lt;&gt; -1
         AND tbSerie.IdSerie = ?
-        ORDER BY tbProductoExt.Descripcion, tbProductoSearch.Rank DESC
+        ORDER BY tbProductoSearch.Rank, tbProductoExt.Descripcion DESC
         LIMIT 100
     </statement>
     <statement name="SimpleProductoSearchByCategoria">

@@ -150,7 +150,7 @@ public class EstadoCuentaFragment extends BaseFragment {
     private void GetResumen(List<EstadoCuenta> listado)
     {
         double vencida_0_8 = 0, vencida_9_15 = 0, vencida_16_30 = 0, vencida_31_60 = 0, vencida_61 = 0, total_vencida = 0;
-        double vencer_1_30 = 0, vencer_31_60 = 0, vencer_61 = 0, total_vencer = 0;
+        double vencer_1_30 = 0, vencer_31_60 = 0, vencer_61 = 0, total_vencer = 0, total_saldos = 0;
         Calendar cal = Calendar.getInstance();
 
         for (EstadoCuenta estado : listado) {
@@ -211,6 +211,7 @@ public class EstadoCuentaFragment extends BaseFragment {
 
         total_vencida = vencida_0_8 + vencida_9_15 + vencida_16_30 + vencida_31_60 + vencida_61;
         total_vencer = vencer_1_30 + vencer_31_60 + vencer_61;
+        total_saldos = total_vencer + total_vencida;
 
         ((TextView) getRootView().findViewById(R.id.estado_cuenta_vencida_0_8)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(vencida_0_8));
         ((TextView) getRootView().findViewById(R.id.estado_cuenta_vencida_9_15)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(vencida_9_15));
@@ -223,5 +224,6 @@ public class EstadoCuentaFragment extends BaseFragment {
         ((TextView) getRootView().findViewById(R.id.estado_cuenta_vencer_31_60)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(vencer_31_60));
         ((TextView) getRootView().findViewById(R.id.estado_cuenta_vencer_61_mas)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(vencer_61));
         ((TextView) getRootView().findViewById(R.id.estado_cuenta_vencer_total)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(total_vencer));
+        ((TextView) getRootView().findViewById(R.id.estado_cuenta_total)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(total_saldos));
     }
 }

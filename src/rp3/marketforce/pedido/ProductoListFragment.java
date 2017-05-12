@@ -394,7 +394,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
                     if(existeStock)
                         ValidarSustituto(seleccionado);
                     else
-                        showDialogMessage("Artículo fuera de producción y sin stock en bodega");
+                        showDialogMessage("Aviso de Producto","Artículo fuera de producción y sin stock en bodega");
                 }
             }
         }

@@ -26,6 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:dropDownHeight="150dp"
             android:hint="@string/hint_search_transaction"
             android:textSize="@dimen/text_input_size" />
     </LinearLayout>
@@ -164,7 +165,8 @@
                 android:id="@+id/stock_list"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:fadeScrollbars="false" />
 
             <TextView
                 android:id="@+id/stock_empty"
@@ -291,6 +293,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
+                android:fadeScrollbars="false"
                 android:minHeight="181dp" />
 
             <TextView

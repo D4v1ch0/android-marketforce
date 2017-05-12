@@ -443,8 +443,9 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
         //int compare = Convert.versionCompare(version, Contants.SQLITE_VERSION_SEARCH);
         Cursor c = null;
         String termSearchSpace = getSearchString(termSearch);
+        String parameter = termSearch.replace(" ", "").trim() + "*";
 
-        c = db.rawQuery(query, new String[]{termSearch + "* OR " + termSearchSpace + "*", serie});
+        c = db.rawQuery(query, new String[]{parameter, serie});
 
 
         List<Producto> list = new ArrayList<Producto>();
@@ -510,8 +511,9 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
         //int compare = Convert.versionCompare(version, Contants.SQLITE_VERSION_SEARCH);
         Cursor c = null;
         String termSearchSpace = getSearchString(termSearch);
+        String parameter = termSearch.replace(" ", "").trim() + "*";
 
-        c = db.rawQuery(query, new String[]{termSearch + "* OR " + termSearchSpace + "*", idSubCategoria + "", serie});
+        c = db.rawQuery(query, new String[]{parameter, idSubCategoria + "", serie});
 
 
         List<Producto> list = new ArrayList<Producto>();

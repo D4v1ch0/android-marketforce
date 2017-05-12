@@ -20,6 +20,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import rp3.app.BaseFragment;
@@ -88,11 +90,7 @@ public class ConsultaPrecioFragment extends BaseFragment {
         list_libro.add("Remate");
         list_libro.add("Standard");
         final ArrayAdapter<String> libroAdapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_spinner_dropdown_item, list_libro);
-        ((Spinner) getRootView().findViewById(R.id.precio_libro)).setAdapter(new NothingSelectedSpinnerAdapter(
-                libroAdapter,
-                R.layout.spinner_empty_selected,
-                this.getContext(), "Libro"));
-        //((Spinner) getRootView().findViewById(R.id.precio_libro)).setAdapter(libroAdapter);
+        ((Spinner) getRootView().findViewById(R.id.precio_libro)).setAdapter(libroAdapter);
 
         productoAdapter = new ProductoAutoCompleteAdapter(this.getContext(), getDataBase());
 
@@ -112,11 +110,11 @@ public class ConsultaPrecioFragment extends BaseFragment {
                     String producto = "", libro = "", linea = "";
                     producto = ((EditText) getRootView().findViewById(R.id.precio_producto)).getText().toString();
                     if(((Spinner) getRootView().findViewById(R.id.precio_linea)).getSelectedItemPosition() > 0)
-                        linea = lineaAdapter.getCode(((Spinner) getRootView().findViewById(R.id.precio_linea)).getSelectedItemPosition());
+                        linea = lineaAdapter.getCode(((Spinner) getRootView().findViewById(R.id.precio_linea)).getSelectedItemPosition() - 1);
                     int position_libro = ((Spinner) getRootView().findViewById(R.id.precio_libro)).getSelectedItemPosition();
-                    if(position_libro == 1)
+                    if(position_libro == 0)
                         libro = Contants.LIBRO_REMATE;
-                    else if(position_libro == 2)
+                    else if(position_libro == 1)
                         libro = Contants.LIBRO_ESTANDAR;
                     if(producto.length() > 0 || libro.length() > 0 || linea.length() > 0) {
                         Bundle args = new Bundle();
@@ -229,6 +227,12 @@ public class ConsultaPrecioFragment extends BaseFragment {
                                    List<LibroPrecio> data) {
 
             try {
+                Collections.sort(data, new Comparator<LibroPrecio>() {
+                    @Override
+                    public int compare(final LibroPrecio object1, final LibroPrecio object2) {
+                        return object1.getDescripcion().compareTo(object2.getDescripcion());
+                    }
+                });
                 PrecioAdapter adapter = new PrecioAdapter(getContext(), data);
                 ((ListView) getRootView().findViewById(R.id.list_precios)).setAdapter(adapter);
                 getRootView().findViewById(R.id.precio_layout).setVisibility(View.VISIBLE);

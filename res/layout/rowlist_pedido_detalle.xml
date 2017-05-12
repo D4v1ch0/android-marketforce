@@ -17,16 +17,16 @@
         android:gravity="center" />
 
     <TextView
+        android:id="@+id/pedido_detalle_descripcion"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/pedido_detalle_descripcion"
+        android:layout_gravity="center"
         android:layout_weight="0.5"
-        android:textSize="@dimen/text_xsmall_size"
+        android:gravity="left|center_vertical"
         android:lines="2"
         android:maxLines="2"
-        android:gravity="center_vertical|center_horizontal"
-        android:layout_gravity="center" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="@dimen/text_xsmall_size" />
 
     <TextView
         android:id="@+id/pedido_detalle_cantidad"

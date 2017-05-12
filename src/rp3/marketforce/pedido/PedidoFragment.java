@@ -343,8 +343,8 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                 showDialogFragment(bodegaFragment, "Saldos de Bodega", "Saldos de Bodega");
                 break;
             case R.id.action_consulta_precio:
-                ConsultaPrecioFragment consultaPrecioFragment = new ConsultaPrecioFragment();
-                showDialogFragment(consultaPrecioFragment, "Consulta de Precios", "Consulta de Precios");
+                Intent intent4 = new Intent(getContext(), ConsultaPrecioActivity.class);
+                startActivity(intent4);
                 break;
             case R.id.action_crear_pedido:
                 AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());

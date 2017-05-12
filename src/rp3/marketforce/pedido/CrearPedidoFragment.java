@@ -659,7 +659,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                         //Muestro aviso en el caso que tenga
                         GeneralValue aviso = GeneralValue.getGeneralValue(getDataBase(), Contants.GENERAL_TABLE_AVISOS_BERLIN, cli.getAviso());
                         if(aviso != null)
-                            showDialogMessage(aviso.getValue());
+                            showDialogMessage("Aviso de Cliente", aviso.getValue());
                     }
                     cliente_auto.setEnabled(false);
                     ((EditText) getRootView().findViewById(R.id.pedido_email)).setEnabled(false);

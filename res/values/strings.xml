@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">RP3 Market Force</string>
-    <string name="title_option_setinicio">Dashboard</string>
+    <string name="title_option_setinicio">Resultados</string>
     <string name="title_option_setrutas">Agenda</string>
     <string name="title_option_setclientes">Clientes</string>
     <string name="title_option_setpedido">Transacciones</string>
@@ -495,4 +495,5 @@
     <string name="label_saldo_no_points">Saldo</string>
     <string name="label_estado_cuenta">Estado de Cuenta</string>
     <string name="label_compras_mes">Ultimas Compras</string>
+    <string name="label_total_saldos">Total Saldos:</string>
 </resources>
