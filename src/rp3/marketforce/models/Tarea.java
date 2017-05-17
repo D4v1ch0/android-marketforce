@@ -200,7 +200,7 @@ public class Tarea extends EntityBase<Tarea>
 
     public static Tarea getTareaId(DataBase db, int id)
     {
-        Cursor c = db.query(Contract.Tareas.TABLE_NAME, new String[]{ Contract.Tareas.COLUMN_TAREA_ID, Contract.Tareas.COLUMN_NOMBRE_TAREA,
+        Cursor c = db.query(Contract.Tareas.TABLE_NAME, new String[]{ Contract.Tareas._ID, Contract.Tareas.COLUMN_TAREA_ID, Contract.Tareas.COLUMN_NOMBRE_TAREA,
                 Contract.Tareas.COLUMN_ESTADO_TAREA, Contract.Tareas.COLUMN_TIPO_TAREA}, Contract.Tareas.COLUMN_TAREA_ID + " = ?", id+"");
         Tarea tarea = null;
         if(c.moveToFirst())
@@ -208,6 +208,7 @@ public class Tarea extends EntityBase<Tarea>
             do
             {
                 tarea = new Tarea();
+                tarea.setID(CursorUtils.getLong(c, Contract.Tareas._ID));
                 tarea.setIdTarea(CursorUtils.getInt(c, Contract.Tareas.COLUMN_TAREA_ID));
                 tarea.setNombreTarea(CursorUtils.getString(c, Contract.Tareas.COLUMN_NOMBRE_TAREA));
                 tarea.setTipoTarea(CursorUtils.getString(c, Contract.Tareas.COLUMN_TIPO_TAREA));

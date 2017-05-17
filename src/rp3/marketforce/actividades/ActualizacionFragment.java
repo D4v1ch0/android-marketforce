@@ -731,14 +731,14 @@ public class ActualizacionFragment extends BaseFragment {
 
     public boolean Validaciones()
     {
-        if(((EditText)getRootView().findViewById(R.id.cliente_identificacion)).getText().toString().trim().length() >= 0 && getRootView().findViewById(R.id.cliente_identificacion).isEnabled())
+        /*if(((EditText)getRootView().findViewById(R.id.cliente_identificacion)).getText().toString().trim().length() >= 0 && getRootView().findViewById(R.id.cliente_identificacion).isEnabled())
         {
             Cliente proof = Cliente.getClienteByIdentificacion(getDataBase(), ((EditText)getRootView().findViewById(R.id.cliente_identificacion)).getText().toString().trim());
             if(proof != null && proof.getID() != agd.getCliente().getID()) {
                 Toast.makeText(getContext(), "Ya existe cliente con esta identificación.", Toast.LENGTH_LONG).show();
                 return false;
             }
-        }
+        }*/
         if(listViewDirecciones.size() <= 0)
         {
             Toast.makeText(getContext(), "No se puede agregar clientes sin dirección.", Toast.LENGTH_LONG).show();
