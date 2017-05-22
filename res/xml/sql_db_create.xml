@@ -38,7 +38,8 @@
         IndiceSolvencia TEXT,
         LimiteCredito REAL,
         ListaPrecio TEXT,
-        CondicionPago TEXT
+        CondicionPago TEXT,
+        Saldo REAL
       )
 	</statement>
 	<statement>

@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="rp3.marketforce"
-    android:versionCode="75"
-    android:versionName="1.5d">
+    package="rp3.berlin"
+    android:versionCode="76"
+    android:versionName="Berlin">
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -14,9 +14,9 @@
         android:protectionLevel="signature" />
 
     <permission
-        android:name="rp3.marketforce.permission.C2D_MESSAGE"
+        android:name="rp3.berlin.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
-    <uses-permission android:name="rp3.marketforce.permission.C2D_MESSAGE" />
+    <uses-permission android:name="rp3.berlin.permission.C2D_MESSAGE" />
 
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -64,7 +64,7 @@
            android:value="@integer/google_play_services_version" />
         
         <activity
-            android:name="rp3.marketforce.SearchableActivity"
+            android:name="rp3.berlin.SearchableActivity"
             android:label="@string/title_activity_searchable" 
             >
             <intent-filter>
@@ -77,7 +77,7 @@
         </activity>
         
         <activity
-            android:name="rp3.marketforce.StartActivity"
+            android:name="rp3.berlin.StartActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoTitleBar" >
             <intent-filter>
@@ -87,7 +87,7 @@
         </activity>
         
         <activity
-            android:name="rp3.marketforce.MainActivity"
+            android:name="rp3.berlin.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:configChanges="orientation">
@@ -99,24 +99,24 @@
             <!-- enable the search dialog to send searches to SearchableActivity -->
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value="rp3.marketforce.SearchableActivity" 
+                android:value="rp3.berlin.SearchableActivity"
                 />
             
         </activity>
          <activity
-            android:name="rp3.marketforce.cliente.ClientDetailActivity"
+            android:name="rp3.berlin.cliente.ClientDetailActivity"
             android:label="@string/app_name"
                         android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/MyAppTheme">
         </activity>
         <activity
-            android:name="rp3.marketforce.ruta.RutasDetailActivity"
+            android:name="rp3.berlin.ruta.RutasDetailActivity"
             android:label="@string/app_name"
             android:configChanges="orientation|keyboardHidden|screenSize"
             >
         </activity>
          <activity
-            android:name="rp3.marketforce.cliente.ClienteEditActivity"
+            android:name="rp3.berlin.cliente.ClienteEditActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -127,7 +127,7 @@
             android:windowSoftInputMode="stateHidden">                        
         </activity>
         
-          <activity android:name=".actividades.TextoActivity" android:theme="@style/ActivityPopupTheme"></activity><service android:name="rp3.accounts.AuthenticatorService" >
+          <activity android:name="rp3.berlin.actividades.TextoActivity" android:theme="@style/ActivityPopupTheme"></activity><service android:name="rp3.accounts.AuthenticatorService" >
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" >
                 </action>
@@ -139,7 +139,7 @@
             </meta-data>
         </service>
         <service
-                android:name="rp3.marketforce.sync.SyncService"
+                android:name="rp3.berlin.sync.SyncService"
                 android:exported="true"
                 android:process=":sync">
             <intent-filter>
@@ -155,94 +155,94 @@
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name="rp3.marketforce.content" />
+                <category android:name="rp3.berlin.content" />
             </intent-filter>
         </receiver>
         <service
-            android:name="rp3.marketforce.content.GCMReceiver"
+            android:name="rp3.berlin.content.GCMReceiver"
             android:exported="false" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name="rp3.marketforce.content" />
+                <category android:name="rp3.berlin.content" />
             </intent-filter>
         </service>
         <receiver
-            android:name="rp3.marketforce.content.EnviarUbicacionReceiver"
+            android:name="rp3.berlin.content.EnviarUbicacionReceiver"
             android:enabled="true" >
         </receiver>
-        <receiver android:name="rp3.marketforce.content.TimeChangedReceiver">
+        <receiver android:name="rp3.berlin.content.TimeChangedReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.TIME_SET" />
             </intent-filter>
         </receiver>
         <provider
             android:name="rp3.content.StubProvider"
-            android:authorities="rp3.marketforce.provider"
+            android:authorities="rp3.berlin.provider"
             android:exported="false"
             android:syncable="true" />
         
-        <activity android:name=".actividades.CheckboxActivity"></activity>
-        <activity android:name=".actividades.ActualizacionActivity"></activity>
-        <activity android:name=".actividades.MultipleActivity" android:theme="@style/ActivityPopupTheme"></activity>
-        <activity android:name=".actividades.SeleccionActivity"></activity>
-        <activity android:name=".actividades.GrupoActivity"></activity>
-        <activity android:name=".actividades.NumericoActivity" android:theme="@style/ActivityPopupTheme"></activity>
-        <activity android:name=".ruta.ReprogramarActivity"></activity>
-        <activity android:name=".ruta.CrearVisitaActivity"></activity>
+        <activity android:name="rp3.berlin.actividades.CheckboxActivity"></activity>
+        <activity android:name="rp3.berlin.actividades.ActualizacionActivity"></activity>
+        <activity android:name="rp3.berlin.actividades.MultipleActivity" android:theme="@style/ActivityPopupTheme"></activity>
+        <activity android:name="rp3.berlin.actividades.SeleccionActivity"></activity>
+        <activity android:name="rp3.berlin.actividades.GrupoActivity"></activity>
+        <activity android:name="rp3.berlin.actividades.NumericoActivity" android:theme="@style/ActivityPopupTheme"></activity>
+        <activity android:name="rp3.berlin.ruta.ReprogramarActivity"></activity>
+        <activity android:name="rp3.berlin.ruta.CrearVisitaActivity"></activity>
         
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyC_7DHljEV8KjzrxpMnkwXDmsfeEjErLD0" />
-        <activity android:name=".ruta.MapaActivity"></activity>
-        <activity android:name=".cliente.CrearClienteActivity" android:configChanges="orientation|keyboardHidden|screenSize"></activity>
-        <activity android:name="ServerActivity" android:theme="@style/AppTheme.NoTitleBar"></activity>
-        <activity android:name=".ruta.ObservacionesActivity" android:theme="@style/MyAppPopupTheme"></activity>
-        <activity android:name=".ruta.FotoActivity" android:theme="@style/MyAppPopupTheme"></activity>
-        <activity android:name=".cliente.ImportContactsActivity"></activity>
+        <activity android:name="rp3.berlin.ruta.MapaActivity"></activity>
+        <activity android:name="rp3.berlin.cliente.CrearClienteActivity" android:configChanges="orientation|keyboardHidden|screenSize"></activity>
+        <activity android:name="rp3.berlin.ServerActivity" android:theme="@style/AppTheme.NoTitleBar"></activity>
+        <activity android:name="rp3.berlin.ruta.ObservacionesActivity" android:theme="@style/MyAppPopupTheme"></activity>
+        <activity android:name="rp3.berlin.ruta.FotoActivity" android:theme="@style/MyAppPopupTheme"></activity>
+        <activity android:name="rp3.berlin.cliente.ImportContactsActivity"></activity>
 
         <!-- Modulo Oportunidades -->
-        <activity android:name=".oportunidad.FiltroOportunidadActivity"></activity>
-        <activity android:name=".oportunidad.EtapaTareasActivity"></activity>
-        <activity android:name=".oportunidad.EtapaActivity"></activity>
-        <activity android:name=".oportunidad.actividades.CheckboxActivity"></activity>
-        <activity android:name=".oportunidad.actividades.MultipleActivity" android:theme="@style/ActivityPopupTheme"></activity>
-        <activity android:name=".oportunidad.actividades.SeleccionActivity"></activity>
-        <activity android:name=".oportunidad.actividades.GrupoActivity"></activity>
-        <activity android:name=".oportunidad.actividades.TextoActivity" android:theme="@style/ActivityPopupTheme"></activity>
-        <activity android:name=".oportunidad.actividades.NumericoActivity" android:theme="@style/ActivityPopupTheme"></activity>
-        <activity android:name=".oportunidad.CrearOportunidadActivity" android:configChanges="orientation"></activity>
-        <activity android:name=".oportunidad.FotoOportunidadActivity"></activity>
-        <activity android:name=".oportunidad.CambiarEstadoActivity" android:theme="@style/MyAppPopupTheme"></activity>
-        <activity android:name=".utils.MapActivity" android:theme="@style/AppDialogTheme"></activity>
+        <activity android:name="rp3.berlin.oportunidad.FiltroOportunidadActivity"></activity>
+        <activity android:name="rp3.berlin.oportunidad.EtapaTareasActivity"></activity>
+        <activity android:name="rp3.berlin.oportunidad.EtapaActivity"></activity>
+        <activity android:name="rp3.berlin.oportunidad.actividades.CheckboxActivity"></activity>
+        <activity android:name="rp3.berlin.oportunidad.actividades.MultipleActivity" android:theme="@style/ActivityPopupTheme"></activity>
+        <activity android:name="rp3.berlin.oportunidad.actividades.SeleccionActivity"></activity>
+        <activity android:name="rp3.berlin.oportunidad.actividades.GrupoActivity"></activity>
+        <activity android:name="rp3.berlin.oportunidad.actividades.TextoActivity" android:theme="@style/ActivityPopupTheme"></activity>
+        <activity android:name="rp3.berlin.oportunidad.actividades.NumericoActivity" android:theme="@style/ActivityPopupTheme"></activity>
+        <activity android:name="rp3.berlin.oportunidad.CrearOportunidadActivity" android:configChanges="orientation"></activity>
+        <activity android:name="rp3.berlin.oportunidad.FotoOportunidadActivity"></activity>
+        <activity android:name="rp3.berlin.oportunidad.CambiarEstadoActivity" android:theme="@style/MyAppPopupTheme"></activity>
+        <activity android:name="rp3.berlin.utils.MapActivity" android:theme="@style/AppDialogTheme"></activity>
         <!-- Modulo Marcaciones -->
-        <activity android:name=".marcaciones.MarcacionActivity"
+        <activity android:name="rp3.berlin.marcaciones.MarcacionActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" >
             <category android:name="android.intent.category.LAUNCHER" />
         </activity>
-        <activity android:name=".marcaciones.JustificacionPreviaActivity"
+        <activity android:name="rp3.berlin.marcaciones.JustificacionPreviaActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"></activity>
-        <activity android:name=".marcaciones.PermisoActivity"></activity>
+        <activity android:name="rp3.berlin.marcaciones.PermisoActivity"></activity>
         
 
         <!-- Modulo Pedidos -->
-        <activity android:name=".pedido.CrearPedidoActivity" android:configChanges="orientation|keyboardHidden|screenSize"></activity>
-        <activity android:name=".pedido.CategoriaActivity" android:configChanges="orientation|keyboardHidden|screenSize"></activity>
-        <activity android:name=".pedido.ArqueoCajaActivity" android:configChanges="orientation|keyboardHidden|screenSize"></activity>
-        <activity android:name=".pedido.ProductoListActivity" android:configChanges="orientation|keyboardHidden|screenSize">
+        <activity android:name="rp3.berlin.pedido.CrearPedidoActivity" android:configChanges="orientation|keyboardHidden|screenSize"></activity>
+        <activity android:name="rp3.berlin.pedido.CategoriaActivity" android:configChanges="orientation|keyboardHidden|screenSize"></activity>
+        <activity android:name="rp3.berlin.pedido.ArqueoCajaActivity" android:configChanges="orientation|keyboardHidden|screenSize"></activity>
+        <activity android:name="rp3.berlin.pedido.ProductoListActivity" android:configChanges="orientation|keyboardHidden|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
             <!-- enable the search dialog to send searches to SearchableActivity -->
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value="rp3.marketforce.SearchableActivity"
+                android:value="rp3.berlin.SearchableActivity"
                 />
         </activity>
 
         <!-- BERLIN -->
-        <activity android:name=".cliente.EstadoCuentaActivity" android:configChanges="orientation|keyboardHidden|screenSize"></activity>
-        <activity android:name=".cliente.ComprasClienteActivity" android:configChanges="orientation|keyboardHidden|screenSize"></activity>
-        <activity android:name=".pedido.ConsultaPrecioActivity" android:configChanges="orientation|keyboardHidden|screenSize"></activity>
+        <activity android:name="rp3.berlin.cliente.EstadoCuentaActivity" android:configChanges="orientation|keyboardHidden|screenSize"></activity>
+        <activity android:name="rp3.berlin.cliente.ComprasClienteActivity" android:configChanges="orientation|keyboardHidden|screenSize"></activity>
+        <activity android:name="rp3.berlin.pedido.ConsultaPrecioActivity" android:configChanges="orientation|keyboardHidden|screenSize"></activity>
     </application>
 
 </manifest>

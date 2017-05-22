@@ -54,7 +54,7 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp">
 
-                <rp3.marketforce.utils.DonutChart
+                <rp3.berlin.utils.DonutChart
                     android:id="@+id/donutChart"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

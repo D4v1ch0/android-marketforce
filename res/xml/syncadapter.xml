@@ -16,8 +16,8 @@ limitations under the License.
 -->
 
 <sync-adapter xmlns:android="http://schemas.android.com/apk/res/android"
-              android:contentAuthority="rp3.marketforce.provider"
-              android:accountType="rp3.marketforce"
+              android:contentAuthority="rp3.berlin.provider"
+              android:accountType="rp3.berlin"
               android:userVisible="false"
               android:supportsUploading="false"
               android:allowParallelSyncs="true"
