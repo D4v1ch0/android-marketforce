@@ -39,8 +39,8 @@ public class PedidoDetalleAdapter extends BaseAdapter {
         df = new DecimalFormat("#.##");
         df.setRoundingMode(RoundingMode.CEILING);
         numberFormat = NumberFormat.getInstance();
-        numberFormat.setMaximumFractionDigits(4);
-        numberFormat.setMinimumFractionDigits(4);
+        numberFormat.setMaximumFractionDigits(2);
+        numberFormat.setMinimumFractionDigits(2);
 
         numberFormatDiscount = NumberFormat.getInstance();
         numberFormatDiscount.setMaximumFractionDigits(2);

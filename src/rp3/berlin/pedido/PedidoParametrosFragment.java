@@ -196,11 +196,15 @@ public class PedidoParametrosFragment extends BaseFragment{
             @Override
             public void onClick(View v) {
                 long idCliente = 0;
-                String idSerie = "";
+                String idSerie = "", ciudad = "";
                 int position = list_nombres.indexOf(cliente_auto.getText().toString());
                 int position_series = list_nombres_series.indexOf(serie_auto.getText().toString());
                 if (position != -1) {
                     if (position_series != -1) {
+                        if(((Spinner) getRootView().findViewById(R.id.crear_pedido_ciudad)).getSelectedItemPosition() == 0)
+                            ciudad = "Guayaquil";
+                        else
+                            ciudad = "Quito";
                         idCliente = list_cliente.get(position).getID();
                         idSerie = list_serie.get(position_series).getCode();
                         int idDireccion = list_cliente.get(position).getClienteDirecciones().get(((Spinner) rootView.findViewById(R.id.crear_pedido_direccion)).getSelectedItemPosition()).getIdClienteDireccion();
@@ -211,6 +215,7 @@ public class PedidoParametrosFragment extends BaseFragment{
                         intent.putExtra(CrearPedidoActivity.ARG_DIRECCION, idDireccion);
                         intent.putExtra(CrearPedidoActivity.ARG_TIPO_ORDEN, tipoOrdenAdapter.getCode(((Spinner) getRootView().findViewById(R.id.crear_pedido_tipo_orden)).getSelectedItemPosition()));
                         intent.putExtra(CrearPedidoActivity.ARG_IDAGENDA, id_agenda);
+                        intent.putExtra(CrearPedidoActivity.ARG_CIUDAD, ciudad);
                         dismiss();
                         if(from == 1)
                             getActivity().finish();

@@ -496,4 +496,7 @@
     <string name="label_estado_cuenta">Estado de Cuenta</string>
     <string name="label_compras_mes">Ultimas Compras</string>
     <string name="label_total_saldos">Total Saldos:</string>
+    <string name="label_pvp">PVP:</string>
+    <string name="label_sin_descuento">Sin Dscto:</string>
+    <string name="label_con_descuento">Con Dscto:</string>
 </resources>

@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -293,40 +294,45 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
 
             headerList.setSelector(getActivity().getResources().getDrawable(R.drawable.bkg));
 
+            if(data.size() == 1 && data.get(0).getID() == 0)
+            {
+                ((TextView)getRootView().findViewById(R.id.list_productos_ninguno)).setText(data.get(0).getDescripcion());
+                getRootView().findViewById(R.id.list_productos_ninguno).setVisibility(View.VISIBLE);
+            }
+            else {
+                adapter = new ProductoAdapter(getContext(), data);
+                headerList.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+                headerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-            adapter = new ProductoAdapter(getContext(), data);
-            headerList.setAdapter(adapter);
-            adapter.notifyDataSetChanged();
-            headerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                @SuppressLint("ResourceAsColor")
-                @Override
-                public void onItemClick(AdapterView<?> parent,
-                                        View view, int position, long id) {
-                    list_alternativo = new ArrayList<Producto>();
-                    fueraProduccion = false;
-                    Producto prod = adapter.getItem(position);
-                    prod = Producto.getProductoID(getDataBase(), prod.getID());
-                    seleccionado = prod;
-                    precio = null;
-                    if(prod.getAviso().trim().length() == 0)
-                        ValidarSustituto(prod);
-                    else
-                    {
-                        GeneralValue generalValue = GeneralValue.getGeneralValue(getDataBase(), Contants.GENERAL_TABLE_AVISO_ITEM_BERLIN, prod.getAviso());
-                        if(generalValue == null || generalValue.getReference1().equalsIgnoreCase("1"))
+                    @SuppressLint("ResourceAsColor")
+                    @Override
+                    public void onItemClick(AdapterView<?> parent,
+                                            View view, int position, long id) {
+                        list_alternativo = new ArrayList<Producto>();
+                        fueraProduccion = false;
+                        Producto prod = adapter.getItem(position);
+                        prod = Producto.getProductoID(getDataBase(), prod.getID());
+                        seleccionado = prod;
+                        precio = null;
+                        if (prod.getAviso().trim().length() == 0)
                             ValidarSustituto(prod);
                         else {
-                            fueraProduccion = true;
-                            GetStock(prod);
+                            GeneralValue generalValue = GeneralValue.getGeneralValue(getDataBase(), Contants.GENERAL_TABLE_AVISO_ITEM_BERLIN, prod.getAviso());
+                            if (generalValue == null || generalValue.getReference1().equalsIgnoreCase("1"))
+                                ValidarSustituto(prod);
+                            else {
+                                fueraProduccion = true;
+                                GetStock(prod);
+                            }
                         }
                     }
-                }
-            });
-            if (data.size() == 0)
-                getRootView().findViewById(R.id.list_productos_ninguno).setVisibility(View.VISIBLE);
-            else
-                getRootView().findViewById(R.id.list_productos_ninguno).setVisibility(View.GONE);
+                });
+                if (data.size() == 0)
+                    getRootView().findViewById(R.id.list_productos_ninguno).setVisibility(View.VISIBLE);
+                else
+                    getRootView().findViewById(R.id.list_productos_ninguno).setVisibility(View.GONE);
+            }
         }
 
         @Override
@@ -382,7 +388,10 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
                 }
                 if(!fueraProduccion) {
                     if (existeStock) {
-                        GetDescuento(seleccionado);
+                        if(evaluatePrecio().getParametroDesc() == 1)
+                            GetDescuento(seleccionado);
+                        else
+                            ShowProducto(0);
                     } else {
                         showDialogConfirmation(DIALOG_STOCK, R.string.message_stock_faltante, R.string.title_stock_faltante);
                     }
@@ -405,7 +414,10 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
         switch (id)
         {
             case DIALOG_STOCK:
-                GetDescuento(seleccionado);
+                if(evaluatePrecio().getParametroDesc() == 1)
+                    GetDescuento(seleccionado);
+                else
+                    ShowProducto(0);
         }
     }
 

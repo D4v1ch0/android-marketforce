@@ -47,6 +47,18 @@ public class ProductoLoader  extends
                 result = Producto.getProductoSearch(db, search, idSubCategoria, serie);
         }
 
+        if(result.size() == 0)
+        {
+            Producto prod = Producto.getProductoSingleByCodigoExterno(db, search.toUpperCase());
+            if(prod != null)
+            {
+                prod = new Producto();
+                prod.setID(0);
+                prod.setDescripcion("Producto existente en otra serie");
+                result.add(prod);
+            }
+        }
+
         return result;
     }
 }

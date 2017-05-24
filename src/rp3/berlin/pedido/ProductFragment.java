@@ -106,8 +106,8 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
         df = new DecimalFormat("#.##");
         df.setRoundingMode(RoundingMode.CEILING);
         numberFormat = NumberFormat.getInstance();
-        numberFormat.setMaximumFractionDigits(4);
-        numberFormat.setMinimumFractionDigits(4);
+        numberFormat.setMaximumFractionDigits(2);
+        numberFormat.setMinimumFractionDigits(2);
 
         numberFormatInteger = NumberFormat.getInstance();
         numberFormatInteger.setMaximumFractionDigits(0);
@@ -130,6 +130,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
             ((TextView)rootView.findViewById(R.id.producto_aplicacion)).setText(jsonObject.getString("a"));
             ((TextView)rootView.findViewById(R.id.producto_descripcion)).setText(jsonObject.getString("d"));
             ((TextView)rootView.findViewById(R.id.producto_descuento_auto)).setText(numberFormatDiscount.format(porcentajeDescAuto) + "%");
+            ((TextView)rootView.findViewById(R.id.producto_sin_desc)).setText("" + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(jsonObject.getDouble("p")));
             ((TextView)rootView.findViewById(R.id.producto_precio)).setText("" + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(jsonObject.getDouble("vd")));
             ((TextView)rootView.findViewById(R.id.producto_precio_final)).setText("" + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " 0");
             List<Vendedor> list_vendedores = Vendedor.getVendedores(getDataBase());

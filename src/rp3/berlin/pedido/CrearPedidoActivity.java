@@ -22,6 +22,7 @@ public class CrearPedidoActivity extends BaseActivity {
     public static String ARG_TIPO_ORDEN = "tipo_orden";
     public static String ARG_SERIE = "serie";
     public static String ARG_IDAGENDA = "idagenda";
+    public static String ARG_CIUDAD = "ciudad";
     private CrearPedidoFragment newFragment;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,7 @@ public class CrearPedidoActivity extends BaseActivity {
         String tipo = "FA";
         String serie = "";
         String tipoorden = "";
+        String ciudad = "";
         if(getIntent().getExtras() != null && getIntent().getExtras().containsKey(ARG_IDPEDIDO))
         {
             id_pedido = getIntent().getExtras().getLong(ARG_IDPEDIDO);
@@ -48,12 +50,13 @@ public class CrearPedidoActivity extends BaseActivity {
             serie = getIntent().getExtras().getString(ARG_SERIE, "");
             tipoorden = getIntent().getExtras().getString(ARG_TIPO_ORDEN, "");
             id_direccion = getIntent().getExtras().getInt(ARG_DIRECCION, 0);
+            ciudad = getIntent().getExtras().getString(ARG_CIUDAD, "");
         }
 
         setHomeAsUpEnabled(true, true);
         setContentView(R.layout.layout_simple_content);
         if (!hasFragment(rp3.core.R.id.content)) {
-            newFragment = CrearPedidoFragment.newInstance(id_pedido, id_agenda, tipo, id_cliente, serie, tipoorden, id_direccion);
+            newFragment = CrearPedidoFragment.newInstance(id_pedido, id_agenda, tipo, id_cliente, serie, tipoorden, id_direccion, ciudad);
             setFragment(rp3.core.R.id.content, newFragment);
         }
     }
@@ -103,9 +106,6 @@ public class CrearPedidoActivity extends BaseActivity {
     public void onNegativeConfirmation(int id) {
         switch (id)
         {
-            case CrearPedidoFragment.DIALOG_SAVE_CANCEL:
-                finish();
-                break;
             default:
                 break;
         }

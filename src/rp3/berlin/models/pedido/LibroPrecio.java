@@ -32,6 +32,7 @@ public class LibroPrecio extends EntityBase<LibroPrecio> {
     private double valorEscalado;
     private int tipoEscalado;
     private String libroEstandar;
+    private int parametroDesc;
 
 
     @Override
@@ -142,6 +143,14 @@ public class LibroPrecio extends EntityBase<LibroPrecio> {
         this.descripcion = descripcion;
     }
 
+    public int getParametroDesc() {
+        return parametroDesc;
+    }
+
+    public void setParametroDesc(int parametroDesc) {
+        this.parametroDesc = parametroDesc;
+    }
+
     @Override
     public void setValues() {
         setValue(Contract.LibroPrecio.COLUMN_FECHA_EFECTIVA, this.fechaEfectiva);
@@ -179,6 +188,7 @@ public class LibroPrecio extends EntityBase<LibroPrecio> {
             precio.setPrecio(CursorUtils.getDouble(c, Contract.LibroPrecio.COLUMN_PRECIO));
             precio.setValorEscalado(CursorUtils.getDouble(c, Contract.LibroPrecio.COLUMN_VALOR_ESCALADO));
             precio.setFechaEfectiva(CursorUtils.getDate(c, Contract.LibroPrecio.COLUMN_FECHA_EFECTIVA));
+            precio.setParametroDesc(CursorUtils.getInt(c, Contract.MatrizPrecio.COLUMN_PARAMETRO_DESC));
             list.add(precio);
         }
         c.close();
@@ -195,6 +205,7 @@ public class LibroPrecio extends EntityBase<LibroPrecio> {
                 precio.setPrecio(CursorUtils.getDouble(d, Contract.LibroPrecio.COLUMN_PRECIO));
                 precio.setValorEscalado(CursorUtils.getDouble(d, Contract.LibroPrecio.COLUMN_VALOR_ESCALADO));
                 precio.setFechaEfectiva(CursorUtils.getDate(d, Contract.LibroPrecio.COLUMN_FECHA_EFECTIVA));
+                precio.setParametroDesc(CursorUtils.getInt(d, Contract.MatrizPrecio.COLUMN_PARAMETRO_DESC));
                 list.add(precio);
             }
             d.close();

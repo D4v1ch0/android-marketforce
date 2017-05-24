@@ -87,6 +87,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     public static String ARG_TIPO_DOCUMENTO = "tipo_documento";
     public static String ARG_TIPO_ORDEN = "tipo_orden";
     public static String ARG_DIRECCION = "direccion";
+    public static String ARG_CIUDAD = "ciudad";
     public static final int REQUEST_BUSQUEDA = 3;
     public static final int REQUEST_CLIENTE = 4;
     public static final int REQUEST_REPRINT= 5;
@@ -104,6 +105,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     private int idDireccion = 0;
     private boolean saved = false;
     private String tipo = "FA";
+    private String ciudad = "";
     private Pedido pedido;
     public ProductFragment productFragment;
     private String code, serie, tipoOrden;
@@ -115,7 +117,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     private PagosListFragment fragment;
     private LoaderPrecio loaderPrecios;
 
-    public static CrearPedidoFragment newInstance(long id_pedido, long id_agenda, String tipo, long idCliente, String serie, String tipoOrden, int idDireccion)
+    public static CrearPedidoFragment newInstance(long id_pedido, long id_agenda, String tipo, long idCliente, String serie, String tipoOrden, int idDireccion, String ciudad)
     {
         CrearPedidoFragment fragment = new CrearPedidoFragment();
         Bundle args = new Bundle();
@@ -125,6 +127,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         args.putLong(ARG_CLIENTE, idCliente);
         args.putString(ARG_SERIE, serie);
         args.putString(ARG_TIPO_ORDEN, tipoOrden);
+        args.putString(ARG_CIUDAD, ciudad);
         args.putInt(ARG_DIRECCION, idDireccion);
         fragment.setArguments(args);
         return fragment;
@@ -322,7 +325,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         pedido.setExcedente(NumberUtils.Round(valorTotal - pagado, 4));
         pedido.setSubtotalSinDescuento(NumberUtils.Round(subtotal, 4));
 
-        pedido.setCiudad("Guayaquil");
+        pedido.setCiudad(ciudad);
         pedido.setSerie(serie);
         pedido.setTipoOrden(tipoOrden);
         pedido.setIdDireccion(idDireccion);
@@ -458,6 +461,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         serie = getArguments().getString(ARG_SERIE, "");
         tipoOrden = getArguments().getString(ARG_TIPO_ORDEN, "");
         idDireccion = getArguments().getInt(ARG_DIRECCION, 0);
+        ciudad = getArguments().getString(ARG_CIUDAD, "");
         cliente_auto = (AutoCompleteTextView) rootView.findViewById(R.id.pedido_cliente);
         list_nombres = new ArrayList<String>();
 
@@ -698,6 +702,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         tipoOrden = pedido.getTipoOrden();
         idCliente = pedido.get_idCliente();
         idDireccion = pedido.getIdDireccion();
+        ciudad = pedido.getCiudad();
         if(pedido.get_idCliente() != 0) {
             idCliente = pedido.get_idCliente();
             cl = Cliente.getClienteID(getDataBase(), pedido.get_idCliente(), false);

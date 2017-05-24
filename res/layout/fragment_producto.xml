@@ -108,7 +108,121 @@
                     android:paddingLeft="5dp"
                     android:paddingRight="0dp"
                     android:paddingTop="6dp"
-                    android:text="@string/label_precio"
+                    android:text="@string/label_sin_descuento"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/color_text_sky_blue"
+                    android:textSize="@dimen/text_small_size"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/material_blue_grey_800"
+                    android:orientation="vertical" />
+
+                <TextView
+                    android:id="@+id/producto_sin_desc"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|right"
+                    android:paddingRight="10dp"
+                    android:text="₡ 120.000"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="@dimen/text_small_size" />
+
+                <LinearLayout
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/material_blue_grey_800"
+                    android:orientation="vertical" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/material_blue_grey_800"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/material_blue_grey_800"
+                    android:orientation="vertical" />
+
+                <TextView
+                    android:id="@+id/textView9999"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/color_grey"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="0dp"
+                    android:paddingTop="6dp"
+                    android:text="@string/label_porc_desc_auto"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/color_text_sky_blue"
+                    android:textSize="@dimen/text_small_size"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/material_blue_grey_800"
+                    android:orientation="vertical" />
+
+                <TextView
+                    android:id="@+id/producto_descuento_auto"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|right"
+                    android:paddingRight="10dp"
+                    android:text="₡ 120.000"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="@dimen/text_small_size" />
+
+                <LinearLayout
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/material_blue_grey_800"
+                    android:orientation="vertical" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/material_blue_grey_800" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/material_blue_grey_800"
+                    android:orientation="vertical" />
+
+                <TextView
+                    android:id="@+id/textView91"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/color_grey"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="0dp"
+                    android:paddingTop="6dp"
+                    android:text="@string/label_con_descuento"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/color_text_sky_blue"
                     android:textSize="@dimen/text_small_size"
@@ -136,63 +250,6 @@
                     android:layout_height="match_parent"
                     android:background="@color/material_blue_grey_800"
                     android:orientation="vertical" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/material_blue_grey_800" />
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/material_blue_grey_800" />
-
-                <TextView
-                    android:id="@+id/textView9999"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@color/color_grey"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="0dp"
-                    android:paddingTop="6dp"
-                    android:text="@string/label_porc_desc_auto"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/color_text_sky_blue"
-                    android:textSize="@dimen/text_small_size"
-                    android:textStyle="bold" />
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/material_blue_grey_800" />
-
-                <TextView
-                    android:id="@+id/producto_descuento_auto"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical|right"
-                    android:paddingRight="10dp"
-                    android:text="₡ 120.000"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textSize="@dimen/text_small_size" />
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/material_blue_grey_800" />
             </LinearLayout>
 
             <LinearLayout

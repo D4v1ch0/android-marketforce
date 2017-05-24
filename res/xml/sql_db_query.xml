@@ -2512,7 +2512,8 @@
         tbLibroPrecio.Item,
         tbLibroPrecio.Precio,
         tbLibroPrecio.ValorEscalado,
-        tbLibroPrecio.FechaEfectiva
+        tbLibroPrecio.FechaEfectiva,
+        tbMatrizPrecio.ParametroDesc AS ParametroDesc
         from tbLibroPrecio
         INNER JOIN tbMatrizPrecio
         ON tbMatrizPrecio.IdLibro = tbLibroPrecio.IdLibro
@@ -2530,8 +2531,11 @@
         tbLibroPrecio.Item,
         tbLibroPrecio.Precio,
         tbLibroPrecio.ValorEscalado,
-        tbLibroPrecio.FechaEfectiva
+        tbLibroPrecio.FechaEfectiva,
+        tbMatrizPrecio.ParametroDesc AS ParametroDesc
         from tbLibroPrecio
+        INNER JOIN tbMatrizPrecio
+        ON tbMatrizPrecio.IdLibro = tbLibroPrecio.IdLibro
         WHERE item = ?
         AND LibroEstandar = 'S'
         AND (tbLibroPrecio.FechaVencimiento = 18000000 OR tbLibroPrecio.FechaVencimiento &gt; ?)
