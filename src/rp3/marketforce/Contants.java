@@ -19,6 +19,8 @@ public class Contants {
     public final static int GENERAL_TABLE_TIPO_MARCACION = 1044;
     public final static int GENERAL_TABLE_MOTIVOS_ANULACION = 1706;
     public final static int GENERAL_TABLE_TIPOS_TRANSACCION = 1621;
+    public final static int GENERAL_TABLE_PUNTO_VENTA_POS = 1707;
+    public final static int GENERAL_TABLE_SECTOR_TRABAJO = 1708;
 	public final static String IMAGE_FOLDER = "imagesFolder";
     public final static String IMAGE_FOLDER_PRODUCTOS = "imagesFolderProducto";
     public final static String IMAGE_FOLDER_OPORTUNIDADES = "imagesFolderOportunidad";
@@ -133,6 +135,8 @@ public class Contants {
     public final static String CAMPO_CARGO_CONTACTO = "CargoCont";
     public final static String CAMPO_CORREO_CONTACTO = "CorreoCont";
     public final static String CAMPO_FOTO_CONTACTO = "FotoCont";
+    public final static String CAMPO_PUNTO_VENTA_POS = "PuntoVenta";
+    public final static String CAMPO_SECTOR_TRABAJO = "SectorTrabajo";
 
     public final static int IS_CREACION = 1;
     public final static int IS_MODIFICACION = 2;

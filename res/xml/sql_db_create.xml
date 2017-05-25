@@ -31,7 +31,9 @@
       FechaProximaVisita INTEGER,
         ExentoImpuesto BOOLEAN,
         CiudadanoOro BOOLEAN,
-        Tarjeta TEXT
+        Tarjeta TEXT,
+        PuntoVentaPOS TEXT,
+        SectorTrabajo TEXT
       )
 	</statement>
 	<statement>

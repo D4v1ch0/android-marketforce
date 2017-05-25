@@ -328,6 +328,10 @@
     <statement name="ToVersion10">
         ALTER TABLE tbCliente ADD COLUMN Tarjeta TEXT;
     </statement>
-
-
+    <statement name="ToVersion11-1">
+        ALTER TABLE tbCliente ADD COLUMN PuntoVentaPOS TEXT;
+    </statement>
+    <statement name="ToVersion11-2">
+        ALTER TABLE tbCliente ADD COLUMN SectorTrabajo TEXT;
+    </statement>
 </sql>

@@ -139,6 +139,15 @@ public class Cliente {
 							else
 								cl.setTarjeta("");
 
+							if(!type.isNull("PuntoVentaPOS"))
+								cl.setPuntoVentaPOS(type.getString("PuntoVentaPOS"));
+							else
+								cl.setPuntoVentaPOS("");
+							if(!type.isNull("SectorTrabajo"))
+								cl.setSectorTrabajo(type.getString("SectorTrabajo"));
+							else
+								cl.setSectorTrabajo("");
+
                             JSONArray strs = type.getJSONArray("ClienteDirecciones");
 
                             rp3.marketforce.models.ClienteDireccion.deleteClienteDireccionIdCliente(db, cl.getIdCliente());
@@ -339,6 +348,8 @@ public class Cliente {
 				jObject.put("ExentoImpuesto", cl.getExentoImpuesto());
 				jObject.put("CiudadanoOro", cl.isCiudadanoOro());
 				jObject.put("Tarjeta", cl.getTarjeta());
+				jObject.put("PuntoVentaPOS", cl.getPuntoVentaPOS());
+				jObject.put("SectorTrabajo", cl.getSectorTrabajo());
 				
 				JSONArray jArrayDirecciones = new JSONArray();
 				for(int i = 0; i < cl.getClienteDirecciones().size(); i++)
@@ -530,6 +541,8 @@ public class Cliente {
 				jObject.put("ExentoImpuesto", cl.getExentoImpuesto());
 				jObject.put("CiudadanoOro", cl.isCiudadanoOro());
 				jObject.put("Tarjeta", cl.getTarjeta());
+				jObject.put("PuntoVentaPOS", cl.getPuntoVentaPOS());
+				jObject.put("SectorTrabajo", cl.getSectorTrabajo());
 				
 				JSONArray jArrayDirecciones = new JSONArray();
 				for(int i = 0; i < cl.getClienteDirecciones().size(); i++)
@@ -730,6 +743,8 @@ public class Cliente {
 					jObject.put("ExentoImpuesto", cl.getExentoImpuesto());
 					jObject.put("CiudadanoOro", cl.isCiudadanoOro());
 					jObject.put("Tarjeta", cl.getTarjeta());
+					jObject.put("PuntoVentaPOS", cl.getPuntoVentaPOS());
+					jObject.put("SectorTrabajo", cl.getSectorTrabajo());
 
 					JSONArray jArrayDirecciones = new JSONArray();
 					for(int i = 0; i < cl.getClienteDirecciones().size(); i++)
@@ -939,6 +954,8 @@ public class Cliente {
 					jObject.put("ExentoImpuesto", cl.getExentoImpuesto());
 					jObject.put("CiudadanoOro", cl.isCiudadanoOro());
 					jObject.put("Tarjeta", cl.getTarjeta());
+					jObject.put("PuntoVentaPOS", cl.getPuntoVentaPOS());
+					jObject.put("SectorTrabajo", cl.getSectorTrabajo());
 					
 					JSONArray jArrayDirecciones = new JSONArray();
 					for(int i = 0; i < cl.getClienteDirecciones().size(); i++)

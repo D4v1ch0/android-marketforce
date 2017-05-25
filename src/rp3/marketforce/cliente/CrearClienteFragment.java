@@ -96,8 +96,11 @@ import rp3.widget.ViewPager;
 public class CrearClienteFragment extends BaseFragment implements SignInFragment.SignConfirmListener {
 
     boolean rotated = false;
+    private AutoCompleteTextView puntoVenta_auto, sector_auto;
+    private ArrayList<String> list_nombres, list_sectores;
+    private List<GeneralValue> listaPuntoVenta, listaSectores;
 
-	public static CrearClienteFragment newInstance(long id_cliente, int tipo)
+    public static CrearClienteFragment newInstance(long id_cliente, int tipo)
 	{
 		CrearClienteFragment fragment = new CrearClienteFragment();
 		Bundle args = new Bundle();
@@ -359,6 +362,12 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
                 setSpannable((EditText) getRootView().findViewById(R.id.cliente_segundo_nombre));
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_CORREO))
                 setSpannable((EditText) getRootView().findViewById(R.id.cliente_correo));
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_PUNTO_VENTA_POS)) {
+                getRootView().findViewById(R.id.cliente_punto_venta_layout).setVisibility(View.VISIBLE);
+            }
+            if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_SECTOR_TRABAJO)){
+                getRootView().findViewById(R.id.cliente_sector_trabajo_layout).setVisibility(View.VISIBLE);
+            }
 
             if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_NOMBRE_JURIDICO))
                 setSpannable((EditText) getRootView().findViewById(R.id.cliente_nombre));
@@ -383,6 +392,9 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
         cli.setIdentificacion(((EditText) getRootView().findViewById(R.id.cliente_identificacion)).getText().toString());
         cli.setTarjeta(((EditText) getRootView().findViewById(R.id.cliente_tarjeta)).getText().toString());
         cli.setTipoPersona(((GeneralValue) ((Spinner) getRootView().findViewById(R.id.crear_cliente_tipo_persona)).getSelectedItem()).getCode());
+        //poner try y catch
+        cli.setPuntoVentaPOS(listaPuntoVenta.get(list_nombres.indexOf(puntoVenta_auto.getText().toString())).getCode());
+        cli.setSectorTrabajo(listaSectores.get(list_sectores.indexOf(sector_auto.getText().toString())).getCode());
         cli.setIdTipoCliente((int) ((Spinner) getRootView().findViewById(R.id.cliente_tipo_cliente)).getAdapter().getItemId(((Spinner) getRootView().findViewById(R.id.cliente_tipo_cliente)).getSelectedItemPosition()));
         cli.setExentoImpuesto(((CheckBox) getRootView().findViewById(R.id.cliente_oro)).isChecked());
         cli.setCiudadanoOro(((CheckBox) getRootView().findViewById(R.id.cliente_cd_oro)).isChecked());
@@ -590,6 +602,8 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
         ContactosContainer = (LinearLayout) getRootView().findViewById(R.id.crear_cliente_container_contacto);
 
         SimpleGeneralValueAdapter tipoPersonaAdapter = new SimpleGeneralValueAdapter(getContext(), getDataBase(), rp3.marketforce.Contants.GENERAL_TABLE_TIPO_PERSONA);
+        listaPuntoVenta = GeneralValue.getGeneralValues(getDataBase(), Contants.GENERAL_TABLE_PUNTO_VENTA_POS);
+        listaSectores = GeneralValue.getGeneralValues(getDataBase(), Contants.GENERAL_TABLE_SECTOR_TRABAJO);
         SimpleGeneralValueAdapter tipoEstadoCivilAdapter = new SimpleGeneralValueAdapter(getContext(), GeneralValue.getGeneralValuesOrder(getDataBase(),rp3.marketforce.Contants.GENERAL_TABLE_ESTADO_CIVIL, rp3.data.models.Contract.GeneralValue.COLUMN_REFERENCE1) );
         SimpleGeneralValueAdapter tipoGeneroAdapter = new SimpleGeneralValueAdapter(getContext(), GeneralValue.getGeneralValuesOrder(getDataBase(), rp3.marketforce.Contants.GENERAL_TABLE_GENERO, rp3.data.models.Contract.GeneralValue.COLUMN_REFERENCE1));
         SimpleIdentifiableAdapter tipoCliente = new SimpleIdentifiableAdapter(getContext(), TipoCliente.getTipoCliente(getDataBase(), ""));
@@ -637,6 +651,28 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
         ((Spinner) getRootView().findViewById(R.id.cliente_canal)).setPrompt("Seleccione un canal");
         ((Spinner) getRootView().findViewById(R.id.cliente_tipo_identificacion)).setAdapter(tipoIdentificacion);
         ((Spinner) getRootView().findViewById(R.id.cliente_tipo_identificacion)).setPrompt("Seleccione un tipo de identificación");
+
+
+        list_nombres = new ArrayList<String>();
+        list_sectores = new ArrayList<String>();
+
+        for (GeneralValue cli : listaPuntoVenta) {
+            list_nombres.add(cli.getValue() + " - " + cli.getReference2());
+        }
+        for (GeneralValue cli : listaSectores) {
+            list_sectores.add(cli.getValue());
+        }
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(), R.layout.spinner_small_text, list_nombres);
+        final ArrayAdapter<String> adapterSectores = new ArrayAdapter<String>(this.getContext(), R.layout.spinner_small_text, list_sectores);
+
+        puntoVenta_auto = (AutoCompleteTextView) rootView.findViewById(R.id.cliente_punto_venta);
+        puntoVenta_auto.setAdapter(adapter);
+        puntoVenta_auto.setThreshold(1);
+
+        sector_auto = (AutoCompleteTextView) rootView.findViewById(R.id.cliente_sector);
+        sector_auto.setAdapter(adapterSectores);
+        sector_auto.setThreshold(1);
+
         ((ImageButton) getRootView().findViewById(R.id.cliente_foto)).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

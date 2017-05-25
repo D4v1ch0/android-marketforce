@@ -426,4 +426,6 @@
     <string name="label_precio">Precio:</string>
     <string name="label_descuento_percentage">Descuento (%):</string>
     <string name="label_total_upper">TOTAL:</string>
+    <string name="hint_ingrese_pdv">Ingrese el punto de venta</string>
+    <string name="hint_ingrese_sector">Ingrese el sector de trabajo</string>
 </resources>

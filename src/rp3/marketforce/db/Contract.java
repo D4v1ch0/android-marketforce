@@ -45,6 +45,8 @@ public final class Contract {
 		public static final String COLUMN_EXENTO_IMPUESTO = "ExentoImpuesto";
 		public static final String COLUMN_CIUDADANO_ORO = "CiudadanoOro";
 		public static final String COLUMN_TARJETA = "Tarjeta";
+		public static final String COLUMN_PUNTO_VENTA_POS = "PuntoVentaPOS";
+		public static final String COLUMN_SECTOR_TRABAJO = "SectorTrabajo";
 				
 		public static final String FIELD_ID_TIPO_IDENTIFICACION = COLUMN_ID_TIPO_IDENTIFICACION;	
 		public static final String FIELD_ID_CLIENTE = COLUMN_ID_CLIENTE;	
@@ -61,6 +63,8 @@ public final class Contract {
 		public static final String FIELD_EXENTO_IMPUESTO = COLUMN_EXENTO_IMPUESTO;
 		public static final String FIELD_CIUDADANO_ORO = COLUMN_CIUDADANO_ORO;
 		public static final String FIELD_TARJETA = COLUMN_TARJETA;
+		public static final String FIELD_PUNTO_VENTA_POS = COLUMN_PUNTO_VENTA_POS;
+		public static final String FIELD_SECTOR_TRABAJO = COLUMN_SECTOR_TRABAJO;
         public static final String FIELD_FECHA_ULTIMA_VISITA = COLUMN_FECHA_ULTIMA_VISITA;
         public static final String FIELD_AGENTE_ULTIMA_VISITA = COLUMN_AGENTE_ULTIMA_VISITA;
         public static final String FIELD_FECHA_PROXIMA_VISITA = COLUMN_FECHA_PROXIMA_VISITA;
