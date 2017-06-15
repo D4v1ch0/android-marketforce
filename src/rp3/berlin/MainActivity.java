@@ -93,12 +93,17 @@ public class MainActivity extends rp3.app.NavActivity {
 		return i;
 	}
 
+
 	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setNavMode(NavActivity.NAV_MODE_SLIDING_PANE);
 
-		super.onCreate(savedInstanceState);
+		try {
+			super.onCreate(savedInstanceState);
+		}
+		catch (Exception ex)
+		{}
 		Session.Start(this);
 		rp3.configuration.Configuration.TryInitializeConfiguration(this, DbOpenHelper.class);
 

@@ -554,6 +554,7 @@ public final class Contract {
 		public static final String COLUMN_ID_OPORTUNIDAD_TIPO = "IdOportunidadTipo";
 		public static final String COLUMN_ID_CANAL = "IdCanal";
 		public static final String COLUMN_TIPO_PERSONA = "TipoPersona";
+		public static final String COLUMN_CANAL_INFOR = "CanalInfor";
 
         public static final String FIELD_ID_OPORTUNIDAD = COLUMN_ID_OPORTUNIDAD;
         public static final String FIELD_PROBABILIDAD = COLUMN_PROBABILIDAD;
@@ -571,6 +572,7 @@ public final class Contract {
 		public static final String FIELD_ID_OPORTUNIDAD_TIPO = COLUMN_ID_OPORTUNIDAD_TIPO;
 		public static final String FIELD_ID_CANAL = COLUMN_ID_CANAL;
 		public static final String FIELD_TIPO_PERSONA = COLUMN_TIPO_PERSONA;
+		public static final String FIELD_CANAL_INFOR = COLUMN_CANAL_INFOR;
 
         public static final String FIELD_DESCRIPCION = Contract.OportunidadExt.TABLE_NAME + "_" + Contract.OportunidadExt.COLUMN_DESCRIPCION;
         public static final String FIELD_DIRECCION = Contract.OportunidadExt.TABLE_NAME + "_" + Contract.OportunidadExt.COLUMN_DIRECCION;

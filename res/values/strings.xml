@@ -499,4 +499,6 @@
     <string name="label_pvp">PVP:</string>
     <string name="label_sin_descuento">Sin Dscto:</string>
     <string name="label_con_descuento">Con Dscto:</string>
+    <string name="label_valor_unitario_short">V. Unit.</string>
+    <string name="label_identificacion_max">IDENTIFICACIÓN</string>
 </resources>

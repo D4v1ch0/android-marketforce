@@ -42,7 +42,7 @@
        	tbEstadoCivil.Value AS tbEstadoCivil_Value,
        	tbGenero.Value AS tbGenero_Value,
        	tbTipoCliente.Descripcion AS tbTipoCliente_Descripcion,
-       	tbCanal.Descripcion AS tbCanal_Descripcion
+        tbCanalInfor.Value AS tbCanal_Descripcion
         FROM tbCliente
     	LEFT JOIN tbClienteExt
     	ON tbCliente._id = tbClienteExt.docid
@@ -53,6 +53,9 @@
     	LEFT JOIN tbGeneralValue tbEstadoCivil
     	ON tbEstadoCivil.GeneralTableId = 1002
     	AND tbEstadoCivil.Code = tbCliente.EstadoCivil
+        LEFT JOIN tbGeneralValue tbCanalInfor
+        ON tbCanalInfor.GeneralTableId = 2002
+        AND tbCanalInfor.Code = tbCliente.CanalPartner
     	LEFT JOIN tbGeneralValue tbGenero
     	ON tbGenero.GeneralTableId = 1003
     	AND tbGenero.Code = tbCliente.Genero    	
@@ -101,7 +104,7 @@
         tbEstadoCivil.Value AS tbEstadoCivil_Value,
         tbGenero.Value AS tbGenero_Value,
         tbTipoCliente.Descripcion AS tbTipoCliente_Descripcion,
-        tbCanal.Descripcion AS tbCanal_Descripcion,
+        tbCanalInfor.Value AS tbCanal_Descripcion,
         tbIdentificationType.Name AS tbIdentificationType_Name
         FROM tbCliente
         JOIN tbClienteExt
@@ -116,6 +119,9 @@
         LEFT JOIN tbGeneralValue tbGenero
         ON tbGenero.GeneralTableId = 1003
         AND tbGenero.Code = tbCliente.Genero
+        LEFT JOIN tbGeneralValue tbCanalInfor
+        ON tbCanalInfor.GeneralTableId = 2002
+        AND tbCanalInfor.Code = tbCliente.CanalPartner
         LEFT JOIN tbIdentificationType
         ON tbIdentificationType._id = tbCliente.IdTipoIdentificacion
         WHERE tbClienteExt.Identificacion = ?
@@ -164,7 +170,7 @@
        	tbEstadoCivil.Value AS tbEstadoCivil_Value,
        	tbGenero.Value AS tbGenero_Value,
        	tbTipoCliente.Descripcion AS tbTipoCliente_Descripcion,
-       	tbCanal.Descripcion AS tbCanal_Descripcion,
+        tbCanalInfor.Value AS tbCanal_Descripcion,
        	tbIdentificationType.Name AS tbIdentificationType_Name
         FROM tbCliente
     	JOIN tbClienteExt
@@ -179,6 +185,9 @@
     	LEFT JOIN tbGeneralValue tbGenero
     	ON tbGenero.GeneralTableId = 1003
     	AND tbGenero.Code = tbCliente.Genero
+        LEFT JOIN tbGeneralValue tbCanalInfor
+        ON tbCanalInfor.GeneralTableId = 2002
+        AND tbCanalInfor.Code = tbCliente.CanalPartner
     	LEFT JOIN tbIdentificationType
     	ON tbIdentificationType._id = tbCliente.IdTipoIdentificacion
     	WHERE tbCliente._id = ?
@@ -229,7 +238,7 @@
        	tbEstadoCivil.Value AS tbEstadoCivil_Value,
        	tbGenero.Value AS tbGenero_Value,
        	tbTipoCliente.Descripcion AS tbTipoCliente_Descripcion,
-       	tbCanal.Descripcion AS tbCanal_Descripcion,
+        tbCanalInfor.Value AS tbCanal_Descripcion,
        	tbIdentificationType.Name AS tbIdentificationType_Name
         FROM tbCliente
     	JOIN tbClienteExt
@@ -244,6 +253,9 @@
     	LEFT JOIN tbGeneralValue tbGenero
     	ON tbGenero.GeneralTableId = 1003
     	AND tbGenero.Code = tbCliente.Genero
+        LEFT JOIN tbGeneralValue tbCanalInfor
+        ON tbCanalInfor.GeneralTableId = 2002
+        AND tbCanalInfor.Code = tbCliente.CanalPartner
     	LEFT JOIN tbIdentificationType
     	ON tbIdentificationType._id = tbCliente.IdTipoIdentificacion
     	WHERE tbCliente.IdCliente = ?
@@ -293,7 +305,7 @@
        	tbEstadoCivil.Value AS tbEstadoCivil_Value,
        	tbGenero.Value AS tbGenero_Value,
        	tbTipoCliente.Descripcion AS tbTipoCliente_Descripcion,
-       	tbCanal.Descripcion AS tbCanal_Descripcion,
+        tbCanalInfor.Value AS tbCanal_Descripcion,
        	tbIdentificationType.Name AS tbIdentificationType_Name
         FROM tbCliente
     	JOIN tbClienteExt
@@ -308,6 +320,9 @@
     	LEFT JOIN tbGeneralValue tbGenero
     	ON tbGenero.GeneralTableId = 1003
     	AND tbGenero.Code = tbCliente.Genero
+        LEFT JOIN tbGeneralValue tbCanalInfor
+        ON tbCanalInfor.GeneralTableId = 2002
+        AND tbCanalInfor.Code = tbCliente.CanalPartner
     	LEFT JOIN tbIdentificationType
     	ON tbIdentificationType._id = tbCliente.IdTipoIdentificacion
     	WHERE tbCliente.IdCliente = 0
@@ -357,7 +372,7 @@
        	tbEstadoCivil.Value AS tbEstadoCivil_Value,
        	tbGenero.Value AS tbGenero_Value,
        	tbTipoCliente.Descripcion AS tbTipoCliente_Descripcion,
-       	tbCanal.Descripcion AS tbCanal_Descripcion,
+        tbCanalInfor.Value AS tbCanal_Descripcion,
        	tbIdentificationType.Name AS tbIdentificationType_Name
         FROM tbCliente
     	JOIN tbClienteExt
@@ -372,6 +387,9 @@
     	LEFT JOIN tbGeneralValue tbGenero
     	ON tbGenero.GeneralTableId = 1003
     	AND tbGenero.Code = tbCliente.Genero
+        LEFT JOIN tbGeneralValue tbCanalInfor
+        ON tbCanalInfor.GeneralTableId = 2002
+        AND tbCanalInfor.Code = tbCliente.CanalPartner
     	LEFT JOIN tbIdentificationType
     	ON tbIdentificationType._id = tbCliente.IdTipoIdentificacion
     	WHERE tbCliente.Pendiente = 1
@@ -574,6 +592,7 @@
        	tbClienteExt.Direccion,
        	tbClienteExt.Telefono,
        	tbClienteExt.NombreCompleto,
+         tbClienteExt.IdExterno,
        	'' AS Cargo
        	FROM tbClienteExt       	 
        	INNER JOIN tbCliente 
@@ -590,6 +609,7 @@
         tbClienteDireccion.Direccion AS Direccion,
         tbContactoExt.Telefono1 AS Telefono,
         '' AS NombreCompleto,
+         '' AS IdExterno,
         tbContactoExt.Cargo AS Cargo
         FROM tbContactoExt
         INNER JOIN tbContacto
@@ -1427,6 +1447,7 @@
         tbOportunidad.IdOportunidadTipo,
         tbOportunidad.IdCanal,
         tbOportunidad.TipoPersona,
+        tbOportunidad.CanalInfor,
         tbOportunidadExt.Descripcion AS tbOportunidadExt_Descripcion,
         tbOportunidadExt.Direccion AS tbOportunidadExt_Direccion,
         tbOportunidadExt.Referencia AS tbOportunidadExt_Referencia,
@@ -1463,6 +1484,7 @@
         tbOportunidad.IdOportunidadTipo,
         tbOportunidad.IdCanal,
         tbOportunidad.TipoPersona,
+        tbOportunidad.CanalInfor,
         tbOportunidadExt.Descripcion AS tbOportunidadExt_Descripcion,
         tbOportunidadExt.Direccion AS tbOportunidadExt_Direccion,
         tbOportunidadExt.Referencia AS tbOportunidadExt_Referencia,
@@ -1499,6 +1521,7 @@
         tbOportunidad.IdOportunidadTipo,
         tbOportunidad.IdCanal,
         tbOportunidad.TipoPersona,
+        tbOportunidad.CanalInfor,
         tbOportunidadExt.Descripcion AS tbOportunidadExt_Descripcion,
         tbOportunidadExt.Direccion AS tbOportunidadExt_Direccion,
         tbOportunidadExt.Referencia AS tbOportunidadExt_Referencia,
@@ -1534,6 +1557,7 @@
         tbOportunidad.IdOportunidadTipo,
         tbOportunidad.IdCanal,
         tbOportunidad.TipoPersona,
+        tbOportunidad.CanalInfor,
         tbOportunidadExt.Descripcion AS tbOportunidadExt_Descripcion,
         tbOportunidadExt.Direccion AS tbOportunidadExt_Direccion,
         tbOportunidadExt.Referencia AS tbOportunidadExt_Referencia,
@@ -1569,6 +1593,7 @@
         tbOportunidad.IdOportunidadTipo,
         tbOportunidad.IdCanal,
         tbOportunidad.TipoPersona,
+        tbOportunidad.CanalInfor,
         tbOportunidadExt.Descripcion AS tbOportunidadExt_Descripcion,
         tbOportunidadExt.Direccion AS tbOportunidadExt_Direccion,
         tbOportunidadExt.Referencia AS tbOportunidadExt_Referencia,
@@ -1615,6 +1640,7 @@
         tbOportunidad.IdOportunidadTipo,
         tbOportunidad.IdCanal,
         tbOportunidad.TipoPersona,
+        tbOportunidad.CanalInfor,
         tbOportunidadExt.Descripcion AS tbOportunidadExt_Descripcion,
         tbOportunidadExt.Direccion AS tbOportunidadExt_Direccion,
         tbOportunidadExt.Referencia AS tbOportunidadExt_Referencia,

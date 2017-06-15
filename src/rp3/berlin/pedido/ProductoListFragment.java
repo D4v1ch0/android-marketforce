@@ -388,7 +388,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
                 }
                 if(!fueraProduccion) {
                     if (existeStock) {
-                        if(evaluatePrecio().getParametroDesc() == 1)
+                        if(evaluatePrecio().getParametroDesc() == 2)
                             GetDescuento(seleccionado);
                         else
                             ShowProducto(0);
@@ -414,7 +414,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
         switch (id)
         {
             case DIALOG_STOCK:
-                if(evaluatePrecio().getParametroDesc() == 1)
+                if(evaluatePrecio().getParametroDesc() == 2)
                     GetDescuento(seleccionado);
                 else
                     ShowProducto(0);

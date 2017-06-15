@@ -302,7 +302,8 @@
         Pendiente BOOLEAN,
         IdOportunidadTipo INTEGER,
         IdCanal INTEGER,
-        TipoPersona TEXT
+        TipoPersona TEXT,
+        CanalInfor TEXT
         )
     </statement>
     <statement>

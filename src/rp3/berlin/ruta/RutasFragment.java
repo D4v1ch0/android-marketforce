@@ -3,6 +3,8 @@ package rp3.berlin.ruta;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 import rp3.app.BaseFragment;
+import rp3.berlin.cliente.ComprasClienteActivity;
+import rp3.berlin.cliente.EstadoCuentaActivity;
 import rp3.configuration.PreferenceManager;
 import rp3.berlin.Contants;
 import rp3.berlin.R;
@@ -376,6 +378,35 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
                         Toast.makeText(getContext(), R.string.warning_seleccionar_agenda, Toast.LENGTH_LONG).show();
                     }
                     return true;
+                case R.id.action_estado_cuenta:
+                    if (selectedTransactionId != 0) {
+                        Agenda agd = Agenda.getAgenda(getDataBase(), selectedTransactionId);
+                        Cliente cli = Cliente.getClienteIDServer(getDataBase(), agd.getIdCliente(), false);
+                        if(cli != null) {
+                            Intent intent5 = new Intent(getContext(), EstadoCuentaActivity.class);
+                            intent5.putExtra(EstadoCuentaActivity.ARG_ID_CLIENTE, cli.getID());
+                            startActivity(intent5);
+                        }
+                        else
+                            Toast.makeText(getContext(), "Cliente ya no existe en su ruta.", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getContext(), R.string.warning_seleccionar_cliente, Toast.LENGTH_LONG).show();
+                    }
+                    break;
+                case R.id.action_compras_cliente:
+                    if (selectedTransactionId != 0) {
+                        Agenda agd = Agenda.getAgenda(getDataBase(), selectedTransactionId);
+                        Cliente cli = Cliente.getClienteIDServer(getDataBase(), agd.getIdCliente(), false);
+                        if (cli != null) {
+                            Intent intent6 = new Intent(getContext(), ComprasClienteActivity.class);
+                            intent6.putExtra(ComprasClienteActivity.ARG_ID_CLIENTE, cli.getID());
+                            startActivity(intent6);
+                        } else
+                            Toast.makeText(getContext(), "Cliente ya no existe en su ruta.", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getContext(), R.string.warning_seleccionar_cliente, Toast.LENGTH_LONG).show();
+                    }
+                    break;
 	    		/*case R.id.action_reprogramar:
 	    			if(selectedTransactionId != 0)
 	    			{
@@ -507,6 +538,8 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_suspender_agenda).setVisible(true);
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_no_visita).setVisible(true);
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_crear_agenda).setVisible(true);
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_estado_cuenta).setVisible(true);
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_compras_cliente).setVisible(true);
                         //menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setVisible(true);
                         //if(agenda.getPedido() != null && agenda.getPedido().getID() != 0)
                         //    menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setTitle("Editar Pedido");
@@ -576,6 +609,8 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_suspender_agenda).setVisible(false);
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_no_visita).setVisible(false);
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_crear_agenda).setVisible(false);
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_estado_cuenta).setVisible(false);
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_compras_cliente).setVisible(false);
                         //menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setVisible(false);
                     }
                 }
@@ -599,6 +634,8 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
                     menuRutas.getItem(i).getSubMenu().findItem(R.id.action_cambiar_contacto).setVisible(agenda != null);
                     //menuRutas.getItem(i).getSubMenu().findItem(R.id.action_reprogramar).setVisible(agenda != null);
                     menuRutas.getItem(i).getSubMenu().findItem(R.id.action_no_visita).setVisible(true);
+                    menuRutas.getItem(i).getSubMenu().findItem(R.id.action_estado_cuenta).setVisible(false);
+                    menuRutas.getItem(i).getSubMenu().findItem(R.id.action_compras_cliente).setVisible(false);
                     //menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setVisible(agenda != null);
                 }
             }
@@ -648,6 +685,8 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_cambiar_contacto).setVisible(false);
                         //menuRutas.getItem(i).getSubMenu().findItem(R.id.action_reprogramar).setVisible(false);
                         menuRutas.getItem(i).getSubMenu().findItem(R.id.action_no_visita).setVisible(false);
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_estado_cuenta).setVisible(false);
+                        menuRutas.getItem(i).getSubMenu().findItem(R.id.action_compras_cliente).setVisible(false);
                         //menuRutas.getItem(i).getSubMenu().findItem(R.id.action_asignar_pedido).setVisible(false);
                     }
                 }

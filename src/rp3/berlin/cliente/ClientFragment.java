@@ -208,45 +208,63 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
-            case R.id.action_editar_cliente:
-                Intent intent2 = new Intent(getActivity(), CrearClienteActivity.class);
-                intent2.putExtra(CrearClienteActivity.ARG_IDCLIENTE, selectedClientId);
-                startActivity(intent2);
-                break;
-            case R.id.action_crear_cliente:
-                Intent intent = new Intent(this.getActivity(), CrearClienteActivity.class);
-                startActivity(intent);
-                break;
-            //case R.id.action_import_contacts:
-            //    showDialogFragment(ImportChooseFragment.newInstance(), "Import");
-            //    break;
-            case R.id.action_ver_posicion:
-                if (!ConnectionUtils.isNetAvailable(getContext())) {
-                    Toast.makeText(getContext(), "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
-                } else if (selectedClientId != 0) {
-                    Intent intent3 = new Intent(getActivity(), MapaActivity.class);
-                    intent3.putExtra(MapaActivity.ACTION_TYPE, MapaActivity.ACTION_POSICION_CLIENTE);
-                    intent3.putExtra(MapaActivity.ARG_AGENDA, selectedClientId);
-                    startActivity(intent3);
-                } else {
-                    Toast.makeText(getContext(), "Debe seleccionar una cliente.", Toast.LENGTH_LONG).show();
-                }
-                return true;
-            case R.id.action_como_llegar:
-                if (!ConnectionUtils.isNetAvailable(getContext())) {
-                    Toast.makeText(getContext(), "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
-                } else if (selectedClientId != 0) {
-                    Intent intent4 = new Intent(getActivity(), MapaActivity.class);
-                    intent4.putExtra(MapaActivity.ACTION_TYPE, MapaActivity.ACTION_LLEGAR_CLIENTE);
-                    intent4.putExtra(MapaActivity.ARG_AGENDA, selectedClientId);
-                    startActivity(intent4);
-                } else {
-                    Toast.makeText(getContext(), R.string.warning_seleccionar_cliente, Toast.LENGTH_LONG).show();
-                }
-                return true;
-            default:
-                break;
-        }
+			case R.id.action_editar_cliente:
+				Intent intent2 = new Intent(getActivity(), CrearClienteActivity.class);
+				intent2.putExtra(CrearClienteActivity.ARG_IDCLIENTE, selectedClientId);
+				startActivity(intent2);
+				break;
+			case R.id.action_crear_cliente:
+				Intent intent = new Intent(this.getActivity(), CrearClienteActivity.class);
+				startActivity(intent);
+				break;
+			//case R.id.action_import_contacts:
+			//    showDialogFragment(ImportChooseFragment.newInstance(), "Import");
+			//    break;
+			case R.id.action_ver_posicion:
+				if (!ConnectionUtils.isNetAvailable(getContext())) {
+					Toast.makeText(getContext(), "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
+				} else if (selectedClientId != 0) {
+					Intent intent3 = new Intent(getActivity(), MapaActivity.class);
+					intent3.putExtra(MapaActivity.ACTION_TYPE, MapaActivity.ACTION_POSICION_CLIENTE);
+					intent3.putExtra(MapaActivity.ARG_AGENDA, selectedClientId);
+					startActivity(intent3);
+				} else {
+					Toast.makeText(getContext(), "Debe seleccionar una cliente.", Toast.LENGTH_LONG).show();
+				}
+				return true;
+			case R.id.action_como_llegar:
+				if (!ConnectionUtils.isNetAvailable(getContext())) {
+					Toast.makeText(getContext(), "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
+				} else if (selectedClientId != 0) {
+					Intent intent4 = new Intent(getActivity(), MapaActivity.class);
+					intent4.putExtra(MapaActivity.ACTION_TYPE, MapaActivity.ACTION_LLEGAR_CLIENTE);
+					intent4.putExtra(MapaActivity.ARG_AGENDA, selectedClientId);
+					startActivity(intent4);
+				} else {
+					Toast.makeText(getContext(), R.string.warning_seleccionar_cliente, Toast.LENGTH_LONG).show();
+				}
+				return true;
+			case R.id.action_estado_cuenta:
+				if (selectedClientId != 0) {
+					Intent intent5 = new Intent(getContext(), EstadoCuentaActivity.class);
+					intent5.putExtra(EstadoCuentaActivity.ARG_ID_CLIENTE, selectedClientId);
+					startActivity(intent5);
+				} else {
+					Toast.makeText(getContext(), R.string.warning_seleccionar_cliente, Toast.LENGTH_LONG).show();
+				}
+				break;
+			case R.id.action_compras_cliente:
+				if (selectedClientId != 0) {
+					Intent intent6 = new Intent(getContext(), ComprasClienteActivity.class);
+					intent6.putExtra(ComprasClienteActivity.ARG_ID_CLIENTE, selectedClientId);
+					startActivity(intent6);
+				} else {
+					Toast.makeText(getContext(), R.string.warning_seleccionar_cliente, Toast.LENGTH_LONG).show();
+				}
+				break;
+			default:
+				break;
+		}
 		return super.onOptionsItemSelected(item);
 	}
 	

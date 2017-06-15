@@ -236,12 +236,13 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
         opt.setDireccionReferencia(((EditText) view.findViewById(R.id.oportunidad_direccion_referencia)).getText().toString());
         opt.setPaginaWeb(((EditText) view.findViewById(R.id.oportunidad_pagina_web)).getText().toString());
         opt.setCorreo(((EditText) view.findViewById(R.id.oportunidad_email)).getText().toString());
-        opt.setIdCanal((int) ((Spinner) getRootView().findViewById(R.id.oportunidad_canal)).getAdapter().getItemId(((Spinner) getRootView().findViewById(R.id.oportunidad_canal)).getSelectedItemPosition()));
+        //opt.setIdCanal((int) ((Spinner) getRootView().findViewById(R.id.oportunidad_canal)).getAdapter().getItemId(((Spinner) getRootView().findViewById(R.id.oportunidad_canal)).getSelectedItemPosition()));
+        opt.setCanalInfor(((GeneralValue) ((Spinner) getRootView().findViewById(R.id.oportunidad_canal)).getSelectedItem()).getCode());
         opt.setTipoPersona(((GeneralValue) ((Spinner) getRootView().findViewById(R.id.oportunidad_tipo_persona)).getSelectedItem()).getCode());
         opt.setLongitud(oportunidad.getLongitud());
         opt.setLatitud(oportunidad.getLatitud());
         opt.setProbabilidad(((SeekBar) view.findViewById(R.id.oportunidad_probabilidad)).getProgress());
-        opt.setCanal(Canal.getCanal(getDataBase(), opt.getIdCanal()).getDescripcion());
+        opt.setCanal(((GeneralValue) ((Spinner) getRootView().findViewById(R.id.oportunidad_canal)).getSelectedItem()).getValue());
         opt.setPendiente(true);
 
 
@@ -641,7 +642,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
             tipos.add(oportunidadTipo.getDescripcion());
         }
 
-        SimpleIdentifiableAdapter tipoCanal = new SimpleIdentifiableAdapter(getContext(), Canal.getCanal(getDataBase(), ""));
+        SimpleGeneralValueAdapter tipoCanal = new SimpleGeneralValueAdapter(getContext(), getDataBase(), rp3.berlin.Contants.GENERAL_TABLE_CANAL_BERLIN);
         SimpleGeneralValueAdapter tipoPersonaAdapter = new SimpleGeneralValueAdapter(getContext(), getDataBase(), rp3.berlin.Contants.GENERAL_TABLE_TIPO_PERSONA);
 
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_spinner_dropdown_item, tipos.toArray(new String[tipos.size()]));
@@ -1019,6 +1020,11 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
         if(((TextView) view.findViewById(R.id.oportunidad_nombre)).length() <= 0)
         {
             Toast.makeText(getContext(), R.string.message_sin_descripcion, Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if(((TextView) view.findViewById(R.id.oportunidad_tipo)).length() <= 0)
+        {
+            Toast.makeText(getContext(), "Debe ingresar el número de Identificación", Toast.LENGTH_LONG).show();
             return false;
         }
         if(((TextView) view.findViewById(R.id.oportunidad_direccion)).length() <= 0)

@@ -86,18 +86,18 @@
         android:background="@color/color_grey_lines"></LinearLayout>
 
     <EditText
+        android:id="@+id/oportunidad_tipo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textCapSentences|textPersonName"
-        android:ems="10"
-        android:id="@+id/oportunidad_tipo"
         android:layout_gravity="center_horizontal"
-        android:hint="@string/label_tipo_empresa"
-        android:background="@color/caldroid_transparent"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="5dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp" />
+        android:background="@color/caldroid_transparent"
+        android:ems="10"
+        android:hint="@string/label_identificacion"
+        android:inputType="number"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp" />
 
     <LinearLayout
         android:orientation="vertical"

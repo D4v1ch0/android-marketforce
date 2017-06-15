@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="rp3.berlin"
-    android:versionCode="77"
+    android:versionCode="80"
     android:versionName="Berlin">
 
     <uses-sdk
@@ -79,7 +79,7 @@
         <activity
             android:name="rp3.berlin.StartActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoTitleBar" >
+            android:theme="@style/AppTheme.NoTitleBar" android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                <category android:name="android.intent.category.LAUNCHER" />
@@ -89,8 +89,7 @@
         <activity
             android:name="rp3.berlin.MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:configChanges="orientation">
+            android:configChanges="orientation" android:screenOrientation="portrait">
             <!-- Only Required for search dialog -->
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
@@ -185,10 +184,10 @@
         <activity android:name="rp3.berlin.actividades.ActualizacionActivity"></activity>
         <activity android:name="rp3.berlin.actividades.MultipleActivity" android:theme="@style/ActivityPopupTheme"></activity>
         <activity android:name="rp3.berlin.actividades.SeleccionActivity"></activity>
-        <activity android:name="rp3.berlin.actividades.GrupoActivity"></activity>
+        <activity android:name="rp3.berlin.actividades.GrupoActivity" android:screenOrientation="portrait"></activity>
         <activity android:name="rp3.berlin.actividades.NumericoActivity" android:theme="@style/ActivityPopupTheme"></activity>
         <activity android:name="rp3.berlin.ruta.ReprogramarActivity"></activity>
-        <activity android:name="rp3.berlin.ruta.CrearVisitaActivity"></activity>
+        <activity android:name="rp3.berlin.ruta.CrearVisitaActivity" android:screenOrientation="portrait"></activity>
         
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
@@ -202,8 +201,8 @@
 
         <!-- Modulo Oportunidades -->
         <activity android:name="rp3.berlin.oportunidad.FiltroOportunidadActivity"></activity>
-        <activity android:name="rp3.berlin.oportunidad.EtapaTareasActivity"></activity>
-        <activity android:name="rp3.berlin.oportunidad.EtapaActivity"></activity>
+        <activity android:name="rp3.berlin.oportunidad.EtapaTareasActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name="rp3.berlin.oportunidad.EtapaActivity" android:screenOrientation="portrait"></activity>
         <activity android:name="rp3.berlin.oportunidad.actividades.CheckboxActivity"></activity>
         <activity android:name="rp3.berlin.oportunidad.actividades.MultipleActivity" android:theme="@style/ActivityPopupTheme"></activity>
         <activity android:name="rp3.berlin.oportunidad.actividades.SeleccionActivity"></activity>

@@ -174,8 +174,11 @@ public class ClientListAdapter extends SectionAdapter{
 				string_client = current.getNombre1();
 			break;
 		}
-		
-		((TextView) convertView.findViewById(R.id.textView_clientlist_name)).setText(""+string_client);
+
+		if(current.getIdExterno() != null)
+			((TextView) convertView.findViewById(R.id.textView_clientlist_name)).setText(current.getIdExterno() + " - " +string_client);
+		else
+			((TextView) convertView.findViewById(R.id.textView_clientlist_name)).setText(""+string_client);
 		
 		if(current.getCorreoElectronico()!= null)
 			if(!current.getCorreoElectronico().equals("null"))

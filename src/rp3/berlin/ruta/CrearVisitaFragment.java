@@ -39,6 +39,7 @@ import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
 import rp3.app.BaseFragment;
+import rp3.configuration.PreferenceManager;
 import rp3.content.SimpleGeneralValueAdapter;
 import rp3.berlin.Contants;
 import rp3.berlin.R;
@@ -123,7 +124,7 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 
         list_cliente = Cliente.getClientAndContacts(getDataBase());
         for (Cliente cli : list_cliente) {
-            list_nombres.add(cli.getNombreCompleto().trim());
+            list_nombres.add(cli.getIdExterno() + " - " + cli.getNombreCompleto().trim());
         }
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(), R.layout.spinner_small_text, list_nombres);
 
@@ -411,6 +412,10 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
                         Toast.makeText(getContext(), "Nombre de Cliente incorrecto.", Toast.LENGTH_LONG).show();
                         return true;
                     }
+                    if (((EditText) getRootView().findViewById(R.id.crear_visita_valor_venta)).length() <= 0) {
+                        Toast.makeText(getContext(), "Debe ingresar un valor de venta.", Toast.LENGTH_LONG).show();
+                        return true;
+                    }
                     Cliente cli = list_cliente.get(list_nombres.indexOf(cliente_auto.getText().toString()));
                     Pedido pedido = Pedido.getPedidoInconclusoCliente(getDataBase(), (int) cli.getIdCliente());
                     if(pedido == null)
@@ -496,7 +501,7 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
         agenda.set_idCliente(agenda.getCliente().getID());
         agenda.setIdClienteDireccion(agenda.getClienteDireccion().getIdClienteDireccion());
         agenda.set_idClienteDireccion(agenda.getClienteDireccion().getID());
-        agenda.setIdRuta(0);
+        agenda.setIdRuta(PreferenceManager.getInt(Contants.KEY_IDRUTA));
         agenda.setNombreCompleto(agenda.getCliente().getNombreCompleto().trim());
         Calendar fc = Calendar.getInstance();
         fc.set(Calendar.MILLISECOND, 0);
@@ -525,7 +530,7 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
             agendaTarea.setIdAgenda(0);
             agendaTarea.set_idAgenda(agenda.getID());
             agendaTarea.setEstadoTarea("P");
-            agendaTarea.setIdRuta(0);
+            agendaTarea.setIdRuta(PreferenceManager.getInt(Contants.KEY_IDRUTA));
             agendaTarea.setIdTarea(tarea.getIdTarea());
             AgendaTarea.insert(getDataBase(), agendaTarea);
         }

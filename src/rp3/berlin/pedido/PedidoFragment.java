@@ -329,25 +329,32 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                 startActivity(intent4);
                 break;
             case R.id.action_crear_pedido:
-                AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
+                int conteoProductos = Producto.conteoProductos(getDataBase());
+                if(conteoProductos > 0) {
+                    AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
 
-                final SimpleGeneralValueAdapter adapter = new SimpleGeneralValueAdapter(this.getContext(), GeneralValue.getGeneralValues(getDataBase(), Contants.GENERAL_TABLE_TIPOS_TRANSACCION, "NC"));
-                builderSingle.setTitle("Seleccione tipo de transacción");
+                    final SimpleGeneralValueAdapter adapter = new SimpleGeneralValueAdapter(this.getContext(), GeneralValue.getGeneralValues(getDataBase(), Contants.GENERAL_TABLE_TIPOS_TRANSACCION, "NC"));
+                    builderSingle.setTitle("Seleccione tipo de transacción");
 
-                builderSingle.setAdapter(
-                        adapter,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (PreferenceManager.getBoolean(adapter.getGeneralValue(which).getCode(), true)) {
-                                    PedidoParametrosFragment pedidoParametrosFragment = PedidoParametrosFragment.newInstance(adapter.getGeneralValue(which).getCode());
-                                    showDialogFragment(pedidoParametrosFragment, "Cabecera", adapter.getGeneralValue(which).getValue());
-                                } else {
-                                    Toast.makeText(getContext(), "No tiene permisos para realizar esta transacción.", Toast.LENGTH_LONG).show();
+                    builderSingle.setAdapter(
+                            adapter,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if (PreferenceManager.getBoolean(adapter.getGeneralValue(which).getCode(), true)) {
+                                        PedidoParametrosFragment pedidoParametrosFragment = PedidoParametrosFragment.newInstance(adapter.getGeneralValue(which).getCode());
+                                        showDialogFragment(pedidoParametrosFragment, "Cabecera", adapter.getGeneralValue(which).getValue());
+                                    } else {
+                                        Toast.makeText(getContext(), "No tiene permisos para realizar esta transacción.", Toast.LENGTH_LONG).show();
+                                    }
                                 }
-                            }
-                        });
-                builderSingle.show();
+                            });
+                    builderSingle.show();
+                }
+                else
+                {
+                    showDialogMessage("Sin Productos", "Debe sincronizar los productos para realizar transacciones.");
+                }
 
                 break;
             case R.id.action_sincronizar_productos:

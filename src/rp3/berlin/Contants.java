@@ -21,6 +21,7 @@ public class Contants {
     public final static int GENERAL_TABLE_TIPOS_TRANSACCION = 1621;
     public final static int GENERAL_TABLE_BODEGAS_BERLIN = 2000;
     public final static int GENERAL_TABLE_AVISOS_BERLIN = 2001;
+    public final static int GENERAL_TABLE_CANAL_BERLIN = 2002;
     public final static int GENERAL_TABLE_LINEA_BERLIN = 2009;
     public final static int GENERAL_TABLE_SERIES_BERLIN = 2015;
     public final static int GENERAL_TABLE_TIPO_ORDEN_BERLIN = 2016;

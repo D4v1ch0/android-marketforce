@@ -357,7 +357,7 @@ public class OportunidadDetailFragment extends BaseFragment {
             }
 
             ((TextView) view_info.findViewById(R.id.oportunidad_direccion)).setText(opt.getDireccion());
-            ((TextView) view_info.findViewById(R.id.oportunidad_medio_referencia)).setText(opt.getReferencia());
+            ((TextView) view_info.findViewById(R.id.oportunidad_medio_referencia)).setText(opt.getTipoEmpresa());
             ((TextView) view_info.findViewById(R.id.oportunidad_referencia)).setText(opt.getDireccionReferencia());
             ((TextView) view_info.findViewById(R.id.oportunidades_comentarios)).setText(opt.getObservacion());
 

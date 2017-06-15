@@ -51,6 +51,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
     private int idCanal;
     private String tipoPersona;
     private String canal;
+    private String canalInfor;
 
     private List<OportunidadContacto> oportunidadContactos;
     private List<OportunidadResponsable> oportunidadResponsables;
@@ -323,6 +324,14 @@ public class Oportunidad extends EntityBase<Oportunidad> {
         this.oportunidadResponsables = oportunidadResponsables;
     }
 
+    public String getCanalInfor() {
+        return canalInfor;
+    }
+
+    public void setCanalInfor(String canalInfor) {
+        this.canalInfor = canalInfor;
+    }
+
     public List<OportunidadTarea> getOportunidadTareas() {
         return oportunidadTareas;
     }
@@ -391,6 +400,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
         setValue(Contract.Oportunidad.COLUMN_ID_OPORTUNIDAD_TIPO, this.idOportunidadTipo);
         setValue(Contract.Oportunidad.COLUMN_ID_CANAL, this.idCanal);
         setValue(Contract.Oportunidad.COLUMN_TIPO_PERSONA, this.tipoPersona);
+        setValue(Contract.Oportunidad.COLUMN_CANAL_INFOR, this.canalInfor);
     }
 
     @Override
@@ -439,6 +449,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
             opt.setIdCanal(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_ID_CANAL));
             opt.setTipoPersona(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TIPO_PERSONA));
             opt.setCanal(CursorUtils.getString(c, Contract.Oportunidad.FIELD_CANAL));
+            opt.setCanalInfor(CursorUtils.getString(c, Contract.Oportunidad.FIELD_CANAL_INFOR));
             opt.setEtapa(Etapa.getEtapaById(db, opt.getIdEtapa()));
             opt.setAgente(Agente.getAgente(db, opt.getIdAgente()));
             opt.setMaxEtapas(Etapa.getEtapasPadres(db, opt.getIdOportunidadTipo()));
@@ -491,6 +502,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
             opt.setIdCanal(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_ID_CANAL));
             opt.setTipoPersona(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TIPO_PERSONA));
             opt.setCanal(CursorUtils.getString(c, Contract.Oportunidad.FIELD_CANAL));
+            opt.setCanalInfor(CursorUtils.getString(c, Contract.Oportunidad.FIELD_CANAL_INFOR));
             opt.setEtapa(Etapa.getEtapaById(db, opt.getIdEtapa()));
             opt.setAgente(Agente.getAgente(db, opt.getIdAgente()));
             opt.setMaxEtapas(Etapa.getEtapasPadres(db, opt.getIdOportunidadTipo()));
@@ -618,6 +630,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
             opt.setIdCanal(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_ID_CANAL));
             opt.setTipoPersona(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TIPO_PERSONA));
             opt.setCanal(CursorUtils.getString(c, Contract.Oportunidad.FIELD_CANAL));
+            opt.setCanalInfor(CursorUtils.getString(c, Contract.Oportunidad.FIELD_CANAL_INFOR));
             opt.setEtapa(Etapa.getEtapaById(db, opt.getIdEtapa()));
             opt.setAgente(Agente.getAgente(db, opt.getIdAgente()));
             opt.setMaxEtapas(Etapa.getEtapasPadres(db, opt.getIdOportunidadTipo()));
@@ -699,6 +712,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
             opt.setIdOportunidadTipo(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_ID_OPORTUNIDAD_TIPO));
             opt.setIdCanal(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_ID_CANAL));
             opt.setTipoPersona(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TIPO_PERSONA));
+            opt.setCanalInfor(CursorUtils.getString(c, Contract.Oportunidad.FIELD_CANAL_INFOR));
             opt.setCanal(CursorUtils.getString(c, Contract.Oportunidad.FIELD_CANAL));
             opt.setAgente(Agente.getAgente(db, opt.getIdAgente()));
             opt.setEtapa(Etapa.getEtapaById(db, opt.getIdEtapa()));
@@ -761,6 +775,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
             opt.setIdCanal(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_ID_CANAL));
             opt.setTipoPersona(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TIPO_PERSONA));
             opt.setCanal(CursorUtils.getString(c, Contract.Oportunidad.FIELD_CANAL));
+            opt.setCanalInfor(CursorUtils.getString(c, Contract.Oportunidad.FIELD_CANAL_INFOR));
 
             opt.setOportunidadContactos(OportunidadContacto.getContactosOportunidad(db, opt.getIdOportunidad()));
             opt.setOportunidadResponsables(OportunidadResponsable.getResponsablesOportunidad(db, opt.getIdOportunidad()));
@@ -809,6 +824,7 @@ public class Oportunidad extends EntityBase<Oportunidad> {
             opt.setIdCanal(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_ID_CANAL));
             opt.setTipoPersona(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TIPO_PERSONA));
             opt.setCanal(CursorUtils.getString(c, Contract.Oportunidad.FIELD_CANAL));
+            opt.setCanalInfor(CursorUtils.getString(c, Contract.Oportunidad.FIELD_CANAL_INFOR));
 
             opt.setOportunidadContactos(OportunidadContacto.getContactosOportunidadInt(db, opt.getID()));
             opt.setOportunidadResponsables(OportunidadResponsable.getResponsablesOportunidadInt(db, opt.getID()));

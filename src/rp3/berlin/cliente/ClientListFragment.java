@@ -382,6 +382,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
                                 cliente.setDireccion(lista.get(y).getDireccion());
                                 cliente.setCorreoElectronico(lista.get(y).getCorreoElectronico());
                                 cliente.setTipoPersona(lista.get(y).getTipoPersona());
+                                cliente.setIdExterno(lista.get(y).getIdExterno());
 
                                 list_aux.add(cliente);
                             }
@@ -435,6 +436,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
                                     cliente.setDireccion(lista.get(y).getDireccion());
                                     cliente.setCorreoElectronico(lista.get(y).getCorreoElectronico());
                                     cliente.setTipoPersona(lista.get(y).getTipoPersona());
+                                    cliente.setIdExterno(lista.get(y).getIdExterno());
 
                                     list_aux.add(cliente);
                                 }
@@ -450,6 +452,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
                                 cliente.setDireccion(lista.get(y).getDireccion());
                                 cliente.setCorreoElectronico(lista.get(y).getCorreoElectronico());
                                 cliente.setTipoPersona(lista.get(y).getTipoPersona());
+                                cliente.setIdExterno(lista.get(y).getIdExterno());
 
                                 list_aux.add(cliente);
                             }

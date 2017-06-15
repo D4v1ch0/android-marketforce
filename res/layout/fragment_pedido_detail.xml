@@ -141,7 +141,8 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/color_text_sky_blue"
             android:textSize="@dimen/text_small_size"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="gone" />
 
         <TextView
             android:layout_width="0dp"
@@ -168,17 +169,17 @@
             android:visibility="visible" />
 
         <TextView
+            android:id="@+id/textView78"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/label_valor_unitario"
-            android:id="@+id/textView78"
             android:layout_weight="0.2"
+            android:gravity="center"
+            android:text="@string/label_valor_unitario_short"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/color_text_sky_blue"
-            android:textStyle="bold"
             android:textSize="@dimen/text_small_size"
-            android:gravity="right"
-            android:visibility="gone" />
+            android:textStyle="bold"
+            android:visibility="visible" />
 
         <TextView
             android:id="@+id/textView97"

@@ -582,6 +582,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 			cl.setTelefono(CursorUtils.getString(c, Contract.ClientExt.COLUMN_TELEFONO));
 			cl.setTipoPersona(CursorUtils.getString(c, Contract.Cliente.COLUMN_TIPO_PERSONA));
 			cl.setIdCliente(CursorUtils.getInt(c, Contract.Cliente.COLUMN_ID_CLIENTE));
+			cl.setIdExterno(CursorUtils.getString(c, Contract.ClientExt.COLUMN_ID_EXTERNO));
 			if(cl.getTipoPersona().equalsIgnoreCase("C")) {
 				Cliente cliente = getClienteIDServer(db, cl.getIdCliente(), false);
 				if(cliente == null)

@@ -65,7 +65,8 @@ public class Oportunidad {
                 jObject.put("Telefono1", oportunidadUpload.getTelefono1());
                 jObject.put("Telefono2", oportunidadUpload.getTelefono2());
                 jObject.put("PaginaWeb", oportunidadUpload.getPaginaWeb());
-                jObject.put("IdCanal", oportunidadUpload.getIdCanal());
+                jObject.put("IdCanal", 1);
+                jObject.put("CanalInfor", oportunidadUpload.getCanalInfor());
                 jObject.put("TipoPersona", oportunidadUpload.getTipoPersona());
 
                 JSONArray jArrayTareas = new JSONArray();
@@ -354,7 +355,8 @@ public class Oportunidad {
                 jObject.put("Telefono1", oportunidadUpload.getTelefono1());
                 jObject.put("Telefono2", oportunidadUpload.getTelefono2());
                 jObject.put("PaginaWeb", oportunidadUpload.getPaginaWeb());
-                jObject.put("IdCanal", oportunidadUpload.getIdCanal());
+                jObject.put("IdCanal", 1);
+                jObject.put("CanalInfor", oportunidadUpload.getCanalInfor());
                 jObject.put("TipoPersona", oportunidadUpload.getTipoPersona());
 
                 JSONArray jArrayTareas = new JSONArray();
@@ -739,6 +741,7 @@ public class Oportunidad {
                     opt.setCalificacion(type.getInt("Calificacion"));
                     opt.setIdAgente(type.getInt("IdAgente"));
                     opt.setIdCanal(type.getInt("IdCanal"));
+                    opt.setCanalInfor(type.getString("CanalInfor"));
                     opt.setTipoPersona(type.getString("TipoPersona"));
                     opt.setFechaCreacion(Convert.getDateFromDotNetTicks(type.getLong("FechaCreacionTicks")));
                     opt.setFechaUltimaGestion(Convert.getDateFromDotNetTicks(type.getLong("FechaUltimaGestionTicks")));

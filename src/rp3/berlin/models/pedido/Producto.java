@@ -442,7 +442,7 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
         String termSearchSpace = getSearchString(termSearch);
         String parameter = termSearch.replace(" ", "").trim() + "*";
 
-        c = db.rawQuery(query, new String[]{parameter, serie});
+        c = db.rawQuery(query, new String[]{parameter + " OR " + termSearch + "*", serie});
 
 
         List<Producto> list = new ArrayList<Producto>();
@@ -476,7 +476,7 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
         String termSearchSpace = getSearchString(termSearch);
         String parameter = termSearch.replace(" ", "").trim() + "*";
 
-        c = db.rawQuery(query, new String[]{parameter});
+        c = db.rawQuery(query, new String[]{parameter + " OR " + termSearch + "*"});
 
 
         List<Producto> list = new ArrayList<Producto>();
@@ -510,7 +510,7 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
         String termSearchSpace = getSearchString(termSearch);
         String parameter = termSearch.replace(" ", "").trim() + "*";
 
-        c = db.rawQuery(query, new String[]{parameter, idSubCategoria + "", serie});
+        c = db.rawQuery(query, new String[]{parameter + " OR " + termSearch + "*", idSubCategoria + "", serie});
 
 
         List<Producto> list = new ArrayList<Producto>();

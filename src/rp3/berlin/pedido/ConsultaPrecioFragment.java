@@ -222,6 +222,13 @@ public class ConsultaPrecioFragment extends BaseFragment {
                                    List<LibroPrecio> data) {
 
             try {
+                if(((EditText) getRootView().findViewById(R.id.precio_producto)).getText().length() > 0 && ((RadioButton) getRootView().findViewById(R.id.precio_general)).isChecked() && data.size() > 0)
+                {
+                    LibroPrecio libroPrecio = data.get(0);
+                    List<LibroPrecio> newData = new ArrayList<>();
+                    newData.add(libroPrecio);
+                    data = newData;
+                }
                 Collections.sort(data, new Comparator<LibroPrecio>() {
                     @Override
                     public int compare(final LibroPrecio object1, final LibroPrecio object2) {
