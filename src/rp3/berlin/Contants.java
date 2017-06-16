@@ -57,6 +57,7 @@ public class Contants {
 	public final static String KEY_ES_ADMINISTRADOR = "EsAdministrador";
     public final static String KEY_ID_SUPERVISOR = "IdSupervisor";
     public final static String KEY_DESCUENTO_MAXIMO = "DescuentoMaximo";
+    public final static String KEY_CIUDAD = "Ciudad";
 	public final static String KEY_CARGO = "Cargo";
     public final static String KEY_FOTO = "Foto";
     public final static String KEY_GPS_NOTIFICATION = "NotificationGPS";

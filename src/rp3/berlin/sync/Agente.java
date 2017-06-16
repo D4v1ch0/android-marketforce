@@ -151,6 +151,8 @@ public class Agente {
 				PreferenceManager.setValue(Contants.KEY_CARGO, jObject.getString(Contants.KEY_CARGO));
                 if(!jObject.isNull(Contants.KEY_DESCUENTO_MAXIMO))
                     PreferenceManager.setValue(Contants.KEY_DESCUENTO_MAXIMO, jObject.getInt(Contants.KEY_DESCUENTO_MAXIMO));
+                if(!jObject.isNull(Contants.KEY_CIUDAD))
+                    PreferenceManager.setValue(Contants.KEY_CIUDAD, jObject.getString(Contants.KEY_CIUDAD));
 			} catch (HttpResponseException e) {
 				if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
 					return SyncAdapter.SYNC_EVENT_AUTH_ERROR;

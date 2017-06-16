@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="rp3.berlin"
-    android:versionCode="80"
+    android:versionCode="81"
     android:versionName="Berlin">
 
     <uses-sdk
@@ -209,10 +209,10 @@
         <activity android:name="rp3.berlin.oportunidad.actividades.GrupoActivity"></activity>
         <activity android:name="rp3.berlin.oportunidad.actividades.TextoActivity" android:theme="@style/ActivityPopupTheme"></activity>
         <activity android:name="rp3.berlin.oportunidad.actividades.NumericoActivity" android:theme="@style/ActivityPopupTheme"></activity>
-        <activity android:name="rp3.berlin.oportunidad.CrearOportunidadActivity" android:configChanges="orientation"></activity>
+        <activity android:name="rp3.berlin.oportunidad.CrearOportunidadActivity" android:configChanges="orientation" android:screenOrientation="portrait"></activity>
         <activity android:name="rp3.berlin.oportunidad.FotoOportunidadActivity"></activity>
         <activity android:name="rp3.berlin.oportunidad.CambiarEstadoActivity" android:theme="@style/MyAppPopupTheme"></activity>
-        <activity android:name="rp3.berlin.utils.MapActivity" android:theme="@style/AppDialogTheme"></activity>
+        <activity android:name="rp3.berlin.utils.MapActivity" android:theme="@style/AppDialogTheme" android:screenOrientation="portrait"></activity>
         <!-- Modulo Marcaciones -->
         <activity android:name="rp3.berlin.marcaciones.MarcacionActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" >

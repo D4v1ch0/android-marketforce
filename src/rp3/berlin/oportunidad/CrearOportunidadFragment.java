@@ -77,6 +77,7 @@ import rp3.berlin.utils.NothingSelectedSpinnerAdapter;
 import rp3.berlin.utils.Utils;
 import rp3.util.ConnectionUtils;
 import rp3.util.GooglePlayServicesUtils;
+import rp3.util.IdentificationValidator;
 import rp3.util.LocationUtils;
 import rp3.util.StringUtils;
 
@@ -1027,6 +1028,15 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
             Toast.makeText(getContext(), "Debe ingresar el número de Identificación", Toast.LENGTH_LONG).show();
             return false;
         }
+        if(((EditText) view.findViewById(R.id.oportunidad_tipo)).getText().toString().trim().length() > 0 && view.findViewById(R.id.oportunidad_tipo).isEnabled())
+        {
+            if(!IdentificationValidator.ValidateIdentification(this.getDataBase(),((EditText) view.findViewById(R.id.oportunidad_tipo)).getText().toString(), 1))
+            {
+                Toast.makeText(getContext(), "Número de identificación incorrecto.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        }
+
         if(((TextView) view.findViewById(R.id.oportunidad_direccion)).length() <= 0)
         {
             Toast.makeText(getContext(), R.string.message_sin_direccion, Toast.LENGTH_LONG).show();
