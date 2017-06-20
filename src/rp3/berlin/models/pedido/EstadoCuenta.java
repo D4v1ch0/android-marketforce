@@ -16,6 +16,8 @@ public class EstadoCuenta {
     private double valor;
     private double abono;
     private double saldo;
+    private double pagosAplic;
+    private double interes;
 
     public String getDocumento() {
         return documento;
@@ -57,6 +59,22 @@ public class EstadoCuenta {
         this.valor = valor;
     }
 
+    public double getPagosAplic() {
+        return pagosAplic;
+    }
+
+    public void setPagosAplic(double pagosAplic) {
+        this.pagosAplic = pagosAplic;
+    }
+
+    public double getInteres() {
+        return interes;
+    }
+
+    public void setInteres(double interes) {
+        this.interes = interes;
+    }
+
     public double getAbono() {
         return abono;
     }
@@ -80,4 +98,6 @@ public class EstadoCuenta {
     public void setDiasXVencer(int diasXVencer) {
         this.diasXVencer = diasXVencer;
     }
+
+
 }

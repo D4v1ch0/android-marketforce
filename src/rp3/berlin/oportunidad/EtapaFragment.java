@@ -118,6 +118,13 @@ public class EtapaFragment extends BaseFragment {
         else
             esActiva = true;
 
+        Etapa next = Etapa.getEtapaNext(getDataBase(), etapa.getOrden() + 1, opt.getIdOportunidadTipo());
+        if(next.getID() == 0)
+        {
+            getRootView().findViewById(R.id.finalizar_etapa).setVisibility(View.GONE);
+            esActiva = false;
+        }
+
         tareas = new ArrayList<OportunidadTarea>();
         List<OportunidadTarea> subTareas = OportunidadTarea.getTareasOportunidadByEtapa(getDataBase(), opt.getIdOportunidad(), idEtapa);
         if(subTareas.size() > 0) {

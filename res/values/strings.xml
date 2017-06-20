@@ -501,4 +501,6 @@
     <string name="label_con_descuento">Con Dscto:</string>
     <string name="label_valor_unitario_short">V. Unit.</string>
     <string name="label_identificacion_max">IDENTIFICACIÓN</string>
+    <string name="label_cupo_credito">Cupo Crédito:</string>
+    <string name="label_saldo_disponible">Saldo Disponible:</string>
 </resources>

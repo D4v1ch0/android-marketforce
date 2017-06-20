@@ -32,6 +32,7 @@ public class EstadoCuentaFragment extends BaseFragment {
     public static String ARG_CLIENTE = "idcliente";
 
     private long idCliente;
+    private Cliente cli;
     private NumberFormat numberFormat;
 
     public static EstadoCuentaFragment newInstance(long idCliente)
@@ -70,7 +71,7 @@ public class EstadoCuentaFragment extends BaseFragment {
         numberFormat.setMinimumFractionDigits(2);
 
         idCliente = getArguments().getLong(ARG_CLIENTE, 0);
-        Cliente cli = Cliente.getClienteID(getDataBase(), idCliente, false);
+        cli = Cliente.getClienteID(getDataBase(), idCliente, false);
 
         ((TextView) rootView.findViewById(R.id.estado_cuenta_cliente)).setText(cli.getNombreCompleto());
 
@@ -126,6 +127,16 @@ public class EstadoCuentaFragment extends BaseFragment {
                 else
                     estadoCuenta.setSaldo(jsonObject.getDouble("Saldo"));
 
+                if(jsonObject.isNull("PagosAplic"))
+                    estadoCuenta.setPagosAplic(0);
+                else
+                    estadoCuenta.setPagosAplic(jsonObject.getDouble("PagosAplic"));
+
+                if(jsonObject.isNull("Interes"))
+                    estadoCuenta.setInteres(0);
+                else
+                    estadoCuenta.setInteres(jsonObject.getDouble("Interes"));
+
                 estadoCuenta.setValor(jsonObject.getDouble("Monto"));
                 listEstadoCuenta.add(estadoCuenta);
             }
@@ -159,26 +170,26 @@ public class EstadoCuentaFragment extends BaseFragment {
                             {
                                 if(estado.getDiasVencidos() > 60)
                                 {
-                                    vencida_61 = vencida_61 + estado.getSaldo();
+                                    vencida_61 = vencida_61 + estado.getSaldo() + estado.getInteres();
                                 }
                                 else
                                 {
-                                    vencida_31_60 = vencida_31_60 + estado.getSaldo();
+                                    vencida_31_60 = vencida_31_60 + estado.getSaldo() + estado.getInteres();
                                 }
                             }
                             else
                             {
-                                vencida_16_30 = vencida_16_30 + estado.getSaldo();
+                                vencida_16_30 = vencida_16_30 + estado.getSaldo() + estado.getInteres();
                             }
                         }
                         else
                         {
-                            vencida_9_15 = vencida_9_15 + estado.getSaldo();
+                            vencida_9_15 = vencida_9_15 + estado.getSaldo() + estado.getInteres();
                         }
                     }
                     else
                     {
-                        vencida_0_8 = vencida_0_8 + estado.getSaldo();
+                        vencida_0_8 = vencida_0_8 + estado.getSaldo() + estado.getInteres();
                     }
                 } else {
                     //Cartera por vencer
@@ -187,16 +198,16 @@ public class EstadoCuentaFragment extends BaseFragment {
                     {
                         if(diasXVencer > 60)
                         {
-                            vencer_61 = vencer_61 + estado.getSaldo();
+                            vencer_61 = vencer_61 + estado.getSaldo() + estado.getInteres();
                         }
                         else
                         {
-                            vencer_31_60 = vencer_31_60 + estado.getSaldo();
+                            vencer_31_60 = vencer_31_60 + estado.getSaldo() + estado.getInteres();
                         }
                     }
                     else
                     {
-                        vencer_1_30 = vencer_1_30 + estado.getSaldo();
+                        vencer_1_30 = vencer_1_30 + estado.getSaldo() + estado.getInteres();
                     }
                 }
             }
@@ -218,5 +229,7 @@ public class EstadoCuentaFragment extends BaseFragment {
         ((TextView) getRootView().findViewById(R.id.estado_cuenta_vencer_61_mas)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(vencer_61));
         ((TextView) getRootView().findViewById(R.id.estado_cuenta_vencer_total)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(total_vencer));
         ((TextView) getRootView().findViewById(R.id.estado_cuenta_total)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(total_saldos));
+        ((TextView) getRootView().findViewById(R.id.estado_cuenta_cupo_credito)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(cli.getLimiteCredito()));
+        ((TextView) getRootView().findViewById(R.id.estado_cuenta_saldo_disponible)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(cli.getLimiteCredito() - total_saldos));
     }
 }
