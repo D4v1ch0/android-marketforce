@@ -24,6 +24,7 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -39,7 +40,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class ClientDetailActivity extends rp3.app.BaseActivity implements ClienteDetailFragmentListener {
-
+	private static final String TAG = ClientDetailActivity.class.getSimpleName();
 	private long transactionId;
 	private final String STATE_TRANSACTIONID = "transactionId";
 	private ClientDetailFragment transactionDetailFragment;
@@ -51,7 +52,6 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
 
 	public static final String STATE_CLIENT_ID = "clientId";
 	public static final String STATE_CLIENT_TIPO_PERSONA = "tipoPersona";
-
 	private long clientId;
 	private String tipoPersona;
 	private LayoutInflater inflater;
@@ -106,7 +106,8 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DManager = new DrawableManager();
+		Log.d(TAG,"onCreate...");
+		DManager = new DrawableManager();
         setHomeAsUpEnabled(true, true);	
 
 		if (getIntent().getExtras().containsKey(ARG_ITEM_ID)) {
@@ -130,7 +131,7 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
     @Override
 	public void onResume() {		
 		super.onResume();
-		
+		Log.d(TAG,"onResume...");
 		if (clientId != 0) {
 			if(tipoPersona != null && tipoPersona.equalsIgnoreCase("C"))
 			{
@@ -940,12 +941,14 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
     protected void onSaveInstanceState(Bundle outState) {
     	// TODO Auto-generated method stub
     	super.onSaveInstanceState(outState);
-    	outState.putLong(STATE_TRANSACTIONID,transactionId);    	
+    	outState.putLong(STATE_TRANSACTIONID,transactionId);
+		Log.d(TAG,"onSaveInstanceState...");
     }
 
 	@Override
 	public void onClienteChanged(Cliente cliente) {
-		finish();		
+		finish();
+		Log.d(TAG,"onClienteChanged...");
 	}    
     
 	private void showDetailDialog(long transactionDetailId) {
@@ -982,5 +985,41 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
         }
 		return super.onOptionsItemSelected(item);
 	}
-    
+
+	/**
+	 *
+	 * Ciclo de vida
+	 *
+	 */
+	@Override
+	public void onStart() {
+		super.onStart();
+		Log.d(TAG,"onStart...");
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		Log.d(TAG,"onStop...");
+	}
+
+
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.d(TAG,"onPause...");
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Log.d(TAG,"onDestroy...");
+	}
+
+	@Override
+	public void finish() {
+		super.finish();
+		Log.d(TAG,"finish...");
+	}
 }

@@ -71,7 +71,7 @@ import rp3.marketforce.ruta.ReprogramarActivity;
 import rp3.util.ConnectionUtils;
 
 public class RecorridoFragment  extends BaseFragment {
-	
+	private static final String TAG = RecorridoFragment.class.getSimpleName();
 	private GoogleMap map;
 	private ArrayList<Marker> markers;
 	private static View view;
@@ -94,12 +94,13 @@ public class RecorridoFragment  extends BaseFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
-		
+		Log.d(TAG,"onCreate...");
 	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 	    if (view != null) {
+            Log.d(TAG,"onCreteView...!=null");
 	        ViewGroup parent = (ViewGroup) view.getParent();
 	        if (parent != null)
 	            parent.removeView(view);
@@ -120,6 +121,7 @@ public class RecorridoFragment  extends BaseFragment {
             });
 	    }
         else {
+            Log.d(TAG,"onCreateView...==null");
             try {
                 view = inflater.inflate(R.layout.fragment_recorrido, container, false);
                 showDialogProgress("Cargando", "Mostrando Mapa");
@@ -455,4 +457,39 @@ public class RecorridoFragment  extends BaseFragment {
 
 	    return  bm;
 	}
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
+    }
 }

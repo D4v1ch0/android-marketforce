@@ -21,6 +21,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,7 +32,7 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 public class ClientFragment extends BaseFragment implements ClienteListFragmentListener, ClienteDetailFragmentListener {
-	
+	private static final String TAG = ClientFragment.class.getSimpleName();
 	private static final int PARALLAX_SIZE = 0;
 	
 	private ClientListFragment transactionListFragment;
@@ -72,7 +73,8 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
 	
 	@Override
 	public void onResume() {		
-		super.onResume();				
+		super.onResume();
+		Log.d(TAG,"onResume...");
 	}
 	
 	@SuppressLint("NewApi")
@@ -129,7 +131,7 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
 	public void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
-		
+		Log.d(TAG,"onStart...");
 		if(selectedClientId != 0){
 			if(!mTwoPane)			
 				slidingPane.closePane();			
@@ -192,7 +194,7 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
 	@Override
 	public void onClienteSelected(Cliente cl) {
 		selectedClientId = cl.getID();
-
+		Log.d(TAG,"onClienteSelected...:"+cl.toString());
 		if(!mTwoPane) {
 			slidingPane.closePane();
 			isActiveListFragment = false;
@@ -261,10 +263,36 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
 	public void onClienteChanged(Cliente cliente) {
 		transactionListFragment.actualizarCliente(cliente);
 		onClienteSelected(cliente);
+		Log.d(TAG,"onClienteChanged:"+cliente.toString());
 	}
 
 	@Override
 	public void onFinalizaConsulta() {		
-	}	
-	
+	}
+	/**
+	 *
+	 * Ciclo de vida
+	 *
+	 */
+
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		Log.d(TAG,"onStop...");
+	}
+
+
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.d(TAG,"onPause...");
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Log.d(TAG,"onDestroy...");
+	}
 }

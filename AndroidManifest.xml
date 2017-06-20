@@ -5,7 +5,7 @@
     android:versionName="1.4.6j">
 
     <uses-sdk
-        android:minSdkVersion="13"
+        android:minSdkVersion="14"
         android:targetSdkVersion="19" />
     
     
@@ -122,7 +122,8 @@
             android:windowSoftInputMode="stateHidden">                        
         </activity>
         
-          <activity android:name=".actividades.TextoActivity" android:theme="@style/ActivityPopupTheme"></activity><service android:name="rp3.accounts.AuthenticatorService" >
+          <activity android:name=".actividades.TextoActivity" android:theme="@style/ActivityPopupTheme"></activity>
+        <service android:name="rp3.accounts.AuthenticatorService" >
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" >
                 </action>

@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -29,7 +30,7 @@ import rp3.util.StringUtils;
  * Created by magno_000 on 03/07/2015.
  */
 public class AgenteDetalleFragment extends BaseFragment {
-
+    private static final String TAG = AgenteDetalleFragment.class.getSimpleName();
     public int idAgente;
 
     public final static String ARG_AGENTE = "id_agente";
@@ -55,6 +56,7 @@ public class AgenteDetalleFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG,"onCreate...");
     }
 
     @Override
@@ -159,6 +161,7 @@ public class AgenteDetalleFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
+            Log.d(TAG,"onActivityResult...RESULT OK");
             switch (requestCode) {
                 case REQ_CODE_SPEECH_INPUT:
                     if (resultCode == RESULT_OK && null != data) {
@@ -171,4 +174,40 @@ public class AgenteDetalleFragment extends BaseFragment {
             }
         }
     }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
+    }
+
 }

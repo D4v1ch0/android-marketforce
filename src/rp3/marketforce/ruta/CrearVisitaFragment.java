@@ -16,6 +16,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -56,7 +57,7 @@ import rp3.util.Convert;
 
 @SuppressLint("NewApi")
 public class CrearVisitaFragment extends BaseFragment implements EditTareasDialogListener {
-
+    private static final String TAG = CrearVisitaFragment.class.getSimpleName();
     public static String ARG_AGENDA = "agenda";
     public static String ARG_IDAGENDA = "idagenda";
     public static String ARG_FROM = "from";
@@ -569,5 +570,34 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
                     }
                 });
         builderSingle.show();
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
     }
 }

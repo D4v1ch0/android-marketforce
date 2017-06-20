@@ -20,6 +20,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,7 +36,7 @@ import java.sql.Ref;
 import java.text.SimpleDateFormat;
 
 public class RutasFragment extends BaseFragment implements RutasListFragment.TransactionListFragmentListener, ContactsAgendaFragment.SaveContactsListener{
-
+    private static final String TAG = RutasFragment.class.getSimpleName();
 	public static final String ARG_TRANSACTIONTYPEID = "transactionTypeId";
 	private static final int PARALLAX_SIZE = 0;
 	
@@ -73,7 +74,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	@Override
 	public void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
-		
+		Log.d(TAG,"onCreate...");
 		setRetainInstance(true);
         setHasOptionsMenu(true);
 			
@@ -85,6 +86,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	@Override
 	public void onStart() {		
 		super.onStart();
+        Log.d(TAG,"onStart...");
 		if(selectedTransactionId != 0 && openPane){
             isMainFragment = false;
 			if(!mTwoPane)			
@@ -519,5 +521,35 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
             if(rutasDetailfragment != null)
                 rutasDetailfragment.reDoMenu = true;
         }
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

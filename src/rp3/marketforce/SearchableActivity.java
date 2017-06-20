@@ -15,6 +15,7 @@ import rp3.widget.SlidingPaneLayout;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 
 public class SearchableActivity extends BaseActivity
 	implements ClientListFragment.ClienteListFragmentListener, ClienteDetailFragmentListener {
+	private static final String TAG = SearchableActivity.class.getSimpleName();
 
 	private boolean mTwoPane;
 	private String query;
@@ -125,7 +127,7 @@ public class SearchableActivity extends BaseActivity
 	@Override
 	protected void onStart() {		
 		super.onStart();
-		
+		Log.d(TAG,"onStart...");
 		if(selectedClientId != 0){
 			if(!mTwoPane)			
 				slidingPane.closePane();
@@ -278,5 +280,36 @@ public class SearchableActivity extends BaseActivity
 	public void onClienteChanged(Cliente cliente) {
 		clientListFragment.actualizarCliente(cliente);
 		onClienteSelected(cliente);		
+	}
+
+	/**
+	 *
+	 *Ciclo de vida
+	 *
+	 */
+
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.d(TAG,"onResume...");
+	}
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		Log.d(TAG,"onBackPressed...");
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Log.d(TAG,"onPause...");
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		Log.d(TAG,"onStop...");
 	}
 }

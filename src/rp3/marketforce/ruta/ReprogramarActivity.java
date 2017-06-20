@@ -28,6 +28,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -47,7 +48,7 @@ import com.roomorama.caldroid.CaldroidListener;
 import com.roomorama.caldroid.CalendarHelper;
 
 public class ReprogramarActivity extends BaseActivity {
-	
+	private static final String TAG = ReprogramarActivity.class.getSimpleName();
 	private static final int TIME_PICKER_INTERVAL = 5;
 
     public static final int ID_DURACION = 0;
@@ -358,6 +359,41 @@ public class ReprogramarActivity extends BaseActivity {
                     }
                 });
         builderSingle.show();
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 
 }

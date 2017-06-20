@@ -11,6 +11,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.CheckBox;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class TextoActivity extends ActividadActivity {
-
+    private static final String TAG = TextoActivity.class.getSimpleName();
 	Actividad ata;
 	private AgendaTareaActividades act;
     boolean actSinGrupo;
@@ -32,7 +33,8 @@ public class TextoActivity extends ActividadActivity {
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		int numero = getIntent().getExtras().getInt(ARG_NUMERO, 1);
+        Log.d(TAG,"onCreate...");
+        int numero = getIntent().getExtras().getInt(ARG_NUMERO, 1);
 		int tema = getIntent().getExtras().getInt(ARG_THEME, R.style.MyAppTheme);
 		setTheme(tema);
         actSinGrupo = getIntent().getExtras().getBoolean(ARG_SIN_GRUPO, false);
@@ -125,7 +127,7 @@ public class TextoActivity extends ActividadActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        Log.d(TAG,"onActivityResult...");
         switch (requestCode) {
             case REQ_CODE_SPEECH_INPUT: {
                 if (resultCode == RESULT_OK && null != data) {
@@ -142,6 +144,7 @@ public class TextoActivity extends ActividadActivity {
 
 	@Override
 	public void aceptarCambios(View v) {
+        Log.d(TAG,"aceptarCambios...");
         if(getTextViewString(R.id.actividad_texto_respuesta).equalsIgnoreCase(""))
             act.setResultado(" ");
         else
@@ -169,5 +172,40 @@ public class TextoActivity extends ActividadActivity {
 		finish();
 		
 	}
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
+    }
 
 }

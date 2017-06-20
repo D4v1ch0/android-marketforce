@@ -16,6 +16,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -26,6 +27,7 @@ import android.widget.TextView;
 
 public class ClienteEditFragment extends BaseFragment {
 
+	private static final String TAG = ClienteEditFragment.class.getSimpleName();
 	public static final String ARG_CLIENT_ID = "clientId";
 
 	private long clientId = 0;
@@ -55,7 +57,7 @@ public class ClienteEditFragment extends BaseFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		Log.d(TAG,"onCreate...");
 		setContentView(R.layout.fragment_transaction_edit_item);
 
 		Bundle arguments = getArguments();
@@ -73,7 +75,7 @@ public class ClienteEditFragment extends BaseFragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		
+		Log.d(TAG,"onAttach...");
 		tryEnableGooglePlayServices(true);				
 		
 		if(getParentFragment()!=null)
@@ -84,7 +86,7 @@ public class ClienteEditFragment extends BaseFragment {
 
 	@Override
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
-
+		Log.d(TAG,"onFragmentCreateView...");
 		if (client != null) {
 
 			String name = "" + client.getNombre1() + " "
@@ -225,9 +227,11 @@ public class ClienteEditFragment extends BaseFragment {
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		setClienteUpdateViews();
+		Log.d(TAG,"onSaveInstanceState...");
 	}
 
 	private void setClienteUpdateViews() {
+		Log.d(TAG,"setClienteUPDATEvIEWS...");
 		String mail = getTextViewString(R.id.editText_correo);
 		Date da = datePicker.getDate();
 
@@ -299,15 +303,6 @@ public class ClienteEditFragment extends BaseFragment {
 		requestSync(settingsBundle);
 	}
 
-	@Override
-	public void onResume() {
-		super.onResume();		
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();		
-	}
 
 	private void getLocation() {
 
@@ -316,6 +311,7 @@ public class ClienteEditFragment extends BaseFragment {
 
 			if (!ConnectionUtils.isNetAvailable(this.getActivity())) {
 				showDialogMessage(R.string.message_error_sync_no_net_available);
+				Log.d(TAG,"No hay conexion...");
 				return;
 			}
 
@@ -334,6 +330,41 @@ public class ClienteEditFragment extends BaseFragment {
 
 			// return LocationUtils.getAddress(getActivity(), location);
 		}
+	}
+
+	/**
+	 *
+	 * Ciclo de vida
+	 *
+	 */
+	@Override
+	public void onStart() {
+		super.onStart();
+		Log.d(TAG,"onStart...");
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		Log.d(TAG,"onStop...");
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		Log.d(TAG,"onResume...");
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.d(TAG,"onPause...");
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Log.d(TAG,"onDestroy...");
 	}
 
 }

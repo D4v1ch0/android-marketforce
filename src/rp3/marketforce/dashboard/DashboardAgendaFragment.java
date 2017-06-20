@@ -26,6 +26,7 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -38,7 +39,7 @@ import android.widget.TextView;
 import android.widget.ListView;
 
 public class DashboardAgendaFragment extends BaseFragment {
-	
+	private static final String TAG = DashboardAgendaFragment.class.getSimpleName();
 	DashboardAgendaAdapter adapter;
 	private List<Agenda> list_agenda;
     private SwipeRefreshLayout pullRefresher;
@@ -64,6 +65,7 @@ public class DashboardAgendaFragment extends BaseFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
+        Log.d(TAG,"onResume...");
 		SimpleDateFormat format4 = new SimpleDateFormat("HH:mm");
 		DrawableManager DManager = new DrawableManager();
     	
@@ -251,7 +253,7 @@ public class DashboardAgendaFragment extends BaseFragment {
 	@Override
 	public void onStart() {		
 		super.onStart();
-			
+			Log.d(TAG,"onStart...");
 	}
 	
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
@@ -279,5 +281,31 @@ public class DashboardAgendaFragment extends BaseFragment {
             pullRefresher.setRefreshing(false);
             onResume();
         }
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

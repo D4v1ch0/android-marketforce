@@ -11,10 +11,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 public class ServerActivity extends BaseActivity {
+	private static final String TAG = ServerActivity.class.getSimpleName();
 	
 	public static String SERVER_CODE = "serverCode";
 
@@ -84,5 +86,41 @@ public class ServerActivity extends BaseActivity {
 	        @Override
 	        protected void onProgressUpdate(Void... values) {}
 	    }
+
+	/**
+	 *
+	 *Ciclo de vida
+	 *
+	 */
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		Log.d(TAG,"onStart...");
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.d(TAG,"onResume...");
+	}
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		Log.d(TAG,"onBackPressed...");
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Log.d(TAG,"onPause...");
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		Log.d(TAG,"onStop...");
+	}
 
 }

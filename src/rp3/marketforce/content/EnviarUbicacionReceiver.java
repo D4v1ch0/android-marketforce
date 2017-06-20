@@ -34,13 +34,14 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.BatteryManager;
 import android.os.Bundle;
+import android.provider.CallLog;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class EnviarUbicacionReceiver extends BroadcastReceiver    {
-
+	private static final String TAG = EnviarUbicacionReceiver.class.getSimpleName();
 	@Override
 	public void onReceive(final Context context, Intent intent) {			
 		/*
@@ -49,6 +50,8 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 		 */
 		try
 		{
+			Log.d(TAG,"onReceive...");
+
 			Session.Start(context);
 			rp3.configuration.Configuration.TryInitializeConfiguration(context);
 

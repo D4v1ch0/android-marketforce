@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,7 +26,7 @@ import android.widget.SearchView.OnQueryTextListener;
 import java.text.SimpleDateFormat;
 
 public class RutasDetailActivity extends rp3.app.BaseActivity implements ContactsAgendaFragment.SaveContactsListener{
-
+	private static final String TAG = RutasDetailActivity.class.getSimpleName();
 	private long transactionId;
 	private final String STATE_TRANSACTIONID = "transactionId";
 	private RutasDetailFragment rutasDetailFragment;
@@ -44,6 +45,7 @@ public class RutasDetailActivity extends rp3.app.BaseActivity implements Contact
 	
 	@Override
 	protected void onResume() {
+		Log.d(TAG,"onResume...");
 		if(rutasDetailFragment != null)
 			rutasDetailFragment.onResume();
 		super.onResume();
@@ -207,5 +209,38 @@ public class RutasDetailActivity extends rp3.app.BaseActivity implements Contact
 ////		startActivity(new Intent(this,TransactionListActivity.class));
 //		finish();
 //	}
-    
+
+
+	/**
+	 *
+	 * Ciclo de vida
+	 *
+	 */
+	@Override
+	public void onStart() {
+		super.onStart();
+		Log.d(TAG,"onStart...");
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		Log.d(TAG,"onStop...");
+	}
+
+
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.d(TAG,"onPause...");
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Log.d(TAG,"onDestroy...");
+	}
+
+
 }

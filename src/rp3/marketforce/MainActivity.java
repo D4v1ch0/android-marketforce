@@ -70,13 +70,14 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 public class MainActivity extends rp3.app.NavActivity{
-	
+	private static final String TAG = MainActivity.class.getSimpleName();
 	public static final int NAV_DASHBOARD		= 1;
 	public static final int NAV_RUTAS  			= 2;
 	public static final int NAV_CLIENTES 		= 3;
@@ -193,11 +194,6 @@ public class MainActivity extends rp3.app.NavActivity{
         super.onSaveInstanceState(outState);
     }
 
-    @Override
-	protected void onStart() {
-		super.onStart();
-
-	}
 	
 	@Override
 	public void navConfig(List<NavItem> navItems, NavActivity currentActivity) {		
@@ -380,6 +376,7 @@ public class MainActivity extends rp3.app.NavActivity{
 
 	@Override
 	public void onBackPressed() {
+		Log.d(TAG,"onBackPressed...");
 		if(this.findViewById(R.id.sliding_pane_clientes) != null)
 		{
 			SlidingPaneLayout slidingPane = (SlidingPaneLayout) findViewById(R.id.sliding_pane_clientes);
@@ -528,4 +525,35 @@ public class MainActivity extends rp3.app.NavActivity{
   		}
       }
 
+	/**
+	 *
+	 *Ciclo de vida
+	 *
+	 */
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		Log.d(TAG,"onStart...");
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.d(TAG,"onResume...");
+	}
+
+
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Log.d(TAG,"onPause...");
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		Log.d(TAG,"onStop...");
+	}
 }

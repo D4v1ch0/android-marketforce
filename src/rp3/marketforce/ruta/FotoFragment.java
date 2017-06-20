@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -37,7 +38,7 @@ import static rp3.util.Screen.getOrientation;
  * Created by magno_000 on 14/04/2015.
  */
 public class FotoFragment extends BaseFragment {
-
+    private static final String TAG = FotoFragment.class.getSimpleName();
     private long idAgenda;
     private Agenda agenda;
     private Uri photo = Utils.getOutputMediaFileUri(Utils.MEDIA_TYPE_IMAGE);
@@ -128,16 +129,13 @@ public class FotoFragment extends BaseFragment {
         myAlertDialog.show();
     }
 
-    @Override
-    public void onStop() {
 
-        super.onStop();
-    }
 
     @Override
     public void onDestroy() {
 
         super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 
     @Override
@@ -208,5 +206,34 @@ public class FotoFragment extends BaseFragment {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
     }
 }

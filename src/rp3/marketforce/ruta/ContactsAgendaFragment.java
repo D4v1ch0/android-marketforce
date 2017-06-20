@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -17,8 +18,8 @@ import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.Contacto;
 
 public class ContactsAgendaFragment extends BaseFragment {
-	
-	public static String TAG = "ContactoAgenda";
+
+	public static String TAG = ContactsAgendaFragment.class.getSimpleName();
 	private long idAgenda;
 	private Agenda agenda;
 	private SaveContactsListener saveListener;
@@ -63,6 +64,7 @@ public class ContactsAgendaFragment extends BaseFragment {
 	@Override
 	public void onResume() {
 	    super.onResume();
+		Log.d(TAG,"onResume...");
 	}
 	      
 	    
@@ -131,6 +133,30 @@ public class ContactsAgendaFragment extends BaseFragment {
 		});
 
 		alert.show();
+	}
+
+	/**
+	 *
+	 * Ciclo de vida
+	 *
+	 */
+	@Override
+	public void onStart() {
+		super.onStart();
+		Log.d(TAG,"onStart...");
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		Log.d(TAG,"onStop...");
+	}
+
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.d(TAG,"onPause...");
 	}
 
 }

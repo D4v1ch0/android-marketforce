@@ -40,6 +40,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -54,7 +55,7 @@ import android.widget.Toast;
 import com.google.android.gms.maps.model.LatLng;
 
 public class RutasDetailFragment extends rp3.app.BaseFragment implements ObservacionesFragmentListener {
-    
+    private static final String TAG = RutasDetailFragment.class.getSimpleName();
     public static final String ARG_ITEM_ID = "idagenda";
     public static final String ARG_AGENDA_ID = "agenda";
     public static final String ARG_RUTA_ID = "ruta";
@@ -137,6 +138,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
     @Override
     public void onResume() {
     	super.onResume();
+        Log.d(TAG,"onResume...");
     	agenda = Agenda.getAgenda(getDataBase(), idAgenda);
         if(agenda == null) {
             agenda = Agenda.getAgendaClienteNull(getDataBase(), idAgenda);
@@ -746,5 +748,36 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
             getRootView().findViewById(R.id.listView_tareas).setVisibility(View.GONE);
             getRootView().findViewById(R.id.detail_agenda_empty_tareas).setVisibility(View.VISIBLE);
         }
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

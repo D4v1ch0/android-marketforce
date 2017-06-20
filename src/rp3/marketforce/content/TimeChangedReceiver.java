@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import rp3.configuration.PreferenceManager;
 import rp3.marketforce.Contants;
@@ -16,9 +17,10 @@ import rp3.util.NotificationPusher;
  * Created by magno_000 on 13/01/2016.
  */
 public class TimeChangedReceiver extends BroadcastReceiver {
-
+    private static final String TAG = TimeChangedReceiver.class.getSimpleName();
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.d(TAG,"onReceive...");
         Session.Start(context);
         rp3.configuration.Configuration.TryInitializeConfiguration(context);
         //int perc = android.provider.Settings.System.getInt(context.getContentResolver(), android.provider.Settings.System.AUTO_TIME, 0);

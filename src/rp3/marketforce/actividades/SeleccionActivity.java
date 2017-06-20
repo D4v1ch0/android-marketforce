@@ -10,6 +10,7 @@ import rp3.marketforce.models.AgendaTareaActividades;
 import rp3.marketforce.models.AgendaTareaOpciones;
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
@@ -17,14 +18,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 public class SeleccionActivity extends ActividadActivity {
-	
+	private static final String TAG = SeleccionActivity.class.getSimpleName();
 	Actividad ata;
 	private AgendaTareaActividades act;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-	    int tema = getIntent().getExtras().getInt(ARG_THEME, R.style.MyAppTheme);
+		Log.d(TAG,"onCreate...");
+		int tema = getIntent().getExtras().getInt(ARG_THEME, R.style.MyAppTheme);
 		setTheme(tema);
 		if(tema != R.style.MyAppTheme)
 		{
@@ -74,6 +76,7 @@ public class SeleccionActivity extends ActividadActivity {
 
 	@Override
 	public void aceptarCambios(View v) {
+		Log.d(TAG,"aceptarCambios...");
 		String respuesta = getSpinnerGeneralValueSelectedCode(R.id.actividad_seleccion_respuesta);
 		act.setResultado(respuesta);
         if(act.getID() == 0)
@@ -89,5 +92,41 @@ public class SeleccionActivity extends ActividadActivity {
 		finish();
 		
 	}
+
+	/**
+	 *
+	 * Ciclo de vida
+	 *
+	 */
+	@Override
+	public void onStart() {
+		super.onStart();
+		Log.d(TAG,"onStart...");
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		Log.d(TAG,"onStop...");
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		Log.d(TAG,"onResume...");
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.d(TAG,"onPause...");
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Log.d(TAG,"onDestroy...");
+	}
+
 
 }

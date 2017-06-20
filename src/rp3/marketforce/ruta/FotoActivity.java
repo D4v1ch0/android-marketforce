@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Display;
 import android.view.Window;
 import android.view.WindowManager;
@@ -20,6 +21,7 @@ import rp3.util.Screen;
  * Created by magno_000 on 14/04/2015.
  */
 public class FotoActivity extends BaseActivity {
+    private static final String TAG = FotoActivity.class.getSimpleName();
     private FotoFragment newFragment;
 
     @Override
@@ -69,13 +71,38 @@ public class FotoActivity extends BaseActivity {
 
     @Override
     public void onStop() {
-
+        Log.d(TAG,"onStop...");
         super.onStop();
     }
 
     @Override
     public void onDestroy() {
-
+        Log.d(TAG,"onDestroy...");
         super.onDestroy();
     }
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
 }

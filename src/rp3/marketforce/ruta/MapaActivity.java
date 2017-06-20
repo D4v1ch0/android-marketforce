@@ -79,7 +79,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MapaActivity extends BaseActivity {
-	
+	private static final String TAG = MapaActivity.class.getSimpleName();
 	public static String ACTION_TYPE = "type";
 	
 	public static String ACTION_POSICION = "posicion";
@@ -1035,6 +1035,37 @@ public class MapaActivity extends BaseActivity {
 	    canvas.drawText(text, xPos, yPos, paint);
 
 	    return  bm;
+	}
+
+	/**
+	 *
+	 *Ciclo de vida
+	 *
+	 */
+
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		Log.d(TAG,"onResume...");
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		Log.d(TAG,"onStop...");
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.d(TAG,"onPause...");
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		Log.d(TAG,"onStart...");
 	}
 
 }

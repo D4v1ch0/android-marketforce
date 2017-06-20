@@ -8,8 +8,9 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion '20.0.0'
+    useLibrary 'org.apache.http.legacy'
+    compileSdkVersion 25
+    buildToolsVersion '25.0.0'
     compileOptions.encoding = 'UTF-8'
 
     sourceSets {

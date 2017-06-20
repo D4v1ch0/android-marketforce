@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.media.ExifInterface;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -31,6 +32,7 @@ import rp3.marketforce.utils.Utils;
 import rp3.util.StringUtils;
 
 public class MotivoNoVisitaFragment extends BaseFragment {
+	public static final String TAG = MotivoNoVisitaFragment.class.getSimpleName();
 	public static MotivoNoVisitaFragment newInstance(long idAgenda)
 	{
 		Bundle arguments = new Bundle();
@@ -41,7 +43,7 @@ public class MotivoNoVisitaFragment extends BaseFragment {
 	}
 
 	public static String ARG_AGENDA = "idAgenda";
-	public static String TAG = "Motivo de No Visita";
+	//public static String TAG = "Motivo de No Visita";
 	private long idAgenda;
 	private Agenda agenda;
 	private SaveContactsListener saveListener;
@@ -72,6 +74,7 @@ public class MotivoNoVisitaFragment extends BaseFragment {
 	@Override
 	public void onResume() {
 	    super.onResume();
+		Log.d(TAG,"onResume...");
 	}
 	
 	@Override
@@ -160,5 +163,31 @@ public class MotivoNoVisitaFragment extends BaseFragment {
 
         }
     }
+
+	/**
+	 *
+	 * Ciclo de vida
+	 *
+	 */
+	@Override
+	public void onStart() {
+		super.onStart();
+		Log.d(TAG,"onStart...");
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		Log.d(TAG,"onStop...");
+	}
+
+
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.d(TAG,"onPause...");
+	}
+
 
 }

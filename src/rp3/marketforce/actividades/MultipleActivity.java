@@ -9,6 +9,7 @@ import rp3.marketforce.models.AgendaTareaActividades;
 import rp3.marketforce.models.AgendaTareaOpciones;
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.CheckBox;
@@ -16,7 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class MultipleActivity extends  ActividadActivity {
-	
+	private static final String TAG = MultipleActivity.class.getSimpleName();
 	Actividad ata;
 	LinearLayout Grupo;
 	String[] respuestas;
@@ -26,6 +27,7 @@ public class MultipleActivity extends  ActividadActivity {
     /** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		Log.d(TAG,"onCreate...");
 		int numero = getIntent().getExtras().getInt(ARG_NUMERO, 1);
 		int tema = getIntent().getExtras().getInt(ARG_THEME, R.style.MyAppTheme);
 		setTheme(tema);
@@ -85,6 +87,7 @@ public class MultipleActivity extends  ActividadActivity {
 	}
 	@Override
 	public void aceptarCambios(View v) {
+		Log.d(TAG,"aceptarCambios...");
 		String respuesta = "", idsresultados = "";
         List<AgendaTareaOpciones> ag_opcs = AgendaTareaOpciones.getOpciones(getDataBase(), act.getIdTarea(), ata.getIdTareaActividad());
 		for(int i = 0; i < Grupo.getChildCount();i++)
@@ -138,5 +141,41 @@ public class MultipleActivity extends  ActividadActivity {
 		}
 		return false;
 	}
+
+	/**
+	 *
+	 * Ciclo de vida
+	 *
+	 */
+	@Override
+	public void onStart() {
+		super.onStart();
+		Log.d(TAG,"onStart...");
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		Log.d(TAG,"onStop...");
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		Log.d(TAG,"onResume...");
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.d(TAG,"onPause...");
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Log.d(TAG,"onDestroy...");
+	}
+
 
 }

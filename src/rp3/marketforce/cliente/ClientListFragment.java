@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,7 +36,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class ClientListFragment extends rp3.app.BaseFragment {
-		        
+    private static final String TAG = ClientListFragment.class.getSimpleName();
     
     public static final String ARG_TRANSACTIONTYPEID = "transactionType";
     public static final String ARG_TRANSACTIONTYPEBO = "transactionTypeBo";    
@@ -86,7 +87,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 	@Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        
+        Log.d(TAG,"onAttach...");
         if(getParentFragment()!=null){        	
         	clienteListFragmentCallback = (ClienteListFragmentListener)getParentFragment();        	
         }else{
@@ -100,6 +101,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 	@Override
 	public void onResume() {
         super.onResume();
+        Log.d(TAG,"onResume...");
         if (currentTransactionBoolean) {
             ejecutarConsulta();
         } else {
@@ -115,7 +117,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Log.d(TAG,"onCreate...");
         
         if(savedInstanceState == null)
         {
@@ -159,7 +161,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
     @Override
     public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
     	super.onFragmentCreateView(rootView, savedInstanceState);
-    	
+    	Log.d(TAG,"onFragmentCreateView...");
     	linearLayout_rootParent = (LinearLayout) rootView.findViewById(R.id.linearLayout_headerlist_client_list);    	    	
     }        
     
@@ -167,6 +169,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
     @Override
     public void onStart() {    	
     	super.onStart();
+        Log.d(TAG,"onStart...");
     	if(headerList!=null && headerList.getParent() == null){
             if(refreshLayout == null)
                 refreshLayout = new SwipeRefreshLayout(this.getContext());
@@ -215,13 +218,14 @@ public class ClientListFragment extends rp3.app.BaseFragment {
      @Override
     public void onSaveInstanceState(Bundle arg0) {    	
     	super.onSaveInstanceState(arg0);
-    	
+    	Log.d(TAG,"onSaveInstanceState...");
     	linearLayout_rootParent.removeView(refreshLayout);
     }
     
     @Override
     public void onDetach() {    	
-    	super.onDetach();    	    	
+    	super.onDetach();
+        Log.d(TAG,"onDetach...");
     }        
          
     
@@ -482,8 +486,8 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 
     	@Override
 		public Loader<List<Cliente>> onCreateLoader(int arg0,
-				Bundle bundle) {				
-
+				Bundle bundle) {
+            Log.d(TAG,"onCreateLoader...");
     		Search = bundle.getString(STRING_SEARCH);
     		flag = bundle.getBoolean(STRING_BOOLEAN);
     		
@@ -494,7 +498,8 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 		@Override
 		public void onLoadFinished(Loader<List<Cliente>> arg0,
 				List<Cliente> data)
-		{								
+		{
+            Log.d(TAG,"onLoadFinished...");
 			lista = data;			
 			OrderBy(ORDER_BY_NAME);
 			clienteListFragmentCallback.onFinalizaConsulta();
@@ -535,13 +540,13 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 
 		@Override
 		public void onLoaderReset(Loader<List<Cliente>> arg0) {	
-			
+			Log.d(TAG,"onLoaderReset...");
 		}
 	}
 
     public void onSyncComplete(Bundle data, MessageCollection messages) {
         super.onSyncComplete(data, messages);
-
+        Log.d(TAG,"onSyncComplete...");
         closeDialogProgress();
         refreshLayout.setRefreshing(false);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

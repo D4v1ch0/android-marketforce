@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -39,7 +40,7 @@ import rp3.marketforce.utils.DetailsPageAdapter;
 import rp3.util.Convert;
 
 public class DashboardGrupoFragment extends BaseFragment {
-
+	private static final String TAG = DashboardGrupoFragment.class.getSimpleName();
 	public static int NUM_VERTICAL_LABELS = 6;
 	
 	private List<String> titles;
@@ -63,21 +64,19 @@ public class DashboardGrupoFragment extends BaseFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
+		Log.d(TAG,"onCreate...");
 		getActivity().setTitle("Equipo");
 		
 		//setRetainInstance(true);				
 		setContentView(R.layout.fragment_dashboard_grupo);
 	}
-	
-	@Override
-	public void onStart() {		
-		super.onStart();
-	}
+
 	
 	@Override
 	public void onDestroyView() {
 		// TODO Auto-generated method stub
 		super.onDestroyView();
+		Log.d(TAG,"onDestroyView...");
 	}
 	
 	public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
@@ -334,7 +333,44 @@ public class DashboardGrupoFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(agenteDetalleFragment != null)
+        	Log.d(TAG,"onActivityResult...agenteDetalleFragment...");
             agenteDetalleFragment.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+	/**
+	 *
+	 * Ciclo de vida
+	 *
+	 */
+	@Override
+	public void onStart() {
+		super.onStart();
+		Log.d(TAG,"onStart...");
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		Log.d(TAG,"onStop...");
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		Log.d(TAG,"onResume...");
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.d(TAG,"onPause...");
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Log.d(TAG,"onDestroy...");
+	}
+
 }

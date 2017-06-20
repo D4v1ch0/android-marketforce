@@ -32,6 +32,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,6 +52,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class RutasListFragment extends rp3.app.BaseFragment{
+    private static final String TAG = RutasListFragment.class.getSimpleName();
 		    
 	public static String ARG_INICIO = "inicio";
 	public static String ARG_FIN = "fin";
@@ -191,8 +193,8 @@ public class RutasListFragment extends rp3.app.BaseFragment{
     
     @Override
     public void onStart() {    	
-    	super.onStart();   
- 
+    	super.onStart();
+        Log.d(TAG,"onStart...");
     }
     
     public void searchTransactions(String termSearch){    	
@@ -676,6 +678,7 @@ public class RutasListFragment extends rp3.app.BaseFragment{
     @Override
     public void onResume() {
     	super.onResume();
+        Log.d(TAG,"onResume...");
         loaderRutas = new  LoaderRutas();
         Bundle args = new Bundle();
         args.putString(LoaderRutas.STRING_SEARCH, "");
@@ -698,5 +701,25 @@ public class RutasListFragment extends rp3.app.BaseFragment{
 		adapter.changeList(list_agenda_in_adapter);
 		paintDates();
     }
-    
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
 }

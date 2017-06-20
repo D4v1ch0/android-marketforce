@@ -1,6 +1,7 @@
 package rp3.marketforce.radar;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -18,6 +19,7 @@ import rp3.marketforce.models.AgenteUbicacion;
  * Created by magno_000 on 20/08/2015.
  */
 public class AgenteRadarFragment extends BaseFragment {
+    private static final String TAG = AgenteRadarFragment.class.getSimpleName();
     public interface AgenteRadarDialogListener {
         void onFinishAgenteRadarDialog(ArrayList<Integer> notShow);
     }
@@ -37,6 +39,7 @@ public class AgenteRadarFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG,"onCreate...");
         if (getArguments().containsKey(ARG_LIST)) {
             ids = getArguments().getIntegerArrayList(ARG_LIST);
         }
@@ -47,7 +50,7 @@ public class AgenteRadarFragment extends BaseFragment {
     @Override
     public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
-
+        Log.d(TAG,"onFragmentCreateView...");
         List<AgenteUbicacion> list_ubicaciones = AgenteUbicacion.getResumen(getDataBase());
         adapter = new AgenteRadarAdapter(this.getContext(), list_ubicaciones, ids);
         ((ListView) rootView.findViewById(R.id.agentes_list)).setAdapter(adapter);
@@ -77,6 +80,42 @@ public class AgenteRadarFragment extends BaseFragment {
         });
 
     }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
+    }
+
 
 }
 

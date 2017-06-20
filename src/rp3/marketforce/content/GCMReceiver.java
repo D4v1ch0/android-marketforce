@@ -16,9 +16,11 @@ import rp3.util.NotificationPusher;
  * Created by magno_000 on 15/06/2015.
  */
 public class GCMReceiver extends GcmListenerService {
+    private static final String TAG = GCMReceiver.class.getSimpleName();
     TextToSpeech t1;
     @Override
     public void onMessageReceived(String from, Bundle data) {
+        Log.d(TAG,"onNMessageReceived...");
         String message = data.getString("Message");
         String title = data.getString("Title");
         String footer = data.getString("Footer","");
@@ -28,8 +30,8 @@ public class GCMReceiver extends GcmListenerService {
         {
             title = getApplicationContext().getString(R.string.app_name);
         }
-        Log.d("Marketforce", "From: " + from);
-        Log.d("Marketforce", "Message: " + message);
+        Log.d(TAG, "From: " + from);
+        Log.d(TAG, "Message: " + message);
 
         String toSpeech = "";
 

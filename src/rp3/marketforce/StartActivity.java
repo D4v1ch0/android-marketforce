@@ -32,10 +32,12 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 public class StartActivity extends rp3.app.StartActivity{
 
+    private static final String TAG = StartActivity.class.getSimpleName();
     public final static int REINTENTAR_MESSAGE = 100;
     public final static int OFFLINE_MESSAGE = 200;
 	
@@ -180,4 +182,42 @@ public class StartActivity extends rp3.app.StartActivity{
 		finish();
 		setServiceRecurring();
 	}
+
+    /**
+     *
+     *Ciclo de vida
+     *
+     */
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Log.d(TAG,"onBackPressed...");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+
 }

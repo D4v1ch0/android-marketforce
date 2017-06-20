@@ -23,6 +23,7 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,6 +40,7 @@ import android.widget.TextView;
 
 @SuppressLint("ResourceAsColor")
 public class ClientDetailFragment extends rp3.app.BaseFragment implements ClienteEditFragment.OnClienteEditListener {
+	private static final String TAG = ClientDetailFragment.class.getSimpleName();
 	/**
 	 * The fragment argument representing the item ID that this fragment
 	 * represents.
@@ -133,6 +135,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.d(TAG,"onCreate...");
 		/*
 		 * Se instancia Drawable Manager para carga de imagenes;
 		 */
@@ -161,6 +164,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	@Override
 	public void onResume() {		
 		super.onResume();
+		Log.d(TAG,"onResume...");
 		if (clientId != 0) {
 			if(tipoPersona != null && tipoPersona.equalsIgnoreCase("C"))
 			{
@@ -257,12 +261,13 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	@Override
 	public void onStart() {
 		super.onStart();
+		Log.d(TAG,"onStart...");
 	}
 	
 	@Override
 	public void onAttach(Activity activity) {
-		super.onAttach(activity);		
-
+		super.onAttach(activity);
+		Log.d(TAG,"onAttach...");
 		try
 		{
 			if(getParentFragment()!=null)
@@ -1273,5 +1278,6 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	@Override
 	public void onClienteUpdate(Cliente cliente) {		
 		clienteDetailFragmentCallback.onClienteChanged(cliente);
+		Log.d(TAG,"onClienteUpdate..."+cliente.toString());
 	}
 }

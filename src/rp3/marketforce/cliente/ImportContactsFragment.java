@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,7 +34,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.CheckBox;
 
 public class ImportContactsFragment extends rp3.app.BaseFragment  {
-	
+	private static final String TAG = ImportContactsFragment.class.getSimpleName();
 	public static String ARG_ID_ORIGEN = "origen";
 	private int tipo;
 	private LoaderInternContacts loaderContacts;
@@ -54,23 +55,22 @@ public class ImportContactsFragment extends rp3.app.BaseFragment  {
         super.onCreate(savedInstanceState);
         tipo = getArguments().getInt(ARG_ID_ORIGEN);
         super.setContentView(R.layout.fragment_import_contacts);
+		Log.d(TAG,"onCreate...");
 	}
 	
 	@Override
 	public void onAttach(Activity activity) {    	
 	    super.onAttach(activity);
 	    setRetainInstance(true);
+		Log.d(TAG,"onAttach...");
 	}
 	
-	    
-	@Override
-	public void onResume() {
-	    super.onResume();
-	}
+
 	
 	@Override
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
 		super.onFragmentCreateView(rootView, savedInstanceState);
+		Log.d(TAG,"onFragmentCreateView...");
 		loaderContacts = new LoaderInternContacts();
 		listView = ((ListView) rootView.findViewById(R.id.import_list_view));
 		listView.setClickable(true);

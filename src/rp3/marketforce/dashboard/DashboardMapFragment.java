@@ -60,6 +60,7 @@ import rp3.util.Screen;
 
 public class DashboardMapFragment extends BaseFragment{
 
+    private static final String TAG = DashboardMapFragment.class.getSimpleName();
 	
 	GoogleMap map;
 	List<Marker> markers;
@@ -74,6 +75,7 @@ public class DashboardMapFragment extends BaseFragment{
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d(TAG,"onCreateView...");
 	    if (view != null) {
 	        ViewGroup parent = (ViewGroup) view.getParent();
 	        if (parent != null)
@@ -116,7 +118,7 @@ public class DashboardMapFragment extends BaseFragment{
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		
+		Log.d(TAG,"onAttach...");
 //		setContentView(R.layout.fragment_client,R.menu.fragment_client);
 		//setContentView(R.layout.fragment_dashboard_map);
 	}
@@ -129,7 +131,7 @@ public class DashboardMapFragment extends BaseFragment{
 	@Override
 	public void onStart() {		
 		super.onStart();
-			
+			Log.d(TAG,"onStart...");
 	}
 	
 	public void setMapa()
@@ -350,4 +352,35 @@ public class DashboardMapFragment extends BaseFragment{
 
 	    return  bm;
 	}
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
+    }
+
 }

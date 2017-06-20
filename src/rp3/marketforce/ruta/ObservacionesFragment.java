@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.speech.RecognizerIntent;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,7 +31,7 @@ import rp3.util.StringUtils;
 import static rp3.util.Screen.getOrientation;
 
 public class ObservacionesFragment extends BaseFragment {
-	
+	private static final String TAG = ObservacionesFragment.class.getSimpleName();
 	public static final int MEDIA_TYPE_IMAGE = 1;
 	public static final int PHOTO_1 = 1;
 	public static final int PHOTO_2 = 2;
@@ -107,6 +108,7 @@ public class ObservacionesFragment extends BaseFragment {
 	@Override
 	public void onResume() {
 	    super.onResume();
+        Log.d(TAG,"onResume...");
 	}
 	
 	@Override
@@ -194,17 +196,20 @@ public class ObservacionesFragment extends BaseFragment {
     public void onStop() {
 
         super.onStop();
+        Log.d(TAG,"onStop...");
     }
 
     @Override
     public void onDestroy() {
 
         super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 
     @Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {
+            Log.d(TAG,"onActivityResullt...requdcode OK");
             switch (requestCode) {
                 case REQ_CODE_SPEECH_INPUT:
                     if (resultCode == RESULT_OK && null != data) {
@@ -248,4 +253,23 @@ public class ObservacionesFragment extends BaseFragment {
             }
 	    }
 	}
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
 }

@@ -4,13 +4,14 @@ import rp3.marketforce.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.RadioGroup;
 
 public class ImportChooseFragment extends rp3.app.BaseFragment  {
-
+	private static final String TAG = ImportChooseFragment.class.getSimpleName();
 	public static ImportChooseFragment newInstance()
 	{
 		ImportChooseFragment fragment = new ImportChooseFragment();
@@ -21,22 +22,21 @@ public class ImportChooseFragment extends rp3.app.BaseFragment  {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.fragment_dialog_import_contactos);
+		Log.d(TAG,"onCreate...");
 	}
 	
 	@Override
 	public void onAttach(Activity activity) {    	
 	    super.onAttach(activity);
+		Log.d(TAG,"onAttach...");
 	}
 	
-	    
-	@Override
-	public void onResume() {
-	    super.onResume();
-	}
+
 	
 	@Override
 	public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
 		super.onFragmentCreateView(rootView, savedInstanceState);
+		Log.d(TAG,"onFragmentCreateView...");
 		getDialog().setTitle(R.string.label_menu_importar_contactos);
 		((Button) rootView.findViewById(R.id.obs_aceptar)).setOnClickListener(new OnClickListener(){
 
@@ -57,4 +57,40 @@ public class ImportChooseFragment extends rp3.app.BaseFragment  {
 				
 			}});
 	}
+
+	/**
+	 *
+	 * Ciclo de vida
+	 *
+	 */
+	@Override
+	public void onStart() {
+		super.onStart();
+		Log.d(TAG,"onStart...");
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		Log.d(TAG,"onStop...");
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		Log.d(TAG,"onResume...");
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.d(TAG,"onPause...");
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Log.d(TAG,"onDestroy...");
+	}
+
 }

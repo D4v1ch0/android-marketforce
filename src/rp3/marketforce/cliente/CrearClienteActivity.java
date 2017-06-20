@@ -11,16 +11,18 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 public class CrearClienteActivity extends BaseActivity {
-
+	private static final String TAG = CrearClienteActivity.class.getSimpleName();
 	public static String ARG_IDCLIENTE = "idcliente";
 	CrearClienteFragment newFragment;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
-	    long id_cliente = 0;
+		Log.d(TAG,"onCreate...");
+		long id_cliente = 0;
         int tipo = 0;
 	    if(getIntent().getExtras() != null && getIntent().getExtras().containsKey(ARG_IDCLIENTE))
 	    {
@@ -56,4 +58,40 @@ public class CrearClienteActivity extends BaseActivity {
 		super.onConfigurationChanged(newConfig);
 		//newFragment.rotated = true;
 	}
+
+	/**
+	 *
+	 * Ciclo de vida
+	 *
+	 */
+	@Override
+	public void onStart() {
+		super.onStart();
+		Log.d(TAG,"onStart...");
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		Log.d(TAG,"onStop...");
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		Log.d(TAG,"onResume...");
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.d(TAG,"onPause...");
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Log.d(TAG,"onDestroy...");
+	}
+
 }

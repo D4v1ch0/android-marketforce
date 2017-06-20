@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
@@ -14,11 +15,13 @@ import android.view.WindowManager.LayoutParams;
 import java.util.List;
 
 public class ObservacionesActivity extends BaseActivity {
-	ObservacionesFragment newFragment;
+    private static final String TAG = ObservacionesActivity.class.getSimpleName();
+    ObservacionesFragment newFragment;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG,"onCreate...");
 		requestWindowFeature(Window.FEATURE_ACTION_BAR);
 	    getWindow().setFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND,
 	            WindowManager.LayoutParams.FLAG_DIM_BEHIND);
@@ -59,15 +62,38 @@ public class ObservacionesActivity extends BaseActivity {
 
 	}
 
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
     @Override
     public void onStop() {
-
         super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
     }
 
     @Override
     public void onDestroy() {
-
         super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

@@ -13,6 +13,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -62,6 +63,7 @@ import rp3.util.LocationUtils;
  * Created by magno_000 on 27/03/2015.
  */
 public class RadarFragment extends BaseFragment implements AgenteRadarFragment.AgenteRadarDialogListener {
+    private static final String TAG = RadarFragment.class.getSimpleName();
     private GoogleMap map;
     private boolean isRotated = false;
     private AgenteDetalleFragment agenteDetalleFragment;
@@ -374,6 +376,7 @@ public class RadarFragment extends BaseFragment implements AgenteRadarFragment.A
     @Override
     public void onSyncComplete(Bundle data, MessageCollection messages) {
         super.onSyncComplete(data, messages);
+        Log.d(TAG,"onSyncComplete...");
         if(data.getString(SyncAdapter.ARG_SYNC_TYPE).equalsIgnoreCase(SyncAdapter.SYNC_TYPE_AGENTES_UBICACION)) {
             closeDialogProgress();
             setMapa();
@@ -494,5 +497,41 @@ public class RadarFragment extends BaseFragment implements AgenteRadarFragment.A
     public void onFinishAgenteRadarDialog(ArrayList<Integer> notShow) {
         this.notShow = notShow;
         SetOldPoints();
+        Log.d(TAG,"onFinishAgenteRadarDialog...");
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }
