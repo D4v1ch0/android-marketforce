@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Random;
 
 import rp3.app.BaseActivity;
+import rp3.berlin.models.pedido.Producto;
 import rp3.configuration.PreferenceManager;
 import rp3.db.sqlite.DataBase;
 import rp3.maps.utils.SphericalUtil;
@@ -853,27 +854,29 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
     }
 
     private void showTareaPedido(AgendaTarea setter) {
-        Pedido pedido = Pedido.getPedidoByAgenda(getDataBase(), agenda.getID());
-        if(pedido.getID() == 0)
-        {
-            //Envío a crear pedido
-            if(agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO)) {
-                PedidoParametrosFragment pedidoParametrosFragment = PedidoParametrosFragment.newInstance("PD", agenda.getID());
-                showDialogFragment(pedidoParametrosFragment, "Cabecera", "Pedido");
-            }
-        }
-        else
-        {
-            if(!agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_PENDIENTE)) {
-                if (pedido.getEstado().equalsIgnoreCase("P")) {
-                    Intent intent2 = new Intent(getContext(), CrearPedidoActivity.class);
-                    intent2.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, "PD");
-                    intent2.putExtra(CrearPedidoActivity.ARG_IDAGENDA, agenda.getID());
-                    intent2.putExtra(CrearPedidoActivity.ARG_IDPEDIDO, pedido.getID());
-                    startActivity(intent2);
+        int conteoProductos = Producto.conteoProductos(getDataBase());
+        if(conteoProductos > 0) {
+            Pedido pedido = Pedido.getPedidoByAgenda(getDataBase(), agenda.getID());
+            if (pedido.getID() == 0) {
+                //Envío a crear pedido
+                if (agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO)) {
+                    PedidoParametrosFragment pedidoParametrosFragment = PedidoParametrosFragment.newInstance("PD", agenda.getID());
+                    showDialogFragment(pedidoParametrosFragment, "Cabecera", "Pedido");
+                }
+            } else {
+                if (!agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_PENDIENTE)) {
+                    if (pedido.getEstado().equalsIgnoreCase("P")) {
+                        Intent intent2 = new Intent(getContext(), CrearPedidoActivity.class);
+                        intent2.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, "PD");
+                        intent2.putExtra(CrearPedidoActivity.ARG_IDAGENDA, agenda.getID());
+                        intent2.putExtra(CrearPedidoActivity.ARG_IDPEDIDO, pedido.getID());
+                        startActivity(intent2);
+                    }
                 }
             }
         }
+        else
+            showDialogMessage("Sin Productos", "Debe sincronizar los productos para realizar transacciones.");
     }
 
     private void SetMarcacion()

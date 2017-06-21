@@ -492,6 +492,12 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
             agenda.setCliente(Cliente.getClienteID(getDataBase(), cli.getID(), true));
         else
             agenda.setCliente(Cliente.getClienteIDServer(getDataBase(), cli.getIdCliente(), true));
+
+        if(hasPedido && cli.getIdCliente() == PreferenceManager.getInt(Contants.KEY_CLIENTE_DEFAULT))
+        {
+            Toast.makeText(getContext(), "No se le puede agregar una tarea de pedido a este cliente.", Toast.LENGTH_LONG).show();
+            return;
+        }
         agenda.setClienteDireccion(agenda.getCliente().getClienteDirecciones().get(getSpinnerSelectedPosition(R.id.crear_visita_direccion)));
         agenda.setCiudad(agenda.getCliente().getClienteDirecciones().get(getSpinnerSelectedPosition(R.id.crear_visita_direccion)).getCiudadDescripcion());
         agenda.setDireccion(agenda.getCliente().getClienteDirecciones().get(getSpinnerSelectedPosition(R.id.crear_visita_direccion)).getDireccion());

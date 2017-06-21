@@ -343,20 +343,20 @@
                     android:background="@color/material_blue_grey_800" />
 
                 <EditText
+                    android:id="@+id/producto_descuento_manual"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:ems="10"
-                    android:id="@+id/producto_descuento_manual"
                     android:layout_weight="1"
-                    android:inputType="number"
-                    android:enabled="true"
+                    android:background="@color/caldroid_white"
                     android:editable="true"
+                    android:ems="10"
+                    android:enabled="true"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
-                    android:maxLength="2"
-                    android:background="@color/caldroid_white"
-                    android:hint="0"
                     android:gravity="center_vertical|right"
+                    android:hint="0"
+                    android:inputType="numberDecimal"
+                    android:maxLength="5"
                     android:paddingRight="10dp" />
 
                 <LinearLayout

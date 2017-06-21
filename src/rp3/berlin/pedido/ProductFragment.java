@@ -110,8 +110,8 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
         numberFormat.setMinimumFractionDigits(2);
 
         numberFormatInteger = NumberFormat.getInstance();
-        numberFormatInteger.setMaximumFractionDigits(0);
-        numberFormatInteger.setMinimumFractionDigits(0);
+        numberFormatInteger.setMaximumFractionDigits(2);
+        numberFormatInteger.setMinimumFractionDigits(2);
 
         numberFormatDiscount = NumberFormat.getInstance();
         numberFormatDiscount.setMaximumFractionDigits(2);
@@ -166,6 +166,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    try {
                     if (s.length() == 0)
                         porcentajeDescManual = 0;
                     else {
@@ -175,7 +176,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
                     if (((EditText) rootView.findViewById(R.id.producto_cantidad)).length() > 0)
                         cantidad = Integer.parseInt(((EditText) rootView.findViewById(R.id.producto_cantidad)).getText().toString());
 
-                    try {
+
                         double precioLibro = evaluatePrecio(cantidad).getPrecio();
                         porcentajeDescAuto = jsonObject.getDouble("pd");
                         double precioDescuento = precioLibro - (precioLibro * porcentajeDescAuto);
@@ -188,7 +189,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
                         ((TextView)rootView.findViewById(R.id.producto_precio)).setText("" + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(precioDescuento));
                         //precio_total = precio_total * (1 + Float.parseFloat(jsonObject.getString("pi")));
                         ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("" + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(precio_total));
-                    } catch (JSONException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -210,9 +211,10 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
                         ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("" + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " 0");
                     else {
                         int cantidad = Integer.parseInt(((EditText) rootView.findViewById(R.id.producto_cantidad)).getText().toString());
+                        try {
                         if(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).length() > 0)
                             porcentajeDescManual = Double.parseDouble(((EditText) rootView.findViewById(R.id.producto_descuento_manual)).getText().toString()) / 100;
-                        try {
+
                             double precioLibro = evaluatePrecio(cantidad).getPrecio();
                             porcentajeDescAuto = jsonObject.getDouble("pd");
                             double precioDescuento = precioLibro - (precioLibro * porcentajeDescAuto);
@@ -225,7 +227,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
                             //precio_total = precio_total * (1 + Float.parseFloat(jsonObject.getString("pi")));
                             ((TextView)rootView.findViewById(R.id.producto_precio)).setText("" + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(precioDescuento));
                             ((TextView) rootView.findViewById(R.id.producto_precio_final)).setText("" + PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(precio_total));
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
@@ -330,18 +332,18 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
 
                     if (((EditText) getRootView().findViewById(R.id.producto_cantidad)).length() > 0 && !((EditText) getRootView().findViewById(R.id.producto_cantidad)).getText().toString().equalsIgnoreCase("0")) {
                         if (((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).length() > 0 && (jsonObject.isNull("tipo") || !jsonObject.getString("tipo").equalsIgnoreCase("NC")) &&
-                                Integer.parseInt(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).getText().toString()) > PreferenceManager.getInt(Contants.KEY_DESCUENTO_MAXIMO) && ((jsonObject.isNull("c")) ||
+                                Double.parseDouble(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).getText().toString()) > PreferenceManager.getInt(Contants.KEY_DESCUENTO_MAXIMO) && ((jsonObject.isNull("c")) ||
                                         (!jsonObject.isNull("c") && (Integer.parseInt(((EditText) getRootView().findViewById(R.id.producto_cantidad)).getText().toString()) > jsonObject.getInt("c") &&
-                                                Integer.parseInt(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).getText().toString()) >= (jsonObject.getDouble("pdm") * 100)) ||
-                                                Integer.parseInt(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).getText().toString()) > (jsonObject.getDouble("pdm") * 100)))) {
-                            if(((Integer.parseInt(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).getText().toString())) + (porcentajeDescAuto*100)) >= 100)
+                                                Double.parseDouble(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).getText().toString()) >= (jsonObject.getDouble("pdm") * 100)) ||
+                                                Double.parseDouble(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).getText().toString()) > (jsonObject.getDouble("pdm") * 100)))) {
+                            if(((Double.parseDouble(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).getText().toString())) + (porcentajeDescAuto*100)) >= 100)
                             {
                                 Toast.makeText(getContext(), "La suma de porcentajes de descuento no puede ser mayor o igual al 100%", Toast.LENGTH_LONG).show();
                                 return;
                             }
-                            if(jsonObject.getDouble("t") <= ((Integer.parseInt(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).getText().toString())) + (porcentajeDescAuto*100)))
+                            if(jsonObject.getDouble("t") <= ((Double.parseDouble(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).getText().toString())) + (porcentajeDescAuto*100)))
                             {
-                                showDialogConfirmation(DIALOG_DESC, "El descuento ingresado para este producto (" + numberFormatDiscount.format(((Integer.parseInt(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).getText().toString())) + (porcentajeDescAuto*100))) +
+                                showDialogConfirmation(DIALOG_DESC, "El descuento ingresado para este producto (" + numberFormatDiscount.format(((Double.parseDouble(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).getText().toString())) + (porcentajeDescAuto*100))) +
                                         "%), es mayor al que se le puede dar al canal del cliente y su línea de producto (" + numberFormatDiscount.format(jsonObject.getDouble("t"))+ "%);" +
                                         " por ende este pedido será bloqueado hasta que reciba la aprobación de un supervisor. Desea continuar?", "Bloqueo de Pedido");
                                 return;

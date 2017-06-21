@@ -15,13 +15,13 @@
         <menu>
             <item android:id="@+id/action_ver_posicion" android:title="@string/label_menu_ver_posicion"></item>
             <item android:id="@+id/action_como_llegar" android:title="@string/label_menu_como_llegar"></item>
-            <item android:id="@+id/action_estado_cuenta" android:title="@string/label_estado_cuenta"></item>
-            <item android:id="@+id/action_compras_cliente" android:title="@string/label_compras_mes"></item>
         </menu>
     </item>
     <item android:id="@+id/submenu_clientes" android:showAsAction="ifRoom" android:title="Otras opciones" android:icon="@drawable/ic_action_overflow">
         <menu>
             <item android:id="@+id/action_contacts" android:title="@string/menu_toggle_contactos" android:checked="false" android:checkable="true"></item>
+            <item android:id="@+id/action_estado_cuenta" android:title="@string/label_estado_cuenta"></item>
+            <item android:id="@+id/action_compras_cliente" android:title="@string/label_compras_mes"></item>
             <item
                 android:id="@+id/action_overflow"
                 android:orderInCategory="100"

@@ -646,7 +646,7 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
                                 stmtSearch.bindLong(1, descargados - 1);
                                 stmtSearch.bindString(2, type.getString("D"));
                                 stmtSearch.bindString(3, type.getString("Ex").trim().replace(" ",""));
-                                stmtSearch.bindString(4, type.getString("Ex").trim().replace(" ",""));
+                                stmtSearch.bindString(4, type.getString("Ex").trim());
                                 stmtSearch.bindString(5, type.getString("GE").trim());
 
                                 stmtSearch.execute();
