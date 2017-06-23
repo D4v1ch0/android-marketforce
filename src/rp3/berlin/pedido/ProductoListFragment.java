@@ -205,10 +205,10 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
 
                 @Override
                 public boolean onQueryTextChange(String newText) {
-                    if (TextUtils.isEmpty(newText)) {
+                    if (newText != null && newText.length() > 2) {
                         try {
                             Bundle args = new Bundle();
-                            args.putString(LoaderProductos.STRING_SEARCH, "");
+                            args.putString(LoaderProductos.STRING_SEARCH, newText);
                             args.putInt(LoaderProductos.INT_CATEGORIA, idSubCategoria);
                             args.putString(LoaderProductos.STRING_BUSQUEDA, tipoBusqueda);
                             args.putString(LoaderProductos.STRING_SERIE, serie);

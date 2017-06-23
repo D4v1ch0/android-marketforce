@@ -124,7 +124,10 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 
         list_cliente = Cliente.getClientAndContacts(getDataBase());
         for (Cliente cli : list_cliente) {
-            list_nombres.add(cli.getIdExterno() + " - " + cli.getNombreCompleto().trim());
+            if(cli.getIdExterno() == null || cli.getIdExterno().trim().length() <= 0)
+                list_nombres.add(cli.getNombreCompleto().trim());
+            else
+                list_nombres.add(cli.getIdExterno() + " - " + cli.getNombreCompleto().trim());
         }
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(), R.layout.spinner_small_text, list_nombres);
 
@@ -437,6 +440,7 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 
     public void SaveAgenda(boolean hasPedido)
     {
+        boolean tieneTareaPedido = false;
         Agenda agenda = new Agenda();
         agenda.setDuracion(duracion);
         agenda.setTiempoViaje(tiempo);
@@ -493,7 +497,13 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
         else
             agenda.setCliente(Cliente.getClienteIDServer(getDataBase(), cli.getIdCliente(), true));
 
-        if(hasPedido && cli.getIdCliente() == PreferenceManager.getInt(Contants.KEY_CLIENTE_DEFAULT))
+        for(Tarea tar : list_tareas)
+        {
+            if(tar.getTipoTarea().equalsIgnoreCase("P"))
+                tieneTareaPedido = true;
+        }
+
+        if(tieneTareaPedido && cli.getIdCliente() == PreferenceManager.getInt(Contants.KEY_CLIENTE_DEFAULT))
         {
             Toast.makeText(getContext(), "No se le puede agregar una tarea de pedido a este cliente.", Toast.LENGTH_LONG).show();
             return;

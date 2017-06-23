@@ -5,19 +5,19 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:gravity="center_vertical">
+        android:layout_marginLeft="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/textView52"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/label_cliente_2"
-            android:id="@+id/textView52"
             android:layout_weight="0.25"
+            android:text="@string/label_cliente_2"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/caldroid_holo_blue_light"
             android:textSize="@dimen/text_medium_small_size" />
 
@@ -27,10 +27,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.75"
             android:background="@android:color/transparent"
+            android:ems="10"
             android:enabled="false"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:ems="10"
             android:hint="@string/hint_nombre_razon_social"
             android:textSize="@dimen/text_medium_small_size" />
 
@@ -62,7 +62,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:layout_marginLeft="5dp"
         android:orientation="horizontal">
 
         <TextView
@@ -87,8 +87,8 @@
             android:focusableInTouchMode="false"
             android:hint="@string/hint_email"
             android:inputType="textEmailAddress"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp"
+            android:paddingBottom="0dp"
+            android:paddingTop="0dp"
             android:textSize="@dimen/text_medium_small_size" />
 
     </LinearLayout>
@@ -102,10 +102,10 @@
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp" >
+        android:layout_marginLeft="5dp"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/textView124"
@@ -129,8 +129,8 @@
             android:focusableInTouchMode="false"
             android:hint="@string/hint_email"
             android:inputType="textEmailAddress"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp"
+            android:paddingBottom="0dp"
+            android:paddingTop="0dp"
             android:textSize="@dimen/text_medium_small_size" />
 
         <TextView
@@ -261,21 +261,58 @@
         android:id="@+id/pedido_detalles"
         android:layout_weight="1" />
 
-    <Button
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/label_agregar_producto"
-        android:id="@+id/pedido_agregar_producto"
-        android:layout_gravity="center_horizontal"
-        style="@style/Widget.Button.Theme"
-        android:background="@color/color_agregar_prod_green"
-        android:textStyle="bold" />
+        android:background="@color/color_grey">
+
+        <EditText
+            android:id="@+id/actividad_texto_respuesta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@color/caldroid_white"
+            android:ems="10"
+            android:fadeScrollbars="false"
+            android:gravity="top"
+            android:hint="@string/hint_escriba_aqui"
+            android:inputType="textMultiLine|textCapSentences"
+            android:lines="2"
+            android:minWidth="@dimen/nav_drawer_width"
+            android:padding="5dp"
+            android:scrollbars="vertical"
+            android:textAppearance="@style/EditTextAppTheme"
+            android:textSize="@dimen/text_input_size">
+
+            <requestFocus />
+        </EditText>
+
+        <ImageView
+            android:id="@+id/actividad_voice_to_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/actividad_texto_respuesta"
+            android:layout_alignRight="@+id/actividad_texto_respuesta"
+            android:layout_alignTop="@+id/actividad_texto_respuesta"
+            android:clickable="true"
+            android:src="@drawable/ic_action_mic" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/caldroid_black"
         android:orientation="vertical" />
+
+    <Button
+        android:id="@+id/pedido_agregar_producto"
+        style="@style/Widget.Button.Theme"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/color_agregar_prod_green"
+        android:text="@string/label_agregar_producto"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -594,42 +631,5 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/caldroid_black" />
-
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/color_grey">
-
-        <EditText
-            android:id="@+id/actividad_texto_respuesta"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textMultiLine|textCapSentences"
-            android:minWidth="@dimen/nav_drawer_width"
-            android:textAppearance="@style/EditTextAppTheme"
-            android:textSize="@dimen/text_input_size"
-            android:background="@color/caldroid_white"
-            android:gravity="top"
-            android:layout_margin="5dp"
-            android:scrollbars="vertical"
-            android:fadeScrollbars="false"
-            android:hint="@string/hint_escriba_aqui"
-            android:lines="2"
-            android:padding="5dp">
-
-            <requestFocus />
-        </EditText>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/actividad_voice_to_text"
-            android:src="@drawable/ic_action_mic"
-            android:layout_alignTop="@+id/actividad_texto_respuesta"
-            android:layout_alignRight="@+id/actividad_texto_respuesta"
-            android:layout_alignEnd="@+id/actividad_texto_respuesta"
-            android:clickable="true" />
-    </RelativeLayout>
 
 </LinearLayout>
