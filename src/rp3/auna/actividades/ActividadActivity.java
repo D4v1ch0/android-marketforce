@@ -27,7 +27,7 @@ public abstract class ActividadActivity extends BaseActivity {
 	protected int id_padre;
 	protected int id_tarea;
 	protected boolean soloVista;
-	
+	//proof
 	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
