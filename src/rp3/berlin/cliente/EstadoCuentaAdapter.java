@@ -75,6 +75,8 @@ public class EstadoCuentaAdapter extends BaseAdapter {
 
             ((TextView) convertView.findViewById(R.id.estado_cuenta_abono)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(detalle.getAbono()));
             ((TextView) convertView.findViewById(R.id.estado_cuenta_saldo)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(detalle.getSaldo()));
+            ((TextView) convertView.findViewById(R.id.estado_cuenta_interes)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(detalle.getInteres()));
+            ((TextView) convertView.findViewById(R.id.estado_cuenta_pago_x_apli)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(detalle.getPagosAplic()));
         }
         else
         {

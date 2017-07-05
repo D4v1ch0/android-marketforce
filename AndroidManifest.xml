@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="rp3.berlin"
-    android:versionCode="83"
-    android:versionName="Berlin">
+    android:versionCode="88"
+    android:versionName="1.0">
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -239,9 +239,10 @@
         </activity>
 
         <!-- BERLIN -->
-        <activity android:name="rp3.berlin.cliente.EstadoCuentaActivity" android:configChanges="orientation|keyboardHidden|screenSize"></activity>
+        <activity android:name="rp3.berlin.cliente.EstadoCuentaActivity" android:configChanges="keyboardHidden|screenSize"></activity>
         <activity android:name="rp3.berlin.cliente.ComprasClienteActivity" android:configChanges="orientation|keyboardHidden|screenSize"></activity>
         <activity android:name="rp3.berlin.pedido.ConsultaPrecioActivity" android:configChanges="orientation|keyboardHidden|screenSize"></activity>
+        <activity android:name="rp3.berlin.dashboard.MetasActivity" android:configChanges="keyboardHidden|screenSize"></activity>
     </application>
 
 </manifest>

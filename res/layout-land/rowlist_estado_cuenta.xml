@@ -85,7 +85,7 @@
         android:maxLines="2"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="10sp"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/estado_cuenta_saldo"
@@ -107,6 +107,6 @@
         android:paddingRight="3dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="10sp"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
 </LinearLayout>

@@ -166,7 +166,7 @@
     <string name="message_ingreso_titulo">Debe de ingresar el titulo de la notificación</string>
     <string name="message_ingreso_mensaje">Debe de ingresar el mensaje de la notificación</string>
     <string name="message_notificacion_enviada">Notificación enviada.</string>
-    <string name="message_info">MARKET FORCE® Android </string>
+    <string name="message_info">MARKET FORCE® Grupo Berlín </string>
     <string name="message_server_connection_reintentar">Hubo un error de conexión al servidor. Desea reintentar? Si escoje no, se ingresará en modo offline.</string>
     <string name="label_sin_especificar">(Sin especificar)</string>
     <string name="hint_escriba_aqui">Escriba aquí</string>
@@ -503,4 +503,20 @@
     <string name="label_identificacion_max">IDENTIFICACIÓN</string>
     <string name="label_cupo_credito">Cupo Crédito:</string>
     <string name="label_saldo_disponible">Saldo Disponible:</string>
+    <string name="action_metas">Metas</string>
+    <string name="label_grupo_comision">Grupo Com.</string>
+    <string name="label_cant_real">C. Real</string>
+    <string name="label_cant_presupuestada">C. Presup.</string>
+    <string name="label_usd_real">USD Real</string>
+    <string name="label_usd_presup">USD Presup.</string>
+    <string name="label_porcentaje_cumplimiento">% Cump.</string>
+    <string name="label_usd_total">USD Total</string>
+    <string name="label_interes">Interés</string>
+    <string name="label_pagos_x_apl">Pagos por Apl.</string>
+    <string name="action_enviar_estado">Enviar por Mail</string>
+    <string name="label_total_vencido">Total Vencido:</string>
+    <string name="label_total_x_vencer">Total Por Vencer:</string>
+    <string name="label_dist_varia">% Dist Varia</string>
+    <string name="label_varia_distri">Varia Distr</string>
+    <string name="label_a_pagar">% A Pagar</string>
 </resources>

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/action_enviar_estado" android:title="@string/action_enviar_estado" android:icon="@drawable/ic_action_email" android:showAsAction="ifRoom|collapseActionView"></item>
+</menu>

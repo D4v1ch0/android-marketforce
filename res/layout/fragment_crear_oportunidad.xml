@@ -35,10 +35,30 @@
         android:paddingBottom="10dp" />
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="@color/color_grey_lines" />
+        android:background="@color/color_grey_lines"
+        android:orientation="vertical" />
+
+    <EditText
+        android:id="@+id/oportunidad_pagina_web"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="5dp"
+        android:background="@color/caldroid_transparent"
+        android:ems="10"
+        android:hint="@string/label_razon_social"
+        android:inputType="textWebEmailAddress"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_grey_lines"
+        android:orientation="vertical" />
 
     <Spinner
         android:layout_width="wrap_content"
@@ -69,6 +89,21 @@
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:background="@color/color_grey_lines" />
+
+    <Spinner
+        android:id="@+id/oportunidad_subcanal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="5dp"
+        android:background="@color/caldroid_transparent"
+        android:spinnerMode="dialog" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_grey_lines"
+        android:orientation="vertical"></LinearLayout>
 
     <Spinner
         android:layout_width="wrap_content"
@@ -163,102 +198,111 @@
     </RelativeLayout>
 
     <TextView
+        android:id="@+id/textView65"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:background="@color/color_grey"
+        android:paddingBottom="5dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="8dp"
+        android:paddingTop="5dp"
         android:text="@string/label_datos_venta"
-        android:id="@+id/textView65"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/color_text_sky_blue"
         android:textStyle="bold"
-        android:paddingLeft="12dp"
-        android:paddingTop="5dp"
-        android:paddingRight="8dp"
-        android:paddingBottom="5dp"
-        android:background="@color/color_grey" />
+        android:visibility="gone" />
 
     <EditText
+        android:id="@+id/oportunidad_monto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:id="@+id/oportunidad_monto"
         android:layout_gravity="center_horizontal"
-        android:hint="@string/label_importe"
-        android:background="@color/caldroid_transparent"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
         android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/caldroid_transparent"
+        android:ems="10"
+        android:hint="@string/label_importe"
         android:inputType="numberDecimal"
+        android:paddingBottom="10dp"
         android:paddingTop="10dp"
-        android:paddingBottom="10dp" />
+        android:visibility="gone" />
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="@color/color_grey_lines" />
+        android:background="@color/color_grey_lines"
+        android:orientation="vertical"
+        android:visibility="gone" />
 
     <TextView
+        android:id="@+id/textView75"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/label_probabilidad_venta"
-        android:id="@+id/textView75"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="5dp"
         android:layout_marginBottom="5dp"
-        android:textColor="@color/color_text_sky_blue" />
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/label_probabilidad_venta"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/color_text_sky_blue"
+        android:visibility="gone" />
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <SeekBar
+            android:id="@+id/oportunidad_probabilidad"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/oportunidad_probabilidad"
+            android:layout_marginLeft="5dp"
             android:layout_weight="1"
             android:max="100"
             android:progress="50"
             android:thumb="@drawable/pestana_prob"
-            android:layout_marginLeft="5dp" />
+            android:visibility="gone" />
 
         <TextView
+            android:id="@+id/oportunidad_prob_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="50%"
-            android:id="@+id/oportunidad_prob_label" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:visibility="gone" />
     </LinearLayout>
 
     <TextView
+        android:id="@+id/textView66"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/label_importancia_estrategica"
-        android:id="@+id/textView66"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="5dp"
         android:layout_marginBottom="5dp"
-        android:textColor="@color/color_text_sky_blue" />
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/label_importancia_estrategica"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/color_text_sky_blue"
+        android:visibility="gone" />
 
     <RatingBar
         android:id="@+id/oportunidad_importancia"
         android:layout_width="wrap_content"
         android:layout_height="25dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:numStars="5"
         android:progressDrawable="@drawable/rating_style"
         android:rating="3"
-        android:layout_marginRight="5dp"
-        android:clickable="true"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginBottom="5dp"
-        android:focusable="true"
-        android:focusableInTouchMode="true" />
+        android:visibility="gone" />
 
     <TextView
         android:layout_width="fill_parent"
@@ -304,24 +348,26 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/textView68"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:background="@color/color_grey"
+        android:paddingBottom="5dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="8dp"
+        android:paddingTop="5dp"
         android:text="@string/label_contactos_max"
-        android:id="@+id/textView68"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/color_text_sky_blue"
         android:textStyle="bold"
-        android:paddingLeft="12dp"
-        android:paddingTop="5dp"
-        android:paddingRight="8dp"
-        android:paddingBottom="5dp"
-        android:background="@color/color_grey" />
+        android:visibility="gone" />
 
     <LinearLayout
-        android:orientation="vertical"
+        android:id="@+id/oportunidad_contacto"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/oportunidad_contacto" />
+        android:orientation="vertical"
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -329,8 +375,9 @@
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
         android:layout_weight="1"
-        android:layout_marginTop="5dp" >
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/agregar_contacto"
@@ -340,10 +387,11 @@
             android:drawableLeft="@drawable/ic_new_item"
             android:drawablePadding="5dp"
             android:gravity="center_vertical"
+            android:paddingBottom="10dp"
             android:text="@string/label_agregar_contacto_oportunidad"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/color_text_sky_blue"
-            android:paddingBottom="10dp" />
+            android:visibility="gone" />
     </LinearLayout>
 
     <TextView
@@ -423,26 +471,6 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:id="@+id/oportunidad_pagina_web"
-        android:layout_gravity="center_horizontal"
-        android:hint="@string/label_pagina_web"
-        android:background="@color/caldroid_transparent"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="5dp"
-        android:inputType="textWebEmailAddress"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp" />
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/color_grey_lines" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/oportunidad_direccion"
@@ -455,24 +483,26 @@
         android:paddingBottom="10dp" />
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="@color/color_grey_lines" />
+        android:background="@color/color_grey_lines"
+        android:orientation="vertical"
+        android:visibility="gone" />
 
     <EditText
+        android:id="@+id/oportunidad_direccion_referencia"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/oportunidad_direccion_referencia"
         android:layout_gravity="center_horizontal"
-        android:hint="@string/label_referencia"
-        android:background="@color/caldroid_transparent"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="5dp"
+        android:background="@color/caldroid_transparent"
+        android:ems="10"
+        android:hint="@string/label_referencia"
+        android:inputType="textPersonName"
+        android:paddingBottom="10dp"
         android:paddingTop="10dp"
-        android:paddingBottom="10dp" />
+        android:visibility="gone" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -532,54 +562,56 @@
     </FrameLayout>
 
     <TextView
+        android:id="@+id/textView71"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/label_anadir_foto"
-        android:id="@+id/textView71"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="5dp"
         android:layout_marginBottom="5dp"
-        android:textColor="@color/color_text_sky_blue" />
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/label_anadir_foto"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/color_text_sky_blue"
+        android:visibility="gone" />
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <ImageButton
-            android:layout_width="0dp"
-            android:layout_height="80dp"
             android:id="@+id/oportunidad_foto1"
-            android:layout_weight="1"
-            android:src="@drawable/ic_action_camera"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="15dp" />
-
-        <ImageButton
             android:layout_width="0dp"
             android:layout_height="80dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_action_camera" />
+
+        <ImageButton
             android:id="@+id/oportunidad_foto2"
-            android:layout_weight="1"
-            android:src="@drawable/ic_action_camera"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="15dp" />
-
-        <ImageButton
             android:layout_width="0dp"
             android:layout_height="80dp"
-            android:id="@+id/oportunidad_foto3"
-            android:layout_weight="1"
-            android:src="@drawable/ic_action_camera"
+            android:layout_marginBottom="15dp"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="5dp"
             android:layout_marginRight="20dp"
-            android:layout_marginBottom="15dp" />
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_action_camera" />
+
+        <ImageButton
+            android:id="@+id/oportunidad_foto3"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_action_camera" />
     </LinearLayout>
 
 </LinearLayout>

@@ -1,5 +1,7 @@
 package rp3.berlin;
 
+import rp3.berlin.cliente.ComprasClienteActivity;
+import rp3.berlin.cliente.EstadoCuentaActivity;
 import rp3.configuration.PreferenceManager;
 import rp3.app.BaseActivity;
 import rp3.berlin.cliente.ClientDetailFragment;
@@ -253,6 +255,24 @@ public class SearchableActivity extends BaseActivity
 					Toast.makeText(this, R.string.warning_seleccionar_cliente, Toast.LENGTH_LONG).show();
 				}
 				return true;
+			case R.id.action_estado_cuenta:
+				if (selectedClientId != 0) {
+					Intent intent5 = new Intent(this, EstadoCuentaActivity.class);
+					intent5.putExtra(EstadoCuentaActivity.ARG_ID_CLIENTE, selectedClientId);
+					startActivity(intent5);
+				} else {
+					Toast.makeText(this, R.string.warning_seleccionar_cliente, Toast.LENGTH_LONG).show();
+				}
+				break;
+			case R.id.action_compras_cliente:
+				if (selectedClientId != 0) {
+					Intent intent6 = new Intent(this, ComprasClienteActivity.class);
+					intent6.putExtra(ComprasClienteActivity.ARG_ID_CLIENTE, selectedClientId);
+					startActivity(intent6);
+				} else {
+					Toast.makeText(this, R.string.warning_seleccionar_cliente, Toast.LENGTH_LONG).show();
+				}
+				break;
 			default:
 				break;
         }

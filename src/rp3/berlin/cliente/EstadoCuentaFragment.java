@@ -1,10 +1,15 @@
 package rp3.berlin.cliente;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -34,6 +39,7 @@ public class EstadoCuentaFragment extends BaseFragment {
     private long idCliente;
     private Cliente cli;
     private NumberFormat numberFormat;
+    private List<EstadoCuenta> estadoCuentas;
 
     public static EstadoCuentaFragment newInstance(long idCliente)
     {
@@ -48,8 +54,16 @@ public class EstadoCuentaFragment extends BaseFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        setContentView(R.layout.fragment_estado_cuenta);
+        setRetainInstance(true);
+        //setContentView(R.layout.fragment_estado_cuenta);
 
+    }
+
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
@@ -60,6 +74,23 @@ public class EstadoCuentaFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_estado_cuenta, R.menu.fragment_estado_cuenta);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId())
+        {
+            case R.id.action_enviar_estado:
+                Bundle bundle = new Bundle();
+                bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SEND_ESTADO_CUENTA);
+                bundle.putString(ARG_CLIENTE, cli.getIdExterno());
+                requestSync(bundle);
+
+                showDialogProgress("Enviando", "Enviando correo a cliente con estado de cuenta");
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -73,14 +104,22 @@ public class EstadoCuentaFragment extends BaseFragment {
         idCliente = getArguments().getLong(ARG_CLIENTE, 0);
         cli = Cliente.getClienteID(getDataBase(), idCliente, false);
 
-        ((TextView) rootView.findViewById(R.id.estado_cuenta_cliente)).setText(cli.getNombreCompleto());
+        ((TextView) rootView.findViewById(R.id.estado_cuenta_cliente)).setText(cli.getIdExterno() + " - " + cli.getNombreCompleto());
 
-        Bundle bundle = new Bundle();
-        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ESTADO_CUENTA);
-        bundle.putString(ARG_CLIENTE, cli.getIdExterno());
-        requestSync(bundle);
+        if(estadoCuentas == null) {
+            Bundle bundle = new Bundle();
+            bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_ESTADO_CUENTA);
+            bundle.putString(ARG_CLIENTE, cli.getIdExterno());
+            requestSync(bundle);
 
-        showDialogProgress("Cargando", "Consultando Estado de Cuenta");
+            showDialogProgress("Cargando", "Consultando Estado de Cuenta");
+        }
+        else
+        {
+            EstadoCuentaAdapter adapter = new EstadoCuentaAdapter(getContext(), estadoCuentas);
+            ((ListView)getRootView().findViewById(R.id.estado_cuenta_lista)).setAdapter(adapter);
+            GetResumen(estadoCuentas);
+        }
     }
 
     @Override
@@ -94,6 +133,16 @@ public class EstadoCuentaFragment extends BaseFragment {
                 ShowEstadoCuenta(desc);
             }
         }
+        if (data.containsKey(SyncAdapter.ARG_SYNC_TYPE) && data.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_SEND_ESTADO_CUENTA)) {
+            closeDialogProgress();
+            if (messages.hasErrorMessage()) {
+                showDialogMessage(messages);
+            }
+            else
+            {
+                Toast.makeText(this.getContext(), "Estado de cuenta enviado", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     public void ShowEstadoCuenta(String json)
@@ -101,7 +150,7 @@ public class EstadoCuentaFragment extends BaseFragment {
         try {
             JSONArray jsonArray = new JSONArray(json);
             Calendar cal = Calendar.getInstance();
-            List<EstadoCuenta> listEstadoCuenta = new ArrayList<>();
+            estadoCuentas = new ArrayList<>();
 
             for(int i = 0; i < jsonArray.length(); i ++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -138,12 +187,12 @@ public class EstadoCuentaFragment extends BaseFragment {
                     estadoCuenta.setInteres(jsonObject.getDouble("Interes"));
 
                 estadoCuenta.setValor(jsonObject.getDouble("Monto"));
-                listEstadoCuenta.add(estadoCuenta);
+                estadoCuentas.add(estadoCuenta);
             }
 
-            EstadoCuentaAdapter adapter = new EstadoCuentaAdapter(getContext(), listEstadoCuenta);
+            EstadoCuentaAdapter adapter = new EstadoCuentaAdapter(getContext(), estadoCuentas);
             ((ListView)getRootView().findViewById(R.id.estado_cuenta_lista)).setAdapter(adapter);
-            GetResumen(listEstadoCuenta);
+            GetResumen(estadoCuentas);
         }
         catch (Exception ex)
         {
@@ -231,5 +280,14 @@ public class EstadoCuentaFragment extends BaseFragment {
         ((TextView) getRootView().findViewById(R.id.estado_cuenta_total)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(total_saldos));
         ((TextView) getRootView().findViewById(R.id.estado_cuenta_cupo_credito)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(cli.getLimiteCredito()));
         ((TextView) getRootView().findViewById(R.id.estado_cuenta_saldo_disponible)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(cli.getLimiteCredito() - total_saldos));
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        /*if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT)
+            Toast.makeText(getContext(), "Portrait", Toast.LENGTH_LONG).show();
+        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
+            Toast.makeText(getContext(), "Landscape", Toast.LENGTH_LONG).show();*/
     }
 }

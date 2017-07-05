@@ -75,7 +75,33 @@
         android:textSize="10sp" />
 
     <TextView
-        android:id="@+id/estado_cuenta_interes"
+        android:id="@+id/meta_dist_varia"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:lines="2"
+        android:maxLines="2"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="10sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/meta_varia_distr"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:lines="2"
+        android:maxLines="2"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="10sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/meta_a_pagar"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="center"
@@ -97,16 +123,5 @@
         android:paddingRight="3dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="10sp" />
-
-    <TextView
-        android:id="@+id/estado_cuenta_pago_x_apli"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:paddingRight="3dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textSize="10sp"
-        android:visibility="gone" />
 
 </LinearLayout>

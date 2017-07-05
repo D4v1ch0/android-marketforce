@@ -82,6 +82,10 @@ public class DashboardFragment extends BaseFragment {
                 Intent intent = new Intent(getContext(), MarcacionActivity.class);
                 startActivity(intent);
                 break;
+			case R.id.action_metas:
+				Intent intent2 = new Intent(getContext(), MetasActivity.class);
+				startActivity(intent2);
+				break;
             default:
                 break;
         }

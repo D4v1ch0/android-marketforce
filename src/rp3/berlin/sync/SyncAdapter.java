@@ -1,6 +1,7 @@
 package rp3.berlin.sync;
 
 import rp3.accounts.ServerAuthenticate;
+import rp3.berlin.dashboard.MetasFragment;
 import rp3.configuration.PreferenceManager;
 import rp3.db.sqlite.DataBase;
 import rp3.berlin.Contants;
@@ -86,6 +87,8 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
     public static String SYNC_TYPE_GET_IMPORTACIONES= "get_importaciones";
     public static String SYNC_TYPE_ESTADO_CUENTA= "estado_cuenta";
     public static String SYNC_TYPE_COMPRAS_CLIENTE= "compras_cliente";
+    public static String SYNC_TYPE_METAS = "metas";
+    public static String SYNC_TYPE_SEND_ESTADO_CUENTA= "send_estado_cuenta";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -548,6 +551,15 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     Bundle bundle = Cliente.executeSyncEstadoCuenta(cliente);
                     addDefaultMessage(bundle.getInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE));
                     putData(EstadoCuentaFragment.ARG_CLIENTE, bundle.getString(EstadoCuentaFragment.ARG_CLIENTE));
+                } else if (syncType.equals(SYNC_TYPE_SEND_ESTADO_CUENTA)) {
+                    String cliente = extras.getString(EstadoCuentaFragment.ARG_CLIENTE).trim();
+                    Bundle bundle = Cliente.executeSyncSendEstadoCuenta(cliente);
+                    addDefaultMessage(bundle.getInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE));
+                    //putData(EstadoCuentaFragment.ARG_CLIENTE, bundle.getString(EstadoCuentaFragment.ARG_CLIENTE));
+                } else if (syncType.equals(SYNC_TYPE_METAS)) {
+                    Bundle bundle = Agente.executeSyncGetMetas();
+                    addDefaultMessage(bundle.getInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE));
+                    putData(MetasFragment.ARG_RESP, bundle.getString(MetasFragment.ARG_RESP));
                 } else if (syncType.equals(SYNC_TYPE_COMPRAS_CLIENTE)) {
                     String cliente = extras.getString(ComprasClienteFragment.ARG_CLIENTE).trim();
                     Bundle bundle = Cliente.executeSyncCompras(cliente);

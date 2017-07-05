@@ -22,6 +22,7 @@ import java.io.InputStream;
 
 import rp3.accounts.ServerAuthenticate;
 import rp3.accounts.User;
+import rp3.berlin.dashboard.MetasFragment;
 import rp3.configuration.PreferenceManager;
 import rp3.connection.HttpConnection;
 import rp3.connection.WebService;
@@ -366,6 +367,10 @@ public class Agente {
                     PreferenceManager.setValue(Contants.KEY_GOOGLE_CALENDAR_PASS, jObject.getString(Contants.KEY_GOOGLE_CALENDAR_PASS));
                 if(!jObject.isNull(Contants.KEY_CLIENTE_DEFAULT))
                     PreferenceManager.setValue(Contants.KEY_CLIENTE_DEFAULT, jObject.getInt(Contants.KEY_CLIENTE_DEFAULT));
+                if(!jObject.isNull(Contants.KEY_MINUTO_ATRASO_DIA))
+                    PreferenceManager.setValue(Contants.KEY_MINUTO_ATRASO_DIA, jObject.getInt(Contants.KEY_MINUTO_ATRASO_DIA));
+                if(!jObject.isNull(Contants.KEY_MINUTO_ATRASO_MES))
+                    PreferenceManager.setValue(Contants.KEY_MINUTO_ATRASO_MES, jObject.getInt(Contants.KEY_MINUTO_ATRASO_MES));
 			} catch (HttpResponseException e) {
 				if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
 					return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
@@ -501,5 +506,37 @@ public class Agente {
         }
 
         return SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
+    public static Bundle executeSyncGetMetas(){
+        Bundle resp = new Bundle();
+        WebService webService = new WebService("MartketForce","GetMetas");
+        try
+        {
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED) {
+                    resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE, rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR);
+                }
+                resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_HTTP_ERROR);
+                return resp;
+            } catch (Exception e) {
+                resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_ERROR);
+                return resp;
+            }
+
+            JSONArray types = webService.getJSONArrayResponse();
+            if(types != null)
+                resp.putString(MetasFragment.ARG_RESP, types.toString());
+            else
+                resp.putString(MetasFragment.ARG_RESP, "");
+            resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS);
+        }finally{
+            webService.close();
+        }
+        return resp;
     }
 }

@@ -48,6 +48,8 @@ public class Pedido {
         try {
             DecimalFormat df = new DecimalFormat("#.##");
             df.setRoundingMode(RoundingMode.CEILING);
+            DecimalFormat df2 = new DecimalFormat("#.####");
+            df2.setRoundingMode(RoundingMode.CEILING);
 
             jObject.put("IdAgenda", pedidoUpload.getIdAgenda());
             jObject.put("IdRuta", PreferenceManager.getInt(Contants.KEY_IDRUTA));
@@ -125,9 +127,9 @@ public class Pedido {
                 jObjectDetalle.put("PorcDescOro", removeCommas(df.format(NumberUtils.Round(det.getPorcentajeDescuentoOro(), 2))));
                 jObjectDetalle.put("ValorDescOro", removeCommas(df.format(NumberUtils.Round(det.getValorDescuentoOro(), 2))));
                 jObjectDetalle.put("ValorDescOroTotal", removeCommas(df.format(NumberUtils.Round(det.getValorDescuentoOroTotal(), 2))));
-                jObjectDetalle.put("PorcDescAutomatico", removeCommas(df.format(det.getPorcentajeDescuentoAutomatico())));
-                jObjectDetalle.put("PorcDescManual", removeCommas(df.format(det.getPorcentajeDescuentoManual())));
-                jObjectDetalle.put("PorcImpuestoIvaVenta", removeCommas(df.format(det.getPorcentajeImpuesto())));
+                jObjectDetalle.put("PorcDescAutomatico", removeCommas(df2.format(det.getPorcentajeDescuentoAutomatico())));
+                jObjectDetalle.put("PorcDescManual", removeCommas(df2.format(det.getPorcentajeDescuentoManual())));
+                jObjectDetalle.put("PorcImpuestoIvaVenta", removeCommas(df2.format(det.getPorcentajeImpuesto())));
                 jObjectDetalle.put("Subtotal", removeCommas(df.format(det.getSubtotal())));
                 jObjectDetalle.put("SubtotalSinDescuento", removeCommas(df.format(det.getSubtotalSinDescuento())));
                 jObjectDetalle.put("SubtotalSinImpuesto", removeCommas(df.format(det.getSubtotalSinImpuesto())));
@@ -221,6 +223,8 @@ public class Pedido {
             try {
                 DecimalFormat df = new DecimalFormat("#.##");
                 df.setRoundingMode(RoundingMode.CEILING);
+                DecimalFormat df2 = new DecimalFormat("#.####");
+                df2.setRoundingMode(RoundingMode.CEILING);
 
                 jObject.put("IdAgenda", pedidoUpload.getIdAgenda());
                 jObject.put("IdRuta", PreferenceManager.getInt(Contants.KEY_IDRUTA));
@@ -336,10 +340,10 @@ public class Pedido {
                     if(det.getValorDescuentoAutomatico() == 0)
                         jObjectDetalle.put("PorcDescAutomatico", 0);
                     else
-                        jObjectDetalle.put("PorcDescAutomatico", removeCommas(df.format(NumberUtils.Round(det.getPorcentajeDescuentoAutomatico(), 2))));
+                        jObjectDetalle.put("PorcDescAutomatico", removeCommas(df2.format(det.getPorcentajeDescuentoAutomatico())));
 
-                    jObjectDetalle.put("PorcDescManual", removeCommas(df.format(NumberUtils.Round(det.getPorcentajeDescuentoManual(), 2))));
-                    jObjectDetalle.put("PorcImpuestoIvaVenta", removeCommas(df.format(NumberUtils.Round(det.getPorcentajeImpuesto(), 2))));
+                    jObjectDetalle.put("PorcDescManual", removeCommas(df2.format(det.getPorcentajeDescuentoManual())));
+                    jObjectDetalle.put("PorcImpuestoIvaVenta", removeCommas(df2.format(NumberUtils.Round(det.getPorcentajeImpuesto(), 2))));
                     jObjectDetalle.put("Subtotal", removeCommas(df.format(NumberUtils.Round(det.getSubtotal(), 2))));
                     jObjectDetalle.put("SubtotalSinDescuento", removeCommas(df.format(NumberUtils.Round(det.getSubtotalSinDescuento(), 2))));
                     jObjectDetalle.put("SubtotalSinImpuesto", removeCommas(df.format(NumberUtils.Round(det.getSubtotalSinImpuesto(), 2))));

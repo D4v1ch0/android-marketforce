@@ -229,7 +229,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
         else
             opt.setObservacion(((EditText) view.findViewById(R.id.oportunidad_comentario)).getText().toString());
         opt.setObservacion(((EditText) view.findViewById(R.id.oportunidad_comentario)).getText().toString());
-        opt.setReferencia(((EditText) view.findViewById(R.id.oportunidad_referencia)).getText().toString());
+        opt.setReferencia(((GeneralValue) ((Spinner) getRootView().findViewById(R.id.oportunidad_subcanal)).getSelectedItem()).getValue());
         opt.setDireccion(((EditText) view.findViewById(R.id.oportunidad_direccion)).getText().toString());
         opt.setTipoEmpresa(((EditText) view.findViewById(R.id.oportunidad_tipo)).getText().toString());
         opt.setTelefono1(((EditText) view.findViewById(R.id.oportunidad_movil)).getText().toString());
@@ -644,6 +644,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
         }
 
         SimpleGeneralValueAdapter tipoCanal = new SimpleGeneralValueAdapter(getContext(), getDataBase(), rp3.berlin.Contants.GENERAL_TABLE_CANAL_BERLIN);
+        SimpleGeneralValueAdapter tipoSubCanal = new SimpleGeneralValueAdapter(getContext(), getDataBase(), rp3.berlin.Contants.GENERAL_TABLE_SUBCANAL_BERLIN);
         SimpleGeneralValueAdapter tipoPersonaAdapter = new SimpleGeneralValueAdapter(getContext(), getDataBase(), rp3.berlin.Contants.GENERAL_TABLE_TIPO_PERSONA);
 
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_spinner_dropdown_item, tipos.toArray(new String[tipos.size()]));
@@ -652,13 +653,19 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
                 adapter,
                 R.layout.spinner_empty_selected,
                 this.getContext()));
-        ((Spinner) view.findViewById(R.id.oportunidad_tipo_etapas)).setPrompt(" Seleccione un tipo");
+        ((Spinner) view.findViewById(R.id.oportunidad_tipo_etapas)).setPrompt("Seleccione un tipo");
         ((Spinner) getRootView().findViewById(R.id.oportunidad_canal)).setAdapter(tipoCanal);
         ((Spinner) getRootView().findViewById(R.id.oportunidad_canal)).setAdapter(new NothingSelectedSpinnerAdapter(
                 tipoCanal,
                 R.layout.spinner_empty_selected,
                 this.getContext(), "Canal"));
         ((Spinner) getRootView().findViewById(R.id.oportunidad_canal)).setPrompt("Seleccione un canal");
+        ((Spinner) getRootView().findViewById(R.id.oportunidad_subcanal)).setAdapter(tipoSubCanal);
+        ((Spinner) getRootView().findViewById(R.id.oportunidad_subcanal)).setAdapter(new NothingSelectedSpinnerAdapter(
+                tipoCanal,
+                R.layout.spinner_empty_selected,
+                this.getContext(), "Subcanal"));
+        ((Spinner) getRootView().findViewById(R.id.oportunidad_subcanal)).setPrompt("Seleccione un subcanal");
         ((Spinner) getRootView().findViewById(R.id.oportunidad_tipo_persona)).setAdapter(tipoPersonaAdapter);
         ((Spinner) getRootView().findViewById(R.id.oportunidad_tipo_persona)).setPrompt("Seleccione un tipo de persona");
 
@@ -1045,6 +1052,16 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
         if(((Spinner) view.findViewById(R.id.oportunidad_tipo_etapas)).getSelectedItemPosition() == 0)
         {
             Toast.makeText(getContext(), R.string.message_sin_tipo_oportunidad, Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if(((Spinner) view.findViewById(R.id.oportunidad_canal)).getSelectedItemPosition() == 0)
+        {
+            Toast.makeText(getContext(), "Debe seleccionar un canal", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if(((Spinner) view.findViewById(R.id.oportunidad_subcanal)).getSelectedItemPosition() == 0)
+        {
+            Toast.makeText(getContext(), "Debe seleccionar un subcanal", Toast.LENGTH_LONG).show();
             return false;
         }
         return true;

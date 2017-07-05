@@ -195,7 +195,7 @@ public class MarcacionFragment extends BaseFragment {
                                                     try {
                                                         Marcacion.insert(getDataBase(), marc);
                                                     } catch (Exception ex) {
-                                                        DataBase db = DataBase.newDataBase(rp3.berlin.db.DbOpenHelper.class);
+                                                        DataBase db = DataBase.newDataBase(DbOpenHelper.class);
                                                         Marcacion.insert(db, marc);
                                                     }
 
@@ -212,6 +212,18 @@ public class MarcacionFragment extends BaseFragment {
                                                         Calendar cal_hoy = Calendar.getInstance();
                                                         try {
                                                             cal_hoy.setTime(format.parse(dia.getHoraInicio1().replace("h", ":")));
+                                                            //Se agrega tolerancia
+                                                            int atraso_dia = PreferenceManager.getInt(Contants.KEY_MINUTO_ATRASO_DIA, 0);
+                                                            int atraso_mes = PreferenceManager.getInt(Contants.KEY_MINUTO_ATRASO_MES, 0);
+                                                            if(atraso_mes < atraso_dia)
+                                                            {
+                                                                if(atraso_mes <= 0)
+                                                                    atraso_dia = 0;
+                                                                else
+                                                                    atraso_dia = atraso_dia - atraso_mes;
+                                                            }
+                                                            cal_hoy.add(Calendar.MINUTE, atraso_dia);
+
                                                         } catch (Exception ex) {
                                                         }
                                                         int atraso = CheckMinutes(cal_hoy);
@@ -237,6 +249,17 @@ public class MarcacionFragment extends BaseFragment {
                                                         Calendar cal_hoy = Calendar.getInstance();
                                                         try {
                                                             cal_hoy.setTime(format.parse(dia.getHoraInicio1().replace("h", ":")));
+                                                            //Se agrega tolerancia
+                                                            int atraso_dia = PreferenceManager.getInt(Contants.KEY_MINUTO_ATRASO_DIA, 0);
+                                                            int atraso_mes = PreferenceManager.getInt(Contants.KEY_MINUTO_ATRASO_MES, 0);
+                                                            if(atraso_mes < atraso_dia)
+                                                            {
+                                                                if(atraso_mes <= 0)
+                                                                    atraso_dia = 0;
+                                                                else
+                                                                    atraso_dia = atraso_dia - atraso_mes;
+                                                            }
+                                                            cal_hoy.add(Calendar.MINUTE, atraso_dia);
                                                         } catch (Exception ex) {
                                                         }
                                                         int atraso = CheckMinutes(cal_hoy);

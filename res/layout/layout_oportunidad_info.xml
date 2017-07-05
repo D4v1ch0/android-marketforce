@@ -7,116 +7,120 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/label_probabilidad_venta"
-                android:id="@+id/textView30"
-                android:layout_weight="1"
-                android:textColor="@color/color_text_sky_blue"
-                android:textStyle="bold"
-                android:gravity="center" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/label_importe"
-                android:id="@+id/textView32"
-                android:layout_weight="1"
-                android:textColor="@color/color_text_sky_blue"
-                android:textStyle="bold"
-                android:gravity="center" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:gravity="center">
+            android:orientation="horizontal">
 
-            <RelativeLayout
-                android:orientation="vertical"
+            <TextView
+                android:id="@+id/textView30"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:text="@string/label_probabilidad_venta"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/color_text_sky_blue"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView32"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/label_importe"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/color_text_sky_blue"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
                 android:layout_marginTop="15dp"
-                android:layout_marginBottom="15dp">
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <rp3.berlin.utils.DonutChart
                     android:id="@+id/donutChart"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    customviews:radius="60dp"
-                    android:layout_gravity="center"
                     android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true" />
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
+                    customviews:radius="60dp" />
 
                 <TextView
+                    android:id="@+id/oportunidad_probabilidad"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Medium Text"
-                    android:id="@+id/oportunidad_probabilidad"
-                    android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
                     android:gravity="center"
+                    android:text="Medium Text"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textStyle="bold" />
 
             </RelativeLayout>
 
             <TextView
+                android:id="@+id/oportunidad_importe"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Medium Text"
-                android:id="@+id/oportunidad_importe"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:text="Medium Text"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
 
     <TextView
+        android:id="@+id/textView33"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:background="@color/color_grey"
+        android:paddingBottom="5dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="8dp"
+        android:paddingTop="5dp"
         android:text="@string/label_contactos_max"
-        android:id="@+id/textView33"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/color_text_sky_blue"
         android:textStyle="bold"
-        android:paddingLeft="12dp"
-        android:paddingTop="5dp"
-        android:paddingRight="8dp"
-        android:paddingBottom="5dp"
-        android:background="@color/color_grey" />
+        android:visibility="gone" />
 
     <TextView
+        android:id="@+id/oportunidad_sin_contactos"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/label_no_contacto"
-        android:id="@+id/oportunidad_sin_contactos"
-        android:textColor="@color/color_text_sky_blue"
         android:gravity="center"
-        android:padding="15dp" />
+        android:padding="15dp"
+        android:text="@string/label_no_contacto"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/color_text_sky_blue"
+        android:visibility="gone" />
 
     <LinearLayout
-        android:orientation="vertical"
+        android:id="@+id/oportunidad_contactos"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/oportunidad_contactos"></LinearLayout>
+        android:orientation="vertical"
+        android:visibility="gone"></LinearLayout>
 
     <TextView
         android:layout_width="fill_parent"
@@ -287,14 +291,14 @@
         android:layout_margin="5dp" >
 
         <TextView
+            android:id="@+id/textView41"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/label_pagina_web"
-            android:id="@+id/textView41"
             android:layout_weight="0.33"
-            android:textColor="@color/color_text_sky_blue"
-            android:paddingLeft="6dp" />
+            android:paddingLeft="6dp"
+            android:text="@string/label_razon_social"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/color_text_sky_blue" />
 
         <LinearLayout
             android:orientation="vertical"
