@@ -166,7 +166,7 @@ public class EstadoCuentaFragment extends BaseFragment {
                 else
                     estadoCuenta.setDiasXVencer(jsonObject.getInt("DiasXVencer"));
 
-                estadoCuenta.setDocumento(jsonObject.getInt("NumeroDocumento") + "");
+                estadoCuenta.setDocumento(jsonObject.getString("NumeroDocumento") + "");
                 estadoCuenta.setFechaEmision(Convert.getDateFromDotNetTicks(jsonObject.getLong("FechaEmisionTicks")));
                 if(!jsonObject.isNull("FechaVencimientoTicks"))
                     estadoCuenta.setFechaVencimiento(Convert.getDateFromDotNetTicks(jsonObject.getLong("FechaVencimientoTicks")));
@@ -208,63 +208,47 @@ public class EstadoCuentaFragment extends BaseFragment {
 
         for (EstadoCuenta estado : listado) {
             //Primero valido si la fecha de vencimiento es mayor o menor al día de hoy
-            if(estado.getFechaVencimiento() != null) {
-                if (cal.getTime().getTime() > estado.getFechaVencimiento().getTime()) {
-                    //Cartera vencida
-                    if(estado.getDiasVencidos() > 8)
-                    {
-                        if(estado.getDiasVencidos() > 15)
-                        {
-                            if(estado.getDiasVencidos() > 30)
-                            {
-                                if(estado.getDiasVencidos() > 60)
-                                {
-                                    vencida_61 = vencida_61 + estado.getSaldo() + estado.getInteres();
+            if(!estado.getDocumento().contains("N") && !estado.getDocumento().contains("E")) {
+                if (estado.getFechaVencimiento() != null) {
+                    if (cal.getTime().getTime() > estado.getFechaVencimiento().getTime()) {
+                        //Cartera vencida
+                        if (estado.getDiasVencidos() > 8) {
+                            if (estado.getDiasVencidos() > 15) {
+                                if (estado.getDiasVencidos() > 30) {
+                                    if (estado.getDiasVencidos() > 60) {
+                                        vencida_61 = vencida_61 + estado.getSaldo();
+                                    } else {
+                                        vencida_31_60 = vencida_31_60 + estado.getSaldo();
+                                    }
+                                } else {
+                                    vencida_16_30 = vencida_16_30 + estado.getSaldo();
                                 }
-                                else
-                                {
-                                    vencida_31_60 = vencida_31_60 + estado.getSaldo() + estado.getInteres();
-                                }
+                            } else {
+                                vencida_9_15 = vencida_9_15 + estado.getSaldo();
                             }
-                            else
-                            {
-                                vencida_16_30 = vencida_16_30 + estado.getSaldo() + estado.getInteres();
+                        } else {
+                            vencida_0_8 = vencida_0_8 + estado.getSaldo();
+                        }
+                    } else {
+                        //Cartera por vencer
+                        int diasXVencer = (-1) * estado.getDiasXVencer();
+                        if (diasXVencer > 30) {
+                            if (diasXVencer > 60) {
+                                vencer_61 = vencer_61 + estado.getSaldo();
+                            } else {
+                                vencer_31_60 = vencer_31_60 + estado.getSaldo();
                             }
+                        } else {
+                            vencer_1_30 = vencer_1_30 + estado.getSaldo();
                         }
-                        else
-                        {
-                            vencida_9_15 = vencida_9_15 + estado.getSaldo() + estado.getInteres();
-                        }
-                    }
-                    else
-                    {
-                        vencida_0_8 = vencida_0_8 + estado.getSaldo() + estado.getInteres();
-                    }
-                } else {
-                    //Cartera por vencer
-                    int diasXVencer = (-1) * estado.getDiasXVencer();
-                    if(diasXVencer > 30)
-                    {
-                        if(diasXVencer > 60)
-                        {
-                            vencer_61 = vencer_61 + estado.getSaldo() + estado.getInteres();
-                        }
-                        else
-                        {
-                            vencer_31_60 = vencer_31_60 + estado.getSaldo() + estado.getInteres();
-                        }
-                    }
-                    else
-                    {
-                        vencer_1_30 = vencer_1_30 + estado.getSaldo() + estado.getInteres();
                     }
                 }
             }
+            total_saldos = total_saldos + estado.getSaldo();
         }
 
         total_vencida = vencida_0_8 + vencida_9_15 + vencida_16_30 + vencida_31_60 + vencida_61;
         total_vencer = vencer_1_30 + vencer_31_60 + vencer_61;
-        total_saldos = total_vencer + total_vencida;
 
         ((TextView) getRootView().findViewById(R.id.estado_cuenta_vencida_0_8)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(vencida_0_8));
         ((TextView) getRootView().findViewById(R.id.estado_cuenta_vencida_9_15)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(vencida_9_15));

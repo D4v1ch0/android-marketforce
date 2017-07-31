@@ -465,8 +465,8 @@
     <string name="label_consultar_importaciones">Importaciones</string>
     <string name="label_sin_importaciones">No hay información de Importaciones</string>
     <string name="label_bodega">Bodega</string>
-    <string name="label_stock_disponible">Stock Disponible</string>
-    <string name="label_fisico">Stock Físico</string>
+    <string name="label_stock_disponible">Disponible</string>
+    <string name="label_fisico">Físico</string>
     <string name="label_producto">Producto</string>
     <string name="label_procedencia">Procedencia</string>
     <string name="label_fecha_pedido">Fecha Pedido</string>
@@ -519,4 +519,8 @@
     <string name="label_dist_varia">% Dist Varia</string>
     <string name="label_varia_distri">Varia Distr</string>
     <string name="label_a_pagar">% A Pagar</string>
+    <string name="label_codigo">Código:</string>
+    <string name="label_total_a_pagar">Total a Pagar:</string>
+    <string name="title_sin_conexion">Sin Conexión</string>
+    <string name="message_sin_conexion_stock_descuento">No hay conexión para consultar stock y descuentos, desea continuar?</string>
 </resources>

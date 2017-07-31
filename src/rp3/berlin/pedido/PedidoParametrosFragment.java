@@ -39,7 +39,7 @@ public class PedidoParametrosFragment extends BaseFragment{
     public static String ARG_ID_AGENDA = "id_agenda";
 
     private AutoCompleteTextView cliente_auto, serie_auto;
-    private ArrayList<String> list_nombres, list_nombres_series;
+    private ArrayList<String> list_nombres, list_nombres_series, list_ciudad;
     private List<Cliente> list_cliente;
     private List<GeneralValue> list_serie;
     private List<Tarea> list_tareas;
@@ -89,7 +89,7 @@ public class PedidoParametrosFragment extends BaseFragment{
         id_agenda = getArguments().getLong(ARG_ID_AGENDA , 0);
         list_nombres = new ArrayList<String>();
         list_nombres_series = new ArrayList<String>();
-        List<String> list_ciudad = new ArrayList<String>();
+        list_ciudad = new ArrayList<String>();
         if (list_tareas == null)
             list_tareas = new ArrayList<Tarea>();
 
@@ -108,19 +108,95 @@ public class PedidoParametrosFragment extends BaseFragment{
         }
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(), R.layout.spinner_small_text, list_nombres);
 
-        list_serie = GeneralValue.getGeneralValues(getDataBase(), Contants.GENERAL_TABLE_SERIES_BERLIN);
+        /*list_serie = GeneralValue.getGeneralValues(getDataBase(), Contants.GENERAL_TABLE_SERIES_BERLIN);
         for (GeneralValue gv : list_serie) {
             list_nombres_series.add(gv.getCode() + " - " + gv.getValue());
         }
-        final ArrayAdapter<String> adapterSeries = new ArrayAdapter<String>(this.getContext(), R.layout.spinner_small_text, list_nombres_series);
+        final ArrayAdapter<String> adapterSeries = new ArrayAdapter<String>(this.getContext(), R.layout.spinner_small_text, list_nombres_series);*/
 
-        tipoOrdenAdapter = new SimpleGeneralValueAdapter(getContext(), GeneralValue.getGeneralValues(getDataBase(), Contants.GENERAL_TABLE_TIPO_ORDEN_BERLIN));
-        ((Spinner) getRootView().findViewById(R.id.crear_pedido_tipo_orden)).setAdapter(tipoOrdenAdapter);
+        //tipoOrdenAdapter = new SimpleGeneralValueAdapter(getContext(), GeneralValue.getGeneralValues(getDataBase(), Contants.GENERAL_TABLE_TIPO_ORDEN_BERLIN));
+        //((Spinner) getRootView().findViewById(R.id.crear_pedido_tipo_orden)).setAdapter(tipoOrdenAdapter);
 
-        list_ciudad.add("Guayaquil");
-        list_ciudad.add("Quito");
+        List<GeneralValue> list_ciudad_adapter = GeneralValue.getGeneralValues(getDataBase(), Contants.GENERAL_TABLE_DEPARTAMENTO_BERLIN);
+        if(list_ciudad_adapter.size() > 0) {
+            for (GeneralValue gv : list_ciudad_adapter) {
+                list_ciudad.add(gv.getReference2());
+            }
+        }
+        else
+        {
+            list_ciudad.add("Guayaquil");
+            list_ciudad.add("Quito");
+        }
         final ArrayAdapter<String> ciudadAdapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_spinner_dropdown_item, list_ciudad);
         ((Spinner) getRootView().findViewById(R.id.crear_pedido_ciudad)).setAdapter(ciudadAdapter);
+        ((Spinner) getRootView().findViewById(R.id.crear_pedido_ciudad)).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                //Actualizo Tipo de Orden
+                List<GeneralValue> values = GeneralValue.getGeneralValues(getDataBase(), Contants.GENERAL_TABLE_TIPO_ORDEN_BERLIN);
+                List<GeneralValue> newValues = new ArrayList<GeneralValue>();
+                for(GeneralValue gv : values)
+                {
+                    if(list_ciudad.get(i).contains(gv.getReference1()))
+                        newValues.add(gv);
+                }
+                if(newValues.size() == 0)
+                    newValues = values;
+                tipoOrdenAdapter = new SimpleGeneralValueAdapter(getContext(), newValues);
+                ((Spinner) getRootView().findViewById(R.id.crear_pedido_tipo_orden)).setAdapter(tipoOrdenAdapter);
+
+                //Actualizo Serie
+                List<GeneralValue> valuesSeries = GeneralValue.getGeneralValues(getDataBase(), Contants.GENERAL_TABLE_SERIES_BERLIN);
+                List<GeneralValue> newValuesSeries = new ArrayList<GeneralValue>();
+                for(GeneralValue gv : valuesSeries)
+                {
+                    if(list_ciudad.get(i).contains(gv.getReference1()))
+                        newValuesSeries.add(gv);
+                }
+                if(newValuesSeries.size() == 0)
+                    newValuesSeries = valuesSeries;
+                list_nombres_series.clear();
+                list_serie = newValuesSeries;
+                for (GeneralValue gv : newValuesSeries) {
+                    list_nombres_series.add(gv.getCode() + " - " + gv.getValue());
+                }
+                final ArrayAdapter<String> adapterSeries = new ArrayAdapter<String>(getContext(), R.layout.spinner_small_text, list_nombres_series);
+                serie_auto.setAdapter(adapterSeries);
+                serie_auto.setThreshold(3);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        List<GeneralValue> values = GeneralValue.getGeneralValues(getDataBase(), Contants.GENERAL_TABLE_TIPO_ORDEN_BERLIN);
+        List<GeneralValue> newValues = new ArrayList<GeneralValue>();
+        for(GeneralValue gv : values)
+        {
+            if(list_ciudad.get(0).contains(gv.getReference1()))
+                newValues.add(gv);
+        }
+        tipoOrdenAdapter = new SimpleGeneralValueAdapter(getContext(), newValues);
+        ((Spinner) getRootView().findViewById(R.id.crear_pedido_tipo_orden)).setAdapter(tipoOrdenAdapter);
+
+        List<GeneralValue> valuesSeries = GeneralValue.getGeneralValues(getDataBase(), Contants.GENERAL_TABLE_SERIES_BERLIN);
+        List<GeneralValue> newValuesSeries = new ArrayList<GeneralValue>();
+        for(GeneralValue gv : valuesSeries)
+        {
+            if(list_ciudad.get(0).contains(gv.getReference1()))
+                newValuesSeries.add(gv);
+        }
+        if(newValuesSeries.size() == 0)
+            newValuesSeries = valuesSeries;
+        list_nombres_series.clear();
+        list_serie = newValuesSeries;
+        for (GeneralValue gv : newValuesSeries) {
+            list_nombres_series.add(gv.getCode() + " - " + gv.getValue());
+        }
+        final ArrayAdapter<String> adapterSeries = new ArrayAdapter<String>(getContext(), R.layout.spinner_small_text, list_nombres_series);
 
         cliente_auto.setAdapter(adapter);
         cliente_auto.setThreshold(3);
@@ -137,17 +213,17 @@ public class PedidoParametrosFragment extends BaseFragment{
                     ArrayList<String> direcciones = new ArrayList<String>();
                     int position = list_nombres.indexOf(adapter.getItem(pos));
                     if (position != -1) {
+                        Collections.sort(list_cliente.get(position).getClienteDirecciones(), new Comparator<ClienteDireccion>() {
+                            @Override
+                            public int compare(final ClienteDireccion object1, final ClienteDireccion object2) {
+                                return object1.getDireccion().compareTo(object2.getDireccion());
+                            }
+                        });
                         for (ClienteDireccion cliDir : list_cliente.get(position).getClienteDirecciones()) {
                             direcciones.add(cliDir.getDireccion());
                         }
-                        Collections.sort(direcciones, new Comparator<String>() {
-                            @Override
-                            public int compare(final String object1, final String object2) {
-                                return object1.compareTo(object2);
-                            }
-                        });
                         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_small_text, direcciones);
-                        ((Spinner) rootView.findViewById(R.id.crear_visita_direccion)).setAdapter(adapter);
+                        ((Spinner) rootView.findViewById(R.id.crear_pedido_direccion)).setAdapter(adapter);
                     }
 
                 }
@@ -162,15 +238,16 @@ public class PedidoParametrosFragment extends BaseFragment{
                     ArrayList<String> direcciones = new ArrayList<String>();
                     int position = list_nombres.indexOf(cliente_auto.getText().toString());
                     if (position != -1) {
+                        Collections.sort(list_cliente.get(position).getClienteDirecciones(), new Comparator<ClienteDireccion>() {
+                            @Override
+                            public int compare(final ClienteDireccion object1, final ClienteDireccion object2) {
+                                return object1.getDireccion().compareTo(object2.getDireccion());
+                            }
+                        });
                         for (ClienteDireccion cliDir : list_cliente.get(position).getClienteDirecciones()) {
                             direcciones.add(cliDir.getDireccion());
                         }
-                        Collections.sort(direcciones, new Comparator<String>() {
-                            @Override
-                            public int compare(final String object1, final String object2) {
-                                return object1.compareTo(object2);
-                            }
-                        });
+
                         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_small_text, direcciones);
                         ((Spinner) rootView.findViewById(R.id.crear_pedido_direccion)).setAdapter(adapter);
                     }
@@ -199,15 +276,14 @@ public class PedidoParametrosFragment extends BaseFragment{
                 String idSerie = "", ciudad = "";
                 int position = list_nombres.indexOf(cliente_auto.getText().toString());
                 int position_series = list_nombres_series.indexOf(serie_auto.getText().toString());
+                int position_ciudad = ((Spinner) getRootView().findViewById(R.id.crear_pedido_ciudad)).getSelectedItemPosition();
+                int position_direccion = ((Spinner) rootView.findViewById(R.id.crear_pedido_direccion)).getSelectedItemPosition();
                 if (position != -1) {
                     if (position_series != -1) {
-                        if(((Spinner) getRootView().findViewById(R.id.crear_pedido_ciudad)).getSelectedItemPosition() == 0)
-                            ciudad = "Guayaquil";
-                        else
-                            ciudad = "Quito";
+                        ciudad = list_ciudad.get(position_ciudad);
                         idCliente = list_cliente.get(position).getID();
                         idSerie = list_serie.get(position_series).getCode();
-                        int idDireccion = list_cliente.get(position).getClienteDirecciones().get(((Spinner) rootView.findViewById(R.id.crear_pedido_direccion)).getSelectedItemPosition()).getIdClienteDireccion();
+                        int idDireccion = list_cliente.get(position).getClienteDirecciones().get(position_direccion).getIdClienteDireccion();
                         Intent intent = new Intent(getContext(), CrearPedidoActivity.class);
                         intent.putExtra(CrearPedidoActivity.ARG_TIPO_DOCUMENTO, transaccion);
                         intent.putExtra(CrearPedidoActivity.ARG_CLIENTE, idCliente);
@@ -245,15 +321,15 @@ public class PedidoParametrosFragment extends BaseFragment{
                 {
                     ArrayList<String> direcciones = new ArrayList<String>();
                     cliente_auto.setText(list_nombres.get(i));
+                    Collections.sort(list_cliente.get(i).getClienteDirecciones(), new Comparator<ClienteDireccion>() {
+                        @Override
+                        public int compare(final ClienteDireccion object1, final ClienteDireccion object2) {
+                            return object1.getDireccion().compareTo(object2.getDireccion());
+                        }
+                    });
                     for (ClienteDireccion cliDir : list_cliente.get(i).getClienteDirecciones()) {
                         direcciones.add(cliDir.getDireccion());
                     }
-                    Collections.sort(direcciones, new Comparator<String>() {
-                        @Override
-                        public int compare(final String object1, final String object2) {
-                            return object1.compareTo(object2);
-                        }
-                    });
                     ArrayAdapter<String> adapterDir = new ArrayAdapter<String>(getContext(), R.layout.spinner_small_text, direcciones);
                     ((Spinner) rootView.findViewById(R.id.crear_pedido_direccion)).setAdapter(adapterDir);
                     cliente_auto.setEnabled(false);

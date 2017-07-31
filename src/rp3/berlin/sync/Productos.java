@@ -318,6 +318,7 @@ public class Productos {
             else
                 resp.putString(Agente.KEY_DESCUENTO, "");
             resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS);
+            //resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_HTTP_ERROR);
         }finally{
             webService.close();
         }
@@ -352,6 +353,7 @@ public class Productos {
             else
                 resp.putString(ProductoListFragment.ARG_ITEM, "");
             resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS);
+            //resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_ERROR);
         }finally{
             webService.close();
         }

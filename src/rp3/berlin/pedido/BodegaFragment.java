@@ -9,16 +9,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import rp3.app.BaseFragment;
+import rp3.berlin.models.pedido.LibroPrecio;
+import rp3.configuration.PreferenceManager;
 import rp3.data.MessageCollection;
 import rp3.data.models.GeneralValue;
 import rp3.berlin.Contants;
@@ -28,6 +32,7 @@ import rp3.berlin.models.pedido.Producto;
 import rp3.berlin.models.pedido.Stock;
 import rp3.berlin.models.pedido.VentaPerdida;
 import rp3.berlin.sync.SyncAdapter;
+import rp3.util.ConnectionUtils;
 import rp3.util.Convert;
 
 /**
@@ -41,6 +46,7 @@ public class BodegaFragment extends BaseFragment {
     private Producto prod;
     private SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy HH:mm");
     private ProductoAutoCompleteAdapter adapter;
+    private NumberFormat numberFormat;
 
     public static BodegaFragment newInstance(String item)
     {
@@ -72,12 +78,22 @@ public class BodegaFragment extends BaseFragment {
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
         item = getArguments().getString(ARG_ITEM, "");
+        numberFormat = NumberFormat.getInstance();
+        numberFormat.setMaximumFractionDigits(2);
+        numberFormat.setMinimumFractionDigits(2);
         if(!item.trim().equalsIgnoreCase(""))
         {
             ((EditText) getRootView().findViewById(R.id.codigo_producto)).setText(item);
             prod = Producto.getProductoSingleByCodigoExterno(getDataBase(), item);
+            List<LibroPrecio> result = LibroPrecio.consultaPrecioGeneral(getDataBase(), Contants.LIBRO_ESTANDAR, item, prod.getLinea());
             ((TextView) getRootView().findViewById(R.id.consulta_producto)).setText(prod.getCodigoExterno() + " - " + prod.getDescripcion());
             ((TextView) getRootView().findViewById(R.id.consulta_producto)).setVisibility(View.VISIBLE);
+            if(result.size() > 0)
+                ((TextView) getRootView().findViewById(R.id.consulta_precio)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(evaluatePrecio(result).getPrecio()));
+            else
+                ((TextView) getRootView().findViewById(R.id.consulta_precio)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(0));
+            ((TextView) getRootView().findViewById(R.id.consulta_aplicacion)).setText(prod.getAplicacion());
+            getRootView().findViewById(R.id.consulta_extra_data).setVisibility(View.VISIBLE);
             GetStock(item);
         }
 
@@ -118,8 +134,15 @@ public class BodegaFragment extends BaseFragment {
                     prod = Producto.getProductoSingleByCodigoExterno(getDataBase(), ((EditText) getRootView().findViewById(R.id.codigo_producto)).getText().toString());
                     if(prod != null)
                     {
+                        List<LibroPrecio> result = LibroPrecio.consultaPrecioGeneral(getDataBase(), Contants.LIBRO_ESTANDAR, prod.getCodigoExterno(), prod.getLinea());
                         ((TextView) getRootView().findViewById(R.id.consulta_producto)).setText(prod.getCodigoExterno() + " - " + prod.getDescripcion());
                         ((TextView) getRootView().findViewById(R.id.consulta_producto)).setVisibility(View.VISIBLE);
+                        if(result.size() > 0)
+                            ((TextView) getRootView().findViewById(R.id.consulta_precio)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(evaluatePrecio(result).getPrecio()));
+                        else
+                            ((TextView) getRootView().findViewById(R.id.consulta_precio)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(0));
+                        ((TextView) getRootView().findViewById(R.id.consulta_aplicacion)).setText(prod.getAplicacion());
+                        getRootView().findViewById(R.id.consulta_extra_data).setVisibility(View.VISIBLE);
                         GetStock(prod.getCodigoExterno());
                     }
                     else
@@ -201,22 +224,34 @@ public class BodegaFragment extends BaseFragment {
 
     public void GetStock(String codigo)
     {
-        Bundle bundle = new Bundle();
-        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_GET_STOCK_CONSULTA);
-        bundle.putString(ARG_ITEM, codigo);
-        requestSync(bundle);
+        if (ConnectionUtils.isNetAvailable(getContext())) {
+            Bundle bundle = new Bundle();
+            bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_GET_STOCK_CONSULTA);
+            bundle.putString(ARG_ITEM, codigo);
+            requestSync(bundle);
 
-        showDialogProgress("Cargando", "Consultando Stock");
+            showDialogProgress("Cargando", "Consultando Stock");
+        }
+        else
+        {
+            Toast.makeText(getContext(), R.string.message_error_sync_no_net_available, Toast.LENGTH_LONG).show();
+        }
     }
 
     public void GetImportaciones(String codigo)
     {
-        Bundle bundle = new Bundle();
-        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_GET_IMPORTACIONES);
-        bundle.putString(ARG_ITEM, codigo);
-        requestSync(bundle);
+        if (ConnectionUtils.isNetAvailable(getContext())) {
+            Bundle bundle = new Bundle();
+            bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_GET_IMPORTACIONES);
+            bundle.putString(ARG_ITEM, codigo);
+            requestSync(bundle);
 
-        showDialogProgress("Cargando", "Consultando Importaciones");
+            showDialogProgress("Cargando", "Consultando Importaciones");
+        }
+        else
+        {
+            Toast.makeText(getContext(), R.string.message_error_sync_no_net_available, Toast.LENGTH_LONG).show();
+        }
     }
 
     public void ShowStock(String json)
@@ -299,5 +334,21 @@ public class BodegaFragment extends BaseFragment {
         {
 
         }
+    }
+
+    public LibroPrecio evaluatePrecio(List<LibroPrecio> precio)
+    {
+        LibroPrecio resp = new LibroPrecio();
+        for(LibroPrecio libroPrecio : precio)
+        {
+            if(resp.getItem() == null && libroPrecio.getValorEscalado() == 0)
+                resp = libroPrecio;
+            else
+            {
+                if(libroPrecio.getValorEscalado() == 0 && libroPrecio.getFechaEfectiva().getTime() > resp.getFechaEfectiva().getTime())
+                    resp = libroPrecio;
+            }
+        }
+        return resp;
     }
 }

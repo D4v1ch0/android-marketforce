@@ -229,6 +229,7 @@ public class LibroPrecio extends EntityBase<LibroPrecio> {
             precio.setDescripcion(CursorUtils.getString(c, Contract.ProductoExt.COLUMN_DESCRIPCION));
             precio.setPrecio(CursorUtils.getDouble(c, Contract.LibroPrecio.COLUMN_PRECIO));
             precio.setMedida(CursorUtils.getString(c, Contract.LibroPrecio.COLUMN_MEDIDA));
+            precio.setFechaEfectiva(CursorUtils.getDate(c, Contract.LibroPrecio.COLUMN_FECHA_EFECTIVA));
             list.add(precio);
         }
         c.close();

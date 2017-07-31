@@ -41,6 +41,7 @@ import rp3.berlin.models.pedido.PedidoDetalle;
 import rp3.berlin.models.pedido.Producto;
 import rp3.berlin.sync.Agente;
 import rp3.berlin.sync.SyncAdapter;
+import rp3.util.ConnectionUtils;
 
 /**
  * Created by magno_000 on 20/10/2015.
@@ -58,6 +59,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
     public static final String ARG_ITEM= "item";
 
     public static final int DIALOG_STOCK = 1;
+    public static final int DIALOG_SIN_CONEXION = 2;
 
     private JSONObject jsonObject;
     private LoaderProductos loaderProductos;
@@ -322,8 +324,13 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
                             if (generalValue == null || generalValue.getReference1().equalsIgnoreCase("1"))
                                 ValidarSustituto(prod);
                             else {
-                                fueraProduccion = true;
-                                GetStock(prod);
+                                if (!ConnectionUtils.isNetAvailable(getContext())) {
+                                    showDialogMessage("Aviso de Producto","Artículo fuera de producción");
+                                }
+                                else {
+                                    fueraProduccion = true;
+                                    GetStock(prod);
+                                }
                             }
                         }
                     }
@@ -418,17 +425,26 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
                     GetDescuento(seleccionado);
                 else
                     ShowProducto(0);
+                break;
+            case DIALOG_SIN_CONEXION:
+                ShowProducto(0);
+                break;
         }
     }
 
     public void GetStock(Producto prod)
     {
-        Bundle bundle = new Bundle();
-        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_GET_STOCK);
-        bundle.putString(ARG_ITEM, prod.getCodigoExterno());
-        requestSync(bundle);
+        if (!ConnectionUtils.isNetAvailable(this.getContext())) {
+            showDialogConfirmation(DIALOG_SIN_CONEXION, R.string.message_sin_conexion_stock_descuento, R.string.title_sin_conexion);
+        }
+        else {
+            Bundle bundle = new Bundle();
+            bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_GET_STOCK);
+            bundle.putString(ARG_ITEM, prod.getCodigoExterno());
+            requestSync(bundle);
 
-        showDialogProgress("Cargando", "Consultando Stock");
+            showDialogProgress("Cargando", "Consultando Stock");
+        }
     }
 
     public void GetSustitutos(Producto prod)
@@ -510,7 +526,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
                             if (evaluatePrecio().getPrecio() > 0) {
                                 GetStock(seleccionado);
                             } else {
-                                showDialogMessage("El producto debe tener precio para poder ingresar el registro");
+                                showDialogMessage("El producto " + seleccionado.getCodigoExterno() + " debe tener precio para poder ingresar el registro");
                             }
                         }
                     });
@@ -522,7 +538,10 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
 
     public void GetDescuento(Producto prod)
     {
-
+        if (!ConnectionUtils.isNetAvailable(this.getContext())) {
+            Toast.makeText(this.getContext(), "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
+        }
+        else {
             //Envio y reviso si existe descuento
             Bundle bundle = new Bundle();
             bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_GET_DESCUENTO);
@@ -534,6 +553,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
             requestSync(bundle);
 
             showDialogProgress("Cargando", "Consultando Descuento");
+        }
     }
 
     public void ShowProducto(double descuento)
@@ -609,7 +629,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
 
             }
         } else {
-            showDialogMessage("El producto debe tener precio para poder ingresar el registro");
+            showDialogMessage("El producto " + seleccionado.getCodigoExterno() + " debe tener precio para poder ingresar el registro");
         }
     }
 
@@ -657,6 +677,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
                 precio = data;
                 if (where.equalsIgnoreCase("ShowProducto")) {
                     ShowFragmentProducto();
+                    closeDialogProgress();
                 }
                 else if(where.equalsIgnoreCase("ValidarSubstituto"))
                 {
@@ -664,10 +685,10 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
                     if (evaluatePrecio().getPrecio() > 0) {
                         GetStock(seleccionado);
                     } else {
-                        showDialogMessage("El producto debe tener precio para poder ingresar el registro");
+                        showDialogMessage("El producto " + seleccionado.getCodigoExterno() + " debe tener precio para poder ingresar el registro");
                     }
                 }
-                closeDialogProgress();
+                //closeDialogProgress();
             } catch (Exception ex) {
 
             }

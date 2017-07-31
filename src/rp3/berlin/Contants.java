@@ -27,6 +27,7 @@ public class Contants {
     public final static int GENERAL_TABLE_TIPO_ORDEN_BERLIN = 2016;
     public final static int GENERAL_TABLE_AVISO_ITEM_BERLIN = 2017;
     public final static int GENERAL_TABLE_SUBCANAL_BERLIN = 2018;
+    public final static int GENERAL_TABLE_DEPARTAMENTO_BERLIN = 2019;
 	public final static String IMAGE_FOLDER = "imagesFolder";
     public final static String IMAGE_FOLDER_PRODUCTOS = "imagesFolderProducto";
     public final static String IMAGE_FOLDER_OPORTUNIDADES = "imagesFolderOportunidad";

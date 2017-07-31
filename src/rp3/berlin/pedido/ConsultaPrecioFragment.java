@@ -82,8 +82,8 @@ public class ConsultaPrecioFragment extends BaseFragment {
                 this.getContext(), "Línea"));
         //((Spinner) getRootView().findViewById(R.id.precio_linea)).setAdapter(lineaAdapter);
 
-        list_libro.add("Remate");
         list_libro.add("Standard");
+        list_libro.add("Remate");
         final ArrayAdapter<String> libroAdapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_spinner_dropdown_item, list_libro);
         ((Spinner) getRootView().findViewById(R.id.precio_libro)).setAdapter(libroAdapter);
 
@@ -107,9 +107,9 @@ public class ConsultaPrecioFragment extends BaseFragment {
                     if(((Spinner) getRootView().findViewById(R.id.precio_linea)).getSelectedItemPosition() > 0)
                         linea = lineaAdapter.getCode(((Spinner) getRootView().findViewById(R.id.precio_linea)).getSelectedItemPosition() - 1);
                     int position_libro = ((Spinner) getRootView().findViewById(R.id.precio_libro)).getSelectedItemPosition();
-                    if(position_libro == 0)
+                    if(position_libro == 1)
                         libro = Contants.LIBRO_REMATE;
-                    else if(position_libro == 1)
+                    else if(position_libro == 0)
                         libro = Contants.LIBRO_ESTANDAR;
                     if(producto.length() > 0 || libro.length() > 0 || linea.length() > 0) {
                         Bundle args = new Bundle();
@@ -224,7 +224,7 @@ public class ConsultaPrecioFragment extends BaseFragment {
             try {
                 if(((EditText) getRootView().findViewById(R.id.precio_producto)).getText().length() > 0 && ((RadioButton) getRootView().findViewById(R.id.precio_general)).isChecked() && data.size() > 0)
                 {
-                    LibroPrecio libroPrecio = data.get(0);
+                    LibroPrecio libroPrecio = evaluatePrecio(data);
                     List<LibroPrecio> newData = new ArrayList<>();
                     newData.add(libroPrecio);
                     data = newData;
@@ -248,5 +248,20 @@ public class ConsultaPrecioFragment extends BaseFragment {
         public void onLoaderReset(Loader<List<LibroPrecio>> arg0) {
 
         }
+    }
+    public LibroPrecio evaluatePrecio(List<LibroPrecio> precio)
+    {
+        LibroPrecio resp = new LibroPrecio();
+        for(LibroPrecio libroPrecio : precio)
+        {
+            if(resp.getItem() == null && libroPrecio.getValorEscalado() == 0)
+                resp = libroPrecio;
+            else
+            {
+                if(libroPrecio.getValorEscalado() == 0 && libroPrecio.getFechaEfectiva().getTime() > resp.getFechaEfectiva().getTime())
+                    resp = libroPrecio;
+            }
+        }
+        return resp;
     }
 }

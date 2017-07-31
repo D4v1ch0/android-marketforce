@@ -38,6 +38,7 @@ public class MetasFragment extends BaseFragment {
 
     private NumberFormat numberFormat;
     private List<Meta> listMeta;
+    private double total_a_pagar;
 
     @Override
     public void onAttach(Activity activity) {
@@ -79,6 +80,7 @@ public class MetasFragment extends BaseFragment {
         {
             MetasAdapter adapter = new MetasAdapter(getContext(), listMeta);
             ((ListView)getRootView().findViewById(R.id.metas_lista)).setAdapter(adapter);
+            ((TextView) getRootView().findViewById(R.id.metas_total)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(total_a_pagar));
         }
     }
 
@@ -101,6 +103,7 @@ public class MetasFragment extends BaseFragment {
             JSONArray jsonArray = new JSONArray(json);
             Calendar cal = Calendar.getInstance();
             listMeta = new ArrayList<>();
+            total_a_pagar = 0;
 
             for(int i = 0; i < jsonArray.length(); i ++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -113,6 +116,8 @@ public class MetasFragment extends BaseFragment {
                 meta.setPorCumplir(jsonObject.getDouble("PorCumplir"));
                 if(!jsonObject.isNull("UsdTotal"))
                     meta.setUsdTotal(jsonObject.getDouble("UsdTotal"));
+                else
+                    meta.setUsdTotal(0);
                 if(!jsonObject.isNull("PorCumplir"))
                     meta.setPorCumplir(jsonObject.getDouble("PorCumplir"));
                 if(!jsonObject.isNull("PorcDisVaria"))
@@ -120,10 +125,12 @@ public class MetasFragment extends BaseFragment {
                 if(!jsonObject.isNull("VarDistri"))
                     meta.setVarDistri(jsonObject.getDouble("VarDistri"));
                 listMeta.add(meta);
+                total_a_pagar = total_a_pagar + meta.getUsdTotal();
             }
 
             MetasAdapter adapter = new MetasAdapter(getContext(), listMeta);
             ((ListView)getRootView().findViewById(R.id.metas_lista)).setAdapter(adapter);
+            ((TextView) getRootView().findViewById(R.id.metas_total)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(total_a_pagar));
         }
         catch (Exception ex)
         {

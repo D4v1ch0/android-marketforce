@@ -293,7 +293,8 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                     "-" + getSecuencia(PreferenceManager.getInt(Contants.KEY_SECUENCIA_NOTA_CREDITO) + 1, 9));
         }
         if (tipo.equalsIgnoreCase("PD")) {
-            pedido.setNumeroDocumento("PD" + dateFormat.format(Calendar.getInstance().getTime()));
+            if(pedido.getID() == 0)
+                pedido.setNumeroDocumento("PD" + dateFormat.format(Calendar.getInstance().getTime()));
             if(pedido.getTipoDocumento() != null && pedido.getTipoDocumento().equalsIgnoreCase(tipo)) {
                 pedido.setIdDocumentoRef(0);
                 pedido.set_idDocumentoRef(0);
@@ -654,7 +655,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                             showDialogMessage("Aviso de Cliente", aviso.getValue());
                     }
                     cliente_auto.setEnabled(false);
-                    ((EditText) getRootView().findViewById(R.id.pedido_email)).setEnabled(false);
+                    //((EditText) getRootView().findViewById(R.id.pedido_email)).setEnabled(false);
                 }
         }
         if (pedido.getPedidoDetalles() == null)
