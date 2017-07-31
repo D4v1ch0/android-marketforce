@@ -393,8 +393,12 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
         cli.setTarjeta(((EditText) getRootView().findViewById(R.id.cliente_tarjeta)).getText().toString());
         cli.setTipoPersona(((GeneralValue) ((Spinner) getRootView().findViewById(R.id.crear_cliente_tipo_persona)).getSelectedItem()).getCode());
         //poner try y catch
-        cli.setPuntoVentaPOS(listaPuntoVenta.get(list_nombres.indexOf(puntoVenta_auto.getText().toString())).getCode());
-        cli.setSectorTrabajo(listaSectores.get(list_sectores.indexOf(sector_auto.getText().toString())).getCode());
+        try {
+            cli.setPuntoVentaPOS(listaPuntoVenta.get(list_nombres.indexOf(puntoVenta_auto.getText().toString())).getCode());
+            cli.setSectorTrabajo(listaSectores.get(list_sectores.indexOf(sector_auto.getText().toString())).getCode());
+        }
+        catch (Exception ex)
+        {}
         cli.setIdTipoCliente((int) ((Spinner) getRootView().findViewById(R.id.cliente_tipo_cliente)).getAdapter().getItemId(((Spinner) getRootView().findViewById(R.id.cliente_tipo_cliente)).getSelectedItemPosition()));
         cli.setExentoImpuesto(((CheckBox) getRootView().findViewById(R.id.cliente_oro)).isChecked());
         cli.setCiudadanoOro(((CheckBox) getRootView().findViewById(R.id.cliente_cd_oro)).isChecked());
