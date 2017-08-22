@@ -523,4 +523,7 @@
     <string name="label_total_a_pagar">Total a Pagar:</string>
     <string name="title_sin_conexion">Sin Conexión</string>
     <string name="message_sin_conexion_stock_descuento">No hay conexión para consultar stock y descuentos, desea continuar?</string>
+    <string name="label_61_90">61 - 90 días:</string>
+    <string name="label_91_dias">91 o más días:</string>
+    <string name="message_no_descuento">* Precio asignado no incluye descuentos adicionales</string>
 </resources>

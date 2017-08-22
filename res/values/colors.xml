@@ -36,7 +36,7 @@
      <color name="color_visited">#6FBF56</color>
      <color name="color_orange">#FF8838</color>
      <color name="color_pending">#335AA8</color>
-     <color name="color_unvisited">#BE2026</color>
+     <color name="color_unvisited">#be2026</color>
      <color name="color_grey_lines">#cccccc</color>
      <color name="color_fondo">#EDEDED</color>
      <color name="color_grey">#dddddd</color>

@@ -226,10 +226,10 @@
                     android:layout_weight="1"
                     android:background="@color/color_grey"
                     android:gravity="left"
-                    android:paddingBottom="5dp"
+                    android:paddingBottom="3dp"
                     android:paddingLeft="5dp"
                     android:paddingRight="0dp"
-                    android:paddingTop="6dp"
+                    android:paddingTop="3dp"
                     android:text="@string/label_0_8_dias"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/color_text_sky_blue"
@@ -272,10 +272,10 @@
                     android:layout_weight="1"
                     android:background="@color/color_grey"
                     android:gravity="left"
-                    android:paddingBottom="5dp"
+                    android:paddingBottom="3dp"
                     android:paddingLeft="5dp"
                     android:paddingRight="0dp"
-                    android:paddingTop="6dp"
+                    android:paddingTop="3dp"
                     android:text="@string/label_9_15_dias"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/color_text_sky_blue"
@@ -318,10 +318,10 @@
                     android:layout_weight="1"
                     android:background="@color/color_grey"
                     android:gravity="left"
-                    android:paddingBottom="5dp"
+                    android:paddingBottom="3dp"
                     android:paddingLeft="5dp"
                     android:paddingRight="0dp"
-                    android:paddingTop="6dp"
+                    android:paddingTop="3dp"
                     android:text="@string/label_16_30_dias"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/color_text_sky_blue"
@@ -364,10 +364,10 @@
                     android:layout_weight="1"
                     android:background="@color/color_grey"
                     android:gravity="left"
-                    android:paddingBottom="5dp"
+                    android:paddingBottom="3dp"
                     android:paddingLeft="5dp"
                     android:paddingRight="0dp"
-                    android:paddingTop="6dp"
+                    android:paddingTop="3dp"
                     android:text="@string/label_31_60_días"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/color_text_sky_blue"
@@ -410,11 +410,11 @@
                     android:layout_weight="1"
                     android:background="@color/color_grey"
                     android:gravity="left"
-                    android:paddingBottom="5dp"
+                    android:paddingBottom="3dp"
                     android:paddingLeft="5dp"
                     android:paddingRight="0dp"
-                    android:paddingTop="6dp"
-                    android:text="@string/label_61_dias"
+                    android:paddingTop="3dp"
+                    android:text="@string/label_61_90"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/color_text_sky_blue"
                     android:textSize="12sp"
@@ -427,7 +427,54 @@
                     android:orientation="vertical" />
 
                 <TextView
-                    android:id="@+id/estado_cuenta_vencida_61_mas"
+                    android:id="@+id/estado_cuenta_vencida_61_90"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|right"
+                    android:paddingRight="10dp"
+                    android:text="¢ 0.00"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/bg_layout_dates"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView121"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/color_grey"
+                    android:gravity="left"
+                    android:paddingBottom="3dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="0dp"
+                    android:paddingTop="3dp"
+                    android:text="@string/label_91_dias"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/color_text_sky_blue"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/material_blue_grey_800"
+                    android:orientation="vertical" />
+
+                <TextView
+                    android:id="@+id/estado_cuenta_vencida_91_mas"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -456,10 +503,10 @@
                     android:layout_weight="1"
                     android:background="@color/color_grey"
                     android:gravity="left"
-                    android:paddingBottom="5dp"
+                    android:paddingBottom="3dp"
                     android:paddingLeft="5dp"
                     android:paddingRight="0dp"
-                    android:paddingTop="6dp"
+                    android:paddingTop="3dp"
                     android:text="@string/label_total_vencido"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/color_text_sky_blue"
@@ -532,10 +579,10 @@
                     android:layout_weight="1"
                     android:background="@color/color_grey"
                     android:gravity="left"
-                    android:paddingBottom="5dp"
+                    android:paddingBottom="3dp"
                     android:paddingLeft="5dp"
                     android:paddingRight="0dp"
-                    android:paddingTop="6dp"
+                    android:paddingTop="3dp"
                     android:text="@string/label_1_30_dias"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/color_text_sky_blue"
@@ -578,10 +625,10 @@
                     android:layout_weight="1"
                     android:background="@color/color_grey"
                     android:gravity="left"
-                    android:paddingBottom="5dp"
+                    android:paddingBottom="3dp"
                     android:paddingLeft="5dp"
                     android:paddingRight="0dp"
-                    android:paddingTop="6dp"
+                    android:paddingTop="3dp"
                     android:text="@string/label_31_60_días"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/color_text_sky_blue"
@@ -624,11 +671,11 @@
                     android:layout_weight="1"
                     android:background="@color/color_grey"
                     android:gravity="left"
-                    android:paddingBottom="5dp"
+                    android:paddingBottom="3dp"
                     android:paddingLeft="5dp"
                     android:paddingRight="0dp"
-                    android:paddingTop="6dp"
-                    android:text="@string/label_61_dias"
+                    android:paddingTop="3dp"
+                    android:text="@string/label_61_90"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/color_text_sky_blue"
                     android:textSize="12sp"
@@ -641,7 +688,7 @@
                     android:orientation="vertical" />
 
                 <TextView
-                    android:id="@+id/estado_cuenta_vencer_61_mas"
+                    android:id="@+id/estado_cuenta_vencer_61_90"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -650,6 +697,7 @@
                     android:text="¢ 0.00"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textSize="12sp" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -669,13 +717,61 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@color/color_grey"
+                    android:gravity="left"
+                    android:paddingBottom="3dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="0dp"
+                    android:paddingTop="3dp"
+                    android:text="@string/label_91_dias"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/color_text_sky_blue"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/material_blue_grey_800"
+                    android:orientation="vertical" />
+
+                <TextView
+                    android:id="@+id/estado_cuenta_vencer_91_mas"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|right"
+                    android:paddingRight="10dp"
+                    android:text="¢ 0.00"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/bg_layout_dates"
+                android:orientation="vertical" >
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView121"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/color_grey"
                     android:ellipsize="end"
                     android:gravity="left"
                     android:lines="1"
-                    android:paddingBottom="5dp"
+                    android:paddingBottom="3dp"
                     android:paddingLeft="5dp"
                     android:paddingRight="0dp"
-                    android:paddingTop="6dp"
+                    android:paddingTop="3dp"
                     android:text="@string/label_total_x_vencer"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/color_text_sky_blue"
@@ -720,10 +816,10 @@
                     android:layout_weight="1"
                     android:background="@color/color_grey"
                     android:gravity="left"
-                    android:paddingBottom="5dp"
+                    android:paddingBottom="3dp"
                     android:paddingLeft="5dp"
                     android:paddingRight="0dp"
-                    android:paddingTop="6dp"
+                    android:paddingTop="3dp"
                     android:text="@string/label_cupo_credito"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/color_text_sky_blue"
@@ -770,10 +866,10 @@
                     android:ellipsize="end"
                     android:gravity="left"
                     android:lines="1"
-                    android:paddingBottom="5dp"
+                    android:paddingBottom="3dp"
                     android:paddingLeft="5dp"
                     android:paddingRight="0dp"
-                    android:paddingTop="6dp"
+                    android:paddingTop="3dp"
                     android:text="@string/label_saldo_disponible"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/color_text_sky_blue"

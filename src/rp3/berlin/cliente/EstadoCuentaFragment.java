@@ -202,8 +202,8 @@ public class EstadoCuentaFragment extends BaseFragment {
 
     private void GetResumen(List<EstadoCuenta> listado)
     {
-        double vencida_0_8 = 0, vencida_9_15 = 0, vencida_16_30 = 0, vencida_31_60 = 0, vencida_61 = 0, total_vencida = 0;
-        double vencer_1_30 = 0, vencer_31_60 = 0, vencer_61 = 0, total_vencer = 0, total_saldos = 0;
+        double vencida_0_8 = 0, vencida_9_15 = 0, vencida_16_30 = 0, vencida_31_60 = 0, vencida_61_90 = 0, vencida_91 = 0, total_vencida = 0;
+        double vencer_1_30 = 0, vencer_31_60 = 0, vencer_61_90 = 0, vencer_91 = 0, total_vencer = 0, total_saldos = 0;
         Calendar cal = Calendar.getInstance();
 
         for (EstadoCuenta estado : listado) {
@@ -216,7 +216,11 @@ public class EstadoCuentaFragment extends BaseFragment {
                             if (estado.getDiasVencidos() > 15) {
                                 if (estado.getDiasVencidos() > 30) {
                                     if (estado.getDiasVencidos() > 60) {
-                                        vencida_61 = vencida_61 + estado.getSaldo();
+                                        if (estado.getDiasVencidos() > 90) {
+                                            vencida_91 = vencida_91 + estado.getSaldo();
+                                        } else {
+                                            vencida_61_90 = vencida_61_90 + estado.getSaldo();
+                                        }
                                     } else {
                                         vencida_31_60 = vencida_31_60 + estado.getSaldo();
                                     }
@@ -234,7 +238,11 @@ public class EstadoCuentaFragment extends BaseFragment {
                         int diasXVencer = (-1) * estado.getDiasXVencer();
                         if (diasXVencer > 30) {
                             if (diasXVencer > 60) {
-                                vencer_61 = vencer_61 + estado.getSaldo();
+                                if (diasXVencer > 90) {
+                                    vencer_91 = vencer_91 + estado.getSaldo();
+                                } else {
+                                    vencer_61_90 = vencer_61_90 + estado.getSaldo();
+                                }
                             } else {
                                 vencer_31_60 = vencer_31_60 + estado.getSaldo();
                             }
@@ -247,19 +255,21 @@ public class EstadoCuentaFragment extends BaseFragment {
             total_saldos = total_saldos + estado.getSaldo();
         }
 
-        total_vencida = vencida_0_8 + vencida_9_15 + vencida_16_30 + vencida_31_60 + vencida_61;
-        total_vencer = vencer_1_30 + vencer_31_60 + vencer_61;
+        total_vencida = vencida_0_8 + vencida_9_15 + vencida_16_30 + vencida_31_60 + vencida_61_90 + vencida_91;
+        total_vencer = vencer_1_30 + vencer_31_60 + vencer_61_90 + vencer_91;
 
         ((TextView) getRootView().findViewById(R.id.estado_cuenta_vencida_0_8)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(vencida_0_8));
         ((TextView) getRootView().findViewById(R.id.estado_cuenta_vencida_9_15)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(vencida_9_15));
         ((TextView) getRootView().findViewById(R.id.estado_cuenta_vencida_16_30)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(vencida_16_30));
         ((TextView) getRootView().findViewById(R.id.estado_cuenta_vencida_31_60)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(vencida_31_60));
-        ((TextView) getRootView().findViewById(R.id.estado_cuenta_vencida_61_mas)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(vencida_61));
+        ((TextView) getRootView().findViewById(R.id.estado_cuenta_vencida_61_90)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(vencida_61_90));
+        ((TextView) getRootView().findViewById(R.id.estado_cuenta_vencida_91_mas)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(vencida_91));
         ((TextView) getRootView().findViewById(R.id.estado_cuenta_vencida_total)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(total_vencida));
 
         ((TextView) getRootView().findViewById(R.id.estado_cuenta_vencer_1_30)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(vencer_1_30));
         ((TextView) getRootView().findViewById(R.id.estado_cuenta_vencer_31_60)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(vencer_31_60));
-        ((TextView) getRootView().findViewById(R.id.estado_cuenta_vencer_61_mas)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(vencer_61));
+        ((TextView) getRootView().findViewById(R.id.estado_cuenta_vencer_61_90)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(vencer_61_90));
+        ((TextView) getRootView().findViewById(R.id.estado_cuenta_vencer_91_mas)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(vencer_91));
         ((TextView) getRootView().findViewById(R.id.estado_cuenta_vencer_total)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(total_vencer));
         ((TextView) getRootView().findViewById(R.id.estado_cuenta_total)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(total_saldos));
         ((TextView) getRootView().findViewById(R.id.estado_cuenta_cupo_credito)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(cli.getLimiteCredito()));

@@ -987,6 +987,8 @@ public final class Contract {
 		public static final String COLUMN_ID_BENEFICIO = "IdBeneficio";
 		public static final String COLUMN_USR_DESC_MANUAL = "UsrAutorizaDescManual";
 		public static final String COLUMN_ID_VENDEDOR = "IdVendedor";
+		public static final String COLUMN_LIBRO_PRECIO = "LibroPrecio";
+		public static final String COLUMN_PARAR_DESCUENTO = "PararDescuento";
 	}
 
 	public static abstract class Producto implements BaseColumns {

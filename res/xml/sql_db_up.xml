@@ -331,6 +331,12 @@
     <statement name="ToVersion11">
         ALTER TABLE tbOportunidad ADD COLUMN CanalInfor TEXT;
     </statement>
+    <statement name="ToVersion12-1">
+        ALTER TABLE tbPedidoDetalle ADD COLUMN LibroPrecio TEXT;
+    </statement>
+    <statement name="ToVersion12-2">
+        ALTER TABLE tbPedidoDetalle ADD COLUMN PararDescuento INTEGER;
+    </statement>
 
 
 </sql>

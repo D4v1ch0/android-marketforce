@@ -176,6 +176,7 @@ public class LibroPrecio extends EntityBase<LibroPrecio> {
     }
 
     public static List<LibroPrecio> getPrecio(DataBase db, String item, String cliente, String listaPrecio) {
+        boolean irAEstandar = true;
         String query = QueryDir.getQuery(Contract.LibroPrecio.QUERY_LIBRO_PRECIO);
         Calendar cal = Calendar.getInstance();
 
@@ -188,12 +189,15 @@ public class LibroPrecio extends EntityBase<LibroPrecio> {
             precio.setPrecio(CursorUtils.getDouble(c, Contract.LibroPrecio.COLUMN_PRECIO));
             precio.setValorEscalado(CursorUtils.getDouble(c, Contract.LibroPrecio.COLUMN_VALOR_ESCALADO));
             precio.setFechaEfectiva(CursorUtils.getDate(c, Contract.LibroPrecio.COLUMN_FECHA_EFECTIVA));
+            precio.setIdLibro(CursorUtils.getString(c, Contract.LibroPrecio.COLUMN_ID_LIBRO));
             precio.setParametroDesc(CursorUtils.getInt(c, Contract.MatrizPrecio.COLUMN_PARAMETRO_DESC));
+            if(precio.getValorEscalado() == 0)
+                irAEstandar = false;
             list.add(precio);
         }
         c.close();
 
-        if(list.size() == 0)
+        if(list.size() == 0 || irAEstandar)
         {
             query = QueryDir.getQuery(Contract.LibroPrecio.QUERY_LIBRO_PRECIO_ESTANDAR);
 
@@ -205,6 +209,7 @@ public class LibroPrecio extends EntityBase<LibroPrecio> {
                 precio.setPrecio(CursorUtils.getDouble(d, Contract.LibroPrecio.COLUMN_PRECIO));
                 precio.setValorEscalado(CursorUtils.getDouble(d, Contract.LibroPrecio.COLUMN_VALOR_ESCALADO));
                 precio.setFechaEfectiva(CursorUtils.getDate(d, Contract.LibroPrecio.COLUMN_FECHA_EFECTIVA));
+                precio.setIdLibro(CursorUtils.getString(d, Contract.LibroPrecio.COLUMN_ID_LIBRO));
                 precio.setParametroDesc(CursorUtils.getInt(d, Contract.MatrizPrecio.COLUMN_PARAMETRO_DESC));
                 list.add(precio);
             }
@@ -229,6 +234,7 @@ public class LibroPrecio extends EntityBase<LibroPrecio> {
             precio.setDescripcion(CursorUtils.getString(c, Contract.ProductoExt.COLUMN_DESCRIPCION));
             precio.setPrecio(CursorUtils.getDouble(c, Contract.LibroPrecio.COLUMN_PRECIO));
             precio.setMedida(CursorUtils.getString(c, Contract.LibroPrecio.COLUMN_MEDIDA));
+            precio.setIdLibro(CursorUtils.getString(c, Contract.LibroPrecio.COLUMN_ID_LIBRO));
             precio.setFechaEfectiva(CursorUtils.getDate(c, Contract.LibroPrecio.COLUMN_FECHA_EFECTIVA));
             list.add(precio);
         }
@@ -246,6 +252,7 @@ public class LibroPrecio extends EntityBase<LibroPrecio> {
             precio.setItem(CursorUtils.getString(c, Contract.LibroPrecio.COLUMN_ITEM));
             precio.setDescripcion(CursorUtils.getString(c, Contract.ProductoExt.COLUMN_DESCRIPCION));
             precio.setPrecio(CursorUtils.getDouble(c, Contract.LibroPrecio.COLUMN_PRECIO));
+            precio.setIdLibro(CursorUtils.getString(c, Contract.LibroPrecio.COLUMN_ID_LIBRO));
             precio.setMedida(CursorUtils.getString(c, Contract.LibroPrecio.COLUMN_MEDIDA));
             list.add(precio);
         }

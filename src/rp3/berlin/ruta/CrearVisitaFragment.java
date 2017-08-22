@@ -254,7 +254,10 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
         if (id != 0) {
             Cliente cli = Cliente.getClienteID(getDataBase(), id, false);
 
-            cliente_auto.setText(cli.getNombreCompleto().trim());
+            if(cli.getIdExterno() == null || cli.getIdExterno().trim().length() <= 0)
+                cliente_auto.setText(cli.getNombreCompleto().trim());
+            else
+                cliente_auto.setText(cli.getIdExterno() + " - " + cli.getNombreCompleto().trim());
 
             cliente_auto.dismissDropDown();
             ArrayList<String> direcciones = new ArrayList<String>();

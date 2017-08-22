@@ -39,7 +39,10 @@ import java.util.List;
 import java.util.Locale;
 
 import rp3.app.BaseFragment;
+import rp3.berlin.sync.Agente;
+import rp3.berlin.utils.Utils;
 import rp3.configuration.PreferenceManager;
+import rp3.data.MessageCollection;
 import rp3.data.models.GeneralValue;
 import rp3.berlin.Contants;
 import rp3.berlin.R;
@@ -102,8 +105,8 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     private long idCliente = 0;
     private long idAgenda = 0;
     private long idPedido = 0;
-    private int idDireccion = 0;
-    private boolean saved = false;
+    private int idDireccion = 0, item_position = 0;
+    private boolean saved = false, consultaDescuento = false;
     private String tipo = "FA";
     private String ciudad = "";
     private Pedido pedido;
@@ -116,6 +119,8 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     private Menu menu;
     private PagosListFragment fragment;
     private LoaderPrecio loaderPrecios;
+    private double descuento;
+    private Producto seleccionado;
 
     public static CrearPedidoFragment newInstance(long id_pedido, long id_agenda, String tipo, long idCliente, String serie, String tipoOrden, int idDireccion, String ciudad)
     {
@@ -620,18 +625,10 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 try {
-                    showDialogProgress("Cargando", "Consultando Precio");
                     Producto prod = Producto.getProductoIdServer(getDataBase(), pedido.getPedidoDetalles().get(position).getIdProducto());
-                    Cliente cliente = Cliente.getClienteID(getDataBase(), idCliente, false);
-                    Bundle args = new Bundle();
-                    args.putString(LoaderPrecio.STRING_CLIENTE, cliente.getIdExterno());
-                    args.putString(LoaderPrecio.STRING_ITEM, prod.getCodigoExterno());
-                    args.putString(LoaderPrecio.STRING_LISTA_PRECIO, cliente.getListPrecio());
-                    args.putString(LoaderPrecio.STRING_CANAL, cliente.getCanalPartner());
-                    args.putInt(LoaderPrecio.INT_POSICION, position);
-                    if(loaderPrecios == null)
-                        loaderPrecios = new LoaderPrecio();
-                    executeLoader(0, args, loaderPrecios);
+                    seleccionado = prod;
+                    item_position = position;
+                    GetDescuento(seleccionado);
                 } catch (Exception ex) {
 
                 }
@@ -790,7 +787,10 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         ((TextView) getRootView().findViewById(R.id.pedido_impuestos)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(impuestos));
         ((TextView) getRootView().findViewById(R.id.pedido_base_cero)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(base0));
         ((TextView) getRootView().findViewById(R.id.pedido_base_imponible)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(baseImponible));
-        ((TextView) getRootView().findViewById(R.id.pedido_subtotal)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(subtotal));
+        if(Screen.isLargeLayoutSize(this.getContext()))
+            ((TextView) getRootView().findViewById(R.id.pedido_subtotal)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(subtotal));
+        else
+            ((TextView) getRootView().findViewById(R.id.pedido_subtotal)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(subtotal - descuentos));
         ((TextView) getRootView().findViewById(R.id.pedido_redondeo)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(redondeo));
         ((TextView) getRootView().findViewById(R.id.pedido_neto)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(neto));
 
@@ -894,6 +894,8 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                         detalle.setCodigoExterno(jsonObject.getString("cod"));
                         detalle.setIdBeneficio(jsonObject.getInt("ib"));
                         detalle.setIdVendedor(jsonObject.getString("ven"));
+                        detalle.setLibroPrecio(jsonObject.getString("lp"));
+                        detalle.setPararDescuento(jsonObject.getInt("desc"));
                         if(!jsonObject.isNull("udm"))
                             detalle.setUsrDescManual(jsonObject.getString("udm"));
                         onAcceptSuccess(detalle);
@@ -1224,7 +1226,10 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         ((TextView) getRootView().findViewById(R.id.pedido_impuestos)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(impuestos));
         ((TextView) getRootView().findViewById(R.id.pedido_base_cero)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(base0));
         ((TextView) getRootView().findViewById(R.id.pedido_base_imponible)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(baseImponible));
-        ((TextView) getRootView().findViewById(R.id.pedido_subtotal)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(subtotal));
+        if(Screen.isLargeLayoutSize(this.getContext()))
+            ((TextView) getRootView().findViewById(R.id.pedido_subtotal)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(subtotal));
+        else
+            ((TextView) getRootView().findViewById(R.id.pedido_subtotal)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(subtotal - descuentos));
         ((TextView) getRootView().findViewById(R.id.pedido_redondeo)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(redondeo));
         ((TextView) getRootView().findViewById(R.id.pedido_neto)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(neto));
 
@@ -1423,6 +1428,71 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         return valorTotal;
     }
 
+    public void GetDescuento(Producto prod)
+    {
+        if (!ConnectionUtils.isNetAvailable(this.getContext())) {
+            Toast.makeText(this.getContext(), "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
+        }
+        else {
+            //Envio y reviso si existe descuento
+            consultaDescuento = true;
+            Cliente cl = Cliente.getClienteID(getDataBase(), idCliente, false);
+            Bundle bundle = new Bundle();
+            bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_GET_DESCUENTO);
+            bundle.putString(ProductoListFragment.ARG_CLIENTE, cl.getIdExterno());
+            bundle.putString(ProductoListFragment.ARG_LINEA, prod.getLinea());
+            bundle.putString(ProductoListFragment.ARG_LISTA_PRECIO, prod.getCodigoExterno());
+            bundle.putString(ProductoListFragment.ARG_TIPO_ORDEN, tipoOrden);
+            bundle.putString(ProductoListFragment.ARG_FAMILIA, prod.getFamilia());
+            requestSync(bundle);
+
+            showDialogProgress("Cargando", "Consultando Descuento");
+        }
+    }
+
+    @Override
+    public void onSyncComplete(Bundle data, MessageCollection messages) {
+        if (data.containsKey(SyncAdapter.ARG_SYNC_TYPE) && data.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_GET_DESCUENTO) && consultaDescuento) {
+            consultaDescuento = false;
+            closeDialogProgress();
+            if (messages.hasErrorMessage()) {
+                showDialogMessage(messages);
+            } else {
+                double descuento = 0;
+                String desc = data.getString(Agente.KEY_DESCUENTO);
+                try {
+                    JSONArray jsonArray = new JSONArray(desc);
+                    for(int i = 0; i < jsonArray.length(); i ++) {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        descuento = Double.parseDouble(jsonObject.getString("PorcentajeDescuento"));
+                        descuento = descuento / 100;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+                ShowProducto(descuento);
+            }
+        }
+    }
+
+    public void ShowProducto(double descuento) {
+        this.descuento = descuento;
+        showDialogProgress("Cargando", "Consultando Precio");
+        Cliente cliente = Cliente.getClienteID(getDataBase(), idCliente, false);
+        Bundle args = new Bundle();
+        args.putString(LoaderPrecio.STRING_CLIENTE, cliente.getIdExterno());
+        args.putString(LoaderPrecio.STRING_ITEM, seleccionado.getCodigoExterno());
+        args.putString(LoaderPrecio.STRING_LISTA_PRECIO, cliente.getListPrecio());
+        args.putString(LoaderPrecio.STRING_CANAL, cliente.getCanalPartner());
+        args.putInt(LoaderPrecio.INT_POSICION, item_position);
+        if(loaderPrecios == null)
+            loaderPrecios = new LoaderPrecio();
+        executeLoader(0, args, loaderPrecios);
+
+    }
+
     public class LoaderPrecio implements LoaderManager.LoaderCallbacks<List<LibroPrecio>> {
 
         public static final String STRING_CLIENTE = "cliente";
@@ -1476,7 +1546,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                 jsonObject.put("c", pedido.getPedidoDetalles().get(position).getCantidad());
                 jsonObject.put("vd", pedido.getPedidoDetalles().get(position).getValorUnitario() -
                         (pedido.getPedidoDetalles().get(position).getValorDescuentoAutomatico() + pedido.getPedidoDetalles().get(position).getValorDescuentoManual()));
-                jsonObject.put("pd", pedido.getPedidoDetalles().get(position).getPorcentajeDescuentoAutomatico());
+                jsonObject.put("pd", descuento);
                 jsonObject.put("ib", prod.getIdBeneficio());
                 jsonObject.put("co", pedido.getPedidoDetalles().get(position).getCantidadOriginal());
                 jsonObject.put("ven", pedido.getPedidoDetalles().get(position).getIdVendedor());
@@ -1490,8 +1560,10 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                     JSONObject jsonLibro = new JSONObject();
                     jsonLibro.put("i", libroPrecio.getItem());
                     jsonLibro.put("p", libroPrecio.getPrecio());
+                    jsonLibro.put("des", libroPrecio.getParametroDesc());
                     jsonLibro.put("e", libroPrecio.getValorEscalado());
                     jsonLibro.put("f", libroPrecio.getFechaEfectiva().getTime());
+                    jsonLibro.put("l", libroPrecio.getIdLibro());
                     jArrayLibro.put(jsonLibro);
                 }
                 jsonObject.put("lp", jArrayLibro);

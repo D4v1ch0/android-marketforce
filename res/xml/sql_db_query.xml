@@ -2539,6 +2539,7 @@
         tbLibroPrecio.Precio,
         tbLibroPrecio.ValorEscalado,
         tbLibroPrecio.FechaEfectiva,
+        tbLibroPrecio.IdLibro,
         tbMatrizPrecio.ParametroDesc AS ParametroDesc
         from tbLibroPrecio
         INNER JOIN tbMatrizPrecio
@@ -2558,6 +2559,7 @@
         tbLibroPrecio.Precio,
         tbLibroPrecio.ValorEscalado,
         tbLibroPrecio.FechaEfectiva,
+        tbLibroPrecio.IdLibro,
         tbMatrizPrecio.ParametroDesc AS ParametroDesc
         from tbLibroPrecio
         INNER JOIN tbMatrizPrecio
@@ -2573,7 +2575,9 @@
         tbLibroPrecio.Item,
         tbProductoExt.Descripcion,
         tbLibroPrecio.Medida,
-        tbLibroPrecio.Precio
+        tbLibroPrecio.Precio,
+        tbLibroPrecio.IdLibro,
+        tbLibroPrecio.FechaEfectiva
         from tbLibroPrecio
         INNER JOIN tbMatrizPrecio
         ON tbMatrizPrecio.IdLibro = tbLibroPrecio.IdLibro
@@ -2592,6 +2596,7 @@
         tbProductoExt.Descripcion,
         tbLibroPrecio.Medida,
         tbLibroPrecio.Precio,
+        tbLibroPrecio.IdLibro,
         tbLibroPrecio.FechaEfectiva
         from tbLibroPrecio
         INNER JOIN tbProducto
@@ -2608,6 +2613,7 @@
         tbLibroPrecio.Item,
         tbProductoExt.Descripcion,
         tbLibroPrecio.Medida,
+        tbLibroPrecio.IdLibro,
         tbLibroPrecio.Precio
         from tbLibroPrecio
         INNER JOIN tbMatrizPrecio

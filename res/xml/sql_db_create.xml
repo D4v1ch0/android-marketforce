@@ -559,7 +559,9 @@
         CantidadDevolucion INTEGER,
         BaseICE REAL,
         IdBeneficio INTEGER,
-        IdVendedor TEXT
+        IdVendedor TEXT,
+        LibroPrecio TEXT,
+        PararDescuento INTEGER
         )
     </statement>
     <statement>

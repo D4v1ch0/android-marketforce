@@ -349,6 +349,7 @@ public class Producto extends rp3.data.entity.EntityBase<Producto>{
             prod.setDescripcion(CursorUtils.getString(c, Contract.Producto.FIELD_DESCRIPCION));
             prod.setAplicacion(CursorUtils.getString(c, Contract.Producto.COLUMN_APLICACION));
             prod.setLinea(CursorUtils.getString(c, Contract.Producto.COLUMN_LINEA));
+            prod.setFamilia(CursorUtils.getString(c, Contract.Producto.COLUMN_FAMILIA));
         }
         c.close();
         return prod;

@@ -142,6 +142,8 @@ public class Pedido {
                 jObjectDetalle.put("BaseICE", removeCommas(df.format(det.getBaseICE())));
                 jObjectDetalle.put("CantidadDevolucion", det.getCantidadDevolucion());
                 jObjectDetalle.put("IdVendedor", det.getIdVendedor());
+                jObjectDetalle.put("LibroPrecio", det.getLibroPrecio());
+                jObjectDetalle.put("PararDescuento", det.getPararDescuento());
 
                 jArrayDetalle.put(jObjectDetalle);
             }
@@ -357,6 +359,8 @@ public class Pedido {
                     jObjectDetalle.put("UsrAutorizaDescManual", det.getUsrDescManual());
                     jObjectDetalle.put("CantidadDevolucion", det.getCantidadDevolucion());
                     jObjectDetalle.put("IdVendedor", det.getIdVendedor());
+                    jObjectDetalle.put("LibroPrecio", det.getLibroPrecio());
+                    jObjectDetalle.put("PararDescuento", det.getPararDescuento());
 
                     jArrayDetalle.put(jObjectDetalle);
                 }

@@ -260,6 +260,8 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
             jsonObject.put("cod", transaction.getProducto().getCodigoExterno());
             jsonObject.put("ib", transaction.getIdBeneficio());
             jsonObject.put("ven", transaction.getIdVendedor());
+            jsonObject.put("lp", transaction.getLibroPrecio());
+            jsonObject.put("desc", transaction.getPararDescuento());
             if(transaction.getUsrDescManual() != null && !transaction.getUsrDescManual().equalsIgnoreCase(""))
                 jsonObject.put("udm", transaction.getUsrDescManual());
 
@@ -610,9 +612,11 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
                 for (LibroPrecio libroPrecio : precio) {
                     JSONObject jsonLibro = new JSONObject();
                     jsonLibro.put("i", libroPrecio.getItem());
+                    jsonLibro.put("des", libroPrecio.getParametroDesc());
                     jsonLibro.put("p", libroPrecio.getPrecio());
                     jsonLibro.put("e", libroPrecio.getValorEscalado());
                     jsonLibro.put("f", libroPrecio.getFechaEfectiva().getTime());
+                    jsonLibro.put("l", libroPrecio.getIdLibro());
                     jArrayLibro.put(jsonLibro);
                 }
                 jsonObject.put("lp", jArrayLibro);
