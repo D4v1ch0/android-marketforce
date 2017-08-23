@@ -526,4 +526,7 @@
     <string name="label_61_90">61 - 90 días:</string>
     <string name="label_91_dias">91 o más días:</string>
     <string name="message_no_descuento">* Precio asignado no incluye descuentos adicionales</string>
+    <string name="label_c_real">Total C. Real:</string>
+    <string name="label_total_usd_real">Total USD Real:</string>
+    <string name="label_total_varia_dist">Total Varia Distrb.:</string>
 </resources>

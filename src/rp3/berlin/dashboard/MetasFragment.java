@@ -13,6 +13,8 @@ import org.json.JSONObject;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import rp3.app.BaseFragment;
@@ -38,7 +40,7 @@ public class MetasFragment extends BaseFragment {
 
     private NumberFormat numberFormat;
     private List<Meta> listMeta;
-    private double total_a_pagar;
+    private double total_a_pagar, total_usd_real, total_c_real, total_varia_distrb;
 
     @Override
     public void onAttach(Activity activity) {
@@ -81,6 +83,10 @@ public class MetasFragment extends BaseFragment {
             MetasAdapter adapter = new MetasAdapter(getContext(), listMeta);
             ((ListView)getRootView().findViewById(R.id.metas_lista)).setAdapter(adapter);
             ((TextView) getRootView().findViewById(R.id.metas_total)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(total_a_pagar));
+            ((TextView) getRootView().findViewById(R.id.metas_total_creal)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(total_c_real));
+            ((TextView) getRootView().findViewById(R.id.metas_total_usd_real)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(total_usd_real));
+            ((TextView) getRootView().findViewById(R.id.metas_total_varia_distrb)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(total_varia_distrb));
+
         }
     }
 
@@ -103,11 +109,12 @@ public class MetasFragment extends BaseFragment {
             JSONArray jsonArray = new JSONArray(json);
             Calendar cal = Calendar.getInstance();
             listMeta = new ArrayList<>();
-            total_a_pagar = 0;
+            total_a_pagar = 0; total_c_real = 0; total_usd_real = 0; total_varia_distrb = 0;
 
             for(int i = 0; i < jsonArray.length(); i ++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 Meta meta = new Meta();
+                meta.setGrupoEstadistico(jsonObject.getString("GrupoEstadistico"));
                 meta.setGrupoComisionDescripcion(jsonObject.getString("GrupoComisionDescripcion"));
                 meta.setcReal(jsonObject.getDouble("CReal"));
                 meta.setcPresupuestado(jsonObject.getDouble("CPresupuestado"));
@@ -124,13 +131,30 @@ public class MetasFragment extends BaseFragment {
                     meta.setPorcDisVaria(Float.parseFloat(jsonObject.getString("PorcDisVaria")));
                 if(!jsonObject.isNull("VarDistri"))
                     meta.setVarDistri(jsonObject.getDouble("VarDistri"));
+                if(!jsonObject.isNull("PorAPagas"))
+                    meta.setPorAPagas(jsonObject.getDouble("PorAPagas"));
                 listMeta.add(meta);
                 total_a_pagar = total_a_pagar + meta.getUsdTotal();
+                total_c_real = total_c_real + meta.getcReal();
+                total_usd_real = total_usd_real + meta.getReal();
+                total_varia_distrb = total_varia_distrb + meta.getVarDistri();
             }
 
+            Collections.sort(listMeta, new Comparator<Meta>() {
+                @Override
+                public int compare(Meta meta, Meta t1) {
+                    if(meta.getGrupoEstadistico().equalsIgnoreCase(t1.getGrupoEstadistico()))
+                        return meta.getGrupoComisionDescripcion().compareToIgnoreCase(t1.getGrupoComisionDescripcion());
+                    else
+                        return meta.getGrupoEstadistico().compareToIgnoreCase(t1.getGrupoEstadistico());
+                }
+            });
             MetasAdapter adapter = new MetasAdapter(getContext(), listMeta);
             ((ListView)getRootView().findViewById(R.id.metas_lista)).setAdapter(adapter);
             ((TextView) getRootView().findViewById(R.id.metas_total)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(total_a_pagar));
+            ((TextView) getRootView().findViewById(R.id.metas_total_creal)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(total_c_real));
+            ((TextView) getRootView().findViewById(R.id.metas_total_usd_real)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(total_usd_real));
+            ((TextView) getRootView().findViewById(R.id.metas_total_varia_distrb)).setText(PreferenceManager.getString(Contants.KEY_MONEDA_SIMBOLO) + " " + numberFormat.format(total_varia_distrb));
         }
         catch (Exception ex)
         {
