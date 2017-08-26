@@ -5,6 +5,7 @@
     <string name="title_option_setrutas">Agenda</string>
     <string name="title_option_setclientes">Clientes</string>
     <string name="title_option_setpedido">Transacciones</string>
+    <string name="title_option_settrazabilidad">Consulta de Pedidos</string>
     <string name="title_option_setreuniones">Reuniones</string>
     <string name="title_option_setrecordatorios">Recordatorios</string>
     <string name="title_option_recorrido">Mi Recorrido</string>
@@ -526,4 +527,13 @@
     <string name="label_61_90">61 - 90 días:</string>
     <string name="label_91_dias">91 o más días:</string>
     <string name="message_no_descuento">* Precio asignado no incluye descuentos adicionales</string>
+    <string name="label_consultar">Consultar</string>
+    <string name="label_no_pedidos">No hay pedidos</string>
+    <string name="label_estado_points">Estado:</string>
+    <string name="label_esta_infor">Esta en Infor?</string>
+    <string name="hint_codigo_cliente">Código del Cliente</string>
+    <string name="label_numeral_pedido">#</string>
+    <string name="label_orden">Orden</string>
+    <string name="label_marketforce">Marketforce</string>
+    <string name="label_infor">Infor</string>
 </resources>

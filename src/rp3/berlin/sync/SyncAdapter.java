@@ -2,6 +2,7 @@ package rp3.berlin.sync;
 
 import rp3.accounts.ServerAuthenticate;
 import rp3.berlin.dashboard.MetasFragment;
+import rp3.berlin.tracking.TrackingListFragment;
 import rp3.configuration.PreferenceManager;
 import rp3.db.sqlite.DataBase;
 import rp3.berlin.Contants;
@@ -31,6 +32,8 @@ import android.content.SyncResult;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+
+import java.util.Date;
 
 public class SyncAdapter extends rp3.content.SyncAdapter {
 	
@@ -89,6 +92,8 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
     public static String SYNC_TYPE_COMPRAS_CLIENTE= "compras_cliente";
     public static String SYNC_TYPE_METAS = "metas";
     public static String SYNC_TYPE_SEND_ESTADO_CUENTA= "send_estado_cuenta";
+    public static String SYNC_TYPE_GET_PEDIDOS= "get_pedidos";
+    public static String SYNC_TYPE_GET_INFO_PEDIDOS= "get_info_pedidos";
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);		
@@ -565,6 +570,15 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     Bundle bundle = Cliente.executeSyncCompras(cliente);
                     addDefaultMessage(bundle.getInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE));
                     putData(ComprasClienteFragment.ARG_CLIENTE, bundle.getString(ComprasClienteFragment.ARG_CLIENTE));
+                } else if (syncType.equals(SYNC_TYPE_GET_PEDIDOS)) {
+                    long inicio = extras.getLong(TrackingListFragment.ARG_INICIO);
+                    long fin = extras.getLong(TrackingListFragment.ARG_FIN);
+                    String cliente = extras.getString(TrackingListFragment.ARG_CLIENTE).trim();
+                    String estado = extras.getString(TrackingListFragment.ARG_ESTADO).trim();
+                    String infor = extras.getString(TrackingListFragment.ARG_INFOR).trim();
+                    Bundle bundle = Pedido.executeSyncGetPedido(inicio, fin, cliente, estado,infor);
+                    addDefaultMessage(bundle.getInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE));
+                    putData(TrackingListFragment.ARG_PEDIDOS, bundle.getString(TrackingListFragment.ARG_PEDIDOS));
                 } else if (syncType.equals(SYNC_TYPE_BATCH)) {
                     result = Cliente.executeSyncInserts(db);
                     addDefaultMessage(result);

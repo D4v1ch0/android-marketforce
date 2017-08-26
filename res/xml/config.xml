@@ -613,6 +613,12 @@
                     <webMethod>GET</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>
+                <method>
+                    <name>GetPedido</name>
+                    <action>pedido/ConsultaPedidoApp?fechaInicioTicks=@fechaInicioTicks&amp;fechaFinTicks=@fechaFinTicks&amp;cliente=@cliente&amp;estado=@estado&amp;estaInfor=@estaInfor</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
             </methods>     
         </webServiceData>
            <webServiceData>

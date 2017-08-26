@@ -12,6 +12,7 @@ import java.util.List;
 
 import rp3.app.NavActivity;
 import rp3.app.nav.NavItem;
+import rp3.berlin.tracking.TrackingFragment;
 import rp3.configuration.PreferenceManager;
 import rp3.data.Constants;
 import rp3.data.MessageCollection;
@@ -76,6 +77,7 @@ public class MainActivity extends rp3.app.NavActivity {
 	public static final int NAV_INFORMATION = 13;
 	public static final int NAV_OPORTUNIDAD = 14;
 	public static final int NAV_JUSTIFICACIONES = 15;
+	public static final int NAV_TRAZABILIDAD = 16;
 
 	public static final int CERRAR_SESION_DIALOG = 12;
 	public static final int CERRAR_CAJA_DIALOG = 13;
@@ -211,6 +213,7 @@ public class MainActivity extends rp3.app.NavActivity {
 		NavItem radar = new NavItem(NAV_RADAR, R.string.title_option_radar, R.drawable.ic_action_data_usage);
 		NavItem information = new NavItem(NAV_INFORMATION, R.string.title_option_informacion, R.drawable.ic_action_about);
 		NavItem oportunidad = new NavItem(NAV_OPORTUNIDAD, R.string.title_option_oportunidad, R.drawable.oportunidades);
+		NavItem trazabilidad = new NavItem(NAV_TRAZABILIDAD, R.string.title_option_settrazabilidad, R.drawable.ic_google_circles);
 
 		NavItem settingsGroup = new NavItem(0, R.string.title_option_setconfiguracion, 0, NavItem.TYPE_CATEGORY);
 
@@ -240,8 +243,10 @@ public class MainActivity extends rp3.app.NavActivity {
 			if (PreferenceManager.getBoolean(Contants.KEY_MODULO_MARCACIONES, true))
 				navItems.add(justificaciones);
 		}
-		if (PreferenceManager.getBoolean(Contants.KEY_MODULO_POS, true))
+		if (PreferenceManager.getBoolean(Contants.KEY_MODULO_POS, true)) {
 			navItems.add(pedido);
+			navItems.add(trazabilidad);
+		}
 		//navItems.add(reuniones);
 		//navItems.add(recordatorios);
 		navItems.add(settingsGroup);
@@ -287,6 +292,11 @@ public class MainActivity extends rp3.app.NavActivity {
 				break;
 			case NAV_PEDIDO:
 				setNavFragment(PedidoFragment.newInstance(0),
+						item.getTitle());
+				lastTitle = item.getTitle();
+				break;
+			case NAV_TRAZABILIDAD:
+				setNavFragment(TrackingFragment.newInstance(0),
 						item.getTitle());
 				lastTitle = item.getTitle();
 				break;

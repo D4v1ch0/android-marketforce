@@ -1,5 +1,6 @@
 package rp3.berlin.sync;
 
+import android.os.Bundle;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -10,8 +11,10 @@ import org.ksoap2.transport.HttpResponseException;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
+import rp3.berlin.tracking.TrackingListFragment;
 import rp3.configuration.PreferenceManager;
 import rp3.connection.HttpConnection;
 import rp3.connection.WebService;
@@ -614,6 +617,47 @@ public class Pedido {
         }
 
         return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
+    public static Bundle executeSyncGetPedido(long fechaInicio, long fechaFin, String cliente, String estado, String infor){
+        Bundle resp = new Bundle();
+        WebService webService = new WebService("MartketForce","GetPedido");
+        try
+        {
+            cliente = cliente.replace(" ", "%20");
+            webService.addParameter("@fechaInicioTicks", fechaInicio);
+            webService.addParameter("@fechaFinTicks", fechaFin);
+            webService.addParameter("@cliente", cliente);
+            webService.addParameter("@estado", estado);
+            if(infor.equalsIgnoreCase("Si"))
+                webService.addParameter("@estaInfor", true);
+            if(infor.equalsIgnoreCase("No"))
+                webService.addParameter("@estaInfor", false);
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED) {
+                    resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE, rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR);
+                }
+                resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_HTTP_ERROR);
+                return resp;
+            } catch (Exception e) {
+                resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_ERROR);
+                return resp;
+            }
+
+            JSONArray types = webService.getJSONArrayResponse();
+            if(types != null)
+                resp.putString(TrackingListFragment.ARG_PEDIDOS, types.toString());
+            else
+                resp.putString(TrackingListFragment.ARG_PEDIDOS, "");
+            resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS);
+        }finally{
+            webService.close();
+        }
+        return resp;
     }
 
     private static String removeCommas(String value)

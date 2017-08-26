@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="3dp"
+    android:paddingBottom="3dp">
+
+    <TextView
+        android:id="@+id/tracking_cliente"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="0.3"
+        android:gravity="center"
+        android:maxLines="4"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/tracking_pedido"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="0.08"
+        android:gravity="center"
+        android:lines="2"
+        android:maxLines="2"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="9sp" />
+
+    <TextView
+        android:id="@+id/tracking_fecha"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.2"
+        android:gravity="center"
+        android:paddingRight="3dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="9sp" />
+
+    <TextView
+        android:id="@+id/tracking_estado"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="0.17"
+        android:gravity="center"
+        android:lines="2"
+        android:maxLines="2"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/tracking_agente"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="0.17"
+        android:gravity="center"
+        android:lines="2"
+        android:maxLines="2"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/tracking_orden"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.15"
+        android:background="@color/color_fondo_total"
+        android:gravity="center"
+        android:paddingRight="3dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/tracking_estado_infor"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.15"
+        android:background="@color/color_fondo_total"
+        android:gravity="center"
+        android:paddingRight="3dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="10sp" />
+
+</LinearLayout>
