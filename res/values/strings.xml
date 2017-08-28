@@ -536,4 +536,7 @@
     <string name="label_orden">Orden</string>
     <string name="label_marketforce">Marketforce</string>
     <string name="label_infor">Infor</string>
+    <string name="label_c_real">Total C. Real:</string>
+    <string name="label_total_usd_real">Total USD Real:</string>
+    <string name="label_total_varia_dist">Total Varia Distrb.:</string>
 </resources>
