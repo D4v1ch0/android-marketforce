@@ -15,6 +15,9 @@ public class PedidoView {
     private String agente;
     private String orden;
     private String estadoInfor;
+    private String factura;
+    private int aprobado;
+    private boolean bloqueado;
 
     public int getIdPedido() {
         return idPedido;
@@ -70,5 +73,29 @@ public class PedidoView {
 
     public void setEstadoInfor(String estadoInfor) {
         this.estadoInfor = estadoInfor;
+    }
+
+    public String getFactura() {
+        return factura;
+    }
+
+    public void setFactura(String factura) {
+        this.factura = factura;
+    }
+
+    public int getAprobado() {
+        return aprobado;
+    }
+
+    public void setAprobado(int aprobado) {
+        this.aprobado = aprobado;
+    }
+
+    public boolean isBloqueado() {
+        return bloqueado;
+    }
+
+    public void setBloqueado(boolean bloqueado) {
+        this.bloqueado = bloqueado;
     }
 }

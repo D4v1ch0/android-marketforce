@@ -2,6 +2,7 @@ package rp3.berlin.sync;
 
 import rp3.accounts.ServerAuthenticate;
 import rp3.berlin.dashboard.MetasFragment;
+import rp3.berlin.tracking.TrackingDetailFragment;
 import rp3.berlin.tracking.TrackingListFragment;
 import rp3.configuration.PreferenceManager;
 import rp3.db.sqlite.DataBase;
@@ -579,6 +580,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     Bundle bundle = Pedido.executeSyncGetPedido(inicio, fin, cliente, estado,infor);
                     addDefaultMessage(bundle.getInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE));
                     putData(TrackingListFragment.ARG_PEDIDOS, bundle.getString(TrackingListFragment.ARG_PEDIDOS));
+                } else if (syncType.equals(SYNC_TYPE_GET_INFO_PEDIDOS)) {
+                    long idPedido = extras.getLong(TrackingDetailFragment.ARG_ITEM_ID);
+                    Bundle bundle = Pedido.executeSyncGetInfoPedido(idPedido);
+                    addDefaultMessage(bundle.getInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE));
+                    putData(TrackingDetailFragment.ARG_ITEM_ID, bundle.getString(TrackingDetailFragment.ARG_ITEM_ID));
                 } else if (syncType.equals(SYNC_TYPE_BATCH)) {
                     result = Cliente.executeSyncInserts(db);
                     addDefaultMessage(result);

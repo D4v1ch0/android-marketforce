@@ -69,6 +69,13 @@ public class TrackingAdapter extends BaseAdapter {
             ((TextView) convertView.findViewById(R.id.tracking_agente)).setText(detalle.getAgente());
             ((TextView) convertView.findViewById(R.id.tracking_orden)).setText(detalle.getOrden());
             ((TextView) convertView.findViewById(R.id.tracking_estado_infor)).setText(detalle.getEstadoInfor());
+            if(detalle.isBloqueado())
+            {
+                if(detalle.getAprobado() == -1)
+                    ((TextView) convertView.findViewById(R.id.tracking_estado)).setText("Por Aprobar");
+                if(detalle.getAprobado() == 0)
+                    ((TextView) convertView.findViewById(R.id.tracking_estado)).setText("Rechazado");
+            }
         }
         else
         {

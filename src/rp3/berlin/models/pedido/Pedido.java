@@ -63,6 +63,7 @@ public class Pedido extends EntityBase<Pedido> {
     private Cliente cliente;
     private GeneralValue transaccion;
     private Pedido docRef;
+    private List<PedidoTrazabilidad> pedidoTrazabilidad;
 
     @Override
     public long getID() {
@@ -412,6 +413,14 @@ public class Pedido extends EntityBase<Pedido> {
         this.idDireccion = idDireccion;
     }
 
+    public List<PedidoTrazabilidad> getPedidoTrazabilidad() {
+        return pedidoTrazabilidad;
+    }
+
+    public void setPedidoTrazabilidad(List<PedidoTrazabilidad> pedidoTrazabilidad) {
+        this.pedidoTrazabilidad = pedidoTrazabilidad;
+    }
+
     @Override
     public void setValues() {
         setValue(Contract.Pedido.COLUMN_ID_PEDIDO, this.idPedido);
@@ -570,6 +579,7 @@ public class Pedido extends EntityBase<Pedido> {
                 pedido.setCliente(Cliente.getClienteID(db, pedido.get_idCliente(), false));
             pedido.setNombre(CursorUtils.getString(c, Contract.Pedido.FIELD_NOMBRE));
             pedido.setTransaccion(GeneralValue.getGeneralValue(db, Contants.GENERAL_TABLE_TIPOS_TRANSACCION, pedido.getTipoDocumento()));
+            pedido.setPedidoTrazabilidad(PedidoTrazabilidad.getTrazabilidad(db, pedido.getID()));
             list.add(pedido);
         }
         c.close();
@@ -794,6 +804,7 @@ public class Pedido extends EntityBase<Pedido> {
             pedido.setTipoOrden(CursorUtils.getString(c, Contract.Pedido.COLUMN_TIPO_ORDEN));
             pedido.setSerie(CursorUtils.getString(c, Contract.Pedido.COLUMN_SERIE));
             pedido.setCiudad(CursorUtils.getString(c, Contract.Pedido.COLUMN_CIUDAD_DESPACHO));
+            pedido.setPedidoTrazabilidad(PedidoTrazabilidad.getTrazabilidad(db, pedido.getID()));
 
         }
         c.close();

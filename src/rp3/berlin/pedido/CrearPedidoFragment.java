@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Locale;
 
 import rp3.app.BaseFragment;
+import rp3.berlin.models.pedido.PedidoTrazabilidad;
 import rp3.berlin.sync.Agente;
 import rp3.berlin.utils.Utils;
 import rp3.configuration.PreferenceManager;
@@ -427,6 +428,35 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
                 pago.setIdPedido(pedido.getIdPedido());
                 pago.set_idPedido((int) pedido.getID());
                 Pago.insert(getDataBase(), pago);
+            }
+        }
+
+        //Inserto trazabilidad
+        if(idPedido != 0)
+        {
+            if(pedido.getEstado().equalsIgnoreCase("C"))
+            {
+                PedidoTrazabilidad cerrado = new PedidoTrazabilidad();
+                cerrado.set_idPedido((int)pedido.getID());
+                cerrado.setFecha(Calendar.getInstance().getTime());
+                cerrado.setEstado("CRD");
+                PedidoTrazabilidad.insert(getDataBase(), cerrado);
+            }
+        }
+        else
+        {
+            PedidoTrazabilidad creacion = new PedidoTrazabilidad();
+            creacion.set_idPedido((int)pedido.getID());
+            creacion.setFecha(Calendar.getInstance().getTime());
+            creacion.setEstado("ING");
+            PedidoTrazabilidad.insert(getDataBase(), creacion);
+            if(pedido.getEstado().equalsIgnoreCase("C"))
+            {
+                PedidoTrazabilidad cerrado = new PedidoTrazabilidad();
+                cerrado.set_idPedido((int)pedido.getID());
+                cerrado.setFecha(Calendar.getInstance().getTime());
+                cerrado.setEstado("CRD");
+                PedidoTrazabilidad.insert(getDataBase(), cerrado);
             }
         }
 

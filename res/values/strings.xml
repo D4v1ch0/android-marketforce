@@ -539,4 +539,14 @@
     <string name="label_c_real">Total C. Real:</string>
     <string name="label_total_usd_real">Total USD Real:</string>
     <string name="label_total_varia_dist">Total Varia Distrb.:</string>
+    <string name="label_pedido">Pedido:</string>
+    <string name="label_cerrado">Cerrado</string>
+    <string name="label_recibido">Recibido</string>
+    <string name="label_aprobado">Aprobado</string>
+    <string name="label_enviado">Enviado</string>
+    <string name="label_liberado">Liberado</string>
+    <string name="label_lanzado">Lanzado</string>
+    <string name="label_facturado">Facturado</string>
+    <string name="label_ov">OV:</string>
+    <string name="label_factura">Factura:</string>
 </resources>

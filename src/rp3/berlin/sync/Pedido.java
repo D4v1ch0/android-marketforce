@@ -14,6 +14,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import rp3.berlin.models.pedido.PedidoTrazabilidad;
+import rp3.berlin.tracking.TrackingDetailFragment;
 import rp3.berlin.tracking.TrackingListFragment;
 import rp3.configuration.PreferenceManager;
 import rp3.connection.HttpConnection;
@@ -167,7 +169,16 @@ public class Pedido {
                 jArrayPago.put(jObjectPago);
             }
 
-            jObject.put("Pagos", jArrayPago);
+            JSONArray jArrayTrazabilidad = new JSONArray();
+            for (PedidoTrazabilidad trazabilidad : pedidoUpload.getPedidoTrazabilidad()) {
+                JSONObject jObjectTrazabilidad = new JSONObject();
+                jObjectTrazabilidad.put("FechaTicks", Convert.getDotNetTicksFromDate(trazabilidad.getFecha()));
+                jObjectTrazabilidad.put("Estado", trazabilidad.getEstado());
+
+                jArrayTrazabilidad.put(jObjectTrazabilidad);
+            }
+
+            jObject.put("Trazabilidad", jArrayTrazabilidad);
         } catch (Exception ex) {
 
         }
@@ -400,6 +411,17 @@ public class Pedido {
                 }
 
                 jObject.put("Pagos", jArrayPago);
+
+                JSONArray jArrayTrazabilidad = new JSONArray();
+                for (PedidoTrazabilidad trazabilidad : pedidoUpload.getPedidoTrazabilidad()) {
+                    JSONObject jObjectTrazabilidad = new JSONObject();
+                    jObjectTrazabilidad.put("FechaTicks", Convert.getDotNetTicksFromDate(trazabilidad.getFecha()));
+                    jObjectTrazabilidad.put("Estado", trazabilidad.getEstado());
+
+                    jArrayTrazabilidad.put(jObjectTrazabilidad);
+                }
+
+                jObject.put("Trazabilidad", jArrayTrazabilidad);
             } catch (Exception ex) {
 
             }
@@ -624,7 +646,7 @@ public class Pedido {
         WebService webService = new WebService("MartketForce","GetPedido");
         try
         {
-            cliente = cliente.replace(" ", "%20");
+            estado = estado.replace(" ", "%20");
             webService.addParameter("@fechaInicioTicks", fechaInicio);
             webService.addParameter("@fechaFinTicks", fechaFin);
             webService.addParameter("@cliente", cliente);
@@ -653,6 +675,39 @@ public class Pedido {
                 resp.putString(TrackingListFragment.ARG_PEDIDOS, types.toString());
             else
                 resp.putString(TrackingListFragment.ARG_PEDIDOS, "");
+            resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS);
+        }finally{
+            webService.close();
+        }
+        return resp;
+    }
+
+    public static Bundle executeSyncGetInfoPedido(long idPedido){
+        Bundle resp = new Bundle();
+        WebService webService = new WebService("MartketForce","GetTrazabilidad");
+        try
+        {
+            webService.addParameter("@idPedido", idPedido);
+            webService.addCurrentAuthToken();
+
+            try {
+                webService.invokeWebService();
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED) {
+                    resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE, rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR);
+                }
+                resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_HTTP_ERROR);
+                return resp;
+            } catch (Exception e) {
+                resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_ERROR);
+                return resp;
+            }
+
+            JSONArray types = webService.getJSONArrayResponse();
+            if(types != null)
+                resp.putString(TrackingDetailFragment.ARG_ITEM_ID, types.toString());
+            else
+                resp.putString(TrackingDetailFragment.ARG_ITEM_ID, "");
             resp.putInt(rp3.content.SyncAdapter.ARG_SYNC_TYPE,rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS);
         }finally{
             webService.close();

@@ -337,6 +337,14 @@
     <statement name="ToVersion12-2">
         ALTER TABLE tbPedidoDetalle ADD COLUMN PararDescuento INTEGER;
     </statement>
+    <statement name="ToVersion13">
+        CREATE TABLE tbPedidoTrazabilidad(
+        _id INTEGER PRIMARY KEY,
+        _IdPedido INTEGER,
+        Fecha INTEGER,
+        Estado TEXT
+        );
+    </statement>
 
 
 </sql>

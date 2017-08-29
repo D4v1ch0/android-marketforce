@@ -1340,4 +1340,13 @@ public final class Contract {
 		public static final String COLUMN_FECHA = "Fecha";
 		public static final String COLUMN_PENDIENTE = "Pendiente";
 	}
+
+	public static abstract class PedidoTrazabilidad implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbPedidoTrazabilidad";
+
+		public static final String COLUMN_ID_PEDIDO = "_IdPedido";
+		public static final String COLUMN_FECHA = "Fecha";
+		public static final String COLUMN_ESTADO = "Estado";
+	}
 }

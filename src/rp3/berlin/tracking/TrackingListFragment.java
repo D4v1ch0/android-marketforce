@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
@@ -248,6 +249,14 @@ public class TrackingListFragment extends BaseFragment {
                 pedidoView.setNombreCliente(jsonObject.getString("Cliente"));
                 pedidoView.setFechaIngreso(Convert.getDateFromDotNetTicks(jsonObject.getLong("FecIngTicks")));
 
+                if(!jsonObject.isNull("Aprobado"))
+                    pedidoView.setAprobado(jsonObject.getBoolean("Aprobado") ? 1 : 0);
+                else
+                    pedidoView.setAprobado(-1);
+
+                if(!jsonObject.isNull("Bloqueado"))
+                    pedidoView.setBloqueado(jsonObject.getBoolean("Bloqueado"));
+
                 if(jsonObject.isNull("Orden"))
                     pedidoView.setOrden("");
                 else
@@ -258,11 +267,22 @@ public class TrackingListFragment extends BaseFragment {
                 else
                     pedidoView.setEstadoInfor(jsonObject.getString("EstadoInfor"));
 
+                if(jsonObject.isNull("Factura"))
+                    pedidoView.setFactura("");
+                else
+                    pedidoView.setFactura(jsonObject.getString("Factura"));
+
                 pedidos.add(pedidoView);
             }
 
-            TrackingAdapter adapter = new TrackingAdapter(getContext(), pedidos);
+            final TrackingAdapter adapter = new TrackingAdapter(getContext(), pedidos);
             ((ListView)getRootView().findViewById(R.id.linearLayout_headerlist_ruta_list)).setAdapter(adapter);
+            ((ListView)getRootView().findViewById(R.id.linearLayout_headerlist_ruta_list)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    permisoListFragmentCallback.onPedidoSelected(adapter.getItem(i));
+                }
+            });
         }
         catch (Exception ex)
         {

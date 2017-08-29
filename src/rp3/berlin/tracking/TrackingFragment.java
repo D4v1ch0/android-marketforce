@@ -183,7 +183,19 @@ public class TrackingFragment extends BaseFragment implements TrackingListFragme
 
     @Override
     public void onPedidoSelected(PedidoView pedido) {
+        selectedClientId = pedido.getIdPedido();
 
+        if (!mTwoPane) {
+            slidingPane.closePane();
+            isActiveListFragment = false;
+        }
+
+        RefreshMenu();
+
+        this.getActivity().setTitle("Pedido # " + pedido.getIdPedido());
+
+        transactionDetailFragment = TrackingDetailFragment.newInstance(pedido);
+        setFragment(R.id.content_transaction_detail, transactionDetailFragment);
     }
 
     @Override
