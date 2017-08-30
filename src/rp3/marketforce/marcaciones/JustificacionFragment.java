@@ -89,6 +89,7 @@ public class JustificacionFragment extends BaseFragment {
                             permiso.setIdMarcacion(idMarcacion);
                             Marcacion marc = Marcacion.getMarcacion(getDataBase(), idMarcacion);
                             marc.setPendiente(true);
+                            permiso.setFecha(marc.getFecha());
                             Marcacion.update(getDataBase(), marc);
                             Permiso.update(getDataBase(), permiso);
                             Bundle bundle = new Bundle();

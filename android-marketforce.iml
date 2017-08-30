@@ -126,6 +126,7 @@
     <orderEntry type="module" module-name="AndroidGraphView" exported="" />
     <orderEntry type="module" module-name="main" exported="" />
     <orderEntry type="module" module-name="android-core" exported="" />
+    <orderEntry type="library" exported="" name="android-android-25" level="project" />
     <orderEntry type="library" exported="" name="org.apache.http.legacy-android-25" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-25.3.0" level="project" />
     <orderEntry type="library" exported="" name="nineoldandroids-2.4.0" level="project" />
