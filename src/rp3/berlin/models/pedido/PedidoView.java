@@ -18,6 +18,8 @@ public class PedidoView {
     private String factura;
     private int aprobado;
     private boolean bloqueado;
+    private int lineasMKF;
+    private int lineasINFOR;
 
     public int getIdPedido() {
         return idPedido;
@@ -97,5 +99,21 @@ public class PedidoView {
 
     public void setBloqueado(boolean bloqueado) {
         this.bloqueado = bloqueado;
+    }
+
+    public int getLineasMKF() {
+        return lineasMKF;
+    }
+
+    public void setLineasMKF(int lineasMKF) {
+        this.lineasMKF = lineasMKF;
+    }
+
+    public int getLineasINFOR() {
+        return lineasINFOR;
+    }
+
+    public void setLineasINFOR(int lineasINFOR) {
+        this.lineasINFOR = lineasINFOR;
     }
 }

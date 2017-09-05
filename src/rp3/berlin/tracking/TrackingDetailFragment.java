@@ -43,9 +43,12 @@ public class TrackingDetailFragment extends BaseFragment {
     private static final String ARG_CLIENTE = "cliente";
     private static final String ARG_OV = "ov";
     private static final String ARG_FACTURA = "factura";
+    private static final String ARG_LINEAS_MKF = "lin_mkf";
+    private static final String ARG_LINEAS_INFOR = "lin_infor";
     private final int REQ_CODE_SPEECH_INPUT = 100;
 
     private long clientId;
+    private int lineas_mkf = 0, lineas_infor = 0;
     private String cliente, ov, factura;
     private Pedido pedido;
     private TrackingFragment detailFragmentListener;
@@ -58,6 +61,8 @@ public class TrackingDetailFragment extends BaseFragment {
         arguments.putString(TrackingDetailFragment.ARG_CLIENTE, pedido.getNombreCliente());
         arguments.putString(TrackingDetailFragment.ARG_OV, pedido.getOrden());
         arguments.putString(TrackingDetailFragment.ARG_FACTURA, pedido.getFactura());
+        arguments.putInt(TrackingDetailFragment.ARG_LINEAS_MKF, pedido.getLineasMKF());
+        arguments.putInt(TrackingDetailFragment.ARG_LINEAS_INFOR, pedido.getLineasINFOR());
         TrackingDetailFragment fragment = new TrackingDetailFragment();
         fragment.setArguments(arguments);
         return fragment;
@@ -85,6 +90,12 @@ public class TrackingDetailFragment extends BaseFragment {
         if (getArguments().containsKey(ARG_OV)) {
             ov = getArguments().getString(ARG_OV);
         }
+        if (getArguments().containsKey(ARG_LINEAS_MKF)) {
+            lineas_mkf = getArguments().getInt(ARG_LINEAS_MKF);
+        }
+        if (getArguments().containsKey(ARG_LINEAS_INFOR)) {
+            lineas_infor = getArguments().getInt(ARG_LINEAS_INFOR);
+        }
 
         if (clientId != 0) {
             super.setContentView(R.layout.fragment_tracking_detail);
@@ -100,10 +111,14 @@ public class TrackingDetailFragment extends BaseFragment {
 
         ((TextView) getRootView().findViewById(R.id.tracking_pedido)).setText(clientId + "");
         ((TextView) getRootView().findViewById(R.id.tracking_cliente)).setText(cliente);
-        if(ov != null)
+        if (ov != null)
             ((TextView) getRootView().findViewById(R.id.tracking_ov)).setText(ov);
-        if(factura != null)
+        if (factura != null)
             ((TextView) getRootView().findViewById(R.id.tracking_factura)).setText(factura);
+
+        ((TextView) getRootView().findViewById(R.id.tracking_lineas_mkf)).setText(lineas_mkf + "");
+
+        ((TextView) getRootView().findViewById(R.id.tracking_lineas_infor)).setText(lineas_infor + "");
 
         Bundle bundle = new Bundle();
         bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_GET_INFO_PEDIDOS);

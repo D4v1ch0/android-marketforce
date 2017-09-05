@@ -530,7 +530,7 @@
     <string name="label_consultar">Consultar</string>
     <string name="label_no_pedidos">No hay pedidos</string>
     <string name="label_estado_points">Estado:</string>
-    <string name="label_esta_infor">Esta en Infor?</string>
+    <string name="label_esta_infor">Generado en Infor</string>
     <string name="hint_codigo_cliente">Código del Cliente</string>
     <string name="label_numeral_pedido">#</string>
     <string name="label_orden">Orden</string>
@@ -549,4 +549,5 @@
     <string name="label_facturado">Facturado</string>
     <string name="label_ov">OV:</string>
     <string name="label_factura">Factura:</string>
+    <string name="label_lineas">Líneas:</string>
 </resources>

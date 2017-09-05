@@ -67,18 +67,35 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/textView147"
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textColor="@color/caldroid_holo_blue_light"
-                        android:textSize="@dimen/text_medium_small_size" />
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView139"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.75"
+                            android:text="@string/label_lineas"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:textColor="@color/caldroid_holo_blue_light"
+                            android:textSize="@dimen/text_medium_small_size" />
+
+                        <TextView
+                            android:id="@+id/tracking_lineas_mkf"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.25"
+                            android:paddingBottom="3dp"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:textSize="@dimen/text_small_size" />
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/tracking_fecha_creado"
@@ -317,7 +334,8 @@
             android:layout_weight="0.25"
             android:background="@color/caldroid_sky_blue"
             android:gravity="center"
-            android:text="MKF" />
+            android:text="Marketforce"
+            android:textSize="@dimen/text_medium_small_size" />
 
     </LinearLayout>
 
@@ -357,6 +375,32 @@
                         android:layout_weight="1"
                         android:orientation="vertical">
 
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/textView150"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.75"
+                                android:text="@string/label_lineas"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:textColor="@color/caldroid_holo_blue_light"
+                                android:textSize="@dimen/text_medium_small_size" />
+
+                            <TextView
+                                android:id="@+id/tracking_lineas_infor"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.25"
+                                android:paddingBottom="3dp"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:textSize="@dimen/text_small_size" />
+                        </LinearLayout>
+
                         <TextView
                             android:id="@+id/textView139"
                             android:layout_width="match_parent"
@@ -373,6 +417,7 @@
                             android:paddingBottom="3dp"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:textSize="@dimen/text_small_size" />
+
                     </LinearLayout>
 
                     <TextView
@@ -580,7 +625,8 @@
             android:layout_weight="0.25"
             android:background="@color/caldroid_sky_blue"
             android:gravity="center"
-            android:text="INFOR" />
+            android:text="Infor"
+            android:textSize="@dimen/text_medium_small_size" />
 
     </LinearLayout>
 

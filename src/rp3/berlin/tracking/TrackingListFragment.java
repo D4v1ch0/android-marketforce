@@ -6,6 +6,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
@@ -25,6 +26,8 @@ import java.util.List;
 import rp3.app.BaseFragment;
 import rp3.berlin.Contants;
 import rp3.berlin.R;
+import rp3.berlin.cliente.ClienteAutoCompleteAdapter;
+import rp3.berlin.models.Cliente;
 import rp3.berlin.models.pedido.PedidoView;
 import rp3.berlin.pedido.PedidoAdapter;
 import rp3.berlin.sync.SyncAdapter;
@@ -51,6 +54,8 @@ public class TrackingListFragment extends BaseFragment {
     private boolean isContacts = false;
     private List<String> list_infor, list_estados;
     private List<PedidoView> pedidos;
+    private AutoCompleteTextView cliente_auto;
+    private ClienteAutoCompleteAdapter clienteAdapter;
 
     public static TrackingListFragment newInstance() {
         TrackingListFragment fragment = new TrackingListFragment();
@@ -121,6 +126,11 @@ public class TrackingListFragment extends BaseFragment {
             }
         });
 
+        clienteAdapter = new ClienteAutoCompleteAdapter(this.getContext(), getDataBase());
+        cliente_auto = (AutoCompleteTextView) rootView.findViewById(R.id.crear_pedido_cliente);
+        cliente_auto.setAdapter(clienteAdapter);
+        cliente_auto.setThreshold(3);
+
         list_estados.add("Todos");
         list_estados.add("Pendiente");
         list_estados.add("Cerrado");
@@ -162,10 +172,7 @@ public class TrackingListFragment extends BaseFragment {
         bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_GET_PEDIDOS);
         bundle.putLong(ARG_INICIO, Convert.getDotNetTicksFromDate(desde.getTime()));
         bundle.putLong(ARG_FIN, Convert.getDotNetTicksFromDate(hasta.getTime()));
-        if(((EditText) getRootView().findViewById(R.id.pedido_view_cliente)).length() > 0)
-            bundle.putString(ARG_CLIENTE, ((EditText) getRootView().findViewById(R.id.pedido_view_cliente)).getText().toString());
-        else
-            bundle.putString(ARG_CLIENTE, "");
+        bundle.putString(ARG_CLIENTE, cliente_auto.getText().toString());
 
         int position_estado = ((Spinner) getRootView().findViewById(R.id.pedido_view_estado)).getSelectedItemPosition();
         int position_infor = ((Spinner) getRootView().findViewById(R.id.pedido_view_infor)).getSelectedItemPosition();
@@ -271,6 +278,16 @@ public class TrackingListFragment extends BaseFragment {
                     pedidoView.setFactura("");
                 else
                     pedidoView.setFactura(jsonObject.getString("Factura"));
+
+                if(jsonObject.isNull("TotalItems"))
+                    pedidoView.setLineasMKF(0);
+                else
+                    pedidoView.setLineasMKF(jsonObject.getInt("TotalItems"));
+
+                if(jsonObject.isNull("Lineas"))
+                    pedidoView.setLineasINFOR(0);
+                else
+                    pedidoView.setLineasINFOR(jsonObject.getInt("Lineas"));
 
                 pedidos.add(pedidoView);
             }
