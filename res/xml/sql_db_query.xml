@@ -960,12 +960,12 @@
         FROM tbAgenda
         JOIN tbAgendaExt 
         ON tbAgenda._id = tbAgendaExt.docid
-        JOIN tbCliente        
+        LEFT JOIN tbCliente
         ON (tbAgenda.IdCliente = tbCliente.IdCliente AND tbAgenda.IdCliente &lt;&gt; 0) 
         OR (tbAgenda._IdCliente = tbCliente._id AND tbAgenda.IdCliente = 0)
-        JOIN tbClienteExt
+        LEFT JOIN tbClienteExt
         ON tbClienteExt.docid = tbCliente._id
-        JOIN tbClienteDireccion        
+        LEFT JOIN tbClienteDireccion
         ON ((tbAgenda.IdCliente = tbClienteDireccion.IdCliente AND tbAgenda.IdCliente &lt;&gt; 0) 
         OR (tbAgenda._IdCliente = tbClienteDireccion._IdCliente AND tbAgenda.IdCliente = 0))
         AND tbAgenda.IdClienteDireccion = tbClienteDireccion.IdClienteDireccion
