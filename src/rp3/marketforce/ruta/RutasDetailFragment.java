@@ -431,19 +431,25 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 
                @Override
                public void onClick(View v) {
-                   setViewVisibility(R.id.detail_agenda_button_iniciar, View.VISIBLE);
+
                    setViewVisibility(R.id.detail_agenda_button_fin, View.GONE);
                    setViewVisibility(R.id.detail_agenda_button_cancelar, View.GONE);
                    //getRootView().findViewById(R.id.detail_agenda_observacion).setClickable(false);
-                   if (agenda.getFechaFinReal() == null || agenda.getFechaFinReal().getTime() < 0) {
+                   if (agenda.getFechaFinReal() == null || agenda.getFechaFinReal().getTime() <= 0) {
                        agenda.setEstadoAgenda(Contants.ESTADO_PENDIENTE);
                        agenda.setEstadoAgendaDescripcion(Contants.DESC_PENDIENTE);
+                       agenda.setFechaCancelacion(Calendar.getInstance().getTime());
                        ((ImageView) rootView.findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_pending);
+                       setViewVisibility(R.id.detail_agenda_button_iniciar, View.VISIBLE);
                    } else {
                        agenda.setEstadoAgenda(Contants.ESTADO_VISITADO);
                        agenda.setEstadoAgendaDescripcion(Contants.DESC_VISITADO);
+                       if (agenda.getFechaCancelacion() == null || agenda.getFechaCancelacion().getTime() <= 0)
+                           agenda.setFechaCancelacion(Calendar.getInstance().getTime());
                        ((ImageView) rootView.findViewById(R.id.detail_agenda_image_status)).setImageResource(R.drawable.circle_visited);
+                       setViewVisibility(R.id.detail_agenda_button_modificar, View.VISIBLE);
                    }
+
                    Agenda.update(getDataBase(), agenda);
                    setTextViewText(R.id.detail_agenda_estado, agenda.getEstadoAgendaDescripcion());
                    if (agenda.getObservaciones() == null || agenda.getObservaciones().length() <= 0)
@@ -471,7 +477,8 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                        agenda = Agenda.getAgendaClienteNull(getDataBase(), idAgenda);
                    agenda.setEstadoAgenda(Contants.ESTADO_VISITADO);
                    agenda.setEstadoAgendaDescripcion(Contants.DESC_VISITADO);
-                   agenda.setFechaFinReal(Calendar.getInstance().getTime());
+                   if (agenda.getFechaFinReal() == null || agenda.getFechaFinReal().getTime() <= 0)
+                       agenda.setFechaFinReal(Calendar.getInstance().getTime());
                    final Context ctx = getContext();
                    if (agenda.getLatitud() == 0 && agenda.getLongitud() == 0) {
                        Location location = LocationUtils.getLastLocation(ctx);

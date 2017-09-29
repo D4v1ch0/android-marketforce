@@ -59,6 +59,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 	private long TiempoViaje;
 	private String idMotivoReprogramacion;
 	private Date fechaCreacion;
+	private Date fechaCancelacion;
 
 	public Pedido getPedido() {
 		return pedido;
@@ -163,6 +164,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 		setValue(Contract.Agenda.COLUMN_TIEMPO_VIAJE, this.TiempoViaje);
 		setValue(Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION, this.idMotivoReprogramacion);
 		setValue(Contract.Agenda.COLUMN_FECHA_CREACION, this.fechaCreacion);
+		setValue(Contract.Agenda.COLUMN_FECHA_CANCELACION, this.fechaCancelacion);
 	}
 
 	@Override
@@ -441,6 +443,14 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 		this._idCliente = _idCliente;
 	}
 
+	public Date getFechaCancelacion() {
+		return fechaCancelacion;
+	}
+
+	public void setFechaCancelacion(Date fechaCancelacion) {
+		this.fechaCancelacion = fechaCancelacion;
+	}
+
 	public static List<Agenda> getAgenda(DataBase db){
 		String query = QueryDir.getQuery( Contract.Agenda.QUERY_AGENDA );
 
@@ -463,6 +473,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setTiempoViaje(CursorUtils.getInt(c, Contract.Agenda.COLUMN_TIEMPO_VIAJE));
 			agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
 			agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
+			agd.setFechaCancelacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CANCELACION));
 			agd.setEnviado(CursorUtils.getBoolean(c, Contract.Agenda.COLUMN_ENVIADO));
 
 			ClienteDireccion cld = new ClienteDireccion();
@@ -572,6 +583,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
 			agd.setLatitud(CursorUtils.getDouble(c, Contract.Agenda.COLUMN_LATITUD));
 			agd.setLongitud(CursorUtils.getDouble(c, Contract.Agenda.COLUMN_LONGITUD));
+			agd.setFechaCancelacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CANCELACION));
 
 			Cliente cl = new Cliente();
 			cl.setNombreCompleto(agd.getNombreCompleto());
@@ -646,6 +658,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
 			agd.setLatitud(CursorUtils.getDouble(c, Contract.Agenda.COLUMN_LATITUD));
 			agd.setLongitud(CursorUtils.getDouble(c, Contract.Agenda.COLUMN_LONGITUD));
+			agd.setFechaCancelacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CANCELACION));
 
 			Cliente cl = new Cliente();
 			cl.setNombreCompleto(agd.getNombreCompleto());
@@ -705,6 +718,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
 			agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
 			agd.setEnviado(CursorUtils.getBoolean(c, Contract.Agenda.COLUMN_ENVIADO));
+			agd.setFechaCancelacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CANCELACION));
 
 			Cliente cl = new Cliente();
 			cl.setNombreCompleto(agd.getNombreCompleto());
@@ -763,6 +777,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setTiempoViaje(CursorUtils.getInt(c, Contract.Agenda.COLUMN_TIEMPO_VIAJE));
 			agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
 			agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
+			agd.setFechaCancelacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CANCELACION));
 
 			Cliente cl = new Cliente();
 			cl.setNombreCompleto(agd.getNombreCompleto());
@@ -823,6 +838,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setTiempoViaje(CursorUtils.getInt(c, Contract.Agenda.COLUMN_TIEMPO_VIAJE));
 			agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
 			agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
+			agd.setFechaCancelacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CANCELACION));
 
 			agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getIdAgenda(), agd.getIdRuta(), false));
 			agd.setCliente(rp3.marketforce.models.Cliente.getClienteIDServer(db, agd.getIdCliente(), false));
@@ -863,7 +879,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 						Contract.Agenda.COLUMN_ESTADO_AGENDA, Contract.Agenda.COLUMN_CONTACTO_ID, Contract.Agenda.COLUMN_FECHA_INICIO,
 						Contract.Agenda.COLUMN_FECHA_FIN, Contract.Agenda.COLUMN_OBSERVACIONES, Contract.Agenda.COLUMN_CONTACTO_ID,
 						Contract.Agenda.COLUMN_FOTO1_INT, Contract.Agenda.COLUMN_FOTO2_INT, Contract.Agenda.COLUMN_FOTO3_INT,
-						Contract.Agenda.COLUMN_MOTIVO_NO_VISITA_ID, Contract.Agenda.COLUMN_LATITUD, Contract.Agenda.COLUMN_LONGITUD, Contract.Agenda.COLUMN_DISTANCIA,
+						Contract.Agenda.COLUMN_MOTIVO_NO_VISITA_ID, Contract.Agenda.COLUMN_LATITUD, Contract.Agenda.COLUMN_LONGITUD, Contract.Agenda.COLUMN_DISTANCIA, Contract.Agenda.COLUMN_FECHA_CANCELACION,
 						Contract.Agenda.COLUMN_DURACION, Contract.Agenda.COLUMN_TIEMPO_VIAJE, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION},
 				Contract.Agenda.COLUMN_CLIENTE_ID_EXT + " = ?", id);
 
@@ -895,6 +911,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			agd.setTiempoViaje(CursorUtils.getInt(c, Contract.Agenda.COLUMN_TIEMPO_VIAJE));
 			agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
 			agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
+			agd.setFechaCancelacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CANCELACION));
 
 			agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getIdAgenda(), agd.getIdRuta(), false));
 			agd.setCliente(rp3.marketforce.models.Cliente.getClienteIDServer(db, agd.getIdCliente(), false));
@@ -914,7 +931,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 						Contract.Agenda.COLUMN_FECHA_FIN, Contract.Agenda.COLUMN_OBSERVACIONES, Contract.Agenda.COLUMN_CONTACTO_ID,
 						Contract.Agenda.COLUMN_FOTO1_INT, Contract.Agenda.COLUMN_FOTO2_INT, Contract.Agenda.COLUMN_FOTO3_INT,
 						Contract.Agenda.COLUMN_MOTIVO_NO_VISITA_ID, Contract.Agenda.COLUMN_LATITUD, Contract.Agenda.COLUMN_LONGITUD, Contract.Agenda.COLUMN_DISTANCIA,
-						Contract.Agenda.COLUMN_DURACION, Contract.Agenda.COLUMN_TIEMPO_VIAJE, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION, Contract.Agenda.COLUMN_FECHA_CREACION},
+						Contract.Agenda.COLUMN_DURACION, Contract.Agenda.COLUMN_TIEMPO_VIAJE, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION, Contract.Agenda.COLUMN_FECHA_CREACION,Contract.Agenda.COLUMN_FECHA_CANCELACION},
 				Contract.Agenda.COLUMN_AGENDA_ID + " = ? ", 0);
 
 		List<Agenda> list_agenda = new ArrayList<Agenda>();
@@ -951,6 +968,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 				agd.setTiempoViaje(CursorUtils.getInt(c, Contract.Agenda.COLUMN_TIEMPO_VIAJE));
 				agd.setIdMotivoReprogramacion(CursorUtils.getString(c, Contract.Agenda.COLUMN_MOTIVO_REPROGRAMACION));
 				agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
+				agd.setFechaCancelacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CANCELACION));
 
 				if(agd.getIdAgenda() == 0)
 					agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getID(), agd.getIdRuta(), true));
@@ -1004,6 +1022,7 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 				agd.setNombreCompleto(CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_NOMBRE));
 				agd.setDireccion((CursorUtils.getString(c, Contract.Agenda.FIELD_CLIENTE_DIRECCION)));
 				agd.setFechaCreacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CREACION));
+				agd.setFechaCancelacion(CursorUtils.getDate(c, Contract.Agenda.COLUMN_FECHA_CANCELACION));
 
 				if(agd.getIdAgenda() == 0)
 					agd.setAgendaTareaList(AgendaTarea.getAgendaTareas(db, agd.getID(), agd.getIdRuta(), true));

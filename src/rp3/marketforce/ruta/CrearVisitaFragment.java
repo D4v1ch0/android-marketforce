@@ -211,6 +211,8 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
                 showDuracion(ID_TIEMPO);
             }
         });
+        duracion = Integer.parseInt(adapterDuracion.getGeneralValue(0).getCode());
+        tiempo = Integer.parseInt(adapterDuracion.getGeneralValue(0).getCode());
         DesdeText.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -124,7 +124,8 @@
       Duracion INTEGER,
       TiempoViaje INTEGER,
       IdMotivoReprogramar TEXT,
-        FechaCreacion INTEGER
+        FechaCreacion INTEGER,
+        FechaCancelacion INTEGER
       )
 	</statement>
 	

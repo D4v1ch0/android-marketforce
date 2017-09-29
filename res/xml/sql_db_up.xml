@@ -334,4 +334,7 @@
     <statement name="ToVersion11-2">
         ALTER TABLE tbCliente ADD COLUMN SectorTrabajo TEXT;
     </statement>
+    <statement name="ToVersion12">
+        ALTER TABLE tbAgenda ADD COLUMN FechaCancelacion INTEGER;
+    </statement>
 </sql>

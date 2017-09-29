@@ -41,6 +41,8 @@ public class Agenda {
             jObject.put("FechaFinTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaFin()));
             jObject.put("FechaInicioGestionTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaInicioReal()));
             jObject.put("FechaFinGestionTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaFinReal()));
+            if(agendaUpload.getFechaCancelacion() != null && agendaUpload.getFechaCancelacion().getTime() > 0)
+                jObject.put("FechaCancelacionTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaCancelacion()));
             jObject.put("Latitud", agendaUpload.getLatitud());
             jObject.put("Longitud", agendaUpload.getLongitud());
             jObject.put("Duracion", agendaUpload.getDuracion());
@@ -107,10 +109,14 @@ public class Agenda {
                 agendaUpload.setEnviado(true);
                 rp3.marketforce.models.Agenda.update(db, agendaUpload);
             } catch (HttpResponseException e) {
+                agendaUpload.setEnviado(false);
+                rp3.marketforce.models.Agenda.update(db, agendaUpload);
                 if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
                     return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
                 return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
             } catch (Exception e) {
+                agendaUpload.setEnviado(false);
+                rp3.marketforce.models.Agenda.update(db, agendaUpload);
                 return SyncAdapter.SYNC_EVENT_ERROR;
             }
 
@@ -397,6 +403,8 @@ public class Agenda {
             jObject.put("DistanciaUbicacion", agenda.getDistancia());
             jObject.put("MotivoReprogramacion", agenda.getIdMotivoReprogramacion());
             jObject.put("MotivoReprogramacionTabla", Contants.GENERAL_TABLE_MOTIVOS_REPROGRAMACION);
+            if(agenda.getFechaCancelacion() != null && agenda.getFechaCancelacion().getTime() > 0)
+                jObject.put("FechaCancelacionTicks", Convert.getDotNetTicksFromDate(agenda.getFechaCancelacion()));
 
             JSONArray jArrayTareas = new JSONArray();
             for (AgendaTarea agt : agenda.getAgendaTareas()) {
@@ -501,6 +509,8 @@ public class Agenda {
                 jObject.put("MotivoReprogramacionTabla", Contants.GENERAL_TABLE_MOTIVOS_REPROGRAMACION);
                 jObject.put("FechaInicioOriginalTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaInicio()));
                 jObject.put("FechaFinOriginalTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaFin()));
+                if(agendaUpload.getFechaCancelacion() != null && agendaUpload.getFechaCancelacion().getTime() > 0)
+                    jObject.put("FechaCancelacionTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaCancelacion()));
 
                 JSONArray jArrayTareas = new JSONArray();
                 for (AgendaTarea agt : agendaUpload.getAgendaTareas()) {
@@ -753,6 +763,8 @@ public class Agenda {
                 jObject.put("MotivoReprogramacionTabla", Contants.GENERAL_TABLE_MOTIVOS_REPROGRAMACION);
                 jObject.put("FechaInicioOriginalTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaInicio()));
                 jObject.put("FechaFinOriginalTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaFin()));
+                if(agendaUpload.getFechaCancelacion() != null && agendaUpload.getFechaCancelacion().getTime() > 0)
+                    jObject.put("FechaCancelacionTicks", Convert.getDotNetTicksFromDate(agendaUpload.getFechaCancelacion()));
                 agendasConId.add(agendaUpload);
 
                 JSONArray jArrayTareas = new JSONArray();

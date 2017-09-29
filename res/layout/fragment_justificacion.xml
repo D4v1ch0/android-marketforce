@@ -46,15 +46,16 @@
                 android:id="@+id/justificacion_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/observaciones_fondo"
                 android:ems="10"
+                android:fadeScrollbars="false"
+                android:gravity="top"
                 android:inputType="textMultiLine|textCapSentences"
                 android:lines="3"
+                android:maxLength="250"
                 android:maxLines="3"
-                android:background="@drawable/observaciones_fondo"
                 android:padding="3dp"
-                android:scrollbars="vertical"
-                android:fadeScrollbars="false"
-                android:gravity="top" />
+                android:scrollbars="vertical" />
 
             <ImageView
                 android:layout_width="wrap_content"

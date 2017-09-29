@@ -266,6 +266,7 @@ public final class Contract {
         public static final String COLUMN_TIEMPO_VIAJE= "TiempoViaje";
         public static final String COLUMN_MOTIVO_REPROGRAMACION= "IdMotivoReprogramar";
 		public static final String COLUMN_FECHA_CREACION= "FechaCreacion";
+		public static final String COLUMN_FECHA_CANCELACION= "FechaCancelacion";
 		
 		public static final String FIELD_RUTA_ID = COLUMN_RUTA_ID;
 		public static final String FIELD_AGENDA_ID = COLUMN_AGENDA_ID;
