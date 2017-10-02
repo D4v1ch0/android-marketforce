@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="rp3.berlin"
     android:versionCode="100"
-    android:versionName="1.0.11">
+    android:versionName="1.0.12">
 
     <uses-sdk
         android:minSdkVersion="14"

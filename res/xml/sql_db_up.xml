@@ -345,6 +345,9 @@
         Estado TEXT
         );
     </statement>
+    <statement name="ToVersion14">
+        ALTER TABLE tbAgenda ADD COLUMN FechaCancelacion INTEGER;
+    </statement>
 
 
 </sql>

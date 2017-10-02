@@ -132,7 +132,8 @@
       TiempoViaje INTEGER,
       IdMotivoReprogramar TEXT,
         FechaCreacion INTEGER,
-        ValorVenta REAL
+        ValorVenta REAL,
+        FechaCancelacion INTEGER
       )
 	</statement>
 	
