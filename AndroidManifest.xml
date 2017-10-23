@@ -1,17 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="rp3.marketforce"
-    android:versionCode="82"
-    android:versionName="1.5.2b">
+    android:versionCode="83"
+    android:versionName="1.5.2c">
 
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="19" />
-    
-    
-    <permission
-        android:name="com.vogella.android.locationapi.maps.permission.MAPS_RECEIVE"
-        android:protectionLevel="signature" />
 
     <permission
         android:name="rp3.marketforce.permission.C2D_MESSAGE"

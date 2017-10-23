@@ -14,6 +14,7 @@ import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.DiaLaboral;
 import rp3.marketforce.models.Ubicacion;
+import rp3.marketforce.models.marcacion.Marcacion;
 import rp3.marketforce.resumen.AgenteDetalleFragment;
 import rp3.marketforce.sync.EnviarUbicacion;
 import rp3.marketforce.sync.SyncAdapter;
@@ -61,11 +62,22 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 			cal.setTimeInMillis(PreferenceManager.getLong(Contants.KEY_ALARMA_FIN));
 			calendar.set(Calendar.HOUR_OF_DAY, cal.get(Calendar.HOUR_OF_DAY));
 			calendar.set(Calendar.MINUTE, cal.get(Calendar.MINUTE));
-			
-			String prueba = cal.getTime().toString();
-			String prueba2 = calendar.getTime().toString();
+
+			boolean sigueSensando = false;
 
             DiaLaboral diaLaboral = DiaLaboral.getDia(DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class), Utils.getDayOfWeek(calendarCurrent));
+			Marcacion ultimaMarcacion = Marcacion.getUltimaMarcacion(DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class));
+			//Chequeo si ha hecho marcacion hoy
+			if(ultimaMarcacion != null)
+			{
+				Calendar dia_hoy = Calendar.getInstance();
+				Calendar dia_marcacion = Calendar.getInstance();
+				dia_marcacion.setTime(ultimaMarcacion.getFecha());
+				if ((dia_hoy.get(Calendar.DAY_OF_YEAR) == dia_marcacion.get(Calendar.DAY_OF_YEAR)) && ultimaMarcacion.getTipo().equalsIgnoreCase("J1")) {
+					sigueSensando = true;
+				}
+			}
+
 			if(context == null)
 				Utils.ErrorToFile("Context is null - " + Calendar.getInstance().getTime().toString());
 			else {
@@ -81,7 +93,7 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 					PreferenceManager.setValue(Contants.KEY_GPS_NOTIFICATION, true);
 				}else{
 					gps = "OFF";
-					if(calendarCurrent.getTimeInMillis() < calendar.getTimeInMillis() && diaLaboral.isEsLaboral()) {
+					if(calendarCurrent.getTimeInMillis() < calendar.getTimeInMillis() && (diaLaboral.isEsLaboral() || sigueSensando)) {
 						if (PreferenceManager.getInt(Contants.KEY_ID_SUPERVISOR, 0) != 0) {
 							if (PreferenceManager.getBoolean(Contants.KEY_GPS_NOTIFICATION, true)) {
 								NotificationPusher.pushNotification(1, context, "Por favor encienda su GPS", "GPS");
@@ -98,7 +110,7 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 				}
 				Utils.ErrorToFile("Context is ok - GPS: " + gps + " - NET: " + net + " - BATTERY: " + getBatteryLevel(context) + " - " + Calendar.getInstance().getTime().toString());
 			}
-			if(calendarCurrent.getTimeInMillis() < calendar.getTimeInMillis() && diaLaboral.isEsLaboral())
+			if(calendarCurrent.getTimeInMillis() < calendar.getTimeInMillis() && (diaLaboral.isEsLaboral() || sigueSensando))
 			{
 				LocationUtils.getLocation(context, new OnLocationResultListener() {
 					
