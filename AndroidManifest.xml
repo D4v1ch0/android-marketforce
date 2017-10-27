@@ -1,17 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="rp3.berlin"
-    android:versionCode="100"
+    android:versionCode="101"
     android:versionName="1.0.12">
 
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="19" />
-    
-    
-    <permission
-        android:name="com.vogella.android.locationapi.maps.permission.MAPS_RECEIVE"
-        android:protectionLevel="signature" />
 
     <permission
         android:name="rp3.berlin.permission.C2D_MESSAGE"
