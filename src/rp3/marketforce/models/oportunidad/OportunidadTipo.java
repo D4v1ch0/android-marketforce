@@ -74,7 +74,8 @@ public class OportunidadTipo extends EntityBase<OportunidadTipo> {
 
     public static List<OportunidadTipo> getOportunidadTipoAll(DataBase db){
 
-        Cursor c = db.query(Contract.OportunidadTipo.TABLE_NAME, new String[] {Contract.OportunidadTipo._ID, Contract.OportunidadTipo.COLUMN_ID_OPORTUNIDAD_TIPO, Contract.OportunidadTipo.COLUMN_DESCRIPCION});
+        Cursor c = db.query(Contract.OportunidadTipo.TABLE_NAME, new String[] {Contract.OportunidadTipo._ID, Contract.OportunidadTipo.COLUMN_ID_OPORTUNIDAD_TIPO, Contract.OportunidadTipo.COLUMN_DESCRIPCION},
+                null,null, null,null,Contract.OportunidadTipo.COLUMN_DESCRIPCION);
 
         List<OportunidadTipo> list = new ArrayList<OportunidadTipo>();
         while(c.moveToNext()){
