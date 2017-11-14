@@ -58,6 +58,7 @@ import rp3.data.models.GeneralValue;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agente;
+import rp3.marketforce.models.oportunidad.AgendaOportunidad;
 import rp3.marketforce.models.oportunidad.Etapa;
 import rp3.marketforce.models.oportunidad.EtapaTarea;
 import rp3.marketforce.models.oportunidad.Oportunidad;
@@ -247,7 +248,19 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
             bitacora.setIdOportunidad(opt.getIdOportunidad());
             bitacora.set_idOportunidad((int) opt.getID());
             bitacora.setDetalle("Se creó oportunidad");
+            bitacora.setIdOportunidadBitacora(1);
             OportunidadBitacora.insert(getDataBase(), bitacora);
+
+            AgendaOportunidad agd = new AgendaOportunidad();
+            agd.set_idOportunidad((int)opt.getID());
+            agd.setIdOportunidad(opt.getIdOportunidad());
+            agd.setPendiente(true);
+            agd.setEstado(Contants.ESTADO_GESTIONANDO);
+            agd.setFechaInicio(Calendar.getInstance().getTime());
+            agd.setDescripcion(opt.getDescripcion());
+            agd.setDireccion(opt.getDireccion());
+            agd.setEmail(opt.getCorreo());
+            AgendaOportunidad.insert(getDataBase(), agd);
         }
         else {
             Oportunidad.update(getDataBase(), opt);
@@ -257,6 +270,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
             bitacora.setIdOportunidad(opt.getIdOportunidad());
             bitacora.set_idOportunidad((int) opt.getID());
             bitacora.setDetalle("Se actualizó oportunidad");
+            bitacora.setIdOportunidadBitacora(opt.getOportunidadBitacoras().size() + 1);
             OportunidadBitacora.insert(getDataBase(), bitacora);
         }
 

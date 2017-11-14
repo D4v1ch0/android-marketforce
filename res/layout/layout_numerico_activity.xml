@@ -54,18 +54,18 @@
             android:id="@+id/actividad_texto_respuesta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:minWidth="@dimen/nav_drawer_width"
-            android:textAppearance="@style/EditTextAppTheme"
-            android:textSize="@dimen/text_input_size"
-            android:background="@drawable/observaciones_fondo"
-            android:gravity="top"
             android:layout_margin="5dp"
-            android:scrollbars="vertical"
+            android:background="@drawable/observaciones_fondo"
+            android:ems="10"
             android:fadeScrollbars="false"
+            android:gravity="top"
             android:hint="@string/hint_escriba_aqui"
+            android:inputType="numberDecimal"
             android:lines="1"
-            android:inputType="number">
+            android:minWidth="@dimen/nav_drawer_width"
+            android:scrollbars="vertical"
+            android:textAppearance="@style/EditTextAppTheme"
+            android:textSize="@dimen/text_input_size">
 
             <requestFocus />
         </EditText>

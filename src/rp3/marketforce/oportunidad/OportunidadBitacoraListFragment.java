@@ -20,6 +20,7 @@ import java.util.List;
 import rp3.app.BaseFragment;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agente;
+import rp3.marketforce.models.oportunidad.AgendaOportunidad;
 import rp3.marketforce.models.oportunidad.Oportunidad;
 import rp3.marketforce.models.oportunidad.OportunidadBitacora;
 import rp3.marketforce.sync.SyncAdapter;
@@ -72,11 +73,16 @@ public class OportunidadBitacoraListFragment extends BaseFragment implements Opo
         super.onResume();
         oportunidad = Oportunidad.getOportunidadId(getDataBase(), idOportunidad);
 
+        AgendaOportunidad agd = AgendaOportunidad.getAgendaOportunidadGestionado(getDataBase());
+
         list = OportunidadBitacora.getBitacoraOportunidad(getDataBase(), oportunidad.getIdOportunidad());
         if(list.size() == 0)
             list = OportunidadBitacora.getBitacoraOportunidadInt(getDataBase(), oportunidad.getID());
 
         OportunidadBitacoraAdapter adapter = new OportunidadBitacoraAdapter(this.getContext(), list);
+
+        if(agd.getID() == 0 || agd.get_idOportunidad() != oportunidad.getID())
+            getRootView().findViewById(R.id.bitacora_agregar).setVisibility(View.GONE);
 
         ((ListView) getRootView().findViewById(R.id.bitacora_list)).setAdapter(adapter);
         getRootView().findViewById(R.id.bitacora_agregar).setOnClickListener(new View.OnClickListener() {

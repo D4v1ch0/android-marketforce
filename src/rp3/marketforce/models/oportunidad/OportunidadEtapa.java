@@ -29,6 +29,7 @@ public class OportunidadEtapa extends EntityBase<OportunidadEtapa> {
     private Etapa etapa;
     private List<OportunidadTarea> oportunidadTareas;
     private Date fechaFinPlan;
+    private int idAgenda;
 
     @Override
     public long getID() {
@@ -112,6 +113,14 @@ public class OportunidadEtapa extends EntityBase<OportunidadEtapa> {
         this.estado = estado;
     }
 
+    public int getIdAgenda() {
+        return idAgenda;
+    }
+
+    public void setIdAgenda(int idAgenda) {
+        this.idAgenda = idAgenda;
+    }
+
     public List<OportunidadTarea> getOportunidadTareas() {
         return oportunidadTareas;
     }
@@ -149,6 +158,7 @@ public class OportunidadEtapa extends EntityBase<OportunidadEtapa> {
         setValue(Contract.OportunidadEtapa.COLUMN_ESTADO, this.estado);
         setValue(Contract.OportunidadEtapa.COLUMN_ID_ETAPA_PADRE, this.idEtapaPadre);
         setValue(Contract.OportunidadEtapa.COLUMN_FECHA_FIN_PLAN, this.fechaFinPlan);
+        setValue(Contract.OportunidadEtapa.COLUMN_ID_AGENDA, this.idAgenda);
     }
 
     @Override
@@ -164,7 +174,7 @@ public class OportunidadEtapa extends EntityBase<OportunidadEtapa> {
     public static List<OportunidadEtapa> getEtapasOportunidad(DataBase db, int idOportunidad) {
         Cursor c = db.query(Contract.OportunidadEtapa.TABLE_NAME, new String[]{Contract.OportunidadEtapa._ID, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD, Contract.OportunidadEtapa.COLUMN_FECHA_FIN_PLAN,
                         Contract.OportunidadEtapa.COLUMN_ID_ETAPA, Contract.OportunidadEtapa.COLUMN_FECHA_INICIO, Contract.OportunidadEtapa.COLUMN_OBSERVACION,
-                        Contract.OportunidadEtapa.COLUMN_FECHA_FIN, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD_INT, Contract.OportunidadEtapa.COLUMN_ESTADO,
+                        Contract.OportunidadEtapa.COLUMN_FECHA_FIN, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD_INT, Contract.OportunidadEtapa.COLUMN_ESTADO, Contract.OportunidadEtapa.COLUMN_ID_AGENDA,
                 Contract.OportunidadEtapa.COLUMN_ID_ETAPA_PADRE}
                 , Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD + " = ?",  new String[]{idOportunidad + ""});
 
@@ -181,6 +191,7 @@ public class OportunidadEtapa extends EntityBase<OportunidadEtapa> {
             cont.setEstado(CursorUtils.getString(c, Contract.OportunidadEtapa.COLUMN_ESTADO));
             cont.setIdEtapaPadre(CursorUtils.getInt(c, Contract.OportunidadEtapa.COLUMN_ID_ETAPA_PADRE));
             cont.setFechaFinPlan(CursorUtils.getDate(c, Contract.OportunidadEtapa.COLUMN_FECHA_FIN_PLAN));
+            cont.setIdAgenda(CursorUtils.getInt(c, Contract.OportunidadEtapa.COLUMN_ID_AGENDA));
 
             cont.setEtapa(Etapa.getEtapaById(db, cont.getIdEtapa()));
 
@@ -193,7 +204,7 @@ public class OportunidadEtapa extends EntityBase<OportunidadEtapa> {
     public static List<OportunidadEtapa> getEtapasOportunidadInt(DataBase db, long id) {
         Cursor c = db.query(Contract.OportunidadEtapa.TABLE_NAME, new String[]{Contract.OportunidadEtapa._ID, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD, Contract.OportunidadEtapa.COLUMN_FECHA_FIN_PLAN,
                         Contract.OportunidadEtapa.COLUMN_ID_ETAPA, Contract.OportunidadEtapa.COLUMN_FECHA_INICIO, Contract.OportunidadEtapa.COLUMN_OBSERVACION,
-                        Contract.OportunidadEtapa.COLUMN_FECHA_FIN, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD_INT, Contract.OportunidadEtapa.COLUMN_ESTADO,
+                        Contract.OportunidadEtapa.COLUMN_FECHA_FIN, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD_INT, Contract.OportunidadEtapa.COLUMN_ESTADO, Contract.OportunidadEtapa.COLUMN_ID_AGENDA,
                         Contract.OportunidadEtapa.COLUMN_ID_ETAPA_PADRE},
                 Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD_INT + " = ?",  new String[]{id + ""});
 
@@ -210,6 +221,7 @@ public class OportunidadEtapa extends EntityBase<OportunidadEtapa> {
             cont.setEstado(CursorUtils.getString(c, Contract.OportunidadEtapa.COLUMN_ESTADO));
             cont.setIdEtapaPadre(CursorUtils.getInt(c, Contract.OportunidadEtapa.COLUMN_ID_ETAPA_PADRE));
             cont.setFechaFinPlan(CursorUtils.getDate(c, Contract.OportunidadEtapa.COLUMN_FECHA_FIN_PLAN));
+            cont.setIdAgenda(CursorUtils.getInt(c, Contract.OportunidadEtapa.COLUMN_ID_AGENDA));
 
             cont.setEtapa(Etapa.getEtapaById(db, cont.getIdEtapa()));
 
@@ -222,7 +234,7 @@ public class OportunidadEtapa extends EntityBase<OportunidadEtapa> {
     public static OportunidadEtapa getEtapaOportunidad(DataBase db, int idOportunidad, int idEtapa) {
         Cursor c = db.query(Contract.OportunidadEtapa.TABLE_NAME, new String[]{Contract.OportunidadEtapa._ID, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD, Contract.OportunidadEtapa.COLUMN_FECHA_FIN_PLAN,
                         Contract.OportunidadEtapa.COLUMN_ID_ETAPA, Contract.OportunidadEtapa.COLUMN_FECHA_INICIO, Contract.OportunidadEtapa.COLUMN_OBSERVACION,
-                        Contract.OportunidadEtapa.COLUMN_FECHA_FIN, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD_INT, Contract.OportunidadEtapa.COLUMN_ESTADO,
+                        Contract.OportunidadEtapa.COLUMN_FECHA_FIN, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD_INT, Contract.OportunidadEtapa.COLUMN_ESTADO,Contract.OportunidadEtapa.COLUMN_ID_AGENDA,
                         Contract.OportunidadEtapa.COLUMN_ID_ETAPA_PADRE},
                 Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD + " = ? AND " + Contract.OportunidadEtapa.COLUMN_ID_ETAPA + " = ?",  new String[]{idOportunidad + "", idEtapa + ""});
 
@@ -240,6 +252,7 @@ public class OportunidadEtapa extends EntityBase<OportunidadEtapa> {
             cont.setOportunidadTareas(OportunidadTarea.getTareasOportunidadByEtapa(db, cont.getIdOportunidad(), cont.getIdEtapa()));
             cont.setIdEtapaPadre(CursorUtils.getInt(c, Contract.OportunidadEtapa.COLUMN_ID_ETAPA_PADRE));
             cont.setFechaFinPlan(CursorUtils.getDate(c, Contract.OportunidadEtapa.COLUMN_FECHA_FIN_PLAN));
+            cont.setIdAgenda(CursorUtils.getInt(c, Contract.OportunidadEtapa.COLUMN_ID_AGENDA));
 
             cont.setEtapa(Etapa.getEtapaById(db, cont.getIdEtapa()));
         }
@@ -252,7 +265,7 @@ public class OportunidadEtapa extends EntityBase<OportunidadEtapa> {
     public static OportunidadEtapa getEtapaOportunidadInt(DataBase db, long idOportunidad, int idEtapa) {
         Cursor c = db.query(Contract.OportunidadEtapa.TABLE_NAME, new String[]{Contract.OportunidadEtapa._ID, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD, Contract.OportunidadEtapa.COLUMN_FECHA_FIN_PLAN,
                         Contract.OportunidadEtapa.COLUMN_ID_ETAPA, Contract.OportunidadEtapa.COLUMN_FECHA_INICIO, Contract.OportunidadEtapa.COLUMN_OBSERVACION,
-                        Contract.OportunidadEtapa.COLUMN_FECHA_FIN, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD_INT, Contract.OportunidadEtapa.COLUMN_ESTADO,
+                        Contract.OportunidadEtapa.COLUMN_FECHA_FIN, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD_INT, Contract.OportunidadEtapa.COLUMN_ESTADO, Contract.OportunidadEtapa.COLUMN_ID_AGENDA,
                         Contract.OportunidadEtapa.COLUMN_ID_ETAPA_PADRE},
                 Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD_INT + " = ? AND " + Contract.OportunidadEtapa.COLUMN_ID_ETAPA + " = ?",  new String[]{idOportunidad + "", idEtapa + ""});
 
@@ -270,6 +283,7 @@ public class OportunidadEtapa extends EntityBase<OportunidadEtapa> {
             cont.setOportunidadTareas(OportunidadTarea.getTareasOportunidadByEtapa(db, cont.getIdOportunidad(), cont.getIdEtapa()));
             cont.setIdEtapaPadre(CursorUtils.getInt(c, Contract.OportunidadEtapa.COLUMN_ID_ETAPA_PADRE));
             cont.setFechaFinPlan(CursorUtils.getDate(c, Contract.OportunidadEtapa.COLUMN_FECHA_FIN_PLAN));
+            cont.setIdAgenda(CursorUtils.getInt(c, Contract.OportunidadEtapa.COLUMN_ID_AGENDA));
 
             cont.setEtapa(Etapa.getEtapaById(db, cont.getIdEtapa()));
         }
@@ -280,7 +294,7 @@ public class OportunidadEtapa extends EntityBase<OportunidadEtapa> {
     public static List<OportunidadEtapa> getEtapaOportunidadHijas(DataBase db, long idOportunidad, int idEtapa) {
         Cursor c = db.query(Contract.OportunidadEtapa.TABLE_NAME, new String[]{Contract.OportunidadEtapa._ID, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD, Contract.OportunidadEtapa.COLUMN_FECHA_FIN_PLAN,
                         Contract.OportunidadEtapa.COLUMN_ID_ETAPA, Contract.OportunidadEtapa.COLUMN_FECHA_INICIO, Contract.OportunidadEtapa.COLUMN_OBSERVACION,
-                        Contract.OportunidadEtapa.COLUMN_FECHA_FIN, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD_INT, Contract.OportunidadEtapa.COLUMN_ESTADO,
+                        Contract.OportunidadEtapa.COLUMN_FECHA_FIN, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD_INT, Contract.OportunidadEtapa.COLUMN_ESTADO,Contract.OportunidadEtapa.COLUMN_ID_AGENDA,
                         Contract.OportunidadEtapa.COLUMN_ID_ETAPA_PADRE},
                 Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD_INT + " = ? AND " + Contract.OportunidadEtapa.COLUMN_ID_ETAPA_PADRE + " = ?",  new String[]{idOportunidad + "", idEtapa + ""});
 
@@ -297,6 +311,7 @@ public class OportunidadEtapa extends EntityBase<OportunidadEtapa> {
             cont.setEstado(CursorUtils.getString(c, Contract.OportunidadEtapa.COLUMN_ESTADO));
             cont.setIdEtapaPadre(CursorUtils.getInt(c, Contract.OportunidadEtapa.COLUMN_ID_ETAPA_PADRE));
             cont.setFechaFinPlan(CursorUtils.getDate(c, Contract.OportunidadEtapa.COLUMN_FECHA_FIN_PLAN));
+            cont.setIdAgenda(CursorUtils.getInt(c, Contract.OportunidadEtapa.COLUMN_ID_AGENDA));
 
             cont.setEtapa(Etapa.getEtapaById(db, cont.getIdEtapa()));
 
@@ -309,7 +324,7 @@ public class OportunidadEtapa extends EntityBase<OportunidadEtapa> {
     public static List<OportunidadEtapa> getEtapaOportunidadHijasExt(DataBase db, int idOportunidad, int idEtapa) {
         Cursor c = db.query(Contract.OportunidadEtapa.TABLE_NAME, new String[]{Contract.OportunidadEtapa._ID, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD, Contract.OportunidadEtapa.COLUMN_FECHA_FIN_PLAN,
                         Contract.OportunidadEtapa.COLUMN_ID_ETAPA, Contract.OportunidadEtapa.COLUMN_FECHA_INICIO, Contract.OportunidadEtapa.COLUMN_OBSERVACION,
-                        Contract.OportunidadEtapa.COLUMN_FECHA_FIN, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD_INT, Contract.OportunidadEtapa.COLUMN_ESTADO,
+                        Contract.OportunidadEtapa.COLUMN_FECHA_FIN, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD_INT, Contract.OportunidadEtapa.COLUMN_ESTADO, Contract.OportunidadEtapa.COLUMN_ID_AGENDA,
                         Contract.OportunidadEtapa.COLUMN_ID_ETAPA_PADRE},
                 Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD + " = ? AND " + Contract.OportunidadEtapa.COLUMN_ID_ETAPA_PADRE + " = ?",  new String[]{idOportunidad + "", idEtapa + ""});
 
@@ -326,6 +341,7 @@ public class OportunidadEtapa extends EntityBase<OportunidadEtapa> {
             cont.setEstado(CursorUtils.getString(c, Contract.OportunidadEtapa.COLUMN_ESTADO));
             cont.setIdEtapaPadre(CursorUtils.getInt(c, Contract.OportunidadEtapa.COLUMN_ID_ETAPA_PADRE));
             cont.setFechaFinPlan(CursorUtils.getDate(c, Contract.OportunidadEtapa.COLUMN_FECHA_FIN_PLAN));
+            cont.setIdAgenda(CursorUtils.getInt(c, Contract.OportunidadEtapa.COLUMN_ID_AGENDA));
 
             cont.setEtapa(Etapa.getEtapaById(db, cont.getIdEtapa()));
 
@@ -338,7 +354,7 @@ public class OportunidadEtapa extends EntityBase<OportunidadEtapa> {
     public static OportunidadEtapa getEtapaOportunidad(DataBase db, long idEtapa) {
         Cursor c = db.query(Contract.OportunidadEtapa.TABLE_NAME, new String[]{Contract.OportunidadEtapa._ID, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD, Contract.OportunidadEtapa.COLUMN_FECHA_FIN_PLAN,
                         Contract.OportunidadEtapa.COLUMN_ID_ETAPA, Contract.OportunidadEtapa.COLUMN_FECHA_INICIO, Contract.OportunidadEtapa.COLUMN_OBSERVACION,
-                        Contract.OportunidadEtapa.COLUMN_FECHA_FIN, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD_INT, Contract.OportunidadEtapa.COLUMN_ESTADO,
+                        Contract.OportunidadEtapa.COLUMN_FECHA_FIN, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD_INT, Contract.OportunidadEtapa.COLUMN_ESTADO, Contract.OportunidadEtapa.COLUMN_ID_AGENDA,
                         Contract.OportunidadEtapa.COLUMN_ID_ETAPA_PADRE},
                 Contract.OportunidadEtapa._ID + " = ? ",  new String[]{idEtapa + ""});
 
@@ -356,10 +372,41 @@ public class OportunidadEtapa extends EntityBase<OportunidadEtapa> {
             cont.setOportunidadTareas(OportunidadTarea.getTareasOportunidadByEtapa(db, cont.getIdOportunidad(), cont.getIdEtapa()));
             cont.setIdEtapaPadre(CursorUtils.getInt(c, Contract.OportunidadEtapa.COLUMN_ID_ETAPA_PADRE));
             cont.setFechaFinPlan(CursorUtils.getDate(c, Contract.OportunidadEtapa.COLUMN_FECHA_FIN_PLAN));
+            cont.setIdAgenda(CursorUtils.getInt(c, Contract.OportunidadEtapa.COLUMN_ID_AGENDA));
 
             cont.setEtapa(Etapa.getEtapaById(db, cont.getIdEtapa()));
         }
         c.close();
         return cont;
+    }
+
+    public static List<OportunidadEtapa> getEtapasOportunidadByAgenda(DataBase db, long idAgenda) {
+        Cursor c = db.query(Contract.OportunidadEtapa.TABLE_NAME, new String[]{Contract.OportunidadEtapa._ID, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD, Contract.OportunidadEtapa.COLUMN_FECHA_FIN_PLAN,
+                Contract.OportunidadEtapa.COLUMN_ID_ETAPA, Contract.OportunidadEtapa.COLUMN_FECHA_INICIO, Contract.OportunidadEtapa.COLUMN_OBSERVACION,
+                Contract.OportunidadEtapa.COLUMN_FECHA_FIN, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD_INT, Contract.OportunidadEtapa.COLUMN_ESTADO, Contract.OportunidadEtapa.COLUMN_ID_AGENDA,
+                Contract.OportunidadEtapa.COLUMN_ID_ETAPA_PADRE}
+                , Contract.OportunidadEtapa.COLUMN_ID_AGENDA + " = ?",  new String[]{idAgenda + ""});
+
+        List<OportunidadEtapa> list = new ArrayList<OportunidadEtapa>();
+        while (c.moveToNext()) {
+            OportunidadEtapa cont = new OportunidadEtapa();
+            cont.setID(CursorUtils.getInt(c, Contract.OportunidadEtapa._ID));
+            cont.setIdOportunidad(CursorUtils.getInt(c, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD));
+            cont.set_idOportunidad(CursorUtils.getInt(c, Contract.OportunidadEtapa.COLUMN_ID_OPORTUNIDAD_INT));
+            cont.setIdEtapa(CursorUtils.getInt(c, Contract.OportunidadEtapa.COLUMN_ID_ETAPA));
+            cont.setFechaInicio(CursorUtils.getDate(c, Contract.OportunidadEtapa.COLUMN_FECHA_INICIO));
+            cont.setObservacion(CursorUtils.getString(c, Contract.OportunidadEtapa.COLUMN_OBSERVACION));
+            cont.setFechaFin(CursorUtils.getDate(c, Contract.OportunidadEtapa.COLUMN_FECHA_FIN));
+            cont.setEstado(CursorUtils.getString(c, Contract.OportunidadEtapa.COLUMN_ESTADO));
+            cont.setIdEtapaPadre(CursorUtils.getInt(c, Contract.OportunidadEtapa.COLUMN_ID_ETAPA_PADRE));
+            cont.setFechaFinPlan(CursorUtils.getDate(c, Contract.OportunidadEtapa.COLUMN_FECHA_FIN_PLAN));
+            cont.setIdAgenda(CursorUtils.getInt(c, Contract.OportunidadEtapa.COLUMN_ID_AGENDA));
+
+            cont.setEtapa(Etapa.getEtapaById(db, cont.getIdEtapa()));
+
+            list.add(cont);
+        }
+        c.close();
+        return list;
     }
 }

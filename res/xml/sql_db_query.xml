@@ -617,30 +617,60 @@
     
 	 
 	  <statement name="AgendaByCliente">
-       SELECT  
-        tbAgenda._id, 
-        tbAgenda.IdRuta,
-        tbAgenda.IdAgenda,        
-        tbAgenda.FechaInicio,
-        tbAgenda.FechaFin,
-        tbAgenda.EstadoAgenda,
-        tbAgenda.IdContacto,
-        tbAgenda.IdCliente,
-        tbAgenda.IdMotivoNoVisita,
-        tbAgenda.Distancia,
-        tbAgenda.Duracion,
-        tbAgenda.TiempoViaje,
-        tbAgenda.IdMotivoReprogramar,
-        tbAgenda.Enviado,
+          SELECT * FROM (SELECT
+          tbAgenda._id,
+          tbAgenda._IdCliente,
+          tbAgenda.IdRuta,
+          tbAgenda.IdAgenda,
+          tbAgenda.FechaInicio,
+          tbAgenda.FechaFin,
+          tbAgenda.EstadoAgenda,
+          tbAgenda.IdContacto,
+          tbAgenda.IdCliente,
+          tbAgenda.IdMotivoNoVisita,
+          tbAgenda.Distancia,
+          tbAgenda.Duracion,
+          tbAgenda.TiempoViaje,
+          tbAgenda.IdMotivoReprogramar,
+          tbAgenda.Enviado,
           tbAgenda.FechaCreacion,
+          tbAgenda.Observaciones,
           tbAgenda.FechaCancelacion,
-        tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
-        tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
-        tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad
-        FROM tbAgenda
-        JOIN tbAgendaExt
-        ON tbAgenda._id = tbAgendaExt.docid
-        ORDER BY tbAgenda.FechaInicio, tbAgendaExt.NombreCompleto
+          tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
+          tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
+          tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad,
+          'C' As TipoAgenda
+          FROM tbAgenda
+          JOIN tbAgendaExt
+          ON tbAgenda._id = tbAgendaExt.docid
+          UNION ALL
+          SELECT
+          tbAgendaOportunidad._id,
+          tbAgendaOportunidad._IdOportunidad AS _IdCliente,
+          0 AS IdRuta,
+          tbAgendaOportunidad.IdAgenda,
+          tbAgendaOportunidad.FechaInicio,
+          tbAgendaOportunidad.FechaFin,
+          tbAgendaOportunidad.EstadoAgenda,
+          0 AS IdContacto,
+          tbAgendaOportunidad.IdOportunidad AS IdCliente,
+          '' AS IdMotivoNoVisita,
+          0 AS Distancia,
+          0 AS Duracion,
+          0 AS TiempoViaje,
+          0 AS IdMotivoReprogramar,
+          tbAgendaOportunidad.Pendiente AS Enviado,
+          tbAgendaOportunidad.FechaInicio AS FechaCreacion,
+          '' AS Observaciones,
+          tbAgendaOportunidad.FechaInicio AS FechaCancelacion,
+          tbAgendaOportunidadExt.Descripcion AS tbAgendaExt_NombreCompleto,
+          tbAgendaOportunidadExt.Direccion AS tbAgendaExt_Direccion,
+          tbAgendaOportunidadExt.Correo AS tbAgendaExt_Ciudad,
+          'O' As TipoAgenda
+          FROM tbAgendaOportunidad
+          JOIN tbAgendaOportunidadExt
+          ON tbAgendaOportunidad._id = tbAgendaOportunidadExt.docid)
+          ORDER BY FechaInicio, tbAgendaExt_NombreCompleto
      </statement>
     <statement name="AgendaByClienteNull">
         SELECT
@@ -810,7 +840,8 @@
     </statement>
 
 	  <statement name="AgendaSemanal">
-       SELECT  
+          SELECT * FROM
+       (SELECT
         tbAgenda._id, 
         tbAgenda._IdCliente,
         tbAgenda._IdContacto,
@@ -828,15 +859,46 @@
         tbAgenda.IdMotivoReprogramar,
         tbAgenda.Enviado,
           tbAgenda.FechaCreacion,
+		  tbAgenda.Observaciones,
           tbAgenda.FechaCancelacion,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
-        tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad
+        tbAgendaExt.Ciudad AS tbAgendaExt_Ciudad,
+          'C' AS TipoAgenda
         FROM tbAgenda
         JOIN tbAgendaExt
         ON tbAgenda._id = tbAgendaExt.docid
-        WHERE tbAgenda.FechaInicio >= ?
-        ORDER BY tbAgenda.FechaInicio, tbAgendaExt.NombreCompleto
+        WHERE tbAgenda.FechaInicio >= ? AND tbAgenda.EstadoAgenda &lt;&gt; 'ELIM'
+          UNION ALL
+          SELECT
+          tbAgendaOportunidad._id,
+          tbAgendaOportunidad._IdOportunidad AS _IdCliente,
+          0 AS _IdContacto,
+          0 AS _IdClienteDireccion,
+          0 AS IdRuta,
+          tbAgendaOportunidad.IdAgenda,
+          tbAgendaOportunidad.FechaInicio,
+          tbAgendaOportunidad.FechaFin,
+          tbAgendaOportunidad.EstadoAgenda,
+          0 AS IdContacto,
+          tbAgendaOportunidad.IdOportunidad AS IdCliente,
+          0 AS Distancia,
+          0 AS Duracion,
+          0 AS TiempoViaje,
+          0 AS IdMotivoReprogramar,
+          tbAgendaOportunidad.Pendiente AS Enviado,
+          tbAgendaOportunidad.FechaInicio AS FechaCreacion,
+          '' AS Observaciones,
+          tbAgendaOportunidad.FechaInicio AS FechaCancelacion,
+          tbAgendaOportunidadExt.Descripcion AS tbAgendaExt_NombreCompleto,
+          tbAgendaOportunidadExt.Direccion AS tbAgendaExt_Direccion,
+          tbAgendaOportunidadExt.Correo AS tbAgendaExt_Ciudad,
+          'O' As TipoAgenda
+          FROM tbAgendaOportunidad
+          JOIN tbAgendaOportunidadExt
+          ON tbAgendaOportunidad._id = tbAgendaOportunidadExt.docid
+          WHERE tbAgendaOportunidad.FechaInicio >= ?)
+          ORDER BY FechaInicio, tbAgendaExt_NombreCompleto
      </statement>
 
     <statement name="AgendaDashboard">
@@ -969,12 +1031,12 @@
         FROM tbAgenda
         JOIN tbAgendaExt 
         ON tbAgenda._id = tbAgendaExt.docid
-        LEFT JOIN tbCliente
+        JOIN tbCliente        
         ON (tbAgenda.IdCliente = tbCliente.IdCliente AND tbAgenda.IdCliente &lt;&gt; 0) 
         OR (tbAgenda._IdCliente = tbCliente._id AND tbAgenda.IdCliente = 0)
-        LEFT JOIN tbClienteExt
+        JOIN tbClienteExt
         ON tbClienteExt.docid = tbCliente._id
-        LEFT JOIN tbClienteDireccion
+        JOIN tbClienteDireccion        
         ON ((tbAgenda.IdCliente = tbClienteDireccion.IdCliente AND tbAgenda.IdCliente &lt;&gt; 0) 
         OR (tbAgenda._IdCliente = tbClienteDireccion._IdCliente AND tbAgenda.IdCliente = 0))
         AND tbAgenda.IdClienteDireccion = tbClienteDireccion.IdClienteDireccion
@@ -1044,7 +1106,7 @@
   		count(*) as conteo 
   		FROM tbAgenda
 		WHERE EstadoAgenda = ? AND FechaInicio >= ?
-		AND FechaFin &lt;= ?
+		AND FechaFin &lt;= ? AND tbAgenda.EstadoAgenda &lt;&gt; 'ELIM'
      </statement>
 	  
 	 <statement name="SimpleRutaSearch">
@@ -1056,6 +1118,7 @@
         tbAgenda.IdCliente,
         tbAgenda.Enviado,
          tbAgenda.FechaCreacion,
+         tbAgenda.Observaciones,
         tbAgendaExt.NombreCompleto AS tbAgendaExt_NombreCompleto,
         tbAgendaExt.Direccion AS tbAgendaExt_Direccion,
         tbAgenda.EstadoAgenda AS tbAgenda_EstadoAgenda,
@@ -1063,7 +1126,8 @@
         tbAgenda.FechaFin AS tbAgenda_FechaFin,
         tbClienteDireccion.Direccion AS tbAgendaExt_Direccion,
         tbClienteDireccion.Telefono1 AS tbAgendaExt_Telefono1,
-        tbEstadoAgenda.Value AS tbEstadoAgenda_Value
+        tbEstadoAgenda.Value AS tbEstadoAgenda_Value,
+         'C' AS TipoAgenda
        	FROM tbAgendaExt       	 
        	INNER JOIN tbAgenda 
        	ON tbAgenda._id = tbAgendaExt.docid 
@@ -1085,7 +1149,44 @@
          ON tbAgenda.IdCliente = tbCliente.IdCliente OR tbAgenda._idCliente = tbCliente._id
          JOIN tbClienteDireccion
          ON tbAgenda.IdCliente = tbClienteDireccion.IdCliente
-         AND tbAgenda.IdClienteDireccion = tbClienteDireccion.IdClienteDireccion
+         AND tbAgenda.IdClienteDireccion = tbClienteDireccion.IdClienteDireccion AND tbAgenda.EstadoAgenda &lt;&gt; 'ELIM'
+         ORDER BY tbRutaSearch.Rank DESC
+         UNION ALL
+         SELECT
+         tbAgendaOportunidad._id,
+         0 AS IdRuta,
+         tbAgendaOportunidad.IdAgenda,
+         0 AS IdContacto,
+         tbAgendaOportunidad.IdOportunidad AS IdCliente,
+         tbAgendaOportunidad.Pendiente AS Enviado,
+         tbAgendaOportunidad.FechaInicio AS FechaCreacion,
+         '' AS Observaciones,
+         tbAgendaOportunidadExt.Descripcion AS tbAgendaExt_NombreCompleto,
+         tbAgendaOportunidadExt.Direccion AS tbAgendaExt_Direccion,
+         tbAgendaOportunidad.EstadoAgenda AS tbAgenda_EstadoAgenda,
+         tbAgendaOportunidad.FechaInicio AS tbAgenda_FechaInicio,
+         tbAgendaOportunidad.FechaFin AS tbAgenda_FechaFin,
+         tbAgendaOportunidadExt.Direccion AS tbAgendaExt_Direccion,
+         '' AS tbAgendaExt_Telefono1,
+         tbEstadoAgenda.Value AS tbEstadoAgenda_Value,
+         'O' AS TipoAgenda
+         FROM tbAgendaOportunidadExt
+         JOIN tbAgendaOportunidad
+         ON tbAgendaOportunidad._id = tbAgendaOportunidadExt.docid
+         INNER JOIN (
+
+             SELECT
+             tbAgendaOportunidadExt.docid,
+             matchinfo( tbAgendaOportunidadExt ) AS Rank
+             FROM tbAgendaOportunidadExt
+             WHERE tbAgendaOportunidadExt MATCH ?
+             ORDER BY rank DESC LIMIT 30 OFFSET 0
+
+         ) AS tbRutaSearch
+         ON tbAgendaOportunidadExt.docid = tbRutaSearch.docid
+         JOIN tbGeneralValue tbEstadoAgenda
+         ON tbEstadoAgenda.GeneralTableId = 1013
+         AND tbAgendaOportunidad.EstadoAgenda = tbEstadoAgenda.Code
          ORDER BY tbRutaSearch.Rank DESC
      </statement>
     
@@ -2158,5 +2259,53 @@
         INNER JOIN tbTarjetaComision
         ON tbTipoDiferido.IdTipoDiferido = tbTarjetaComision.IdTipoDiferido
         WHERE tbTarjetaComision.IdBanco = ? AND tbTarjetaComision.IdMarcaTarjeta = ?
+    </statement>
+	<statement name="AgendaOportunidadByID">
+        SELECT
+        tbAgendaOportunidad._id,
+        tbAgendaOportunidad.IdAgenda,
+        tbAgendaOportunidad._IdOportunidad,
+        tbAgendaOportunidad.IdOportunidad,
+        tbAgendaOportunidad.EstadoAgenda,
+        tbAgendaOportunidad.FechaInicio,
+        tbAgendaOportunidad.FechaFin,
+        tbAgendaOportunidad.Latitud,
+        tbAgendaOportunidad.Longitud,
+        tbAgendaOportunidad.Pendiente,
+        tbAgendaOportunidadExt.Descripcion AS tbAgendaOportunidadExt_Descripcion,
+        tbAgendaOportunidadExt.Direccion AS tbAgendaOportunidadExt_Direccion,
+        tbAgendaOportunidadExt.Correo AS tbAgendaOportunidadExt_Correo,
+        tbEstadoAgenda.Value AS tbEstadoAgenda_Value
+        FROM tbAgendaOportunidad
+        JOIN tbAgendaOportunidadExt
+        ON tbAgendaOportunidad._id = tbAgendaOportunidadExt.docid
+        JOIN tbGeneralValue tbEstadoAgenda
+        ON tbEstadoAgenda.GeneralTableId = 1013
+        AND tbAgendaOportunidad.EstadoAgenda = tbEstadoAgenda.Code
+        WHERE tbAgendaOportunidad._id = ?
+    </statement>
+    <statement name="AgendaOportunidadPendientes">
+        SELECT
+        tbAgendaOportunidad._id,
+        tbAgendaOportunidad.IdAgenda,
+        tbAgendaOportunidad._IdOportunidad,
+        tbAgendaOportunidad.IdOportunidad,
+        tbAgendaOportunidad.EstadoAgenda,
+        tbAgendaOportunidad.FechaInicio,
+        tbAgendaOportunidad.FechaFin,
+        tbAgendaOportunidad.Latitud,
+        tbAgendaOportunidad.Longitud,
+        tbAgendaOportunidad.Pendiente,
+        tbAgendaOportunidadExt.Descripcion AS tbAgendaOportunidadExt_Descripcion,
+        tbAgendaOportunidadExt.Direccion AS tbAgendaOportunidadExt_Direccion,
+        tbAgendaOportunidadExt.Correo AS tbAgendaOportunidadExt_Correo,
+        tbEstadoAgenda.Value AS tbEstadoAgenda_Value
+        FROM tbAgendaOportunidad
+        JOIN tbAgendaOportunidadExt
+        ON tbAgendaOportunidad._id = tbAgendaOportunidadExt.docid
+        JOIN tbGeneralValue tbEstadoAgenda
+        ON tbEstadoAgenda.GeneralTableId = 1013
+        AND tbAgendaOportunidad.EstadoAgenda = tbEstadoAgenda.Code
+        WHERE tbAgendaOportunidad.Pendiente = 1 AND tbAgendaOportunidad.EstadoAgenda = 'V'
     </statement>
 </sql>

@@ -5,6 +5,7 @@ import rp3.configuration.PreferenceManager;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
+import rp3.marketforce.oportunidad.AgendaProspectoFragment;
 import rp3.marketforce.pedido.CrearPedidoActivity;
 import rp3.marketforce.resumen.AgenteDetalleFragment;
 import rp3.marketforce.sync.SyncAdapter;
@@ -57,6 +58,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
     public SimpleDateFormat format1 = new SimpleDateFormat("EEEE");
     public SimpleDateFormat format2 = new SimpleDateFormat("dd");
     public SimpleDateFormat format3 = new SimpleDateFormat("MMMM");
+    private AgendaProspectoFragment prospectoDetailfragment;
 
 
     public static RutasFragment newInstance(int transactionTypeId) {
@@ -376,6 +378,20 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
     	rutasDetailfragment = RutasDetailFragment.newInstance(selectedTransactionId);     	
     	setFragment(R.id.content_transaction_detail, rutasDetailfragment);           					
 	}
+
+    @Override
+    public void onProspectoSelected(long id) {
+        if(!mTwoPane) {
+            isMainFragment = false;
+            slidingPane.closePane();
+        }
+
+        selectedTransactionId = id;
+        RefreshMenu();
+
+        prospectoDetailfragment = AgendaProspectoFragment.newInstance(selectedTransactionId);
+        setFragment(R.id.content_transaction_detail, prospectoDetailfragment);
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

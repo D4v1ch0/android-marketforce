@@ -337,4 +337,32 @@
     <statement name="ToVersion12">
         ALTER TABLE tbAgenda ADD COLUMN FechaCancelacion INTEGER;
     </statement>
+    <statement name="ToVersion13-1">
+        ALTER TABLE tbOportunidadEtapa ADD COLUMN IdAgenda INTEGER;
+    </statement>
+    <statement name="ToVersion13-2">
+        ALTER TABLE tbOportunidadBitacora ADD COLUMN IdAgenda INTEGER;
+    </statement>
+    <statement name="ToVersion13-3">
+        CREATE TABLE tbAgendaOportunidad(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdAgenda INTEGER,
+        _IdOportunidad INTEGER,
+        IdOportunidad INTEGER,
+        EstadoAgenda TEXT,
+        FechaInicio INTEGER,
+        FechaFin INTEGER,
+        Latitud REAL,
+        Longitud REAL,
+        Pendiente BOOLEAN
+        );
+    </statement>
+    <statement name="ToVersion13-4">
+        CREATE VIRTUAL TABLE tbAgendaOportunidadExt USING fts4 (
+        Descripcion,
+        Direccion,
+        Correo,
+        tokenize=porter
+        );
+    </statement>
 </sql>

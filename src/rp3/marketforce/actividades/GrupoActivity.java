@@ -491,6 +491,7 @@ public class GrupoActivity extends ActividadActivity {
 				intent.putExtra(RutasDetailFragment.ARG_ITEM_ID, (int)actividad_hija.getIdTareaActividad());
 				intent.putExtra(RutasDetailFragment.ARG_AGENDA_ID, (long) resp.getIdAgenda());
 				intent.putExtra(RutasDetailFragment.ARG_RUTA_ID, (int) resp.getIdRuta());
+				intent.putExtra(ARG_AGENDA_INT, id_agenda_int);
 				intent.putExtra(ARG_PADRE_ID, (int) actividad_hija.getIdTareaActividadPadre());
 				intent.putExtra(ARG_TAREA, (int) actividad_hija.getIdTarea());
 				intent.putExtra(ARG_THEME, R.style.AppDialogTheme);

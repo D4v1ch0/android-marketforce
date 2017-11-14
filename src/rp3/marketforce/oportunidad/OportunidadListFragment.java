@@ -2,25 +2,32 @@ package rp3.marketforce.oportunidad;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -33,11 +40,13 @@ import rp3.marketforce.headerlistview.HeaderListView;
 import rp3.marketforce.loader.ClientLoader;
 import rp3.marketforce.loader.OportunidadLoader;
 import rp3.marketforce.models.Cliente;
+import rp3.marketforce.models.oportunidad.AgendaOportunidad;
 import rp3.marketforce.models.oportunidad.Oportunidad;
 import rp3.marketforce.models.oportunidad.OportunidadTipo;
 import rp3.marketforce.ruta.CrearVisitaActivity;
 import rp3.marketforce.ruta.CrearVisitaFragment;
 import rp3.marketforce.sync.SyncAdapter;
+import rp3.util.CalendarUtils;
 import rp3.util.ConnectionUtils;
 
 /**
@@ -72,6 +81,7 @@ public class OportunidadListFragment extends BaseFragment {
     public interface OportunidadListFragmentListener {
         public void onOportunidadSelected(Oportunidad oportunidad);
         public void onFinalizaConsulta();
+        public void onFinalizaGestion();
         public boolean allowSelectedItem();
     }
 
@@ -96,6 +106,7 @@ public class OportunidadListFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yy");
         if(!filtro) {
             if (currentTransactionBoolean) {
                 ejecutarConsulta();
@@ -106,6 +117,78 @@ public class OportunidadListFragment extends BaseFragment {
                 getLoaderManager().initLoader(0, args, loaderOportunidad);
             }
         }
+        //muestro si existe un prospecto gestionando
+        AgendaOportunidad agd = AgendaOportunidad.getAgendaOportunidadGestionado(getDataBase());
+        if(agd.getID() != 0) {
+            LinearLayout containerGestionando = (LinearLayout) getRootView().findViewById(R.id.oportunidad_gestionando);
+            final Oportunidad opt = Oportunidad.getOportunidadId(getDataBase(), agd.get_idOportunidad());
+            LayoutInflater inflater = (LayoutInflater) this.getActivity().getSystemService(
+                    Context.LAYOUT_INFLATER_SERVICE);
+            View convertView = (View) inflater.inflate(this.getContext().getResources().getLayout(R.layout.rowlist_oportunidad), null);
+
+            ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_nombre)).setText(opt.getDescripcion());
+            ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_probabilidad)).setText("Probabilidad: " + opt.getProbabilidad() + "%");
+            if(opt.getAgente() != null)
+                ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_agente)).setText(opt.getAgente().getNombre());
+            else
+                ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_agente)).setText("");
+            ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_number)).setText("G");
+            ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_importe)).setText("$" + numberFormat.format(opt.getImporte()));
+            ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_contactado)).setText("Contactado: " + format1.format(opt.getFechaCreacion()));
+
+            if (opt.getEstado().equalsIgnoreCase("S"))
+                ((ImageView) convertView.findViewById(R.id.rowlist_oportunidad_prioridad)).setImageResource(R.drawable.blue_flag);
+            if (opt.getEstado().equalsIgnoreCase("C"))
+                ((ImageView) convertView.findViewById(R.id.rowlist_oportunidad_prioridad)).setImageResource(R.drawable.green_flag);
+            if (opt.getEstado().equalsIgnoreCase("NC"))
+                ((ImageView) convertView.findViewById(R.id.rowlist_oportunidad_prioridad)).setImageResource(R.drawable.gray_flag);
+            Calendar cal = Calendar.getInstance();
+            Calendar calFecha = Calendar.getInstance();
+            calFecha.setTime(opt.getFechaCreacion());
+            long dias = CalendarUtils.DayDiff(cal, calFecha);
+            if (dias == 0 && cal.get(Calendar.DAY_OF_YEAR) != calFecha.get(Calendar.DAY_OF_YEAR))
+                dias = 1;
+            ((TextView) convertView.findViewById(R.id.rowlist_oportunidad_dias)).setText("Días transcurridos: " + dias);
+            ((RatingBar) convertView.findViewById(R.id.rowlist_oportunidad_calificacion)).setRating(opt.getCalificacion());
+
+            if (opt.getEtapa().getOrden() > 1)
+                convertView.findViewById(R.id.rowlist_oportunidad_etapa1).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa1));
+            if (opt.getEtapa().getOrden() > 2)
+                convertView.findViewById(R.id.rowlist_oportunidad_etapa2).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa2));
+            if (opt.getEtapa().getOrden() > 3)
+                convertView.findViewById(R.id.rowlist_oportunidad_etapa3).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa3));
+            if (opt.getEtapa().getOrden() > 4)
+                convertView.findViewById(R.id.rowlist_oportunidad_etapa4).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa4));
+            if (opt.getEstado().equalsIgnoreCase("C")) {
+                convertView.findViewById(R.id.rowlist_oportunidad_etapa1).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa1));
+                convertView.findViewById(R.id.rowlist_oportunidad_etapa2).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa2));
+                convertView.findViewById(R.id.rowlist_oportunidad_etapa3).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa3));
+                convertView.findViewById(R.id.rowlist_oportunidad_etapa4).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa4));
+                convertView.findViewById(R.id.rowlist_oportunidad_etapa5).setBackgroundColor(getContext().getResources().getColor(R.color.color_etapa5));
+            }
+
+            if (opt.getMaxEtapas() < 5)
+                convertView.findViewById(R.id.rowlist_oportunidad_etapa5).setVisibility(View.INVISIBLE);
+            if (opt.getMaxEtapas() < 4)
+                convertView.findViewById(R.id.rowlist_oportunidad_etapa4).setVisibility(View.INVISIBLE);
+            if (opt.getMaxEtapas() < 3)
+                convertView.findViewById(R.id.rowlist_oportunidad_etapa3).setVisibility(View.INVISIBLE);
+            if (opt.getMaxEtapas() < 2)
+                convertView.findViewById(R.id.rowlist_oportunidad_etapa2).setVisibility(View.INVISIBLE);
+
+            containerGestionando.removeAllViews();
+            containerGestionando.addView(convertView);
+            getRootView().findViewById(R.id.oportunidad_gestionando_content).setVisibility(View.VISIBLE);
+            containerGestionando.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    oportunidadListFragmentCallback.onOportunidadSelected(opt);
+                }
+            });
+
+        }
+        else
+            getRootView().findViewById(R.id.oportunidad_gestionando_content).setVisibility(View.GONE);
     }
 
     @Override
@@ -135,6 +218,7 @@ public class OportunidadListFragment extends BaseFragment {
 
         list = (ExpandableListView) rootView.findViewById(R.id.oportunidad_list);
         pullRefresher = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
+
     }
 
 
@@ -387,9 +471,15 @@ public class OportunidadListFragment extends BaseFragment {
         monto = 0;
         for(Oportunidad opt : lista)
         {
-            listDataChild.get(opt.getOportunidadTipo().getDescripcion()).add(opt);
-            if(opt.getEstado().equalsIgnoreCase("A"))
-                monto = monto + opt.getImporte();
+            if(opt.getOportunidadTipo().getDescripcion() != null) {
+                listDataChild.get(opt.getOportunidadTipo().getDescripcion()).add(opt);
+                if (opt.getEstado().equalsIgnoreCase("A"))
+                    monto = monto + opt.getImporte();
+            }
+            else
+            {
+                Log.e("Sin Oportunidad Tipo", opt.getDescripcion());
+            }
         }
 
         return listDataChild;

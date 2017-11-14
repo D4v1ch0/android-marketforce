@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -37,10 +38,13 @@ import rp3.marketforce.R;
 import rp3.marketforce.cliente.ClienteEditActivity;
 import rp3.marketforce.cliente.ClienteEditFragment;
 import rp3.marketforce.cliente.CrearClienteActivity;
+import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.Agente;
+import rp3.marketforce.models.oportunidad.AgendaOportunidad;
 import rp3.marketforce.models.oportunidad.Oportunidad;
 import rp3.marketforce.models.oportunidad.OportunidadEtapa;
 import rp3.marketforce.resumen.AgenteDetalleFragment;
+import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.DetailsPageAdapter;
 import rp3.marketforce.utils.DonutChart;
 import rp3.marketforce.utils.DrawableManager;
@@ -63,6 +67,7 @@ public class OportunidadDetailFragment extends BaseFragment {
     private static final int IDFOTOS= 503;
 
     private long clientId;
+    private AgendaOportunidad agd;
     private Oportunidad opt;
     private LayoutInflater inflater;
     private LinearLayout linearLayoutRigth;
@@ -75,6 +80,7 @@ public class OportunidadDetailFragment extends BaseFragment {
     private ImageButton TabContactos;
     private ImageView ArrowInfo, ArrowDir, ArrowCont;
     public AgenteDetalleFragment agenteDetalleFragment;
+    private OportunidadListFragment.OportunidadListFragmentListener oportunidadListFragmentCallback;
 
     private String str_titulo;
     private final int REQUEST_CODE_DETAIL_EDIT = 3;
@@ -219,7 +225,12 @@ public class OportunidadDetailFragment extends BaseFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
+        if(getParentFragment()!=null){
+            oportunidadListFragmentCallback = (OportunidadListFragment.OportunidadListFragmentListener)getParentFragment();
+        }else{
+            oportunidadListFragmentCallback = (OportunidadListFragment.OportunidadListFragmentListener) activity;
+            setRetainInstance(true);
+        }
         //setRetainInstance(true);
     }
 
@@ -789,6 +800,10 @@ public class OportunidadDetailFragment extends BaseFragment {
                             Intent intent = new Intent(getContext(), EtapaActivity.class);
                             intent.putExtra(EtapaActivity.ARG_ETAPA, view.getId());
                             intent.putExtra(EtapaActivity.ARG_OPORTUNIDAD, clientId);
+                            if(agd.getIdOportunidad() == opt.getIdOportunidad())
+                                intent.putExtra(EtapaActivity.ARG_ID_AGENDA, (int) agd.getID());
+                            else
+                                intent.putExtra(EtapaActivity.ARG_ID_AGENDA, 0);
                             startActivity(intent);
                         }
                     });
@@ -906,6 +921,78 @@ public class OportunidadDetailFragment extends BaseFragment {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        //GESTION DE OPORTUNIDADES
+        //Se valida si existen agendas de oportunidades gestionando
+        agd = AgendaOportunidad.getAgendaOportunidadGestionado(getDataBase());
+        if (Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_GESTIONANDO, 0, Agenda.getLastAgenda(getDataBase())) == 0 && agd.getID() == 0) {
+            getRootView().findViewById(R.id.oportunidad_inicio_gestion).setVisibility(View.VISIBLE);
+            getRootView().findViewById(R.id.oportunidad_cancelar_gestion).setVisibility(View.GONE);
+            getRootView().findViewById(R.id.oportunidad_finalizar_gestion).setVisibility(View.GONE);
+        } else {
+            if (agd.get_idOportunidad() == opt.getID()) {
+                getRootView().findViewById(R.id.oportunidad_inicio_gestion).setVisibility(View.GONE);
+                getRootView().findViewById(R.id.oportunidad_cancelar_gestion).setVisibility(View.VISIBLE);
+                getRootView().findViewById(R.id.oportunidad_finalizar_gestion).setVisibility(View.VISIBLE);
+            } else {
+                getRootView().findViewById(R.id.oportunidad_inicio_gestion).setVisibility(View.INVISIBLE);
+                getRootView().findViewById(R.id.oportunidad_cancelar_gestion).setVisibility(View.GONE);
+                getRootView().findViewById(R.id.oportunidad_finalizar_gestion).setVisibility(View.GONE);
+            }
+        }
+
+
+        ((Button) getRootView().findViewById(R.id.oportunidad_inicio_gestion)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                agd = new AgendaOportunidad();
+                agd.set_idOportunidad((int)opt.getID());
+                agd.setIdOportunidad(opt.getIdOportunidad());
+                agd.setPendiente(true);
+                agd.setEstado(Contants.ESTADO_GESTIONANDO);
+                agd.setFechaInicio(Calendar.getInstance().getTime());
+                agd.setDescripcion(opt.getDescripcion());
+                agd.setDireccion(opt.getDireccion());
+                agd.setEmail(opt.getCorreo());
+                AgendaOportunidad.insert(getDataBase(), agd);
+                getRootView().findViewById(R.id.oportunidad_inicio_gestion).setVisibility(View.GONE);
+                getRootView().findViewById(R.id.oportunidad_cancelar_gestion).setVisibility(View.VISIBLE);
+                getRootView().findViewById(R.id.oportunidad_finalizar_gestion).setVisibility(View.VISIBLE);
+            }
+        });
+
+        ((Button) getRootView().findViewById(R.id.oportunidad_finalizar_gestion)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                agd.setDescripcion(opt.getDescripcion());
+                agd.setDireccion(opt.getDireccion());
+                agd.setEmail(opt.getCorreo());
+                agd.setPendiente(true);
+                agd.setEstado(Contants.ESTADO_VISITADO);
+                agd.setFechaFin(Calendar.getInstance().getTime());
+                AgendaOportunidad.update(getDataBase(), agd);
+                getRootView().findViewById(R.id.oportunidad_inicio_gestion).setVisibility(View.VISIBLE);
+                getRootView().findViewById(R.id.oportunidad_cancelar_gestion).setVisibility(View.GONE);
+                getRootView().findViewById(R.id.oportunidad_finalizar_gestion).setVisibility(View.GONE);
+
+                Bundle bundle = new Bundle();
+                bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_AGENDA_OPORTUNIDAD);
+                requestSync(bundle);
+                oportunidadListFragmentCallback.onFinalizaGestion();
+            }
+        });
+
+        ((Button) getRootView().findViewById(R.id.oportunidad_cancelar_gestion)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                agd.setPendiente(false);
+                agd.setEstado(Contants.ESTADO_ELIMINADO);
+                //agd.setFechaFin(Calendar.getInstance().getTime());
+                AgendaOportunidad.update(getDataBase(), agd);
+                getRootView().findViewById(R.id.oportunidad_inicio_gestion).setVisibility(View.VISIBLE);
+                getRootView().findViewById(R.id.oportunidad_cancelar_gestion).setVisibility(View.GONE);
+                getRootView().findViewById(R.id.oportunidad_finalizar_gestion).setVisibility(View.GONE);
+            }
+        });
 
         //TabInfo.setBackgroundColor(getResources().getColor(R.color.tab_activated));
     }

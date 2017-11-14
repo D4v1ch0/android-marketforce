@@ -24,6 +24,7 @@ public class OportunidadBitacora extends EntityBase<OportunidadBitacora> {
     private int idAgente;
     private String detalle;
     private Date fecha;
+    private int idAgenda;
 
     private Agente agente;
 
@@ -85,6 +86,14 @@ public class OportunidadBitacora extends EntityBase<OportunidadBitacora> {
         this.fecha = fecha;
     }
 
+    public int getIdAgenda() {
+        return idAgenda;
+    }
+
+    public void setIdAgenda(int idAgenda) {
+        this.idAgenda = idAgenda;
+    }
+
     public Agente getAgente() {
         return agente;
     }
@@ -111,6 +120,7 @@ public class OportunidadBitacora extends EntityBase<OportunidadBitacora> {
         setValue(Contract.OportunidadBitacora.COLUMN_ID_OPORTUNIDAD_BITACORA, this.idOportunidadBitacora);
         setValue(Contract.OportunidadBitacora.COLUMN_DETALLE, this.detalle);
         setValue(Contract.OportunidadBitacora.COLUMN_FECHA, this.fecha);
+        setValue(Contract.OportunidadBitacora.COLUMN_ID_AGENDA, this.idAgenda);
     }
 
     @Override
@@ -127,7 +137,7 @@ public class OportunidadBitacora extends EntityBase<OportunidadBitacora> {
     public static List<OportunidadBitacora> getBitacoraOportunidad(DataBase db, int idOportunidad) {
         Cursor c = db.query(Contract.OportunidadBitacora.TABLE_NAME,new String[] {Contract.OportunidadBitacora._ID, Contract.OportunidadBitacora.COLUMN_ID_OPORTUNIDAD,
                 Contract.OportunidadBitacora.COLUMN_ID_OPORTUNIDAD_INT, Contract.OportunidadBitacora.COLUMN_ID_AGENTE, Contract.OportunidadBitacora.COLUMN_ID_OPORTUNIDAD_BITACORA,
-                Contract.OportunidadBitacora.COLUMN_DETALLE, Contract.OportunidadBitacora.COLUMN_FECHA}, Contract.OportunidadBitacora.COLUMN_ID_OPORTUNIDAD + " = ? "
+                Contract.OportunidadBitacora.COLUMN_DETALLE, Contract.OportunidadBitacora.COLUMN_FECHA, Contract.OportunidadBitacora.COLUMN_ID_AGENDA}, Contract.OportunidadBitacora.COLUMN_ID_OPORTUNIDAD + " = ? "
                 , new String[]{idOportunidad + ""}, null, null, Contract.OportunidadBitacora.COLUMN_FECHA + " DESC");
 
         List<OportunidadBitacora> list = new ArrayList<OportunidadBitacora>();
@@ -140,6 +150,7 @@ public class OportunidadBitacora extends EntityBase<OportunidadBitacora> {
             cont.set_idOportunidad(CursorUtils.getInt(c, Contract.OportunidadBitacora.COLUMN_ID_OPORTUNIDAD_INT));
             cont.setDetalle(CursorUtils.getString(c, Contract.OportunidadBitacora.COLUMN_DETALLE));
             cont.setFecha(CursorUtils.getDate(c, Contract.OportunidadBitacora.COLUMN_FECHA));
+            cont.setIdAgenda(CursorUtils.getInt(c, Contract.OportunidadBitacora.COLUMN_ID_AGENDA));
             cont.setAgente(Agente.getAgente(db, cont.getIdAgente()));
             list.add(cont);
         }
@@ -150,7 +161,7 @@ public class OportunidadBitacora extends EntityBase<OportunidadBitacora> {
     public static OportunidadBitacora getBitacoraOportunidadUnit(DataBase db, int idOportunidad, int idBitacora) {
         Cursor c = db.query(Contract.OportunidadBitacora.TABLE_NAME,new String[] {Contract.OportunidadBitacora._ID, Contract.OportunidadBitacora.COLUMN_ID_OPORTUNIDAD,
                 Contract.OportunidadBitacora.COLUMN_ID_OPORTUNIDAD_INT, Contract.OportunidadBitacora.COLUMN_ID_AGENTE, Contract.OportunidadBitacora.COLUMN_ID_OPORTUNIDAD_BITACORA,
-                Contract.OportunidadBitacora.COLUMN_DETALLE, Contract.OportunidadBitacora.COLUMN_FECHA}, Contract.OportunidadBitacora.COLUMN_ID_OPORTUNIDAD + " = ? AND "
+                Contract.OportunidadBitacora.COLUMN_DETALLE, Contract.OportunidadBitacora.COLUMN_FECHA, Contract.OportunidadBitacora.COLUMN_ID_AGENDA}, Contract.OportunidadBitacora.COLUMN_ID_OPORTUNIDAD + " = ? AND "
                 + Contract.OportunidadBitacora._ID + " = ? "
                 , new String[]{idOportunidad + "", idBitacora + ""});
 
@@ -163,6 +174,7 @@ public class OportunidadBitacora extends EntityBase<OportunidadBitacora> {
             resp.set_idOportunidad(CursorUtils.getInt(c, Contract.OportunidadBitacora.COLUMN_ID_OPORTUNIDAD_INT));
             resp.setDetalle(CursorUtils.getString(c, Contract.OportunidadBitacora.COLUMN_DETALLE));
             resp.setFecha(CursorUtils.getDate(c, Contract.OportunidadBitacora.COLUMN_FECHA));
+            resp.setIdAgenda(CursorUtils.getInt(c, Contract.OportunidadBitacora.COLUMN_ID_AGENDA));
             resp.setAgente(Agente.getAgente(db, resp.getIdAgente()));
         }
         c.close();
@@ -172,7 +184,7 @@ public class OportunidadBitacora extends EntityBase<OportunidadBitacora> {
     public static OportunidadBitacora getBitacoraOportunidadUnitInt(DataBase db, long idOportunidad, int idBitacora) {
         Cursor c = db.query(Contract.OportunidadBitacora.TABLE_NAME,new String[] {Contract.OportunidadBitacora._ID, Contract.OportunidadBitacora.COLUMN_ID_OPORTUNIDAD,
                 Contract.OportunidadBitacora.COLUMN_ID_OPORTUNIDAD_INT, Contract.OportunidadBitacora.COLUMN_ID_AGENTE, Contract.OportunidadBitacora.COLUMN_ID_OPORTUNIDAD_BITACORA,
-                Contract.OportunidadBitacora.COLUMN_DETALLE, Contract.OportunidadBitacora.COLUMN_FECHA}, Contract.OportunidadBitacora.COLUMN_ID_OPORTUNIDAD_INT + " = ? AND "
+                Contract.OportunidadBitacora.COLUMN_DETALLE, Contract.OportunidadBitacora.COLUMN_FECHA, Contract.OportunidadBitacora.COLUMN_ID_AGENDA}, Contract.OportunidadBitacora.COLUMN_ID_OPORTUNIDAD_INT + " = ? AND "
                 + Contract.OportunidadBitacora._ID + " = ? "
                 , new String[]{idOportunidad + "", idBitacora + ""});
 
@@ -185,6 +197,7 @@ public class OportunidadBitacora extends EntityBase<OportunidadBitacora> {
             resp.set_idOportunidad(CursorUtils.getInt(c, Contract.OportunidadBitacora.COLUMN_ID_OPORTUNIDAD_INT));
             resp.setDetalle(CursorUtils.getString(c, Contract.OportunidadBitacora.COLUMN_DETALLE));
             resp.setFecha(CursorUtils.getDate(c, Contract.OportunidadBitacora.COLUMN_FECHA));
+            resp.setIdAgenda(CursorUtils.getInt(c, Contract.OportunidadBitacora.COLUMN_ID_AGENDA));
             resp.setAgente(Agente.getAgente(db, resp.getIdAgente()));
         }
         c.close();
@@ -194,7 +207,7 @@ public class OportunidadBitacora extends EntityBase<OportunidadBitacora> {
     public static List<OportunidadBitacora> getBitacoraOportunidadInt(DataBase db, long idOportunidad) {
         Cursor c = db.query(Contract.OportunidadBitacora.TABLE_NAME,new String[] {Contract.OportunidadBitacora._ID, Contract.OportunidadBitacora.COLUMN_ID_OPORTUNIDAD,
                 Contract.OportunidadBitacora.COLUMN_ID_OPORTUNIDAD_INT, Contract.OportunidadBitacora.COLUMN_ID_AGENTE, Contract.OportunidadBitacora.COLUMN_ID_OPORTUNIDAD_BITACORA,
-                Contract.OportunidadBitacora.COLUMN_DETALLE, Contract.OportunidadBitacora.COLUMN_FECHA}, Contract.OportunidadBitacora.COLUMN_ID_OPORTUNIDAD_INT + " = ? "
+                Contract.OportunidadBitacora.COLUMN_DETALLE, Contract.OportunidadBitacora.COLUMN_FECHA, Contract.OportunidadBitacora.COLUMN_ID_AGENDA}, Contract.OportunidadBitacora.COLUMN_ID_OPORTUNIDAD_INT + " = ? "
                 , new String[]{idOportunidad + ""}, null, null, Contract.OportunidadBitacora.COLUMN_FECHA + " DESC");
 
         List<OportunidadBitacora> list = new ArrayList<OportunidadBitacora>();
@@ -207,6 +220,31 @@ public class OportunidadBitacora extends EntityBase<OportunidadBitacora> {
             cont.set_idOportunidad(CursorUtils.getInt(c, Contract.OportunidadBitacora.COLUMN_ID_OPORTUNIDAD_INT));
             cont.setDetalle(CursorUtils.getString(c, Contract.OportunidadBitacora.COLUMN_DETALLE));
             cont.setFecha(CursorUtils.getDate(c, Contract.OportunidadBitacora.COLUMN_FECHA));
+            cont.setIdAgenda(CursorUtils.getInt(c, Contract.OportunidadBitacora.COLUMN_ID_AGENDA));
+            cont.setAgente(Agente.getAgente(db, cont.getIdAgente()));
+            list.add(cont);
+        }
+        c.close();
+        return list;
+    }
+
+    public static List<OportunidadBitacora> getBitacoraOportunidadByAgenda(DataBase db, long idAgenda) {
+        Cursor c = db.query(Contract.OportunidadBitacora.TABLE_NAME,new String[] {Contract.OportunidadBitacora._ID, Contract.OportunidadBitacora.COLUMN_ID_OPORTUNIDAD,
+                Contract.OportunidadBitacora.COLUMN_ID_OPORTUNIDAD_INT, Contract.OportunidadBitacora.COLUMN_ID_AGENTE, Contract.OportunidadBitacora.COLUMN_ID_OPORTUNIDAD_BITACORA,
+                Contract.OportunidadBitacora.COLUMN_DETALLE, Contract.OportunidadBitacora.COLUMN_FECHA, Contract.OportunidadBitacora.COLUMN_ID_AGENDA}, Contract.OportunidadBitacora.COLUMN_ID_AGENDA + " = ? "
+                , new String[]{idAgenda + ""}, null, null, Contract.OportunidadBitacora.COLUMN_FECHA + " DESC");
+
+        List<OportunidadBitacora> list = new ArrayList<OportunidadBitacora>();
+        while(c.moveToNext()){
+            OportunidadBitacora cont = new OportunidadBitacora();
+            cont.setID(CursorUtils.getInt(c, Contract.OportunidadBitacora._ID));
+            cont.setIdOportunidad(CursorUtils.getInt(c, Contract.OportunidadBitacora.COLUMN_ID_OPORTUNIDAD));
+            cont.setIdAgente(CursorUtils.getInt(c, Contract.OportunidadBitacora.COLUMN_ID_AGENTE));
+            cont.setIdOportunidadBitacora(CursorUtils.getInt(c, Contract.OportunidadBitacora.COLUMN_ID_OPORTUNIDAD_BITACORA));
+            cont.set_idOportunidad(CursorUtils.getInt(c, Contract.OportunidadBitacora.COLUMN_ID_OPORTUNIDAD_INT));
+            cont.setDetalle(CursorUtils.getString(c, Contract.OportunidadBitacora.COLUMN_DETALLE));
+            cont.setFecha(CursorUtils.getDate(c, Contract.OportunidadBitacora.COLUMN_FECHA));
+            cont.setIdAgenda(CursorUtils.getInt(c, Contract.OportunidadBitacora.COLUMN_ID_AGENDA));
             cont.setAgente(Agente.getAgente(db, cont.getIdAgente()));
             list.add(cont);
         }

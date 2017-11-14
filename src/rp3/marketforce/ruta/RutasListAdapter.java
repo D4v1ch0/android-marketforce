@@ -9,6 +9,7 @@ import java.util.List;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
+import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.ruta.RutasListFragment.TransactionListFragmentListener;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -96,7 +97,10 @@ public class RutasListAdapter extends BaseAdapter{
 				((TextView) convertView.findViewById(R.id.textView_nombre)).setText(""+agd.getNombreCompleto().trim());
 				try
 				{
-					((TextView) convertView.findViewById(R.id.textView_cargo_canal)).setText(""+agd.getCliente().getCanalDescripcion());
+					if(agd.getTipoAgenda().equalsIgnoreCase(Contants.TIPO_AGENDA_CLIENTE))
+						((TextView) convertView.findViewById(R.id.textView_cargo_canal)).setText(""+agd.getCliente().getCanalDescripcion());
+					else
+						((TextView) convertView.findViewById(R.id.textView_cargo_canal)).setText("PROSPECTO");
 				}
 				catch(Exception ex)
 				{
@@ -114,7 +118,7 @@ public class RutasListAdapter extends BaseAdapter{
 				((TextView) convertView.findViewById(R.id.textView_cargo_canal)).setText(""+cargo + agd.getNombreCompleto());
 			}
 
-            if(agd.isEnviado())
+            if((agd.isEnviado() && agd.getTipoAgenda().equalsIgnoreCase(Contants.TIPO_AGENDA_CLIENTE)) || (!agd.isEnviado() && agd.getTipoAgenda().equalsIgnoreCase(Contants.TIPO_AGENDA_OPORTUNIDAD)))
                 convertView.findViewById(R.id.itemlist_sincronizar).setVisibility(View.INVISIBLE);
 			if(agd.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO))
 				((ImageView) convertView.findViewById(R.id.itemlist_rutas_estado)).setImageResource(R.drawable.circle_in_process);
@@ -130,6 +134,11 @@ public class RutasListAdapter extends BaseAdapter{
 			
 			if(agd.getClienteDireccion() != null)
 				((TextView) convertView.findViewById(R.id.textView_address)).setText(""+agd.getClienteDireccion().getDireccion());
+			else if(agd.getDireccion() != null && agd.getDireccion().length() > 0)
+				((TextView) convertView.findViewById(R.id.textView_address)).setText(""+agd.getDireccion());
+
+			if(((TextView) convertView.findViewById(R.id.textView_address)).getText().toString().trim().length() <= 0)
+				((TextView) convertView.findViewById(R.id.textView_address)).setText("(Sin descripción)");
 
             Calendar hoy = Calendar.getInstance();
             Calendar diaAgenda = Calendar.getInstance();
@@ -137,6 +146,14 @@ public class RutasListAdapter extends BaseAdapter{
             if(hoy.get(Calendar.DAY_OF_YEAR) == diaAgenda.get(Calendar.DAY_OF_YEAR))
                 convertView.findViewById(R.id.view_vertical).setVisibility(View.VISIBLE);
 
+			//Se evalua si tiene tareas pendientes
+			if(agd.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_VISITADO)) {
+				if (agd.getAgendaTareas() != null) {
+					for(AgendaTarea tarea : agd.getAgendaTareas())
+						if(!tarea.getEstadoTarea().equalsIgnoreCase("R"))
+							convertView.findViewById(R.id.itemlist_tarea).setVisibility(View.VISIBLE);
+				}
+			}
 			
 			//convertView.setBackgroundResource(R.drawable.border_bottom);
 		}

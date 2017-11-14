@@ -91,6 +91,7 @@ public class RutasListFragment extends rp3.app.BaseFragment{
     }
     
     public interface TransactionListFragmentListener {
+        public void onProspectoSelected(long id);
         public void onTransactionSelected(long id);
 
 		boolean onCreateOptionsMenu(Menu menu);
@@ -301,8 +302,11 @@ public class RutasListFragment extends rp3.app.BaseFragment{
 				
 				if(adapter.isAction() && adapter.getItem(position).getNombreCompleto() != null)
 				{
-					
-					transactionListFragmentCallback.onTransactionSelected(list_agenda_in_adapter.get(position).getID());
+					Agenda selectedAgenda = list_agenda_in_adapter.get(position);
+                    if(selectedAgenda.getTipoAgenda().equalsIgnoreCase(Contants.TIPO_AGENDA_CLIENTE))
+					    transactionListFragmentCallback.onTransactionSelected(list_agenda_in_adapter.get(position).getID());
+                    else
+                        transactionListFragmentCallback.onProspectoSelected(list_agenda_in_adapter.get(position).getID());
 				}
 				
 				adapter.setAction(true);

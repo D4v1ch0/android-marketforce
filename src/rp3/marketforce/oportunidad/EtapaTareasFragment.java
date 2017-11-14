@@ -169,6 +169,7 @@ public class EtapaTareasFragment extends BaseFragment {
                 bitacora.setIdOportunidad(opt.getIdOportunidad());
                 bitacora.set_idOportunidad((int) opt.getID());
                 bitacora.setDetalle("Se finalizó subetapa " + etapa.getOrden() + ": " + etapa.getDescripcion());
+                bitacora.setIdOportunidadBitacora(opt.getOportunidadBitacoras().size() + 1);
                 OportunidadBitacora.insert(getDataBase(), bitacora);
 
                 if(next != null) {

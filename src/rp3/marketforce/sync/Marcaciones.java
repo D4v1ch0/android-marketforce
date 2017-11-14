@@ -77,8 +77,10 @@ public class Marcaciones {
                 jObject.put("EnUbicacion", marc.isEnUbicacion());
                 jObject.put("Latitud", marc.getLatitud());
                 jObject.put("Longitud", marc.getLongitud());
-                jObject.put("LatitudPlan", Double.parseDouble(PreferenceManager.getString(Contants.KEY_LATITUD_PARTIDA)));
-                jObject.put("LongitudPlan", Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA)));
+                if(Double.parseDouble(PreferenceManager.getString(Contants.KEY_LATITUD_PARTIDA, "0")) != 0) {
+                    jObject.put("LatitudPlan", Double.parseDouble(PreferenceManager.getString(Contants.KEY_LATITUD_PARTIDA)));
+                    jObject.put("LongitudPlan", Double.parseDouble(PreferenceManager.getString(Contants.KEY_LONGITUD_PARTIDA)));
+                }
                 if(marc.getPermiso() != null)
                     jObject.put("IdPermiso", marc.getPermiso().getIdPermiso());
                 if(marc.getPermiso() != null && marc.getPermiso().getIdPermiso() == 0) {

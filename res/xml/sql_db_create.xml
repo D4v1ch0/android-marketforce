@@ -364,7 +364,8 @@
         FechaFin INTEGER,
         Observacion TEXT,
         Estado TEXT,
-        FechaFinPlan INTEGER
+        FechaFinPlan INTEGER,
+        IdAgenda INTEGER
         )
     </statement>
     <statement>
@@ -408,7 +409,8 @@
         IdOportunidadBitacora INTEGER,
         IdAgente INTEGER,
         Detalle TEXT,
-        FechaInicio INTEGER
+        FechaInicio INTEGER,
+        IdAgenda INTEGER
         )
     </statement>
     <statement>
@@ -683,6 +685,28 @@
         CREATE TABLE tbVendedor(
         IdVendedor TEXT PRIMARY KEY
         )
+    </statement>
+	<statement>
+        CREATE TABLE tbAgendaOportunidad(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdAgenda INTEGER,
+        _IdOportunidad INTEGER,
+        IdOportunidad INTEGER,
+        EstadoAgenda TEXT,
+        FechaInicio INTEGER,
+        FechaFin INTEGER,
+        Latitud REAL,
+        Longitud REAL,
+        Pendiente BOOLEAN
+        )
+    </statement>
+    <statement>
+        CREATE VIRTUAL TABLE tbAgendaOportunidadExt USING fts4 (
+        Descripcion,
+        Direccion,
+        Correo,
+        tokenize=porter
+        );
     </statement>
 
 </sql>

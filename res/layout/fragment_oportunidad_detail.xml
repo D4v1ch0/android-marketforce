@@ -48,7 +48,36 @@
                 android:layout_weight="1"
                 android:textSize="@dimen/text_small_size"
                 android:linksClickable="false"
-                android:lines="2" />
+                android:lines="2"
+                android:visibility="gone" />
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/label_button_iniciar"
+                android:id="@+id/oportunidad_inicio_gestion"
+                style="@style/Widget.Button.Theme"
+                android:layout_weight="1"
+                android:visibility="visible" />
+
+            <Button
+                style="@style/Widget.Button.Theme"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/label_cancelar"
+                android:id="@+id/oportunidad_cancelar_gestion"
+                android:layout_weight="1"
+                android:visibility="gone"
+                android:layout_marginRight="5dp" />
+
+            <Button
+                style="@style/Widget.Button.Theme"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/label_finalizar"
+                android:id="@+id/oportunidad_finalizar_gestion"
+                android:layout_weight="1"
+                android:visibility="gone" />
 
             <ImageView
                 android:layout_width="wrap_content"

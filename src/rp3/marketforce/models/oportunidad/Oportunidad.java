@@ -663,6 +663,9 @@ public class Oportunidad extends EntityBase<Oportunidad> {
             opt.setTelefono1(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TELEFONO1));
             opt.setTelefono2(CursorUtils.getString(c, Contract.Oportunidad.FIELD_TELEFONO2));
             opt.setIdOportunidadTipo(CursorUtils.getInt(c, Contract.Oportunidad.FIELD_ID_OPORTUNIDAD_TIPO));
+            opt.setEtapa(Etapa.getEtapaById(db, opt.getIdEtapa()));
+            opt.setAgente(Agente.getAgente(db, opt.getIdAgente()));
+            opt.setMaxEtapas(Etapa.getEtapasPadres(db, opt.getIdOportunidadTipo()));
 
             if(opt.getIdOportunidad() != 0) {
                 opt.setOportunidadContactos(OportunidadContacto.getContactosOportunidad(db, opt.getIdOportunidad()));
