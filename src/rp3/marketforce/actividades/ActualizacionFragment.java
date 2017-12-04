@@ -492,6 +492,7 @@ public class ActualizacionFragment extends BaseFragment {
         if (cliDir.getLongitud() != 0) {
             ((EditText) listViewDirecciones.get(0).findViewById(R.id.cliente_longitud)).setText("" + cliDir.getLongitud());
             ((EditText) listViewDirecciones.get(0).findViewById(R.id.cliente_latitud)).setText("" + cliDir.getLatitud());
+            ((ImageView)listViewDirecciones.get(0).findViewById(R.id.cliente_ubicacion_check)).setImageResource(R.drawable.checkbox_on);
         }
         ((Spinner) listViewDirecciones.get(0).findViewById(R.id.cliente_tipo_direccion_spinner)).setEnabled(false);
 
@@ -604,6 +605,7 @@ public class ActualizacionFragment extends BaseFragment {
                                 if (location != null) {
                                     ((EditText) listViewDirecciones.get(pos).findViewById(R.id.cliente_longitud)).setText("" + location.getLongitude());
                                     ((EditText) listViewDirecciones.get(pos).findViewById(R.id.cliente_latitud)).setText("" + location.getLatitude());
+                                    ((ImageView)listViewDirecciones.get(pos).findViewById(R.id.cliente_ubicacion_check)).setImageResource(R.drawable.checkbox_on);
                                 } else {
                                     Toast.makeText(getContext(), "Debe de activar su GPS.", Toast.LENGTH_SHORT).show();
                                 }

@@ -1,10 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="rp3.marketforce"
-    android:versionCode="85"
-    android:versionName="1.5.3a">
+    android:versionCode="89"
+    android:versionName="1.5.3d">
 
     <uses-sdk
+
         android:minSdkVersion="14"
         android:targetSdkVersion="19" />
 

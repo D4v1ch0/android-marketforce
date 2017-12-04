@@ -39,6 +39,7 @@ import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
 import rp3.app.BaseFragment;
+import rp3.configuration.PreferenceManager;
 import rp3.content.SimpleGeneralValueAdapter;
 import rp3.data.models.GeneralValue;
 import rp3.marketforce.Contants;
@@ -116,7 +117,7 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 
         list_cliente = Cliente.getClientAndContacts(getDataBase());
         for (Cliente cli : list_cliente) {
-            list_nombres.add(cli.getNombreCompleto().trim());
+            list_nombres.add(cli.getNombreCompleto().trim().replace("(","").replace(")",""));
         }
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(), R.layout.spinner_small_text, list_nombres);
 
@@ -428,7 +429,8 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
                 agenda.set_idCliente(agenda.getCliente().getID());
                 agenda.setIdClienteDireccion(agenda.getClienteDireccion().getIdClienteDireccion());
                 agenda.set_idClienteDireccion(agenda.getClienteDireccion().getID());
-                agenda.setIdRuta(0);
+                int idRuta = PreferenceManager.getInt(Contants.KEY_IDRUTA);
+                agenda.setIdRuta(PreferenceManager.getInt(Contants.KEY_IDRUTA));
                 agenda.setNombreCompleto(agenda.getCliente().getNombreCompleto().trim());
                 Calendar fc = Calendar.getInstance();
                 fc.set(Calendar.MILLISECOND, 0);
@@ -451,7 +453,7 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
                     agendaTarea.setIdAgenda(0);
                     agendaTarea.set_idAgenda(agenda.getID());
                     agendaTarea.setEstadoTarea("P");
-                    agendaTarea.setIdRuta(0);
+                    agendaTarea.setIdRuta(PreferenceManager.getInt(Contants.KEY_IDRUTA));
                     agendaTarea.setIdTarea(tarea.getIdTarea());
                     AgendaTarea.insert(getDataBase(), agendaTarea);
                 }

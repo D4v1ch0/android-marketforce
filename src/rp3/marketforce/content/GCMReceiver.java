@@ -15,6 +15,7 @@ import java.util.Locale;
 import rp3.marketforce.R;
 import rp3.marketforce.marcaciones.MarcacionActivity;
 import rp3.marketforce.marcaciones.PermisoActivity;
+import rp3.marketforce.models.DiaLaboral;
 import rp3.marketforce.models.marcacion.Marcacion;
 import rp3.marketforce.utils.Utils;
 import rp3.runtime.Session;
@@ -71,8 +72,19 @@ public class GCMReceiver extends GcmListenerService {
                 if(type.equalsIgnoreCase(NOTIFICATION_TYPE_MARCACION)) {
                     try {
                         DataBase db = DataBase.newDataBase(rp3.marketforce.db.DbOpenHelper.class);
+                        boolean ultHoy = false;
                         Marcacion ultimaMarcacion = Marcacion.getUltimaMarcacion(db);
-                        if (ultimaMarcacion == null || rp3.marketforce.models.marcacion.Marcacion.getMarcacionesPendientes(db).size() == 0) {
+                        if(ultimaMarcacion != null)
+                        {
+                            Calendar dia_hoy = Calendar.getInstance();
+                            Calendar dia_marcacion = Calendar.getInstance();
+                            dia_marcacion.setTime(ultimaMarcacion.getFecha());
+                            if (dia_hoy.get(Calendar.DAY_OF_YEAR) == dia_marcacion.get(Calendar.DAY_OF_YEAR)) {
+                                ultHoy = true;
+                            }
+                        }
+                        if (ultimaMarcacion == null || rp3.marketforce.models.marcacion.Marcacion.getMarcacionesPendientes(db).size() == 0 ||
+                                (ultimaMarcacion.isPendiente() && !ultHoy)) {
                             toSpeech = title;
                             if(getApplicationContext() == null)
                                 Utils.ErrorToFile("Context is null - " + Calendar.getInstance().getTime().toString());

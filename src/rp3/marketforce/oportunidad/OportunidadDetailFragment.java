@@ -800,7 +800,7 @@ public class OportunidadDetailFragment extends BaseFragment {
                             Intent intent = new Intent(getContext(), EtapaActivity.class);
                             intent.putExtra(EtapaActivity.ARG_ETAPA, view.getId());
                             intent.putExtra(EtapaActivity.ARG_OPORTUNIDAD, clientId);
-                            if(agd.getIdOportunidad() == opt.getIdOportunidad())
+                            if(agd.get_idOportunidad() == opt.getID())
                                 intent.putExtra(EtapaActivity.ARG_ID_AGENDA, (int) agd.getID());
                             else
                                 intent.putExtra(EtapaActivity.ARG_ID_AGENDA, 0);

@@ -241,6 +241,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                             result = Marcaciones.executeSyncMarcacionesHoy(db);
                             addDefaultMessage(result);
                         }
+
+                        if (result == SYNC_EVENT_SUCCESS) {
+                            result = Marcaciones.executeSync(db);
+                            addDefaultMessage(result);
+                        }
                     }
 
                     if(PreferenceManager.getBoolean(Contants.KEY_MODULO_POS, false)) {
@@ -538,6 +543,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                             SyncAudit.insert(SYNC_TYPE_ACT_AGENDA, SYNC_EVENT_SUCCESS);
                         }
                     }
+
                 } else if (syncType.equals(SYNC_TYPE_UPLOAD_AGENDAS)) {
 
                     result = Agenda.executeSyncInserts(db);
