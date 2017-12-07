@@ -366,7 +366,8 @@ public class Cliente {
                     }
                     else
                         jObjectDir.put("IdCiudad", cl.getClienteDirecciones().get(i).getIdCiudad());
-                    //if(cl.getClienteDirecciones().get(i).getCiudadDescripcion() != null && !cl.getClienteDirecciones().get(i).getCiudadDescripcion().equalsIgnoreCase("null"))
+                    if(cl.getClienteDirecciones().get(i).getCiudadDescripcion() != null && !cl.getClienteDirecciones().get(i).getCiudadDescripcion().equalsIgnoreCase("null"))
+						jObjectDir.put("CiudadDescripcion", cl.getClienteDirecciones().get(i).getCiudadDescripcion());
 
 					jObjectDir.put("Telefono1", cl.getClienteDirecciones().get(i).getTelefono1());
 					jObjectDir.put("Telefono2", cl.getClienteDirecciones().get(i).getTelefono2());
@@ -560,6 +561,10 @@ public class Cliente {
                     }
                     else
                         jObjectDir.put("IdCiudad", cl.getClienteDirecciones().get(i).getIdCiudad());
+
+					if(cl.getClienteDirecciones().get(i).getCiudadDescripcion() != null && !cl.getClienteDirecciones().get(i).getCiudadDescripcion().equalsIgnoreCase("null"))
+						jObjectDir.put("CiudadDescripcion", cl.getClienteDirecciones().get(i).getCiudadDescripcion());
+
 					jObjectDir.put("Telefono1", cl.getClienteDirecciones().get(i).getTelefono1());
 					jObjectDir.put("Telefono2", cl.getClienteDirecciones().get(i).getTelefono2());
 					jObjectDir.put("TipoDireccion", cl.getClienteDirecciones().get(i).getTipoDireccion());
@@ -762,6 +767,8 @@ public class Cliente {
                         }
                         else
                             jObjectDir.put("IdCiudad", cl.getClienteDirecciones().get(i).getIdCiudad());
+						if(cl.getClienteDirecciones().get(i).getCiudadDescripcion() != null && !cl.getClienteDirecciones().get(i).getCiudadDescripcion().equalsIgnoreCase("null"))
+							jObjectDir.put("CiudadDescripcion", cl.getClienteDirecciones().get(i).getCiudadDescripcion());
 						jObjectDir.put("Telefono1", cl.getClienteDirecciones().get(i).getTelefono1());
 						jObjectDir.put("Telefono2", cl.getClienteDirecciones().get(i).getTelefono2());
 						jObjectDir.put("TipoDireccion", cl.getClienteDirecciones().get(i).getTipoDireccion());
@@ -972,6 +979,8 @@ public class Cliente {
                         }
                         else
                             jObjectDir.put("IdCiudad", cl.getClienteDirecciones().get(i).getIdCiudad());
+						if(cl.getClienteDirecciones().get(i).getCiudadDescripcion() != null && !cl.getClienteDirecciones().get(i).getCiudadDescripcion().equalsIgnoreCase("null"))
+							jObjectDir.put("CiudadDescripcion", cl.getClienteDirecciones().get(i).getCiudadDescripcion());
 
 						jObjectDir.put("Telefono1", cl.getClienteDirecciones().get(i).getTelefono1());
 						jObjectDir.put("Telefono2", cl.getClienteDirecciones().get(i).getTelefono2());
