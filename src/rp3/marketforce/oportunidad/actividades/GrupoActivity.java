@@ -201,7 +201,7 @@ public class GrupoActivity extends ActividadActivity {
 		OportunidadTareaActividad act = OportunidadTareaActividad.getActividadSimple(getDataBase(), id_etapa, id_oportunidad, id_actividad, actividad_hija.getIdTareaActividad());
 		if(act != null)
 		{
-			if(act.getResultado() != null && act.getResultado().equalsIgnoreCase("true"))
+			if(act.getResultado() != null && (act.getResultado().equalsIgnoreCase("true") || act.getResultado().equalsIgnoreCase("Si")))
 				check.setChecked(true);
 		}
 		else
