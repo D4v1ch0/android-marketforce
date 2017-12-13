@@ -64,6 +64,7 @@ public class Contants {
     public final static String KEY_AGENTE_UBICACION_3 = "AgenteUbicacion3";
     public final static String KEY_MODULO_OPORTUNIDADES = "ModuloOportunidades";
     public final static String KEY_MODULO_MARCACIONES = "ModuloMarcaciones";
+    public final static String KEY_CONSULTA_OPORTUNIDADES_APP = "ConsultaOportunidadesApp";
     public final static String KEY_MODULO_POS = "ModuloPOS";
     public final static String KEY_PERMITIR_CREACION = "PermitirCreacion";
     public final static String KEY_PERMITIR_MODIFICACION = "PermitirModificacion";

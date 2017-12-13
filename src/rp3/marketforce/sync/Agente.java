@@ -364,6 +364,8 @@ public class Agente {
                     PreferenceManager.setValue(Contants.KEY_MODULO_POS, jObject.getBoolean(Contants.KEY_MODULO_POS));
                 if(!jObject.isNull(Contants.KEY_MARACIONES_DISTANCIA))
                     PreferenceManager.setValue(Contants.KEY_MARACIONES_DISTANCIA, jObject.getDouble(Contants.KEY_MARACIONES_DISTANCIA) + "");
+                if(!jObject.isNull(Contants.KEY_CONSULTA_OPORTUNIDADES_APP))
+                    PreferenceManager.setValue(Contants.KEY_CONSULTA_OPORTUNIDADES_APP, jObject.getBoolean(Contants.KEY_CONSULTA_OPORTUNIDADES_APP));
 			} catch (HttpResponseException e) {
 				if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
 					return SyncAdapter.SYNC_EVENT_AUTH_ERROR;

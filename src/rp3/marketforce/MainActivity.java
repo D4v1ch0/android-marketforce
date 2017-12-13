@@ -218,7 +218,6 @@ public class MainActivity extends rp3.app.NavActivity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-
 	}
 
 	@Override

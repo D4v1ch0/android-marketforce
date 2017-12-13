@@ -27,6 +27,7 @@ import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.ValueDependentColor;
 
 import rp3.app.BaseFragment;
+import rp3.configuration.PreferenceManager;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
 import rp3.marketforce.models.Agenda;
@@ -168,8 +169,7 @@ public class DashboardGraphicFragment extends BaseFragment {
             time_inicio = inicio.getTimeInMillis();
             time_fin = fin.getTimeInMillis();
         }
-
-
+        
         int visitados = Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_VISITADO, time_inicio, time_fin);
         int no_visitado = Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_NO_VISITADO, time_inicio, time_fin);
         int pendientes = Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_PENDIENTE, time_inicio, time_fin);

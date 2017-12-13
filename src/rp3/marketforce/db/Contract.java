@@ -1226,6 +1226,7 @@ public final class Contract {
 
 		public static final String QUERY_GET_BY_ID = "AgendaOportunidadByID";
 		public static final String QUERY_GET_PENDIENTES= "AgendaOportunidadPendientes";
+		public static final String QUERY_CONTEO= "AgendaOportunidadConteo";
 	}
 
 	public static abstract class AgendaOportunidadExt implements BaseColumns {

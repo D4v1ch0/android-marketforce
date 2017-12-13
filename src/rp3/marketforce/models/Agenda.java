@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import rp3.configuration.PreferenceManager;
 import rp3.data.entity.EntityBase;
 import rp3.db.QueryDir;
 import rp3.db.sqlite.DataBase;
@@ -1262,6 +1263,17 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 			cont = CursorUtils.getInt(c,"conteo");
 		}
 		c.close();
+
+		if(PreferenceManager.getBoolean(Contants.KEY_CONSULTA_OPORTUNIDADES_APP, true))
+		{
+			query = QueryDir.getQuery( Contract.AgendaOportunidad.QUERY_CONTEO );
+			Cursor d = db.rawQuery(query, new String[]{estado, inicio + "", fin + ""});
+			if(d.moveToFirst())
+			{
+				cont = cont + CursorUtils.getInt(d,"conteo");
+			}
+			d.close();
+		}
 		return cont;
 	}
 

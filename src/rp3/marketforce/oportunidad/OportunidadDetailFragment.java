@@ -51,6 +51,7 @@ import rp3.marketforce.utils.DrawableManager;
 import rp3.marketforce.utils.MapActivity;
 import rp3.marketforce.utils.Utils;
 import rp3.util.CalendarUtils;
+import rp3.util.LocationUtils;
 import rp3.util.ViewUtils;
 import rp3.widget.ViewPager;
 
@@ -969,6 +970,8 @@ public class OportunidadDetailFragment extends BaseFragment {
                 agd.setPendiente(true);
                 agd.setEstado(Contants.ESTADO_VISITADO);
                 agd.setFechaFin(Calendar.getInstance().getTime());
+                agd.setLatitud(LocationUtils.getLastLocation(getContext()).getLatitude());
+                agd.setLongitud(LocationUtils.getLastLocation(getContext()).getLongitude());
                 AgendaOportunidad.update(getDataBase(), agd);
                 getRootView().findViewById(R.id.oportunidad_inicio_gestion).setVisibility(View.VISIBLE);
                 getRootView().findViewById(R.id.oportunidad_cancelar_gestion).setVisibility(View.GONE);

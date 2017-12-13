@@ -1102,12 +1102,20 @@
     </statement>
      
 	 <statement name="AgendaConteo">
-  		SELECT 
-  		count(*) as conteo 
+  		SELECT
+  		count(*) as conteo
   		FROM tbAgenda
 		WHERE EstadoAgenda = ? AND FechaInicio >= ?
 		AND FechaFin &lt;= ? AND tbAgenda.EstadoAgenda &lt;&gt; 'ELIM'
      </statement>
+
+    <statement name="AgendaOportunidadConteo">
+        SELECT
+        count(*) as conteo
+        FROM tbAgendaOportunidad
+        WHERE EstadoAgenda = ? AND FechaInicio >= ?
+        AND FechaFin &lt;= ? AND tbAgendaOportunidad.EstadoAgenda &lt;&gt; 'ELIM'
+    </statement>
 	  
 	 <statement name="SimpleRutaSearch">
         SELECT 
