@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="rp3.marketforce"
-    android:versionCode="91"
-    android:versionName="1.5.3e">
+    android:versionCode="92"
+    android:versionName="1.5.3f">
 
     <uses-sdk
 
@@ -167,6 +167,18 @@
         <receiver android:name="rp3.marketforce.content.TimeChangedReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.TIME_SET" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="rp3.marketforce.content.ShutdownReciever">
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_SHUTDOWN" />
+                <action android:name="android.intent.action.QUICKBOOT_POWEROFF" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="rp3.marketforce.content.UninstallReceiver">
+            <intent-filter android:priority="0">
+                <action android:name="android.intent.action.QUERY_PACKAGE_RESTART" />
+                <data android:scheme="package" />
             </intent-filter>
         </receiver>
         <provider

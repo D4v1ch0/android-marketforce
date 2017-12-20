@@ -3,7 +3,10 @@ package rp3.marketforce.content;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Random;
 
 import rp3.app.BaseActivity;
@@ -78,6 +81,19 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 				}
 			}
 
+			String valid = "N/A";
+			try
+			{
+				List<String> validInstallers = new ArrayList<>(Arrays.asList("com.android.vending", "com.google.android.feedback"));
+				final String installer = context.getPackageManager().getInstallerPackageName(context.getPackageName());
+				if(installer != null && validInstallers.contains(installer))
+					valid = "Si";
+				else
+					valid = "No";
+			}
+			catch (Exception ex)
+			{}
+
 			if(context == null)
 				Utils.ErrorToFile("Context is null - " + Calendar.getInstance().getTime().toString());
 			else {
@@ -108,7 +124,7 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 						}
 					}
 				}
-				Utils.ErrorToFile("Context is ok - GPS: " + gps + " - NET: " + net + " - BATTERY: " + getBatteryLevel(context) + " - " + Calendar.getInstance().getTime().toString());
+				Utils.ErrorToFile("Context is ok - GPS: " + gps + " - NET: " + net + " - BATTERY: " + getBatteryLevel(context) + " - GP: " + valid + " - " + Calendar.getInstance().getTime().toString());
 			}
 			if(calendarCurrent.getTimeInMillis() < calendar.getTimeInMillis() && (diaLaboral.isEsLaboral() || sigueSensando))
 			{
