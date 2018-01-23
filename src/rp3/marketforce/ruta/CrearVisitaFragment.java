@@ -16,6 +16,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,6 +46,9 @@ import rp3.content.SimpleGeneralValueAdapter;
 import rp3.data.models.GeneralValue;
 import rp3.marketforce.Contants;
 import rp3.marketforce.R;
+import rp3.marketforce.cliente.ClientListFragment;
+import rp3.marketforce.loader.ClientLoader;
+import rp3.marketforce.loader.RutasLoader;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.AgendaTarea;
 import rp3.marketforce.models.Cliente;
@@ -83,6 +88,11 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
     private CaldroidFragment caldroidFragment;
     private String[] arrayDuracion;
 
+    Spinner spinner;
+    Button btnVisitaConfirmacionTarea;
+    LinearLayout layoutCrearVisita;
+    String lastText="";
+
     public static CrearVisitaFragment newInstance(long id, String text) {
         Bundle arguments = new Bundle();
         arguments.putLong(ARG_IDAGENDA, id);
@@ -101,7 +111,7 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
 
-        String lastText = "";
+        lastText = "";
         list_nombres = new ArrayList<String>();
         if (list_tareas == null)
             list_tareas = new ArrayList<Tarea>();
@@ -115,123 +125,20 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY, 0);
 
-        list_cliente = Cliente.getClientAndContacts(getDataBase());
-        for (Cliente cli : list_cliente) {
-            list_nombres.add(cli.getNombreCompleto().trim().replace("(","").replace(")",""));
-        }
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(), R.layout.spinner_small_text, list_nombres);
 
-        adapterDuracion = new SimpleGeneralValueAdapter(this.getContext(), getDataBase(), Contants.GENERAL_TABLE_DURACION_VISITA);
         Duracion = ((TextView) rootView.findViewById(R.id.crear_visita_duracion));
         TiempoViaje = ((TextView) rootView.findViewById(R.id.crear_visita_tiempo_viaje));
         DesdeText = ((TextView) rootView.findViewById(R.id.crear_visita_desde_text));
 
-        cliente_auto.setAdapter(adapter);
-        cliente_auto.setThreshold(1);
+        DesdeText.setText("");
+        Duracion.setText("");
+        TiempoViaje.setText("");
 
-        if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-            cliente_auto.setOnItemClickListener(new OnItemClickListener() {
-
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view,
-                                        int pos, long id) {
-                    ArrayList<String> direcciones = new ArrayList<String>();
-                    int position = list_nombres.indexOf(adapter.getItem(pos));
-                    if (position != -1) {
-                        for (ClienteDireccion cliDir : list_cliente.get(position).getClienteDirecciones()) {
-                            direcciones.add(cliDir.getDireccion());
-                        }
-                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_small_text, direcciones);
-                        ((Spinner) rootView.findViewById(R.id.crear_visita_direccion)).setAdapter(adapter);
-                    }
-
-                }
-            });
-
-
-        } else {
-            cliente_auto.setOnDismissListener(new OnDismissListener() {
-
-                @Override
-                public void onDismiss() {
-                    ArrayList<String> direcciones = new ArrayList<String>();
-                    int position = list_nombres.indexOf(cliente_auto.getText().toString());
-                    if (position != -1) {
-                        for (ClienteDireccion cliDir : list_cliente.get(position).getClienteDirecciones()) {
-                            direcciones.add(cliDir.getDireccion());
-                        }
-                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_small_text, direcciones);
-                        ((Spinner) rootView.findViewById(R.id.crear_visita_direccion)).setAdapter(adapter);
-                    }
-
-                }
-            });
-        }
-
-        if (!lastText.equalsIgnoreCase("")) {
-            ArrayList<String> direcciones = new ArrayList<String>();
-            int position = list_nombres.indexOf(lastText);
-            if (position != -1) {
-                for (ClienteDireccion cliDir : list_cliente.get(position).getClienteDirecciones()) {
-                    direcciones.add(cliDir.getDireccion());
-                }
-                ArrayAdapter<String> adapterDir = new ArrayAdapter<String>(getContext(), R.layout.spinner_small_text, direcciones);
-                ((Spinner) rootView.findViewById(R.id.crear_visita_direccion)).setAdapter(adapterDir);
-            }
-        }
-
-        ((Button) rootView.findViewById(R.id.crear_visita_conf_tarea)).setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                showDialogFragment(TareasFragment.newInstance(list_tareas), "Tareas");
-            }
-        });
+        spinner = ((Spinner) rootView.findViewById(R.id.crear_visita_direccion));
+        btnVisitaConfirmacionTarea = ((Button) rootView.findViewById(R.id.crear_visita_conf_tarea));
+        layoutCrearVisita = ((LinearLayout) rootView.findViewById(R.id.crear_visita_desde_clickable));
 
         setCalendar();
-        DesdeText.setText(format1.format(fecha.getTime()));
-        Duracion.setText(adapterDuracion.getGeneralValue(0).getValue());
-        TiempoViaje.setText(adapterDuracion.getGeneralValue(0).getValue());
-
-        List<String> stringList = new ArrayList<String>();
-        for(int i = 0; i < adapterDuracion.getCount(); i ++)
-            stringList.add(adapterDuracion.getGeneralValue(i).getValue());
-
-        arrayDuracion = new String[stringList.size()];
-        stringList.toArray(arrayDuracion);
-
-        Duracion.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDuracion(ID_DURACION);
-            }
-        });
-        TiempoViaje.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDuracion(ID_TIEMPO);
-            }
-        });
-        duracion = Integer.parseInt(adapterDuracion.getGeneralValue(0).getCode());
-        tiempo = Integer.parseInt(adapterDuracion.getGeneralValue(0).getCode());
-        DesdeText.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDialogTimePicker(1, fecha_hora.get(Calendar.HOUR_OF_DAY), fecha_hora.get(Calendar.MINUTE), TIME_PICKER_INTERVAL);
-            }
-        });
-
-        ((LinearLayout) rootView.findViewById(R.id.crear_visita_desde_clickable)).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDialogTimePicker(1, fecha_hora.get(Calendar.HOUR_OF_DAY), fecha_hora.get(Calendar.MINUTE), TIME_PICKER_INTERVAL);
-            }
-        });
-
-        if (getArguments().getString(ARG_FROM).equalsIgnoreCase("Cliente"))
-            setDatosCliente(getArguments().getLong(ARG_IDAGENDA));
-        else
-            setDatos(getArguments().getLong(ARG_IDAGENDA));
     }
 
     @Override
@@ -294,6 +201,12 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
         fecha = Calendar.getInstance();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getLoaderManager().initLoader(0, new Bundle(),  new LoaderCliente());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -577,4 +490,160 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
                 });
         builderSingle.show();
     }
+
+
+    public class LoaderCliente implements LoaderManager.LoaderCallbacks<List<Cliente>> {
+
+        public static final String STRING_SEARCH = "string_search";
+        public static final String STRING_BOOLEAN = "string_boolean";
+        private String Search;
+        private boolean flag;
+
+        @Override
+        public Loader<List<Cliente>> onCreateLoader(int cargaProgress,
+                                                    Bundle bundle) {
+
+            Search = bundle.getString(STRING_SEARCH);
+            flag = bundle.getBoolean(STRING_BOOLEAN);
+
+            showDialogProgress( getResources().getString(R.string.loadingTitleWait),getResources().getString(R.string.loadingMessageCrearAgenda));
+            //showDefaultLoading();
+            return new ClientLoader(getActivity(), getDataBase(), true, "", true);
+        }
+
+        public void onLoadFinished(Loader<List<Cliente>> loader, List<Cliente> data) {
+            if(getActivity() != null) {
+                list_cliente = data;
+
+                if (list_cliente != null)
+                    if (list_cliente.size() > 0) {
+
+                        //list_cliente = Cliente.getClientAndContacts(getDataBase());
+                        for (Cliente cli : list_cliente) {
+                            list_nombres.add(cli.getNombreCompleto().trim().replace("(","").replace(")",""));
+                        }
+                        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_small_text, list_nombres);
+
+                        adapterDuracion = new SimpleGeneralValueAdapter(getContext(), getDataBase(), Contants.GENERAL_TABLE_DURACION_VISITA);
+
+
+                        cliente_auto.setAdapter(adapter);
+                        cliente_auto.setThreshold(1);
+
+                        if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                            cliente_auto.setOnItemClickListener(new OnItemClickListener() {
+
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view,
+                                                        int pos, long id) {
+                                    ArrayList<String> direcciones = new ArrayList<String>();
+                                    int position = list_nombres.indexOf(adapter.getItem(pos));
+                                    if (position != -1) {
+                                        for (ClienteDireccion cliDir : list_cliente.get(position).getClienteDirecciones()) {
+                                            direcciones.add(cliDir.getDireccion());
+                                        }
+                                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_small_text, direcciones);
+                                        spinner.setAdapter(adapter);
+                                    }
+
+                                }
+                            });
+
+
+                        } else {
+                            cliente_auto.setOnDismissListener(new OnDismissListener() {
+
+                                @Override
+                                public void onDismiss() {
+                                    ArrayList<String> direcciones = new ArrayList<String>();
+                                    int position = list_nombres.indexOf(cliente_auto.getText().toString());
+                                    if (position != -1) {
+                                        for (ClienteDireccion cliDir : list_cliente.get(position).getClienteDirecciones()) {
+                                            direcciones.add(cliDir.getDireccion());
+                                        }
+                                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_small_text, direcciones);
+                                        spinner.setAdapter(adapter);
+                                    }
+
+                                }
+                            });
+                        }
+
+                        if (!lastText.equalsIgnoreCase("")) {
+                            ArrayList<String> direcciones = new ArrayList<String>();
+                            int position = list_nombres.indexOf(lastText);
+                            if (position != -1) {
+                                for (ClienteDireccion cliDir : list_cliente.get(position).getClienteDirecciones()) {
+                                    direcciones.add(cliDir.getDireccion());
+                                }
+                                ArrayAdapter<String> adapterDir = new ArrayAdapter<String>(getContext(), R.layout.spinner_small_text, direcciones);
+                                spinner.setAdapter(adapterDir);
+                            }
+                        }
+
+                        btnVisitaConfirmacionTarea.setOnClickListener(new OnClickListener() {
+
+                            @Override
+                            public void onClick(View v) {
+                                showDialogFragment(TareasFragment.newInstance(list_tareas), "Tareas");
+                            }
+                        });
+
+                        //setCalendar();
+                        DesdeText.setText(format1.format(fecha.getTime()));
+                        Duracion.setText(adapterDuracion.getGeneralValue(0).getValue());
+                        TiempoViaje.setText(adapterDuracion.getGeneralValue(0).getValue());
+
+                        List<String> stringList = new ArrayList<String>();
+                        for(int i = 0; i < adapterDuracion.getCount(); i ++)
+                            stringList.add(adapterDuracion.getGeneralValue(i).getValue());
+
+                        arrayDuracion = new String[stringList.size()];
+                        stringList.toArray(arrayDuracion);
+
+                        Duracion.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                showDuracion(ID_DURACION);
+                            }
+                        });
+                        TiempoViaje.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                showDuracion(ID_TIEMPO);
+                            }
+                        });
+                        duracion = Integer.parseInt(adapterDuracion.getGeneralValue(0).getCode());
+                        tiempo = Integer.parseInt(adapterDuracion.getGeneralValue(0).getCode());
+                        DesdeText.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                showDialogTimePicker(1, fecha_hora.get(Calendar.HOUR_OF_DAY), fecha_hora.get(Calendar.MINUTE), TIME_PICKER_INTERVAL);
+                            }
+                        });
+
+                        layoutCrearVisita.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                showDialogTimePicker(1, fecha_hora.get(Calendar.HOUR_OF_DAY), fecha_hora.get(Calendar.MINUTE), TIME_PICKER_INTERVAL);
+                            }
+                        });
+
+                        if (getArguments().getString(ARG_FROM).equalsIgnoreCase("Cliente"))
+                            setDatosCliente(getArguments().getLong(ARG_IDAGENDA));
+                        else
+                            setDatos(getArguments().getLong(ARG_IDAGENDA));
+
+                    }
+            }
+            closeDialogProgress();
+        }
+
+        @Override
+        public void onLoaderReset(Loader<List<Cliente>> loader) {
+
+        }
+
+    }
+
 }

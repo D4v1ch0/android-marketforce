@@ -22,6 +22,7 @@ import rp3.data.MessageCollection;
 import rp3.data.models.GeopoliticalStructure;
 import rp3.data.models.GeopoliticalStructure.GeopoliticalStructureExt;
 import rp3.marketforce.cliente.ClientFragment;
+import rp3.marketforce.cliente.ClientListFragment;
 import rp3.marketforce.content.EnviarUbicacionReceiver;
 import rp3.marketforce.dashboard.DashboardFragment;
 import rp3.marketforce.db.Contract;
@@ -30,6 +31,7 @@ import rp3.marketforce.information.InformationFragment;
 import rp3.marketforce.marcaciones.MarcacionActivity;
 import rp3.marketforce.marcaciones.PermisoActivity;
 import rp3.marketforce.marcaciones.PermisoFragment;
+import rp3.marketforce.marcaciones.PermisoListFragment;
 import rp3.marketforce.models.Actividad;
 import rp3.marketforce.models.Agenda;
 import rp3.marketforce.models.Agenda.AgendaExt;
@@ -47,12 +49,14 @@ import rp3.marketforce.oportunidad.OportunidadFragment;
 import rp3.marketforce.models.marcacion.Justificacion;
 import rp3.marketforce.models.pedido.ControlCaja;
 import rp3.marketforce.models.pedido.ProductoCodigo;
+import rp3.marketforce.oportunidad.OportunidadListFragment;
 import rp3.marketforce.pedido.ControlCajaFragment;
 import rp3.marketforce.pedido.PedidoFragment;
 import rp3.marketforce.radar.RadarFragment;
 import rp3.marketforce.recorrido.RecorridoFragment;
 import rp3.marketforce.resumen.DashboardGrupoFragment;
 import rp3.marketforce.ruta.RutasFragment;
+import rp3.marketforce.ruta.RutasListFragment;
 import rp3.marketforce.sync.SyncAdapter;
 import rp3.marketforce.utils.DrawableManager;
 import rp3.marketforce.utils.Utils;
@@ -186,6 +190,7 @@ public class MainActivity extends rp3.app.NavActivity {
 			} else {
 				selectedItem = savedInstanceState.getInt("Selected");
 				lastTitle = savedInstanceState.getString("Title");
+
 			}
 		}
 		setAlarm();
@@ -212,6 +217,7 @@ public class MainActivity extends rp3.app.NavActivity {
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putString("Title", lastTitle);
 		outState.putInt("Selected", selectedItem);
+
 		super.onSaveInstanceState(outState);
 	}
 
@@ -273,21 +279,35 @@ public class MainActivity extends rp3.app.NavActivity {
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+	}
+
+	@Override
 	public void onNavItemSelected(NavItem item) {
 		super.onNavItemSelected(item);
 		selectedItem = item.getId();
+		if(item.getId() != NAV_CLIENTES)
+			ClientListFragment.idCurrentCliente = -1;
+		if(item.getId() !=NAV_OPORTUNIDAD)
+			OportunidadListFragment.idCurrentOportunidad = -1;
+		if(item.getId() !=NAV_RUTAS)
+			RutasListFragment.idCurrentRuta = -1;
+		if(item.getId() !=NAV_JUSTIFICACIONES)
+			PermisoListFragment.idCurrentPermiso = -1;
+
 		switch (item.getId()) {
 			case NAV_DASHBOARD:
 				setNavFragment(DashboardFragment.newInstance(0), item.getTitle());
 				lastTitle = item.getTitle();
 				break;
 			case NAV_RUTAS:
-				setNavFragment(RutasFragment.newInstance(0),
+				setNavFragment(RutasFragment.newInstance(0, RutasListFragment.idCurrentRuta),
 						item.getTitle());
 				lastTitle = item.getTitle();
 				break;
 			case NAV_CLIENTES:
-				setNavFragment(ClientFragment.newInstance(item.getId()),
+				setNavFragment(ClientFragment.newInstance(item.getId(),(int) ClientListFragment.idCurrentCliente),
 						item.getTitle());
 				lastTitle = item.getTitle();
 				break;
@@ -362,12 +382,12 @@ public class MainActivity extends rp3.app.NavActivity {
 				}
 				break;
 			case NAV_OPORTUNIDAD:
-				setNavFragment(OportunidadFragment.newInstance(),
+				setNavFragment(OportunidadFragment.newInstance(OportunidadListFragment.idCurrentOportunidad),
 						item.getTitle());
 				lastTitle = item.getTitle();
 				break;
 			case NAV_JUSTIFICACIONES:
-				setNavFragment(PermisoFragment.newInstance(),
+				setNavFragment(PermisoFragment.newInstance(PermisoListFragment.idCurrentPermiso),
 						item.getTitle());
 				lastTitle = item.getTitle();
 				break;
@@ -514,6 +534,11 @@ public class MainActivity extends rp3.app.NavActivity {
 		super.onConfigurationChanged(newConfig);
 
 		invalidateOptionsMenu();
+		NavItem item = new NavItem();
+		item.setId(selectedItem);
+		item.setTitle(lastTitle);
+
+		onNavItemSelected(item);
 	}
 
 	private void pushNotification(Context ctx, Agenda agd, String message) {

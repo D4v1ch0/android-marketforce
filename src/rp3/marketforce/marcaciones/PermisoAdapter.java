@@ -47,7 +47,9 @@ public class PermisoAdapter extends BaseAdapter {
     public long getItemId(int position) {
         return 0;
     }
-
+    public List<Justificacion> getItems(){
+        return permisos;
+    }
     @SuppressLint("ViewHolder")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {

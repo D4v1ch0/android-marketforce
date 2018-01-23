@@ -1,6 +1,7 @@
 package rp3.marketforce.cliente;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import rp3.marketforce.R;
@@ -174,6 +175,12 @@ public class ClientListAdapter extends SectionAdapter{
 			else
 				string_client = current.getNombre1();
 			break;
+		default:
+			if(!current.getTipoPersona().equalsIgnoreCase("J"))
+				string_client = current.getNombre1()+" "+current.getApellido1();
+			else
+				string_client = current.getNombre1();
+			break;
 		}
 		
 		((TextView) convertView.findViewById(R.id.textView_clientlist_name)).setText(""+string_client);
@@ -226,11 +233,13 @@ public class ClientListAdapter extends SectionAdapter{
         	notifyDataSetChanged();
         }
         
-        if(clienteListFragmentCallback != null && action)
-        	clienteListFragmentCallback.onClienteSelected(dataList.get(section).get(row)); 
+        if(clienteListFragmentCallback != null && action){
+			ClientListFragment.idCurrentCliente = (int) dataList.get(section).get(row).getIdCliente();
+			clienteListFragmentCallback.onClienteSelected(dataList.get(section).get(row));
+		}
         else
         	action = true;
-       
+
        }
 	public int getSection()
 	{
@@ -249,5 +258,6 @@ public class ClientListAdapter extends SectionAdapter{
 	public void setAction(boolean action) {
 		this.action = action;
 	}
-	
+
+
 }

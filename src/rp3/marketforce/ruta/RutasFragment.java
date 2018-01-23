@@ -61,9 +61,12 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
     private AgendaProspectoFragment prospectoDetailfragment;
 
 
-    public static RutasFragment newInstance(int transactionTypeId) {
+    public static RutasFragment newInstance(int transactionTypeId, int currentRuta) {
 		RutasFragment fragment = new RutasFragment();
-		return fragment;
+        Bundle args = new Bundle();
+        args.putInt(RutasListFragment.ARG_CODIGORUTA, currentRuta);
+        fragment.setArguments(args);
+        return fragment;
     }
 	
 	@Override
@@ -76,11 +79,18 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	@Override
 	public void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
-		
+
+        int currentRuta = -1;
+
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            currentRuta = bundle.getInt(RutasListFragment.ARG_CODIGORUTA);
+        }
+
 		setRetainInstance(true);
         setHasOptionsMenu(true);
 			
-		rutasListFragment = RutasListFragment.newInstance();
+		rutasListFragment = RutasListFragment.newInstance(currentRuta);
 		obsFragment = null;
         setContentView(R.layout.fragment_rutas, R.menu.fragment_ruta_menu);
 	}
@@ -275,7 +285,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
                 case R.id.action_suspender_agenda:
                     if(selectedTransactionId != 0)
                     {
-                        if(PreferenceManager.getInt(Contants.KEY_ID_SUPERVISOR, 0) != 0)
+                        //if(PreferenceManager.getInt(Contants.KEY_ID_SUPERVISOR, 0) != 0)
                         {
                             Agenda agdNot = Agenda.getAgenda(getDataBase(), selectedTransactionId);
                             if(agdNot == null)

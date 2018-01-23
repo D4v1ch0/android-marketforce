@@ -180,7 +180,10 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
                     setTextViewText(R.id.textView_tipo_canal, agenda.getContacto().getCargo().trim());
                 else
                     setTextViewText(R.id.textView_tipo_canal, "");
-                setTextViewText(R.id.textView_tipo_cliente, agenda.getContacto().getEmpresa().trim());
+                String empresa = "";
+                if (agenda.getContacto().getEmpresa() != null)
+                    empresa = agenda.getContacto().getEmpresa().trim();
+                    setTextViewText(R.id.textView_tipo_cliente, empresa);
             } else {
                 ((ImageView) this.getRootView().findViewById(R.id.map_image)).setImageBitmap(BitmapUtils.getRoundedRectBitmap(
                         BitmapFactory.decodeResource(getResources(), R.drawable.user),

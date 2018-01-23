@@ -12,6 +12,7 @@ import rp3.marketforce.db.Contract;
 import rp3.util.Convert;
 import rp3.util.CursorUtils;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 
 public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 	
@@ -934,7 +935,7 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 		}
 		return result;	
 	}
-	
+
 	public class ClientExt extends EntityBase<ClientExt>{
 
 		@Override

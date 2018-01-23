@@ -41,6 +41,16 @@ public class PermisoFragment extends BaseFragment implements PermisoListFragment
 
     public static PermisoFragment newInstance() {
         PermisoFragment fragment = new PermisoFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static PermisoFragment newInstance(int currentPermiso) {
+        PermisoFragment fragment = new PermisoFragment();
+        Bundle args = new Bundle();
+        args.putInt(PermisoListFragment.ARG_CODIGOPERMISO, currentPermiso);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -59,9 +69,15 @@ public class PermisoFragment extends BaseFragment implements PermisoListFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        int currentPermiso = -1;
+
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            currentPermiso = bundle.getInt(PermisoListFragment.ARG_CODIGOPERMISO);
+        }
 
         setRetainInstance(true);
-        transactionListFragment = PermisoListFragment.newInstance(true, null);
+        transactionListFragment = PermisoListFragment.newInstance(true, null,currentPermiso);
 
     }
 

@@ -46,8 +46,11 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
     private boolean filtro = false;
     private OportunidadBitacoraListFragment subFragment;
 
-    public static OportunidadFragment newInstance() {
+    public static OportunidadFragment newInstance(int idCurrentOportunidad) {
         OportunidadFragment fragment = new OportunidadFragment();
+        Bundle args = new Bundle();
+        args.putInt(OportunidadListFragment.ARG_CODIGOOPORTUNIDAD, idCurrentOportunidad);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -66,9 +69,15 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        int currentOportunidad = -1;
+
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            currentOportunidad = bundle.getInt(OportunidadListFragment.ARG_CODIGOOPORTUNIDAD);
+        }
 
         setRetainInstance(true);
-        transactionListFragment = OportunidadListFragment.newInstance(true, null);
+        transactionListFragment = OportunidadListFragment.newInstance(true, null,currentOportunidad);
 
     }
 

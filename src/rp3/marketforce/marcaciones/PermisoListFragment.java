@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rp3.app.BaseActivity;
@@ -32,6 +33,7 @@ public class PermisoListFragment extends BaseFragment {
 
     public static final String ARG_TRANSACTIONTYPEID = "transactionType";
     public static final String ARG_TRANSACTIONTYPEBO = "transactionTypeBo";
+    public static final String ARG_CODIGOPERMISO = "idPermiso";
 
     PermisoListFragmentListener permisoListFragmentCallback;
     private PermisoAdapter adapter;
@@ -42,12 +44,23 @@ public class PermisoListFragment extends BaseFragment {
 
     private LoaderJustificacion loaderPermiso;
     private boolean isContacts = false;
+    public static int idCurrentPermiso = -1;
 
     public static PermisoListFragment newInstance(boolean flag , String transactionTypeId) {
         PermisoListFragment fragment = new PermisoListFragment();
         Bundle args = new Bundle();
         args.putString(ARG_TRANSACTIONTYPEID, transactionTypeId);
         args.putBoolean(ARG_TRANSACTIONTYPEBO, flag);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static PermisoListFragment newInstance(boolean flag , String transactionTypeId, int idCurrentPermiso) {
+        PermisoListFragment fragment = new PermisoListFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_TRANSACTIONTYPEID, transactionTypeId);
+        args.putBoolean(ARG_TRANSACTIONTYPEBO, flag);
+        args.putInt(ARG_CODIGOPERMISO, idCurrentPermiso);
         fragment.setArguments(args);
         return fragment;
     }
@@ -97,6 +110,7 @@ public class PermisoListFragment extends BaseFragment {
         if(savedInstanceState == null)
         {
             currentTransactionBoolean = getArguments().getBoolean(ARG_TRANSACTIONTYPEBO);
+            idCurrentPermiso = getArguments().getInt(ARG_CODIGOPERMISO);
             loaderPermiso = new LoaderJustificacion();
         }
     }
@@ -140,6 +154,49 @@ public class PermisoListFragment extends BaseFragment {
 
     }
 
+    private void setItemSelected() {
+        int row = 0;
+        List<Justificacion> listJustificaciones = adapter.getItems();
+        ArrayList<Integer> pos = getPositionPermiso(idCurrentPermiso,listJustificaciones);
+        if(pos.size()>0)
+        {
+            row = pos.get(0);
+
+            if(getResources().getConfiguration().orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE){
+                permisoListFragmentCallback.onPermisoSelected(adapter.getItem(row));
+            }
+            headerList.setSelection(row);
+        }
+
+        adapter.notifyDataSetChanged();
+    }
+
+    private ArrayList<Integer> getPositionPermiso(int idPermiso, List<Justificacion> lista){
+        ArrayList<Integer> pos = new ArrayList<>();
+        int posRow = 0;
+        boolean setInicio = false;
+
+        if(lista.size()==0)
+        {
+            return pos;
+        }
+
+        if(idPermiso==-1)
+        {
+            setInicio = true;
+        }
+
+        for (Justificacion justificacion: lista) {
+            if(setInicio || idPermiso == justificacion.getIdPermiso())
+            {
+                pos.add(posRow);
+                return pos;
+            }
+            posRow++;
+        }
+        return pos;
+    }
+
     public void setListeners()
     {
         headerList.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -168,7 +225,7 @@ public class PermisoListFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent,
                                     View view, int position, long id) {
-
+                idCurrentPermiso = (int) adapter.getItem(position).getIdPermiso();
                 permisoListFragmentCallback.onPermisoSelected(adapter.getItem(position));
 
             }
@@ -270,7 +327,11 @@ public class PermisoListFragment extends BaseFragment {
             headerList.setAdapter(adapter);
             adapter.notifyDataSetChanged();
             if (permisoListFragmentCallback.allowSelectedItem())
-                permisoListFragmentCallback.onPermisoSelected(data.get(0));
+                if(data.size()>0)
+                {
+                    permisoListFragmentCallback.onPermisoSelected(data.get(0));
+                }
+
             permisoListFragmentCallback.onFinalizaConsulta();
             headerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -278,15 +339,16 @@ public class PermisoListFragment extends BaseFragment {
                 @Override
                 public void onItemClick(AdapterView<?> parent,
                                         View view, int position, long id) {
-
+                    idCurrentPermiso = (int) adapter.getItem(position).getIdPermiso();
                     permisoListFragmentCallback.onPermisoSelected(adapter.getItem(position));
-
                 }
             });
             if(data.size() == 0)
                 getRootView().findViewById(R.id.list_permisos_ninguno).setVisibility(View.VISIBLE);
             else
                 getRootView().findViewById(R.id.list_permisos_ninguno).setVisibility(View.GONE);
+
+            setItemSelected();
         }
 
         @Override

@@ -60,6 +60,10 @@
     <string name="label_button_aceptar_act">Aceptar</string>
     <string name="label_button_cancelar_act">Cancelar</string>
     <string name="menu_toggle_contactos">Ver Contactos</string>
+    <string name="loadingTitleWait">Espere</string>
+    <string name="loadingMessageClient">Cargando Clientes...</string>
+    <string name="loadingMessageRuta">Cargando Ruta...</string>
+    <string name="loadingMessageCrearAgenda">Cargando Información...</string>
     <string name="loading">Cargando...</string>
     <string name="label_contacto">Contacto:</string>
     <string name="label_button_modificar_gestion">Modificar Gestión</string>

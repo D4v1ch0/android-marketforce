@@ -4,6 +4,8 @@ import java.util.List;
 
 import rp3.db.sqlite.DataBase;
 import rp3.marketforce.models.Agenda;
+import rp3.marketforce.models.Cliente;
+
 import android.content.Context;
 
 public class RutasLoader extends
@@ -28,7 +30,7 @@ public class RutasLoader extends
 		   result = Agenda.getAgendaSemanal(db);
 		else
 			result = Agenda.getAgendaSearch(db, search);
-		
+
 		return result;
 	}
 	

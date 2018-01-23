@@ -208,8 +208,8 @@ public class Cliente {
                             }
 
                             strs = type.getJSONArray("ClienteContactos");
-
-                            //rp3.marketforce.models.Contacto.deleteContactoIdCliente(db, cl.getIdCliente());
+							//la siguiente linea estaba comentada y no permitia eliminar los datos si ya no se recibian del servidor - jpluas 08/01/2018
+                            rp3.marketforce.models.Contacto.deleteContactoIdCliente(db, cl.getIdCliente());
 
                             for (int j = 0; j < strs.length(); j++) {
                                 JSONObject str = strs.getJSONObject(j);

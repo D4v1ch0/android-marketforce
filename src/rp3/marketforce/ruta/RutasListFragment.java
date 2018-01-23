@@ -54,7 +54,11 @@ public class RutasListFragment extends rp3.app.BaseFragment{
 		    
 	public static String ARG_INICIO = "inicio";
 	public static String ARG_FIN = "fin";
-	
+    public static final String ARG_CODIGORUTA = "idCliente";
+
+    public static final int SHOWPROGRESS = 1;
+    public static final int NOSHOWPROGRESS = 0;
+
     private TransactionListFragmentListener transactionListFragmentCallback;
     private SwipeRefreshLayout pullRefresher;
     private View LoadingFooter;
@@ -84,10 +88,19 @@ public class RutasListFragment extends rp3.app.BaseFragment{
     private View lastItem = null;
     private DataBase db;
     private String fromCarga;
+    public static int idCurrentRuta = -1;
     
     public static RutasListFragment newInstance() {
     	RutasListFragment fragment = new RutasListFragment();
 		return fragment;
+    }
+
+    public static RutasListFragment newInstance(int idCurrentRuta) {
+        RutasListFragment fragment = new RutasListFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_CODIGORUTA, idCurrentRuta);
+        fragment.setArguments(args);
+        return fragment;
     }
     
     public interface TransactionListFragmentListener {
@@ -130,7 +143,12 @@ public class RutasListFragment extends rp3.app.BaseFragment{
 		format2 = new SimpleDateFormat("EEEE");
 		format3 = new SimpleDateFormat("dd");
 		format4 = new SimpleDateFormat("MMMM");
-		
+
+        if(savedInstanceState == null)
+        {
+            idCurrentRuta = getArguments().getInt(ARG_CODIGORUTA);
+        }
+
 		LoadingFooter = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.item_list_loading, null, false);
     }
     
@@ -182,7 +200,6 @@ public class RutasListFragment extends rp3.app.BaseFragment{
     		setListenersList();
     		paintDates();
     	}
-    	    	    	
     }
     
     @Override
@@ -200,7 +217,7 @@ public class RutasListFragment extends rp3.app.BaseFragment{
     	Bundle args = new Bundle();
 		args.putString(LoaderRutas.STRING_SEARCH, termSearch);
 		args.putBoolean(LoaderRutas.STRING_BOOLEAN, false);
-	    executeLoader(0, args, loaderRutas);
+	    executeLoader(NOSHOWPROGRESS, args, loaderRutas);
     }      
     
     public void loadTransactions(int transactionType)
@@ -261,7 +278,33 @@ public class RutasListFragment extends rp3.app.BaseFragment{
             paintDates();
         }
 	}
-	
+
+    private ArrayList<Integer> getPositionRuta(int idRuta, List<Agenda> lista){
+        ArrayList<Integer> pos = new ArrayList<>();
+        int posRow = 0;
+        boolean setInicio = false;
+
+        if(lista.size()==0)
+        {
+            return pos;
+        }
+
+        if(idRuta==-1)
+        {
+            setInicio = true;
+        }
+
+        for (Agenda agenda: lista) {
+            if(agenda.getCliente() != null && (setInicio || idRuta == agenda.getIdAgenda()))
+            {
+                pos.add(posRow);
+                return pos;
+            }
+            posRow++;
+        }
+        return pos;
+    }
+
 	private void setListenersList()
 	{
 		headerlist.setOnScrollListener(new OnScrollListener() {
@@ -303,6 +346,7 @@ public class RutasListFragment extends rp3.app.BaseFragment{
 				if(adapter.isAction() && adapter.getItem(position).getNombreCompleto() != null)
 				{
 					Agenda selectedAgenda = list_agenda_in_adapter.get(position);
+                    idCurrentRuta = (int) list_agenda_in_adapter.get(position).getIdAgenda();
                     if(selectedAgenda.getTipoAgenda().equalsIgnoreCase(Contants.TIPO_AGENDA_CLIENTE))
 					    transactionListFragmentCallback.onTransactionSelected(list_agenda_in_adapter.get(position).getID());
                     else
@@ -368,11 +412,13 @@ public class RutasListFragment extends rp3.app.BaseFragment{
 	    	private boolean flag;
 		 
 	    	@Override
-			public Loader<List<Agenda>> onCreateLoader(int arg0,
+			public Loader<List<Agenda>> onCreateLoader(int cargaProgress,
 					Bundle bundle) {	
 	    		
 	    		Search = bundle.getString(STRING_SEARCH);
 	    		flag = bundle.getBoolean(STRING_BOOLEAN);
+                if(cargaProgress == SHOWPROGRESS)
+                    showDialogProgress( getResources().getString(R.string.loadingTitleWait),getResources().getString(R.string.loadingMessageRuta));
 
 				return new RutasLoader(getActivity(), getDataBase(),flag,Search);
 			}
@@ -410,8 +456,10 @@ public class RutasListFragment extends rp3.app.BaseFragment{
                             }
                             setListenersList();
                             paintDates();
+                            setItemSelected();
                         }
                 }
+                closeDialogProgress();
 			}
 
 			@Override
@@ -419,7 +467,28 @@ public class RutasListFragment extends rp3.app.BaseFragment{
 				
 			}
 		}
-	 
+
+    private void setItemSelected(){
+        int row = 0;
+        ArrayList<Integer> pos = getPositionRuta(idCurrentRuta,list_agenda_in_adapter);
+        if(pos.size()>0)
+        {
+            row = pos.get(0);
+
+            if(getResources().getConfiguration().orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE){
+                Agenda selectedAgenda = list_agenda_in_adapter.get(row);
+                String tipoAgenda = (selectedAgenda.getTipoAgenda() == null)? "":selectedAgenda.getTipoAgenda();
+                if( tipoAgenda.equalsIgnoreCase(Contants.TIPO_AGENDA_CLIENTE))
+                    transactionListFragmentCallback.onTransactionSelected(list_agenda_in_adapter.get(row).getID());
+                else
+                    transactionListFragmentCallback.onProspectoSelected(list_agenda_in_adapter.get(row).getID());
+            }
+            headerlist.setSelection(row);
+        }
+
+        adapter.notifyDataSetChanged();
+    }
+
 	 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
      void paintDates(){
 		 	Calendar anterior = null;
@@ -626,7 +695,7 @@ public class RutasListFragment extends rp3.app.BaseFragment{
 				 }
 			 }
 	 }
-    
+
     private void mPaintRiel()
     {
     	int bgColor = getActivity().getResources().getColor(R.color.bg_button_bg_main);
@@ -684,7 +753,7 @@ public class RutasListFragment extends rp3.app.BaseFragment{
         Bundle args = new Bundle();
         args.putString(LoaderRutas.STRING_SEARCH, "");
         args.putBoolean(LoaderRutas.STRING_BOOLEAN, true);
-        executeLoader(0, args, loaderRutas);
+        executeLoader(SHOWPROGRESS, args, loaderRutas);
     }
     
     public void Refresh() {	  

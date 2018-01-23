@@ -31,6 +31,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import rp3.app.BaseFragment;
 import rp3.data.MessageCollection;
@@ -56,6 +57,7 @@ public class OportunidadListFragment extends BaseFragment {
 
     public static final String ARG_TRANSACTIONTYPEID = "transactionType";
     public static final String ARG_TRANSACTIONTYPEBO = "transactionTypeBo";
+    public static final String ARG_CODIGOOPORTUNIDAD = "idOportunidad";
     private OportunidadListFragmentListener oportunidadListFragmentCallback;
     private boolean currentTransactionBoolean;
     private String currentTransactionSearch;
@@ -68,12 +70,23 @@ public class OportunidadListFragment extends BaseFragment {
     public boolean filtro = false;
     private NumberFormat numberFormat;
     private double monto = 0;
+    public static int idCurrentOportunidad = -1;
 
     public static OportunidadListFragment newInstance(boolean flag , String transactionTypeId) {
         OportunidadListFragment fragment = new OportunidadListFragment();
         Bundle args = new Bundle();
         args.putString(ARG_TRANSACTIONTYPEID, transactionTypeId);
         args.putBoolean(ARG_TRANSACTIONTYPEBO, flag);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static OportunidadListFragment newInstance(boolean flag , String transactionTypeId, int idCurrentOportunidad) {
+        OportunidadListFragment fragment = new OportunidadListFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_TRANSACTIONTYPEID, transactionTypeId);
+        args.putBoolean(ARG_TRANSACTIONTYPEBO, flag);
+        args.putInt(ARG_CODIGOOPORTUNIDAD, idCurrentOportunidad);
         fragment.setArguments(args);
         return fragment;
     }
@@ -200,9 +213,8 @@ public class OportunidadListFragment extends BaseFragment {
         {
             currentTransactionBoolean = getArguments().getBoolean(ARG_TRANSACTIONTYPEBO);
             currentTransactionSearch = getArguments().getString(ARG_TRANSACTIONTYPEID);
+            idCurrentOportunidad = getArguments().getInt(ARG_CODIGOOPORTUNIDAD);
             loaderOportunidad = new LoaderOportunidad();
-
-
 
         }
     }
@@ -294,11 +306,47 @@ public class OportunidadListFragment extends BaseFragment {
         return super.onOptionsItemSelected(item);
     }
 
+    private ArrayList<Integer> getPositionOportunidad(int idOportunidad, HashMap<String, List<Oportunidad>>  lista){
+        ArrayList<Integer> pos = new ArrayList<>();
+        int posicionGeneral = 0;
+        int posSeccion = 0;
+        int posRow = 0;
+
+        if(lista.entrySet().size()==0){
+            return pos;
+        }
+
+        if(idOportunidad==-1)
+        {
+            pos.add(posSeccion);
+            pos.add(posRow);
+            pos.add(posicionGeneral);
+            return pos;
+        }
+
+        for (Map.Entry<String, List<Oportunidad>> arrayOportunidades: lista.entrySet()) {
+            posRow = 0;
+            for (Oportunidad cliente: arrayOportunidades.getValue()) {
+                if(idOportunidad == cliente.getIdOportunidad())
+                {
+                    pos.add(posSeccion);
+                    pos.add(posRow);
+                    pos.add(posicionGeneral);
+                    return pos;
+                }
+                posRow++;
+                posicionGeneral++;
+            }
+            posicionGeneral++;
+            posSeccion++;
+        }
+        return pos;
+    }
+
     @SuppressLint("SimpleDateFormat")
     private void OrderBy() {
 
         try {
-
 
             if (lista == null) {
                 list.setVisibility(View.GONE);
@@ -369,19 +417,23 @@ public class OportunidadListFragment extends BaseFragment {
                     list.setAdapter(adapter);
                 }
                 adapter.setList(lista);
-                adapter.notifyDataSetChanged();
+                //adapter.notifyDataSetChanged();
             }
 
             list.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
                 @Override
                 public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                    oportunidadListFragmentCallback.onOportunidadSelected(lista.get(tipos.get(groupPosition)).get(childPosition));
+                    onRowItemClick(groupPosition,childPosition);
+
                     return false;
                 }
             });
 
             if (oportunidadListFragmentCallback.allowSelectedItem() && lista.size() != 0)
                 oportunidadListFragmentCallback.onOportunidadSelected(lista.get(0).get(0));
+
+            setItemSelected();
+
         }
         catch (Exception ex)
         {
@@ -389,6 +441,36 @@ public class OportunidadListFragment extends BaseFragment {
         }
 
     }
+
+    private void setItemSelected(){
+        /*Regresar a la ultima posicion*/
+        int seccion = 0;
+        int row = 0;
+        int posGeneral = 0;
+        ArrayList<Integer> pos = getPositionOportunidad(idCurrentOportunidad,lista);
+        if(pos.size()>0)
+        {
+            seccion = pos.get(0);
+            row = pos.get(1);
+            posGeneral = pos.get(2);
+
+            if(getResources().getConfiguration().orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE){
+                onRowItemClick(seccion,row);
+            }
+        }
+
+        if(idCurrentOportunidad==-1){
+            list.setSelection(posGeneral);
+            list.expandGroup(seccion);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    private void onRowItemClick(int groupPosition, int childPosition){
+        OportunidadListFragment.idCurrentOportunidad = (int) lista.get(tipos.get(groupPosition)).get(childPosition).getIdOportunidad();
+        oportunidadListFragmentCallback.onOportunidadSelected(lista.get(tipos.get(groupPosition)).get(childPosition));
+    }
+
 
 
     public class LoaderOportunidad implements LoaderManager.LoaderCallbacks<List<Oportunidad>> {

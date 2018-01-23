@@ -285,6 +285,7 @@ public class Agente {
             try {
                 webService.invokeWebService();
             } catch (HttpResponseException e) {
+
                 if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
                     return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
                 return SyncAdapter.SYNC_EVENT_HTTP_ERROR;

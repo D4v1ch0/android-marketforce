@@ -43,9 +43,13 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
     public boolean isActiveListFragment = true;
 	private long selectedClientId;
 	private boolean isContact = false;
-    
-	public static ClientFragment newInstance(int transactionTypeId) {
+
+	public static ClientFragment newInstance(int transactionTypeId, int currentCliente) {
 		ClientFragment fragment = new ClientFragment();
+		Bundle args = new Bundle();
+		args.putInt(ClientListFragment.ARG_CODIGOCLIENTE, currentCliente);
+		fragment.setArguments(args);
+
 		return fragment;
     }
 	
@@ -64,17 +68,28 @@ public class ClientFragment extends BaseFragment implements ClienteListFragmentL
 	@Override
 	public void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
-		
+		int currentCliente = -1;
+
+		Bundle bundle = this.getArguments();
+		if (bundle != null) {
+			currentCliente = bundle.getInt(ClientListFragment.ARG_CODIGOCLIENTE);
+		}
+
 		setRetainInstance(true);		
-		transactionListFragment = ClientListFragment.newInstance(true, null);					
-		
+		transactionListFragment = ClientListFragment.newInstance(true, null, currentCliente);
 	}
 	
 	@Override
-	public void onResume() {		
-		super.onResume();				
+	public void onResume() {super.onResume();
+		//if(clienteCurrent != null)
+			//onClienteSelected(clienteCurrent);
 	}
-	
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+	}
+
 	@SuppressLint("NewApi")
 	@Override
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {		
