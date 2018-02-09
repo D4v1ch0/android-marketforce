@@ -5,10 +5,12 @@ import java.util.List;
 
 import rp3.auna.R;
 import rp3.auna.cliente.ClientListFragment.ClienteListFragmentListener;
+import rp3.auna.db.Contract;
 import rp3.auna.headerlistview.SectionAdapter;
 import rp3.auna.models.Cliente;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +18,9 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 @SuppressLint("SimpleDateFormat")
-public class ClientListAdapter extends SectionAdapter{
-	
+public class ClientListAdapter extends SectionAdapter implements AdapterView.OnItemLongClickListener{
+	private static final String TAG = ClientListAdapter.class.getSimpleName();
+
 //	static class ViewHolderHeader {
 //		TextView textView_headerlist_client_list;
 //	}
@@ -43,7 +46,10 @@ public class ClientListAdapter extends SectionAdapter{
 	
 	private final int ORDER_BY_NAME = 5;
     private final int ORDER_BY_LAST_NAME = 6;
-	
+
+	/**Callback para el List de clientes*/
+	public CallbackClienteList callbackClienteList;
+
 	public ClientListAdapter(Context c,ArrayList<ArrayList<rp3.auna.models.Cliente>> data, List<String> headersortList,
 			int order,ClienteListFragmentListener clienteListFragmentCallback){
 		this.dataList = data;
@@ -217,8 +223,14 @@ public class ClientListAdapter extends SectionAdapter{
 	@Override
     public void onRowItemClick(AdapterView<?> parent, View view, int section, int row, long id) {
         super.onRowItemClick(parent, view, section, row, id);
-        
-        section_ = section;
+		Log.d(TAG,"onRowItemClick:section="+section+" row="+row);
+
+		for(ArrayList<Cliente> list:dataList){
+			for(Cliente cliente:list){
+				Log.d(TAG,"For Cliente:"+cliente.toString());
+			}
+		}
+		section_ = section;
     	row_ = row;
     	
         if(clienteListFragmentCallback.allowSelectedItem()){        	
@@ -248,5 +260,29 @@ public class ClientListAdapter extends SectionAdapter{
 	public void setAction(boolean action) {
 		this.action = action;
 	}
-	
+
+	@Override
+	public void onRowItemLongClick(AdapterView<?> parent, View view,int sectionPosition, int position, long id) {
+		super.onRowItemLongClick(parent, view,sectionPosition, position, id);
+		Log.d(TAG,"onRowItemLongClick:section="+sectionPosition+" row="+position);
+		Log.d(TAG,"onRowItemLongClick:Cliente="+dataList.get(sectionPosition).get(position).toString());
+		section_ = sectionPosition;
+		row_ = position;
+
+		if(clienteListFragmentCallback.allowSelectedItem()){
+			notifyDataSetChanged();
+		}
+
+		if(clienteListFragmentCallback != null && action)
+			clienteListFragmentCallback.onLongClienteSelected(dataList.get(sectionPosition).get(position),view);
+
+
+		else
+			action = true;
+	}
+
+	public interface CallbackClienteList{
+		void OnClickClienteSelected(Cliente cliente);
+		void OnLongClickSelected(Cliente cliente);
+	}
 }

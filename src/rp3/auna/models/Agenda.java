@@ -1182,7 +1182,8 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 	public static List<Agenda> getAgendaMinutes(DataBase db, long minutes_max, long minutes_min) {
 		long actual = Calendar.getInstance().getTimeInMillis();
 		Cursor c = db.query(Contract.Agenda.TABLE_NAME, new String[]{Contract.Agenda.COLUMN_AGENDA_ID, Contract.Agenda.COLUMN_CLIENTE_ID,
-						Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID, Contract.Agenda.COLUMN_FECHA_INICIO, Contract.Agenda.COLUMN_FECHA_FIN,
+						Contract.Agenda.COLUMN_CLIENTE_DIRECCION_ID, Contract.Agenda.COLUMN_FECHA_INICIO,
+						Contract.Agenda.COLUMN_FECHA_FIN,
 						Contract.Agenda.COLUMN_ESTADO_AGENDA},
 				"(" + Contract.Agenda.COLUMN_FECHA_INICIO + " - " + actual + ") <= " + minutes_max + " AND " +
 						"(" + Contract.Agenda.COLUMN_FECHA_INICIO + " - " + actual + ") >= " + minutes_min + " AND " +
@@ -1201,7 +1202,6 @@ public class Agenda extends rp3.data.entity.EntityBase<Agenda>{
 				agd.setFechaInicio(CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_INCICIO));
 				agd.setFechaFin(CursorUtils.getDate(c, Contract.Agenda.FIELD_FECHA_FIN));
 				agd.setEstadoAgenda(CursorUtils.getString(c, Contract.Agenda.COLUMN_ESTADO_AGENDA));
-
 				agd.setCliente(rp3.auna.models.Cliente.getClienteIDServer(db, agd.getIdCliente(), false));
 				agd.setClienteDireccion(ClienteDireccion.getClienteDireccionIdDireccion(db, agd.getIdCliente(), agd.getIdClienteDireccion()));
 				list.add(agd);

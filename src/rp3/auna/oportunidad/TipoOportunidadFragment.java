@@ -1,6 +1,7 @@
 package rp3.auna.oportunidad;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ public class TipoOportunidadFragment extends BaseFragment {
         void onFinishTiposDialog(List<OportunidadTipo> tipos);
     }
 
+    private static final String TAG = TipoOportunidadFragment.class.getSimpleName();
     public static String ARG_TIPOS = "tipos";
     private LinearLayout Grupo;
     private List<OportunidadTipo> tipos;
@@ -44,6 +46,7 @@ public class TipoOportunidadFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG,"onCreateView...");
         respuestas = getArguments().getStringArrayList(ARG_TIPOS);
 
         View view = inflater.inflate(R.layout.fragment_dialog_tareas, container);
@@ -101,6 +104,42 @@ public class TipoOportunidadFragment extends BaseFragment {
             }
         }
         return false;
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 
 }

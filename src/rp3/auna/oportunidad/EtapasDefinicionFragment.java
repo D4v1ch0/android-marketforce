@@ -2,6 +2,7 @@ package rp3.auna.oportunidad;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -21,6 +22,7 @@ import rp3.auna.models.oportunidad.OportunidadEtapa;
  */
 public class EtapasDefinicionFragment extends BaseFragment {
 
+    private static final String TAG = EtapasDefinicionFragment.class.getSimpleName();
     public static final String ID_ETAPA = "id_etapa";
 
     private int idTipoOportunidad;
@@ -38,6 +40,7 @@ public class EtapasDefinicionFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG,".onCreate..");
         optEtapas = new ArrayList<OportunidadEtapa>();
 
         idTipoOportunidad = getArguments().getInt(ID_ETAPA);
@@ -71,12 +74,13 @@ public class EtapasDefinicionFragment extends BaseFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         setContentView(R.layout.fragment_etapas_definicion);
-
+        Log.d(TAG,"onAttach...");
     }
 
     @Override
     public void onDailogDatePickerChange(int id, Calendar c) {
         super.onDailogDatePickerChange(id, c);
+        Log.d(TAG,"onDailogDatePickerChange...");
         optEtapas.get(id).setFechaFinPlan(c.getTime());
         List<OportunidadEtapa> etpList = new ArrayList<>();
         long fechaUlt = -1; boolean aunSeCalcula = true;
@@ -114,7 +118,7 @@ public class EtapasDefinicionFragment extends BaseFragment {
     @Override
     public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
-
+        Log.d(TAG,"onFragmentCreateView...");
         adapter = new EtapaDefinicionAdapter(getContext(),optEtapas);
         ((ListView) rootView.findViewById(R.id.etapas_list)).setAdapter(adapter);
         ((ListView) rootView.findViewById(R.id.etapas_list)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -155,5 +159,41 @@ public class EtapasDefinicionFragment extends BaseFragment {
                 dismiss();
             }
         });
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/White"
+    android:orientation="vertical">
+
+    <ProgressBar
+        android:visibility="gone"
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminate="true" />
+
+    <RelativeLayout
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:visibility="visible"
+        android:id="@+id/containerAgenda"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:paddingBottom="40dp"
+        android:gravity="center_vertical">
+        <ImageView
+            android:layout_marginTop="150dp"
+            android:visibility="visible"
+            android:id="@+id/ivEmpty"
+            android:layout_marginBottom="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_action_empty"/>
+        <TextView
+            android:visibility="visible"
+            android:id="@+id/tvMensaje"
+            android:gravity="center_horizontal"
+            android:layout_below="@+id/ivEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/md_text"
+            android:text="No hay informacion"
+            android:textSize="15sp"
+            android:layout_marginBottom="40dp"
+            />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/containerComision"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="25dp"
+        android:background="@color/White"
+        android:visibility="visible"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:orientation="vertical"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="0dp"
+                android:layout_weight="0.3"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.3"
+                    android:src="@drawable/iv_avance_ventas" />
+
+                <TextView
+                    android:id="@+id/textView131"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="0.1"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:text=""
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
+                    android:textColor="@color/md_text"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:id="@+id/tvVentas"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="0.4"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="right"
+                    android:text="0"
+                    android:textStyle="bold"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
+                    android:textColor="@color/md_text"
+                    android:textSize="22sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="0dp"
+                android:layout_weight="0.3"
+                android:gravity="center_horizontal"
+                android:weightSum="1">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.3"
+                    android:src="@drawable/iv_avance_comisional" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="0.1"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:text="S/ "
+                    android:textStyle="bold"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
+                    android:textColor="@color/md_text"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:id="@+id/tvComisional"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="0.4"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="right"
+                    android:text="0.0"
+                    android:textStyle="bold"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
+                    android:textColor="@color/md_text"
+                    android:textSize="22sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="0dp"
+                android:layout_weight="0.3"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.3"
+                    android:src="@drawable/iv_avance_incentivos" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="0.1"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:text="S/ "
+                    android:textStyle="bold"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
+                    android:textColor="@color/md_text"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:id="@+id/tvIncentivos"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="0.4"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="right"
+                    android:text="0.0"
+                    android:textStyle="bold"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
+                    android:textColor="@color/md_text"
+                    android:textSize="22sp" />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+</FrameLayout>

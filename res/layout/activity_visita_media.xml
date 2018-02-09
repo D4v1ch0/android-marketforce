@@ -1,0 +1,141 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/linearLayoutSettings"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/alternative_background"
+    android:fitsSystemWindows="@bool/fitsSystemWindows"
+    android:orientation="vertical">
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/scheduleAppBarVisitaMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+    <FrameLayout
+        android:id="@+id/statusBarVisitaMedia"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/statusBarHeight"
+        android:background="?colorPrimaryDark"
+        android:translationZ="4dp" />
+
+    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/toolbarVisitaMedia"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:translationZ="4dp"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        />
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabsMedia"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabTextColor="@color/whiteA80"
+            app:tabSelectedTextColor="@color/White"
+            app:tabMode="fixed"
+            app:tabGravity="fill"
+            app:tabIndicatorColor="#fddb04"
+            app:tabIndicatorHeight="4dp"/>
+</android.support.design.widget.AppBarLayout>
+
+        <LinearLayout
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+           >
+            <LinearLayout
+                android:layout_marginTop="16dp"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:textSize="16sp"
+                        android:fontFamily="sans-serif"
+                        android:layout_weight="0.2"
+                        android:text="Documentos:"
+                        android:layout_width="0dp"
+                        android:textColor="?attr/colorPrimary"
+                        android:layout_height="wrap_content" />
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/pdf_icon"/>
+                    <TextView
+                        android:id="@+id/tvDocumentos"
+                        android:textColor="@color/md_text"
+                        android:textSize="16sp"
+                        android:layout_marginLeft="5dp"
+                        android:fontFamily="sans-serif"
+                        android:text="Sin documentos"
+                        android:layout_weight="0.5"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:textSize="16sp"
+                        android:fontFamily="sans-serif"
+                        android:layout_weight="0.2"
+                        android:text="Imagenes:"
+                        android:textColor="?attr/colorPrimary"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content" />
+
+                    <ImageView
+                        android:id="@+id/imageView5"
+                        android:layout_width="25dp"
+                        android:layout_height="22dp"
+                        android:tint="?attr/colorPrimaryDark"
+                        android:src="@drawable/ic_action_new_picture"/>
+
+                    <TextView
+                        android:id="@+id/tvImagenes"
+                        android:textSize="16sp"
+                        android:fontFamily="sans-serif"
+                        android:textColor="@color/md_text"
+                        android:text="Sin imagenes"
+                        android:layout_weight="0.5"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+                <android.support.v7.widget.RecyclerView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:layout_weight="0.3"
+                    android:padding="3dp"
+                    android:orientation="horizontal"
+                    android:scrollbars="horizontal"
+                    app:reverseLayout="true"
+                    android:id="@+id/rvImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <android.support.v7.widget.RecyclerView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:layout_weight="0.3"
+                    android:scrollbars="horizontal"
+                    app:reverseLayout="true"
+                    android:padding="3dp"
+                    android:id="@+id/rvPdf"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>

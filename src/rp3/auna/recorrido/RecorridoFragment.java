@@ -67,6 +67,7 @@ import rp3.util.ConnectionUtils;
 
 public class RecorridoFragment  extends BaseFragment {
 
+    private static final String TAG = RecorridoFragment.class.getSimpleName();
     private GoogleMap map;
     private ArrayList<Marker> markers;
     private static View view;
@@ -93,17 +94,19 @@ public class RecorridoFragment  extends BaseFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        Log.d(TAG,"onAttach...");
         setContentView(R.layout.fragment_recorrido, R.menu.fragment_recorrido_menu);
 
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Log.d(TAG,"onCreate...");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d(TAG,"onCreateView...");
         if (view != null) {
             ViewGroup parent = (ViewGroup) view.getParent();
             if (parent != null)
@@ -209,11 +212,12 @@ public class RecorridoFragment  extends BaseFragment {
 
     public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
-
+        Log.d(TAG,"onFragmentCreateView...");
     }
 
     private void setMapa()
     {
+        Log.d(TAG,"setMapa...");
         ult = null;
         //map = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.recorrido_map)).getMap();
         map.clear();
@@ -298,16 +302,19 @@ public class RecorridoFragment  extends BaseFragment {
 
     protected void irSiguiente() {
         cal.add(Calendar.DATE, 1);
+        Log.d(TAG,"irSiguiente...");
         setMapa();
     }
 
     protected void irAnterior() {
         cal.add(Calendar.DATE, -1);
+        Log.d(TAG,"irAnterior...");
         setMapa();
     }
 
     private void showRuta(LatLng source, LatLng dest)
     {
+        Log.d(TAG,"showRuta...");
         final String url = makeURL(source.latitude, source.longitude, dest.latitude, dest.longitude);
 
         Runnable runnable = new Runnable() {
@@ -337,6 +344,7 @@ public class RecorridoFragment  extends BaseFragment {
     }
 
     public String makeURL (double sourcelat, double sourcelog, double destlat, double destlog ){
+        Log.d(TAG,"makeURL...");
         StringBuilder urlString = new StringBuilder();
         urlString.append("https://maps.googleapis.com/maps/api/directions/json");
         urlString.append("?key=");
@@ -498,5 +506,41 @@ public class RecorridoFragment  extends BaseFragment {
         // Because the demo WMS layer we are using is just a white background map, switch the base layer
         // to satellite so we can see the WMS overlay.
         //map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

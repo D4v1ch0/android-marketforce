@@ -63,6 +63,7 @@ import rp3.widget.SlidingPaneLayout;
  */
 public class PedidoFragment extends BaseFragment implements PedidoListFragment.PedidoListFragmentListener,PedidoDetailFragment.PedidoDetailFragmentListener {
 
+    private static final String TAG = PedidoFragment.class.getSimpleName();
     private static final int PARALLAX_SIZE = 0;
     private static final int DIALOG_SYNC_PRODUCTOS = 1;
     private static final int DIALOG_CIERRE = 2;
@@ -108,10 +109,6 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
 
     @SuppressLint("NewApi")
     @Override
@@ -919,4 +916,37 @@ public class PedidoFragment extends BaseFragment implements PedidoListFragment.P
             super.onPostExecute(s);
         }
     }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
+    }
+
 }

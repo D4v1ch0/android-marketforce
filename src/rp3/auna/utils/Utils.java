@@ -9,14 +9,18 @@ import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.graphics.Matrix;
+import android.location.Location;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Environment;
@@ -24,6 +28,15 @@ import android.provider.MediaStore.MediaColumns;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
+
+import com.google.android.gms.location.LocationServices;
+
+import rp3.app.BaseActivity;
+import rp3.configuration.Configuration;
+import rp3.db.sqlite.DataBase;
+import rp3.db.sqlite.DataBaseServiceHelper;
+import rp3.runtime.Session;
+import rp3.util.GooglePlayServicesUtils;
 
 public class Utils {
 	public static final int MEDIA_TYPE_IMAGE = 1;
@@ -242,6 +255,7 @@ public class Utils {
 
 	    return mediaFile;
 	}
+
 	public static String getPath(Uri uri, Activity activity) {
 		String[] projection = { MediaColumns.DATA };
 		Cursor cursor = activity
@@ -290,6 +304,16 @@ public class Utils {
 		}
 		return number;
 	}
+
+	public static String convertToSMSNumberPeru(String number)
+	{
+		if(number.length() >= 0 && number.startsWith("0"))
+		{
+			number = number.substring(1);
+			number = "+51" + number;
+		}
+		return number;
+	}
 	
 	public static void ErrorToFile(Exception ex)
 	{
@@ -301,9 +325,13 @@ public class Utils {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		ps.append("\r\n");
-		ex.printStackTrace(ps);
-		ps.close();
+		try {
+			ps.append("\r\n");
+			ex.printStackTrace(ps);
+			ps.close();
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	public static void ErrorToFile(String ex)
@@ -370,4 +398,87 @@ public class Utils {
             default: return 1;
         }
     }
+
+	public static DataBase getDataBase(Context context){
+		try {DataBase db;
+			Class<? extends SQLiteOpenHelper> dataBaseClass;
+				Session.Start(context);
+				rp3.configuration.Configuration.TryInitializeConfiguration(context);
+				Configuration.reinitializeConfiguration(context, Configuration.getDataBaseConfiguration()
+						.getDataBaseClass());
+					dataBaseClass = Configuration.getDataBaseConfiguration()
+							.getDataBaseClass();
+				db = DataBaseServiceHelper.getWritableDatabase(context,
+						dataBaseClass);
+				return db;
+
+		}
+		catch (Exception ex)
+		{
+			Log.d("Utils","Exception:"+ex.getMessage());
+			return DataBaseServiceHelper.getWritableDatabase(context,
+					Configuration.getDataBaseConfiguration()
+							.getDataBaseClass());
+		}
+
+	}
+
+	public static boolean validarCorreo(String email) {
+
+		String regExpn =
+				"^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@"
+						+ "((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+						+ "[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\."
+						+ "([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+						+ "[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|"
+						+ "([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$";
+
+		CharSequence inputStr = email;
+
+		Pattern pattern = Pattern.compile(regExpn, Pattern.CASE_INSENSITIVE);
+		Matcher matcher = pattern.matcher(inputStr);
+
+		if (matcher.matches())
+			return true;
+		else
+			return false;
+
+	}
+
+	public static String removeCommas(String value)
+	{
+		return value.replace(",","").replace(".","");
+	}
+
+	public static String getNumberOperation(int numberOperation){
+		String cadena = String.valueOf(numberOperation);
+		Log.d("Utils","Cadena:"+cadena);
+		int lenght = cadena.length();
+		for(int i = 0;i<9;i++){
+			int size = cadena.length();
+			if(size==9){
+				Log.d("Utils","Tamaño del numero de operation es 9:"+cadena);
+				break;
+			}
+			cadena = "0"+cadena;
+		}
+		//int diferencia = lenght - 9 ;
+		return cadena;
+	}
+
+	public static String getNumberDocumento(String documento,int length){
+		Log.d("Utils","Cadena:"+documento);
+		int lenght = documento.length();
+		for(int i = 0;i<length;i++){
+			int size = documento.length();
+			if(size==length){
+				Log.d("Utils","Tamaño del numero de operation es 9:"+documento);
+				break;
+			}
+			documento = "0"+documento;
+		}
+		//int diferencia = lenght - 9 ;
+		return documento;
+	}
+
 }

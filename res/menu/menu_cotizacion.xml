@@ -1,0 +1,39 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" >
+    <item android:id="@+id/action_consultarid_cotizacion"
+        android:title="@string/label_grabar"
+        android:icon="@drawable/ic_action_search"
+        app:showAsAction="always"></item>
+    <item android:id="@+id/action_email_cotizacion"
+        android:title="@string/label_grabar"
+        android:icon="@drawable/ic_action_email"
+        app:showAsAction="always"></item>
+    <item android:id="@+id/action_save_cotizacion"
+        android:title="@string/label_grabar"
+        android:icon="@drawable/ic_save"
+        app:showAsAction="always"></item>
+
+    <item
+        android:visible="false"
+        android:id="@+id/action_cancel_cotizacion"
+        android:title="@string/cancel"
+        android:icon="@drawable/ic_action_cancel_dark"
+        app:showAsAction="always"></item>
+   <item
+        android:id="@+id/action_cancelar_visita"
+        android:title="Cancelar Visita"
+        app:showAsAction="never"/>
+
+    <item
+        android:visible="false"
+        android:id="@+id/action_llamada_visita"
+        android:title="Agendar llamada"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_agendar_visita"
+        android:title="Reprogramar Visita"
+        app:showAsAction="never"/>
+
+</menu>

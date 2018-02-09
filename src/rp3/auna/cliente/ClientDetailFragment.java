@@ -15,6 +15,7 @@ import rp3.widget.ViewPager;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
@@ -22,6 +23,7 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,6 +39,8 @@ import android.widget.TextView;
 
 @SuppressLint("ResourceAsColor")
 public class ClientDetailFragment extends rp3.app.BaseFragment implements ClienteEditFragment.OnClienteEditListener {
+
+	private static final String TAG = ClientDetailFragment.class.getSimpleName();
 	/**
 	 * The fragment argument representing the item ID that this fragment
 	 * represents.
@@ -131,6 +135,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.d(TAG,"onCreate...");
 		/*
 		 * Se instancia Drawable Manager para carga de imagenes;
 		 */
@@ -159,6 +164,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	@Override
 	public void onResume() {		
 		super.onResume();
+		Log.d(TAG,"onResume...");
 		if (clientId != 0) {
 			if(tipoPersona != null && tipoPersona.equalsIgnoreCase("C"))
 			{
@@ -251,16 +257,11 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 			renderContacto(getRootView());
 		}
 	}
-	
-	@Override
-	public void onStart() {
-		super.onStart();
-	}
-	
+
 	@Override
 	public void onAttach(Activity activity) {
-		super.onAttach(activity);		
-
+		super.onAttach(activity);
+		Log.d(TAG,"onAttach...");
 		try
 		{
 			if(getParentFragment()!=null)
@@ -284,6 +285,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 
 	@SuppressWarnings("ResourceType")
 	private void setPageConfig(int page){
+		Log.d(TAG,"setPageConfig...");
 		curentPage = page;
 		String title = pagerAdapter.getPageTitle(page).toString();
 		if(title.equalsIgnoreCase("Info"))
@@ -318,6 +320,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	@SuppressWarnings("ResourceType")
 	private void renderClienteNatural(View rootView)
 	{
+		Log.d(TAG,"renderClienteNatural...");
 		boolean telf = false, email = false;
 		hideDialogConfirmation();
         String email_str = "";
@@ -641,6 +644,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	@SuppressWarnings("ResourceType")
 	private void renderClienteJuridico(View rootView)
 	{
+		Log.d(TAG,"renderClienteJuridico...");
 		boolean telf = false, email = false, pagina_web = false;
 		hideDialogConfirmation();
         String email_str = "", pagina_Web_str = "";
@@ -651,6 +655,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 				Context.LAYOUT_INFLATER_SERVICE);
 
 		String etiqueta = "";
+		Log.d(TAG,"testArrayDetails.length:"+testArrayDetails.length);
 		for (int x = 0; x < testArrayDetails.length; x++) {
 			etiqueta = "";
 			switch (x) {
@@ -1242,6 +1247,7 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		outState.putLong(STATE_CLIENT_ID, clientId);
+		Log.d(TAG,"onSaveInstanceState...");
 	}
 
 	private void showDetailDialog(long transactionDetailId) {
@@ -1273,7 +1279,46 @@ public class ClientDetailFragment extends rp3.app.BaseFragment implements Client
 	}
 
 	@Override
-	public void onClienteUpdate(Cliente cliente) {		
+	public void onClienteUpdate(Cliente cliente) {
+		Log.d(TAG,"onClienteUpdate..."+cliente.toString());
 		clienteDetailFragmentCallback.onClienteChanged(cliente);
+	}
+
+	/**
+	 *
+	 * Ciclo de vida
+	 *
+	 */
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		Log.d(TAG,"onStart...");
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.d(TAG,"onPause...");
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		Log.d(TAG,"onStop...");
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		super.onDestroyView();
+		Log.d(TAG,"onDestroy...");
+	}
+
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		super.onDestroyView();
 	}
 }

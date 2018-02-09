@@ -1,6 +1,7 @@
 package rp3.auna.sync;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -21,6 +22,7 @@ import rp3.db.sqlite.DataBase;
  * Created by magno_000 on 30/01/2017.
  */
 public class Auna {
+    private static final String TAG = Auna.class.getSimpleName();
     public static Bundle executeCotizacion(String parametros) {
         Bundle bundle = new Bundle();
         WebService webService = new WebService("MartketForce", "GetCotizacion");
@@ -68,7 +70,7 @@ public class Auna {
         try {
             jObject = new JSONObject(parametros);
         } catch (Exception ex) {
-
+            Log.d(TAG,"Exception:"+ex.getMessage());
         }
 
         webService.addParameter("model", jObject);

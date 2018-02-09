@@ -96,6 +96,7 @@ import rp3.util.LocationUtils;
  */
 public class ActualizacionFragment extends BaseFragment implements AgregarTarjetaFragment.AgregarTarjetaDialogListener{
 
+
     boolean rotated = false;
     private final static String TAG = "IntPayMe";
 
@@ -154,6 +155,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG,"onCreate...");
         cliente = new Cliente();
         contactPhotos = new ArrayList<String>();
         numberFormat = NumberFormat.getInstance();
@@ -164,15 +166,12 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        Log.d(TAG,"onAttach...");
         tryEnableGooglePlayServices(true);
         setContentView(R.layout.fragment_cierre_venta, R.menu.fragment_crear_cliente);
         setRetainInstance(true);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -208,6 +207,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
     }
 
     private void Grabar() {
+        Log.d(TAG,"Grabar..");
         Cliente cli = agd.getCliente();
         ClienteDireccion cliDir = agd.getClienteDireccion();
         Contacto contacto = agd.getContacto();
@@ -339,7 +339,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
     @Override
     public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
-
+        Log.d(TAG,"onFragmentCreateView...");
 
         listViewDirecciones = new ArrayList<LinearLayout>();
         listViewContactos = new ArrayList<LinearLayout>();
@@ -616,6 +616,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
     }
 
     private void setDatosClientes() {
+        Log.d(TAG,"setDatosClientes...");
         DrawableManager DManager = new DrawableManager();
         SimpleDateFormat format1 = new SimpleDateFormat("dd MMMM yyyy");
         Cliente cli = agd.getCliente();
@@ -704,6 +705,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
     }
 
     protected void takePicture(final int idView) {
+        Log.d(TAG,"takePicture...");
         AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(this.getActivity());
         myAlertDialog.setTitle("Fotografía");
         myAlertDialog.setMessage("Obtener de");
@@ -739,6 +741,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
 
     private void addTarjeta()
     {
+        Log.d(TAG,"addTarjeta...");
         if(validacionesAlignet()) {
             tarjetaFragment = AgregarTarjetaFragment.newInstance(listViewTarjetas.size());
             showDialogFragment(tarjetaFragment, "Agregar Tarjeta");
@@ -747,6 +750,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
 
     private void addDireccion()
     {
+        Log.d(TAG,"addDireccion...");
         final LinearLayout direccion = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.layout_cliente_direccion_detail, null);
         final int pos = listViewDirecciones.size();
         direccion.findViewById(R.id.cliente_direccion).setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -838,6 +842,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
 
     private void addContacto()
     {
+        Log.d(TAG,"addContacto...");
         final LinearLayout contacto = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.layout_cliente_contacto_detail, null);
         final int pos = listViewContactos.size();
         ((Button) contacto.findViewById(R.id.eliminar_contacto)).setOnClickListener(new View.OnClickListener() {
@@ -866,11 +871,13 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
+        Log.d(TAG,"onConfigurationChanged...");
         super.onConfigurationChanged(newConfig);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG,"onActivityResult...");
         if (requestCode == Constants.RESULT_API) {
             if (resultCode == RESULT_OK) {
                 boolean successful = data.getBooleanExtra("successful", false);
@@ -924,8 +931,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
         }
     }
 
-    public ArrayAdapter<String> getDirecciones()
-    {
+    public ArrayAdapter<String> getDirecciones() {
         List<String> list = new ArrayList<String>();
         for(int i = 0; i < listViewDirecciones.size(); i ++)
         {
@@ -934,8 +940,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
         return new ArrayAdapter<String>(getActivity(), rp3.core.R.layout.base_rowlist_simple_spinner_small, list);
     }
 
-    public ArrayAdapter<String> getFechasCaducidad()
-    {
+    public ArrayAdapter<String> getFechasCaducidad(){
         SimpleDateFormat format1 = new SimpleDateFormat("MM/yyyy");
         List<String> list = new ArrayList<String>();
         Calendar cal = Calendar.getInstance();
@@ -948,8 +953,8 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
         return new ArrayAdapter<String>(getActivity(), rp3.core.R.layout.base_rowlist_simple_spinner_small, list);
     }
 
-    public boolean Validaciones()
-    {
+    public boolean Validaciones(){
+        Log.d(TAG,"Validaciones...");
         if(((EditText)getRootView().findViewById(R.id.cliente_identificacion)).getText().toString().trim().length() >= 0 && getRootView().findViewById(R.id.cliente_identificacion).isEnabled())
         {
             Cliente proof = Cliente.getClienteByIdentificacion(getDataBase(), ((EditText)getRootView().findViewById(R.id.cliente_identificacion)).getText().toString().trim());
@@ -1068,8 +1073,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
         return true;
     }
 
-    private int getPosition(SpinnerAdapter spinnerAdapter, int i)
-    {
+    private int getPosition(SpinnerAdapter spinnerAdapter, int i) {
         int position = -1;
         for(int f = 0; f < spinnerAdapter.getCount(); f++)
         {
@@ -1078,8 +1082,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
         }
         return position;
     }
-    private int getPosition(SpinnerAdapter spinnerAdapter, String i)
-    {
+    private int getPosition(SpinnerAdapter spinnerAdapter, String i) {
         int position = -1;
         for(int f = 0; f < spinnerAdapter.getCount(); f++)
         {
@@ -1095,13 +1098,14 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
 
     @Override
     public void onFinishAgregarTarjetaDialog(ClienteTarjeta clienteTarjeta) {
+        Log.d(TAG,"onFinishAgregarTarjetaDialog...");
         agregarTarjeta = clienteTarjeta;
         validarSolicitud();
 
     }
 
-    public void agregaTarjeta()
-    {
+    public void agregaTarjeta() {
+        Log.d(TAG,"agregaTarjeta...");
         final LinearLayout tarjeta = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.layout_cliente_tarjeta_detail, null);
         final int pos = listViewTarjetas.size();
         ((Button) tarjeta.findViewById(R.id.eliminar_tarjeta)).setOnClickListener(new View.OnClickListener() {
@@ -1156,6 +1160,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
 
     @Override
     public void onSyncComplete(Bundle data, MessageCollection messages) {
+        Log.d(TAG,"onSyncComplete..");
         if (data.containsKey(SyncAdapter.ARG_SYNC_TYPE) && data.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_VALIDA_SOLICITUD)) {
             closeDialogProgress();
             if (messages.hasErrorMessage()) {
@@ -1169,6 +1174,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
 
     private void finishAgenda()
     {
+        Log.d(TAG,"finishAgenda...");
         agenda = Agenda.getAgenda(getDataBase(), idAgenda);
         if (agenda == null)
             agenda = Agenda.getAgendaClienteNull(getDataBase(), idAgenda);
@@ -1235,6 +1241,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
     //region Registro Pago
     public void registrarPagoOncosys(PayMeResponse response)
     {
+        Log.d(TAG,"registrarPagoOncosys...");
         Bundle bundle = new Bundle();
         bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_REGISTRAR_PAGO);
         bundle.putString(ARG_PARAMS, generaJSONPago(response));
@@ -1244,6 +1251,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
 
     public String generaJSONPago(PayMeResponse response) {
 
+        Log.d(TAG,"generaJSONPago...");
         SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy");
         JSONObject jsonObject = new JSONObject();
         try {
@@ -1266,6 +1274,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
 
     private boolean validarResponse()
     {
+        Log.d(TAG,"validarResponse...");
         try {
             JSONObject jsonObject = new JSONObject(response);
             if(jsonObject.getString("Result").equalsIgnoreCase("0"))
@@ -1310,6 +1319,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
 
     private void validarSolicitud()
     {
+        Log.d(TAG,"validarSolicitud...");
         if(ValidacionesSolicitud())
         {
             if(idOperacion.equalsIgnoreCase("")) {
@@ -1328,6 +1338,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
 
     private boolean ValidacionesSolicitud()
     {
+        Log.d(TAG,"ValidacionesSolicitud...");
         if(cotizacion == null || cotizacion.getID() == 0)
         {
             Toast.makeText(this.getActivity(), "Debe ingresar previamente una cotización.", Toast.LENGTH_LONG).show();
@@ -1373,6 +1384,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
 
     private String generaJSON()
     {
+        Log.d(TAG,"generaJSON...");
         SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy");
         JSONObject jsonObject = new JSONObject();
         try
@@ -1422,6 +1434,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
     private ArrayList<PurchaseInformation> purchasesInformation = new  ArrayList<PurchaseInformation>();
 
     private void listener() {
+        Log.d(TAG,"listener...");
         SugarContext.init(this.getActivity());
         setValuesToSend();
 
@@ -1438,7 +1451,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
     }
 
     private void setValuesToSend() {
-
+        Log.d(TAG,"setValuesToSend...");
         commerce.setCommerceName("Auna");
         commerce.setCommerceLogo("logo_commerce");
         commerce.setCommerceColor("1B83B7");
@@ -1521,7 +1534,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
         product1.setItem("001");
         product1.setCode(((GeneralValue)((Spinner)getRootView().findViewById(R.id.cliente_programa)).getSelectedItem()).getCode());
         product1.setName(((GeneralValue)((Spinner)getRootView().findViewById(R.id.cliente_programa)).getSelectedItem()).getValue());
-        product1.setUnitPrice(removeCommas(numberFormat.format(cotizacion.getValor())));
+        //product1.setUnitPrice(removeCommas(numberFormat.format(cotizacion.getValor())));
         product1.setQuantity("1");
 
         products.add(product1);
@@ -1543,6 +1556,7 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
 
     public boolean validacionesAlignet()
     {
+        Log.d(TAG,"validacionesAlignet...");
         if(((Spinner) getRootView().findViewById(R.id.cliente_programa)).getSelectedItemPosition() == 0)
         {
             Toast.makeText(this.getActivity(), "Debe escoger un programa.", Toast.LENGTH_LONG).show();
@@ -1557,5 +1571,40 @@ public class ActualizacionFragment extends BaseFragment implements AgregarTarjet
     }
     //endregion
 
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
+    }
 }
 

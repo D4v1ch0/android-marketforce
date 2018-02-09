@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -44,6 +45,8 @@ import rp3.util.StringUtils;
  * Created by magno_000 on 01/06/2015.
  */
 public class EtapaFragment extends BaseFragment {
+
+    private static final String TAG = EtapaFragment.class.getSimpleName();
     public final static String ARG_ETAPA = "etapa";
     public final static String ARG_OPORTUNIDAD = "oportunidad";
     public final static int REQ_CODE_SPEECH_INPUT = 1200;
@@ -72,7 +75,7 @@ public class EtapaFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Log.d(TAG,"onCreate...");
         if (getParentFragment() == null)
             setRetainInstance(true);
 
@@ -94,6 +97,7 @@ public class EtapaFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
 
+        Log.d(TAG,".onResume..");
         final Etapa etapa = Etapa.getEtapaById(getDataBase(), idEtapa);
 
         ((TextView)getRootView().findViewById(R.id.etapa_descripcion)).setText(etapa.getDescripcion());
@@ -314,6 +318,7 @@ public class EtapaFragment extends BaseFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG,"onActivityResult...");
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQ_CODE_SPEECH_INPUT:
@@ -377,6 +382,7 @@ public class EtapaFragment extends BaseFragment {
 
     public void showTareaGrupo(OportunidadTarea agt)
     {
+        Log.d(TAG,"showTareaGrupo...");
         Intent intent = new Intent(getContext(), GrupoActivity.class);
         intent.putExtra(ARG_ITEM_ID, agt.getIdTarea());
         intent.putExtra(ARG_ETAPA, agt.getIdEtapa());
@@ -384,5 +390,35 @@ public class EtapaFragment extends BaseFragment {
         intent.putExtra(ActividadActivity.ARG_VISTA, !opt.getEstado().equalsIgnoreCase("A") || !esActiva);
         intent.putExtra(ActividadActivity.ARG_TITULO, agt.getTarea().getNombreTarea());
         startActivity(intent);
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

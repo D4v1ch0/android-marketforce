@@ -1,6 +1,10 @@
 package rp3.auna.ruta;
 
 import rp3.app.BaseFragment;
+import rp3.auna.MainActivity;
+import rp3.auna.cliente.ClientFragment;
+import rp3.auna.models.Cliente;
+import rp3.auna.models.ventanueva.LlamadaVta;
 import rp3.configuration.PreferenceManager;
 import rp3.auna.Contants;
 import rp3.auna.R;
@@ -12,10 +16,14 @@ import rp3.widget.SlidingPaneLayout;
 import rp3.widget.SlidingPaneLayout.PanelSlideListener;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,9 +34,12 @@ import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RutasFragment extends BaseFragment implements RutasListFragment.TransactionListFragmentListener, ContactsAgendaFragment.SaveContactsListener{
 
+    private static final String TAG = RutasFragment.class.getSimpleName();
 	public static final String ARG_TRANSACTIONTYPEID = "transactionTypeId";
 	private static final int PARALLAX_SIZE = 0;
 	
@@ -59,6 +70,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
+        Log.d(TAG,"onAttach...");
 //		setContentView(R.layout.fragment_client,R.menu.fragment_client);
 
 	}
@@ -66,7 +78,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	@Override
 	public void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
-		
+		Log.d(TAG,"onCreate...");
 		//setRetainInstance(true);
         setHasOptionsMenu(true);
 			
@@ -78,6 +90,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	@Override
 	public void onStart() {		
 		super.onStart();
+        Log.d(TAG,"onStart...");
 		/*if(selectedTransactionId != 0 && openPane){
             isMainFragment = false;
 			if(!mTwoPane)			
@@ -90,12 +103,13 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        Log.d(TAG,"onSaveInstanceState...");
     }
 
     @Override
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {		
 		super.onFragmentCreateView(rootView, savedInstanceState);
-				
+        Log.d(TAG,"onFragmentCreateView...");
 		slidingPane = (SlidingPaneLayout) rootView.findViewById(R.id.sliding_pane_clientes);
 		slidingPane.setParallaxDistance(PARALLAX_SIZE);
 		slidingPane.setShadowResource(R.drawable.sliding_pane_shadow);
@@ -116,7 +130,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
                         rutasListFragment.Refresh();
                 }
                 catch(Exception ex)
-                {}
+                {Log.d(TAG,"onPanelOpened catch:"+ex.getMessage());}
 
 			}
 
@@ -176,7 +190,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
                         try {
                             rutasListFragment.searchTransactions("");
                         } catch (Exception ex) {
-
+                            Log.d(TAG,"onQueryTextChange catch:"+ex.getMessage());
                         }
                     }
                     textSearch = newText;
@@ -203,8 +217,20 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	    		case R.id.action_search_ruta:    	
 	    			return true;
 	    		case R.id.action_crear_visita:
-	    			Intent intent = new Intent(getActivity(), CrearVisitaActivity.class);
-	    			startActivity(intent);
+	    		    Log.d(TAG,"action_crear_visita:...");
+                    Fragment  fragment = ClientFragment.newInstance(0);
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(rp3.core.R.id.content_frame, fragment).commit();
+                    if(getActivity().getTitle()!=null){
+                        ((MainActivity)(getActivity())).setNavFragment(ClientFragment.newInstance(0),"Prospectos");
+                        ((MainActivity)(getActivity())).isPaneFragmentLoaded = true;
+                        ((MainActivity)(getActivity())).setNavigationSelection(3);
+                    }
+
+	    			//Intent intent = new Intent(getActivity(), CrearVisitaActivity.class);
+	    			//startActivity(intent);
+                    //
+
+
 	    			openPane = false;
 	    			return true;
                 /*case R.id.action_asignar_pedido:
@@ -218,10 +244,12 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	    		case R.id.action_ver_posicion:
                     if(!ConnectionUtils.isNetAvailable(getContext()))
                     {
+                        Log.d(TAG,"connectionUtils == false...");
                         Toast.makeText(getContext(), "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
                     }
                     else if(selectedTransactionId != 0)
 	    			{
+                        Log.d(TAG,"selectedTransactionId != 0 ");
 		    			Intent intent2 = new Intent(getActivity(), MapaActivity.class);
 		    			intent2.putExtra(MapaActivity.ACTION_TYPE, MapaActivity.ACTION_POSICION);
 		    			intent2.putExtra(MapaActivity.ARG_AGENDA, selectedTransactionId);
@@ -229,6 +257,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	    			}
 	    			else
 	    			{
+                        Log.d(TAG,"Debe seleccionar una agenda...");
 	    				Toast.makeText(getContext(), "Debe seleccionar una agenda.", Toast.LENGTH_LONG).show();
 	    			}
 	    			return true;
@@ -345,6 +374,7 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	 
 	 @Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+         Log.d(TAG,"onActivityResult...");
 		 if(requestCode == ObservacionesFragment.PHOTO_1 || requestCode == ObservacionesFragment.PHOTO_2 || requestCode == ObservacionesFragment.PHOTO_3)
 		 {
 			 rutasDetailfragment.obsFragment.onActivityResult(requestCode, resultCode, data);
@@ -383,11 +413,12 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
 	public void Refresh() {
 		rutasDetailfragment.onResume();
 		rutasListFragment.Refresh();
-		
+
 	}
 
     public void RefreshMenu()
     {
+        Log.d(TAG,"refreshMenu...");
         menuRutas.setGroupVisible(R.id.submenu_rutas, true);
         menuRutas.findItem(R.id.submenu_rutas).setVisible(true);
         Agenda agenda = Agenda.getAgenda(getDataBase(), selectedTransactionId);
@@ -554,5 +585,36 @@ public class RutasFragment extends BaseFragment implements RutasListFragment.Tra
             if(rutasDetailfragment != null)
                 rutasDetailfragment.reDoMenu = true;
         }
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

@@ -113,5 +113,158 @@
         <attr name="radius" format="dimension"/>
     </declare-styleable>
 
+    <style name="pruebatheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/bg_button_bg_main</item>
+        <item name="colorPrimaryDark">@color/color_rating_select</item>
+        <item name="colorAccent">#448aff</item>
+        <item name="android:background">@android:color/white</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="android:actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+    </style>
+
+
+    <!-- Theme Material Design J.V. -->
+
+    <style name="AppThemeMD" parent="Theme.AppCompat.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/bg_button_bg_main</item>
+        <item name="colorPrimaryDark">@color/color_rating_select</item>
+        <item name="colorAccent">#448aff</item>
+        <item name="colorControlHighlight">@color/bg_selected_nav_drawer_list_item</item>​
+        <item name="colorControlNormal">@color/whiteA80</item>
+        <item name="colorSwitchThumbNormal">@color/md_grey_200</item>
+        <item name="android:colorForeground">@color/whiteA80</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="actionModeBackground">@color/drawer_navigation</item>​
+        <item name="android:popupMenuStyle">@style/MyPopupMenu</item>
+        <item name="android:dialogTheme">@style/AppCompatAlertDialogStyle</item>
+        <item name="android:datePickerDialogTheme">@style/AppCompatAlertDialogStyle</item>
+        <item name="android:datePickerStyle">@style/AppCompatAlertDialogStyle</item>
+        <!--<item name="android:timePickerDialogTheme">@style/MyTimePickerDialogStyle</item>-->
+        <!--<item name="android:background">@color/alternative_background</item>-->
+        <!--<item name="android:windowBackground">@color/alternative_background</item>-->
+        <!-- Navigation Drawer Arrow Style. -->
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+
+        <!-- Overflow Button Style. -->
+        <item name="actionOverflowButtonStyle">@style/OverflowStyle</item>
+    </style>
+
+    <style name="AppThemeMDDefault" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/bg_button_bg_main</item>
+        <item name="colorPrimaryDark">@color/color_rating_select</item>
+        <item name="colorAccent">#448aff</item>
+        <item name="colorControlHighlight">@color/bg_selected_nav_drawer_list_item</item>​
+        <item name="colorControlNormal">@color/whiteA80</item>
+        <item name="colorSwitchThumbNormal">@color/md_grey_200</item>
+        <item name="android:colorForeground">@color/whiteA80</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="actionModeBackground">@color/drawer_navigation</item>​
+        <item name="android:popupMenuStyle">@style/MyPopupMenu</item>
+        <item name="android:popupTheme">@style/TimePicker</item>
+        <item name="android:dialogTheme">@style/AppCompatAlertDialogStyle</item>
+        <item name="android:datePickerDialogTheme">@style/AppCompatAlertDialogStyle</item>
+        <item name="android:datePickerStyle">@style/AppCompatAlertDialogStyle</item>
+        <!--<item name="android:timePickerDialogTheme">@style/MyTimePickerDialogStyle</item>-->
+        <!--<item name="android:background">@color/alternative_background</item>-->
+        <!--<item name="android:windowBackground">@color/alternative_background</item>-->
+        <!-- Navigation Drawer Arrow Style. -->
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+
+        <!-- Overflow Button Style. -->
+        <item name="actionOverflowButtonStyle">@style/OverflowStyle</item>
+    </style>
+
+    <style name="MyTimePickerDialogStyle" parent="@style/ThemeOverlay.AppCompat.Dialog.Alert">
+        <item name="showTitle">false</item>
+        <item name="android:background">@color/White</item>
+        <item name="colorControlActivated">@color/bg_selected_nav_drawer_list_item</item>
+        <item name="colorAccent">@color/alternative_background</item>
+        <item name="android:textColorPrimary">@color/bg_button_bg_main</item>
+        <item name="android:textColorSecondary">@color/color_rating_select</item>
+    </style>
+
+    <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/bg_button_bg_main</item>
+        <item name="android:textColorPrimary">@color/md_text</item>
+        <item name="android:background">@color/bg_button_bg_main</item>
+        <item name="colorControlHighlight">@color/bg_selected_nav_drawer_list_item</item>​
+        <item name="colorControlNormal">@color/bg_button_bg_main</item>
+        <item name="android:popupBackground">#ff00ff</item>
+        <item name="colorPrimary">#ff00ff</item>
+        <item name="colorPrimaryDark">#ffff00</item>
+        <item name="android:color">#ffff00</item>
+        <item name="android:colorBackground">#ffff00</item>
+        <item name="android:textColorAlertDialogListItem">#ffff00</item>
+        <item name="android:calendarTextColor">#ffff00</item>
+        <item name="android:colorForeground">@color/bg_button_bg_main</item>
+    </style>
+
+    <!--<item name="colorSwitchThumbNormal">@color/md_grey_200</item>-->
+
+    <style name="MyPopupMenu" parent="@style/Widget.AppCompat.PopupMenu">
+        <item name="android:dropDownHorizontalOffset">-4dp</item>
+        <item name="android:dropDownVerticalOffset">4dp</item>
+    </style>
+
+    <style name="PopupAnimation" parent="android:Animation" mce_bogus="1">
+        <item name="android:windowEnterAnimation">@anim/fade_in</item>
+        <item name="android:windowExitAnimation">@anim/fade_out</item>
+    </style>
+
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@color/White</item>
+    </style>
+
+    <style name="OverflowStyle" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_action_navigation_more_vert</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="TimePicker" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowIsFloating">true</item>
+        <item name="colorPrimary">#2582B4</item>
+        <item name="colorPrimaryDark">#0C6D98</item>
+        <item name="colorAccent">#2582B4</item>
+        <item name="colorControlActivated">@color/bg_selected_nav_drawer_list_item</item>
+    </style>
+
+<!--
+
+    <style name="Base.Widget.Design.TabLayout" parent="android:Widget">
+        <item name="tabMaxWidth">@dimen/tab_max_width</item>
+        <item name="tabIndicatorColor">?attr/colorAccent</item>
+        <item name="tabIndicatorHeight">2dp</item>
+        <item name="tabPaddingStart">12dp</item>
+        <item name="tabPaddingEnd">12dp</item>
+        <item name="tabBackground">?attr/selectableItemBackground</item>
+        <item name="tabTextAppearance">@style/TextAppearance.Design.Tab</item>
+        <item name="tabSelectedTextColor">?android:textColorPrimary</item>
+    </style>
+-->
+
+  <!--  <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/background_splash</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>-->
+    <!-- ActionBar Title -->
+    <style name="CustomActionBarTitleBase" parent="TextAppearance.AppCompat.Widget.ActionBar.Title"/>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <color name="md_black_1000_75">#c0000000</color>
+    <color name="md_grey_200">#eeeeee</color>
+    <color name="md_black_1000_50">#80000000</color>
+    <color name="md_red_500_25">#40f44336</color>
+    <color name="md_red_500">#f44336</color>
+    <color name="md_red_700">#d32f2f</color>
+    <color name="md_blue_A200">#448aff</color>
+    <color name="action_mode">#E0E0E0</color>
 
 </resources>

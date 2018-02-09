@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
@@ -33,6 +34,7 @@ import rp3.auna.utils.PrintHelper;
  */
 public class ArqueoCajaFragment extends BaseFragment implements ArqueoControlFragment.ControlCajaListener {
 
+    private static final String TAG = ArqueoCajaFragment.class.getSimpleName();
     private static final int DIALOG_FECHA = 1;
     public final static int SPACES = 36;
 
@@ -42,11 +44,12 @@ public class ArqueoCajaFragment extends BaseFragment implements ArqueoControlFra
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG,"onCreate...");
     }
 
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
+        Log.d(TAG,"onAttach...");
         setContentView(R.layout.fragment_arqueo_caja, R.menu.fragment_arqueo_menu);
 
         numberFormat = NumberFormat.getInstance();
@@ -64,7 +67,7 @@ public class ArqueoCajaFragment extends BaseFragment implements ArqueoControlFra
     @Override
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
-
+        Log.d(TAG,"onFragmentCreateView...");
         //showDialogDatePicker(DIALOG_FECHA);
         showDialogFragment(new ArqueoControlFragment(), "Cajas Aperturadas", "Cajas Aperturadas");
 
@@ -93,7 +96,7 @@ public class ArqueoCajaFragment extends BaseFragment implements ArqueoControlFra
     public void onControlCajaSelected(ControlCaja transaction) {
         List<Pago> pagos = Pago.getArqueoCaja(getDataBase(), transaction.getID(), true);
         control = transaction;
-
+        Log.d(TAG,"onControlCajaSelected...");
         int cantidad = 0;
         double valor = 0;
         for(Pago pago: pagos)
@@ -113,6 +116,7 @@ public class ArqueoCajaFragment extends BaseFragment implements ArqueoControlFra
 
     public void imprimirArqueo()
     {
+        Log.d(TAG,"imprimirArqueo...");
         if(control != null) {
             List<Pago> pagos = Pago.getArqueoCaja(getDataBase(), control.getID(), true);
             String toPrint = PrintHelper.generarArqueo(pagos, control);
@@ -185,5 +189,41 @@ public class ArqueoCajaFragment extends BaseFragment implements ArqueoControlFra
         {
             Toast.makeText(getContext(), "Debe de Seleccionar una Apertura de Caja", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -53,7 +54,7 @@ import rp3.util.Screen;
 
 public class DashboardMapFragment extends BaseFragment{
 
-	
+	private static final String TAG = DashboardMapFragment.class.getSimpleName();
 	GoogleMap map;
 	List<Marker> markers;
 	boolean instantiated = false;
@@ -67,6 +68,7 @@ public class DashboardMapFragment extends BaseFragment{
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d(TAG,"onCreateView...");
 	    if (view != null) {
 	        ViewGroup parent = (ViewGroup) view.getParent();
 	        if (parent != null)
@@ -109,24 +111,20 @@ public class DashboardMapFragment extends BaseFragment{
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		
+		Log.d(TAG,"onAttach...");
 //		setContentView(R.layout.fragment_client,R.menu.fragment_client);
 		//setContentView(R.layout.fragment_dashboard_map);
 	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {		
-		super.onCreate(savedInstanceState);				
-	}
-	
-	@Override
-	public void onStart() {		
-		super.onStart();
-			
+		super.onCreate(savedInstanceState);
+        Log.d(TAG,"onCreate...");
 	}
 	
 	public void setMapa()
 	{
+        Log.d(TAG,"setMapa...");
 		//map = ((MapActivity) getActivity().getFragmentManager().findFragmentById(R.id.dashboard_map)).getMap();
         try {
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Contants.LATITUD, Contants.LONGITUD), Contants.ZOOM), 1, null);
@@ -166,17 +164,19 @@ public class DashboardMapFragment extends BaseFragment{
 	
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
     	super.onFragmentCreateView(rootView, savedInstanceState);
-    	
+    	Log.d(TAG,"onFragmentCreateView...");
 	}
 	
 	private void showRuta(LatLng source, LatLng dest)
 	{
+
 		final String url = makeURL(source.latitude, source.longitude, dest.latitude, dest.longitude);
-		
+		Log.d(TAG,"showRuta...");
 		Runnable runnable = new Runnable() {
 		      @Override
 		      public void run() {
                   try {
+                      Log.d(TAG,"showRuta runnable...");
                       final String resp = getJSONFromUrl(url);
                       Activity actv = (Activity) getActivity();
                       actv.runOnUiThread(new Runnable() {
@@ -215,7 +215,7 @@ public class DashboardMapFragment extends BaseFragment{
 	public void drawPath(String  result) {
 
         try {
-
+            Log.d(TAG,"drawPath...");
                final JSONObject json = new JSONObject(result);
                JSONArray routeArray = json.getJSONArray("routes");
                JSONObject routes = routeArray.getJSONObject(0);
@@ -234,7 +234,7 @@ public class DashboardMapFragment extends BaseFragment{
 
         } 
         catch (Exception e) {
-
+            Log.d(TAG,e.getLocalizedMessage());
         }
     } 
 	
@@ -343,4 +343,40 @@ public class DashboardMapFragment extends BaseFragment{
 
 	    return  bm;
 	}
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
+    }
 }

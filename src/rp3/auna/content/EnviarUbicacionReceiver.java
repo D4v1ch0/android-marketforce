@@ -32,6 +32,8 @@ import android.util.Log;
 
 public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 
+	private static final String TAG = EnviarUbicacionReceiver.class.getSimpleName();
+
 	@Override
 	public void onReceive(final Context context, Intent intent) {			
 		/*
@@ -40,6 +42,7 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 		 */
 		try
 		{
+			Log.d(TAG,"onReceive...");
 			Session.Start(context);
 			rp3.configuration.Configuration.TryInitializeConfiguration(context);
 
@@ -57,9 +60,10 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 			String prueba2 = calendar.getTime().toString();
 
             DiaLaboral diaLaboral = DiaLaboral.getDia(DataBase.newDataBase(rp3.auna.db.DbOpenHelper.class), Utils.getDayOfWeek(calendarCurrent));
-			if(context == null)
+			if(context == null) {
+				//Log.d(TAG,"Context is null:"+Calendar.getInstance().getTime().toString());
 				Utils.ErrorToFile("Context is null - " + Calendar.getInstance().getTime().toString());
-			else {
+			}else {
 				String gps = "";
 				String net = "";
 				if (ConnectionUtils.isNetAvailable(context))
@@ -76,12 +80,12 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 						if (PreferenceManager.getInt(Contants.KEY_ID_SUPERVISOR, 0) != 0) {
 							if (PreferenceManager.getBoolean(Contants.KEY_GPS_NOTIFICATION, true)) {
 								NotificationPusher.pushNotification(1, context, "Por favor encienda su GPS", "GPS");
-								Bundle bundle = new Bundle();
+								/*Bundle bundle = new Bundle();
 								bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SEND_NOTIFICATION);
 								bundle.putInt(AgenteDetalleFragment.ARG_AGENTE, PreferenceManager.getInt(Contants.KEY_ID_SUPERVISOR, 0));
 								bundle.putString(AgenteDetalleFragment.ARG_TITLE, "GPS");
 								bundle.putString(AgenteDetalleFragment.ARG_MESSAGE, "El usuario " + Session.getUser().getFullName() + " tiene apagado su GPS.");
-								rp3.sync.SyncUtils.requestSync(bundle);
+								rp3.sync.SyncUtils.requestSync(bundle);*/
 								PreferenceManager.setValue(Contants.KEY_GPS_NOTIFICATION, false);
 							}
 						}
@@ -94,10 +98,12 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 				LocationUtils.getLocation(context, new OnLocationResultListener() {
 					
 					@Override
-					public void getLocationResult(Location location) {	
+					public void getLocationResult(Location location) {
+						Log.d(TAG,"getLocationResult...");
 						try
 						{
 							if(location!=null){
+								Log.d(TAG,"location!=null...");
                                 if(Session.IsLogged()) {
                                     if (ConnectionUtils.isNetAvailable(context)) {
                                         Ubicacion ub = new Ubicacion();
@@ -106,7 +112,6 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
                                         ub.setFecha(Calendar.getInstance().getTimeInMillis());
                                         ub.setPendiente(true);
                                         Ubicacion.insert(DataBase.newDataBase(rp3.auna.db.DbOpenHelper.class), ub);
-
                                         Bundle bundle = new Bundle();
                                         bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_BATCH);
                                         rp3.sync.SyncUtils.requestSync(bundle);
@@ -123,7 +128,8 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 						}
 						catch(Exception e)
 						{
-							Utils.ErrorToFile(e);
+							Log.d(TAG,"LocationsUtils:"+e.getMessage());
+							//Utils.ErrorToFile(e);
 						}
 					}
 				});
@@ -140,12 +146,14 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 		}
 		catch(Exception ex)
 		{
-			Utils.ErrorToFile(ex);
+			//Utils.ErrorToFile(ex);
+			ex.printStackTrace();
 		}
 	}
 	
 	public void cancelAlarm(Context context)
 	{
+		Log.d(TAG,"cancelAlarm...");
 		AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
 	    Intent updateServiceIntent = new Intent(context, EnviarUbicacionReceiver.class);
@@ -155,12 +163,13 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 	        alarmManager.cancel(pendingUpdateIntent);
 	        restartAlarm(context);
 	    } catch (Exception e) {
-	        Log.e("AlarmEnviarUbicacion", "AlarmManager update was not canceled. " + e.toString());
+	        Log.e("AlarmEnviarUbicacion", "Alarm update was not canceled. " + e.toString());
 	    }
 	}
 	
 	public void restartAlarm(Context context)
 	{
+		Log.d(TAG,"restartAlarm...");
 		Intent i = new Intent(context, EnviarUbicacionReceiver.class);
 		PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
 		

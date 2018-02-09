@@ -2,6 +2,7 @@ package rp3.auna.cliente;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,7 @@ import rp3.data.models.GeneralValue;
  */
 public class AgregarTarjetaFragment extends BaseFragment {
 
+    private static final String TAG = AgregarTarjetaFragment.class.getSimpleName();
     public static String ARG_POS = "posicion";
 
     private int pos;
@@ -59,6 +61,7 @@ public class AgregarTarjetaFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG,"onCreateView...");
         pos = getArguments().getInt(ARG_POS);
 
         view = inflater.inflate(R.layout.layout_cliente_tarjeta_detail, container);
@@ -129,4 +132,39 @@ public class AgregarTarjetaFragment extends BaseFragment {
         return true;
     }
 
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
+    }
 }

@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <item
+        android:title="Buscar..."
+        android:id="@+id/badge"
+        app:actionLayout="@layout/layout_counter"
+        android:icon="@drawable/shape_counter"
+        app:showAsAction="always" />
+    <item
+        android:title="Finalizar"
+        android:id="@+id/action_guardar_referido"
+        android:icon="@drawable/shape_counter"
+        app:showAsAction="never" />
+</menu>

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import rp3.auna.models.ventanueva.AgendaVta;
 import rp3.data.MessageCollection;
 import rp3.db.sqlite.DataBase;
 import rp3.auna.Contants;
@@ -29,6 +30,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,7 +48,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class RutasListFragment extends rp3.app.BaseFragment{
-		    
+
+    private static final String TAG = RutasListFragment.class.getSimpleName();
 	public static String ARG_INICIO = "inicio";
 	public static String ARG_FIN = "fin";
 	
@@ -79,7 +82,16 @@ public class RutasListFragment extends rp3.app.BaseFragment{
     private View lastItem = null;
     private DataBase db;
     private String fromCarga;
-    
+
+    /***
+     * Cargar Agendas de la Venta Nueva con sus acciones y adaptadores
+     *
+     * @return
+     */
+    private List<AgendaVta> agendasVta;
+    private List<AgendaVta> agendasVta_adapter;
+    //private LoaderAgendas loaderAgendas;
+
     public static RutasListFragment newInstance() {
     	RutasListFragment fragment = new RutasListFragment();
 		return fragment;
@@ -96,6 +108,7 @@ public class RutasListFragment extends rp3.app.BaseFragment{
 	@Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        Log.d(TAG,"onAttach...");
         
         if(getParentFragment()!=null){        	
         	transactionListFragmentCallback = (TransactionListFragmentListener)getParentFragment();
@@ -109,8 +122,8 @@ public class RutasListFragment extends rp3.app.BaseFragment{
 	@SuppressLint({ "SimpleDateFormat", "NewApi" })
 	@Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);		     
-
+        super.onCreate(savedInstanceState);
+        Log.d(TAG,"onCreate...");
         db = this.getDataBase();
         calendar = Calendar.getInstance();
         day_month =  calendar.get(Calendar.DAY_OF_MONTH);
@@ -131,7 +144,7 @@ public class RutasListFragment extends rp3.app.BaseFragment{
     @Override
     public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
     	super.onFragmentCreateView(rootView, savedInstanceState);
-    	
+    	Log.d(TAG,"onFragmentCreateView...");
     	inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE); 
     	//linearLayout_rootParent = (LinearLayout) rootView.findViewById(R.id.linearLayout_headerlist_ruta_list);
     	headerlist = (ListView) rootView.findViewById(R.id.linearLayout_headerlist_ruta_list);
@@ -146,9 +159,9 @@ public class RutasListFragment extends rp3.app.BaseFragment{
 			@Override
 			public void onRefresh() {
                 if(ConnectionUtils.isNetAvailable(getContext())) {
-                    Bundle bundle = new Bundle();
+                    /*Bundle bundle = new Bundle();
                     bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_AGENDAS);
-                    requestSync(bundle);
+                    requestSync(bundle);*/
                 }
                 else
                 {
@@ -182,19 +195,16 @@ public class RutasListFragment extends rp3.app.BaseFragment{
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {    	
     	super.onActivityCreated(savedInstanceState);
+        Log.d(TAG,"onActivityCreated...");
     }
+
     
-    @Override
-    public void onStart() {    	
-    	super.onStart();   
- 
-    }
-    
-    public void searchTransactions(String termSearch){    	
-    	Bundle args = new Bundle();
+    public void searchTransactions(String termSearch){
+        Log.d(TAG,"searchTransactions...");
+    	/*Bundle args = new Bundle();
 		args.putString(LoaderRutas.STRING_SEARCH, termSearch);
 		args.putBoolean(LoaderRutas.STRING_BOOLEAN, false);
-	    executeLoader(0, args, loaderRutas);
+	    executeLoader(0, args, loaderRutas);*/
     }      
     
     public void loadTransactions(int transactionType)
@@ -204,14 +214,14 @@ public class RutasListFragment extends rp3.app.BaseFragment{
 	@Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        Log.d(TAG,"onViewCreated...");
     }
     
 	
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        
+        Log.d(TAG,"onSaveInstanceState...");
         //pullRefresher.removeView(headerlist);
         
     }
@@ -219,10 +229,10 @@ public class RutasListFragment extends rp3.app.BaseFragment{
 	@Override
 	public void onSyncComplete(Bundle data, MessageCollection messages) {		
 		super.onSyncComplete(data, messages);
-		
+		Log.d(TAG,"onSyncComplete...");
 		closeDialogProgress();		
 		pullRefresher.setRefreshing(false);
-        String prueba = data.getString(SyncAdapter.ARG_SYNC_TYPE);
+        /*String prueba = data.getString(SyncAdapter.ARG_SYNC_TYPE);
         if(data.containsKey(SyncAdapter.ARG_SYNC_TYPE) && (data.getString(SyncAdapter.ARG_SYNC_TYPE).equalsIgnoreCase(SyncAdapter.SYNC_TYPE_UPLOAD_AGENDAS)
                 || data.getString(SyncAdapter.ARG_SYNC_TYPE).equalsIgnoreCase(SyncAdapter.SYNC_TYPE_ACTUALIZAR_AGENDA))) {
             if (data.getString(SyncAdapter.ARG_SYNC_TYPE).equalsIgnoreCase(SyncAdapter.SYNC_TYPE_UPLOAD_AGENDAS)) {
@@ -232,7 +242,7 @@ public class RutasListFragment extends rp3.app.BaseFragment{
                     if (headerlist.getFooterViewsCount() != 0)
                         headerlist.removeFooterView(LoadingFooter);
                 } catch (Exception ex) {
-
+                    Log.d(TAG,"Exception onSync.."+ex.getMessage());
                 }
                 if(fromCarga.equalsIgnoreCase(ARG_INICIO))
                     list_agenda = Agenda.getAgenda(getDataBase());
@@ -253,11 +263,12 @@ public class RutasListFragment extends rp3.app.BaseFragment{
                 adapter.changeList(list_agenda_in_adapter);
             }
             paintDates();
-        }
+        }*/
 	}
 	
 	private void setListenersList()
 	{
+        Log.d(TAG,"setListenersList...");
 		headerlist.setOnScrollListener(new OnScrollListener() {
 			
 			@Override
@@ -293,7 +304,7 @@ public class RutasListFragment extends rp3.app.BaseFragment{
 			@Override
 			public void onItemClick(AdapterView<?> parent,
 					View view, int position, long id) {
-				
+				Log.d(TAG,"position:"+position);
 				if(adapter.isAction() && adapter.getItem(position).getNombreCompleto() != null)
 				{
 					
@@ -386,7 +397,7 @@ public class RutasListFragment extends rp3.app.BaseFragment{
                             }
 
                             orderDate();
-                            adapter = new RutasListAdapter(getActivity(), list_agenda_in_adapter, transactionListFragmentCallback);
+                            //adapter = new RutasListAdapter(getActivity(), list_agenda_in_adapter, transactionListFragmentCallback);
                             headerlist.setAdapter(adapter);
 
                             header_position = new ArrayList<String>();
@@ -410,6 +421,64 @@ public class RutasListFragment extends rp3.app.BaseFragment{
 				
 			}
 		}
+
+   /*  public class LoaderAgendas implements LoaderCallbacks<List<AgendaVta>>{
+         private final String TAG = LoaderAgendas.class.getSimpleName();
+         public static final String STRING_SEARCH = "string_search";
+         public static final String STRING_BOOLEAN = "string_boolean";
+         private String Search;
+         private boolean flag;
+
+         @Override
+         public Loader<List<AgendaVta>> onCreateLoader(int id, Bundle args) {
+             Log.d(TAG,"onCreateLoader...");
+             Search = args.getString(STRING_SEARCH);
+             flag = args.getBoolean(STRING_BOOLEAN);
+
+             return new LlamadaVtaLoader(getActivity(), getDataBase(),flag,Search);
+         }
+
+         @Override
+         public void onLoadFinished(Loader<List<AgendaVta>> loader, List<AgendaVta> data) {
+             Log.d(TAG,"onLoadFinished...");
+             if(getActivity() != null) {
+                 agendasVta = data;
+
+                 if (agendasVta != null)
+                     if (agendasVta.size() > 0) {
+                         if (headerlist == null) {
+                             //headerlist = (HeaderListView) rootView.findViewById(R.id.linearLayout_headerlist_ruta_list);
+                             headerlist.setDivider(null);
+                             headerlist.setDividerHeight(0);
+                             headerlist.setSelector(getActivity().getResources().getDrawable(R.drawable.bkg_rutas));
+                             //linearLayout_rootParent.addView(headerlist);
+                         }
+
+                         orderDate();
+                         //adapter = new RutasListAdapter(getActivity(), list_agenda_in_adapter, transactionListFragmentCallback);
+                         headerlist.setAdapter(adapter);
+
+                         header_position = new ArrayList<String>();
+
+                         cont = 0;
+                         for (int m = 0; m < list_agenda_in_adapter.size(); m++) {
+                             if (list_agenda_in_adapter.get(m).getNombreCompleto() == null) {
+                                 cont++;
+                                 header_position.add("" + m);
+                             }
+
+                         }
+                         setListenersList();
+                         paintDates();
+                     }
+             }
+         }
+
+         @Override
+         public void onLoaderReset(Loader<List<AgendaVta>> loader) {
+             Log.d(TAG,"onLoaderReset...");
+         }
+     } */
 	 
 	 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
      void paintDates(){
@@ -656,7 +725,7 @@ public class RutasListFragment extends rp3.app.BaseFragment{
     }
     
     private boolean isViewVisible(View view) {
-    	
+    	Log.d(TAG,"isViewVisible...");
     	Rect scrollBounds = new Rect();
     	horizontalScrollView.getHitRect(scrollBounds);
     	if (view.getLocalVisibleRect(scrollBounds)) {
@@ -671,14 +740,19 @@ public class RutasListFragment extends rp3.app.BaseFragment{
     @Override
     public void onResume() {
     	super.onResume();
-        loaderRutas = new  LoaderRutas();
+        Log.d(TAG,"onResume...");
+        //loaderRutas = new  LoaderRutas();
+        //loaderAgendas = new LoaderAgendas();
         Bundle args = new Bundle();
-        args.putString(LoaderRutas.STRING_SEARCH, "");
-        args.putBoolean(LoaderRutas.STRING_BOOLEAN, true);
-        executeLoader(0, args, loaderRutas);
+        //args.putString(LoaderRutas.STRING_SEARCH, "");
+        //args.putBoolean(LoaderRutas.STRING_BOOLEAN, true);
+        args.putString(LoaderRutas.STRING_SEARCH, "Todo");
+        args.putBoolean(LoaderRutas.STRING_BOOLEAN, false);
+        //executeLoader(0, args, loaderAgendas);
     }
     
-    public void Refresh() {	  
+    public void Refresh() {
+        Log.d(TAG,"refresh...");
     	Context ctx = this.getContext();
     	if(list_agenda_in_adapter == null || list_agenda_in_adapter.size() == 0)
     		list_agenda = Agenda.getAgenda(this.getDataBase());

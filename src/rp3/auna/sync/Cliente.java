@@ -20,10 +20,11 @@ import rp3.util.Convert;
 import android.util.Log;
 
 public class Cliente {
-	
+
+	private static final String TAG = "ClienteWS";
 		public static int executeSync(DataBase db){
 			WebService webService = new WebService("MartketForce","GetClientes");
-			
+
 			try
 			{			
 				webService.addCurrentAuthToken();
@@ -727,7 +728,7 @@ public class Cliente {
 		
 		public static int executeSyncPendientes(DataBase db){
 			WebService webService = new WebService("MartketForce","UpdateClienteFull");			
-			
+			Log.d(TAG,"executeSyncPendientes...");
 			List<rp3.auna.models.Cliente> clientes = rp3.auna.models.Cliente.getClientePendientes(db, true);
 			if(clientes.size() == 0)
 				return SyncAdapter.SYNC_EVENT_SUCCESS;
@@ -950,8 +951,8 @@ public class Cliente {
 		}
 		
 		public static int executeSyncInserts(DataBase db){
-			WebService webService = new WebService("MartketForce","CreateCliente");			
-			
+			WebService webService = new WebService("MartketForce","CreateCliente");
+			Log.d(TAG,"executeSyncInserts...");
 			int id = 0;
 			List<rp3.auna.models.Cliente> clientes = rp3.auna.models.Cliente.getClienteInserts(db, true);
 			List<rp3.auna.models.Cliente> clientesConId = new ArrayList<rp3.auna.models.Cliente>();
@@ -959,6 +960,7 @@ public class Cliente {
 				return SyncAdapter.SYNC_EVENT_SUCCESS;
 			JSONObject jObject = new JSONObject();
 			JSONArray jArray = new JSONArray();
+
 			for(int s = 0 ; s < clientes.size(); s ++)
 			{
 				rp3.auna.models.Cliente cl = clientes.get(s);

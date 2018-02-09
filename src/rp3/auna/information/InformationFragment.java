@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -20,6 +21,7 @@ import rp3.auna.R;
  */
 public class InformationFragment extends BaseFragment {
 
+    private static final String TAG = InformationFragment.class.getSimpleName();
     public static InformationFragment newInstance()
     {
         return new InformationFragment();
@@ -29,12 +31,13 @@ public class InformationFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_information);
+        Log.d(TAG,"onCreate...");
     }
 
     @Override
     public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
-
+        Log.d(TAG,"onFragmentCreateView...");
         PackageInfo pInfo = null;
         try {
             pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
@@ -74,5 +77,41 @@ public class InformationFragment extends BaseFragment {
             ((TextView) rootView.findViewById(R.id.info_caja)).setVisibility(View.GONE);
             ((TextView) rootView.findViewById(R.id.infor_caja_id)).setVisibility(View.GONE);
         }
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +27,7 @@ import rp3.widget.SlidingPaneLayout;
  */
 public class OportunidadFragment extends BaseFragment implements OportunidadListFragment.OportunidadListFragmentListener {
 
+    private static final String TAG = OportunidadFragment.class.getSimpleName();
     private static final int PARALLAX_SIZE = 0;
     public static final int FILTER_CODE = 1001;
 
@@ -51,11 +53,13 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
     @Override
     public void onFragmentResult(String tagName, int resultCode, Bundle data) {
         super.onFragmentResult(tagName, resultCode, data);
+        Log.d(TAG,"onFragmentResult...");
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        Log.d(TAG,"onAttach...");
         setContentView(R.layout.fragment_oportunidad, R.menu.fragment_oportunidad_menu);
 
     }
@@ -63,20 +67,17 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Log.d(TAG,"onCreate...");
         setRetainInstance(true);
         transactionListFragment = OportunidadListFragment.newInstance(true, null);
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG,"onActivityResult...");
         if(requestCode == FILTER_CODE)
         {
 
@@ -107,7 +108,7 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
     @Override
     public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
-
+        Log.d(TAG,"onFragmentCreateView...");
         slidingPane = (SlidingPaneLayout) rootView.findViewById(R.id.sliding_pane_clientes);
         slidingPane.setParallaxDistance(PARALLAX_SIZE);
         slidingPane.setShadowResource(R.drawable.sliding_pane_shadow);
@@ -161,6 +162,7 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
     public void onStart() {
         // TODO Auto-generated method stub
         super.onStart();
+        Log.d(TAG,"onStart...");
 
         if(selectedOportunidadId != 0 && !isActiveListFragment){
             if(!mTwoPane)
@@ -170,6 +172,7 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
 
     @Override
     public void onAfterCreateOptionsMenu(Menu menu) {
+        Log.d(TAG,"onAfterCreateOptionsMenu...");
         this.menu = menu;
         SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
         //SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
@@ -218,6 +221,7 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
     }
 
     private void RefreshMenu() {
+        Log.d(TAG,"RefreshMenu...");
         if (!mTwoPane) {
             menu.findItem(R.id.action_search).setVisible(isActiveListFragment);
             if(selectedOportunidad != null)
@@ -278,6 +282,7 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
 
     @Override
     public void onOportunidadSelected(Oportunidad oportunidad) {
+        Log.d(TAG,"onOportunidadSelected...");
         if(!mTwoPane) {
             //isMainFragment = false;
             slidingPane.closePane();
@@ -300,6 +305,37 @@ public class OportunidadFragment extends BaseFragment implements OportunidadList
     @Override
     public boolean allowSelectedItem() {
         return false;
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 
 }

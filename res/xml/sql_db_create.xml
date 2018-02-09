@@ -723,5 +723,158 @@
         Valor REAL
         )
     </statement>
+    <statement>
+        CREATE TABLE tbAgendaVta(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdAgenda INTEGER,
+        OrigenTabla INTEGER,
+        OrigenValue TEXT,
+        Latitud REAL,
+        Longitud REAL,
+        IdCliente INTEGER,
+        IdAgente INTEGER,
+        Estado INTEGER,
+        Insertado INTEGER
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbVisitaVta(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdVisita INTEGER,
+        Descripcion TEXT,
+        FechaVisita INTEGER,
+        FechaInicio INTEGER,
+        FechaFin INTEGER,
+        IdCliente INTEGER,
+        IdClienteDireccion TEXT,
+        IdAgente INTEGER,
+        Observacion TEXT,
+        Latitud REAL,
+        Longitud REAL,
+        MotivoReprogramacionTabla INTEGER,
+        MotivoReprogramacionValue TEXT,
+        MotivoVisitaTabla INTEGER,
+        MotivoVisitaValue TEXT,
+        VisitaTabla INTEGER,
+        VisitaValue TEXT,
+        ReferidoTabla INTEGER,
+        ReferidoValue TEXT,
+        TiempoCode TEXT,
+        DuracionCode TEXT,
+        TipoVenta TEXT,
+        ReferidoCount INT,
+        VisitaId INT,
+        LlamadaId INT,
+        Estado INTEGER,
+        Insertado INTEGER
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbFotoVisitaVta(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdFoto INTEGER,
+        IdVisita INTEGER,
+        Foto TEXT,
+        Observacion TEXT,
+        Estado INTEGER,
+        Insertado INTEGER
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbLlamadaVta(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdLlamada INTEGER,
+        Descripcion TEXT,
+        Observacion TEXT,
+        FechaLlamada INTEGER,
+        FechaInicioLlamada INTEGER,
+        FechaFinLlamada INTEGER,
+        Duracion INTEGER,
+        IdCliente INTEGER,
+        IdAgente INTEGER,
+        Latitud REAL,
+        Longitud REAL,
+        LlamadaTabla INTEGER,
+        LlamadoValue TEXT,
+        MotivoReprogramacionTabla INTEGER,
+        MotivoReprogramacionValue TEXT,
+        MotivoVisitaTabla INTEGER,
+        MotivoVisitaValue TEXT,
+        ReferidoTabla INTEGER,
+        ReferidoValue TEXT,
+        LlamadaValor INTEGER, ---Concreto realizar una Visita o no [0 - 1]
+        LlamadaId INTEGER,
+        Estado INTEGER,
+        Insertado INTEGER
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbProspectoVta(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdProspecto INTEGER,
+        Nombre TEXT NULL,
+        Celular TEXT NULL,
+        Telefono TEXT NULL,
+        TipoDocumento INTEGER,
+        Documento TEXT NULL,
+        Direccion1 TEXT NULL,
+        Direccion2 TEXT NULL,
+        TipoPersonaCode TEXT NULL,
+        Ruc TEXT NULL,
+        Nombres TEXT NULL,
+        ApellidoPaterno TEXT NULL,
+        ApellidoMaterno TEXT NULL,
+        RazonSocial TEXT NULL,
+        ContactoNombre TEXT NULL,
+        ContactoApellidoPaterno TEXT NULL,
+        ContactoApellidoMaterno TEXT NULL,
+        ContactoTelefono TEXT NULL,
+        EmpresaTelefono TEXT,
+        Email TEXT,
+        LlamadaReferido INTEGER,
+        VisitaReferido INTEGER,
+        IdAgente INTEGER NULL,
+        OrigenCode TEXT NULL,
+        EstadoCode TEXT NULL,
+        Referente TEXT NULL,
+        Estado INTEGER
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbApplicationParameter(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        ApplicationId TEXT,
+        ParameterId TEXT,
+        Value TEXT,
+        Label TEXT,
+        Description TEXT
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbAlarmManagerJVS(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        Alarm_Active INTEGER,
+        Alarm_Time TEXT,
+        Alarm_Tone TEXT,
+        Alarm_Vibrate INTEGER,
+        Alarm_Name TEXT,
+        Alarm_Type INTEGER,
+        Alarm_Identificador INTEGER,
+        Alarm_Fecha INTEGER,
+        Alarm_Mensaje TEXT,
+        Alarm_Agente INT
+        )
+    </statement>
+    <statement>
+        CREATE TABLE tbAgenteComisiones(
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        IdAgente INTEGER,
+        PkAsesor INTEGER,
+        NombreAsesor TEXT,
+        Ventas TEXT,
+        Comision TEXT,
+        Incentivo TEXT
+        )
+    </statement>
 
 </sql>

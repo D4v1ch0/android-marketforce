@@ -1,0 +1,214 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/linearLayoutSettings"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/alternative_background"
+    android:fitsSystemWindows="@bool/fitsSystemWindows"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/statusBarLlamada"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/statusBarHeight"
+        android:background="?colorPrimaryDark"
+        android:translationZ="4dp" />
+
+    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/toolbarNuevaLlamada"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:translationZ="4dp"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <FrameLayout
+        android:id="@+id/linearContentLlamada"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/scrollViewNuevaLlamada"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbarThumbVertical="@drawable/scrollbar"
+            android:scrollbars="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@color/White"
+                    app:cardElevation="4dp">
+                    <FrameLayout
+                        android:id="@+id/crear_llamada_calendarnew"
+                        android:layout_width="match_parent"
+                        android:layout_height="999dp"
+                        android:clipChildren="true"
+                        android:measureAllChildren="true" />
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardElevation="4dp"
+                    app:cardBackgroundColor="@color/White">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/textView104"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="center_horizontal"
+                            android:text="Información"
+                            android:textColor="?attr/colorPrimary"
+                            android:textSize="16sp" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp">
+
+                            <TextView
+                                android:id="@+id/map_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/label_cliente"
+                                android:fontFamily="sans-serif-medium"
+                                android:gravity="center_horizontal"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
+                                android:textColor="?attr/colorPrimary"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:id="@+id/crear_llamada_clientenew"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:ems="10"
+                                android:hint="@string/hint_search_transaction"
+                                android:fontFamily="sans-serif"
+                                android:text="Clientito"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
+                                android:textColor="@color/md_text"
+                                android:textSize="15sp"
+                                />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:id="@+id/crear_llamada_desde_clickable"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="3dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/label_hora_llamada"
+                                android:id="@+id/textView"
+                                android:fontFamily="sans-serif-medium"
+                                android:gravity="center_horizontal"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
+                                android:textColor="?attr/colorPrimary"
+                                android:textSize="15sp"
+                                android:layout_marginBottom="5dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="12:00"
+                                android:id="@+id/crear_llamada_desde_textnew"
+                                android:textSize="15sp"
+                                android:layout_marginLeft="8dp"
+                                android:textColor="@color/md_text"
+                                android:gravity="center_vertical"
+                                android:clickable="true" />
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:id="@+id/linear_crear_llamada_descripcion"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginBottom="3dp"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_marginTop="3dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginBottom="5dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_weight="0.4"
+                                android:fontFamily="sans-serif-medium"
+                                android:gravity="center_horizontal"
+                                android:text="@string/label_descripcion"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
+                                android:textColor="?attr/colorPrimary"
+                                android:textSize="15sp"
+                                 />
+
+                            <EditText
+                                android:id="@+id/crear_llamada_descripcionnew"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:clickable="true"
+                                android:gravity="center_horizontal"
+                                android:hint="Digite alguna descripción (Opcional)"
+                                android:inputType="text"
+                                android:textColor="@color/md_text"
+                                android:textColorHint="#8a000000"
+                                android:textSize="15sp"
+                                android:layout_marginBottom="10dp"/>
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/space" />
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+        <android.support.design.widget.FloatingActionButton
+            app:backgroundTint="?attr/colorPrimary"
+            android:id="@+id/fabNuevaLlamada"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_save"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="20dp"
+            android:layout_alignBottom="@+id/linearContentProspectoNuevo"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="bottom|right"/>
+    </FrameLayout>
+
+</LinearLayout>

@@ -2,6 +2,7 @@ package rp3.auna.pedido;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,7 +24,7 @@ import rp3.util.Screen;
  */
 public class PedidoDetailFragment extends BaseFragment {
 
-
+    private static final String TAG = PedidoDetailFragment.class.getSimpleName();
     public static final String STATE_CLIENT_ID = "clientId";
     private static final String ARG_ITEM_ID = "id";
     private final int REQ_CODE_SPEECH_INPUT = 100;
@@ -48,6 +49,7 @@ public class PedidoDetailFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG,"onCreate...");
         numberFormat = NumberFormat.getInstance();
         numberFormat.setMaximumFractionDigits(2);
         numberFormat.setMinimumFractionDigits(2);
@@ -71,6 +73,7 @@ public class PedidoDetailFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG,"onResume...");
         detailFragmentListener.RefreshMenu();
         if (clientId != 0) {
             pedido = Pedido.getPedido(getDataBase(), clientId, true);
@@ -150,5 +153,37 @@ public class PedidoDetailFragment extends BaseFragment {
             //detailFragmentListener = (PedidoFragment) activity;
             setRetainInstance(true);
         }
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

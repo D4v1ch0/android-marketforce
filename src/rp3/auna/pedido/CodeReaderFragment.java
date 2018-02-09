@@ -2,6 +2,7 @@ package rp3.auna.pedido;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -27,6 +28,7 @@ import rp3.auna.utils.DrawableManager;
  */
 public class CodeReaderFragment extends BaseFragment {
 
+    private static final String TAG = CodeReaderFragment.class.getSimpleName();
     private DecimalFormat df;
     private NumberFormat numberFormat, numberFormatInteger;
     private ProductCodeAcceptListener createFragmentListener;
@@ -34,11 +36,12 @@ public class CodeReaderFragment extends BaseFragment {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG,"onCreate...");
     }
 
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
+        Log.d(TAG,"onAttach...");
         setContentView(R.layout.fragment_code_reader);
         if(getParentFragment()!=null){
             createFragmentListener = (ProductCodeAcceptListener)getParentFragment();
@@ -55,17 +58,19 @@ public class CodeReaderFragment extends BaseFragment {
     @Override
     public void onFragmentResult(String tagName, int resultCode, Bundle data) {
         super.onFragmentResult(tagName, resultCode, data);
+        Log.d(TAG,"onFragmentResult...");
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        Log.d(TAG,"onSaveInstanceState...");
     }
 
     @Override
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
-
+        Log.d(TAG,"onFragmentCreateView...");
         df = new DecimalFormat("#.##");
         df.setRoundingMode(RoundingMode.CEILING);
         numberFormat = NumberFormat.getInstance();
@@ -111,6 +116,7 @@ public class CodeReaderFragment extends BaseFragment {
 
     public void findProduct(String codigo)
     {
+        Log.d(TAG,"findProduct...");
         ProductoCodigo productoCodigo = ProductoCodigo.getProductoCodigo(getDataBase(), codigo);
         if (productoCodigo == null) {
             getRootView().findViewById(R.id.code_no_product).setVisibility(View.VISIBLE);
@@ -154,5 +160,41 @@ public class CodeReaderFragment extends BaseFragment {
 
             createFragmentListener.onAcceptCodeSuccess(detalle);
         }
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

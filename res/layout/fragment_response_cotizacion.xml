@@ -1,0 +1,675 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_marginTop="5dp"
+    android:nestedScrollingEnabled="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/alternative_background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:background="@color/alternative_background"
+        android:visibility="visible"
+        android:id="@+id/lyContainerTemp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center_vertical">
+        <ImageView
+            android:layout_marginTop="150dp"
+            android:visibility="visible"
+            android:id="@+id/ivEmpty"
+            android:layout_marginBottom="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_action_empty"/>
+        <TextView
+            android:visibility="visible"
+            android:id="@+id/tvMensaje"
+            android:gravity="center_horizontal"
+            android:layout_below="@+id/ivEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/md_text"
+            android:text="No hay informacion"
+            android:textSize="15sp"
+            android:layout_marginBottom="60dp"
+            />
+    </RelativeLayout>
+
+    <ScrollView
+        android:visibility="gone"
+        android:id="@+id/lyContainerData"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <!-- Cabecera principal -->
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="10dp"
+                app:cardBackgroundColor="@color/White"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="5dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView116"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_weight="0.2"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="Tipo de venta:"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
+                            android:textColor="?attr/colorPrimary"
+                            android:textSize="14sp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.4"
+                            android:orientation="vertical">
+
+                            <RadioGroup
+                                android:id="@+id/rbgroupTipoVenta"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <android.support.v7.widget.AppCompatRadioButton
+                                    android:id="@+id/rbCorporativo"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="sans-serif"
+                                    android:text="Corporativo"
+                                    android:textColor="@color/md_text"
+                                    android:textSize="14sp"
+                                    android:visibility="gone"
+                                    app:buttonTint="?attr/colorPrimary" />
+
+                                <android.support.v7.widget.AppCompatRadioButton
+                                    android:id="@+id/rbIndividual"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="sans-serif"
+                                    android:text="Individual"
+                                    android:textColor="@color/md_text"
+                                    android:textSize="14sp"
+                                    app:buttonTint="?attr/colorPrimary" />
+                            </RadioGroup>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Ruc Corporativo -->
+                    <LinearLayout
+                        android:id="@+id/lnRucEmpresa"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/textView"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="Ruc:"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
+                            android:textColor="?attr/colorAccent"
+                            android:textSize="14sp" />
+
+                        <EditText
+                            android:id="@+id/etRucEmpresa"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.4"
+                            android:fontFamily="sans-serif"
+                            android:hint="Obligatorio"
+                            android:inputType="number"
+                            android:maxLength="11"
+                            android:textColor="@color/md_text"
+                            android:textColorHint="@color/dark_gray"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="30dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="0.2"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="Programa:"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
+                            android:textColor="?attr/colorPrimary"
+                            android:textSize="14sp" />
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_weight="0.4"
+                            android:background="@drawable/spinner_background"
+                            android:padding="1dp">
+
+                            <Spinner
+                                android:id="@+id/cotizacion_programa_movil"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:popupTheme="@style/TimePicker"
+                                android:spinnerMode="dialog" />
+
+                            <ImageView
+                                android:layout_width="36dp"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_weight="0.1"
+                                android:src="@drawable/ic_action_arrow_down"
+                                android:tint="@color/md_text" />
+                        </RelativeLayout>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/lyCampana"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="Campaña:"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
+                            android:textColor="?attr/colorPrimary"
+                            android:textSize="14sp" />
+
+                        <CheckBox
+                            android:id="@+id/checkboxcamapana"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.4"
+                            android:buttonTint="?attr/colorPrimary" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+            <!-- init Contenedor de Afiliados -->
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                app:cardBackgroundColor="@color/White"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:id="@+id/cotizacion_param_content_movil"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+            <!-- end Contenedor de Afiliados -->
+
+            <!-- Contenedor Respuesta de Cotizacion -->
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginTop="10dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:id="@+id/cotizacion_resp_scroll_movil"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <!-- Leyenda Solo para Fraccionamientos -->
+                    <LinearLayout
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:id="@+id/lnFraccionamientos"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="?attr/colorPrimaryDark"
+                        android:fontFamily="sans-serif-medium"
+                        android:orientation="horizontal"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:visibility="visible">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:fontFamily="sans-serif"
+                            android:gravity="center"
+                            android:text="Fraccionamiento Anual de cuotas"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:textColor="@color/caldroid_white"
+                            android:textSize="16sp" />
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="0.5"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:padding="0dp">
+                            <Spinner
+                                android:layout_marginTop="0dp"
+                                android:id="@+id/spFraccionamiento"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="?attr/colorPrimaryDark"
+                                android:padding="0dp"
+                                android:popupTheme="@style/TimePicker"
+                                android:popupBackground="@color/White"
+                                android:spinnerMode="dialog" />
+                            <ImageView
+                                android:layout_alignParentRight="true"
+                                android:layout_width="35dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.1"
+                                android:tint="@color/caldroid_white"
+                                android:src="@drawable/ic_action_arrow_down"/>
+
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                    <!-- Cabecera Tipos de Pago Anual/TC/TD -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <!--Anual-->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="?attr/colorPrimary"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="5dp">
+
+                            <TextView
+                                android:id="@+id/textView83"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="@string/label_pago_anual"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:textColor="@color/caldroid_white"
+                                android:textSize="@dimen/text_large_size" />
+
+                            <TextView
+
+                                android:id="@+id/textView102"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="@string/label_con_todas_tarjetas"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:textColor="@color/caldroid_white"
+                                android:textSize="@dimen/text_medium_small_size" />
+                        </LinearLayout>
+
+                        <!--Mensual Tc-->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@color/bg_button_bg_main"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="5dp">
+
+                            <TextView
+                                android:id="@+id/textView105"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="@string/label_pago_mensual"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:textColor="@color/caldroid_white"
+                                android:textSize="@dimen/text_large_size" />
+
+                            <TextView
+                                android:id="@+id/textView106"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="@string/label_con_tarjeta_credito"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:textColor="@color/caldroid_white"
+                                android:textSize="@dimen/text_medium_small_size" />
+                        </LinearLayout>
+
+                        <!--Mensual TD-->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@color/bg_button_bg_main"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="5dp">
+
+                            <TextView
+                                android:id="@+id/textView119"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="@string/label_pago_mensual"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:textColor="@color/caldroid_white"
+                                android:textSize="@dimen/text_large_size" />
+
+                            <TextView
+                                android:id="@+id/textView121"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="@string/label_con_tarjeta_debito"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:textColor="@color/caldroid_white"
+                                android:textSize="@dimen/text_medium_small_size" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Contenedor respuestas de totales Anual,TC,TD-->
+                    <LinearLayout
+                        android:id="@+id/linear_layout_3"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <!--Total de Anual -->
+                        <LinearLayout
+                            android:id="@+id/cotizacion_select_anual_movil"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:clickable="true"
+                            android:orientation="vertical">
+                            <!-- Total respuesta Anual -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:padding="5dp">
+
+                                <TextView
+                                    android:id="@+id/textView103"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="sans-serif-medium"
+                                    android:text="@string/label_total"
+                                    android:textStyle="bold"
+                                    android:textAppearance="?android:attr/textAppearanceMedium"
+                                    android:textColor="@color/md_text"
+                                    android:textSize="@dimen/text_medium_small_size" />
+
+                                <TextView
+                                    android:id="@+id/cotizacion_anual_total_Movil"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="sans-serif-medium"
+                                    android:gravity="center"
+                                    android:textStyle="bold"
+                                    android:text="S/.1422.00 anual"
+                                    android:textAppearance="?android:attr/textAppearanceMedium"
+                                    android:textColor="@color/md_black_1000_75"
+                                    android:textSize="15sp" />
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="2dp"
+                                android:background="@color/alternative_background" />
+                            <!-- Respuestas Cotizacion Afiliado Anual -->
+                            <LinearLayout
+                                android:id="@+id/cotizacion_resp_anual_content_movil"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:clickable="true"
+                                android:orientation="vertical">
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/color_grey_lines"
+                            android:orientation="horizontal"></LinearLayout>
+
+                        <!-- Total de TC -->
+                        <LinearLayout
+                            android:id="@+id/cotizacion_select_tc_movil"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:clickable="true"
+                            android:orientation="vertical">
+                            <!-- TC -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:padding="5dp">
+
+                                <TextView
+                                    android:id="@+id/textView107"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="sans-serif-medium"
+                                    android:text="@string/label_total"
+                                    android:textStyle="bold"
+                                    android:textAppearance="?android:attr/textAppearanceMedium"
+                                    android:textColor="@color/md_text"
+                                    android:textSize="@dimen/text_medium_small_size" />
+
+                                <TextView
+                                    android:id="@+id/cotizacion_mensual_credito_Movil"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="sans-serif-medium"
+                                    android:gravity="center"
+                                    android:textStyle="bold"
+                                    android:text="S/. 126.00 al mes"
+                                    android:textAppearance="?android:attr/textAppearanceMedium"
+                                    android:textColor="@color/md_black_1000_75"
+                                    android:textSize="15sp" />
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="2dp"
+                                android:background="@color/alternative_background" />
+                            <!--Contenedor afiliados TC -->
+                            <LinearLayout
+                                android:id="@+id/cotizacion_resp_credito_content_movil"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/color_grey_lines"
+                            android:orientation="horizontal" />
+
+                        <!-- Total de TD -->
+                        <LinearLayout
+                            android:id="@+id/cotizacion_select_td_movil"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:clickable="true"
+
+                            android:orientation="vertical">
+                            <!-- TD -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:padding="5dp">
+
+                                <TextView
+                                    android:id="@+id/textView123"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="sans-serif-medium"
+                                    android:text="@string/label_total"
+                                    android:textStyle="bold"
+                                    android:textAppearance="?android:attr/textAppearanceMedium"
+                                    android:textColor="@color/md_text"
+                                    android:textSize="@dimen/text_medium_small_size" />
+
+                                <TextView
+                                    android:id="@+id/cotizacion_mensual_debito_Movil"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="sans-serif-medium"
+                                    android:gravity="center"
+                                    android:textStyle="bold"
+                                    android:text="S/. 146.00 al mes"
+                                    android:textAppearance="?android:attr/textAppearanceMedium"
+                                    android:textColor="@color/md_black_1000_75"
+                                    android:textSize="15sp" />
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="2dp"
+                                android:background="@color/alternative_background" />
+                            <!-- Contenedor Afiliados TD -->
+                            <LinearLayout
+                                android:id="@+id/cotizacion_resp_debito_content_movil"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <!-- Contenedor No hay datos -->
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/cotizacion_resp_empty_movil"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/White"
+                        android:fontFamily="sans-serif-medium"
+                        android:gravity="center"
+                        android:minHeight="125dp"
+                        android:text="@string/label_no_datos"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="15sp"
+                        android:visibility="visible" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+
+    </ScrollView>
+
+
+
+
+
+</LinearLayout>

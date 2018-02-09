@@ -19,7 +19,17 @@
     <webServiceConfiguration>                
         <webServiceData>
             <name>Core</name>
-            <url>[@server:http://www.rp3marketforce.com/Rp3MarketForce]/api</url>
+            <!--<url>http://192.168.43.120:55042/api</url>-->
+            <!--<url>http://auna.des.rp3marketforce.com/api</url>-->
+            <!--<url>http://192.168.0.24:55042/api</url>-->
+            <!--<url>http://192.168.0.19:55042/api</url>-->
+            <!-- Url QAS-->
+            <url>http://auna.rp3marketforce.com:8080/api</url>
+            <!-- Url PRD-->
+            <!--<url>https://crm.auna.pe/api</url>-->
+
+            <!--<url>http://172.20.10.2:55042/api</url>-->
+            <!--<url>[@server:http://www.rp3marketforce.com/Rp3MarketForce]/api</url>-->
             <!--url>http://10.10.0.119/AgendaComercial/api</url-->
             <type>REST</type>
             <oAuthClientId>android-app-marketforce</oAuthClientId>
@@ -65,8 +75,20 @@
         </webServiceData>
            <webServiceData>
             <name>MartketForce</name>
-            <url>[@server:http://www.rp3marketforce.com/Rp3MarketForce]/api</url>
+            <!--<url>[@server:http://www.rp3marketforce.com/Rp3MarketForce]/api</url>-->
                <!--url>http://10.10.0.119/AgendaComercial/api</url-->
+               <!--<url>http://172.20.10.2:55042/api</url>-->
+               <!--<url>http://192.168.0.24:55042/api</url>-->
+               <!--<url>http://192.168.0.19:55042/api</url>-->
+
+               <!-- Url QAS -->
+               <url>http://auna.rp3marketforce.com:8080/api</url>
+
+               <!-- Url PRD -->
+               <!--<url>https://crm.auna.pe/api</url>-->
+
+               <!--<url>http://auna.des.rp3marketforce.com/api</url>-->
+               <!--<url>http://192.168.43.120:55042/api</url>-->
             <type>REST</type>
             <oAuthClientId>android-app-marketforce</oAuthClientId>
             <oAuthClientSecret>rp3-marketforce2014</oAuthClientSecret>
@@ -439,7 +461,7 @@
                 </method>
                 <method>
                     <name>GetDescuento</name>
-                    <action>agente/getDescuento?user=@user</action>
+                    <action>agente/getDescuento?userMovil=@userMovil</action>
                     <webMethod>GET</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>
@@ -532,6 +554,91 @@
                 <method>
                     <name>RegistrarPago</name>
                     <action>auna/RegistrarPago</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <!--Venta Nueva-->
+                <method>
+                    <name>ObtenerProspectoVta</name>
+                    <action>prospectoVta/GetProspectos?idagente=@idagente</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>ObtenerAgendaVta</name>
+                    <action>agendavta/GetAgendas?idagente=@idagente</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>ObtenerLlamadaVta</name>
+                    <action>agendavta/GetLlamadas?idagente=@idagente&amp;fecha=@fecha</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>ObtenerVisitaVta</name>
+                    <action>agendavta/GetVisitas?idagente=@idagente&amp;fecha=@fecha</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>ObtenerApplicationParameter</name>
+                    <action>marketforce/GetApplicationParameter?applicationId=@applicationId</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>InsertarLlamadaVta</name>
+                    <action>agendavta/RegistrarLlamada</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>InsertarVisitaVta</name>
+                    <action>agendavta/RegistrarVisita</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>InsertarAgendaVta</name>
+                    <action>agendavta/RegistrarAgenda</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>InsertarProspectoVta</name>
+                    <action>prospectoVta/RegistrarProspecto</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>ActualizarProspectoVta</name>
+                    <action>prospectoVta/ActualizarProspecto</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>ActualizarLlamadasVta</name>
+                    <action>Llamada/ActualizarLlamada</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>ActualizarVisitasVta</name>
+                    <action>Llamada/ActualizarVisita</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>Comisiones</name>
+                    <action>MKF/GetDatosAsesor?idagente=@idagente</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>ListaNegraProspectoVta</name>
+                    <action>ProspectoVta/Robinson</action>
                     <webMethod>POST</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>

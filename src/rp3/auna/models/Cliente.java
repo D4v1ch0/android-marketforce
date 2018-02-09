@@ -1074,5 +1074,52 @@ public class Cliente extends rp3.data.entity.EntityBase<Cliente>{
 	public void setPendiente(boolean pendiente) {
 		this.pendiente = pendiente;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Cliente{" +
+				"id=" + id +
+				", idCliente=" + idCliente +
+				", idTipoIdentificacion=" + idTipoIdentificacion +
+				", identificacion='" + identificacion + '\'' +
+				", nombre1='" + nombre1 + '\'' +
+				", nombre2='" + nombre2 + '\'' +
+				", apellido1='" + apellido1 + '\'' +
+				", apellido2='" + apellido2 + '\'' +
+				", nombreCompleto='" + nombreCompleto + '\'' +
+				", correoElectronico='" + correoElectronico + '\'' +
+				", genero='" + genero + '\'' +
+				", estadoCivil='" + estadoCivil + '\'' +
+				", paginaWeb='" + paginaWeb + '\'' +
+				", razonSocial='" + razonSocial + '\'' +
+				", actividadEconomica='" + actividadEconomica + '\'' +
+				", fechaNacimiento=" + fechaNacimiento +
+				", idTipoCliente=" + idTipoCliente +
+				", idCanal=" + idCanal +
+				", Calificacion=" + Calificacion +
+				", nuevo=" + nuevo +
+				", pendiente=" + pendiente +
+				", fechaUltimaVisita=" + fechaUltimaVisita +
+				", fechaProximaVisita=" + fechaProximaVisita +
+				", agenteUltimaVisita='" + agenteUltimaVisita + '\'' +
+				", exentoImpuesto=" + exentoImpuesto +
+				", ciudadanoOro=" + ciudadanoOro +
+				", tarjeta='" + tarjeta + '\'' +
+				", formaPago='" + formaPago + '\'' +
+				", estadoCliente='" + estadoCliente + '\'' +
+				", direccion='" + direccion + '\'' +
+				", telefono='" + telefono + '\'' +
+				", estadoCivilDescripcion='" + estadoCivilDescripcion + '\'' +
+				", generoDescripcion='" + generoDescripcion + '\'' +
+				", tipoClienteDescripcion='" + tipoClienteDescripcion + '\'' +
+				", canalDescripcion='" + canalDescripcion + '\'' +
+				", tipoIdentificacionDescripcion='" + tipoIdentificacionDescripcion + '\'' +
+				", URLFoto='" + URLFoto + '\'' +
+				", tipoPersona='" + tipoPersona + '\'' +
+				", contactos=" + contactos +
+				", clienteDirecciones=" + clienteDirecciones +
+				", clienteTarjetas=" + clienteTarjetas +
+				", clienteDireccionPrincipal=" + clienteDireccionPrincipal +
+				'}';
+	}
 }

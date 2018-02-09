@@ -21,6 +21,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -35,7 +36,8 @@ import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
 public class ReprogramarActivity extends BaseActivity {
-	
+
+    private static final String TAG = ReprogramarActivity.class.getSimpleName();
 	private static final int TIME_PICKER_INTERVAL = 5;
 
     public static final int ID_DURACION = 0;
@@ -59,7 +61,8 @@ public class ReprogramarActivity extends BaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
-	    //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Log.d(TAG,"onCreate...");
+        //this.requestWindowFeature(WindowPopup.FEATURE_NO_TITLE);
         setTitle("Reprogramar Agenda");
 	    
 	    setContentView(R.layout.dialog_reprogramar_agenda, R.menu.fragment_crear_cliente);
@@ -134,6 +137,7 @@ public class ReprogramarActivity extends BaseActivity {
 
     @Override
     public void onDailogTimePickerChange(int id, int hours, int minutes) {
+        Log.d(TAG,"onDailogTimePickerChange...");
         fecha.set(Calendar.HOUR_OF_DAY, hours);
         fecha.set(Calendar.MINUTE, minutes);
         DesdeText.setText(format1.format(fecha.getTime()));
@@ -142,6 +146,7 @@ public class ReprogramarActivity extends BaseActivity {
 
 	public void aceptarCambios()
 	{
+        Log.d(TAG,"aceptarCambios...");
         agenda = Agenda.getAgenda(getDataBase(), idAgenda);
 		Calendar cal = Calendar.getInstance();
 		Calendar calFin = Calendar.getInstance();
@@ -207,6 +212,7 @@ public class ReprogramarActivity extends BaseActivity {
 	public void cancelarCambios()
 	{
 		finish();
+        Log.d(TAG,"cancelarCambios...");
 	}
 	
 	@SuppressLint("NewApi")
@@ -255,6 +261,7 @@ public class ReprogramarActivity extends BaseActivity {
 
     private void setCalendar()
     {
+        Log.d(TAG,"setCalendar...");
         caldroidFragment = new CaldroidFragment();
         Bundle args = new Bundle();
         Calendar cal = Calendar.getInstance();
@@ -307,9 +314,11 @@ public class ReprogramarActivity extends BaseActivity {
         switch(item.getItemId())
         {
             case R.id.action_save:
+                Log.d(TAG,"action_save...");
                 aceptarCambios();
                 break;
             case R.id.action_cancel:
+                Log.d(TAG,"action_cancel...");
                 cancelarCambios();
                 break;
             default:
@@ -320,6 +329,7 @@ public class ReprogramarActivity extends BaseActivity {
 
     public void showDuracion(final int type)
     {
+        Log.d(TAG,"showDuracion...");
         AlertDialog.Builder builderSingle = new AlertDialog.Builder(
                 this);
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
@@ -346,6 +356,41 @@ public class ReprogramarActivity extends BaseActivity {
                     }
                 });
         builderSingle.show();
+    }
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 
 }

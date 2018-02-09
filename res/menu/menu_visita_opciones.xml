@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_cancelar_visita"
+        android:title="Cancelar Visita"
+        app:showAsAction="never"/>
+    <item
+        android:visible="false"
+        android:id="@+id/action_llamada_visita"
+        android:title="Agendar llamada"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_agendar_visita"
+        android:title="Reprogramar Visita"
+        app:showAsAction="never"/>
+
+</menu>

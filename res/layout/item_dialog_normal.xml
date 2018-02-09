@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:paddingLeft="@dimen/normal_space"
+    android:layout_height="wrap_content"
+    android:background="@color/alternative_background">
+
+    <TextView
+        android:textColor="@color/md_text"
+        android:id="@+id/tvDireccion"
+        android:fontFamily="sans-serif"
+        android:textSize="14sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="5dp"
+        android:text="Calle Vulcano (Ex Calle 5) # 126" />
+
+    <RadioButton
+        android:buttonTint="@color/accentt"
+        app:buttonTint="?attr/colorPrimary"
+        android:id="@+id/rbDireccion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="5dp"
+        android:checked="false" />
+
+
+</RelativeLayout>

@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -52,6 +53,8 @@ import rp3.widget.ViewPager;
  */
 @SuppressWarnings("ResourceType")
 public class OportunidadDetailFragment extends BaseFragment {
+
+    private static final String TAG = OportunidadDetailFragment.class.getSimpleName();
     public static final String ARG_ITEM_ID = "rp3.pos.transactionid";
 
     public static final String STATE_CLIENT_ID = "clientId";
@@ -100,6 +103,7 @@ public class OportunidadDetailFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG,"onCreate...");
 		/*
 		 * Se instancia Drawable Manager para carga de imagenes;
 		 */
@@ -123,6 +127,7 @@ public class OportunidadDetailFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG,"onResume...");
         if (clientId != 0) {
             opt = Oportunidad.getOportunidadId(getDataBase(), clientId);
         }
@@ -209,15 +214,11 @@ public class OportunidadDetailFragment extends BaseFragment {
         
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
+        Log.d(TAG,"onAttach...");
         //setRetainInstance(true);
     }
 
@@ -228,6 +229,7 @@ public class OportunidadDetailFragment extends BaseFragment {
     }
 
     private void setPageConfig(int page){
+        Log.d(TAG,"setPageConfig...");
         curentPage = page;
         String title = pagerAdapter.getPageTitle(page).toString();
         if(title.equalsIgnoreCase("Info"))
@@ -261,6 +263,7 @@ public class OportunidadDetailFragment extends BaseFragment {
 
     private void renderOportunidad(View rootView) {
         hideDialogConfirmation();
+        Log.d(TAG,"renderOportunidad...");
         try {
             NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
             numberFormat.setMaximumFractionDigits(0);
@@ -911,6 +914,7 @@ public class OportunidadDetailFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d(TAG,"onDestroy...");
         /*
         BitmapDrawable dr = (BitmapDrawable)((ImageView)linearLayoutContact.findViewById(IDFOTOS).findViewById(R.id.oportunidad_photo1)).getDrawable();
         if(dr != null) {((ImageView)linearLayoutContact.findViewById(IDFOTOS).findViewById(R.id.oportunidad_photo1)).setImageDrawable(null);}
@@ -925,6 +929,7 @@ public class OportunidadDetailFragment extends BaseFragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        Log.d(TAG,"onSaveInstanceState...");
         outState.putLong(STATE_CLIENT_ID, clientId);
     }
 
@@ -991,6 +996,30 @@ public class OportunidadDetailFragment extends BaseFragment {
             }
         }
 
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
     }
 
 }

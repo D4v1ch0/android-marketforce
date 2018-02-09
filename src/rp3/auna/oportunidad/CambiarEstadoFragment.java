@@ -1,6 +1,7 @@
 package rp3.auna.oportunidad;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -21,6 +22,8 @@ import rp3.auna.models.oportunidad.OportunidadBitacora;
  * Created by magno_000 on 28/05/2015.
  */
 public class CambiarEstadoFragment extends BaseFragment {
+
+    private static final String TAG = CambiarEstadoFragment.class.getSimpleName();
     private long id;
     public static CambiarEstadoFragment newInstance(long id) {
         Bundle arguments = new Bundle();
@@ -33,6 +36,7 @@ public class CambiarEstadoFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG,"onCreate...");
         if (getArguments().containsKey(CambiarEstadoActivity.ARG_ID)) {
             id = getArguments().getLong(CambiarEstadoActivity.ARG_ID);
         }else if(savedInstanceState!=null){
@@ -45,7 +49,7 @@ public class CambiarEstadoFragment extends BaseFragment {
     @Override
     public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
-
+        Log.d(TAG,"onFragmentCreateView...");
         final Oportunidad opt = Oportunidad.getOportunidadId(getDataBase(), id);
         List<GeneralValue> values = GeneralValue.getGeneralValues(getDataBase(), Contants.GENERAL_TABLE_ESTADOS_OPORTUNIDAD);
         final List<GeneralValue> generalValues = new ArrayList<GeneralValue>();
@@ -74,5 +78,41 @@ public class CambiarEstadoFragment extends BaseFragment {
             }
         });
 
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

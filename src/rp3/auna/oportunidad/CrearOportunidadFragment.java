@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -80,6 +81,7 @@ import rp3.util.StringUtils;
  */
 public class CrearOportunidadFragment extends BaseFragment implements AgenteFragment.EditAgentesListener, EtapasDefinicionFragment.EtapasDefinicionListener {
 
+    private static final String TAG = CrearOportunidadFragment.class.getSimpleName();
     private View view;
     public final static int REQ_CODE_SPEECH_INPUT = 1200;
     public final static int PHOTO_1 = 4;
@@ -121,6 +123,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG,"onCreate...");
         oportunidad = new Oportunidad();
         contactPhotos = new ArrayList<String>();
         photos = new ArrayList<String>();
@@ -139,14 +142,10 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        Log.d(TAG,"onAttach...");
         tryEnableGooglePlayServices(true);
         setContentView(R.layout.fragment_crear_oportunidad, R.menu.fragment_crear_cliente);
         setRetainInstance(true);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -176,6 +175,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
 
     private void EvaluarEtapas()
     {
+        Log.d(TAG,"EvaluarEtapas...");
         boolean hayVariable = false;
         List<Etapa> etapas = Etapa.getEtapasAll(getDataBase(), listTipos.get(((Spinner) view.findViewById(R.id.oportunidad_tipo_etapas)).getSelectedItemPosition() - 1).getIdOportunidadTipo());
         for(Etapa etapa : etapas)
@@ -199,6 +199,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
     }
 
     private void Grabar() {
+        Log.d(TAG,"Grabar...");
         Oportunidad opt = new Oportunidad();
         opt.setIdOportunidadTipo(listTipos.get(((Spinner) view.findViewById(R.id.oportunidad_tipo_etapas)).getSelectedItemPosition() - 1).getIdOportunidadTipo());
         if(id != 0)
@@ -422,6 +423,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
 
     public void SaveAddress()
     {
+        Log.d(TAG,"SaveAddress...");
         Geocoder geo = new Geocoder(this.getContext());
         try {
             List<Address> addr = geo.getFromLocation(currentLoc.getLatitude(), currentLoc.getLongitude(), 2);
@@ -445,6 +447,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d(TAG,"onCreateView...");
         if (view != null) {
             ViewGroup parent = (ViewGroup) view.getParent();
             showDialogProgress("Cargando", "Mostrando Mapa");
@@ -503,6 +506,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
 
     public void SetData()
     {
+        Log.d(TAG,"SetData...");
         getActivity().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
         );
@@ -658,6 +662,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
     }
 
     private void promptSpeechInput() {
+        Log.d(TAG,"promptSpeechInput...");
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -676,11 +681,12 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
     @Override
     public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
-
+        Log.d(TAG,"onFragmentCreateView...");
     }
 
 
     private void setDatosOportunidad() {
+        Log.d(TAG,"setDatosOportunidad...");
         Oportunidad opt = new Oportunidad();
         if(!setData) {
             if (id != 0)
@@ -759,6 +765,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
     }
 
     protected void takePicture(final int idView) {
+        Log.d(TAG,".takePicture..");
         photoFlag = true;
         listContactos = new ArrayList<OportunidadContacto>();
         for(int i = 0; i < listViewContactos.size(); i ++)
@@ -779,6 +786,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
     }
 
     private void addThisAgente(final int id, String tipo) {
+        Log.d(TAG,"addThisAgente...");
         if(tipo.length() <= 0)
             tipo = "G";
         final LinearLayout responsable = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.rowlist_responsable, null);
@@ -822,6 +830,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        Log.d(TAG,"onSaveInstanceState...");
         listContactos = new ArrayList<OportunidadContacto>();
         for(int i = 0; i < listViewContactos.size(); i ++)
         {
@@ -836,6 +845,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
 
     private void addContacto()
     {
+        Log.d(TAG,"addContacto...");
         final LinearLayout contacto = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.layout_crear_oportunidad_contacto, null);
         final int pos = listViewContactos.size();
         if(pos != 0)
@@ -865,6 +875,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
 
     private void addContacto(final long id)
     {
+        Log.d(TAG,"addContacto...");
         OportunidadContacto opCont = OportunidadContacto.getContactoInt(getDataBase(), id);
         final LinearLayout contacto = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.layout_crear_oportunidad_contacto, null);
         final int pos = listViewContactos.size();
@@ -908,10 +919,12 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+        Log.d(TAG,"onConfigurationChanged...");
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG,"onActivityResult...");
         if (resultCode == RESULT_OK) {
             if (requestCode == REQ_CODE_SPEECH_INPUT) {
                 if (resultCode == RESULT_OK && null != data) {
@@ -980,6 +993,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
 
     public boolean Validaciones()
     {
+        Log.d(TAG,"Validaciones...");
         if(((TextView) view.findViewById(R.id.oportunidad_nombre)).length() <= 0)
         {
             Toast.makeText(getContext(), R.string.message_sin_descripcion, Toast.LENGTH_LONG).show();
@@ -995,6 +1009,7 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
 
     @Override
     public void onFinishAgentesDialog(ArrayList<Integer> agentes) {
+        Log.d(TAG,"onFinishAgentesDialog...");
         for(int idAgente : agentes) {
             if(!listAgentesIds.contains(idAgente)) {
                 final LinearLayout responsable = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.rowlist_responsable, null);
@@ -1058,8 +1073,45 @@ public class CrearOportunidadFragment extends BaseFragment implements AgenteFrag
 
     @Override
     public void onEtapasFinish(List<OportunidadEtapa> etapas) {
+        Log.d(TAG,"onEtapasFinish...");
         listEtapas = etapas;
         Grabar();
         finish();
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
@@ -38,6 +39,7 @@ import rp3.util.StringUtils;
  */
 public class JustificacionPreviaFragment extends BaseFragment {
 
+    private static final String TAG = JustificacionPreviaFragment.class.getSimpleName();
     private final int REQ_CODE_SPEECH_INPUT = 100;
     private int TIME_PICKER_INTERVAL = 5;
 
@@ -49,6 +51,7 @@ public class JustificacionPreviaFragment extends BaseFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        Log.d(TAG,"onAttach...");
         fecha = Calendar.getInstance();
         fecha.add(Calendar.DATE, 1);
         setContentView(R.layout.fragment_justificaciones_previas, R.menu.fragment_crear_cliente);
@@ -57,6 +60,7 @@ public class JustificacionPreviaFragment extends BaseFragment {
     @Override
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
+        Log.d(TAG,"onFragmentCreateView...");
         setCalendar();
         ((CheckBox)rootView.findViewById(R.id.justificacion_ausencia)).setChecked(true);
         hideLlegada();
@@ -139,6 +143,7 @@ public class JustificacionPreviaFragment extends BaseFragment {
     }
 
     private void promptSpeechInput() {
+        Log.d(TAG,"promptSpeechInput...");
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -156,6 +161,7 @@ public class JustificacionPreviaFragment extends BaseFragment {
 
     private void setCalendar()
     {
+        Log.d(TAG,"setCalendar...");
         caldroidFragment = new CaldroidFragment();
         Bundle args = new Bundle();
         Calendar cal = Calendar.getInstance();
@@ -237,6 +243,7 @@ public class JustificacionPreviaFragment extends BaseFragment {
     }
 
     private void showLlegada() {
+        Log.d(TAG,"showLlegada...");
         getRootView().findViewById(R.id.permiso_llegada).setVisibility(View.VISIBLE);
         ((TextView)getRootView().findViewById(R.id.permiso_llegada_text)).setText(format1.format(fecha.getTime()));
         getRootView().findViewById(R.id.permiso_llegada_text).setOnClickListener(new View.OnClickListener() {
@@ -250,10 +257,47 @@ public class JustificacionPreviaFragment extends BaseFragment {
 
     private void hideLlegada()
     {
+        Log.d(TAG,"hideLlegada...");
         getRootView().findViewById(R.id.permiso_llegada).setVisibility(View.GONE);
         fecha.set(Calendar.HOUR_OF_DAY, 0);
         fecha.set(Calendar.MINUTE, 0);
         fecha.set(Calendar.SECOND, 0);
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }
 

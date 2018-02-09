@@ -9,11 +9,13 @@ import java.util.List;
 import rp3.auna.Contants;
 import rp3.auna.R;
 import rp3.auna.models.Agenda;
+import rp3.auna.models.ventanueva.AgendaVta;
 import rp3.auna.ruta.RutasListFragment.TransactionListFragmentListener;
 import rp3.configuration.PreferenceManager;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +24,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 @SuppressLint("SimpleDateFormat")
-public class RutasListAdapter extends BaseAdapter{
-	
+public class RutasListAdapter extends BaseAdapter {
+
+	private static final String TAG = RutasListAdapter.class.getSimpleName();
 	private boolean action = true;
 	private LayoutInflater inflater;
 	private Context contex;
@@ -39,8 +42,17 @@ public class RutasListAdapter extends BaseAdapter{
 	private Date date;
 	private int row_ = -1;
 	private int section_ = -1;
+
+	/**
+	 *
+	 *
+	 * @param c
+	 * @param list_agenda
+	 * @param transactionListFragmentCallback
+	 */
+	private List<AgendaVta> list_agendaVta;
 	
-	public RutasListAdapter(Context c, List<Agenda> list_agenda ,TransactionListFragmentListener transactionListFragmentCallback){
+	/*public RutasListAdapter(Context c, List<Agenda> list_agenda ,TransactionListFragmentListener transactionListFragmentCallback){
 		this.inflater = LayoutInflater.from(c);
 		this.contex = c;
 		this.list_agenda = list_agenda;
@@ -49,6 +61,18 @@ public class RutasListAdapter extends BaseAdapter{
         format2 = new SimpleDateFormat("dd");
         format3 = new SimpleDateFormat("MMMM");
         format5 = new SimpleDateFormat("yyyy");
+		format4= new SimpleDateFormat("HH:mm");
+	}*/
+
+	public RutasListAdapter(Context c, List<AgendaVta> list_agenda ,TransactionListFragmentListener transactionListFragmentCallback){
+		this.inflater = LayoutInflater.from(c);
+		this.contex = c;
+		this.list_agendaVta = list_agenda;
+		this.transactionListFragmentCallback = transactionListFragmentCallback;
+		format1 = new SimpleDateFormat("EEEE");
+		format2 = new SimpleDateFormat("dd");
+		format3 = new SimpleDateFormat("MMMM");
+		format5 = new SimpleDateFormat("yyyy");
 		format4= new SimpleDateFormat("HH:mm");
 	}
 	
@@ -101,6 +125,7 @@ public class RutasListAdapter extends BaseAdapter{
 				}
 				catch(Exception ex)
 				{
+					Log.d(TAG,"Exception:"+ex.getMessage());
 				}
 			}
 			else
@@ -143,7 +168,83 @@ public class RutasListAdapter extends BaseAdapter{
 		}
 		return convertView;
 	}
-	
+
+	/*@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		AgendaVta agd = list_agendaVta.get(position);
+		if(agd.getVisita()!=null && agd.getLlamada()!=null){
+			Log.d(TAG,"getView:agd.getVisita()!=null && agd.getLlamada()!=null");
+			//Ya se llamo se debe gestionar la visita creada defrente y ya no llamar
+		}else if(agd.getVisita()!=null){
+			Log.d(TAG,"getView:agd.getVisita()!=null");
+			//Se creo una cita solo se debe gestionar eso y no llamar
+		}else if(agd.getLlamada()!=null){
+			Log.d(TAG,"getView:agd.getLlamada()!=null");
+			//Se debe gestionar solo esa llamada
+		}
+
+			convertView = (View) inflater.inflate(this.contex.getApplicationContext().getResources().getLayout(R.layout.rowlist_rutas_list), null);
+
+			date = agd.getFechaInicio();
+			hour_inicio = format4.format(date);
+			hour_fin = format4.format(agd.getFechaFin());
+			//str_range =hour_inicio+" - "+hour_fin;
+			str_range =hour_inicio;
+
+			((TextView) convertView.findViewById(R.id.textView_horas)).setText(str_range);
+			if(agd.getIdContacto() == 0)
+			{
+				((TextView) convertView.findViewById(R.id.textView_nombre)).setText(""+agd.getNombreCompleto().trim());
+				try
+				{
+					((TextView) convertView.findViewById(R.id.textView_cargo_canal)).setText(""+agd.getCliente().getCanalDescripcion());
+				}
+				catch(Exception ex)
+				{
+					Log.d(TAG,"Exception:"+ex.getMessage());
+				}
+			}
+			else
+			{
+				String apellido = "";
+				String cargo = "";
+				if(agd.getContacto().getApellido() != null)
+					apellido = agd.getContacto().getApellido();
+				if(agd.getContacto().getCargo() != null)
+					cargo = agd.getContacto().getCargo() + " - ";
+				((TextView) convertView.findViewById(R.id.textView_nombre)).setText(""+agd.getContacto().getNombre() + " " + apellido);
+				((TextView) convertView.findViewById(R.id.textView_cargo_canal)).setText(""+cargo + agd.getNombreCompleto());
+			}
+
+			if(agd.isEnviado())
+				convertView.findViewById(R.id.itemlist_sincronizar).setVisibility(View.INVISIBLE);
+			if(agd.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO))
+				((ImageView) convertView.findViewById(R.id.itemlist_rutas_estado)).setImageResource(R.drawable.circle_in_process);
+			if(agd.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_NO_VISITADO))
+				((ImageView) convertView.findViewById(R.id.itemlist_rutas_estado)).setImageResource(R.drawable.circle_unvisited);
+			if(agd.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_PENDIENTE))
+				((ImageView) convertView.findViewById(R.id.itemlist_rutas_estado)).setImageResource(R.drawable.circle_pending);
+			if(agd.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_REPROGRAMADO))
+				((ImageView) convertView.findViewById(R.id.itemlist_rutas_estado)).setImageResource(R.drawable.circle_reprogramed);
+			if(agd.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_VISITADO))
+				((ImageView) convertView.findViewById(R.id.itemlist_rutas_estado)).setImageResource(R.drawable.circle_visited);
+
+
+			if(agd.getClienteDireccion() != null)
+				((TextView) convertView.findViewById(R.id.textView_address)).setText(""+agd.getClienteDireccion().getDireccion());
+
+			Calendar hoy = Calendar.getInstance();
+			Calendar diaAgenda = Calendar.getInstance();
+			diaAgenda.setTime(agd.getFechaInicio());
+			if(hoy.get(Calendar.DAY_OF_YEAR) == diaAgenda.get(Calendar.DAY_OF_YEAR))
+				convertView.findViewById(R.id.view_vertical).setVisibility(View.VISIBLE);
+
+
+			//convertView.setBackgroundResource(R.drawable.border_bottom);
+
+		return convertView;
+	}*/
+
 	public void changeList(List<Agenda> list_agenda)
 	{
 		this.list_agenda = list_agenda;
@@ -175,5 +276,5 @@ public class RutasListAdapter extends BaseAdapter{
 	public Agenda getItem(int position) {
 		// TODO Auto-generated method stub
 		return list_agenda.get(position);
-	}	
+	}
 }

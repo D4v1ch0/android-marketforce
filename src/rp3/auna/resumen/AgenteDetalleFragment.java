@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -35,6 +36,7 @@ import rp3.util.StringUtils;
  */
 public class AgenteDetalleFragment extends BaseFragment {
 
+    private static final String TAG = AgenteDetalleFragment.class.getSimpleName();
     public int idAgente;
 
     public final static String ARG_AGENTE = "id_agente";
@@ -67,6 +69,7 @@ public class AgenteDetalleFragment extends BaseFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        Log.d(TAG,"onAttach...");
         setContentView(R.layout.fragment_agente_detalle);
     }
 
@@ -78,6 +81,7 @@ public class AgenteDetalleFragment extends BaseFragment {
     @Override
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
+        Log.d(TAG,"onFragmentCreateView...");
         idAgente = getArguments().getInt(ARG_AGENTE);
         final boolean es_oportunidad = getArguments().getBoolean(ARG_OPORTUNIDAD, false);
 
@@ -213,6 +217,7 @@ public class AgenteDetalleFragment extends BaseFragment {
     }
 
     private void promptSpeechInput() {
+        Log.d(TAG,"promptSpeechInput...");
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -230,6 +235,7 @@ public class AgenteDetalleFragment extends BaseFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG,"onActivityResult...");
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQ_CODE_SPEECH_INPUT:
@@ -242,5 +248,41 @@ public class AgenteDetalleFragment extends BaseFragment {
                     break;
             }
         }
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

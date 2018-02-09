@@ -2,6 +2,7 @@ package rp3.auna.oportunidad.actividades;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -11,7 +12,8 @@ import rp3.auna.models.oportunidad.OportunidadTareaActividad;
 import rp3.auna.oportunidad.EtapaTareasFragment;
 
 public abstract class ActividadActivity extends BaseActivity {
-	
+
+    private static final String TAG = ActividadActivity.class.getSimpleName();
 	public static String ARG_THEME = "theme";
     public static String ARG_SIN_GRUPO = "sin_grupo";
 	public static String ARG_PADRE_ID = "padre";
@@ -97,6 +99,42 @@ public abstract class ActividadActivity extends BaseActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 
 }

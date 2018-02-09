@@ -18,6 +18,8 @@ import rp3.auna.models.marcacion.Justificacion;
  * Created by magno_000 on 19/06/2015.
  */
 public class PermisoAdapter extends BaseAdapter {
+
+    private static final String TAG = PermisoAdapter.class.getSimpleName();
     private SimpleDateFormat format5;
     private Context context;
     private LayoutInflater inflater;
@@ -63,4 +65,5 @@ public class PermisoAdapter extends BaseAdapter {
 
         return convertView;
     }
+
 }

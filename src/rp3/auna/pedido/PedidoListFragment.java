@@ -33,6 +33,7 @@ import rp3.util.ConnectionUtils;
  */
 public class PedidoListFragment extends BaseFragment {
 
+    private static final String TAG = PedidoListFragment.class.getSimpleName();
     public static final String ARG_TRANSACTIONTYPEID = "transactionType";
     public static final String ARG_TRANSACTIONTYPEBO = "transactionTypeBo";
 
@@ -62,7 +63,7 @@ public class PedidoListFragment extends BaseFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
+        Log.d(TAG,"onAttach...");
         if(getParentFragment()!=null){
             permisoListFragmentCallback = (PedidoListFragmentListener)getParentFragment();
         }else{
@@ -76,14 +77,15 @@ public class PedidoListFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG,"onResume...");
         ejecutarConsulta();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Log.e("CARGA PEDIDOS", "Entra pantalla: " + Calendar.getInstance().getTime().toString());
+        Log.d(TAG,"onCreate...");
+        Log.e(TAG, "CARGA PEDIDOS Entra pantalla: " + Calendar.getInstance().getTime().toString());
         if(savedInstanceState == null)
         {
             Bundle args = new Bundle();
@@ -94,6 +96,7 @@ public class PedidoListFragment extends BaseFragment {
     }
 
     public void searchTransactions(String termSearch){
+        Log.d(TAG,"searchTransactions...");
         Bundle args = new Bundle();
         args.putString(LoaderPedidos.STRING_SEARCH, termSearch);
         if(loaderPedidos == null)
@@ -102,6 +105,7 @@ public class PedidoListFragment extends BaseFragment {
     }
 
     public void ejecutarConsulta(){
+        Log.d(TAG,"ejecutarConsulta...");
         Bundle args = new Bundle();
         if(loaderPedidos == null)
             loaderPedidos = new LoaderPedidos();
@@ -111,7 +115,7 @@ public class PedidoListFragment extends BaseFragment {
     @Override
     public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
-
+        Log.d(TAG,"onFragmentCreateView...");
         headerList = (ExpandableListView) rootView.findViewById(R.id.linearLayout_headerlist_ruta_list);
         headerList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         refreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
@@ -143,6 +147,7 @@ public class PedidoListFragment extends BaseFragment {
 
     public void setListeners()
     {
+        Log.d(TAG,"setListeners...");
         headerList.setOnScrollListener(new AbsListView.OnScrollListener() {
 
             @Override
@@ -180,6 +185,7 @@ public class PedidoListFragment extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
+        Log.d(TAG,"onStart...");
         if(headerList!=null && headerList.getParent() == null){
             if(refreshLayout == null)
                 refreshLayout = new SwipeRefreshLayout(this.getContext());
@@ -209,11 +215,13 @@ public class PedidoListFragment extends BaseFragment {
     @Override
     public void onSaveInstanceState(Bundle arg0) {
         super.onSaveInstanceState(arg0);
+        Log.d(TAG,"onSaveInstanceState...");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        Log.d(TAG,"onDetach...");
     }
 
     public class LoaderPedidos implements LoaderManager.LoaderCallbacks<List<Pedido>> {
@@ -347,5 +355,31 @@ public class PedidoListFragment extends BaseFragment {
 
         return listDataChild;
     }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
+    }
+
 
 }

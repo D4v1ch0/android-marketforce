@@ -327,7 +327,8 @@ public final class Contract {
 		public static final String QUERY_AGENDA_TICKS = "AgendaByTicks";
 		public static final String QUERY_AGENDA_SEARCH = "SimpleRutaSearch";
 		public static final String QUERY_CONTEO = "AgendaConteo";
-	}
+
+    }
 
 	public static abstract class AgendaLlamada implements BaseColumns {
 
@@ -1233,4 +1234,286 @@ public final class Contract {
 		public static final String COLUMN_VALOR = "Valor";
 
 	}
+
+	public static abstract class AgendaVta implements BaseColumns{
+		public static final String TABLE_NAME = "tbAgendaVta";
+		public static final String COLUMN_AGENDAVTA_ID = "_id";
+		public static final String COLUMN_AGENDAVTA_IDAGENDA = "IdAgenda";
+		public static final String COLUMN_AGENDAVTA_ORIGEN_TABLA = "OrigenTabla";
+		public static final String COLUMN_AGENDAVTA_ORIGEN_VALUE = "OrigenValue";
+		public static final String COLUMN_AGENDAVTA_LATITUD = "Latitud";
+		public static final String COLUMN_AGENDAVTA_ID_CLIENTE = "IdCliente";
+		public static final String COLUMN_AGENDAVTA_ID_AGENTE = "IdAgente";
+		public static final String COLUMN_AGENDAVTA_LONGITUD = "Longitud";
+		public static final String COLUMN_AGENDAVTA_ESTADO = "Estado";
+		public static final String COLUMN_AGENDAVTA_INSERTADO = "Insertado";
+
+		public static final String QUERY_AGENDAVTA_GET = "SELECT * from "+TABLE_NAME+" WHERE "+COLUMN_AGENDAVTA_IDAGENDA+" = ";
+		public static final String QUERY_AGENDAVTA_GET_ID_BD = "SELECT * from "+TABLE_NAME+" WHERE "+COLUMN_AGENDAVTA_ID+" = ";
+
+        public static final String QUERY_AGENDAVTA_INSERTADAS = "AgendasInsertadas";
+		public static final String QUERY_AGENDAVTA_SINCRONIZADAS= "AgendasSincronizadas";
+        public static final String QUERY_AGENDAVTA_ALL = "AgendasAll";
+        public static final String QUERY_AGENDAVTA_SINCRONIZADAIDAGENDA = "AgendasSincronizadasAgenda";
+        public static final String QUERY_AGENDAVTA_SINCRONIZADAIDAGENDABD = "AgendasSincronizadasAgendaBd";
+		public static final String QUERY_AGENDAVTA_SINCRONIZADAIDAGENDABDPROSPECTOBD = "AgendasSincronizadasAgendaBdbyProspecto";
+
+        public static final String QUERY_LLAMADAVTA_UPDATE_TO_INSERTADAS ="UPDATE tbLlamada SET Insertado = 0 WHERE Insertado = 1";
+        public static final String QUERY_DELETE ="DELETE FROM tbAgendaVta WHERE Insertado = 0";
+
+        public static final String QUERY_GET_IDAGENDA = "AgendaGetIdAgenda";
+		public static final String QUERY_GET_MAX_ID = "SELECT max(_id) from "+TABLE_NAME;
+		public static final String QUERY_AGENDAVTA_UPDATE_TO_INSERTADAS ="UPDATE tbAgendaVta SET Insertado = 0 WHERE Insertado = 1";
+
+	}
+
+	public static abstract class VisitaVta implements BaseColumns {
+		public static final String TABLE_NAME = "tbVisitaVta";
+		public static final String COLUMN_VISITAVTA_ID = "_id";
+		public static final String COLUMN_VISITAVTA_IDAGENDA = "IdAgenda";
+		public static final String COLUMN_VISITAVTA_IDVISITA = "IdVisita";
+		public static final String COLUMN_VISITAVTA_DESCRIPCION = "Descripcion";
+		public static final String COLUMN_VISITAVTA_FECHA_VISITA = "FechaVisita";
+		public static final String COLUMN_VISITAVTA_FECHA_INICIO = "FechaInicio";
+		public static final String COLUMN_VISITAVTA_FECHA_FIN = "FechaFin";
+		public static final String COLUMN_VISITAVTA_IDCLIENTE = "IdCliente";
+		public static final String COLUMN_VISITAVTA_IDCLIENTEDIRECCION = "IdClienteDireccion";
+		public static final String COLUMN_VISITAVTA_IDAGENTE= "IdAgente";
+		public static final String COLUMN_VISITAVTA_OBSERVACION = "Observacion";
+		public static final String COLUMN_VISITAVTA_LATITUD = "Latitud";
+		public static final String COLUMN_VISITAVTA_LONGITUD = "Longitud";
+		public static final String COLUMN_VISITAVTA_MOTIVO_REPROGRAMACION_TABLA = "MotivoReprogramacionTabla";
+		public static final String COLUMN_VISITAVTA_MOTIVO_REPROGRAMACION_VALUE = "MotivoReprogramacionValue";
+		public static final String COLUMN_VISITAVTA_MOTIVO_VISITA_TABLA = "MotivoVisitaTabla";
+		public static final String COLUMN_VISITAVTA_MOTIVO_VISITA_VALUE = "MotivoVisitaValue";
+		public static final String COLUMN_VISITAVTA_VISITA_TABLE = "VisitaTabla";
+		public static final String COLUMN_VISITAVTA_VISITA_VALUE = "VisitaValue";
+		public static final String COLUMN_VISITAVTA_REFERIDO_TABLA = "ReferidoTabla";
+		public static final String COLUMN_VISITAVTA_REFERIDO_VALUE = "ReferidoValue";
+		public static final String COLUMN_VISITAVTA_TIEMPO_CODE = "TiempoCode";
+		public static final String COLUMN_VISITAVTA_DURACION_CODE = "DuracionCode";
+		public static final String COLUMN_VISITAVTA_TIPO_VENTA = "TipoVenta";
+		public static final String COLUMN_VISITAVTA_REFERIDO_COUNT = "ReferidoCount";
+		public static final String COLUMN_VISITAVTA_VISITAID = "VisitaId";
+		public static final String COLUMN_VISITAVTA_LLAMADAID = "LlamadaId";
+		public static final String COLUMN_VISITAVTA_ESTADO = "Estado";
+		public static final String COLUMN_VISITAVTA_INSERTADO = "Insertado";
+
+        public static final String QUERY_VISITAVTA_INSERTADAS = "VisitasInsertadas";
+        public static final String QUERY_VISITAVTA_ALL = "VisitasAll";
+		public static final String QUERY_VISITAVTA_PENDIENTE_ALL = "VisitasPendienteAll";
+        public static final String QUERY_VISITAVTA_ACTUALIZADAS = "LlamadasActualizadas";
+        public static final String QUERY_LLAMADAVTA_UPDATE_TO_INSERTADAS ="UPDATE tbLlamada SET Insertado = 0 WHERE Insertado = 1";
+        public static final String QUERY_DELETE ="DELETE FROM tbVisitaVta WHERE Insertado = 0";
+
+        public static final String QUERY_GETVISITA_IDAGENDA= "VisitaGetIdAgenda";
+
+		public static final String QUERY_GET_MAX_ID = "SELECT max(_id) from "+TABLE_NAME;
+
+		public static final String QUERY_VISITAVTA_UPDATE_TO_INSERTADAS ="UPDATE tbVisitaVta SET Insertado = 0 WHERE Insertado = 1";
+
+		public static final String QUERY_VISITAVTA_SINCRONIZADAS ="VisitasSincronizadas" ;
+		public static final String QUERY_VISITAVTA_SINCRONIZADAS_AGENDA = "VisitaSincronizadasAgenda";
+		public static final String QUERY_VISITAVTA_SINCRONIZADAS_AGENDABD = "VisitaSincronizadasAgendaBd";
+		public static final String QUERY_VISITAVTA_SINCRONIZADAIDBDPROSPECTOBD = "VisitasSincronizadasBdbyProspecto";
+
+		public static final String QUERY_MAX_VISITA_FECHA = "VisitassUltimaFecha";
+	}
+
+	public static abstract class FotoVisitaVta implements BaseColumns{
+		public static final String TABLE_NAME = "tbFotoVisitaVta";
+		public static final String COLUMN_FOTOVISITAVTA_ID = "_id";
+		public static final String COLUMN_FOTOVISITAVTA_IDFOTO = "IdFoto";
+		public static final String COLUMN_FOTOVISITAVTA_IDVISITA = "IdVisita";
+		public static final String COLUMN_FOTOVISITAVTA_DESCRIPCION = "Observacion";
+		public static final String COLUMN_FOTOVISITAVTA_FOTO= "Foto";
+		public static final String COLUMN_FOTOVISITAVTA_ESTADO = "Estado";
+		public static final String COLUMN_FOTOVISITAVTA_INSERTADO = "Insertado";
+
+        public static final String QUERY_FOTOVISITAVTA_INSERTADAS = "FotoVisitasInsertadas";
+        public static final String QUERY_FOTOVISITAVTA_ALL = "FotoVisitasAll";
+        public static final String QUERY_FOTOVISITAVTA_SINCRONIZADAS = "FotosVisitaSincronizadas";
+        public static final String QUERY_DELETE ="DELETE FROM tbFotoVisitaVta WHERE Insertado = 0";
+		public static final String QUERY_FOTOVISITAVTA_SINCRONIZADAS_VISITA = "FotosVisitaSincronizadasAgenda";
+		public static final String QUERY_FOTOVISITAVTA_SINCRONIZADAS_VISITABD = "FotosVisitaSincronizadasAgendaBd";
+
+		public static final String QUERY_GET_MAX_ID = "SELECT max(_id) from "+TABLE_NAME;
+		public static final String QUERY_FOTOVISITAVTA_UPDATE_TO_INSERTADAS ="UPDATE tbFotoVisitaVta SET Insertado = 0 WHERE Insertado = 1";
+
+	}
+
+	public static abstract class LlamadaVta implements BaseColumns {
+
+		public static final String TABLE_NAME = "tbLlamadaVta";
+
+		public static final String COLUMN_LLAMADAVTA_ID = "_id";
+		public static final String COLUMN_LLAMADAVTA_IDAGENDA = "IdAgenda";
+		public static final String COLUMN_LLAMADAVTA_IDLLAMADA = "IdLlamada";
+		public static final String COLUMN_LLAMADAVTA_DESCRIPCION = "Descripcion";
+		public static final String COLUMN_LLAMADAVTA_OBSERVACION = "Observacion";
+		public static final String COLUMN_LLAMADAVTA_FECHA_LLAMADA = "FechaLlamada";
+		public static final String COLUMN_LLAMADAVTA_FECHA_INICIO_LLAMADA = "FechaInicioLlamada";
+		public static final String COLUMN_LLAMADAVTA_FECHA_FIN_LLAMADA = "FechaFinLlamada";
+		public static final String COLUMN_LLAMADAVTA_DURACION = "Duracion";
+		public static final String COLUMN_LLAMADAVTA_IDCLIENTE = "IdCliente";
+		public static final String COLUMN_LLAMADAVTA_IDAGENTE = "IdAgente";
+		public static final String COLUMN_LLAMADAVTA_LATITUD = "Latitud";
+		public static final String COLUMN_LLAMADAVTA_LONGITUD = "Longitud";
+		public static final String COLUMN_LLAMADAVTA_LLAMADA_TABLA = "LlamadaTabla";
+		public static final String COLUMN_LLAMADAVTA_LLAMADA_VALUE = "LlamadoValue";
+		public static final String COLUMN_LLAMADAVTA_MOTIVO_REPROGRAMACION_TABLA = "MotivoReprogramacionTabla";
+		public static final String COLUMN_LLAMADAVTA_MOTIVO_REPROGRAMACION_VALUE = "MotivoReprogramacionValue";
+		public static final String COLUMN_LLAMADAVTA_MOTIVO_VISITA_TABLA = "MotivoVisitaTabla";
+		public static final String COLUMN_LLAMADAVTA_MOTIVO_VISITA_VALUE = "MotivoVisitaValue";
+		public static final String COLUMN_LLAMADAVTA_REFERIDO_TABLA = "ReferidoTabla";
+		public static final String COLUMN_LLAMADAVTA_REFERIDO_VALUE = "ReferidoValue";
+		public static final String COLUMN_LLAMADAVTA_LLAMADA_VALOR = "LlamadaValor";
+		public static final String COLUMN_LLAMADAVTA_LLAMADA_LLAMADAID = "LlamadaId";
+		public static final String COLUMN_LLAMADAVTA_ESTADO = "Estado";
+		public static final String COLUMN_LLAMADAVTA_INSERTADO = "Insertado";
+
+
+		public static final String QUERY_LLAMADAVTA_INSERTADAS = "LlamadasInsertadas";
+		public static final String QUERY_LLAMADAVTA_ALL = "LlamadasAll";
+		public static final String QUERY_LLAMADAVTA_PENDIENTE_ALL = "LlamadasAllPendiente";
+		public static final String QUERY_LLAMADAVTA_ACTUALIZADAS = "LlamadasActualizados";
+		public static final String QUERY_LLAMADAVTA_SINCRONIZADAS = "LlamadasSincronizadas";
+		public static final String QUERY_LLAMADAVTA_SINCRONIZADAS_AGENDA = "LlamadasSincronizadasAgenda";
+		public static final String QUERY_LLAMADAVTA_SINCRONIZADAS_AGENDABD = "LlamadasSincronizadasAgendaBd";
+		public static final String QUERY_LLAMADAVTA_OBTENER = "ObtenerLlamada";
+		public static final String QUERY_LLAMADAVTA_OBTENERBD = "ObtenerLlamadaBd";
+		public static final String QUERY_LLAMADAVTA_UPDATE_TO_INSERTADAS ="UPDATE tbLlamadaVta SET Insertado = 0 WHERE Insertado = 1";
+		public static final String QUERY_DELETE ="DELETE FROM tbLlamadaVta WHERE Insertado = 0";
+
+        public static final String QUERY_GETLLAMADA_IDAGENDA = "LlamadaGetIdAgenda";
+		public static final String QUERY_GET_MAX_ID = "SELECT max(_id) from "+TABLE_NAME;
+		public static final String QUERY_GET_MAX_IDLLAMADA = "SELECT MAX(IdLlamada) FROM tbLlamadaVta";
+		public static final String QUERY_GET_MAX_IDLLAMADABD = "SELECT MAX(_id) FROM tbLlamadaVta";
+		public static final String QUERY_LLAMADAVTA_SINCRONIZADAIDBDPROSPECTOBD = "LlamadasSincronizadasBdbyProspecto";
+
+		public static final String QUERY_MAX_LLAMADA_FECHA = "LlamadasUltimaFecha";
+	}
+
+	public static abstract class ProspectoVta implements BaseColumns{
+		public static final String TABLE_NAME = "tbProspectoVta";
+
+		public static final String COLUMN_PROSPECTOVTA_ID = "_id";
+		public static final String COLUMN_PROSPECTOVTA_IDPROSPECTO = "IdProspecto";
+		public static final String COLUMN_PROSPECTOVTA_NOMBRE = "Nombre";
+		public static final String COLUMN_PROSPECTOVTA_CELULAR = "Celular";
+		public static final String COLUMN_PROSPECTOVTA_TELEFONO = "Telefono";
+		public static final String COLUMN_PROSPECTOVTA_TIPODOCUMENTO = "TipoDocumento";
+		public static final String COLUMN_PROSPECTOVTA_DOCUMENTO = "Documento";
+		public static final String COLUMN_PROSPECTOVTA_DIRECCION1 = "Direccion1";
+		public static final String COLUMN_PROSPECTOVTA_DIRECCION2 = "Direccion2";
+		public static final String COLUMN_PROSPECTOVTA_TIPOPERSONA = "TipoPersonaCode";
+		public static final String COLUMN_PROSPECTOVTA_RUC = "Ruc";
+		public static final String COLUMN_PROSPECTOVTA_RAZONSOCIAL = "RazonSocial";
+		public static final String COLUMN_PROSPECTOVTA_NOMBRES = "Nombres";
+		public static final String COLUMN_PROSPECTOVTA_APELLIDOPATERNO = "ApellidoPaterno";
+		public static final String COLUMN_PROSPECTOVTA_APELLIDOMATERNO = "ApellidoMaterno";
+		public static final String COLUMN_PROSPECTOVTA_CONTACTONOMBRE = "ContactoNombre";
+		public static final String COLUMN_PROSPECTOVTA_CONTACTOAPELLIDOPATERNO = "ContactoApellidoPaterno";
+		public static final String COLUMN_PROSPECTOVTA_CONTACTOAPELLIDOMATERNO = "ContactoApellidoMaterno";
+		public static final String COLUMN_PROSPECTOVTA_CONTACTOTELEFONO = "ContactoTelefono";
+		public static final String COLUMN_PROSPECTOVTA_EMPRESATELEFONO = "EmpresaTelefono";
+		public static final String COLUMN_PROSPECTOVTA_EMAIL= "Email";
+		public static final String COLUMN_PROSPECTOVTA_REFERIDO_LLAMADA= "LlamadaReferido";
+		public static final String COLUMN_PROSPECTOVTA_REFERIDO_VISITA = "VisitaReferido";
+		public static final String COLUMN_PROSPECTOVTA_IDAGENTE = "IdAgente";
+		public static final String COLUMN_PROSPECTOVTA_ORIGEN = "OrigenCode";
+		public static final String COLUMN_PROSPECTOVTA_ESTADO_CODE = "EstadoCode";
+		public static final String COLUMN_PROSPECTOVTA_REFERENTE = "Referente";
+		public static final String COLUMN_PROSPECTOVTA_ESTADO = "Estado";
+
+
+		public static final String QUERY_PROSPECTOVTA_SINCRONIZADAS_IDPROSPECTO = "ProspectosSincronizadasId";
+		public static final String QUERY_PROSPECTOVTA_SINCRONIZADAS_IDBD = "ProspectosSincronizadasIdBd";
+
+		//
+		public static final String QUERY_PROSPECTOVTA_INSERTADAS = "ProspectosInsertadas";
+		public static final String QUERY_PROSPECTOVTA_ALL = "ProspectosAll";
+		public static final String QUERY_PROSPECTOVTA_ALL_ESTADO = "ProspectosAllEstado";
+		public static final String QUERY_PROSPECTOVTA_SINCRONIZADAS = "ProspectosSincronizadas";
+		public static final String QUERY_PROSPECTOVTA_ACTUALIZADoS = "ProspectosActualizadas";
+		public static final String QUERY_PROSPECTOVTA_UPDATE_TO_SINCRONIZADAS ="UPDATE tbProspectoVta SET Estado = 0 WHERE Estado = 1";
+		public static final String QUERY_DELETE_SINCRONIZADA ="DELETE FROM tbProspectoVta WHERE Estado = 2";
+		public static final String QUERY_PROSPECTOVTA_LISTA_NEGRA = "ProspectoListaNegra";
+		//
+
+
+		public static final String QUERY_PROSPECTO_VTA_REFERIDO = "SELECT * FROM tbProspectoVta WHERE OrigenCode = 'B' and IdProspecto = ";
+
+		public static final String QUERY_PROSPECTOVTA_ACTUALIZADAS = "ProspectosActualizadas";
+
+		public static final String QUERY_PROSPECTOVTA_UPDATE_TO_INSERTADAS ="UPDATE tbProspectoVta SET Estado = 0 WHERE Estado = 1";
+
+		public static final String QUERY_DELETE ="DELETE FROM tbProspectoVta WHERE Estado = 0";
+
+		public static final String QUERY_GET_MAX_ID = "SELECT max(_id) from "+TABLE_NAME;
+	}
+
+
+	public static abstract class ApplicationParameter implements BaseColumns{
+		public static final String TABLE_NAME = "tbApplicationParameter";
+
+		public static final String COLUMN_APPLICATIONPARAMETER_ID = "_id";
+		public static final String COLUMN_APPLICATIONPARAMETER_APPLICATIONID = "ApplicationId";
+		public static final String COLUMN_APPLICATIONPARAMETER_PARAMETERID = "ParameterId";
+		public static final String COLUMN_APPLICATIONPARAMETER_VALUE = "Value";
+		public static final String COLUMN_APPLICATIONPARAMETER_LABEL = "Label";
+		public static final String COLUMN_APPLICATIONPARAMETER_DESCRIPTION = "Description";
+
+		public static final String QUERY_PROSPECTOVTA_ACTUALIZADAS = "ProspectosActualizadas";
+
+		public static final String QUERY_PROSPECTOVTA_UPDATE_TO_INSERTADAS ="UPDATE tbProspectoVta SET Estado = 0 WHERE Estado = 1";
+
+		public static final String QUERY_DELETE ="DELETE FROM tbProspectoVta WHERE Estado = 0";
+
+		public static final String QUERY_GET_MAX_ID = "SELECT max(_id) from "+TABLE_NAME;
+	}
+
+	public static abstract class ComisionAgente implements BaseColumns{
+		public static final String TABLE_NAME = "tbAgenteComisiones";
+
+		public static final String COLUMN_COMISION_ID = "_id";
+		public static final String COLUMN_COMISION_AGENTE_ID = "IdAgente";
+		public static final String COLUMN_COMISION_PK_ASESOR = "PkAsesor";
+		public static final String COLUMN_COMISION_NOMBRE_ASESOR = "NombreAsesor";
+		public static final String COLUMN_COMISION_VENTAS = "Ventas";
+		public static final String COLUMN_COMISION_COMISION = "Comision";
+		public static final String COLUMN_COMISION_INCENTIVO = "Incentivo";
+
+		public static final String QUERY_ALL = "SELECT * FROM "+TABLE_NAME;
+
+	}
+
+	public static abstract class AlarmManagerJVS implements BaseColumns{
+		public static final String TABLE_NAME = "tbAlarmManagerJVS";
+
+		public static final String COLUMN_ALARM_MANAGER_ID = "_id";
+		public static final String COLUMN_ALARM_MANAGER_ALARM_ACTIVE = "Alarm_Active";
+		public static final String COLUMN_ALARM_MANAGER_ALARM_TIME = "Alarm_Time";
+		public static final String COLUMN_ALARM_MANAGER_ALARM_TONE = "Alarm_Tone";
+		public static final String COLUMN_ALARM_MANAGER_ALARM_VIBRATE = "Alarm_Vibrate";
+		public static final String COLUMN_ALARM_MANAGER_ALARM_NAME = "Alarm_Name";
+		public static final String COLUMN_ALARM_MANAGER_ALARM_TYPE = "Alarm_Type";
+		public static final String COLUMN_ALARM_MANAGER_ALARM_IDENTIFICADOR = "Alarm_Identificador";
+		public static final String COLUMN_ALARM_MANAGER_ALARM_FECHA = "Alarm_Fecha";
+		public static final String COLUMN_ALARM_MANAGER_ALARM_MENSAJE = "Alarm_Mensaje";
+		public static final String COLUMN_ALARM_MANAGER_ALARM_AGENTE = "Alarm_Agente";
+
+		public static final String QUERY_ALL = "SELECT * FROM "+TABLE_NAME;
+		public static final String QUERY_LLAMADAS_ALL = "SELECT * FROM tbAlarmManagerJVS WHERE Alarm_Type = 2";
+		public static final String QUERY_LLAMADAS_SUPERVISOR_ALL = "SELECT * FROM tbAlarmManagerJVS WHERE Alarm_Type = 22";
+		public static final String QUERY_VISITAS_ALL = "SELECT * FROM tbAlarmManagerJVS WHERE Alarm_Type = 1";
+		public static final String QUERY_VISITAS_SUPERVISOR_ALL = "SELECT * FROM tbAlarmManagerJVS WHERE Alarm_Type = 11";
+
+		public static final String DELETE_LLAMADAS_ALL = "DELETE FROM tbAlarmManagerJVS WHERE ";
+		public static final String DELETE_LLAMADAS_SUPERVISOR_ALL = "";
+		public static final String DELETE_VISITAS_ALL = "";
+		public static final String DELETE_VISITAS_SUPERVISOR_ALL = "";
+	}
+
+
 }

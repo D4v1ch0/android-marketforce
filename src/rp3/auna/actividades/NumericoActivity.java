@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.text.InputFilter;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
@@ -25,6 +26,7 @@ import rp3.util.StringUtils;
  */
 public class NumericoActivity extends ActividadActivity {
 
+    private static final String TAG = NumericoActivity.class.getSimpleName();
     Actividad ata;
     private AgendaTareaActividades act;
     boolean actSinGrupo;
@@ -34,6 +36,7 @@ public class NumericoActivity extends ActividadActivity {
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG,"onCreate...");
         int numero = getIntent().getExtras().getInt(ARG_NUMERO, 1);
         int tema = getIntent().getExtras().getInt(ARG_THEME, R.style.MyAppTheme);
         setTheme(tema);
@@ -120,7 +123,7 @@ public class NumericoActivity extends ActividadActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        Log.d(TAG,"onActivityResult...");
         switch (requestCode) {
             case REQ_CODE_SPEECH_INPUT: {
                 if (resultCode == RESULT_OK && null != data) {
@@ -137,6 +140,7 @@ public class NumericoActivity extends ActividadActivity {
 
     @Override
     public void aceptarCambios(View v) {
+        Log.d(TAG,"aceptarCambios...");
         if(ata.getLimite() == 0 || getTextViewString(R.id.actividad_texto_respuesta).trim().equalsIgnoreCase("") || getTextViewString(R.id.actividad_texto_respuesta).length() == ata.getLimite()) {
             if (getTextViewString(R.id.actividad_texto_respuesta).equalsIgnoreCase(""))
                 act.setResultado(" ");
@@ -171,4 +175,39 @@ public class NumericoActivity extends ActividadActivity {
 
     }
 
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
+    }
 }

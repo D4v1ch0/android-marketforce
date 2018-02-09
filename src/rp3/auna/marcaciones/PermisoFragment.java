@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import rp3.widget.SlidingPaneLayout;
  */
 public class PermisoFragment extends BaseFragment implements PermisoListFragment.PermisoListFragmentListener, PermisoDetailFragment.PermisoDetailFragmentListener {
 
+    private static final String TAG = PermisoFragment.class.getSimpleName();
     private static final int PARALLAX_SIZE = 0;
 
     private PermisoListFragment transactionListFragment;
@@ -39,10 +41,12 @@ public class PermisoFragment extends BaseFragment implements PermisoListFragment
     @Override
     public void onFragmentResult(String tagName, int resultCode, Bundle data) {
         super.onFragmentResult(tagName, resultCode, data);
+        Log.d(TAG,"onFragmentResult...");
     }
 
     @Override
     public void onAttach(Activity activity) {
+        Log.d(TAG,"onAttach...");
         super.onAttach(activity);
         setContentView(R.layout.fragment_client);
 
@@ -51,7 +55,7 @@ public class PermisoFragment extends BaseFragment implements PermisoListFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Log.d(TAG,"onCreate...");
         setRetainInstance(true);
         transactionListFragment = PermisoListFragment.newInstance(true, null);
 
@@ -60,13 +64,14 @@ public class PermisoFragment extends BaseFragment implements PermisoListFragment
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG,"onResume...");
     }
 
     @SuppressLint("NewApi")
     @Override
     public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
-
+        Log.d(TAG,"onFragmentCreateView...");
         slidingPane = (SlidingPaneLayout) rootView.findViewById(R.id.sliding_pane_clientes);
         slidingPane.setParallaxDistance(PARALLAX_SIZE);
         slidingPane.setShadowResource(R.drawable.sliding_pane_shadow);
@@ -112,6 +117,7 @@ public class PermisoFragment extends BaseFragment implements PermisoListFragment
 //		}
     }
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG,"onActivityResult...");
          transactionDetailFragment.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -119,7 +125,7 @@ public class PermisoFragment extends BaseFragment implements PermisoListFragment
     public void onStart() {
         // TODO Auto-generated method stub
         super.onStart();
-
+        Log.d(TAG,"onStart...");
         if (selectedClientId != 0) {
             if (!mTwoPane)
                 slidingPane.closePane();
@@ -157,9 +163,36 @@ public class PermisoFragment extends BaseFragment implements PermisoListFragment
 
     @Override
     public void onPermisoChanged(Permiso permiso) {
+        Log.d(TAG,"onPermisoChanged...");
         if (!mTwoPane)
             slidingPane.openPane();
         transactionListFragment.onResume();
 
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

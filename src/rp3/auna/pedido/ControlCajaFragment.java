@@ -2,6 +2,7 @@ package rp3.auna.pedido;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import rp3.util.ConnectionUtils;
  */
 public class ControlCajaFragment extends BaseFragment {
 
+    private static final String TAG = ControlCajaFragment.class.getSimpleName();
     public static final String ARG_CONTROL = "control";
     private SimpleDateFormat format1, format2, format3, format5;
 
@@ -31,11 +33,12 @@ public class ControlCajaFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG,"onCreate...");
     }
 
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
+        Log.d(TAG,"onAttach...");
         setContentView(R.layout.fragment_control_caja);
         if(getParentFragment()!=null){
             ((PedidoFragment)getParentFragment()).RefreshMenu();
@@ -46,17 +49,19 @@ public class ControlCajaFragment extends BaseFragment {
     @Override
     public void onFragmentResult(String tagName, int resultCode, Bundle data) {
         super.onFragmentResult(tagName, resultCode, data);
+        Log.d(TAG,"onFragmentResult...");
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        Log.d(TAG,"onSaveInstanceState...");
     }
 
     @Override
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
-
+        Log.d(TAG,"onFragmentCreateView...");
         format1 = new SimpleDateFormat("EEEE");
         format2 = new SimpleDateFormat("dd");
         format3 = new SimpleDateFormat("MMMM");
@@ -108,5 +113,41 @@ public class ControlCajaFragment extends BaseFragment {
 
             }
         });
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

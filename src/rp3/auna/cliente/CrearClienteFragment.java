@@ -24,6 +24,7 @@ import android.provider.MediaStore;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -77,6 +78,7 @@ import rp3.util.LocationUtils;
 
 public class CrearClienteFragment extends BaseFragment implements SignInFragment.SignConfirmListener {
 
+    private static final String TAG = CrearClienteFragment.class.getSimpleName();
     boolean rotated = false;
 
 	public static CrearClienteFragment newInstance(long id_cliente, int tipo)
@@ -117,20 +119,17 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         cliente = new Cliente();
+        Log.d(TAG,"...");
         contactPhotos = new ArrayList<String>();
 	}
 	
 	@Override
 	public void onAttach(Activity activity) {    	
 	    super.onAttach(activity);
+        Log.d(TAG,"...");
 	    tryEnableGooglePlayServices(true);
 	    setContentView(R.layout.fragment_crear_cliente, R.menu.fragment_crear_cliente);
 	    setRetainInstance(true);
-	}
-	    
-	@Override
-	public void onResume() {
-	    super.onResume();
 	}
 	
 	@Override
@@ -236,6 +235,7 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
         }
     }
     private void SetCamposContactos() {
+        Log.d(TAG,"SetCamposContactos...");
         List<Campo> campos = Campo.getCampos(getDataBase(), tipo);
         for(Campo campo : campos) {
             /*if (campo.getIdCampo().equalsIgnoreCase(Contants.CAMPO_NOMBRE_CONTACTO))
@@ -357,6 +357,7 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
     }
 	
 	private void Grabar() {
+        Log.d(TAG,"...");
         Cliente cli = new Cliente();
         if (idCliente != 0)
             cli = Cliente.getClienteID(getDataBase(), idCliente, true);
@@ -515,6 +516,7 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
 
     public void SaveAddress()
     {
+        Log.d(TAG,"...");
         Geocoder geo = new Geocoder(this.getContext());
         try {
             List<Address> addr = geo.getFromLocation(currentLoc.getLatitude(), currentLoc.getLongitude(), 2);
@@ -539,7 +541,7 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
     @Override
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
-
+        Log.d(TAG,"...");
         if(listViewDirecciones == null)
             listViewDirecciones = new ArrayList<LinearLayout>();
         if(listViewContactos == null)
@@ -674,9 +676,11 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
     @Override
     public void onViewStateRestored(Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
+        Log.d(TAG,"...");
     }
 
     private void setDatosClientes() {
+        Log.d(TAG,"...");
 		DrawableManager DManager = new DrawableManager();
         SimpleDateFormat format1 = new SimpleDateFormat("dd MMMM yyyy");
 		Cliente cli = Cliente.getClienteID(getDataBase(), idCliente, true);
@@ -769,6 +773,7 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
 	}
 	
 	protected void takePicture(final int idView) {
+        Log.d(TAG,"...");
 		AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(this.getActivity());
 	    myAlertDialog.setTitle("Fotografía");
 	    myAlertDialog.setMessage("Obtener de");
@@ -804,6 +809,7 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
 
 	private void addDireccion()
 	{
+        Log.d(TAG,"...");
 		final LinearLayout direccion = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.layout_cliente_direccion_detail, null);
         final int pos = listViewDirecciones.size();
         //direccion.findViewById(R.id.cliente_direccion).requestFocus();
@@ -916,6 +922,7 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
 	
 	private void addContacto()
 	{
+        Log.d(TAG,"addContacto...");
 		final LinearLayout contacto = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.layout_cliente_contacto_detail, null);
 		final int pos = listViewContactos.size();
         contacto.findViewById(R.id.cliente_nombres).requestFocus();
@@ -950,11 +957,12 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-
+        Log.d(TAG,"onConfigurationChanged..");
     }
 
     @Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG,"onActivityResult...");
 		if (resultCode == RESULT_OK) {
             Bitmap pree = null;
             if(data != null) {
@@ -1010,6 +1018,7 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
 	
 	public boolean Validaciones()
 	{
+        Log.d(TAG,"Validaciones...");
         if(((EditText)getRootView().findViewById(R.id.cliente_identificacion)).getText().toString().trim().length() >= 0 && getRootView().findViewById(R.id.cliente_identificacion).isEnabled())
         {
             Cliente proof = Cliente.getClienteByIdentificacion(getDataBase(), ((EditText)getRootView().findViewById(R.id.cliente_identificacion)).getText().toString().trim());
@@ -1203,5 +1212,41 @@ public class CrearClienteFragment extends BaseFragment implements SignInFragment
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix,
                 true);
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

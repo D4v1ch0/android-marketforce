@@ -19,6 +19,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,7 +37,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class GrupoActivity extends ActividadActivity {
-	
+
+	private static final String TAG = GrupoActivity.class.getSimpleName();
 	LinearLayout Container;
 	int contador = 0, contador_ungroup = 0;
     List<Spinner> combos;
@@ -48,6 +50,7 @@ public class GrupoActivity extends ActividadActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
+		Log.d(TAG,"onCreate...");
 	    if(getResources().getString(R.string.is_tablet).equalsIgnoreCase("true"))
 		{
             if(soloVista)
@@ -141,6 +144,7 @@ public class GrupoActivity extends ActividadActivity {
 	
 	public void agregarGrupo(Actividad actividad)
 	{
+		Log.d(TAG,"agregarGrupo...");
 		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		contador = 0;
 		
@@ -173,6 +177,7 @@ public class GrupoActivity extends ActividadActivity {
 	
 	public void agregarCheckbox(final Actividad actividad_hija)
 	{
+		Log.d(TAG,"agregarCheckbox...");
 		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 4);
 		LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 1);
 		params2.setMargins(15, 5, 15, 5);
@@ -252,7 +257,8 @@ public class GrupoActivity extends ActividadActivity {
 	}
 	
 	public void agregarTexto(final Actividad actividad_hija)
-	{		
+	{
+		Log.d(TAG,"agregarTexto...");
 		LinearLayout layout = new LinearLayout(this);
 		TextView texto = new TextView(this);
 		TextView textoResp = new TextView(this);
@@ -342,6 +348,7 @@ public class GrupoActivity extends ActividadActivity {
 
 	public void agregarFecha(final Actividad actividad_hija)
 	{
+		Log.d(TAG,"agregarFecha...");
 		LinearLayout layout = new LinearLayout(this);
 		TextView texto = new TextView(this);
 		TextView textoResp = new TextView(this);
@@ -428,6 +435,7 @@ public class GrupoActivity extends ActividadActivity {
 
 	@Override
 	public void onDailogDatePickerChange(int id, Calendar c) {
+		Log.d(TAG,"onDailogDatePickerChange...");
 		super.onDailogDatePickerChange(id, c);
 		SimpleDateFormat format2 = new SimpleDateFormat("dd");
 		SimpleDateFormat format3 = new SimpleDateFormat("MMMM");
@@ -442,6 +450,7 @@ public class GrupoActivity extends ActividadActivity {
 
 	public void agregarNumerico(final Actividad actividad_hija)
 	{
+		Log.d(TAG,"agregarNumerico...");
 		LinearLayout layout = new LinearLayout(this);
 		TextView texto = new TextView(this);
 		TextView textoResp = new TextView(this);
@@ -529,6 +538,7 @@ public class GrupoActivity extends ActividadActivity {
 	
 	public void agregarSeleccion(final Actividad actividad_hija)
 	{
+		Log.d(TAG,"agregarSeleccion...");
 		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		LinearLayout layout = new LinearLayout(this);
 		TextView texto = new TextView(this);
@@ -639,6 +649,7 @@ public class GrupoActivity extends ActividadActivity {
 	
 	public void agregarMultiple(final Actividad actividad_hija)
 	{
+		Log.d(TAG,"agregarMultiple...");
 		LinearLayout layout = new LinearLayout(this);
 		LinearLayout innerContainer = new LinearLayout(this);
 		TextView texto = new TextView(this);
@@ -729,6 +740,7 @@ public class GrupoActivity extends ActividadActivity {
 
 	@Override
 	public void aceptarCambios(View v) {
+		Log.d(TAG,"aceptarCambios...");
         for(Spinner combo : combos)
         {
             if(combo.getSelectedItemPosition() == 0)
@@ -756,6 +768,7 @@ public class GrupoActivity extends ActividadActivity {
 	@SuppressLint("ResourceAsColor")
 	public LinearLayout getLinea()
 	{
+		Log.d(TAG,"getLinea...");
 		LinearLayout.LayoutParams params3 = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 1);
 		params3.setMargins(0, 20, 0, 20);
 		LinearLayout linea = new LinearLayout(this);
@@ -768,6 +781,7 @@ public class GrupoActivity extends ActividadActivity {
 	@SuppressLint("ResourceAsColor")
 	public LinearLayout getLineaSinMargen()
 	{
+		Log.d(TAG,"getLineaSinMargen...");
 		LinearLayout.LayoutParams params3 = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 1);
 		LinearLayout linea = new LinearLayout(this);
 		linea.setLayoutParams(params3);
@@ -779,6 +793,7 @@ public class GrupoActivity extends ActividadActivity {
 	@SuppressLint("ResourceAsColor")
 	public LinearLayout getLineaHorizontal()
 	{
+		Log.d(TAG,"getLineaHorizontal...");
 		LinearLayout.LayoutParams params3 = new LinearLayout.LayoutParams(1,LayoutParams.MATCH_PARENT);
 		params3.setMargins(5, 0, 5, 0);
 		LinearLayout linea = new LinearLayout(this);
@@ -791,6 +806,7 @@ public class GrupoActivity extends ActividadActivity {
 	@SuppressLint("ResourceAsColor")
 	public LinearLayout getLineaHorizontalSinMargen()
 	{
+		Log.d(TAG,"getLineaHorizontalSinMargen...");
 		LinearLayout.LayoutParams params3 = new LinearLayout.LayoutParams(1,LayoutParams.MATCH_PARENT);
 		params3.setMargins(10, 0, 10, 0);
 		LinearLayout linea = new LinearLayout(this);
@@ -803,6 +819,7 @@ public class GrupoActivity extends ActividadActivity {
 	
 	public LinearLayout getNumero()
 	{
+		Log.d(TAG,"getNumero...");
 		LinearLayout.LayoutParams params3 = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
 		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		params3.setMargins(5, 0, 15, 0);
@@ -841,6 +858,7 @@ public class GrupoActivity extends ActividadActivity {
 	
 	@Override
 	protected void onResume() {
+		Log.d(TAG,"onResume...");
 		Container.removeAllViews();
         combos = new ArrayList<Spinner>();
         multiples = new ArrayList<TextView>();
@@ -910,7 +928,37 @@ public class GrupoActivity extends ActividadActivity {
         ((Button) findViewById(R.id.actividad_cancelar)).setVisibility(View.GONE);
 		super.onResume();
 	}
-	
+
+	/**
+	 *
+	 * Ciclo de vida
+	 *
+	 */
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		Log.d(TAG,"onStart...");
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Log.d(TAG,"onPause...");
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		Log.d(TAG,"onStop...");
+	}
+
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Log.d(TAG,"onDestroy...");
+	}
 
 
 }

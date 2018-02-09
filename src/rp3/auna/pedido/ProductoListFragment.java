@@ -7,6 +7,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +32,7 @@ import rp3.auna.models.pedido.ProductoPromocion;
  */
 public class ProductoListFragment extends BaseFragment implements ProductFragment.ProductAcceptListener {
 
+    private static final String TAG = ProductoListFragment.class.getSimpleName();
     public static final String ARG_PRODUCTO = "Producto";
     public static final String ARG_BUSQUEDA = "busqueda";
 
@@ -72,13 +74,14 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG,"onResume...");
         ejecutarConsulta();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Log.d(TAG,"onCreate...");
         if(savedInstanceState == null)
         {
             Bundle args = new Bundle();
@@ -90,6 +93,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
     }
 
     public void ejecutarConsulta(){
+        Log.d(TAG,"ejecutarConsulta...");
         Bundle args = new Bundle();
         args.putInt(LoaderProductos.INT_CATEGORIA, idSubCategoria);
         args.putString(LoaderProductos.STRING_BUSQUEDA, tipoBusqueda);
@@ -101,6 +105,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
     @Override
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
+        Log.d(TAG,"onFragmentCreateView...");
         headerList = (ListView) rootView.findViewById(R.id.list_productos);
         headerList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
@@ -117,6 +122,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
 
     public void setListeners()
     {
+        Log.d(TAG,"setListeners...");
         headerList.setAdapter(adapter);
         headerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -136,6 +142,7 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
     public void onAfterCreateOptionsMenu(Menu menu) {
         SearchView searchView = null;
         MenuItem prob = menu.findItem(R.id.action_search);
+        Log.d(TAG,"onAfterCreateOptionsMenu...");
         if(prob != null)
             searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
 
@@ -301,5 +308,36 @@ public class ProductoListFragment extends BaseFragment implements ProductFragmen
         public void onLoaderReset(Loader<List<Producto>> arg0) {
 
         }
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

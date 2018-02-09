@@ -18,6 +18,8 @@ import rp3.auna.R;
  * Created by magno_000 on 19/06/2015.
  */
 public class MarcacionAdapter extends BaseAdapter {
+
+    private static final String TAG = MarcacionAdapter.class.getSimpleName();
     private SimpleDateFormat format5, format4;
     private Context context;
     private LayoutInflater inflater;

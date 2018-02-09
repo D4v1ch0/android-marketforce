@@ -95,18 +95,18 @@
                     android:id="@+id/cliente_identificacion"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
                     android:layout_weight="0.6"
+                    android:background="@color/caldroid_transparent"
                     android:ems="10"
                     android:hint="@string/label_identificacion"
                     android:inputType="number"
-                    android:textSize="@dimen/text_medium_size"
-                    android:background="@color/caldroid_transparent"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
+                    android:paddingBottom="10dp"
                     android:paddingLeft="15dp"
-                    android:paddingTop="10dp"
                     android:paddingRight="10dp"
-                    android:paddingBottom="10dp" />
+                    android:paddingTop="10dp"
+                    android:textSize="@dimen/text_medium_size" />
             </LinearLayout>
 
             <LinearLayout

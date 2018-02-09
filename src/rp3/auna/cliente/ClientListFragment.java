@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import rp3.auna.ventanueva.CrearLlamadaActivity;
+import rp3.auna.ventanueva.CrearLlamadaFragment;
 import rp3.data.MessageCollection;
 import rp3.auna.R;
 import rp3.auna.headerlistview.HeaderListView;
@@ -21,6 +23,7 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,8 +35,8 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class ClientListFragment extends rp3.app.BaseFragment {
-		        
-    
+
+    private static final String TAG = ClientListFragment.class.getSimpleName();
     public static final String ARG_TRANSACTIONTYPEID = "transactionType";
     public static final String ARG_TRANSACTIONTYPEBO = "transactionTypeBo";    
     
@@ -74,7 +77,8 @@ public class ClientListFragment extends rp3.app.BaseFragment {
     public interface ClienteListFragmentListener {
         public void onClienteSelected(Cliente cliente);
         public void onFinalizaConsulta();
-        public boolean allowSelectedItem();        
+        public boolean allowSelectedItem();
+        public void onLongClienteSelected(Cliente cliente,View view);
     }
 
     public ClientListFragment() {
@@ -83,7 +87,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 	@Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        
+        Log.d(TAG,"onAttach...");
         if(getParentFragment()!=null){        	
         	clienteListFragmentCallback = (ClienteListFragmentListener)getParentFragment();        	
         }else{
@@ -97,6 +101,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 	@Override
 	public void onResume() {
         super.onResume();
+        Log.d(TAG,"onResume...");
         if (currentTransactionBoolean) {
             ejecutarConsulta();
         } else {
@@ -106,31 +111,26 @@ public class ClientListFragment extends rp3.app.BaseFragment {
             if(loaderCliente == null)
                 loaderCliente = new LoaderCliente();
             getLoaderManager().initLoader(0, args, loaderCliente);
+
         }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        
+        Log.d(TAG,"onCreate...");
         if(savedInstanceState == null)
         {
         	currentTransactionBoolean = getArguments().getBoolean(ARG_TRANSACTIONTYPEBO);
 		    currentTransactionSearch = getArguments().getString(ARG_TRANSACTIONTYPEID);
-		     
-		     
-		   
-		     id_select = R.id.item_order_name;
-		     
+
+		     //id_select = R.id.item_order_name;
 		     loaderCliente = new LoaderCliente();
-		     
-		     
-		     
         }
     }
     
     public void ejecutarConsulta(){
+        Log.d(TAG,"ejecutarConsulta...");
 		 Bundle args = new Bundle();
 		 args.putString(LoaderCliente.STRING_SEARCH, "");
 		 args.putBoolean(LoaderCliente.STRING_BOOLEAN, true);
@@ -138,6 +138,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
     }
     
     public void actualizarCliente(Cliente cliente){
+        Log.d(TAG,"actualizarCliente...");
     	for(ArrayList<Cliente> l: list_order){
 	    	for(Cliente c: l){
 	    		if(c.getID() == cliente.getID()){
@@ -156,7 +157,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
     @Override
     public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
     	super.onFragmentCreateView(rootView, savedInstanceState);
-    	
+        Log.d(TAG,"onFragmentCreateView...");
     	linearLayout_rootParent = (LinearLayout) rootView.findViewById(R.id.linearLayout_headerlist_client_list);    	    	
     }        
     
@@ -164,6 +165,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
     @Override
     public void onStart() {    	
     	super.onStart();
+        Log.d(TAG,"onStart...");
     	if(headerList!=null && headerList.getParent() == null){
             if(refreshLayout == null)
                 refreshLayout = new SwipeRefreshLayout(this.getContext());
@@ -174,6 +176,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
             refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
+                    Log.d(TAG,"setOnRefreshListener...");
                     if (ConnectionUtils.isNetAvailable(getContext())) {
                         Bundle bundle = new Bundle();
                         bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPLOAD_CLIENTES);
@@ -212,17 +215,19 @@ public class ClientListFragment extends rp3.app.BaseFragment {
      @Override
     public void onSaveInstanceState(Bundle arg0) {    	
     	super.onSaveInstanceState(arg0);
-    	
+         Log.d(TAG,"onSaveInstanceState...");
     	linearLayout_rootParent.removeView(refreshLayout);
     }
     
     @Override
     public void onDetach() {    	
-    	super.onDetach();    	    	
+    	super.onDetach();
+        Log.d(TAG,"onDetach...");
     }        
          
     
     public void searchTransactions(String termSearch){
+        Log.d(TAG,"searchTransactions...");
         Bundle args = new Bundle();
 		args.putString(LoaderCliente.STRING_SEARCH, termSearch);
 		args.putBoolean(LoaderCliente.STRING_BOOLEAN, false);
@@ -241,15 +246,15 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 	 @Override
 	    public boolean onOptionsItemSelected(MenuItem item) {
 	    	
-		 menu.findItem(R.id.item_order_name).setChecked(false);
+		/* menu.findItem(R.id.item_order_name).setChecked(false);
 		 menu.findItem(R.id.item_order_last_name).setChecked(false);		 
-     	 menu.findItem(id_select).setChecked(true);
+     	 menu.findItem(id_select).setChecked(true); */
      	 
-     	 if(item.getItemId() == R.id.item_order_name || item.getItemId() == R.id.item_order_last_name){
+     	 /*if(item.getItemId() == R.id.item_order_name || item.getItemId() == R.id.item_order_last_name){
      		 callOrderBy(item.getItemId());
      		 return true;
-     	 }
-     	 if(item.getItemId() == R.id.action_contacts)
+     	 } */
+     	 /*if(item.getItemId() == R.id.action_contacts)
      	 {
      		 if(isContacts)
      		 {
@@ -268,31 +273,32 @@ public class ClientListFragment extends rp3.app.BaseFragment {
     	    getLoaderManager().restartLoader(0, args, loaderCliente);
      		 
      		 return true;
-     	 }
+     	 } */
 	    	
      	 return super.onOptionsItemSelected(item);
 	 }
 	 	
 	 private void callOrderBy(int id){
+         Log.d(TAG,"callOrderBy...");
 		 switch(id)
 	    	{
-	    		case R.id.item_order_name:
+	    		/*case R.id.item_order_name:
 	    			
 	    			id_select = R.id.item_order_name;
 	    			
 	    		   OrderBy(ORDER_BY_NAME);
 	    		   
-	    		   break;
+	    		   break; */
 		    			
 	               
 	                
-	    		case R.id.item_order_last_name:
+	    		/*case R.id.item_order_last_name:
 	    			
 	    			id_select = R.id.item_order_last_name;
 	    				
 	    			OrderBy(ORDER_BY_LAST_NAME);
 	    			
-	    			break;
+	    			break;*/
 	    				
 	              
 	    	}
@@ -300,7 +306,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 	
 	@SuppressLint("SimpleDateFormat")
 	private void OrderBy(int option) {
-
+        Log.d(TAG,"OrderBy...");
         try {
 
 
@@ -358,6 +364,10 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 
 
             switch (option) {
+
+                /***
+                 * ORDER_BY_NAME
+                 */
                 case ORDER_BY_NAME:
 
                     for (int x = 0; x < lista.size(); x++)
@@ -374,6 +384,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
                                 rp3.auna.models.Cliente cliente = new rp3.auna.models.Cliente();
 
                                 cliente.setID(lista.get(y).getID());
+                                cliente.setIdCliente(lista.get(y).getIdCliente());
                                 cliente.setNombre1(lista.get(y).getNombre1());
                                 cliente.setNombre2(lista.get(y).getNombre2());
                                 cliente.setApellido1(lista.get(y).getApellido1());
@@ -402,7 +413,10 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 //			ORDER_IDENTIFICATOR	= ORDER_BY_NAME;
 
                     break;
-                case ORDER_BY_LAST_NAME:
+                /***
+                 * ORDER_BY_LAST_NAME
+                 */
+                /*case ORDER_BY_LAST_NAME:
 
                     for (int x = 0; x < lista.size(); x++) {
                         if (!lista.get(x).getTipoPersona().equalsIgnoreCase("J")) {
@@ -468,11 +482,13 @@ public class ClientListFragment extends rp3.app.BaseFragment {
                         clienteListFragmentCallback.onClienteSelected(list_order.get(0).get(0));
 //			ORDER_IDENTIFICATOR	= ORDER_BY_LAST_NAME;
 
-                    break;
+                    break;*/
             }
         }
         catch(Exception ex)
-        {}
+        {
+            Log.d(TAG,"Exception Order by:"+ex.getMessage());
+        }
 
     }
 
@@ -499,41 +515,14 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 		public void onLoadFinished(Loader<List<Cliente>> arg0,
 				List<Cliente> data)
 		{								
-			lista = data;			
+			lista = data;
+            Log.d(TAG,"onLoadFinished Cantidad de clientes:"+lista.size());
 			OrderBy(ORDER_BY_NAME);
 			clienteListFragmentCallback.onFinalizaConsulta();
 			if(adapter != null)
 			{
 				adapter.notifyDataSetChanged();
-				headerList.getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
-	
-					@Override
-					public boolean onItemLongClick(AdapterView<?> parent,
-							final View view, final int position, long id) {
-						PopupMenu popup = new PopupMenu(getContext(), view);
-		                
-		                popup.getMenuInflater()
-		                    .inflate(R.menu.list_item_client_menu, popup.getMenu());
-		                
-		                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-		                    public boolean onMenuItemClick(MenuItem item) {
-		                        switch(item.getItemId())
-		                        {
-		                        	case R.id.item_menu_clientes_crear_visita:
-		                        		Intent intent2 = new Intent(getActivity(), CrearVisitaActivity.class);
-		                        		intent2.putExtra(CrearVisitaFragment.ARG_IDAGENDA, view.getId());
-		                        		intent2.putExtra(CrearVisitaFragment.ARG_FROM, "Cliente");
-		                        		startActivity(intent2);
-		                        		adapter.setAction(true);
-		                        	break;
-		                        }
-		                        return true;
-		                    }
-		                });
-		                popup.show();
-						return false;
-					}
-				});
+
 			}
 		}
 
@@ -545,7 +534,7 @@ public class ClientListFragment extends rp3.app.BaseFragment {
 
     public void onSyncComplete(Bundle data, MessageCollection messages) {
         super.onSyncComplete(data, messages);
-
+        Log.d(TAG,"...");
         closeDialogProgress();
         try {
 
@@ -568,6 +557,32 @@ public class ClientListFragment extends rp3.app.BaseFragment {
         }
         catch (Exception ex)
         {}
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 
 	

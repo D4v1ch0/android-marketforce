@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="rp3.auna"
@@ -5,71 +6,103 @@
     android:versionName="AUNA">
 
     <uses-sdk
-        android:minSdkVersion="14"
-        android:targetSdkVersion="19"
-        tools:overrideLibrary="pe.solera.api_payme_android"/>
-    
-    
+        android:minSdkVersion="21"
+        android:targetSdkVersion="25"
+        tools:overrideLibrary="pe.solera.api_payme_android" />
+
     <permission
         android:name="com.vogella.android.locationapi.maps.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
-
     <permission
         android:name="rp3.auna.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
+
     <uses-permission android:name="rp3.marketforce.permission.C2D_MESSAGE" />
-    
-    
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.READ_CALL_LOG" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WRITE_CALL_LOG" />
-
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
-    <uses-feature android:name="android.hardware.location" android:required="false" />
-    <uses-feature android:name="android.hardware.location.gps" android:required="false" />
-    <uses-feature android:name="android.hardware.location.network" android:required="false" />
-    <uses-feature android:name="android.hardware.telephony" android:required="false" />
-    <uses-feature android:name="android.hardware.microphone" android:required="false" />
-    <uses-feature android:name="android.hardware.wifi" android:required="false" />
-    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
-    <uses-feature android:name="android.hardware.bluetooth" android:required="false" />
-    <uses-feature android:name="android.hardware.bluetooth_le" android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.network"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.microphone"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.wifi"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.bluetooth"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.BIND_SCREENING_SERVICE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!-- support screens -->
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:resizeable="true"
+        android:xlargeScreens="true" />
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/MyAppTheme"
         android:largeHeap="true"
-        android:name="android.support.multidex.MultiDexApplication"
-        tools:replace="android:icon, android:theme"
-        
-        >
-        <meta-data android:name="com.google.android.gms.version"
-           android:value="@integer/google_play_services_version" />
-        
+        android:resizeableActivity="true"
+        android:theme="@style/MyAppTheme"
+        tools:replace="android:icon, android:theme">
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
         <activity
-            android:name="rp3.auna.SearchableActivity"
-            android:label="@string/title_activity_searchable" 
-            >
+            android:name=".SearchableActivity"
+            android:label="@string/title_activity_searchable"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -78,174 +111,371 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-        
         <activity
-            android:name="rp3.auna.StartActivity"
+            android:name=".StartActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoTitleBar" >
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-               <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        
-        <activity
-            android:name="rp3.auna.MainActivity"
-            android:label="@string/app_name"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait">
-            <!-- Only Required for search dialog -->
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH"/>
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+
             <!-- enable the search dialog to send searches to SearchableActivity -->
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value="rp3.marketforce.SearchableActivity" 
-                />
-            
-        </activity>
-         <activity
-            android:name="rp3.auna.cliente.ClientDetailActivity"
-            android:label="@string/app_name"
-                        android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/MyAppTheme">
+                android:value="rp3.marketforce.SearchableActivity" />
         </activity>
         <activity
-            android:name="rp3.auna.ruta.RutasDetailActivity"
-            android:label="@string/app_name"
+            android:name=".cliente.ClientDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            >
-        </activity>
-         <activity
-            android:name="rp3.auna.cliente.ClienteEditActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="stateAlwaysHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyAppTheme" />
+        <activity
+            android:name=".ruta.RutasDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            >
-        </activity>
-        
-         <activity android:name="rp3.accounts.AuthenticatorActivity" android:theme="@style/AppTheme.NoTitleBar"
-            android:windowSoftInputMode="stateHidden">                        
-        </activity>
-        
-          <activity android:name="rp3.auna.actividades.TextoActivity" android:theme="@style/ActivityPopupTheme"></activity><service android:name="rp3.accounts.AuthenticatorService" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".cliente.ClienteEditActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name="rp3.accounts.AuthenticatorActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoTitleBar"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".actividades.TextoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActivityPopupTheme" />
+
+        <service android:name="rp3.accounts.AuthenticatorService">
             <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator" >
-                </action>
+                <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
 
             <meta-data
                 android:name="android.accounts.AccountAuthenticator"
-                android:resource="@xml/authenticator" >
-            </meta-data>
+                android:resource="@xml/authenticator" />
         </service>
         <service
-                android:name="rp3.auna.sync.SyncService"
-                android:exported="true"
-                android:process=":sync">
+            android:name=".sync.SyncService"
+            android:exported="true"
+            android:process=":sync">
             <intent-filter>
-                <action android:name="android.content.SyncAdapter"/>
+                <action android:name="android.content.SyncAdapter" />
             </intent-filter>
-            <meta-data android:name="android.content.SyncAdapter"
-                    android:resource="@xml/syncadapter" />
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/syncadapter" />
         </service>
 
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND" >
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
                 <category android:name="rp3.marketforce.content" />
             </intent-filter>
         </receiver>
+        <receiver android:name=".util.broadcast.AlarmReceiver" />
+        <receiver
+            android:name=".util.broadcast.BootReceiver"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
         <service
-            android:name="rp3.auna.content.GCMReceiver"
-            android:exported="false" >
+            android:name=".util.service.SchedulingService"
+            android:process="rp3.pe.jvs.alarm.serviceProcess" />
+        <service
+            android:name=".content.GCMReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
                 <category android:name="rp3.marketforce.content" />
             </intent-filter>
         </service>
+
         <receiver
-            android:name="rp3.auna.content.EnviarUbicacionReceiver"
-            android:enabled="true" >
-        </receiver>
-        <receiver android:name="rp3.auna.content.TimeChangedReceiver">
+            android:name=".content.EnviarUbicacionReceiver"
+            android:enabled="true" />
+        <receiver android:name=".content.TimeChangedReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.TIME_SET" />
             </intent-filter>
         </receiver>
+
+        <!-- Receiver venta nueva -->
+        <action android:name="android.location.PROVIDERS_CHANGED" />
+
+        <receiver android:name=".content.GpsLocationReceiver">
+            <intent-filter>
+                <action android:name="android.location.PROVIDERS_CHANGED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".content.DuracionLlamadaReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PHONE_STATE" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".content.AppReceiver" />
+        <receiver android:name=".content.ShutDownReceiver" />
+        <receiver android:name=".content.AgendaReceiver" />
+
+        <service
+            android:name=".util.service.AgendaService"
+            android:enabled="true" />
+        <!--  -->
+
         <provider
             android:name="rp3.content.StubProvider"
             android:authorities="rp3.auna.provider"
             android:exported="false"
             android:syncable="true" />
-        
-        <activity android:name="rp3.auna.actividades.CheckboxActivity"></activity>
-        <activity android:name="rp3.auna.actividades.ActualizacionActivity"></activity>
-        <activity android:name="rp3.auna.actividades.MultipleActivity" android:theme="@style/ActivityPopupTheme"></activity>
-        <activity android:name="rp3.auna.actividades.SeleccionActivity"></activity>
-        <activity android:name="rp3.auna.actividades.GrupoActivity"></activity>
-        <activity android:name="rp3.auna.actividades.NumericoActivity" android:theme="@style/ActivityPopupTheme"></activity>
-        <activity android:name="rp3.auna.actividades.CotizacionActivity" android:screenOrientation="portrait"></activity>
-        <activity android:name="rp3.auna.ruta.ReprogramarActivity"></activity>
-        <activity android:name="rp3.auna.ruta.CrearVisitaActivity"></activity>
 
-        
+        <activity
+            android:name=".actividades.CheckboxActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".actividades.ActualizacionActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".actividades.MultipleActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActivityPopupTheme" />
+        <activity
+            android:name=".actividades.SeleccionActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".actividades.GrupoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".actividades.NumericoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActivityPopupTheme" />
+        <activity
+            android:name=".actividades.CotizacionActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ruta.ReprogramarActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ruta.CrearVisitaActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ventanueva.CrearLlamadaActivity"
+            android:screenOrientation="portrait" />
+
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyC_7DHljEV8KjzrxpMnkwXDmsfeEjErLD0" />
-        <activity android:name="rp3.auna.ruta.MapaActivity"></activity>
-        <activity android:name="rp3.auna.cliente.CrearClienteActivity" android:configChanges="orientation|keyboardHidden|screenSize"></activity>
-        <activity android:name="rp3.auna.ServerActivity" android:theme="@style/AppTheme.NoTitleBar"></activity>
-        <activity android:name="rp3.auna.ruta.ObservacionesActivity" android:theme="@style/MyAppPopupTheme"></activity>
-        <activity android:name="rp3.auna.ruta.FotoActivity" android:theme="@style/MyAppPopupTheme"></activity>
-        <activity android:name="rp3.auna.cliente.ImportContactsActivity"></activity>
+
+        <activity
+            android:name=".ruta.MapaActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".cliente.CrearClienteActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ServerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoTitleBar" />
+        <activity
+            android:name=".ruta.ObservacionesActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyAppPopupTheme" />
+        <activity
+            android:name=".ruta.FotoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyAppPopupTheme" />
+        <activity
+            android:name=".cliente.ImportContactsActivity"
+            android:screenOrientation="portrait" />
 
         <!-- Modulo Oportunidades -->
-        <activity android:name="rp3.auna.oportunidad.FiltroOportunidadActivity"></activity>
-        <activity android:name="rp3.auna.oportunidad.EtapaTareasActivity"></activity>
-        <activity android:name="rp3.auna.oportunidad.EtapaActivity"></activity>
-        <activity android:name="rp3.auna.oportunidad.actividades.CheckboxActivity"></activity>
-        <activity android:name="rp3.auna.oportunidad.actividades.MultipleActivity" android:theme="@style/ActivityPopupTheme"></activity>
-        <activity android:name="rp3.auna.oportunidad.actividades.SeleccionActivity"></activity>
-        <activity android:name="rp3.auna.oportunidad.actividades.GrupoActivity"></activity>
-        <activity android:name="rp3.auna.oportunidad.actividades.TextoActivity" android:theme="@style/ActivityPopupTheme"></activity>
-        <activity android:name="rp3.auna.oportunidad.actividades.NumericoActivity" android:theme="@style/ActivityPopupTheme"></activity>
-        <activity android:name="rp3.auna.oportunidad.CrearOportunidadActivity" android:configChanges="orientation"></activity>
-        <activity android:name="rp3.auna.oportunidad.FotoOportunidadActivity"></activity>
-        <activity android:name="rp3.auna.oportunidad.CambiarEstadoActivity" android:theme="@style/MyAppPopupTheme"></activity>
-        <activity android:name="rp3.auna.utils.MapActivity" android:theme="@style/AppDialogTheme"></activity>
+        <activity
+            android:name=".oportunidad.FiltroOportunidadActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".oportunidad.EtapaTareasActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".oportunidad.EtapaActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".oportunidad.actividades.CheckboxActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".oportunidad.actividades.MultipleActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActivityPopupTheme" />
+        <activity
+            android:name=".oportunidad.actividades.SeleccionActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".oportunidad.actividades.GrupoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".oportunidad.actividades.TextoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActivityPopupTheme" />
+        <activity
+            android:name=".oportunidad.actividades.NumericoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActivityPopupTheme" />
+        <activity
+            android:name=".oportunidad.CrearOportunidadActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".oportunidad.FotoOportunidadActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".oportunidad.CambiarEstadoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyAppPopupTheme" />
+        <activity
+            android:name=".utils.MapActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppDialogTheme" />
         <!-- Modulo Marcaciones -->
-        <activity android:name="rp3.auna.marcaciones.MarcacionActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" >
+        <activity
+            android:name=".marcaciones.MarcacionActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait">
             <category android:name="android.intent.category.LAUNCHER" />
         </activity>
-        <activity android:name="rp3.auna.marcaciones.JustificacionPreviaActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"></activity>
-        <activity android:name="rp3.auna.marcaciones.PermisoActivity"></activity>
-        
+        <activity
+            android:name=".marcaciones.JustificacionPreviaActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
+        <activity android:name=".marcaciones.PermisoActivity" />
 
         <!-- Modulo Pedidos -->
-        <activity android:name="rp3.auna.pedido.CrearPedidoActivity" android:configChanges="orientation|keyboardHidden|screenSize"></activity>
-        <activity android:name="rp3.auna.pedido.CategoriaActivity" android:configChanges="orientation|keyboardHidden|screenSize"></activity>
-        <activity android:name="rp3.auna.pedido.ArqueoCajaActivity" android:configChanges="orientation|keyboardHidden|screenSize"></activity>
-        <activity android:name="rp3.auna.pedido.ProductoListActivity" android:configChanges="orientation|keyboardHidden|screenSize">
+        <activity
+            android:name=".pedido.CrearPedidoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pedido.CategoriaActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pedido.ArqueoCajaActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pedido.ProductoListActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH"/>
+                <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
             <!-- enable the search dialog to send searches to SearchableActivity -->
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value="rp3.marketforce.SearchableActivity"
-                />
+                android:value="rp3.marketforce.SearchableActivity" />
         </activity>
 
-        <!--AUNA -->
-        <activity android:name="pe.solera.api_payme_android.classes.activities.CardsAct" android:theme="@style/Theme.AppCompat.Light"></activity>
+        <!-- AUNA -->
+        <!--
+            <activity
+            android:name="pe.solera.api_payme_android.classes.activities.CardsAct"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light" />
+        -->
+        <activity
+            android:name=".ventanueva.CrearVisitaActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ventanueva.DetailClienteActivity" />
+        <activity
+            android:name=".Main2Activity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:theme="@style/AppThemeMD">
+
+            <!-- Only Required for search dialog -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ProspectoActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:theme="@style/AppThemeMD" />
+        <activity
+            android:name=".CrearLlamadaActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:theme="@style/AppThemeMD" />
+        <activity
+            android:name=".CrearVisitaActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:theme="@style/AppThemeMD" />
+        <activity
+            android:name=".CaptacionSolicitudActivity"
+            android:hardwareAccelerated="false"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:theme="@style/AppThemeMD" />
+        <activity
+            android:name=".CotizacionActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:theme="@style/AppThemeMD" />
+        <activity
+            android:name=".VisitaMediaActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:theme="@style/AppThemeMD" />
+        <activity
+            android:name=".MultiPhotoSelectedActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:theme="@style/AppThemeMD" />
+        <activity
+            android:name=".MultiMediaSelectedActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:theme="@style/AppThemeMD" />
+        <activity
+            android:name=".PhotoActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:theme="@style/AppThemeMD" />
+        <activity
+            android:name=".AlarmAlertActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:theme="@style/AppThemeMD">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".DetalleVisitaActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:theme="@style/AppThemeMD" />
+        <activity android:name=".reportes.ReporteActivity"
+            android:hardwareAccelerated="false"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:theme="@style/AppThemeMD"/>
     </application>
 
 </manifest>

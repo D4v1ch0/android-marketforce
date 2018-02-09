@@ -1,6 +1,7 @@
 package rp3.auna.ruta;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ import rp3.util.ConnectionUtils;
  */
 public class CrearClienteFragment extends BaseFragment {
 
+    private static final String TAG = CrearClienteFragment.class.getSimpleName();
     public static String ARG_NOMBRES = "nombres";
 
     private String nombres;
@@ -49,6 +51,7 @@ public class CrearClienteFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG,"onCreateView...");
         nombres = getArguments().getString(ARG_NOMBRES);
 
         view = inflater.inflate(R.layout.fragment_crear_cliente_visita, container);
@@ -65,6 +68,7 @@ public class CrearClienteFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 if(Validaciones()) {
+                    Log.d(TAG,"...");
                     Cliente cli = new Cliente();
                     cli.setIdCanal((int) Canal.getCanal(getDataBase(), "").get(0).getID());
                     cli.setIdTipoIdentificacion((int) ((Spinner) view.findViewById(R.id.cliente_tipo_identificacion)).getAdapter().getItemId(((Spinner) view.findViewById(R.id.cliente_tipo_identificacion)).getSelectedItemPosition()));
@@ -90,7 +94,10 @@ public class CrearClienteFragment extends BaseFragment {
 
 
                     if (cli.getID() == 0)
+                    {
+                        Log.d(TAG,"...");
                         cli.setID(getDataBase().queryMaxInt(Contract.Cliente.TABLE_NAME, Contract.Cliente._ID));
+                    }
 
 
                     ClienteDireccion cliDir = new ClienteDireccion();
@@ -112,6 +119,7 @@ public class CrearClienteFragment extends BaseFragment {
 
 
                     if (ConnectionUtils.isNetAvailable(getActivity())) {
+                        Log.d(TAG,"...");
                         Bundle bundle = new Bundle();
                         bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_CLIENTE_CREATE);
                         bundle.putLong(rp3.auna.cliente.CrearClienteFragment.ARG_CLIENTE, cli.getID());
@@ -137,6 +145,7 @@ public class CrearClienteFragment extends BaseFragment {
 
     public boolean Validaciones()
     {
+        Log.d(TAG,"Validaciones...");
         if(((EditText) view.findViewById(R.id.cliente_primer_nombre)).getText() == null || ((EditText) view.findViewById(R.id.cliente_primer_nombre)).getText().toString().length() <= 0)
         {
             Toast.makeText(getContext(), R.string.warning_falta_nombre, Toast.LENGTH_LONG);
@@ -148,6 +157,42 @@ public class CrearClienteFragment extends BaseFragment {
             return false;
         }
         return true;
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 
 }

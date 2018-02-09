@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.util.Log;
 import android.view.View;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -32,6 +33,7 @@ import rp3.util.StringUtils;
  */
 public class JustificacionFragment extends BaseFragment {
 
+    private static final String TAG = JustificacionFragment.class.getSimpleName();
     private final int REQ_CODE_SPEECH_INPUT = 100;
 
     public static final String ARG_PERMISO = "id_permidso";
@@ -43,6 +45,7 @@ public class JustificacionFragment extends BaseFragment {
 
     @Override
     public void onAttach(Activity activity) {
+        Log.d(TAG,"onAttach...");
         super.onAttach(activity);
         setContentView(R.layout.fragment_justificacion);
     }
@@ -50,6 +53,7 @@ public class JustificacionFragment extends BaseFragment {
     @Override
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
+        Log.d(TAG,"onFragmentCreateView...");
         setCancelable(false);
 
         getDialog().setTitle("Justificación");
@@ -154,6 +158,7 @@ public class JustificacionFragment extends BaseFragment {
     }
 
     private void promptSpeechInput() {
+        Log.d(TAG,"promptSpeechInput...");
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -172,10 +177,12 @@ public class JustificacionFragment extends BaseFragment {
     @Override
     public void onFragmentResult(String tagName, int resultCode, Bundle data) {
         super.onFragmentResult(tagName, resultCode, data);
+        Log.d(TAG,"onFragmentResult...");
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG,"onActivityResult...");
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQ_CODE_SPEECH_INPUT:
@@ -199,5 +206,41 @@ public class JustificacionFragment extends BaseFragment {
                 position = f;
         }
         return position;
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

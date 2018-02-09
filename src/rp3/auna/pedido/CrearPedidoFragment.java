@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -63,6 +64,7 @@ import rp3.util.StringUtils;
  */
 public class CrearPedidoFragment extends BaseFragment implements ProductFragment.ProductAcceptListener, PagosListFragment.PagosAcceptListener, CodeReaderFragment.ProductCodeAcceptListener{
 
+    private static final String TAG = CrearPedidoFragment.class.getSimpleName();
     public final static int CODE_PRINT = 1;
     private final int REQ_CODE_SPEECH_INPUT = 100;
 
@@ -111,6 +113,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG,"onCreate...");
         consumidorFinal.setCiudadanoOro(false);
         consumidorFinal.setExentoImpuesto(false);
         consumidorFinal.setNombre1("Consumidor Final");
@@ -127,6 +130,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        Log.d(TAG,"onAttach...");
         tryEnableGooglePlayServices(true);
         setContentView(R.layout.fragment_crear_pedido, R.menu.fragment_crear_pedido);
         setRetainInstance(true);
@@ -135,6 +139,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG,"onResume...");
         if(code != null) {
             try {
                 productFragment = ProductFragment.newInstance(code);
@@ -206,6 +211,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
     private void Grabar(boolean pendiente) {
         Pedido docRef = null;
+        Log.d(TAG,"Grabar...");
         if(tipo.equalsIgnoreCase("NC"))
             docRef = Pedido.getPedido(getDataBase(), pedido.get_idDocumentoRef(), true);
 
@@ -369,16 +375,19 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        Log.d(TAG,"onSaveInstanceState...");
     }
 
     @Override
     public void onViewStateRestored(Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
+        Log.d(TAG,"onViewStateRestored...");
     }
 
     @Override
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
+        Log.d(TAG,"onFragmentCreateView...");
         cliente_auto = (AutoCompleteTextView) rootView.findViewById(R.id.pedido_cliente);
         list_nombres = new ArrayList<String>();
 
@@ -879,10 +888,12 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     @Override
     public void onFragmentResult(String tagName, int resultCode, Bundle data) {
         super.onFragmentResult(tagName, resultCode, data);
+        Log.d(TAG,"onFragmentResult...");
     }
 
     public boolean Validaciones()
     {
+        Log.d(TAG,"Validaciones...");
         if(((AutoCompleteTextView) getRootView().findViewById(R.id.pedido_cliente)).length() <= 0)
         {
             Toast.makeText(this.getContext(), "Debe ingresar un cliente", Toast.LENGTH_LONG).show();
@@ -936,6 +947,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     @Override
     public void onAfterCreateOptionsMenu(Menu menu) {
         this.menu = menu;
+        Log.d(TAG,"onAfterCreateOptionsMenu...");
         menu.findItem(R.id.action_forma_pago).setVisible(tipo.equalsIgnoreCase("FA"));
     }
 
@@ -943,6 +955,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     @Override
     public void onDeleteSuccess(PedidoDetalle transaction) {
         int exists = -1;
+        Log.d(TAG,"onDeleteSuccess...");
         for (int i = 0; i < pedido.getPedidoDetalles().size(); i++) {
             if (pedido.getPedidoDetalles().get(i).getIdProducto() == transaction.getIdProducto())
                 exists = i;
@@ -956,6 +969,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
     @Override
     public void onAcceptSuccess(PedidoDetalle transaction) {
+        Log.d(TAG,"onAcceptSuccess...");
         int exists = -1;
 
         if(transaction.getCodigoExterno() == null && transaction.getProducto() != null)
@@ -1002,6 +1016,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
     @Override
     public void onAcceptSuccess(List<Pago> pagos) {
+        Log.d(TAG,"onAcceptSuccess...");
         if(pedido.getPagos() == null)
             pedido.setPagos(new ArrayList<Pago>());
 
@@ -1017,6 +1032,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     }
 
     public void generarFacturaFísica() {
+        Log.d(TAG,"generarFacturaFísica...");
         pedido = Pedido.getPedido(getDataBase(), pedido.getID(), true);
         String toPrint = PrintHelper.generarFacturaFísica(pedido, false);
 
@@ -1124,6 +1140,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
 
     private void setTransaccionValues()
     {
+        Log.d(TAG,"setTransaccionValues...");
         if (adapter == null) {
             adapter = new PedidoDetalleAdapter(this.getContext(), pedido.getPedidoDetalles());
             ((ListView) getRootView().findViewById(R.id.pedido_detalles)).setAdapter(adapter);
@@ -1186,7 +1203,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     @Override
     public void onAcceptCodeSuccess(PedidoDetalle transaction) {
         int exists = -1;
-
+        Log.d(TAG,"onAcceptCodeSuccess...");
         if(transaction.getCodigoExterno() == null && transaction.getProducto() != null)
             transaction.setCodigoExterno(transaction.getProducto().getCodigoExterno());
 
@@ -1230,6 +1247,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     }
 
     private void promptSpeechInput() {
+        Log.d(TAG,"promptSpeechInput...");
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -1246,7 +1264,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     }
 
     private void ValidarExentoImpuestos() {
-
+        Log.d(TAG,"ValidarExentoImpuestos...");
         for (PedidoDetalle det : pedido.getPedidoDetalles()) {
             det.setValorImpuestoTotal(0);
             det.setValorTotal(det.getSubtotal() - det.getValorDescuentoAutomaticoTotal() - det.getValorDescuentoManualTotal() - det.getValorDescuentoOroTotal());
@@ -1257,6 +1275,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     }
 
     private void ValidarImpuestos() {
+        Log.d(TAG,"ValidarImpuestos...");
         for (PedidoDetalle det : pedido.getPedidoDetalles()) {
             if(det.getValorImpuesto() != 0) {
                 det.setValorImpuestoTotal(det.getValorImpuesto() * det.getCantidad());
@@ -1268,6 +1287,7 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
     }
 
     private void ValidarDescuentos(boolean isOro) {
+        Log.d(TAG,"ValidarDescuentos...");
         for (PedidoDetalle det : pedido.getPedidoDetalles()) {
             if(isOro) {
                 det.setValorDescuentoOro(det.getValorUnitario() * det.getPorcentajeDescuentoOro());
@@ -1368,4 +1388,36 @@ public class CrearPedidoFragment extends BaseFragment implements ProductFragment
         //Retorno el saldo para que se presente en la forma de pago.
         return valorTotal;
     }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
+    }
+
 }

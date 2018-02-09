@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,7 +38,8 @@ import rp3.auna.oportunidad.EtapaTareasFragment;
 import rp3.auna.utils.NothingSelectedSpinnerAdapter;
 
 public class GrupoActivity extends ActividadActivity {
-	
+
+	private static final String TAG = GrupoActivity.class.getSimpleName();
 	LinearLayout Container;
 	int contador = 0, contador_ungroup = 0;
     List<Spinner> combos;
@@ -818,6 +820,7 @@ public class GrupoActivity extends ActividadActivity {
 	@Override
 	protected void onResume() {
 		Container.removeAllViews();
+		Log.d(TAG,"onResume...");
         combos = new ArrayList<Spinner>();
         multiples = new ArrayList<TextView>();
         contador = 0;
@@ -886,7 +889,35 @@ public class GrupoActivity extends ActividadActivity {
         ((Button) findViewById(R.id.actividad_cancelar)).setVisibility(View.GONE);
 		super.onResume();
 	}
-	
 
+	/**
+	 *
+	 * Ciclo de vida
+	 *
+	 */
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		Log.d(TAG,"onStart...");
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Log.d(TAG,"onPause...");
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		Log.d(TAG,"onStop...");
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Log.d(TAG,"onDestroy...");
+	}
 
 }

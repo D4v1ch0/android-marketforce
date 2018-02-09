@@ -2103,4 +2103,216 @@
         ON tbTipoDiferido.IdTipoDiferido = tbTarjetaComision.IdTipoDiferido
         WHERE tbTarjetaComision.IdBanco = ? AND tbTarjetaComision.IdMarcaTarjeta = ?
     </statement>
+
+    <!-- Venta Nueva -->
+
+    <!--Prospectos-->
+
+    <statement name ="ProspectoReferidoId">
+        SELECT * FROM tbProspectoVta WHERE IdProspecto
+    </statement>
+
+    <statement name="ProspectosInsertadas">
+        SELECT * FROM tbProspectoVta WHERE Estado = 1
+    </statement>
+    <statement name="ProspectosSincronizadas">
+        SELECT * FROM tbProspectoVta WHERE Estado = 2
+    </statement>
+    <statement name="ProspectosAll">
+        SELECT * FROM tbProspectoVta WHERE EstadoCode = 'A'
+    </statement>
+
+    <statement name="ProspectosAllEstado">
+        SELECT * FROM tbProspectoVta
+    </statement>
+
+    <statement name="ProspectosActualizadas">
+        SELECT * FROM tbProspectoVta WHERE Estado = 3
+    </statement>
+    <statement name="ProspectosSincronizadasId">
+        SELECT * FROM tbProspectoVta WHERE Estado = 3 and IdProspecto = ?
+    </statement>
+    <statement name="ProspectosSincronizadasIdBd">
+        SELECT * FROM tbProspectoVta WHERE _id = ?
+    </statement>
+
+    <statement name="ProspectoListaNegra">
+        SELECT * FROM tbProspectoVta WHERE EstadoCode = 'D' and Documento != NULL and TipoDocumento > 0
+    </statement>
+
+    <!--Llamadas-->
+    <statement name="LlamadasInsertadas">
+        SELECT * FROM tbLlamadaVta WHERE Insertado = 1
+    </statement>
+    <statement name="LlamadasSincronizadas">
+        SELECT * FROM tbLlamadaVta WHERE Insertado = 0
+    </statement>
+    <statement name="LlamadasActualizados">
+        SELECT * FROM tbLlamadaVta WHERE Insertado = 2
+    </statement>
+    <statement name="LlamadasSincronizadasAgenda">
+        SELECT * FROM tbLlamadaVta WHERE Insertado = 0 and IdAgenda = ?
+    </statement>
+    <statement name="LlamadasSincronizadasAgendaBd">
+        SELECT * FROM tbLlamadaVta WHERE Insertado = 1 and IdAgenda = ?
+    </statement>
+
+
+    <statement name="LlamadasUltimaFecha">
+    SELECT * FROM tbLlamadaVta ORDER BY FECHALLAMADA DESC LIMIT 1
+    </statement>
+
+    <statement name="ObtenerLlamada">
+        SELECT * FROM tbLlamadaVta WHERE IdLlamada = ?
+    </statement>
+    <statement name="ObtenerLlamadaBd">
+        SELECT * FROM tbLlamadaVta WHERE Id =
+    </statement>
+    <statement name="LlamadasAll">
+        SELECT T1._id,
+        T1.IdLlamada,
+        T1.Descripcion,
+        T1.Observacion,
+        T1.FechaLlamada,
+        T1.FechaInicioLlamada,
+        T1.FechaFinLlamada,
+        T1.Duracion,
+        T1.IdCliente,
+        T1.IdAgente,
+        T1.Latitud,
+        T1.Longitud,
+        T1.LlamadaTabla,
+        T1.LlamadoValue,
+        T1.MotivoReprogramacionTabla,
+        T1.MotivoReprogramacionValue,
+        T1.MotivoVisitaTabla,
+        T1.MotivoVisitaValue,
+        T1.ReferidoTabla,
+        T1.ReferidoValue,
+        T1.LlamadaValor,
+        T1.LlamadaId,
+        T1.Estado,
+        T1.Insertado FROM tbLlamadaVta T1 INNER JOIN tbGeneralValue T2 ON
+        T2.GeneralTableId = T1.LlamadaTabla  AND t2.Code = T1.LlamadoValue
+        ORDER BY T2.Reference2 DESC,T1.FechaLlamada DESC
+
+    </statement>
+    <statement name="LlamadasAllPendiente">
+        SELECT * FROM tbLlamadaVta WHERE LlamadoValue = 'D' AND INSERTADO = 2 ORDER BY FechaLlamada DESC
+    </statement>
+    <statement name="LlamadasActualizadas">
+        SELECT * FROM tbLlamadaVta WHERE Insertado = 2
+    </statement>
+    <statement name="LlamadasSincronizadasBdbyProspecto">
+        SELECT * FROM tbLlamadaVta WHERE Insertado = 1 and IdCliente = ?
+    </statement>
+
+    <!--Agenda -->
+    <statement name="AgendasInsertadas">
+        SELECT * FROM tbAgendaVta WHERE Insertado = 1
+    </statement>
+    <statement name="AgendasAll">
+        SELECT * FROM tbAgendaVta
+    </statement>
+    <statement name="AgendasSincronizadas">
+        SELECT * FROM tbAgendaVta WHERE Insertado = 0
+    </statement>
+    <statement name="AgendasActualizadas">
+        SELECT * FROM tbAgendaVta WHERE Insertado = 2
+    </statement>
+    <statement name="AgendasSincronizadasAgenda">
+        SELECT * FROM tbAgendaVta WHERE Insertado = 0 and IdAgenda = ?
+    </statement>
+    <statement name="AgendasSincronizadasAgendaBd">
+        SELECT * FROM tbAgendaVta WHERE Insertado = 1 and _id = ?
+    </statement>
+    <statement name="AgendasSincronizadasAgendaBdbyProspecto">
+        SELECT * FROM tbAgendaVta WHERE Insertado = 1 and IdCliente = ?
+    </statement>
+    <!--Visita-->
+    <statement name="VisitasInsertadas">
+        SELECT * FROM tbVisitaVta WHERE Insertado = 1
+    </statement>
+
+    <statement name="VisitasAll">
+        SELECT
+        T1._id,
+        T1.IdVisita,
+        T1.Descripcion,
+        T1.FechaVisita,
+        T1.FechaInicio,
+        T1.FechaFin,
+        T1.IdCliente,
+        T1.IdClienteDireccion,
+        T1.IdAgente,
+        T1.Observacion,
+        T1.Latitud,
+        T1.Longitud,
+        T1.MotivoReprogramacionTabla,
+        T1.MotivoReprogramacionValue,
+        T1.MotivoVisitaTabla,
+        T1.MotivoVisitaValue,
+        T1.VisitaTabla,
+        T1.VisitaValue,
+        T1.ReferidoTabla,
+        T1.ReferidoValue,
+        T1.TiempoCode,
+        T1.DuracionCode,
+        T1.TipoVenta,
+        T1.ReferidoCount,
+        T1.VisitaId,
+        T1.LlamadaId,
+        T1.Estado,
+        T1.Insertado
+        FROM tbVisitaVta T1 INNER JOIN tbGeneralValue T2 ON
+        T2.GeneralTableId = T1.VisitaTabla  AND T2.Code = T1.VisitaValue
+        ORDER BY T2.Reference2 DESC,T1.FechaVisita DESC
+    </statement>
+
+    <statement name="VisitasPendienteAll">
+        SELECT * FROM tbVisitaVta WHERE VisitaValue = 'D' AND INSERTADO = 2 ORDER BY FECHAVISITA DESC
+    </statement>
+
+    <statement name="VisitasSincronizadas">
+        SELECT * FROM tbVisitaVta WHERE Insertado = 0
+    </statement>
+    <statement name="VisitasActualizadas">
+        SELECT * FROM tbVisitaVta WHERE Insertado = 2
+    </statement>
+    <statement name="VisitaGetIdAgenda">
+        SELECT * FROM tbVisitaVta WHERE IdAgenda = ?
+    </statement>
+    <statement name="VisitaSincronizadasAgenda">
+        SELECT * FROM tbVisitaVta WHERE Insertado = 0 and IdAgenda = ?
+    </statement>
+    <statement name="VisitaSincronizadasAgendaBd">
+        SELECT * FROM tbVisitaVta WHERE Insertado = 1 and IdAgenda = ?
+    </statement>
+    <statement name="VisitasSincronizadasBdbyProspecto">
+        SELECT * FROM tbVisitaVta WHERE Insertado = 1 and IdCliente = ?
+    </statement>
+    <statement name="VisitassUltimaFecha">
+        SELECT * FROM tbVisitaVta ORDER BY FECHAVISITA DESC LIMIT 1
+    </statement>
+
+    <!--FotosVisita-->
+    <statement name="FotoVisitasInsertadas">
+        SELECT * FROM tbFotoVisitaVta WHERE Insertado = 1
+    </statement>
+    <statement name="FotoVisitasAll">
+        SELECT * FROM tbFotoVisitaVta
+    </statement>
+    <statement name="FotosVisitaSincronizadas">
+        SELECT * FROM tbFotoVisitaVta WHERE Insertado = 0
+    </statement>
+    <statement name="FotosVisitaActualizadas">
+        SELECT * FROM tbFotoVisitaVta WHERE Insertado = 2
+    </statement>
+    <statement name="FotosVisitaSincronizadasAgenda">
+        SELECT * FROM tbFotoVisitaVta WHERE Insertado = 0 and IdVisita = ?
+    </statement>
+    <statement name="FotosVisitaSincronizadasAgendaBd">
+        SELECT * FROM tbFotoVisitaVta WHERE Insertado = 1 and IdVisita = ?
+    </statement>
+
 </sql>

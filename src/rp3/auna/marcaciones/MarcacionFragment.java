@@ -8,6 +8,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -57,6 +58,7 @@ import rp3.widget.DigitalClock;
  */
 public class MarcacionFragment extends BaseFragment {
 
+    private static final String TAG = MarcacionFragment.class.getSimpleName();
     private static final int PRESS_TIME = 2000;
     private double DISTANCE = 0;
     private static final int DIALOG_J2 = 1;
@@ -79,18 +81,21 @@ public class MarcacionFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG,"onCreate...");
         locationUtils = new LocationUtils();
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        Log.d(TAG,"onAttach...");
         setContentView(R.layout.fragment_marcacion_pager, R.menu.fragment_marcaciones_menu);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG,"onResume...");
         ((ImageView) getRootView().findViewById(R.id.point_hoy)).setImageResource(R.drawable.circle_reprogramed);
         ((ImageView) getRootView().findViewById(R.id.point_semana)).setImageResource(R.drawable.circle_shape);
 
@@ -363,7 +368,7 @@ public class MarcacionFragment extends BaseFragment {
     @Override
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
-
+        Log.d(TAG,"onFragmentCreateView...");
         if(getDataBase() == null) {
             try {
                 Session.Start(this.getContext());
@@ -431,10 +436,12 @@ public class MarcacionFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG,"onActivityResult...");
         fragment.onActivityResult(requestCode, resultCode, data);
     }
 
     public void SetButtonBreak() {
+        Log.d(TAG,"SetButtonBreak...");
         marcaciones.findViewById(R.id.layout_break).setVisibility(View.VISIBLE);
         ((DonutProgress) marcaciones.findViewById(R.id.donut_break)).setMax(PRESS_TIME);
         marcaciones.findViewById(R.id.button_break).setOnTouchListener(new View.OnTouchListener() {
@@ -537,6 +544,7 @@ public class MarcacionFragment extends BaseFragment {
     }
 
     public void SetButtonFinBreak() {
+        Log.d(TAG,"SetButtonFinBreak...");
         marcaciones.findViewById(R.id.layout_fin_break).setVisibility(View.VISIBLE);
         ((DonutProgress) marcaciones.findViewById(R.id.donut_fin_break)).setMax(PRESS_TIME);
         marcaciones.findViewById(R.id.button_fin_break).setOnTouchListener(new View.OnTouchListener() {
@@ -654,6 +662,7 @@ public class MarcacionFragment extends BaseFragment {
     }
 
     public void SetButtonFinJornada() {
+        Log.d(TAG,"SetButtonFinJornada...");
         marcaciones.findViewById(R.id.layout_fin_jornada).setVisibility(View.VISIBLE);
         ((DonutProgress) marcaciones.findViewById(R.id.donut_fin_jornada)).setMax(PRESS_TIME);
         marcaciones.findViewById(R.id.button_fin_jornada).setOnTouchListener(new View.OnTouchListener() {
@@ -886,6 +895,7 @@ public class MarcacionFragment extends BaseFragment {
     }
 
     private void setServiceRecurring(){
+        Log.d(TAG,"setServiceRecurring...");
         Intent i = new Intent(this.getContext(), EnviarUbicacionReceiver.class);
         PendingIntent pi = PendingIntent.getBroadcast(this.getContext(), 0, i, 0);
 
@@ -910,5 +920,36 @@ public class MarcacionFragment extends BaseFragment {
                 calendar.getTimeInMillis() + (i1 * 1000 * 5),
                 1000 * 60 * PreferenceManager.getInt(Contants.KEY_ALARMA_INTERVALO), pi);
 
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

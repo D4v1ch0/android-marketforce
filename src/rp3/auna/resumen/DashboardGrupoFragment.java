@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -36,6 +37,7 @@ import rp3.auna.utils.DetailsPageAdapter;
 @SuppressWarnings("ResourceType")
 public class DashboardGrupoFragment extends BaseFragment {
 
+	private static final String TAG = DashboardGrupoFragment.class.getSimpleName();
 	public static int NUM_VERTICAL_LABELS = 6;
 	
 	private List<String> titles;
@@ -54,30 +56,23 @@ public class DashboardGrupoFragment extends BaseFragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
+		Log.d(TAG,"onAttach...");
 	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
+		Log.d(TAG,"onCreate...");
 		getActivity().setTitle("Equipo");
 		
 		//setRetainInstance(true);				
 		setContentView(R.layout.fragment_dashboard_grupo);
 	}
-	
-	@Override
-	public void onStart() {		
-		super.onStart();
-	}
-	
-	@Override
-	public void onDestroyView() {
-		// TODO Auto-generated method stub
-		super.onDestroyView();
-	}
+
 	
 	public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
     	super.onFragmentCreateView(rootView, savedInstanceState);
+		Log.d(TAG,"onFragmentCreateView...");
     	titles = new ArrayList<String>();
     	visitas = new ArrayList<Integer>();
     	SimpleDateFormat format1 = new SimpleDateFormat("MMMM");
@@ -190,6 +185,7 @@ public class DashboardGrupoFragment extends BaseFragment {
 	
 	private FrameLayout createGraphics(String title, long time_inicio, long time_fin)
 	 {
+		 Log.d(TAG,"createGraphics FrameLayout...");
 		int mayor = 0;
 	 	int tope = 0;
 	 	List<AgenteResumen> list_resumen = AgenteResumen.getResumen(getDataBase(), time_inicio, time_fin);
@@ -329,8 +325,46 @@ public class DashboardGrupoFragment extends BaseFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.d(TAG,"onActivityResult...");
         if(agenteDetalleFragment != null)
             agenteDetalleFragment.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+	/**
+	 *
+	 * Ciclo de vida
+	 *
+	 */
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		Log.d(TAG,"onStart...");
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.d(TAG,"onPause...");
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		Log.d(TAG,"onStop...");
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		Log.d(TAG,"onResume...");
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Log.d(TAG,"onDestroy...");
+	}
+
 }

@@ -2,6 +2,7 @@ package rp3.auna.oportunidad;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -20,6 +21,7 @@ import rp3.util.CalendarUtils;
  */
 public class EtapaFechasFragment extends BaseFragment {
 
+    private static final String TAG = EtapaFechasFragment.class.getSimpleName();
     public static final String ID_ETAPA = "ID_ETAPA";
 
     public long idEtapa;
@@ -35,13 +37,14 @@ public class EtapaFechasFragment extends BaseFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        Log.d(TAG,"onAttach...");
         setContentView(R.layout.fragment_etapa_fechas);
     }
 
     @Override
     public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
-
+        Log.d(TAG,"onFragmentCreateView..");
         idEtapa = getArguments().getLong(ID_ETAPA);
 
         OportunidadEtapa etp = OportunidadEtapa.getEtapaOportunidad(getDataBase(), idEtapa);
@@ -128,5 +131,41 @@ public class EtapaFechasFragment extends BaseFragment {
             ((TextView) rootView.findViewById(R.id.etapa_dias_programado)).setText(diasProgramado + " Día(s)");
         if(fechaInicioProg != -1)
             ((TextView) rootView.findViewById(R.id.etapa_fecha_ini_plan)).setText(format1.format(new Date(fechaInicioProg)));
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

@@ -4,6 +4,7 @@ import rp3.auna.R;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -17,6 +18,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 public class HeaderListView extends RelativeLayout {
+
+    private static final String TAG = HeaderListView.class.getSimpleName();
 
    /*************************************************************/
 	/*
@@ -56,6 +59,15 @@ public class HeaderListView extends RelativeLayout {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (mAdapter != null)
                     mAdapter.onItemClick(parent, view, position, id);
+            }
+        });
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(TAG,"onItemLongClick:"+position);
+                if (mAdapter != null)
+                    mAdapter.onItemLongClick(parent, view, position, id);
+                return false;
             }
         });
         addView(mListView);
@@ -279,7 +291,7 @@ public class HeaderListView extends RelativeLayout {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getContext().getResources().getDisplayMetrics());
     }
 
-    protected class InternalListView extends ListView {
+    protected class InternalListView extends ListView implements AdapterView.OnItemLongClickListener {
 
         public InternalListView(Context context) {
             super(context);
@@ -298,6 +310,11 @@ public class HeaderListView extends RelativeLayout {
         @Override
         protected int computeVerticalScrollRange() {
             return super.computeVerticalScrollRange();
+        }
+
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            return false;
         }
     }
 }

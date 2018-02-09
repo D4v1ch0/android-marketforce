@@ -2,6 +2,7 @@ package rp3.auna.pedido;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -17,16 +18,18 @@ import rp3.auna.models.pedido.ControlCaja;
  */
 public class ArqueoControlFragment extends BaseFragment {
 
+    private static final String TAG = ArqueoControlFragment.class.getSimpleName();
     private ControlCajaListener createFragmentListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG,"onCreate...");
     }
 
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
+        Log.d(TAG,"onAttach...");
         setContentView(R.layout.fragment_arqueo_lista);
         if(getParentFragment()!=null){
             createFragmentListener = (ControlCajaListener)getParentFragment();
@@ -43,7 +46,7 @@ public class ArqueoControlFragment extends BaseFragment {
     @Override
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
-
+        Log.d(TAG,"onFragmentCreateView...");
         final List<ControlCaja> controlCajas = ControlCaja.getControlCajas(getDataBase());
         ControlCajaAdapter adapter = new ControlCajaAdapter(this.getContext(), controlCajas);
 
@@ -56,5 +59,41 @@ public class ArqueoControlFragment extends BaseFragment {
             }
         });
 
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

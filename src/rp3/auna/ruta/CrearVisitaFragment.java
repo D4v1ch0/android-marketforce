@@ -16,6 +16,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -54,6 +55,7 @@ import rp3.util.Convert;
 @SuppressLint("NewApi")
 public class CrearVisitaFragment extends BaseFragment implements EditTareasDialogListener, CrearClienteFragment.CrearClienteDialogListener {
 
+    private static final String TAG = CrearVisitaFragment.class.getSimpleName();
     public static String ARG_AGENDA = "agenda";
     public static String ARG_IDAGENDA = "idagenda";
     public static String ARG_FROM = "from";
@@ -93,12 +95,13 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        Log.d(TAG,"onAttach...");
     }
 
     @Override
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
-
+        Log.d(TAG,"onFragmentCreateView...");
         String lastText = "";
         list_nombres = new ArrayList<String>();
 
@@ -252,6 +255,7 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 
     @Override
     public void onDailogTimePickerChange(int id, int hours, int minutes) {
+        Log.d(TAG,"onDailogTimePickerChange..."+id+hours+minutes);
         fecha.set(Calendar.HOUR_OF_DAY, hours);
         fecha.set(Calendar.MINUTE, minutes);
         DesdeText.setText(format1.format(fecha.getTime()));
@@ -259,6 +263,7 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
     }
 
     private void setDatosCliente(long id) {
+        Log.d(TAG,"setDatosCliente...");
         if (id != 0) {
             Cliente cli = Cliente.getClienteID(getDataBase(), id, false);
 
@@ -279,6 +284,7 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
     }
 
     private void setDatos(long id) {
+        Log.d(TAG,"setDatos...");
         if (id != 0) {
             Agenda agd = Agenda.getAgenda(getDataBase(), id);
             if (agd.getIdContacto() != 0 || agd.get_idContacto() != 0) {
@@ -305,6 +311,7 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG,"onCreate...");
         setRetainInstance(true);
         super.setContentView(R.layout.layout_crear_visita);
         fecha = Calendar.getInstance();
@@ -314,13 +321,14 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        Log.d(TAG,"onCreateView...");
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
 
     @Override
     public void onFinishTareasDialog(List<Tarea> tareas) {
+        Log.d(TAG,"onFinishTareasDialog...");
         this.list_tareas = tareas;
         String tarea_string = "";
         if (tareas.size() > 0) {
@@ -495,6 +503,7 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 
     @Override
     public void onPositiveConfirmation(int id) {
+        Log.d(TAG,"onPositiveConfirmation...");
         switch (id)
         {
             case DIALOG_CREAR_CLIENTE:
@@ -531,6 +540,7 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
     }
 
     private void setCalendar() {
+        Log.d(TAG,"setCalendar...");
         caldroidFragment = new CaldroidFragment();
         Bundle args = new Bundle();
         Calendar cal = Calendar.getInstance();
@@ -607,6 +617,7 @@ public class CrearVisitaFragment extends BaseFragment implements EditTareasDialo
 
     @Override
     public int onFinishCrearClienteDialog(long idCliente) {
+        Log.d(TAG,"onFinishCrearClienteDialog...");
         Agenda agenda = new Agenda();
         agenda.setDuracion(duracion);
         agenda.setTiempoViaje(tiempo);

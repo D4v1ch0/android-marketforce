@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +35,7 @@ import rp3.util.ConnectionUtils;
  */
 public class OportunidadListFragment extends BaseFragment {
 
+    private static final String TAG = OportunidadListFragment.class.getSimpleName();
     public static final String ARG_TRANSACTIONTYPEID = "transactionType";
     public static final String ARG_TRANSACTIONTYPEBO = "transactionTypeBo";
     private OportunidadListFragmentListener oportunidadListFragmentCallback;
@@ -67,7 +69,7 @@ public class OportunidadListFragment extends BaseFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
+        Log.d(TAG,"onAttach...");
         if(getParentFragment()!=null){
             oportunidadListFragmentCallback = (OportunidadListFragmentListener)getParentFragment();
         }else{
@@ -85,6 +87,7 @@ public class OportunidadListFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG,"onResume...");
         if(!filtro) {
             if (currentTransactionBoolean) {
                 ejecutarConsulta();
@@ -100,8 +103,7 @@ public class OportunidadListFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
+        Log.d(TAG,"onCreate...");
         if(savedInstanceState == null)
         {
             currentTransactionBoolean = getArguments().getBoolean(ARG_TRANSACTIONTYPEBO);
@@ -114,6 +116,7 @@ public class OportunidadListFragment extends BaseFragment {
     }
 
     public void ejecutarConsulta(){
+        Log.d(TAG,"ejecutarConsulta...");
         Bundle args = new Bundle();
         executeLoader(0, args, loaderOportunidad);
     }
@@ -121,7 +124,7 @@ public class OportunidadListFragment extends BaseFragment {
     @Override
     public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
-
+        Log.d(TAG,"onFragmentCreateView...");
         list = (ExpandableListView) rootView.findViewById(R.id.oportunidad_list);
         pullRefresher = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
     }
@@ -130,6 +133,7 @@ public class OportunidadListFragment extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
+        Log.d(TAG,"onStart...");
         if(list!=null && list.getParent() == null){
             pullRefresher.setRefreshing(false);
             pullRefresher.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -172,15 +176,18 @@ public class OportunidadListFragment extends BaseFragment {
     @Override
     public void onSaveInstanceState(Bundle arg0) {
         super.onSaveInstanceState(arg0);
+        Log.d(TAG,"onSaveInstanceState...");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        Log.d(TAG,"onDetach...");
     }
 
 
     public void searchTransactions(String termSearch){
+        Log.d(TAG,"searchTransactions...");
         Bundle args = new Bundle();
         args.putString(LoaderOportunidad.STRING_SEARCH, termSearch);
         getLoaderManager().restartLoader(0, args, loaderOportunidad);
@@ -201,7 +208,7 @@ public class OportunidadListFragment extends BaseFragment {
 
     @SuppressLint("SimpleDateFormat")
     private void OrderBy() {
-
+        Log.d(TAG,"OrderBy...");
         try {
 
 
@@ -335,7 +342,7 @@ public class OportunidadListFragment extends BaseFragment {
 
     public void onSyncComplete(Bundle data, MessageCollection messages) {
         super.onSyncComplete(data, messages);
-
+        Log.d(TAG,"onSyncComplete...");
         closeDialogProgress();
         pullRefresher.setRefreshing(false);
         pullRefresher.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -356,6 +363,7 @@ public class OportunidadListFragment extends BaseFragment {
 
     public void aplicarFiltro(Intent intent)
     {
+        Log.d(TAG,"aplicarFiltro...");
         filtro = true;
         lista = toExpandableList(Oportunidad.getOportunidadesFiltro(getDataBase(), intent));
         OrderBy();
@@ -383,4 +391,29 @@ public class OportunidadListFragment extends BaseFragment {
 
         return listDataChild;
     }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
+    }
+
 }

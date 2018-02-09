@@ -1,9 +1,11 @@
 <resources>
 
-    <string name="app_name">RP3 Auna</string>
-    <string name="title_option_setinicio">Dashboard</string>
+    <string name="app_name">CRM AUNA</string>
+    <!--<string name="title_option_setinicio">Dashboard</string>-->
+    <string name="title_option_setinicio">Agenda</string>
     <string name="title_option_setrutas">Agenda</string>
-    <string name="title_option_setclientes">Clientes</string>
+    <!--<string name="title_option_setclientes">Clientes</string>-->
+    <string name="title_option_setclientes">Prospectos</string>
     <string name="title_option_setpedido">Transacciones</string>
     <string name="title_option_setreuniones">Reuniones</string>
     <string name="title_option_setrecordatorios">Recordatorios</string>
@@ -15,16 +17,16 @@
     <string name="title_option_setcerrar_sesion">Cerrar Sesión</string>
     <string name="title_option_setconfiguracion">CONFIGURACIÓN</string>
     <string name="test_money_value">$100.00</string>
-	<string name="test_transaction_type">Factura</string>
-	<string name="test_client_name">Nombre Prueba</string>
-	<string name="test_product_name">Producto de Prueba</string>
-	<string name="test_number_value">100.00</string>
-	<string name="test_order_name">Por nombre</string>
-	<string name="test_order_last_name">Por Apellido</string>
-	<string name="test_order_date">Por fecha</string>
-	<string name="test_telefono">042823867</string>
-	<string name="test_null"></string>
-	<string name="label_total">Total</string>
+    <string name="test_transaction_type">Factura</string>
+    <string name="test_client_name">Nombre Prueba</string>
+    <string name="test_product_name">Producto de Prueba</string>
+    <string name="test_number_value">100.00</string>
+    <string name="test_order_name">Por nombre</string>
+    <string name="test_order_last_name">Por Apellido</string>
+    <string name="test_order_date">Por fecha</string>
+    <string name="test_telefono">042823867</string>
+    <string name="test_null"></string>
+    <string name="label_total">Total</string>
     <string name="label_discount">Descuento</string>
     <string name="label_tax">Impuesto</string>
     <string name="label_taxes">Impuestos</string>
@@ -66,8 +68,8 @@
     <string name="menu_reprogramar_agenda">Reprogramar Agenda</string>
     <string name="label_desde">Desde:</string>
     <string name="label_hasta">Hasta:</string>
-    <string name="label_cliente">Cliente</string>
-    <string name="label_crear_visita">Crear Visita</string>
+    <string name="label_cliente">Prospecto</string>
+    <string name="label_crear_visita">Agendar Visita</string>
     <string name="label_proxima_visita">Próxima Visita</string>
     <string name="label_ver_agentes">Ver Agentes</string>
     <string name="label_ver_rutas">Ver Rutas</string>
@@ -178,9 +180,10 @@
     <string name="label_esta_semana">Esta Semana</string>
     <string name="label_ult_semana">Ult. Semana</string>
     <string name="message_information1"><![CDATA[Market Force® es un producto de RP3® Retail Software. Su registro o uso del Software implica la íntegra aceptación de los <u><font color="#2582b4">Términos y Condiciones</font></u> de la presente Licencia, así como de las políticas de privacidad de Market Force®.]]></string>
+    <string name="message_information11"><![CDATA[Market Force® es un producto de RP3® Retail Software. Su registro o uso del Software implica la íntegra aceptación de los Términos y Condiciones de la presente Licencia, así como de las políticas de privacidad de Market Force®.]]></string>
     <string name="message_information2">Las Condiciones Legales de Uso de la presente aplicación quedan supeditadas al acuerdo de Licencia y Contrato General de suscripción vigente entre el usuario final y RP3® Retail Software.</string>
     <string name="message_information3">En ningún caso RP3® Retail Software será responsable de ningún daño  ocasionado por causa de algún error u omisión, en los contenidos presentados en la aplicación  (incluyendo cualquier daño especial, indirecto o consecuencial, pérdida de datos, pérdida de información, pérdida de beneficios, interrupción de negocios o cualquier otra perdida pecuniaria) por el uso o la imposibilidad de utilizar esta aplicación.</string>
-    <string name="label_copyright">Copyright © 2016</string>
+    <string name="label_copyright">Copyright © 2018</string>
     <string name="message_information_end">RP3® Retail Software - Todos los Derechos Reservados</string>
     <string name="label_punto_inicio">Punto de Inicio</string>
     <string name="label_ultimo_punto">Último Punto</string>
@@ -396,7 +399,8 @@
     <string name="label_segunda_jornada">2da Jornada</string>
     <string name="label_marcaciones_historico">Historico Marcaciones</string>
     <string name="label_sin_marcaciones">No existen marcaciones registradas</string>
-    <string name="label_hora">Hora:</string>
+    <string name="label_hora_visita">Hora a realizar la visita:</string>
+    <string name="label_hora_llamada">Hora a realizar la llamada:</string>
     <string name="label_minutos_atraso">Minutos Atraso:</string>
     <string name="label_jornada">Jornada:</string>
     <string name="title_option_justificaciones">Aprobar Permisos</string>
@@ -444,7 +448,7 @@
     <string name="label_no_datos">No hay datos</string>
     <string name="label_agregar_afiliado">Agregar afiliado</string>
     <string name="label_edad">Edad</string>
-    <string name="label_es_fumador">Es Fumador?</string>
+    <string name="label_es_fumador">¿Es Fumador?</string>
     <string name="label_pago_anual">Anual</string>
     <string name="label_con_todas_tarjetas">con todas las tarjetas</string>
     <string name="label_pago_mensual">Mensual</string>
@@ -456,4 +460,106 @@
     <string name="label_solicitud">Número Solicitud</string>
     <string name="label_valor_cotizacion">Valor Cotizacion</string>
     <string name="label_ciudad_distrito">Ciudad o Distrito</string>
+    <string name="label_crear_llamada">Agendar Llamada</string>
+    <string name="label_asignar_llamada">Asignar Llamada</string>
+    <string name="label_prospecto_direcciones">Direcciones</string>
+    <string name="label_ver_detalle">Ver detalle</string>
+
+
+    <!-- Item Drawer-->
+
+    <string-array name="drawer">
+        <item>@string/agendaitemdrawer</item>
+        <item>@string/prospectoitemdrawer</item>
+        <item>@string/reporteDrawer</item>
+        <item>@string/sincronizaritemdrawer</item>
+        <item>@string/informacionitemdrawer</item>
+        <item>@string/cerrarsesionitemdrawer</item>
+    </string-array>
+
+    <!--<item>@string/reporteDrawer</item>
+    <string name="reporteDrawer">Reporte</string>
+    -->
+
+    <string name="agendaitemdrawer">Agenda</string>
+    <string name="prospectoitemdrawer">Prospectos</string>
+    <string name="reporteDrawer">Reportes</string>
+    <string name="sincronizaritemdrawer">Sincronizar</string>
+    <string name="informacionitemdrawer">Información</string>
+    <string name="cerrarsesionitemdrawer">Cerrar Sesión</string>
+
+    <array name="drawerIcons">
+        <item>@drawable/ic_action_home</item>
+        <item>@drawable/ic_action_prospectos</item>
+        <item>@drawable/ic_action_reportes</item>
+        <item>@drawable/ic_action_sync</item>
+        <item>@drawable/ic_action_information_</item>
+        <item>@drawable/ic_action_logout</item>
+    </array>
+
+    <string name="drawer_open">open drawer</string>
+    <string name="drawer_close">close drawer</string>
+    <string name="action_agregar_prospecto">Agregar Prospecto</string>
+    <string name="ordenarnombre">Ordenar por Nombre</string>
+
+    <!--<string name="url">http://192.168.43.120:55042/api/</string>-->
+    <!--<string name="urlapi">http://192.168.43.120:55042/</string>-->
+    <!--<string name="urlapi">http://auna.des.rp3marketforce.com/api/</string>-->
+    <!--<string name="urlapi">http://192.168.0.7:55042/api/</string>-->
+    <!--<string name="urlapi">http://192.168.0.14:55042/api/</string>-->
+    <!--<string name="urlapi_desarrollo">http://auna.des.rp3marketforce.com/api/</string>-->
+
+    <!--<string name="urlapi">http://auna.rp3marketforce.com:8085/</string>-->
+    <!--<string name="url">http://auna.rp3marketforce.com:8085/api/</string>-->
+
+
+    <!--<string name="urlapi">http://192.168.0.19:55042/</string>-->
+    <!--<string name="url">http://192.168.0.19:55042/api/</string>-->
+
+    <!-- URLS QAS -->
+
+    <string name="urlapi">http://auna.rp3marketforce.com:8080/</string>
+    <string name="url">http://auna.rp3marketforce.com:8080/api/</string>
+
+    <!--URLS PRODUCCIÓN -->
+
+    <!--<string name="urlapi">https://crm.auna.pe/</string>-->
+    <!--<string name="url">https://crm.auna.pe/api/</string>-->
+
+    <string name="cliend_id">ClientId</string>
+    <string name="client_secret">ClientSecret</string>
+    <string name="auth_type_token">AuthTypeToken</string>
+
+    <string name="cliend_id_response">android-app-marketforce</string>
+    <string name="client_secret_response">rp3-marketforce2014</string>
+    <string name="auth_type_token_response">rp3.marketforce</string>
+
+    <string name="auth_token">AuthToken</string>
+
+    <string name="urlapi_desarrollo">http://auna.rp3marketforce.com:8085/api/</string>
+
+    <string name="title_app">RP3 Market Force</string>
+
+    <!--<string name="url">http://auna.des.rp3marketforce.com/api/</string>-->
+
+    <!--<string name="url">http://192.168.0.7:55042/</string>-->
+    <string name="appname_marketforce">RP3 Market Force</string>
+    <string name="aplicacionspi">Rp3AunaApp</string>
+    <string name="gpsdialog">Activar GPS</string>
+    <string name="label_Fecha_nacimiento">Fecha de Nacimiento</string>
+
+    <string name="prospecto_document_exist">Este documento ya esta registrado.</string>
+    <string name="prospecto_document_robinson">Este documento se encuentra en la lista negra.</string>
+    <string name="prospecto_document_validate">Es necesario validar el documento ingresado.</string>
+
+    <string name="path_tick" translatable="false">M4.8,13.4 L9,17.6 M10.4,16.2 L19.6,7</string>
+    <string name="path_cross" translatable="false">M6.4,6.4 L17.6,17.6 M6.4,17.6 L17.6,6.4</string>
+    <string name="arrowoverflow_path_arrowhead" translatable="false">M -5.5,-1 l 11,0 c 0,0 0,0 0,0 l 0,2 c 0,0 0,0 0,0 l -11,0 c 0,0 0,0 0,0 l 0,-2 c 0,0 0,0 0,0 Z</string>
+    <string name="arrowoverflow_path_arrowbar" translatable="false">M -7,-1 l 14,0 c 0,0 0,0 0,0 l 0,2 c 0,0 0,0 0,0 l -14,0 c 0,0 0,0 0,0 l 0,-2 c 0,0 0,0 0,0 Z</string>
+    <string name="arrowoverflow_path_dot" translatable="false">M 0,-2 l 0,0 c 1.1045694996,0 2,0.8954305004 2,2 l 0,0 c 0,1.1045694996 -0.8954305004,2 -2,2 l 0,0 c -1.1045694996,0 -2,-0.8954305004 -2,-2 l 0,0 c 0,-1.1045694996 0.8954305004,-2 2,-2 Z</string>
+    <string name="no_alarms">No alarms available</string>
+    <string name="alarm_will_sound_in" formatted="false">"Alarma con sonido"</string>
+    <string name="alarm_hours_and_minutes" formatted="false">%d horas y %d minutos.</string>
+    <string name="alarm_minutes" formatted="false">\"%d minutos.\"</string>
+    <string name="alarm_less_minute" formatted="false">menos de un minuto.</string>
 </resources>

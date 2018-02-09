@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingLeft="@dimen/normal_space"
+    android:paddingRight="@dimen/normal_space"
+    android:layout_height="wrap_content"
+    android:layout_margin="3dp"
+    android:background="@color/alternative_background">
+    <TextView
+        android:textColor="@color/md_text"
+        android:id="@+id/tvGeneralSelected"
+        android:fontFamily="sans-serif"
+        android:textSize="16sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="50dp"
+        android:text="Calle Vulcano (Ex Calle 5) # 126" />
+
+    <!--<ImageView-->
+        <!--android:layout_width="30dp"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:src="@drawable/ic_action_send_now"-->
+        <!--android:layout_alignParentRight="true"/>-->
+    <RadioButton
+        android:id="@+id/radioClick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:buttonTint="?attr/colorPrimary"
+        />
+
+</RelativeLayout>

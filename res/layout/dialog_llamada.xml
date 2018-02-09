@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/alternative_background"
+    android:padding="@dimen/normal_space"
+    >
+
+    <TextView
+        android:id="@+id/tvLlamada"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/padding_between_title_body"
+        android:gravity="center"
+        android:fontFamily="sans-serif"
+        android:textColor="@color/md_text"
+        android:text="RP3 Market Force"
+        android:textSize="15sp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:background="@color/alternative_background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.RecyclerView
+            android:background="@color/alternative_background"
+            android:id="@+id/rvListaTelefono"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical"
+            android:padding="3dp"/>
+
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/llAddress"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btnFinalizarLlamada"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/button_padding"
+            android:text="Finalizar"
+            android:textColor="?attr/colorPrimary" />
+        <Button
+            android:visibility="gone"
+            android:id="@+id/btnReprogramarLlamada"
+            android:text="Reprogramar"
+            android:textColor="?attr/colorPrimary"
+            style="?android:borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:layout_marginLeft="5dp"
+            android:id="@+id/btnEeditarProspecto"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/button_padding"
+            android:text="Editar Prospecto"
+            android:textColor="?attr/colorPrimary" />
+    </LinearLayout>
+
+</LinearLayout>

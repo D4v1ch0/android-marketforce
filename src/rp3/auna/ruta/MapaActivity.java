@@ -76,7 +76,8 @@ import android.widget.Toast;
 
 @SuppressWarnings("ResourceType")
 public class MapaActivity extends BaseActivity {
-	
+
+	private static final String TAG = MapaActivity.class.getSimpleName();
 	public static String ACTION_TYPE = "type";
 	
 	public static String ACTION_POSICION = "posicion";
@@ -105,6 +106,7 @@ public class MapaActivity extends BaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
+		Log.d(TAG,"onCreate...");
 	    setTitle("Ruta");
 	    format1 = new SimpleDateFormat("EEEE dd MMMM yyyy");
 	
@@ -176,15 +178,18 @@ public class MapaActivity extends BaseActivity {
 	public void ClickPosicion(View v)
 	{
 		setPosicion(agenda.getID());
+		Log.d(TAG,"setPosicion...");
 	}
 	
 	public void ClickComoLlegar(View v)
 	{
 		setRuta(agenda.getID());
+		Log.d(TAG,"ClickComoLlegar...");
 	}
 	
 	public void ClickRutas(View v)
 	{
+		Log.d(TAG,"ClickRutas...");
 		ComoLlegar.setVisibility(View.GONE);
 		Posicion.setVisibility(View.GONE);
 		if(agenda == null)
@@ -1033,5 +1038,42 @@ public class MapaActivity extends BaseActivity {
 
 	    return  bm;
 	}
+
+	/**
+	 *
+	 * Ciclo de vida
+	 *
+	 */
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		Log.d(TAG,"onStart...");
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Log.d(TAG,"onPause...");
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		Log.d(TAG,"onStop...");
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.d(TAG,"onResume...");
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Log.d(TAG,"onDestroy...");
+	}
+
 
 }

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/White"
+    android:orientation="vertical">
+
+    <ProgressBar
+        android:visibility="gone"
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminate="true" />
+
+<RelativeLayout
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:visibility="visible"
+    android:id="@+id/containerAgenda"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center_vertical">
+    <ImageView
+        android:layout_marginTop="150dp"
+        android:visibility="visible"
+        android:id="@+id/ivEmpty"
+        android:layout_marginBottom="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_action_empty"/>
+    <TextView
+        android:visibility="visible"
+        android:id="@+id/tvMensaje"
+        android:gravity="center_horizontal"
+        android:layout_below="@+id/ivEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/md_text"
+        android:text="No hay informacion"
+        android:textSize="15sp"
+        android:layout_marginBottom="40dp"
+        />
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewAgenda"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/space"
+        android:scrollbarStyle="insideOverlay"
+        android:scrollbarThumbVertical="@drawable/scrollbar"
+        android:scrollbars="vertical"
+        android:visibility="visible"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+
+</FrameLayout>

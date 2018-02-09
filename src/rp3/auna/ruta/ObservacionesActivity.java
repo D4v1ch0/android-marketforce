@@ -6,6 +6,7 @@ import rp3.auna.R;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
@@ -13,12 +14,14 @@ import android.view.WindowManager.LayoutParams;
 import java.util.List;
 
 public class ObservacionesActivity extends BaseActivity {
+    private static final String TAG = ObservacionesActivity.class.getSimpleName();
 	ObservacionesFragment newFragment;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_ACTION_BAR);
+        Log.d(TAG,"onCreate...");
 	    getWindow().setFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND,
 	            WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 	    LayoutParams params = getWindow().getAttributes(); 
@@ -47,9 +50,11 @@ public class ObservacionesActivity extends BaseActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
+        Log.d(TAG,"onActivityResult...");
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode != 0 && resultCode != 0)
         {
+            Log.d(TAG,"requestCode != 0 && resultCode != 0...");
             List<Fragment> frags = getSupportFragmentManager().getFragments();
             for(android.support.v4.app.Fragment fr: frags) {
                 fr.onActivityResult(requestCode, resultCode, data);
@@ -58,15 +63,39 @@ public class ObservacionesActivity extends BaseActivity {
 
 	}
 
-    @Override
-    public void onStop() {
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
 
-        super.onStop();
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
     }
 
     @Override
-    public void onDestroy() {
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    protected void onDestroy() {
         super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

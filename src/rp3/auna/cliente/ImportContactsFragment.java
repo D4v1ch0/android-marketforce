@@ -11,6 +11,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -22,7 +23,8 @@ import android.widget.ListView;
 import android.widget.CheckBox;
 
 public class ImportContactsFragment extends rp3.app.BaseFragment  {
-	
+
+	private static final String TAG = ImportContactsFragment.class.getSimpleName();
 	public static String ARG_ID_ORIGEN = "origen";
 	private int tipo;
 	private LoaderInternContacts loaderContacts;
@@ -41,25 +43,24 @@ public class ImportContactsFragment extends rp3.app.BaseFragment  {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+		Log.d(TAG,"onCreate...");
         tipo = getArguments().getInt(ARG_ID_ORIGEN);
         super.setContentView(R.layout.fragment_import_contacts);
 	}
 	
 	@Override
-	public void onAttach(Activity activity) {    	
+	public void onAttach(Activity activity) {
+		Log.d(TAG,"onAttach...");
 	    super.onAttach(activity);
 	    setRetainInstance(true);
 	}
 	
-	    
-	@Override
-	public void onResume() {
-	    super.onResume();
-	}
+
 	
 	@Override
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
 		super.onFragmentCreateView(rootView, savedInstanceState);
+		Log.d(TAG,"onFragmentCreateView...");
 		loaderContacts = new LoaderInternContacts();
 		listView = ((ListView) rootView.findViewById(R.id.import_list_view));
 		listView.setClickable(true);
@@ -131,5 +132,41 @@ public class ImportContactsFragment extends rp3.app.BaseFragment  {
 		public void onLoaderReset(Loader<List<Cliente>> arg0) {	
 			
 		}
+	}
+
+	/**
+	 *
+	 * Ciclo de vida
+	 *
+	 */
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		Log.d(TAG,"onStart...");
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.d(TAG,"onPause...");
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		Log.d(TAG,"onStop...");
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		Log.d(TAG,"onResume...");
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Log.d(TAG,"onDestroy...");
 	}
 }

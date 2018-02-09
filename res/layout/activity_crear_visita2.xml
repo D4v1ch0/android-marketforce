@@ -1,0 +1,326 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/linearLayoutSettings"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/alternative_background"
+    android:fitsSystemWindows="@bool/fitsSystemWindows"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/statusBarVisita"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/statusBarHeight"
+        android:background="?colorPrimaryDark"
+        android:translationZ="4dp" />
+
+    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/toolbarNuevaVisita"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:translationZ="4dp"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <FrameLayout
+        android:id="@+id/linearContentProspectoVisita"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/scrollViewNuevaVisita"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                    <FrameLayout
+                        android:orientation="vertical"
+                        android:id="@+id/crear_visita_prospecto_calendarvisita"
+                        android:layout_width="match_parent"
+                        android:layout_height="999dp"
+                        />
+
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="12dp"
+                    app:cardBackgroundColor="@color/White"
+                    app:cardElevation="4dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp"
+                        android:layout_marginTop="5dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textView104"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="center_horizontal"
+                            android:text="Información"
+                            android:textColor="?attr/colorPrimary"
+                            android:textSize="16sp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_marginTop="3dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/map_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-medium"
+                                android:gravity="center_horizontal"
+                                android:text="@string/label_cliente"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
+                                android:textColor="?attr/colorPrimary"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:id="@+id/crear_visita_prospecto_clientevisita"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif"
+                                android:hint="@string/hint_search_transaction"
+                                android:text="Prospecto"
+                                android:textColor="@color/md_text"
+                                android:textSize="15sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_marginTop="8dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/map_phone"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-medium"
+                                android:gravity="center_horizontal"
+                                android:text="Direccion"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
+                                android:textColor="?attr/colorPrimary"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:id="@+id/crear_visita_prospecto_direccionvisita"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.6"
+                                android:clickable="true"
+                                android:fontFamily="sans-serif"
+                                android:gravity="center_vertical"
+                                android:text="Direccion"
+                                android:textColor="@color/md_text"
+                                android:textSize="15sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="10dp"
+                    app:cardBackgroundColor="@color/White"
+                    app:cardElevation="4dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="2dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="2dp"
+                        android:layout_marginTop="5dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textView104"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="center_horizontal"
+                            android:text="Duración"
+                            android:textColor="?attr/colorPrimary"
+                            android:textSize="15sp" />
+
+                        <LinearLayout
+                            android:id="@+id/crear_visita_prospecto_desde_clickable"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="2dp"
+                            android:layout_marginTop="7dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
+                            android:orientation="horizontal"
+                            android:layout_weight="1">
+
+                            <TextView
+                                android:id="@+id/textView"
+                                android:layout_width="0dp"
+                                android:layout_weight="0.6"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="@string/label_hora_visita"
+                                android:textColor="?attr/colorPrimary"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:id="@+id/crear_visita_prospecto_desde_textvisita"
+                                android:layout_width="0dp"
+                                android:layout_weight="0.3"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="2dp"
+                                android:clickable="true"
+                                android:text="12:00"
+                                android:textColor="@color/md_text"
+                                android:textSize="15sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-medium"
+                                android:layout_weight="0.6"
+                                android:text="Tiempo estimado de viaje:"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
+                                android:textColor="?attr/colorPrimary"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:id="@+id/tvTiempoEstimado"
+                                android:layout_width="0dp"
+                                android:layout_weight="0.3"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="2dp"
+                                android:clickable="true"
+                                android:text="Tiempo"
+                                android:textColor="@color/md_text"
+                                android:textSize="15sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_weight="0.6"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="Duracion estimada de visita:"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
+                                android:textColor="?attr/colorPrimary"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_weight="0.3"
+                                android:id="@+id/tvDuracionEstimado"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="0dp"
+                                android:clickable="true"
+                                android:text="Tiempo"
+                                android:textColor="@color/md_text"
+                                android:textSize="15sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/linear_crear_visita_descripcion"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginBottom="3dp"
+                            android:layout_marginLeft="2dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_marginTop="6dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:lines="2"
+
+                                android:id="@+id/textView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginTop="5dp"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="Descripción:"
+                                android:textColor="?attr/colorPrimary"
+                                android:textSize="15sp" />
+
+                            <EditText
+                                android:id="@+id/etCrearVisitaDescripcionvisita"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:clickable="true"
+                                android:hint="Opcional"
+                                android:inputType="text"
+                                android:textColor="@color/md_text"
+                                android:textColorHint="@color/md_black_1000_15"
+                                android:textSize="15sp" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/space" />
+
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabNuevaVisita"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/linearContentProspectoNuevo"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="bottom|right"
+            android:layout_marginBottom="20dp"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/ic_save"
+            app:backgroundTint="?attr/colorPrimary" />
+    </FrameLayout>
+
+</LinearLayout>

@@ -1,6 +1,7 @@
 package rp3.auna.oportunidad;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
@@ -15,6 +16,8 @@ import rp3.auna.models.Agente;
  * Created by magno_000 on 28/05/2015.
  */
 public class AgenteFragment extends BaseFragment {
+
+    private static final String TAG = AgenteFragment.class.getSimpleName();
     private ArrayList<Integer> respuestas;
     private ListView Grupo;
     private List<Agente> agentes;
@@ -40,10 +43,12 @@ public class AgenteFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.fragment_agente_radar);
+        Log.d(TAG,"onCreate...");
     }
 
     @Override
     public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
+        Log.d(TAG,"onFragmentCreateView...");
         respuestas = getArguments().getIntegerArrayList(ARG_AGENTES);
 
         List<Agente> agentes = Agente.getAgentes(getDataBase());
@@ -69,5 +74,41 @@ public class AgenteFragment extends BaseFragment {
             }
         });
 
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

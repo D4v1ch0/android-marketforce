@@ -9,6 +9,8 @@ import android.widget.ListAdapter;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
+import rp3.auna.R;
+
 /**
  * Decorator Adapter to allow a Spinner to show a 'Nothing Selected...' initially
  * displayed instead of the first choice in the Adapter.
@@ -94,8 +96,10 @@ public class NothingSelectedSpinnerAdapter implements SpinnerAdapter, ListAdapte
      */
     protected View getNothingSelectedView(ViewGroup parent) {
         View view = layoutInflater.inflate(nothingSelectedLayout, parent, false);
-        if(nothingText.trim().length() > 0)
-            ((TextView)view.findViewById(android.R.id.text1)).setText(nothingText);
+        if(nothingText.trim().length() > 0){
+            ((TextView)view.findViewById(R.id.tvGeneralSelected)).setText(nothingText);
+        }
+            //((TextView)view.findViewById(android.R.id.text1)).setText(nothingText);
         return view;
     }
 

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -29,6 +30,8 @@ import rp3.util.ConnectionUtils;
  */
 public class PermisoListFragment extends BaseFragment {
 
+
+    private static final String TAG = PermisoListFragment.class.getSimpleName();
     public static final String ARG_TRANSACTIONTYPEID = "transactionType";
     public static final String ARG_TRANSACTIONTYPEBO = "transactionTypeBo";
 
@@ -60,7 +63,7 @@ public class PermisoListFragment extends BaseFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
+        Log.d(TAG,"onAttach...");
         if(getParentFragment()!=null){
             permisoListFragmentCallback = (PermisoListFragmentListener)getParentFragment();
         }else{
@@ -74,9 +77,10 @@ public class PermisoListFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG,"onResume...");
         try {
             ((MainActivity) getActivity()).updateBadgeNavItem(MainActivity.NAV_JUSTIFICACIONES, Justificacion.getPermisosPendientesAprobarCount(getDataBase()));
-        }catch (Exception ex){}
+        }catch (Exception ex){Log.d(TAG,ex.getMessage());}
 
         if (currentTransactionBoolean) {
             ejecutarConsulta();
@@ -91,8 +95,7 @@ public class PermisoListFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
+        Log.d(TAG,"onCreate...");
         if(savedInstanceState == null)
         {
             currentTransactionBoolean = getArguments().getBoolean(ARG_TRANSACTIONTYPEBO);
@@ -101,6 +104,7 @@ public class PermisoListFragment extends BaseFragment {
     }
 
     public void ejecutarConsulta(){
+        Log.d(TAG,"ejecutarConsulta...");
         Bundle args = new Bundle();
         executeLoader(0, args, loaderPermiso);
     }
@@ -108,7 +112,7 @@ public class PermisoListFragment extends BaseFragment {
     @Override
     public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
-
+        Log.d(TAG,"onFragmentCreateView...");
         headerList = (ListView) rootView.findViewById(R.id.linearLayout_headerlist_ruta_list);
         headerList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         refreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
@@ -141,6 +145,7 @@ public class PermisoListFragment extends BaseFragment {
 
     public void setListeners()
     {
+        Log.d(TAG,"setListeners...");
         headerList.setOnScrollListener(new AbsListView.OnScrollListener() {
 
             @Override
@@ -178,6 +183,7 @@ public class PermisoListFragment extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
+        Log.d(TAG,"onStart...");
         if(headerList!=null && headerList.getParent() == null){
             if(refreshLayout == null)
                 refreshLayout = new SwipeRefreshLayout(this.getContext());
@@ -206,11 +212,13 @@ public class PermisoListFragment extends BaseFragment {
     @Override
     public void onSaveInstanceState(Bundle arg0) {
         super.onSaveInstanceState(arg0);
+        Log.d(TAG,"onSaveInstanceState...");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        Log.d(TAG,"onDetach...");
     }
 
     public class LoaderJustificacion implements LoaderManager.LoaderCallbacks<List<Justificacion>> {
@@ -295,6 +303,7 @@ public class PermisoListFragment extends BaseFragment {
     }
 
     public void onSyncComplete(Bundle data, MessageCollection messages) {
+        Log.d(TAG,"onSyncComplete...");
         super.onSyncComplete(data, messages);
 
         if(data != null && data.getString(SyncAdapter.ARG_SYNC_TYPE).equalsIgnoreCase(SyncAdapter.SYNC_TYPE_JUSTIFICACIONES)) {
@@ -319,6 +328,7 @@ public class PermisoListFragment extends BaseFragment {
 
     public void setList()
     {
+        Log.d(TAG,"setList...");
         if (currentTransactionBoolean) {
             ejecutarConsulta();
         } else {
@@ -327,6 +337,32 @@ public class PermisoListFragment extends BaseFragment {
                 loaderPermiso = new LoaderJustificacion();
             getLoaderManager().initLoader(0, args, loaderPermiso);
         }
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 
 }

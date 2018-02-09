@@ -3,6 +3,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -38,6 +39,7 @@ import rp3.auna.utils.DrawableManager;
 
 public class ProductFragment extends BaseFragment implements SignInFragment.SignConfirmListener{
 
+    private static final String TAG = ProductFragment.class.getSimpleName();
     public static String ARG_CODE = "Code";
     private ProductAcceptListener createFragmentListener;
     private JSONObject jsonObject;
@@ -60,7 +62,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
+        Log.d(TAG,"onNAttach...");
         setContentView(R.layout.fragment_producto);
         if(getParentFragment()!=null){
             createFragmentListener = (ProductAcceptListener)getParentFragment();
@@ -72,6 +74,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
 
     @Override
     public void onSignSuccess(Bundle bundle) {
+        Log.d(TAG,"onSignSuccess...");
         if(bundle.getInt(Agente.KEY_DESCUENTO) >= Integer.parseInt(((EditText) getRootView().findViewById(R.id.producto_descuento_manual)).getText().toString())) {
             usrDescManual = bundle.getString(SignInFragment.ARG_USER);
             Toast.makeText(getContext(), "Usuario Autorizado.", Toast.LENGTH_LONG).show();
@@ -96,7 +99,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
     @Override
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
-
+        Log.d(TAG,"onFragmentCreateView...");
         df = new DecimalFormat("#.##");
         df.setRoundingMode(RoundingMode.CEILING);
         numberFormat = NumberFormat.getInstance();
@@ -309,6 +312,7 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
 
     private void saveDetail()
     {
+        Log.d(TAG,"saveDetail...");
         PedidoDetalle detalle = new PedidoDetalle();
         detalle.setCantidad(Integer.parseInt(((EditText) getRootView().findViewById(R.id.producto_cantidad)).getText().toString()));
         try {
@@ -354,5 +358,41 @@ public class ProductFragment extends BaseFragment implements SignInFragment.Sign
 
         createFragmentListener.onAcceptSuccess(detalle);
         dismiss();
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

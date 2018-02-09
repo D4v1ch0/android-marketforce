@@ -59,6 +59,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CallLog;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -79,7 +80,8 @@ import org.json.JSONObject;
 
 @SuppressWarnings("ResourceType")
 public class RutasDetailFragment extends rp3.app.BaseFragment implements ObservacionesFragmentListener {
-    
+
+    private static final String TAG = RutasDetailFragment.class.getSimpleName();
     public static final String ARG_ITEM_ID = "idagenda";
     public static final String ARG_AGENDA_ID = "agenda";
     public static final String ARG_RUTA_ID = "ruta";
@@ -127,7 +129,8 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState); 
+        super.onCreate(savedInstanceState);
+        Log.d(TAG,"onCreate...");
         format1 = new SimpleDateFormat("EEEE dd MMMM yyyy, HH:mm");
         format2 = new SimpleDateFormat("HH:mm");
         format = new SimpleDateFormat("HH:mm");
@@ -157,10 +160,12 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
     @Override
     public void onAttach(Activity activity) {    	
     	super.onAttach(activity);
+        Log.d(TAG,"onAttach...");
     }
     
     @Override
     public void onAfterCreateOptionsMenu(Menu menu) {
+        Log.d(TAG,"onAfterCreateOptionsMenu...");
         if(reDoMenu)
         {
             menuRutas = menu;
@@ -173,6 +178,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG,"onResume...");
         agenda = Agenda.getAgenda(getDataBase(), idAgenda);
         if (agenda == null) {
             agenda = Agenda.getAgendaClienteNull(getDataBase(), idAgenda);
@@ -293,6 +299,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 
     private void cargaCotizacion(Cotizacion cotizacion)
     {
+        Log.d(TAG,"cargaCotizacion...");
         try {
             NumberFormat numberFormat;
             numberFormat = NumberFormat.getInstance();
@@ -317,6 +324,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG,"onActivityResult...");
         if (resultCode == RESULT_OK) {
             String path = "";
             if (data == null)
@@ -333,7 +341,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
     
 	@Override
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {    	
-    	 
+    	 Log.d(TAG,"onFragmentCreateView...");
 		if(idAgenda != 0){        	
         	agenda = Agenda.getAgenda(getDataBase(), idAgenda);
         }
@@ -645,8 +653,10 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
     }
 
     protected boolean ValidarAgendas() {
+        Log.d(TAG,"validarAgendas...");
 		if(Agenda.getCountVisitados(getDataBase(), Contants.ESTADO_GESTIONANDO, 0, Agenda.getLastAgenda(getDataBase())) > 0 && !agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO))
 		{
+            Log.d(TAG,"AGENDA GESTIONANDO...");
 			Toast.makeText(getContext(), "No puede gestionar otra agenda, si existe otra con estado Gestionando.", Toast.LENGTH_LONG).show();
 			return false;
 		}
@@ -658,6 +668,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 				cal.get(Calendar.MONTH) != cal_agenda.get(Calendar.MONTH) ||
                 cal.get(Calendar.YEAR) != cal_agenda.get(Calendar.YEAR))
 		{
+            Log.d(TAG,"calendar != fechaInicio...");
 			return false;
 		}
 		return true;
@@ -667,6 +678,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 	@Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putLong(STATE_IDAGENDA, idAgenda);
+        Log.d(TAG,"onSaveInstanceState...");
     }
     
 	@Override
@@ -709,6 +721,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 	
 	public void showTareaTexto(Actividad ata, AgendaTarea setter)
 	{
+        Log.d(TAG,"showTareaTexto...");
         Intent intent = new Intent(getContext(), TextoActivity.class);
 		intent.putExtra(ARG_ITEM_ID, ata.getIdTarea());
 		intent.putExtra(ARG_AGENDA_ID, setter.getIdAgenda());
@@ -722,6 +735,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 	
 	public void showTareaSeleccion(Actividad ata, AgendaTarea setter)
 	{
+        Log.d(TAG,"showTareaSeleccion...");
 		Intent intent = new Intent(getContext(), SeleccionActivity.class);
 		intent.putExtra(ARG_ITEM_ID, ata.getIdTarea());
 		intent.putExtra(ARG_AGENDA_ID, setter.getIdAgenda());
@@ -732,6 +746,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 	}
 	public void showTareaMultiSeleccion(Actividad ata, AgendaTarea setter)
 	{
+        Log.d(TAG,"showTareaMultiSeleccion...");
 		Intent intent = new Intent(getContext(), MultipleActivity.class);
 		intent.putExtra(ARG_ITEM_ID, ata.getIdTarea());
 		intent.putExtra(ARG_AGENDA_ID, setter.getIdAgenda());
@@ -743,6 +758,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
     
 	public void showTareaCheckbox(Actividad ata, AgendaTarea setter)
 	{
+        Log.d(TAG,"showTareaCheckBox...");
 		Intent intent = new Intent(getContext(), CheckboxActivity.class);
 		intent.putExtra(ARG_ITEM_ID, ata.getIdTarea());
 		intent.putExtra(ARG_AGENDA_ID, setter.getIdAgenda());
@@ -754,6 +770,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 	
 	public void showTareaGrupo(AgendaTarea agt)
 	{
+        Log.d(TAG,"showTareGrupo...");
 		Intent intent = new Intent(getContext(), GrupoActivity.class);
 		intent.putExtra(ARG_ITEM_ID, agt.getIdTarea());
 		intent.putExtra(ARG_AGENDA_ID, agt.getIdAgenda());
@@ -766,6 +783,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 
     public void showTareaCotizacion(AgendaTarea agt)
     {
+        Log.d(TAG,"showTareaCotizacion...");
         Intent intent = new Intent(getContext(), CotizacionActivity.class);
         intent.putExtra(ARG_ITEM_ID, agt.getIdTarea());
         intent.putExtra(ARG_AGENDA_ID, agt.getIdAgenda());
@@ -779,6 +797,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 
     public void showTareaActualizacion(AgendaTarea agt)
     {
+        Log.d(TAG,"showTareaActualizacion...");
         if(!clienteNull) {
             Intent intent = new Intent(getContext(), ActualizacionActivity.class);
             intent.putExtra(ARG_ITEM_ID, agt.getIdTarea());
@@ -801,6 +820,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 
     public void RefreshMenu()
     {
+        Log.d(TAG,"refreshMenu...");
         menuRutas.findItem(R.id.action_search_ruta).setVisible(false);
         menuRutas.findItem(R.id.action_crear_visita).setVisible(false);
         Agenda agendaNoClient = Agenda.getAgenda(getDataBase(), idAgenda);
@@ -856,8 +876,10 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 
     public void ValidateTareas()
     {
+        Log.d(TAG,"validateTareas...");
         if(agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_GESTIONANDO) || agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_PENDIENTE) || agenda.getEstadoAgenda().equalsIgnoreCase(Contants.ESTADO_REPROGRAMADO))
         {
+
             if(agenda.getAgendaTareas() == null)
                 agenda.setAgendaTareaList(new ArrayList<AgendaTarea>());
 
@@ -1025,6 +1047,7 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
 
     public void SetMarcacionFin()
     {
+        Log.d(TAG,"setMarcacionFin...");
         final Marcacion marc = new Marcacion();
         marc.setTipo("J4"); //falta tipo
         marc.setFecha(Calendar.getInstance().getTime());
@@ -1224,4 +1247,36 @@ public class RutasDetailFragment extends rp3.app.BaseFragment implements Observa
         cursor.close();
         return resp;
     }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
+    }
+
 }

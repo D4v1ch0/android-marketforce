@@ -1,8 +1,16 @@
 package rp3.auna.sync;
 
 import rp3.accounts.ServerAuthenticate;
+import rp3.auna.Main2Activity;
 import rp3.auna.actividades.ActualizacionFragment;
 import rp3.auna.actividades.CotizacionActivity;
+import rp3.auna.fragments.AgendaFragment;
+import rp3.auna.sync.ventanueva.AgendaVta;
+import rp3.auna.sync.ventanueva.ApplicationParameterSync;
+import rp3.auna.sync.ventanueva.LlamadaVta;
+import rp3.auna.sync.ventanueva.ProspectoVta;
+import rp3.auna.sync.ventanueva.VisitaVta;
+import rp3.auna.utils.Utils;
 import rp3.configuration.PreferenceManager;
 import rp3.db.sqlite.DataBase;
 import rp3.auna.Contants;
@@ -21,6 +29,7 @@ import rp3.auna.ruta.RutasDetailFragment;
 import rp3.auna.ruta.RutasListFragment;
 import rp3.sync.SyncAudit;
 import rp3.sync.TestConnection;
+import rp3.util.Convert;
 
 import android.accounts.Account;
 import android.content.ContentProviderClient;
@@ -30,9 +39,12 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.util.Calendar;
+import java.util.List;
+
 public class SyncAdapter extends rp3.content.SyncAdapter {
-	
-	public static String SYNC_TYPE_GENERAL = "general";
+
+    public static String SYNC_TYPE_GENERAL = "general";
 	public static String SYNC_TYPE_ACT_AGENDA = "actagenda";
 	public static String SYNC_TYPE_ENVIAR_UBICACION = "sendlocation";
 	public static String SYNC_TYPE_CLIENTE_UPDATE = "clienteupdate";
@@ -78,12 +90,39 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
     public static String SYNC_TYPE_VALIDAR_NC = "validar_nc";
     public static String SYNC_TYPE_CANCELAR_NC = "cancelar_nc";
 
+    /***
+     * Auna Servicios
+     */
     public static String SYNC_TYPE_CONSULTA_COTIZACION = "cotizacion";
     public static String SYNC_TYPE_VALIDA_SOLICITUD = "solicitud";
     public static String SYNC_TYPE_REGISTRAR_PAGO = "registro_pago";
+    /**
+     * Venta nueva
+     */
+    public static String SYNC_TYPE_INSERTAR_AGENDAVTA = "insertarAgendaVta";
+    public static String SYNC_TYPE_UPDATE_AGENDAVTA = "agendaVtaUpdate";
+    public static String SYNC_TYPE_GET_PROSPECTO = "prospectoVtaGet";
+    public static String SYNC_TYPE_INSERTAR_PROSPECTOVTA = "insertarProspectoVta";
+    public static String SYNC_TYPE_UPDATE_VISITA = "actualizarVisitaVta";
+    public static String SYNC_TYPE_UPDATE_LLAMADAVTA = "actualizarLlamadaVta";
+    public static String SYNC_TYPE_UPDATE_PROSPECTO = "actualizarProspectos";
+    public static String SYNC_TYPE_REFRESH_LLAMADA = "refreshLlamadas";
+    public static String SYNC_TYPE_REFRESH_VISITA = "refreshVisita";
+    public static String SYNC_TYPE_REFRESH_AGENDA = "refreshAgenda";
+    public static final String SYNC_TYPE_REFRESH_REPROGRAM_CANCELED_VISITA = "reprogramcanceledvisita";
+    public static final String SYNC_TYPE_VENTA_NUEVA = "VentaNueva";
+
+    private Context context;
+
+    /**
+     *
+     * @param context
+     * @param autoInitialize
+     */
 	
 	public SyncAdapter(Context context, boolean autoInitialize) {
-		super(context, autoInitialize);		
+		super(context, autoInitialize);
+        this.context = context;
 	}
 
 	@Override
@@ -101,52 +140,65 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
             if(db == null)
                 Log.e("Error:","db is null");
             if(TestConnection.executeSync()) {
-
+                Log.d(TAG,"TestConnection.executeSync()...");
+                Log.d(TAG,"SyncType:"+syncType);
                 if (syncType == null || syncType.equals(SYNC_TYPE_GENERAL)) {
                     db.beginTransaction();
-
+                    Log.d(TAG,"syncType == null || syncType.equals(SYNC_TYPE_GENERAL)...");
+                    Log.d(TAG,"Sincronizar general...");
                     if (result == SYNC_EVENT_SUCCESS) {
+                        Log.d(TAG,"GeneralValue...");
                         result = rp3.sync.GeneralValue.executeSync(db);
                         addDefaultMessage(result);
                     }
 
                     if (result == SYNC_EVENT_SUCCESS) {
+                        Log.d(TAG,"IdentificationType...");
                         result = rp3.sync.IdentificationType.executeSync(db);
                         addDefaultMessage(result);
                     }
 
-                    result = Cliente.executeSyncInserts(db);
-                    addDefaultMessage(result);
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"ApplicationParameters...");
+                        result = ApplicationParameterSync.executeSync(db);
+                        addDefaultMessage(result);
+                    }
 
-                    result = Cliente.executeSyncPendientes(db);
-                    addDefaultMessage(result);
+                    //result = Cliente.executeSyncInserts(db);
+                    //addDefaultMessage(result);
 
-                    result = Agenda.executeSyncInserts(db);
+                    //result = Cliente.executeSyncPendientes(db);
+                    //addDefaultMessage(result);
+
+                    /*result = Agenda.executeSyncInserts(db);
                     addDefaultMessage(result);
 
                     result = Agenda.executeSyncPendientes(db);
-                    addDefaultMessage(result);
+                    addDefaultMessage(result);*/
 
-                    if (result == SYNC_EVENT_SUCCESS) {
+                    /*if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.auna.sync.Cliente.executeSync(db);
                         addDefaultMessage(result);
                         if (result == SYNC_EVENT_SUCCESS) {
                             SyncAudit.insert(SYNC_TYPE_CLIENTE_UPDATE, SYNC_EVENT_SUCCESS);
                         }
-                    }
+                    }*/
 
                     if (result == SYNC_EVENT_SUCCESS) {
+                        Log.d(TAG,"Agente.executeSync...");
                         result = rp3.auna.sync.Agente.executeSync(db);
                         addDefaultMessage(result);
                     }
 
-                    if (result == SYNC_EVENT_SUCCESS) {
+                    /*if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.auna.sync.Rutas.executeSync(db, null, null, false);
                         addDefaultMessage(result);
                         if (result == SYNC_EVENT_SUCCESS) {
                             SyncAudit.insert(SYNC_TYPE_ACT_AGENDA, SYNC_EVENT_SUCCESS);
                         }
-                    }
+                    }*/
+
+
 
                     if (result == SYNC_EVENT_SUCCESS && PreferenceManager.getBoolean(Contants.KEY_ES_SUPERVISOR)) {
                         result = rp3.auna.sync.Agente.executeSyncGetAgente(db);
@@ -200,14 +252,22 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         result = rp3.auna.sync.Agente.executeSyncGetDeviceId(getContext());
                         addDefaultMessage(result);
                     }
+                    if (result == SYNC_EVENT_SUCCESS){
+                        result = rp3.auna.sync.Agente.executeSyncAgentes(db);
+                        addDefaultMessage(result);
+                    }
 
                     if (result == SYNC_EVENT_SUCCESS && !TextUtils.isEmpty(PreferenceManager.getString(Contants.KEY_APP_INSTANCE_ID))) {
                         result = rp3.auna.sync.Agente.executeSyncDeviceId();
                         addDefaultMessage(result);
                     }
 
+                    Log.d(TAG,"Iniciar obteniendo las comisiones...");
+                    result = Agente.executeSyncComisiones(db);
+                    addDefaultMessage(result);
+
                     //Modulo Oportunidades
-                    if(PreferenceManager.getBoolean(Contants.KEY_MODULO_OPORTUNIDADES, true)) {
+                    /*if(PreferenceManager.getBoolean(Contants.KEY_MODULO_OPORTUNIDADES, true)) {
                         if (result == SYNC_EVENT_SUCCESS) {
                             result = rp3.auna.sync.Etapa.executeSyncTipos(db);
                             addDefaultMessage(result);
@@ -225,10 +285,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                             result = rp3.auna.sync.Oportunidad.executeSync(db);
                             addDefaultMessage(result);
                         }
-                    }
+                    }*/
 
                     // MODULO DE MARCACIONES
 
+                    /*
                     if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.auna.sync.Marcaciones.executeSyncGrupo(db);
                         addDefaultMessage(result);
@@ -303,6 +364,8 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                             addDefaultMessage(result);
                         }
                     }
+
+                    */
 				/*
 				 * Se comenta carga de fotos ya que se la hara mediante un lazy loader.
 				 * Para esto se cargara tambien en el modelo Cliente la url de la foto para poder cargarla
@@ -323,7 +386,54 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     //    SyncAudit.insert(SYNC_TYPE_GEOPOLITICAL, SYNC_EVENT_SUCCESS);
                     //}
                     //addDefaultMessage(result);
+                    /**
+                     * Sincronizar Agendas del Agente
+                     * */
+                   /* if (result == SYNC_EVENT_SUCCESS){
+                        result = AgendaVta.executeSync(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        result = ProspectoVta.executeSync(db);
+                        addDefaultMessage(result);
+                    }*/
 
+
+                    /***
+                     * Sincronizar tokio al inicio
+                     */
+                    /**
+                     * Sincronizar Agendas del Agente
+                     * */
+                    Calendar calendar = Calendar.getInstance();
+                    Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
+                    result = ProspectoVta.executeSyncInserts(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar enviando los prospectos en BD sinocronizados...");
+                    result = ProspectoVta.executeSyncSincronizada(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar Obteniendo los prospectos...");
+                    result = ProspectoVta.executeSync(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"insertar llamadas pendientes en BD...");
+                    result = LlamadaVta.executeSyncInsert(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar actualizando las llamadas sincronizadas...");
+                    result = LlamadaVta.executeSyncUpdate(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar obteniendo las llamadas...");
+                    result = LlamadaVta.executeSync(db,Convert.getDotNetTicksFromDate(calendar.getTime()),context);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"insertar visitas pendientes en BD...");
+                    result = VisitaVta.executeSyncInserts(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar actualizando las visitas sincronizadas...");
+                    result = VisitaVta.executeSyncUpdate(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar obteniendo las visitas...");
+                    result = VisitaVta.executeSync(db,Convert.getDotNetTicksFromDate(calendar.getTime()),context);
+                    addDefaultMessage(result);
+                    //Main2Activity.pruebaAlarm(context);
                     db.commitTransaction();
 
                 } else if (syncType.equals(SYNC_TYPE_ENVIAR_UBICACION)) {
@@ -389,7 +499,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                 } else if (syncType.equals(SYNC_TYPE_JUSTIFICACIONES_UPLOAD)) {
                     result = Marcaciones.executeSyncPermisosRevisados(db);
                     addDefaultMessage(result);
-                } else if (syncType.equals(SYNC_TYPE_ENVIAR_AGENDA)) {
+                }/* else if (syncType.equals(SYNC_TYPE_ENVIAR_AGENDA)) {
                     int id = extras.getInt(RutasDetailFragment.ARG_AGENDA_ID);
                     result = Agenda.executeSync(db, id);
                     if(result != SYNC_EVENT_SUCCESS)
@@ -399,11 +509,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         rp3.auna.models.Agenda.update(db, agenda);
                     }
                     addDefaultMessage(result);
-                } else if (syncType.equals(SYNC_TYPE_REPROGRAMAR_AGENDA)) {
+                }*//* else if (syncType.equals(SYNC_TYPE_REPROGRAMAR_AGENDA)) {
                     int id = extras.getInt(RutasDetailFragment.ARG_AGENDA_ID);
                     result = Agenda.executeSyncReschedule(db, id);
                     addDefaultMessage(result);
-                } else if (syncType.equals(SYNC_TYPE_PRODUCTOS)) {
+                }*/ else if (syncType.equals(SYNC_TYPE_PRODUCTOS)) {
 
                     /*Bundle bundle = Productos.executeSync(db);
                     putData("Productos", bundle.getString("Productos"));
@@ -451,11 +561,19 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     long id = extras.getLong(ControlCajaFragment.ARG_CONTROL);
                     result = Caja.executeSyncCerrarCaja(db, id);
                     addDefaultMessage(result);
-                } else if (syncType.equals(SYNC_TYPE_INSERTAR_AGENDA)) {
+                } /*else if (syncType.equals(SYNC_TYPE_INSERTAR_AGENDA)) {
                     long agenda = extras.getLong(CrearVisitaFragment.ARG_AGENDA);
                     result = Agenda.executeSyncInsert(db, agenda);
                     addDefaultMessage(result);
-                } else if (syncType.equals(SYNC_TYPE_UPLOAD_PENDIENTES_PERMISO)) {
+                }*/
+                    else if (syncType.equals(SYNC_TYPE_INSERTAR_AGENDAVTA)){
+                    Log.d(TAG,"else if (syncType.equals(SYNC_TYPE_INSERTAR_AGENDAVTA)...");
+                    result = AgendaVta.executeSyncInserts(db);
+                    addDefaultMessage(result);
+                    result = AgendaVta.executeSync(db);
+                    addDefaultMessage(result);
+                }
+                else if (syncType.equals(SYNC_TYPE_UPLOAD_PENDIENTES_PERMISO)) {
                     result = Marcaciones.executeSync(db);
                     addDefaultMessage(result);
 
@@ -469,11 +587,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         result = Marcaciones.executeSyncMarcacionesHoy(db);
                         addDefaultMessage(result);
                     }
-                } else if (syncType.equals(SYNC_TYPE_AGENDA_NO_VISITA)) {
+                } /*else if (syncType.equals(SYNC_TYPE_AGENDA_NO_VISITA)) {
                     int id = extras.getInt(MotivoNoVisitaFragment.ARG_AGENDA);
                     result = Agenda.executeSyncNoVisita(db, id);
                     addDefaultMessage(result);
-                } else if (syncType.equals(SYNC_TYPE_VALIDAR_NC)) {
+                }*/ else if (syncType.equals(SYNC_TYPE_VALIDAR_NC)) {
                     String nc = extras.getString(AgregarPagoFragment.ARG_NC);
                     String pago = extras.getString(AgregarPagoFragment.ARG_PAGO);
                     Bundle bundle = Caja.executeSyncGetNC(nc, pago);
@@ -486,18 +604,18 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                 } else if (syncType.equals(SYNC_TYPE_UPLOAD_MARCACION)) {
                     result = Marcaciones.executeSync(db);
                     addDefaultMessage(result);
-                } else if (syncType.equals(SYNC_TYPE_ACTUALIZAR_AGENDA)) {
+                }/* else if (syncType.equals(SYNC_TYPE_ACTUALIZAR_AGENDA)) {
                     long inicio = extras.getLong(RutasListFragment.ARG_INICIO);
                     long fin = extras.getLong(RutasListFragment.ARG_FIN);
                     result = rp3.auna.sync.Rutas.executeSync(db, inicio, fin, true);
                     addDefaultMessage(result);
-                } else if (syncType.equals(SYNC_TYPE_AGENDA_GEOLOCATION)) {
+                } *//*else if (syncType.equals(SYNC_TYPE_AGENDA_GEOLOCATION)) {
                     int id = extras.getInt(RutasDetailFragment.ARG_AGENDA_ID);
                     double latitud = extras.getInt(RutasDetailFragment.ARG_LATITUD);
                     double longitud = extras.getInt(RutasDetailFragment.ARG_LONGITUD);
                     result = Agenda.executeSyncGeolocation(db, id, latitud, longitud);
                     addDefaultMessage(result);
-                } else if (syncType.equals(SYNC_TYPE_CONSULTA_COTIZACION)) {
+                } */else if (syncType.equals(SYNC_TYPE_CONSULTA_COTIZACION)) {
                     String params = extras.getString(CotizacionActivity.ARG_PARAMS);
                     Bundle bundle = Auna.executeCotizacion(params);
                     addDefaultMessage(bundle.getInt("Status"));
@@ -513,41 +631,42 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     addDefaultMessage(bundle.getInt("Status"));
                     putData(ActualizacionFragment.ARG_RESPONSE, bundle.getString(ActualizacionFragment.ARG_RESPONSE));
                 } else if (syncType.equals(SYNC_TYPE_BATCH)) {
-                    result = Cliente.executeSyncInserts(db);
-                    addDefaultMessage(result);
-
-                    result = Cliente.executeSyncPendientes(db);
-                    addDefaultMessage(result);
-
+                    //result = Cliente.executeSyncInserts(db);
+                    //addDefaultMessage(result);
+                    //result = Cliente.executeSyncPendientes(db);
+                    //addDefaultMessage(result);
+                    /*
                     result = Agenda.executeSyncInserts(db);
                     addDefaultMessage(result);
 
                     result = Agenda.executeSyncPendientes(db);
                     addDefaultMessage(result);
-
+                    */
                     result = EnviarUbicacion.executeSyncPendientes(db);
                     addDefaultMessage(result);
-
-                    if (PreferenceManager.getBoolean(Contants.KEY_ES_SUPERVISOR)) {
-                        result = rp3.auna.sync.Agente.executeSyncAgentes(db);
-                        addDefaultMessage(result);
-                        result = Marcaciones.executeSyncPermisosRevisados(db);
-                        addDefaultMessage(result);
-                        result = Marcaciones.executeSyncPermisosPorAprobar(db);
-                        addDefaultMessage(result);
-                    }
+                    //Aquí Enviar los prospecto a la Lista Negra
+                    result = ProspectoVta.executeSyncRobinson(db);
+                    addDefaultMessage(result);
+                    //if (PreferenceManager.getBoolean(Contants.KEY_ES_SUPERVISOR)) {
+                        //result = rp3.auna.sync.Agente.executeSyncAgentes(db);
+                        //addDefaultMessage(result);
+                        //result = Marcaciones.executeSyncPermisosRevisados(db);
+                        //addDefaultMessage(result);
+                        //result = Marcaciones.executeSyncPermisosPorAprobar(db);
+                        //addDefaultMessage(result);
+                    //}
 
                     //result = Marcaciones.executeSync(db);
                     //addDefaultMessage(result);
 
-                    if (result == SYNC_EVENT_SUCCESS) {
+                    /*if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.auna.sync.Rutas.executeSync(db, null, null, false);
                         addDefaultMessage(result);
                         if (result == SYNC_EVENT_SUCCESS) {
                             SyncAudit.insert(SYNC_TYPE_ACT_AGENDA, SYNC_EVENT_SUCCESS);
                         }
-                    }
-                } else if (syncType.equals(SYNC_TYPE_UPLOAD_AGENDAS)) {
+                    }*/
+                }/* else if (syncType.equals(SYNC_TYPE_UPLOAD_AGENDAS)) {
 
                     result = Agenda.executeSyncInserts(db);
                     addDefaultMessage(result);
@@ -562,7 +681,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                             SyncAudit.insert(SYNC_TYPE_ACT_AGENDA, SYNC_EVENT_SUCCESS);
                         }
                     }
-                } else if (syncType.equals(SYNC_TYPE_NOTIFICATION_OPORTUNIDAD)) {
+                } */else if (syncType.equals(SYNC_TYPE_NOTIFICATION_OPORTUNIDAD)) {
                     int idOportunidad = extras.getInt(AgenteDetalleFragment.ARG_AGENTE);
                     String title = extras.getString(AgenteDetalleFragment.ARG_TITLE);
                     String message = extras.getString(AgenteDetalleFragment.ARG_MESSAGE);
@@ -609,11 +728,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     result = Cliente.executeSyncPendientes(db);
                     addDefaultMessage(result);
 
-                    result = Agenda.executeSyncInserts(db);
-                    addDefaultMessage(result);
+                    /*result = Agenda.executeSyncInserts(db);
+                    addDefaultMessage(result);*/
 
-                    result = Agenda.executeSyncPendientes(db);
-                    addDefaultMessage(result);
+                    /*result = Agenda.executeSyncPendientes(db);
+                    addDefaultMessage(result);*/
 
                     result = EnviarUbicacion.executeSyncPendientes(db);
                     addDefaultMessage(result);
@@ -644,13 +763,13 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         addDefaultMessage(result);
                     }
 
-                    if (result == SYNC_EVENT_SUCCESS) {
+                    /*if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.auna.sync.Rutas.executeSync(db, null, null, false);
                         addDefaultMessage(result);
                         if (result == SYNC_EVENT_SUCCESS) {
                             SyncAudit.insert(SYNC_TYPE_ACT_AGENDA, SYNC_EVENT_SUCCESS);
                         }
-                    }
+                    }*/
 
                     if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.auna.sync.Agente.executeSync(db);
@@ -806,8 +925,240 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         }
                     }
 
+                    /**
+                     * Sincronizar Agendas del Agente
+                     * */
+                    result = ProspectoVta.executeSyncInserts(db);
+                    addDefaultMessage(result);
+                    result = ProspectoVta.executeSyncSincronizada(db);
+                    addDefaultMessage(result);
+                    result = ProspectoVta.executeSync(db);
+                    addDefaultMessage(result);
+                    //result = AgendaVta.executeSyncInserts(db);
+                    //addDefaultMessage(result);
+                    //result = AgendaVta.executeSync(db);
+                    //addDefaultMessage(result);
+                }
+                else if (syncType.equals(SYNC_TYPE_VENTA_NUEVA)){
+                    Calendar calendar = Calendar.getInstance();
+                    Log.d(TAG,"ApplicationParameters...");
+                    result = ApplicationParameterSync.executeSync(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Parametros...");
+                    result = rp3.auna.sync.Agente.executeSyncParametros(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"GeneralValues...");
+                    result = rp3.sync.GeneralValue.executeSync(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"GCM...");
+                    if (!TextUtils.isEmpty(PreferenceManager.getString(Contants.KEY_APP_INSTANCE_ID))) {
+                        result = rp3.auna.sync.Agente.executeSyncDeviceId();
+                        addDefaultMessage(result);
+                    }
+                    Log.d(TAG,"Iniciar obteniendo las comisiones...");
+                    result = Agente.executeSyncComisiones(db);
+                    addDefaultMessage(result);
+
+                    /**
+                     * Sincronizar Agendas del Agente
+                     * */
+                    Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
+                    result = ProspectoVta.executeSyncInserts(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar enviando los prospectos en BD sinocronizados...");
+                    result = ProspectoVta.executeSyncSincronizada(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar Obteniendo los prospectos...");
+                    result = ProspectoVta.executeSync(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"insertar llamadas pendientes en BD...");
+                    result = LlamadaVta.executeSyncInsert(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar actualizando las llamadas sincronizadas...");
+                    result = LlamadaVta.executeSyncUpdate(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar obteniendo las llamadas...");
+                    result = LlamadaVta.executeSync(db,Convert.getDotNetTicksFromDate(calendar.getTime()),context);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"insertar visitas pendientes en BD...");
+                    result = VisitaVta.executeSyncInserts(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar actualizando las visitas sincronizadas...");
+                    result = VisitaVta.executeSyncUpdate(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar obteniendo las visitas...");
+                    result = VisitaVta.executeSync(db,Convert.getDotNetTicksFromDate(calendar.getTime()),context);
+                    addDefaultMessage(result);
+                }
+                //Actualizar los prospectos modificados
+                else if(syncType.equals(SYNC_TYPE_UPDATE_PROSPECTO)){
+                    Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
+                    result = ProspectoVta.executeSyncInserts(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar enviando los prospectos en BD sinocronizados...");
+                    result = ProspectoVta.executeSyncSincronizada(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar Obteniendo los prospectos...");
+                    result = ProspectoVta.executeSync(db);
+                    addDefaultMessage(result);
+                }
+                else if (syncType.equals(SYNC_TYPE_INSERTAR_PROSPECTOVTA)){
+                    /*result =ProspectoVta.executeSyncInserts(db);
+                    addDefaultMessage(result);*/
+                    Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
+                    result = ProspectoVta.executeSyncInserts(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar enviando los prospectos en BD sinocronizados...");
+                    result = ProspectoVta.executeSyncSincronizada(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar Obteniendo los prospectos...");
+                    result = ProspectoVta.executeSync(db);
+                    addDefaultMessage(result);
+                }
+                else if(syncType.equals(SYNC_TYPE_UPDATE_LLAMADAVTA)){
+                    Calendar calendar = Calendar.getInstance();
+                    Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
+                    result = ProspectoVta.executeSyncInserts(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar enviando los prospectos en BD sinocronizados...");
+                    result = ProspectoVta.executeSyncSincronizada(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar Obteniendo los prospectos...");
+                    result = ProspectoVta.executeSync(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"insertar llamadas pendientes en BD...");
+                    result = LlamadaVta.executeSyncInsert(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar actualizando las llamadas sincronizadas...");
+                    result = LlamadaVta.executeSyncUpdate(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar obteniendo las llamadas...");
+                    result = LlamadaVta.executeSync(db,Convert.getDotNetTicksFromDate(calendar.getTime()),context);
+                    addDefaultMessage(result);
                 }
 
+                else if(syncType.equals(SYNC_TYPE_UPDATE_VISITA)){
+                    Calendar calendar = Calendar.getInstance();
+                    Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
+                    result = ProspectoVta.executeSyncInserts(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar enviando los prospectos en BD sinocronizados...");
+                    result = ProspectoVta.executeSyncSincronizada(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar Obteniendo los prospectos...");
+                    result = ProspectoVta.executeSync(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"insertar visitas pendientes en BD...");
+                    result = VisitaVta.executeSyncInserts(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar actualizando las visitas sincronizadas...");
+                    result = VisitaVta.executeSyncUpdate(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar obteniendo las visitas...");
+                    result = VisitaVta.executeSync(db,Convert.getDotNetTicksFromDate(calendar.getTime()),context);
+                    addDefaultMessage(result);
+                }
+                //refresh llamada
+                else if(syncType.equals(SYNC_TYPE_REFRESH_LLAMADA)){
+                    Long fecha = extras.getLong(AgendaFragment.FECHA);
+
+                    Log.d(TAG,"insertar llamadas pendientes en BD...");
+                    result = LlamadaVta.executeSyncInsert(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar actualizando las llamadas sincronizadas...");
+                    result = LlamadaVta.executeSyncUpdate(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar obteniendo las llamadas...");
+                    result = LlamadaVta.executeSync(db, fecha,context);
+                    addDefaultMessage(result);
+
+                    Log.d(TAG,"insertar visitas pendientes en BD...");
+                    result = VisitaVta.executeSyncInserts(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar actualizando las visitas sincronizadas...");
+                    result = VisitaVta.executeSyncUpdate(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar obteniendo las visitas...");
+                    result = VisitaVta.executeSync(db,fecha,context);
+                    addDefaultMessage(result);
+                }
+                //refresh visita
+                else if(syncType.equals(SYNC_TYPE_REFRESH_VISITA)){
+                    Log.d(TAG,"insertar visitas pendientes en BD...");
+                    Long fecha = extras.getLong(AgendaFragment.FECHA);
+
+                    Log.d(TAG,"insertar llamadas pendientes en BD...");
+                    result = LlamadaVta.executeSyncInsert(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar actualizando las llamadas sincronizadas...");
+                    result = LlamadaVta.executeSyncUpdate(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar obteniendo las llamadas...");
+                    result = LlamadaVta.executeSync(db, fecha,context);
+                    addDefaultMessage(result);
+
+                    result = VisitaVta.executeSyncInserts(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar actualizando las visitas sincronizadas...");
+                    result = VisitaVta.executeSyncUpdate(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar obteniendo las visitas...");
+                    result = VisitaVta.executeSync(db,fecha,context);
+                    addDefaultMessage(result);
+                }
+                //refresh visita reprogramming
+                else if(syncType.equals(SYNC_TYPE_REFRESH_REPROGRAM_CANCELED_VISITA)){
+                    Log.d(TAG,"SYNC_TYPE_REFRESH_REPROGRAM_CANCELED_VISITA");
+                    Calendar calendar = Calendar.getInstance();
+                    Log.d(TAG,"ApplicationParameters...");
+                    result = ApplicationParameterSync.executeSync(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Parametros...");
+                    result = rp3.auna.sync.Agente.executeSyncParametros(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"GeneralValues...");
+                    result = rp3.sync.GeneralValue.executeSync(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"GCM...");
+                    if (!TextUtils.isEmpty(PreferenceManager.getString(Contants.KEY_APP_INSTANCE_ID))) {
+                        result = rp3.auna.sync.Agente.executeSyncDeviceId();
+                        addDefaultMessage(result);
+                    }
+                    Log.d(TAG,"Iniciar obteniendo las comisiones...");
+                    result = Agente.executeSyncComisiones(db);
+                    addDefaultMessage(result);
+
+                    /**
+                     * Sincronizar Agendas del Agente
+                     * */
+                    Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
+                    result = ProspectoVta.executeSyncInserts(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar enviando los prospectos en BD sinocronizados...");
+                    result = ProspectoVta.executeSyncSincronizada(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar Obteniendo los prospectos...");
+                    result = ProspectoVta.executeSync(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"insertar llamadas pendientes en BD...");
+                    result = LlamadaVta.executeSyncInsert(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar actualizando las llamadas sincronizadas...");
+                    result = LlamadaVta.executeSyncUpdate(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar obteniendo las llamadas...");
+                    result = LlamadaVta.executeSync(db,Convert.getDotNetTicksFromDate(calendar.getTime()),context);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"insertar visitas pendientes en BD...");
+                    result = VisitaVta.executeSyncInserts(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar actualizando las visitas sincronizadas...");
+                    result = VisitaVta.executeSyncUpdate(db);
+                    addDefaultMessage(result);
+                    Log.d(TAG,"Iniciar obteniendo las visitas...");
+                    result = VisitaVta.executeSync(db,Convert.getDotNetTicksFromDate(calendar.getTime()),context);
+                    addDefaultMessage(result);
+                }
                 SyncAudit.insert(syncType, result);
             }
             else
@@ -818,12 +1169,21 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 				
 		}catch (Exception e) {			
 			Log.e(TAG, "E: " + e.getMessage());
+
 			addDefaultMessage(SYNC_EVENT_ERROR);
 			SyncAudit.insert(syncType, SYNC_EVENT_ERROR);
 		} 
 		finally{
+            Log.d(TAG,"syncType:"+syncType);
+            if(!syncType.equals(SYNC_TYPE_BATCH) || !syncType.equalsIgnoreCase(SYNC_TYPE_SEND_NOTIFICATION)){
+                Log.d(TAG,"Buscar Alertas en SyncAdapter...");
+                Main2Activity.pruebaAlarm(db,context);
+            }else{
+                Log.d(TAG,"Se activo un batch o send notification...");
+            }
             db.endTransaction();
 			db.close();
+
 			notifySyncFinish();
 		}								
 	}

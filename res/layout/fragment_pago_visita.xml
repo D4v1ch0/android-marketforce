@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/alternative_background"
+    android:nestedScrollingEnabled="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/viewtemp"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:layout_gravity="center"
+        >
+        <ImageView
+            android:layout_marginTop="150dp"
+            android:visibility="visible"
+            android:id="@+id/ivEmpty"
+            android:layout_marginBottom="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_action_empty"/>
+        <TextView
+            android:visibility="visible"
+            android:id="@+id/tvMensaje"
+            android:gravity="center_horizontal"
+            android:layout_below="@+id/ivEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/md_text"
+            android:text="No hay informacion"
+            android:textSize="15sp"
+            android:layout_marginBottom="60dp"
+            />
+
+    </RelativeLayout>
+    <ScrollView
+        android:background="@color/White"
+        android:visibility="visible"
+        android:id="@+id/viewdata"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_marginTop="45dp"
+            android:visibility="visible"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorGrayA75"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="36dp"
+                android:layout_marginTop="3dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="0.09"
+                    android:layout_height="32dp"
+                    android:tint="@color/md_text"
+                    android:src="@drawable/ic_right_arrow" />
+
+                <TextView
+                    android:textSize="14sp"
+                    android:id="@+id/tvTipoVenta"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_weight="0.4"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Fecha:"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
+                    android:textColor="@color/md_text" />
+
+                <TextView
+                    android:id="@+id/tvFecha"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_weight="0.5"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Tipo de Venta:"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
+                    android:textColor="@color/blackA75"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorGrayA75"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="36dp"
+                android:layout_marginTop="3dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="32dp"
+                    android:layout_weight="0.09"
+                    android:src="@drawable/ic_right_arrow"
+                    android:tint="@color/md_text" />
+
+                <TextView
+                    android:textSize="14sp"
+                    android:id="@+id/tvTipoVenta"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_weight="0.4"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Monto:"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
+                    android:textColor="@color/md_text" />
+                <TextView
+                    android:id="@+id/tvMonto"
+                    android:textSize="14sp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:layout_marginTop="6dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Tipo de Venta:"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
+                    android:textColor="@color/blackA75"/>
+
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorGrayA75"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="36dp"
+                android:layout_marginTop="3dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageView6"
+                    android:layout_width="0dp"
+                    android:layout_height="32dp"
+                    android:layout_weight="0.09"
+                    android:src="@drawable/ic_right_arrow"
+                    android:tint="@color/md_text" />
+
+                <TextView
+                    android:textSize="14sp"
+                    android:id="@+id/tvTipoVenta"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_weight="0.4"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Número de Operación:"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
+                    android:textColor="@color/md_text" />
+                <TextView
+                    android:id="@+id/tvNumeroOperacion"
+                    android:textSize="14sp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:layout_marginTop="6dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Tipo de Venta:"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
+                    android:textColor="@color/blackA75"/>
+
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorGrayA75"/>
+            </LinearLayout>
+    </ScrollView>
+</LinearLayout>

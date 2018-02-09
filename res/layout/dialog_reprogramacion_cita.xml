@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/alternative_background"
+    android:padding="@dimen/normal_space"
+    >
+
+    <TextView
+
+        android:textColor="@color/md_text"
+        android:textSize="15sp"
+        android:fontFamily="sans-serif"
+        android:id="@+id/tvLlamada"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/padding_between_title_body"
+        android:gravity="center"
+        android:text="RP3 Market Force"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+
+        <android.support.v7.widget.RecyclerView
+            android:background="@color/alternative_background"
+
+            android:id="@+id/rvListaTelefono"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical"
+            android:layout_marginTop="3dp"
+            android:padding="3dp"/>
+
+            <EditText
+                android:textColorHint="?attr/colorPrimary"
+                android:inputType="text"
+                android:id="@+id/etMotivo"
+                android:textSize="14sp"
+                android:textColor="@color/md_text"
+                android:hint="Escriba un motivo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/llAddress"
+        android:paddingRight="10dp"
+        android:gravity="right"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btnCancelarProspecto"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/button_padding"
+            android:text="Cancelar"
+            android:textColor="?attr/colorPrimary" />
+        <Button
+            android:id="@+id/btnEeditarProspecto"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/button_padding"
+            android:text="ACEPTAR"
+            android:textColor="?attr/colorPrimary" />
+    </LinearLayout>
+
+</LinearLayout>

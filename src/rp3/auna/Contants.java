@@ -25,10 +25,118 @@ public class Contants {
     public final static int GENERAL_TABLE_PROCESADORA = 1103;
     public final static int GENERAL_TABLE_MOTIVOS_ANULACION = 1706;
     public final static int GENERAL_TABLE_TIPOS_TRANSACCION = 1621;
-	public final static String IMAGE_FOLDER = "imagesFolder";
+    /***
+     *  Venta Nueva
+     */
+
+    public static final String DATE_TIME_FORMAT="dd/MM/yyyy HH:mm:ss";
+    public static final String DATE_TIME_FORMAT_ALIGNET="ddMMyyyy HHmmss";
+    public static final String DATE_TIME_FORMAT_TIME="HH:mm:ss";
+    public static final String DATE_FORMAT="dd/MM/yyyy";
+    public static final String DATE_FORMAT_AGENDA_TITLE="dd MMM yy";
+    public static final String DATE_TIME_FORMAT_HH_MM="HH:mm";
+    public static final String DATE_TIME_FORMAT_SYNC="dd/MM/yyyy_HH:mm:ss";
+
+    //General Table
+    public final static int GENERAL_TABLE_TIPO_SOLICITUD_GENERADA = 1816;
+    public final static int GENERAL_TABLE_CONDICION_FUMADOR = 1820;
+    public final static int GENERAL_TABLE_SOLICITUD_VALIDAR_TITULAR = 1822;
+    public final static int GENERAL_TABLE_ESTADOS_LLAMADA = 1831;
+    public final static int GENERAL_TABLE_ESTADOS_PROSPECCION = 1832;
+    public final static int GENERAL_TABLE_ORIGENES_PROSPECCION = 1833;
+    public final static int GENERAL_TABLE_ESTADOS_VISITA = 1834;
+    public final static int GENERAL_TABLE_ESTADOS_CONSULTA_REFERIDO = 1835;
+    public final static int GENERAL_TABLE_ORIGENES_AGENDA = 1836;
+    public final static int GENERAL_TABLE_TIPO_SOLICITUD = 1838;
+    public final static int GENERAL_TABLE_TIPOS_VENTA= 1848;
+    public final static int GENERAL_TABLE_COTIZACION_FRACCIONAMIENTO= 1849;
+    public final static int GENERAL_TABLE_COTIZACION_TIPOS_VENTA= 1850;
+    public static final int GENERAL_TABLE_MOTIVOS_RESPUESTAS_TABLE_ID_LLAMADA = 1847;
+    public static final int GENERAL_TABLE_MOTIVOS_REPROGRAMACION_TABLE_ID_LLAMADA = 1841;
+    public static final int GENERAL_TABLE_MOTIVOS_REPROGRAMACION_TABLE_ID_CITA = 1845;
+    public static final int GENERAL_TABLE_MOTIVOS_CANCELAR_LLAMADA_TABLE_ID = 1842;
+    public static final int GENERAL_TABLE_MOTIVOS_CANCELAR_CITA_TABLE_ID = 1846;
+    public static final int GENERAL_TABLE_COTIZACION_TIPOS_ERROR = 1851;
+    public static final int GENERAL_TABLE_TIPOS_TARJETA = 1854;
+    public static final int GENERAL_TABLE_CONTROL_ERRORES_WS_VALIDAR_PAGO = 1855;
+    public static final int GENERAL_TABLE_MODO_TARIFA_TIPO_PAGO = 1806;
+    public static final int GENERAL_TABLE_TIPO_DOCUMENTO = 1824;
+    //Code values
+    public final static String GENERAL_VALUE_SOLICITUD_VALIDAR_TITULAR_SI = "S";
+    public final static String GENERAL_VALUE_SOLICITUD_VALIDAR_TITULAR_NO = "N";
+
+    public final static String GENERAL_VALUE_COTIZACION_FRACCION_TOTAL = "Total";
+    public final static String GENERAL_VALUE_COTIZACION_FRACCION_PRIMERA = "1";
+    public final static String GENERAL_VALUE_COTIZACION_FRACCION_SEGUNDA= "2";
+    public final static String GENERAL_VALUE_COTIZACION_FRACCION_TERCERA = "3";
+    public final static String GENERAL_VALUE_COTIZACION_FRACCION_CUARTA = "4";
+
+    public final static String GENERAL_VALUE_TIPO_VENTA_INDIVIDUAL = "01";
+    public final static String GENERAL_VALUE_TIPO_VENTA_CORPORATIVO = "20";
+
+    public final static String GENERAL_VALUE_TIPO_SOLICITUD_GENERADA_FISICA = "F";
+    public final static String GENERAL_VALUE_TIPO_SOLICITUD_GENERADA_VIRTUAL = "V";
+
+    public final static String GENERAL_VALUE_TIPO_SOLICITUD_AFILIACION = "1";
+    public final static String GENERAL_VALUE_TIPO_SOLICITUD_NUEVO = "N";
+    public final static String GENERAL_VALUE_TIPO_SOLICITUD_RENOVACION = "R";
+
+    public final static int GENERAL_VALUE_SEXO_M = 1;
+    public final static int GENERAL_VALUE_SEXO_F = 2;
+
+    public final static String GENERAL_VALUE_FUMADOR_SI = "F";
+    public final static String GENERAL_VALUE_FUMADOR_NO = "NF";
+
+    public final static String GENERAL_VALUE_CODE_INDIVIDUAL = "A";
+    public final static String GENERAL_VALUE_CODE_CORPORATIVO= "B";
+
+    public final static String GENERAL_VALUE_CODE_LLAMADA_SI_REALIZO_LLAMADA = "A";
+    public final static String GENERAL_VALUE_CODE_LLAMADA_NO_REALIZO_LLAMADA = "B";
+    public final static String GENERAL_VALUE_CODE_LLAMADA_REPROGRAMADA = "C";
+    public final static String GENERAL_VALUE_CODE_LLAMADA_PENDIENTE = "D";
+    public final static String GENERAL_VALUE_CODE_LLAMADA_CANCELADA = "E";
+
+    public final static String GENERAL_VALUE_CODE_LLAMADA_RESPUESTA_SI = "A";
+    public final static String GENERAL_VALUE_CODE_LLAMADA_RESPUESTA_NO = "B";
+    public final static String GENERAL_VALUE_CODE_LLAMADA_RESPUESTA_LLAMAME_LUEGO = "C";
+    public final static String GENERAL_VALUE_CODE_LLAMADA_RESPUESTA_NO_ME_CONTACTES = "D";
+
+    public final static String GENERAL_VALUE_CODE_APTO_PROSPECCION = "A";
+    public final static String GENERAL_VALUE_CODE_YA_CARGO_PROSPECTO= "B";
+    public final static String GENERAL_VALUE_CODE_FALTAN_DATOS_PROSPECTO = "C";
+    public final static String GENERAL_VALUE_CODE_NO_CONTACTAR_PROSPECTO = "D";
+    public final static String GENERAL_VALUE_CODE_VENTA_PROSPECTO = "E";
+
+    public final static String GENERAL_VALUE_CODE_PROSPECCION_ORIGEN_P100= "A";
+    public final static String GENERAL_VALUE_CODE_PROSPECCION_ORIGEN_REFERIDO_VENTA_MKF = "B";
+    public final static String GENERAL_VALUE_CODE_PROSPECCION_ORIGEN_REFERIDO_MKF = "C";
+    public final static String GENERAL_VALUE_CODE_PROSPECCION_ORIGEN_CAMPAÑAS = "D";
+    public final static String GENERAL_VALUE_CODE_PROSPECCION_ORIGEN_WEB = "E";
+
+
+    public static final String GENERAL_VALUE_CODE_VISITA_REALIZADA = "A";
+    public static final String GENERAL_VALUE_CODE_VISITA_NO_REALIZADA = "B";
+    public final static String GENERAL_VALUE_CODE_VISITA_REPROGRAMADA = "C";
+    public final static String GENERAL_VALUE_CODE_VISITA_PENDIENTE = "D";
+    public final static String GENERAL_VALUE_CODE_VISITA_CANCELADA = "E";
+
+    public static final String GENERAL_VALUE_CODE_ORIGEN_P100 = "A";
+    public static final String GENERAL_VALUE_CODE_ORIGEN_VENTA_MKF= "B";
+    public final static String GENERAL_VALUE_CODE_ORIGEN_MKF_MOVIL = "C";
+    public final static String GENERAL_VALUE_CODE_ORIGEN_CAMPAÑAS = "D";
+    public final static String GENERAL_VALUE_CODE_ORIGEN_MKF_WEB = "E";
+
+    public final static String GENERAL_VALUE_CONSULTA_REFERIDO_SI = "A";
+    public final static String GENERAL_VALUE_CONSULTA_REFERIDO_NO= "B";
+
+    public final static String GENERAL_VALUE_ORIGEN_AGENDA_MOVIL = "A";
+    public final static String GENERAL_VALUE_ORIGEN_AGENDA_WEB= "B";
+    public final static String GENERAL_VALUE_REPROGRAMACION_INDISPONIBILIDAD= "3";
+
+    public final static String IMAGE_FOLDER = "imagesFolder";
     public final static String IMAGE_FOLDER_PRODUCTOS = "imagesFolderProducto";
     public final static String IMAGE_FOLDER_OPORTUNIDADES = "imagesFolderOportunidad";
-	public final static String KEY_FIRST_TIME = "firstTime";
+	public final static String KEY_FIRST_TIME = "firstTime1";
     public final static String KEY_SECOND_TIME = "secondTime";
     public final static String KEY_DATABASE_RESTORE = "db_restore";
 	
@@ -200,5 +308,14 @@ public class Contants {
     public final static String COTIZADOR_PROCEDENCIA_BASE = "01";
     public final static String COTIZADOR_CODIGO_PROGRAMA = "60";
     public final static String COTIZADOR_ORIGEN_SOLICITUD = "01";
+    public final static String COTIZADOR_CAMPANA= "0";
+    public final static String COTIZADOR_USER = "Rp3";
+    public final static String COTIZADOR_TIPO_OPERACION = "001";
+    public final static String COTIZADOR_CANAL_FUERZA_VENTA_INDIVIDUAL = "01";
+    public final static String COTIZADOR_CANAL_CORPORATIVO_INDIVIDUAL = "20";
+
+    public final static String PAYME_IDACQUIRER = "4";
+    public final static String PAYME_ID_ENT_COMMERCE = "1286";
+    public final static String PAYME_COD_CARD_HOLDER_COMMERCE = "ABC120";
 
 }

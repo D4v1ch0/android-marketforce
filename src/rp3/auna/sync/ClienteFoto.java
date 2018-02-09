@@ -13,6 +13,7 @@ import rp3.util.FileUtils;
 
 public class ClienteFoto {
 
+	private static final String TAG = ClienteFoto.class.getSimpleName();
 	public final static String ARG_CLIENTE_ID = "idCliente";
 	
 	public static int executeSync(DataBase db, Long idCliente){

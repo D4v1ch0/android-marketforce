@@ -2,6 +2,7 @@ package rp3.auna.actividades;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import rp3.app.BaseActivity;
@@ -10,7 +11,8 @@ import rp3.auna.models.AgendaTareaActividades;
 import rp3.auna.ruta.RutasDetailFragment;
 
 public abstract class ActividadActivity extends BaseActivity {
-	
+
+    private static final String TAG = ActividadActivity.class.getSimpleName();
 	public static String ARG_THEME = "theme";
     public static String ARG_SIN_GRUPO = "sin_grupo";
 	public static String ARG_PADRE_ID = "padre";
@@ -32,6 +34,7 @@ public abstract class ActividadActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        Log.d(TAG,"onCreate...");
 		if(getActionBar()!= null)
 		{
 			getActionBar().setHomeButtonEnabled(true);
@@ -56,6 +59,7 @@ public abstract class ActividadActivity extends BaseActivity {
 	
 	protected AgendaTareaActividades initActividad(int idActividad)
     {
+        Log.d(TAG,"initActividad...");
         AgendaTareaActividades act = new AgendaTareaActividades();
         act.setIdAgenda((int) id_agenda);
         act.setIdTarea(id_actividad);
@@ -68,6 +72,7 @@ public abstract class ActividadActivity extends BaseActivity {
 
     protected AgendaTareaActividades initActividadInsert(int idActividad)
     {
+        Log.d(TAG,"initActividadInsert...");
         AgendaTareaActividades act = new AgendaTareaActividades();
         act.setIdAgenda((int) id_agenda);
         act.setIdTarea(id_actividad);
@@ -87,6 +92,7 @@ public abstract class ActividadActivity extends BaseActivity {
         switch(item.getItemId())
         {
             case R.id.action_save:
+                Log.d(TAG,"action_save...");
                 aceptarCambios(new View(this));
                 break;
             case R.id.action_cancel:
@@ -96,6 +102,42 @@ public abstract class ActividadActivity extends BaseActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 
 }

@@ -6,9 +6,13 @@
      <color name="color_text_blue">#89C1D7</color>
      <color name="color_background_flied">#F3F6F8</color>
      <color name="bg_button_bg_main">#2582B4</color>
+    <color name="bg_button_bg_main_preview">#195e80</color>
      <color name="bg_button_bg_main_pressed">#727376</color>
      <color name="color_text_hint">#808080</color>
-     
+
+    <color name="iconActivated">#4caf50</color>
+    <color name="iconDeactivated">#2e7d32</color>
+
      <color name="bg_nav_drawer">#386A93</color>  
     <color name="nav_item_text">#FFFFFF</color>
     <color name="nav_item_text_group">#FFFFFF</color>    
@@ -49,4 +53,102 @@
     <color name="color_fondo_total">#DEEAf2</color>
 
 
+    <!-- Colors Material-->
+
+    <color name="colorPrimary">@color/White</color>
+    <color name="colorPrimaryDark">#80D8FF</color>
+    <!--<color name="colorPrimaryDark">#3989ab</color>-->
+    <color name="colorAccent">#FFC107</color>
+    <!---General Color-->
+    <color name="ebb">#E5D4CF</color>
+    <color name="ghostwhite2">#FBFBFC</color>
+    <color name="ghostwhite">#F6F7FA</color>
+    <color name="snuff">#E6D8E3</color>
+    <color name="gainsboro">#DDDADA</color>
+    <color name="Black">#000000</color>
+    <color name="White">#FFFFFF</color>
+    <color name="divider">#B6B6B6</color>
+    <color name="blue_face">#576ea5</color>
+    <color name="primaryText">@color/White</color>
+    <color name="alternative_background">#eeeeee</color>
+    <color name="cv_background">#FFFDE7</color>
+
+    <color name="item_background">#F4F4F4</color>
+    <color name="light_lead">#f3f3f3</color>
+    <color name="fondo_plomo">#f7f7f7</color>
+
+    <!-- Blue Grey -->
+    <color name="BlueGrey">#607D8B</color>
+    <color name="BlueGreyOne">#90A4AE</color>
+    <color name="BlueGreyTwo">#263238</color>
+
+    <!-- Deep Orange -->
+    <color name="DeepOrange">#FF5722</color>
+    <color name="DeepOrangeOne">#FF7043</color>
+    <color name="DeepOrangeTwo">#BF360C</color>
+
+    <!-- Brown  -->
+    <color name="Brown">#795548</color>
+    <color name="BrownOne">#8D6E63</color>
+    <color name="BrownTwo">#3E2723</color>
+
+    <!-- Amber -->
+    <color name="Amber">#FFC107</color>
+    <color name="AmberOne">#FFD54F</color>
+    <color name="AmberTwo">#FF6F00</color>
+    <color name="control_ligth">#FFC400</color>
+
+    <!-- Green -->
+    <color name="Green">#4CAF50</color>
+    <color name="GreenOne">#81C784</color>
+    <color name="GreenTwo">#1B5E20</color>
+
+    <!-- Light Green -->
+    <color name="LightGreen">#8BC34A</color>
+    <color name="LightGreenOne">#C5E1A5</color>
+    <color name="LightGreenTwo">#33691E</color>
+
+    <!-- Lime -->
+    <color name="Lime">#CDDC39</color>
+    <color name="LimeOne">#DCE775</color>
+    <color name="LimeTwo">#827717</color>
+
+    <!-- Light Blue -->
+    <color name="Blue">#2196F3</color>
+    <color name="accentt">#00B0FF</color>
+    <color name="BlueOne">#64B5F6</color>
+    <color name="BlueTwo">#0D47A1</color>
+
+    <!-- Cyan -->
+    <color name="Cyan">#00BCD4</color>
+    <color name="CyanOne">#0097A7</color>
+    <color name="CyanTwo">#006064</color>
+
+    <!-- Red -->
+    <color name="Red">#F44336</color>
+    <color name="RedOne">#D32F2F</color>
+    <color name="RedTwo">#B71C1C</color>
+
+    <!-- Pink -->
+    <color name="Pink">#E91E63</color>
+    <color name="PinkOne">#C2185B</color>
+    <color name="PinkTwo">#EC407A</color>
+
+    <!-- Purple -->
+    <color name="Purple">#9C27B0</color>
+    <color name="PurpleTwo">#6A1B9A</color>
+    <color name="PurpleThree">#AB47BC</color>
+    <color name="md_white_1000_60">#99ffffff</color>
+    <color name="md_white_1000_10">#1affffff</color>
+    <color name="md_white_1000">#ffffff</color>
+    <color name="md_black_1000_15">#26000000</color>
+    <color name="md_text_white">#ffffffff</color>
+    <color name="md_secondary_text_icons_white">#b3ffffff</color>
+    <color name="drawer_navigation">#82B1FF</color>
+
+    <color name="md_text">#df000000</color>
+    <color name="md_secondary_text_icons">#8a000000</color>
+    <color name="md_disabled_hint_text">#4c000000</color>
+    <color name="md_divider">#1f000000</color>
+    <color name="dark_gray">#a9a9a9</color>
 </resources>

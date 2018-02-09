@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_take_photo"
+        android:title="Tomar Foto"
+        app:showAsAction="never"/>
+    <item
+    android:id="@+id/action_subir_documentos"
+    android:title="Documentos"
+    app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_subir_imagenes"
+        android:title="Imagenes"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/subir_archivos"
+        android:title="Subir  Archivos"
+        app:showAsAction="never"/>
+</menu>

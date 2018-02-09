@@ -1,5 +1,7 @@
 package rp3.auna.sync;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +23,10 @@ import rp3.util.Convert;
 
 public class Agenda {
 
+    private static final String TAG = Agenda.class.getSimpleName();
+
     public static int executeSync(DataBase db, int idAgenda) {
+        Log.d(TAG,"executeSync...");
         WebService webService = new WebService("MartketForce", "UpdateAgendaFull");
         webService.setTimeOut(20000);
 
@@ -48,22 +53,32 @@ public class Agenda {
             jObject.put("MotivoReprogramacionTabla", Contants.GENERAL_TABLE_MOTIVOS_REPROGRAMACION);
             if(agendaUpload.getIdCliente() == 0)
             {
+                Log.d(TAG,"agendaUpload.getIdCliente() == 0)...");
                 rp3.auna.models.Cliente newCliente = rp3.auna.models.Cliente.getClienteID(db, agendaUpload.get_idCliente(), false);
                 if(newCliente.getIdCliente() != 0)
                 {
+                    Log.d(TAG,"ewCliente.getIdCliente() != 0...");
                     jObject.put("IdCliente", newCliente.getIdCliente());
                     agendaUpload.setIdCliente((int)newCliente.getIdCliente());
                 }
                 else {
+                    Log.d(TAG,"ewCliente.getIdCliente() == 0...");
                     Cliente.executeSyncCreate(db, agendaUpload.get_idCliente());
                     newCliente = rp3.auna.models.Cliente.getClienteID(db, agendaUpload.get_idCliente(), false);
                     if (newCliente.getIdCliente() != 0)
+                    {
+                        Log.d(TAG,"newCliente.getIdCliente() != 0...");
                         jObject.put("IdCliente", newCliente.getIdCliente());
+                    }
                     else
+                    {
+                        Log.d(TAG,"newCliente.getIdCliente() == 0...");
                         return SyncAdapter.SYNC_EVENT_ERROR;
+                    }
                 }
             }
             else {
+                Log.d(TAG,"agendaUpload.getIdCliente() != 0...");
                 jObject.put("IdCliente", agendaUpload.getIdCliente());
             }
 
@@ -122,8 +137,9 @@ public class Agenda {
             jObject.put("AgendaLlamadas", jArrayLlamadas);
 
             jArray.put(jObject);
+            Log.d(TAG,"jArray:"+jArray.toString()+"...");
         } catch (Exception ex) {
-
+            Log.d(TAG,ex.getMessage());
         }
 
         webService.addParameter("agendas", jArray);
@@ -194,8 +210,9 @@ public class Agenda {
                 jObject.put("IdMedia", 2);
                 jObject.put("Nombre", agendaUpload.getIdAgenda() + "_Foto2.jpg");
                 jObject.put("Contenido", Utils.BitmapToBase64(agendaUpload.getFoto2Int()));
+                Log.d(TAG,"jObject:"+jObject.toString()+"...");
             } catch (Exception ex) {
-
+                Log.d(TAG,ex.getMessage());
             }
 
             webService.addParameter("media", jObject);
@@ -229,8 +246,9 @@ public class Agenda {
                 jObject.put("IdMedia", 3);
                 jObject.put("Nombre", agendaUpload.getIdAgenda() + "_Foto3.jpg");
                 jObject.put("Contenido", Utils.BitmapToBase64(agendaUpload.getFoto3Int()));
+                Log.d(TAG,"jObject:"+jObject.toString()+"...");
             } catch (Exception ex) {
-
+                Log.d(TAG,ex.getMessage());
             }
 
             webService.addParameter("media", jObject);
@@ -273,8 +291,9 @@ public class Agenda {
             jObject.put("Longitud", longitud);
             jObject.put("DistanciaUbicacion", agendaUpload.getDistancia());
             jArray.put(jObject);
+            Log.d(TAG,"jArray:"+jArray.toString()+"...");
         } catch (Exception ex) {
-
+            Log.d(TAG,ex.getMessage());
         }
 
         webService.addParameter("agendas", jArray);
@@ -319,8 +338,9 @@ public class Agenda {
             jObject.put("MotivoReprogramacionTabla", Contants.GENERAL_TABLE_MOTIVOS_REPROGRAMACION);
 
             jArray.put(jObject);
+            Log.d(TAG,"jArray:"+jArray.toString()+"...");
         } catch (Exception ex) {
-
+            Log.d(TAG,ex.getMessage());
         }
 
         webService.addParameter("agendas", jArray);
@@ -363,8 +383,9 @@ public class Agenda {
             jObject.put("DistanciaUbicacion", agendaUpload.getDistancia());
 
             jArray.put(jObject);
+            Log.d(TAG,"jArray:"+jArray.toString());
         } catch (Exception ex) {
-
+            Log.d(TAG,ex.getMessage());
         }
 
         webService.addParameter("agendasNoGestion", jArray);
@@ -393,6 +414,7 @@ public class Agenda {
     }
 
     public static int executeSyncInsert(DataBase db, long id_local) {
+        Log.d(TAG,"executeSyncInsert....");
         WebService webService = new WebService("MartketForce", "InsertarAgenda");
 
         rp3.auna.models.Agenda agenda = rp3.auna.models.Agenda.getAgenda(db, id_local);
@@ -506,6 +528,7 @@ public class Agenda {
     }
 
     public static int executeSyncInserts(DataBase db) {
+        Log.d(TAG,"executeSyncInserts...");
         WebService webService = new WebService("MartketForce", "UpdateAgendaFull");
 
         List<rp3.auna.models.Agenda> agendas = rp3.auna.models.Agenda.getAgendaInserts(db);
@@ -620,12 +643,11 @@ public class Agenda {
 
             }
         }
-
+        Log.d(TAG,"jArray:"+jArray.toString());
         webService.addParameter("agendas", jArray);
 
         try {
             webService.addCurrentAuthToken();
-
             try {
                 webService.invokeWebService();
                 JSONObject codigos = webService.getJSONObjectResponse();
@@ -779,6 +801,7 @@ public class Agenda {
     }
 
     public static int executeSyncPendientes(DataBase db) {
+        Log.d(TAG,"executeSyncPendientes...");
         WebService webService = new WebService("MartketForce", "UpdateAgendaFull");
 
         List<rp3.auna.models.Agenda> agendas = rp3.auna.models.Agenda.getAgendaPendientes(db);
@@ -891,7 +914,7 @@ public class Agenda {
 
                 jArray.put(jObject);
             } catch (Exception ex) {
-
+                Log.d(TAG,ex.getMessage());
             }
         }
 
@@ -932,15 +955,13 @@ public class Agenda {
                     jObject.put("Nombre", agendaUpload.getIdAgenda() + "_Foto1.jpg");
                     jObject.put("Contenido", Utils.BitmapToBase64(agendaUpload.getFoto1Int()));
                 } catch (Exception ex) {
-
+                    Log.d(TAG,ex.getMessage());
                 }
 
                 webService.addParameter("media", jObject);
 
                 try {
                     webService.addCurrentAuthToken();
-
-
                     try {
                         webService.invokeWebService();
                         agendaUpload.setEnviado(true);

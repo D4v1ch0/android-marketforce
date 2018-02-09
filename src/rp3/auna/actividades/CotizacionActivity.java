@@ -1,7 +1,9 @@
 package rp3.auna.actividades;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,6 +42,8 @@ import rp3.data.models.GeneralValue;
  * Created by magno_000 on 27/01/2017.
  */
 public class CotizacionActivity extends ActividadActivity {
+
+    private static final String TAG = CotizacionActivity.class.getSimpleName();
     public static final String ARG_PARAMS = "params";
     public static final String ARG_RESPONSE = "response";
 
@@ -57,6 +61,7 @@ public class CotizacionActivity extends ActividadActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG,"onCreate...");
         if(soloVista)
             setContentView(R.layout.fragment_cotizacion);
         else
@@ -130,32 +135,33 @@ public class CotizacionActivity extends ActividadActivity {
             @Override
             public void onClick(View v) {
                 select = 1;
-                SelectAnual.setBackgroundColor(getResources().getColor(R.color.color_grey_lines));
-                SelectTC.setBackgroundColor(getResources().getColor(R.color.color_background_white));
-                SelectTD.setBackgroundColor(getResources().getColor(R.color.color_background_white));
+                SelectAnual.setBackgroundColor((R.color.color_grey_lines));
+                SelectTC.setBackgroundColor((R.color.color_background_white));
+                SelectTD.setBackgroundColor((R.color.color_background_white));
             }
         });
         SelectTC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 select = 2;
-                SelectAnual.setBackgroundColor(getResources().getColor(R.color.color_background_white));
-                SelectTC.setBackgroundColor(getResources().getColor(R.color.color_grey_lines));
-                SelectTD.setBackgroundColor(getResources().getColor(R.color.color_background_white));
+                SelectAnual.setBackgroundColor((R.color.color_background_white));
+                SelectTC.setBackgroundColor((R.color.color_grey_lines));
+                SelectTD.setBackgroundColor((R.color.color_background_white));
             }
         });
         SelectTD.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 select = 3;
-                SelectAnual.setBackgroundColor(getResources().getColor(R.color.color_background_white));
-                SelectTC.setBackgroundColor(getResources().getColor(R.color.color_background_white));
-                SelectTD.setBackgroundColor(getResources().getColor(R.color.color_grey_lines));
+                SelectAnual.setBackgroundColor((R.color.color_background_white));
+                SelectTC.setBackgroundColor((R.color.color_background_white));
+                SelectTD.setBackgroundColor((R.color.color_grey_lines));
             }
         });
     }
 
     private void cargaCotizacion() {
+        Log.d(TAG,"cargaCotizacion...");
         ultimaConsultaParams = cotizacion.getParametros();
         ultimoResponse = cotizacion.getResponse();
         select = cotizacion.getOpcion();
@@ -247,6 +253,7 @@ public class CotizacionActivity extends ActividadActivity {
     }
 
     private boolean ValidarConsulta() {
+        Log.d(TAG,"ValidarConsulta...");
         if(select == -1) {
             Toast.makeText(CotizacionActivity.this, "Debe seleccionar un programa.", Toast.LENGTH_SHORT).show();
             return false;
@@ -262,6 +269,7 @@ public class CotizacionActivity extends ActividadActivity {
     }
 
     private void consultaContizacion() {
+        Log.d(TAG,"consultaContizacion...");
         Bundle bundle = new Bundle();
         bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_CONSULTA_COTIZACION);
         bundle.putString(ARG_PARAMS, generaJson());
@@ -271,6 +279,8 @@ public class CotizacionActivity extends ActividadActivity {
 
     private String generaJson()
     {
+        startActivityForResult(new Intent(),20);
+        Log.d(TAG,"generaJson...");
         JSONArray jsonArray = new JSONArray();
         for(int i = 0; i < afiliadosLayouts.size(); i++)
         {
@@ -280,7 +290,7 @@ public class CotizacionActivity extends ActividadActivity {
             {
                 jsonObject.put("CodigoProcedenciaBase", Contants.COTIZADOR_PROCEDENCIA_BASE);
                 jsonObject.put("CodigoPrograma", ((GeneralValue)((Spinner) findViewById(R.id.cotizacion_programa)).getSelectedItem()).getCode());
-                jsonObject.put("Edad", ((TextView) afiliado.findViewById(R.id.afiliado_edad)).getText().toString());
+                jsonObject.put("FechaNacimiento", ((TextView) afiliado.findViewById(R.id.afiliado_edad)).getText().toString());
                 jsonObject.put("FlagFumador", ((CheckBox) afiliado.findViewById(R.id.afiliado_es_fumador)).isChecked());
                 jsonObject.put("IdRegistro", "00" + (i+1));
                 jsonObject.put("OrigenSolicitud", Contants.COTIZADOR_ORIGEN_SOLICITUD);
@@ -295,6 +305,7 @@ public class CotizacionActivity extends ActividadActivity {
 
     public boolean ValidarParams()
     {
+        Log.d(TAG,"ValidarParams...");
         if(afiliadosLayouts.size() == 0)
         {
             Toast.makeText(CotizacionActivity.this, "Debe ingresar al menos un afiliado", Toast.LENGTH_SHORT).show();
@@ -319,6 +330,7 @@ public class CotizacionActivity extends ActividadActivity {
 
     @Override
     public void onSyncComplete(Bundle data, MessageCollection messages) {
+        Log.d(TAG,"onSyncComplete...");
         if(data.containsKey(SyncAdapter.ARG_SYNC_TYPE) && data.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_CONSULTA_COTIZACION)){
             closeDialogProgress();
             if(messages.hasErrorMessage()){
@@ -341,8 +353,15 @@ public class CotizacionActivity extends ActividadActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+    }
+
     public void CargaResponse()
     {
+        Log.d(TAG,"CargaResponse...");
         try
         {
             JSONArray jsonArray = new JSONArray(ultimoResponse);
@@ -401,6 +420,7 @@ public class CotizacionActivity extends ActividadActivity {
             }
 
             if (!hayError) {
+                Log.d(TAG,"!hayError...");
                 TotalAnual.setText("S/. " + numberFormat.format(totalAnual)+" anual");
                 TotalTC.setText("S/. " + numberFormat.format(totalTC)+" al mes");
                 TotalTD.setText("S/. " + numberFormat.format(totalTD)+" al mes");
@@ -409,6 +429,7 @@ public class CotizacionActivity extends ActividadActivity {
                 EmptyView.setVisibility(View.GONE);
             } else
             {
+                Log.d(TAG,"hayError...");
                 //SE DEBE MOSTRAR EL ERROR QUE RETORNA EL SERVICIO
             }
         }
@@ -420,6 +441,7 @@ public class CotizacionActivity extends ActividadActivity {
 
     @Override
     public void aceptarCambios(View v) {
+        Log.d(TAG,"aceptarCambios...");
         AgendaTarea agt = AgendaTarea.getTarea(getDataBase(), id_agenda, id_ruta, id_actividad);
         agt.setEstadoTarea("R");
         AgendaTarea.update(getDataBase(), agt);
@@ -428,6 +450,7 @@ public class CotizacionActivity extends ActividadActivity {
 
     public void Grabar()
     {
+        Log.d(TAG,"Grabar...");
         NumberFormat numberFormat = NumberFormat.getInstance();
         numberFormat.setMaximumFractionDigits(0);
         numberFormat.setMinimumFractionDigits(0);
@@ -524,6 +547,7 @@ public class CotizacionActivity extends ActividadActivity {
     }
     private int getPosition(SpinnerAdapter spinnerAdapter, String i)
     {
+        Log.d(TAG,"...");
         int position = -1;
         for(int f = 0; f < spinnerAdapter.getCount(); f++)
         {
@@ -532,8 +556,46 @@ public class CotizacionActivity extends ActividadActivity {
                     position = f;
             }
             catch (Exception ex)
-            {}
+            {
+                Log.d(TAG,"exception:"+ex.getMessage());
+            }
         }
         return position;
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

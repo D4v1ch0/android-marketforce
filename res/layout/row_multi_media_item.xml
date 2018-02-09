@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/White"
+    android:layout_width="match_parent"
+    android:paddingLeft="10dp"
+    android:layout_height="wrap_content"
+    >
+    <ImageView
+        android:layout_marginTop="5dp"
+        android:id="@+id/imageView4"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:src="@drawable/pdf_icon"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="5dp"
+        />
+    <TextView
+        android:textColor="@color/md_text"
+        android:id="@+id/tvDocumento"
+        android:fontFamily="sans-serif"
+        android:textSize="14sp"
+        android:layout_marginLeft="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="11dp"
+        android:text="Documento pdf"
+        android:layout_toEndOf="@+id/imageView4" />
+
+    <CheckBox
+        android:buttonTint="?attr/colorPrimary"
+        android:id="@+id/checkBoxDocument"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"
+        android:checked="false" />
+
+</RelativeLayout>

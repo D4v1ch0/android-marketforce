@@ -13,6 +13,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -56,6 +57,8 @@ import rp3.util.LocationUtils;
  * Created by magno_000 on 27/03/2015.
  */
 public class RadarFragment extends BaseFragment implements AgenteRadarFragment.AgenteRadarDialogListener {
+
+    private static final String TAG = RadarFragment.class.getSimpleName();
     private GoogleMap map;
     private boolean isRotated = false;
     private AgenteDetalleFragment agenteDetalleFragment;
@@ -77,6 +80,7 @@ public class RadarFragment extends BaseFragment implements AgenteRadarFragment.A
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        Log.d(TAG,"onAttach...");
         setRetainInstance(true);
         if(notShow == null)
             notShow = new ArrayList<Integer>();
@@ -87,11 +91,12 @@ public class RadarFragment extends BaseFragment implements AgenteRadarFragment.A
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Log.d(TAG,"onCreate...");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d(TAG,"onCreateView...");
         if (view != null) {
             isRotated = true;
             ViewGroup parent = (ViewGroup) view.getParent();
@@ -234,7 +239,7 @@ public class RadarFragment extends BaseFragment implements AgenteRadarFragment.A
     }
 
     private void SetOldPoints() {
-
+        Log.d(TAG,"setOldPoints...");
         //map = ((MapActivity) getActivity().getFragmentManager().findFragmentById(R.id.recorrido_map)).getMap();
         map.clear();
         if(list_ubicaciones == null)
@@ -314,7 +319,7 @@ public class RadarFragment extends BaseFragment implements AgenteRadarFragment.A
 
     public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
-
+        Log.d(TAG,"onFragmentCreateView...");
     }
 
     @Override
@@ -331,12 +336,14 @@ public class RadarFragment extends BaseFragment implements AgenteRadarFragment.A
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG,"onActivityResult...");
         if(agenteDetalleFragment != null)
             agenteDetalleFragment.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void setMapa() {
+        Log.d(TAG,"setMapa...");
        // map = ((MapActivity) getActivity().getFragmentManager().findFragmentById(R.id.recorrido_map)).getMap();
         map.clear();
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Contants.LATITUD, Contants.LONGITUD), Contants.ZOOM), 1, null);
@@ -361,7 +368,9 @@ public class RadarFragment extends BaseFragment implements AgenteRadarFragment.A
             });
             }
             catch(Exception ex)
-            {	}
+            {
+                Log.d(TAG,ex.getLocalizedMessage());
+            }
 
         }
     }
@@ -369,6 +378,7 @@ public class RadarFragment extends BaseFragment implements AgenteRadarFragment.A
     @Override
     public void onSyncComplete(Bundle data, MessageCollection messages) {
         super.onSyncComplete(data, messages);
+        Log.d(TAG,"onSyncComplete...");
         if(data.getString(SyncAdapter.ARG_SYNC_TYPE).equalsIgnoreCase(SyncAdapter.SYNC_TYPE_AGENTES_UBICACION)) {
             closeDialogProgress();
             setMapa();
@@ -378,6 +388,7 @@ public class RadarFragment extends BaseFragment implements AgenteRadarFragment.A
 
     private void SetPoints()
     {
+        Log.d(TAG,"setPoints...");
         if(list_ubicaciones == null)
             list_ubicaciones = AgenteUbicacion.getResumen(getDataBase());
         markers = new ArrayList<Marker>();
@@ -489,5 +500,41 @@ public class RadarFragment extends BaseFragment implements AgenteRadarFragment.A
     public void onFinishAgenteRadarDialog(ArrayList<Integer> notShow) {
         this.notShow = notShow;
         SetOldPoints();
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

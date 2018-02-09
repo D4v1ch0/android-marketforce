@@ -1,0 +1,104 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/linearLayoutSettings"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:fitsSystemWindows="@bool/fitsSystemWindows"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/statusBarReporte"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/statusBarHeight"
+        android:background="?colorPrimaryDark"
+        android:translationZ="4dp" />
+
+    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/toolbarReporte"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:translationZ="4dp"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <FrameLayout
+        android:id="@+id/linearRporteria"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:visibility="visible"
+            android:id="@+id/containerLoading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+            <ProgressBar
+                android:visibility="visible"
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminate="true" />
+            <TextView
+                android:text="Cargando..."
+                android:gravity="center_horizontal"
+                android:textColor="@color/md_text"
+                android:fontFamily="sans-serif"
+                android:id="@+id/textView136"
+                android:textSize="15sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/containerOff"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/ivImage"
+                android:src="@drawable/ic_action_information_"
+                android:layout_width="match_parent"
+                android:layout_height="70dp" />
+            <TextView
+                android:layout_below="@id/ivImage"
+                android:gravity="center_horizontal"
+                android:text="Sin conexion de red."
+                android:textColor="@color/md_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:layout_marginBottom="60dp"/>
+        </RelativeLayout>
+
+        <ScrollView
+            android:fadeScrollbars="false"
+            android:visibility="gone"
+            android:scrollbars="vertical"
+            android:scrollbarFadeDuration="1"
+            android:id="@+id/scrollcontent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <WebView
+                android:theme="@style/AppThemeMDDefault"
+                android:visibility="visible"
+                android:id="@+id/containerReporte1"
+                android:layout_width="match_parent"
+                android:fadeScrollbars="false"
+                android:layout_height="match_parent"/>
+        </ScrollView>
+
+
+
+
+
+
+    </FrameLayout>
+
+</LinearLayout>

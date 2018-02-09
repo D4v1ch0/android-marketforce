@@ -3,6 +3,7 @@ package rp3.auna.oportunidad;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -19,6 +20,7 @@ import rp3.auna.models.oportunidad.OportunidadBitacora;
  */
 public class OportunidadBitacoraListFragment extends BaseFragment implements OportunidadBitacoraDetailFragment.OportunidadBitacoraListListener {
 
+    private static final String TAG = OportunidadBitacoraListFragment.class.getSimpleName();
     public final static String ARG_OPORTUNIDAD = "id_oportunidad";
 
     private int idOportunidad;
@@ -39,24 +41,26 @@ public class OportunidadBitacoraListFragment extends BaseFragment implements Opo
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         setContentView(R.layout.fragment_oportunidad_bitacora_list);
+        Log.d(TAG,"onAttach...");
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         idOportunidad = getArguments().getInt(ARG_OPORTUNIDAD);
+        Log.d(TAG,"onCreate...");
     }
 
     @Override
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
-
-
+        Log.d(TAG,"onFragmentCreateView...");
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG,"onResume...");
         oportunidad = Oportunidad.getOportunidadId(getDataBase(), idOportunidad);
 
         list = OportunidadBitacora.getBitacoraOportunidad(getDataBase(), oportunidad.getIdOportunidad());
@@ -86,10 +90,12 @@ public class OportunidadBitacoraListFragment extends BaseFragment implements Opo
     @Override
     public void Refresh() {
         onResume();
+        Log.d(TAG,"Refresh...");
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG,"onActivityResult...");
         if (resultCode == RESULT_OK) {
             if (resultCode == RESULT_OK && null != data) {
                 if(subFragment != null)
@@ -97,4 +103,36 @@ public class OportunidadBitacoraListFragment extends BaseFragment implements Opo
             }
         }
     }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
+    }
+
 }

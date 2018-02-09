@@ -12,6 +12,7 @@ import java.util.List;
 
 import rp3.app.NavActivity;
 import rp3.app.nav.NavItem;
+import rp3.auna.cliente.ClientDetailFragment;
 import rp3.configuration.PreferenceManager;
 import rp3.data.Constants;
 import rp3.data.MessageCollection;
@@ -23,7 +24,6 @@ import rp3.auna.information.InformationFragment;
 import rp3.auna.marcaciones.PermisoFragment;
 import rp3.auna.models.Agenda;
 import rp3.auna.oportunidad.OportunidadFragment;
-import rp3.auna.models.marcacion.Justificacion;
 import rp3.auna.models.pedido.ControlCaja;
 import rp3.auna.pedido.ControlCajaFragment;
 import rp3.auna.pedido.PedidoFragment;
@@ -47,6 +47,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.location.Location;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -55,12 +56,14 @@ import android.os.Environment;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 public class MainActivity extends rp3.app.NavActivity {
 
+	private static final String TAG = MainActivity.class.getSimpleName();
 	public static final int NAV_DASHBOARD = 1;
 	public static final int NAV_RUTAS = 2;
 	public static final int NAV_CLIENTES = 3;
@@ -82,11 +85,12 @@ public class MainActivity extends rp3.app.NavActivity {
 
 	public static final String TO_AGENDAS = "toAgendas";
 	public String lastTitle;
-	private int selectedItem;
+	public int selectedItem = 0;
 	TextToSpeech t1;
 	SimpleDateFormat format4 = new SimpleDateFormat("dd/MM/yyy HH:mm");
 	DrawableManager DManager;
 	String toSpeak = "";
+	//public ClientDetailFragment clientDetailFragment;
 
 	public static Intent newIntent(Context c) {
 		Intent i = new Intent(c, MainActivity.class);
@@ -96,8 +100,8 @@ public class MainActivity extends rp3.app.NavActivity {
 	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Log.d(TAG,"onCreate...");
 		setNavMode(NavActivity.NAV_MODE_SLIDING_PANE);
-
 		super.onCreate(savedInstanceState);
 		Session.Start(this);
 		rp3.configuration.Configuration.TryInitializeConfiguration(this, DbOpenHelper.class);
@@ -133,6 +137,7 @@ public class MainActivity extends rp3.app.NavActivity {
 
 		setNavHeaderIcon(getResources().getDrawable(R.drawable.ic_user_new));
 		if (!PreferenceManager.getString(Contants.KEY_FOTO, "").equalsIgnoreCase("")) {
+			Log.d(TAG,"!PreferenceManager.getString(Contants.KEY_FOTO, \"\").equalsIgnoreCase(\"\")...");
 			DManager.fetchDrawableOnThreadRounded(PreferenceManager.getString("server") +
 							Utils.getImageDPISufix(this, PreferenceManager.getString(Contants.KEY_FOTO)).replace("~", "").replace("\\", "/"),
 					(ImageView) this.getRootView().findViewById(R.id.nav_header_icon));
@@ -142,17 +147,21 @@ public class MainActivity extends rp3.app.NavActivity {
 		showNavHeader(true);
 
 		if (getIntent().getExtras() != null && getIntent().getExtras().containsKey(TO_AGENDAS)) {
+			Log.d(TAG,"getIntent().getExtras() != null && getIntent().getExtras().containsKey(TO_AGENDAS)...");
 			int startNav = NAV_RUTAS;
 			setNavigationSelection(startNav);
 			selectedItem = startNav;
 			lastTitle = getText(R.string.title_option_setrutas).toString();
 		} else {
+			Log.d(TAG,"getIntent().getExtras() == null && !getIntent().getExtras().containsKey(TO_AGENDAS)...");
 			if (savedInstanceState == null) {
-				int startNav = NAV_DASHBOARD;
+				Log.d(TAG,"savedInstanceState == null...");
+				int startNav = NAV_RUTAS;
 				setNavigationSelection(startNav);
 				selectedItem = startNav;
 				lastTitle = getText(R.string.title_option_setinicio).toString();
 			} else {
+				Log.d(TAG,"savedInstanceState != null...");
 				selectedItem = savedInstanceState.getInt("Selected");
 				lastTitle = savedInstanceState.getString("Title");
 			}
@@ -162,6 +171,7 @@ public class MainActivity extends rp3.app.NavActivity {
 		bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_GEOPOLITICAL);
 		requestSync(bundle);
 		if (PreferenceManager.getBoolean(Contants.KEY_ES_SUPERVISOR)) {
+			Log.d(TAG,"PreferenceManager.getBoolean(Contants.KEY_ES_SUPERVISOR)...");
 			Bundle bundle2 = new Bundle();
 			bundle2.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_SOLO_RESUMEN);
 			requestSync(bundle2);
@@ -169,32 +179,31 @@ public class MainActivity extends rp3.app.NavActivity {
 		try {
 			LocationUtils.getLocation(this);
 		} catch (Exception ex) {
+			Log.d(TAG,ex.getMessage());
 		}
 
 		ControlCaja controlCaja = ControlCaja.getControlCajaActiva(getDataBase());
 		if (controlCaja != null && controlCaja.getIdAgente() != PreferenceManager.getInt(Contants.KEY_IDAGENTE)) {
+			Log.d(TAG,"ontrolCaja != null && controlCaja.getIdAgente() != PreferenceManager.getInt(Contants.KEY_IDAGENTE)...");
 			showDialogConfirmation(CERRAR_CAJA_DIALOG, R.string.message_cerrar_caja_activa, R.string.title_cerrar_caja_activa);
 		}
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
+		Log.d(TAG,"onSaveIinstanceState...");
 		outState.putString("Title", lastTitle);
 		outState.putInt("Selected", selectedItem);
 		super.onSaveInstanceState(outState);
 	}
 
-	@Override
-	protected void onStart() {
-		super.onStart();
 
-	}
 
 	@Override
 	public void navConfig(List<NavItem> navItems, NavActivity currentActivity) {
 		super.navConfig(navItems, currentActivity);
-
-		NavItem dashboard = new NavItem(NAV_DASHBOARD, R.string.title_option_setinicio, R.drawable.ic_action_select_all);
+		Log.d(TAG,"navConfig...");
+		//NavItem dashboard = new NavItem(NAV_DASHBOARD, R.string.title_option_setinicio, R.drawable.ic_action_select_all);
 		NavItem rutas = new NavItem(NAV_RUTAS, R.string.title_option_setrutas, R.drawable.ic_rutas);
 		NavItem clientes = new NavItem(NAV_CLIENTES, R.string.title_option_setclientes, R.drawable.ic_clientes);
 		NavItem grupo = new NavItem(NAV_RESUMEN, R.string.title_option_resumen, R.
@@ -219,11 +228,12 @@ public class MainActivity extends rp3.app.NavActivity {
 		settingsGroup.addChildItem(information);
 		settingsGroup.addChildItem(cerrarsesion);
 
-		navItems.add(dashboard);
+		//navItems.add(rutas);
 		/*if (PreferenceManager.getBoolean(Contants.KEY_MODULO_OPORTUNIDADES, true))
 			navItems.add(oportunidad);*/
 		int ruta = PreferenceManager.getInt(Contants.KEY_IDRUTA);
 		if (PreferenceManager.getInt(Contants.KEY_IDRUTA) != 0) {
+			Log.d(TAG,"PreferenceManager.getInt(Contants.KEY_IDRUTA) != 0...");
 			navItems.add(rutas);
 			navItems.add(clientes);
 		}
@@ -248,57 +258,71 @@ public class MainActivity extends rp3.app.NavActivity {
 		selectedItem = item.getId();
 		switch (item.getId()) {
 			case NAV_DASHBOARD:
+				Log.d(TAG,"NAV_DASHBOARD...");
 				setNavFragment(DashboardFragment.newInstance(0), item.getTitle());
 				lastTitle = item.getTitle();
 				break;
 			case NAV_RUTAS:
+				Log.d(TAG,"NAV_RUTAS...");
 				setNavFragment(RutasFragment.newInstance(0),
 						item.getTitle());
 				lastTitle = item.getTitle();
 				break;
 			case NAV_CLIENTES:
+				Log.d(TAG,"NAV_CLIENTES...");
 				setNavFragment(ClientFragment.newInstance(item.getId()),
 						item.getTitle());
 				lastTitle = item.getTitle();
 				break;
 			case NAV_RESUMEN:
+				Log.d(TAG,"NAV_RESUMEN...");
 				setNavFragment(DashboardGrupoFragment.newInstance(item.getId()),
 						item.getTitle());
 				lastTitle = item.getTitle();
 				break;
 			case NAV_RADAR:
+				Log.d(TAG,"NAV_RADAR...");
 				setNavFragment(RadarFragment.newInstance(),
 						item.getTitle());
 				lastTitle = item.getTitle();
 				break;
 			case NAV_RECORRIDO:
+				Log.d(TAG,"NAV_RECORRIDO...");
 				if (!ConnectionUtils.isNetAvailable(this)) {
+					Log.d(TAG,"!ConnectionUtils.isNetAvailable(this)...");
 					Toast.makeText(this, "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
 				} else {
+					Log.d(TAG,"ConnectionUtils.isNetAvailable(this)...");
 					setNavFragment(RecorridoFragment.newInstance(),
 							item.getTitle());
 					lastTitle = item.getTitle();
 				}
 				break;
 			case NAV_PEDIDO:
+				Log.d(TAG,"NAV_PEDIDO...");
 				setNavFragment(PedidoFragment.newInstance(0),
 						item.getTitle());
 				lastTitle = item.getTitle();
 				break;
 			case NAV_REUNIONES:
+				Log.d(TAG,"NAV_REUNIONES...");
 				setNavFragment(DefaultFragment.newInstance(0),
 						item.getTitle());
 				lastTitle = item.getTitle();
 				break;
 			case NAV_RECORDATORIOS:
+				Log.d(TAG,"NAV_RECORDATORIOS...");
 				setNavFragment(DefaultFragment.newInstance(0),
 						item.getTitle());
 				lastTitle = item.getTitle();
 				break;
 			case NAV_SINCRONIZAR:
+				Log.d(TAG,"NAV_SINCRONIZAR...");
 				if (!ConnectionUtils.isNetAvailable(this)) {
+					Log.d(TAG,"!ConnectionUtils.isNetAvailable(this)...");
 					Toast.makeText(this, "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
 				} else {
+					Log.d(TAG,"ConnectionUtils.isNetAvailable(this)...");
 					showDialogProgress(R.string.message_title_synchronizing, R.string.message_please_wait);
 
 					Bundle bundle = new Bundle();
@@ -308,19 +332,24 @@ public class MainActivity extends rp3.app.NavActivity {
 
 				break;
 			case NAV_AJUSTES:
+				Log.d(TAG,"NAV_AJUSTES...");
 				setNavFragment(DefaultFragment.newInstance(0),
 						item.getTitle());
 				lastTitle = item.getTitle();
 				break;
 			case NAV_INFORMATION:
+				Log.d(TAG,"NAV_INFORMATION...");
 				setNavFragment(InformationFragment.newInstance(),
 						item.getTitle());
 				lastTitle = item.getTitle();
 				break;
 			case NAV_CERRAR_SESION:
-				if (ControlCaja.getControlCajaActiva(getDataBase()) == null)
+				Log.d(TAG,"...");
+				if (ControlCaja.getControlCajaActiva(getDataBase()) == null) {
+					Log.d(TAG, "ControlCaja.getControlCajaActiva(getDataBase()) == null...");
 					showDialogConfirmation(CERRAR_SESION_DIALOG, R.string.message_cerrar_sesion, R.string.title_option_setcerrar_sesion);
-				else {
+				}else {
+					Log.d(TAG,"ControlCaja.getControlCajaActiva(getDataBase()) != null...");
 					try {
 						Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 						Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
@@ -332,11 +361,13 @@ public class MainActivity extends rp3.app.NavActivity {
 				}
 				break;
 			case NAV_OPORTUNIDAD:
+				Log.d(TAG,"NAV_OPORTUNIDAD...");
 				setNavFragment(OportunidadFragment.newInstance(),
 						item.getTitle());
 				lastTitle = item.getTitle();
 				break;
 			case NAV_JUSTIFICACIONES:
+				Log.d(TAG,"NAV_JUSTIFICACIONES...");
 				setNavFragment(PermisoFragment.newInstance(),
 						item.getTitle());
 				lastTitle = item.getTitle();
@@ -345,6 +376,7 @@ public class MainActivity extends rp3.app.NavActivity {
 				break;
 		}
 		setTitle(lastTitle);
+		Log.d(TAG,"onNavItemSelected..."+lastTitle);
 	}
 
 	@Override
@@ -352,7 +384,7 @@ public class MainActivity extends rp3.app.NavActivity {
 		super.onPositiveConfirmation(id);
 		switch (id) {
 			case CERRAR_SESION_DIALOG:
-
+				Log.d(TAG,"CERRAR_SESION_DIALOG...");
 				PreferenceManager.setValue(Constants.KEY_LAST_LOGIN, Session.getUser().getLogonName());
 				PreferenceManager.setValue(Constants.KEY_LAST_PASS, Session.getUser().getPassword());
 				PreferenceManager.setValue(Constants.KEY_LAST_TOKEN, "temp");
@@ -367,6 +399,7 @@ public class MainActivity extends rp3.app.NavActivity {
 				Session.logOut();
 				break;
 			case CERRAR_CAJA_DIALOG:
+				Log.d(TAG,"CERRAR_CAJA_DIALOG...");
 				ControlCaja controlCaja = ControlCaja.getControlCajaActiva(getDataBase());
 				Bundle bundle2 = new Bundle();
 				bundle2.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_CERRAR_CAJA);
@@ -379,16 +412,21 @@ public class MainActivity extends rp3.app.NavActivity {
 
 	@Override
 	public void onNegativeConfirmation(int id) {
+		Log.d(TAG,"onNegativeConfirmation...");
 		super.onNegativeConfirmation(id);
 	}
 
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		Log.d(TAG,"onMenuItemSelected...");
 		if (this.findViewById(R.id.sliding_pane_clientes) != null) {
+			Log.d(TAG,"this.findViewById(R.id.sliding_pane_clientes) != null...");
 			SlidingPaneLayout slidingPane = (SlidingPaneLayout) findViewById(R.id.sliding_pane_clientes);
 			switch (item.getItemId()) {
 				case android.R.id.home:
+					Log.d(TAG,"android.R.id.home:...");
 					if (!slidingPane.isOpen()) {
+						Log.d(TAG,"!slidingPane.isOpen()...");
 						slidingPane.openPane();
 						return true;
 					}
@@ -400,31 +438,46 @@ public class MainActivity extends rp3.app.NavActivity {
 
 	@Override
 	public void onBackPressed() {
+		Log.d(TAG,"onBackPressed...");
 		if (this.findViewById(R.id.sliding_pane_clientes) != null) {
+			Log.d(TAG,"this.findViewById(R.id.sliding_pane_clientes) != null...");
 			SlidingPaneLayout slidingPane = (SlidingPaneLayout) findViewById(R.id.sliding_pane_clientes);
+			if (selectedItem == NAV_RUTAS) {
+				finish();
+				//extractDatabase();
+			}
 			if (!slidingPane.isOpen()) {
 				slidingPane.openPane();
 			} else {
-				int startNav = NAV_DASHBOARD;
+				int startNav = NAV_RUTAS;
 				setNavigationSelection(startNav);
 				setTitle(getString(R.string.title_option_setinicio));
 				lastTitle = getString(R.string.title_option_setinicio);
 			}
 		} else {
-			if (selectedItem == NAV_DASHBOARD) {
+			Log.d(TAG,"this.findViewById(R.id.sliding_pane_clientes) == null...");
+			if (selectedItem == NAV_RUTAS) {
 				finish();
 				//extractDatabase();
 			} else {
-				int startNav = NAV_DASHBOARD;
+				int startNav = NAV_RUTAS;
 				setNavigationSelection(startNav);
 				setTitle(getString(R.string.title_option_setinicio));
 				lastTitle = getString(R.string.title_option_setinicio);
 			}
 		}
+
+		/*if(clientDetailFragment!=null){
+
+				clientDetailFragment.onDetach();
+				clientDetailFragment.onDestroyView();
+				clientDetailFragment =null;
+
+		}*/
 	}
 
 	public void onSyncComplete(Bundle data, final MessageCollection messages) {
-
+		Log.d(TAG,"onSyncComplete...");
 		if (data.containsKey(SyncAdapter.ARG_SYNC_TYPE) && data.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_TODO)) {
 			closeDialogProgress();
 			if (messages.hasErrorMessage()) {
@@ -438,6 +491,7 @@ public class MainActivity extends rp3.app.NavActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.d(TAG,"onActivityResult...");
 		List<android.support.v4.app.Fragment> frags = getSupportFragmentManager().getFragments();
 		for (android.support.v4.app.Fragment fr : frags) {
 			fr.onActivityResult(requestCode, resultCode, data);
@@ -446,27 +500,35 @@ public class MainActivity extends rp3.app.NavActivity {
 	}
 
 	private void setAlarm() {
+		Log.d(TAG,"setAlarm...");
 		final Context ctx = this;
 		new Thread(new Runnable() {
 			public void run() {
 				try {
 					List<Agenda> agendas = Agenda.getAgendaMinutes(getDataBase(), 900000, 840000);
 					for (Agenda agd : agendas)
+					{
 						pushNotification(ctx, agd, "Faltan 15 Minutos para reunion");
+					}
 
 					agendas = Agenda.getAgendaMinutes(getDataBase(), 1800000, 1740000);
 					for (Agenda agd : agendas)
+					{
 						pushNotification(ctx, agd, "Faltan 30 Minutos para reunion");
+					}
 
 					agendas = Agenda.getAgendaMinutes(getDataBase(), 60000, 0);
 					for (Agenda agd : agendas)
+					{
 						pushNotification(ctx, agd, "Hora de Reunion");
+					}
 
 					Thread.sleep(60000);
 					setAlarm();
 
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
+					Log.d(TAG,e.getMessage()+"...");
 					e.printStackTrace();
 				}
 			}
@@ -476,11 +538,12 @@ public class MainActivity extends rp3.app.NavActivity {
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-
+		Log.d(TAG,"onConfigurationChanged...");
 		invalidateOptionsMenu();
 	}
 
 	private void pushNotification(Context ctx, Agenda agd, String message) {
+		Log.d(TAG,"pushNotification...");
 		NotificationCompat.Builder mBuilder =
 				new NotificationCompat.Builder(ctx)
 						.setSmallIcon(R.drawable.ic_launcher)
@@ -572,7 +635,7 @@ public class MainActivity extends rp3.app.NavActivity {
 		try {
 			file3.createNewFile();
 			OutputStream out = new FileOutputStream(file3);
-			String key = Session.getUser().getLogonName() + ";" + Session.getUser().getPassword();
+			String key = Session.getUserMovil().getLogonName() + ";" + Session.getUserMovil().getPassword();
 			out.write(key.getBytes(StandardCharsets.UTF_8));
 			out.close();
 		} catch (Exception e) {
@@ -581,4 +644,48 @@ public class MainActivity extends rp3.app.NavActivity {
 
 	}
 
+	//region Ciclo de vida
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		Log.d(TAG,"onStop...");
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.d(TAG,"onResume...");
+		/*if(clientDetailFragment!=null){
+			if(clientDetailFragment.isResumed()){
+				clientDetailFragment.onDetach();
+				clientDetailFragment.onDestroyView();
+				clientDetailFragment = null;
+			}
+		}*/
+		/*for(Cliente cliente:Cliente.getCliente(getDataBase())){
+			Log.d(TAG,cliente.toString());
+		}*/
+
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Log.d(TAG,"onDestroy...");
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		Log.d(TAG,"onStart...");
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Log.d(TAG,"onPpause...");
+	}
+
+	//endregion
 }

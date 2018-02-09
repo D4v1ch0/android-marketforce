@@ -124,4 +124,15 @@ public class Agente extends EntityBase<Agente> {
         c.close();
         return agente;
     }
+
+    @Override
+    public String toString() {
+        return "Agente{" +
+                "id=" + id +
+                ", idAgente=" + idAgente +
+                ", nombre='" + nombre + '\'' +
+                ", telefono='" + telefono + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }

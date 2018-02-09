@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Display;
 import android.view.Window;
 import android.view.WindowManager;
@@ -19,10 +20,12 @@ import rp3.auna.models.Campo;
  * Created by magno_000 on 14/04/2015.
  */
 public class FotoActivity extends BaseActivity {
+    private static final String TAG = FotoActivity.class.getSimpleName();
     private FotoFragment newFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG,"onCreate...");
         requestWindowFeature(Window.FEATURE_ACTION_BAR);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND,
                 WindowManager.LayoutParams.FLAG_DIM_BEHIND);
@@ -56,6 +59,7 @@ public class FotoActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG,"onActivityResult...");
         if(requestCode != 0 && resultCode != 0)
         {
             List<Fragment> frags = getSupportFragmentManager().getFragments();
@@ -66,15 +70,39 @@ public class FotoActivity extends BaseActivity {
 
     }
 
-    @Override
-    public void onStop() {
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
 
-        super.onStop();
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
     }
 
     @Override
-    public void onDestroy() {
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    protected void onDestroy() {
         super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

@@ -24,6 +24,7 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,7 +38,8 @@ import android.widget.ListView;
 
 @SuppressWarnings("ResourceType")
 public class DashboardAgendaFragment extends BaseFragment {
-	
+
+    private static final String TAG = DashboardAgendaFragment.class.getSimpleName();
 	DashboardAgendaAdapter adapter;
 	private List<Agenda> list_agenda;
     private SwipeRefreshLayout pullRefresher;
@@ -50,19 +52,21 @@ public class DashboardAgendaFragment extends BaseFragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		
+        Log.d(TAG,"onAttach...");
 //		setContentView(R.layout.fragment_client,R.menu.fragment_client);
 		setContentView(R.layout.fragment_dashboard_agenda);
 	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {		
-		super.onCreate(savedInstanceState);				
+		super.onCreate(savedInstanceState);
+        Log.d(TAG,"onCreate...");
 	}
 	
 	@Override
 	public void onResume() {
 		super.onResume();
+        Log.d(TAG,"onResume...");
 		SimpleDateFormat format4 = new SimpleDateFormat("HH:mm");
 		DrawableManager DManager = new DrawableManager();
     	
@@ -250,10 +254,11 @@ public class DashboardAgendaFragment extends BaseFragment {
 	@Override
 	public void onStart() {		
 		super.onStart();
-			
+        Log.d(TAG,"onStart...");
 	}
 	
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
+        Log.d(TAG,"onFragmentCreateView...");
         super.onFragmentCreateView(rootView, savedInstanceState);
         pullRefresher = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
         if (pullRefresher != null) {
@@ -273,6 +278,7 @@ public class DashboardAgendaFragment extends BaseFragment {
 
     public void onSyncComplete(Bundle data, MessageCollection messages) {
         super.onSyncComplete(data, messages);
+        Log.d(TAG,"onSyncComplete...");
         closeDialogProgress();
         if(pullRefresher != null) {
             pullRefresher.setRefreshing(false);

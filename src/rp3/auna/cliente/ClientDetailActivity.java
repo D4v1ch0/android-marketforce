@@ -21,6 +21,7 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -37,6 +38,7 @@ import android.widget.TextView;
 
 public class ClientDetailActivity extends rp3.app.BaseActivity implements ClienteDetailFragmentListener {
 
+	private static final String TAG = ClientDetailActivity.class.getSimpleName();
 	private long transactionId;
 	private final String STATE_TRANSACTIONID = "transactionId";
 	private ClientDetailFragment transactionDetailFragment;
@@ -103,6 +105,7 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+		Log.d(TAG,"onCreate...");
         DManager = new DrawableManager();
         setHomeAsUpEnabled(true, true);	
 
@@ -127,7 +130,7 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
     @Override
 	public void onResume() {		
 		super.onResume();
-		
+		Log.d(TAG,"onResume...");
 		if (clientId != 0) {
 			if(tipoPersona != null && tipoPersona.equalsIgnoreCase("C"))
 			{
@@ -516,6 +519,7 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
 	@SuppressWarnings("ResourceType")
 	private void renderClienteJuridico(View rootView)
 	{
+		Log.d(TAG,"renderClienteJuridico...");
 		hideDialogConfirmation();
 
 
@@ -750,6 +754,7 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
 	@SuppressWarnings("ResourceType")
 	private void renderContacto(View rootView)
 	{
+		Log.d(TAG,"renderContacto...");
         boolean telf = false, email = false;
 		hideDialogConfirmation();
         String email_str = "";
@@ -941,11 +946,13 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
     protected void onSaveInstanceState(Bundle outState) {
     	// TODO Auto-generated method stub
     	super.onSaveInstanceState(outState);
+		Log.d(TAG,"...");
     	outState.putLong(STATE_TRANSACTIONID,transactionId);    	
     }
 
 	@Override
 	public void onClienteChanged(Cliente cliente) {
+		Log.d(TAG,"...");
 		finish();		
 	}    
     
@@ -983,5 +990,34 @@ public class ClientDetailActivity extends rp3.app.BaseActivity implements Client
         }
 		return super.onOptionsItemSelected(item);
 	}
-    
+
+	/**
+	 *
+	 * Ciclo de vida
+	 *
+	 */
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		Log.d(TAG,"onStart...");
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Log.d(TAG,"onPause...");
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		Log.d(TAG,"onStop...");
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Log.d(TAG,"onDestroy...");
+	}
 }

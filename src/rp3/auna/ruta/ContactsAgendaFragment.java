@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -19,7 +20,7 @@ import rp3.auna.models.Contacto;
 
 public class ContactsAgendaFragment extends BaseFragment {
 	
-	public static String TAG = "ContactoAgenda";
+	public static String TAG = ContactsAgendaFragment.class.getSimpleName();
 	private long idAgenda;
 	private Agenda agenda;
 	private SaveContactsListener saveListener;
@@ -40,13 +41,17 @@ public class ContactsAgendaFragment extends BaseFragment {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments().containsKey(RutasDetailFragment.ARG_ITEM_ID)) {            
+		Log.d(TAG,".onCreate..");
+        if (getArguments().containsKey(RutasDetailFragment.ARG_ITEM_ID)) {
+			Log.d(TAG,"getArguments().containsKey(RutasDetailFragment.ARG_ITEM_ID)...");
             idAgenda = getArguments().getLong(RutasDetailFragment.ARG_ITEM_ID);   
         }else if(savedInstanceState!=null){
+			Log.d(TAG,"savedInstanceState!=null...");
         	idAgenda = savedInstanceState.getLong(RutasDetailFragment.STATE_IDAGENDA);
         }    
         
-        if(idAgenda != 0){        	
+        if(idAgenda != 0){
+			Log.d(TAG,"idAgenda != 0...");
         	agenda = Agenda.getAgenda(getDataBase(), idAgenda);
         }
         super.setContentView(R.layout.fragment_list_contactos);
@@ -55,22 +60,24 @@ public class ContactsAgendaFragment extends BaseFragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
+		Log.d(TAG,"onAattach...");
 		if(getParentFragment()!=null)
+		{
+			Log.d(TAG,"getParentFragment()!=null...");
 			saveListener = (SaveContactsListener) getParentFragment();
+		}
 		else
+		{
+			Log.d(TAG,"getParentFragment()==null...");
 			saveListener = (SaveContactsListener) activity;
-	}
-	    
-	@Override
-	public void onResume() {
-	    super.onResume();
+		}
 	}
 	      
 	    
 	@Override
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
-
 		getDialog().setTitle("Escoger Contacto");
+		Log.d(TAG,"onFragmentCreateView...");
 		boolean id_interno = true;
 		if(agenda.getIdCliente() != 0)
 			id_interno = false;
@@ -87,6 +94,7 @@ public class ContactsAgendaFragment extends BaseFragment {
 					int position, long id) {
 				if(contacts.get(position).getIdContacto() != 0)
 				{
+					Log.d(TAG,"contacts.get(position).getIdContacto() != 0...");
 					agenda.setIdContacto((int) contacts.get(position).getIdContacto());
 					Agenda.update(getDataBase(), agenda);
 					saveListener.Refresh();
@@ -94,6 +102,7 @@ public class ContactsAgendaFragment extends BaseFragment {
 				}
 				else
 				{
+					Log.d(TAG,"contacts.get(position).getIdContacto() == 0...");
 					CreateContact();
 				}
 			}
@@ -102,6 +111,7 @@ public class ContactsAgendaFragment extends BaseFragment {
 	
 	private void CreateContact()
 	{
+		Log.d(TAG,"createContact...");
 		AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
 
 		alert.setTitle("Nuevo Contacto");
@@ -134,6 +144,42 @@ public class ContactsAgendaFragment extends BaseFragment {
 		});
 
 		alert.show();
+	}
+
+	/**
+	 *
+	 * Ciclo de vida
+	 *
+	 */
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		Log.d(TAG,"onStart...");
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.d(TAG,"onPause...");
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		Log.d(TAG,"onStop...");
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		Log.d(TAG,"onResume...");
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Log.d(TAG,"onDestroy...");
 	}
 
 }

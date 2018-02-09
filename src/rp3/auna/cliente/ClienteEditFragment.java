@@ -16,6 +16,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -26,6 +27,7 @@ import android.widget.TextView;
 
 public class ClienteEditFragment extends BaseFragment {
 
+	private static final String TAG = ClienteEditFragment.class.getSimpleName();
 	public static final String ARG_CLIENT_ID = "clientId";
 
 	private long clientId = 0;
@@ -55,7 +57,7 @@ public class ClienteEditFragment extends BaseFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		Log.d(TAG,"onCreate...");
 		setContentView(R.layout.fragment_transaction_edit_item);
 
 		Bundle arguments = getArguments();
@@ -73,7 +75,7 @@ public class ClienteEditFragment extends BaseFragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		
+		Log.d(TAG,"onAttach...");
 		tryEnableGooglePlayServices(true);				
 		
 		if(getParentFragment()!=null)
@@ -84,7 +86,7 @@ public class ClienteEditFragment extends BaseFragment {
 
 	@Override
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
-
+		Log.d(TAG,"onFragmentCreateView...");
 		if (client != null) {
 
 			String name = "" + client.getNombre1() + " "
@@ -228,6 +230,7 @@ public class ClienteEditFragment extends BaseFragment {
 	}
 
 	private void setClienteUpdateViews() {
+		Log.d(TAG,"setClienteUpdateViews...");
 		String mail = getTextViewString(R.id.editText_correo);
 		Date da = datePicker.getDate();
 
@@ -278,6 +281,7 @@ public class ClienteEditFragment extends BaseFragment {
 	}
 
 	private boolean updateCliente() {
+		Log.d(TAG,"updateCliente...");
 		setClienteUpdateViews();
 		ClienteDireccion d = client.getClienteDireccionPrincipal();
 		if(d!=null){
@@ -293,24 +297,15 @@ public class ClienteEditFragment extends BaseFragment {
 	}
 	
 	private void ejecutarSync(){
+		Log.d(TAG,"ejecutarSync...");
 		Bundle settingsBundle = new Bundle();
 		settingsBundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_CLIENTE_UPDATE);
 		settingsBundle.putLong(ClienteActualizacion.ARG_CLIENTE_ID, client.getID());
 		requestSync(settingsBundle);
 	}
 
-	@Override
-	public void onResume() {
-		super.onResume();		
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();		
-	}
-
 	private void getLocation() {
-
+		Log.d(TAG,"getLocation...");
 		if (GooglePlayServicesUtils.servicesConnected((BaseActivity) this
 				.getActivity())) {
 
@@ -334,6 +329,42 @@ public class ClienteEditFragment extends BaseFragment {
 
 			// return LocationUtils.getAddress(getActivity(), location);
 		}
+	}
+
+	/**
+	 *
+	 * Ciclo de vida
+	 *
+	 */
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		Log.d(TAG,"onStart...");
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.d(TAG,"onPause...");
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		Log.d(TAG,"onStop...");
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		Log.d(TAG,"onResume...");
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Log.d(TAG,"onDestroy...");
 	}
 
 }

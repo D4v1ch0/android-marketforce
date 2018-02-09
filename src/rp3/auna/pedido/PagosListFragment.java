@@ -3,6 +3,7 @@ package rp3.auna.pedido;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -25,6 +26,7 @@ import rp3.auna.models.pedido.Pago;
  */
 public class PagosListFragment extends BaseFragment implements AgregarPagoFragment.PagoAgregarListener{
 
+    private static final String TAG = PagosListFragment.class.getSimpleName();
     public static final String ARG_VALOR = "valor";
 
     private PagosAcceptListener createFragmentListener;
@@ -48,6 +50,7 @@ public class PagosListFragment extends BaseFragment implements AgregarPagoFragme
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG,"onCreate...");
         numberFormat = NumberFormat.getInstance();
         numberFormat.setMaximumFractionDigits(2);
         numberFormat.setMinimumFractionDigits(2);
@@ -55,7 +58,7 @@ public class PagosListFragment extends BaseFragment implements AgregarPagoFragme
 
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
+        Log.d(TAG,"onAttach...");
         setContentView(R.layout.fragment_forma_pago);
         if(!isDetail) {
             if (getParentFragment() != null) {
@@ -70,6 +73,7 @@ public class PagosListFragment extends BaseFragment implements AgregarPagoFragme
 
     @Override
     public void onAcceptSuccess(Pago pago) {
+        Log.d(TAG,"onAcceptSuccess...");
         if(pago.getIdPago() == -1)
             pagos.add(pago);
         else
@@ -251,5 +255,41 @@ public class PagosListFragment extends BaseFragment implements AgregarPagoFragme
                 break;
         }
 
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

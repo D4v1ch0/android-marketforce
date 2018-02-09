@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -41,6 +42,7 @@ import rp3.widget.MaskedEditText;
  */
 public class AgregarPagoFragment extends BaseFragment {
 
+    private static final String TAG = AgregarPagoFragment.class.getSimpleName();
     public static final String ARG_SALDO = "saldo";
     public static final String ARG_IDPAGO = "idpago";
     public static final String ARG_EFECTIVO = "efectivo";
@@ -89,11 +91,12 @@ public class AgregarPagoFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG,"onCreate...");
     }
 
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
+        Log.d(TAG,"onAttach...");
         setContentView(R.layout.fragment_agregar_pago);
         if(getParentFragment()!=null){
             createFragmentListener = (PagoAgregarListener)getParentFragment();
@@ -112,6 +115,7 @@ public class AgregarPagoFragment extends BaseFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG,"onActivityResult...");
         switch (requestCode)
         {
             case REQ_CODE_SPEECH_INPUT_PAGO:
@@ -128,7 +132,7 @@ public class AgregarPagoFragment extends BaseFragment {
     @Override
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
-
+        Log.d(TAG,"onFragmentCreateView...");
         saldo = getArguments().getDouble(ARG_SALDO);
         idpago = getArguments().getInt(ARG_IDPAGO, -1);
         efectivo = getArguments().getBoolean(ARG_EFECTIVO);
@@ -438,6 +442,7 @@ public class AgregarPagoFragment extends BaseFragment {
     @Override
     public void onSyncComplete(Bundle data, MessageCollection messages) {
         super.onSyncComplete(data, messages);
+        Log.d(TAG,"onSyncComplete...");
         if(data.containsKey(SyncAdapter.ARG_SYNC_TYPE) && data.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_VALIDAR_NC)){
             closeDialogProgress();
             if(messages.hasErrorMessage()){
@@ -466,6 +471,7 @@ public class AgregarPagoFragment extends BaseFragment {
     }
 
     private void promptSpeechInput() {
+        Log.d(TAG,"promptSpeechInput...");
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -483,6 +489,7 @@ public class AgregarPagoFragment extends BaseFragment {
 
     private void ValidarCampos(FormaPago formaPago)
     {
+        Log.d(TAG,"validarCampos...");
         getRootView().findViewById(R.id.pago_banco_layout).setVisibility(View.GONE);
         getRootView().findViewById(R.id.pago_tarjeta_layout).setVisibility(View.GONE);
         getRootView().findViewById(R.id.pago_numero_cuenta_layout).setVisibility(View.GONE);
@@ -518,5 +525,41 @@ public class AgregarPagoFragment extends BaseFragment {
     public void onDismiss(DialogInterface dialog) {
         createFragmentListener.getNewSaldo(0);
         super.onDismiss(dialog);
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

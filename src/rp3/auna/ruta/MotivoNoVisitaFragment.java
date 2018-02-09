@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -27,6 +28,7 @@ import rp3.auna.sync.SyncAdapter;
 import rp3.util.StringUtils;
 
 public class MotivoNoVisitaFragment extends BaseFragment {
+	public static final String TAG = MotivoNoVisitaFragment.class.getSimpleName();
 	public static MotivoNoVisitaFragment newInstance(long idAgenda)
 	{
 		Bundle arguments = new Bundle();
@@ -37,7 +39,6 @@ public class MotivoNoVisitaFragment extends BaseFragment {
 	}
 
 	public static String ARG_AGENDA = "idAgenda";
-	public static String TAG = "Motivo de No Venta";
 	private long idAgenda;
 	private Agenda agenda;
 	private SaveContactsListener saveListener;
@@ -46,7 +47,8 @@ public class MotivoNoVisitaFragment extends BaseFragment {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments().containsKey(RutasDetailFragment.ARG_ITEM_ID)) {            
+		Log.d(TAG,"onCreate...");
+		if (getArguments().containsKey(RutasDetailFragment.ARG_ITEM_ID)) {
             idAgenda = getArguments().getLong(RutasDetailFragment.ARG_ITEM_ID);   
         }else if(savedInstanceState!=null){
         	idAgenda = savedInstanceState.getLong(RutasDetailFragment.STATE_IDAGENDA);
@@ -63,16 +65,14 @@ public class MotivoNoVisitaFragment extends BaseFragment {
 	@Override
 	public void onAttach(Activity activity) {    	
 	    super.onAttach(activity);
+		Log.d(TAG,"onAttach...");
 	}
-	    
-	@Override
-	public void onResume() {
-	    super.onResume();
-	}
+
 	
 	@Override
 	public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
 		super.onFragmentCreateView(rootView, savedInstanceState);
+		Log.d(TAG,"onFragmentCreateView...");
 		getDialog().setTitle("Motivo de No Venta");
 		saveListener = (SaveContactsListener) getParentFragment();
 		SimpleGeneralValueAdapter motivosNoVisitaAdapter= new SimpleGeneralValueAdapter(getContext(), getDataBase(), rp3.auna.Contants.GENERAL_TABLE_MOTIVOS_NO_VISITA);
@@ -129,6 +129,7 @@ public class MotivoNoVisitaFragment extends BaseFragment {
 	}
 
     private void promptSpeechInput() {
+		Log.d(TAG,"promptSpeechInput...");
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -145,10 +146,11 @@ public class MotivoNoVisitaFragment extends BaseFragment {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.d(TAG,"onActivityResult...");
         if (resultCode == RESULT_OK) {
-
+			Log.d(TAG,"resultCode == RESULT_OK...");
             if (resultCode == RESULT_OK && null != data) {
-
+				Log.d(TAG,"resultCode == RESULT_OK && null != data...");
                 ArrayList<String> result = data
                         .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                 setTextViewText(R.id.obs_text, StringUtils.getStringCapSentence(result.get(0)));
@@ -156,5 +158,41 @@ public class MotivoNoVisitaFragment extends BaseFragment {
 
         }
     }
+
+	/**
+	 *
+	 * Ciclo de vida
+	 *
+	 */
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		Log.d(TAG,"onStart...");
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.d(TAG,"onPause...");
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		Log.d(TAG,"onStop...");
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		Log.d(TAG,"onResume...");
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Log.d(TAG,"onDestroy...");
+	}
 
 }

@@ -1,8 +1,10 @@
 package rp3.auna.headerlistview;
 
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 
@@ -14,7 +16,9 @@ import android.widget.BaseAdapter;
 */
 /*************************************************************/
 
-public abstract class SectionAdapter extends BaseAdapter implements OnItemClickListener {
+public abstract class SectionAdapter extends BaseAdapter implements  OnItemClickListener,OnItemLongClickListener,View.OnLongClickListener {
+
+    private static final String TAG = SectionAdapter.class.getSimpleName();
 
     private int mCount = -1;
 
@@ -64,11 +68,29 @@ public abstract class SectionAdapter extends BaseAdapter implements OnItemClickL
     /**
      * Dispatched to call onRowItemClick
      */
-    public final void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public  void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Log.d(TAG,"onItemClick...");
         onRowItemClick(parent, view, getSection(position), getRowInSection(position), id);
     }
 
     public void onRowItemClick(AdapterView<?> parent, View view, int section, int row, long id) {
+
+    }
+
+    @Override
+    public final boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        Log.d(TAG,"onItemLongClick...");
+        onRowItemLongClick(parent, view, getSection(position), getRowInSection(position), id);
+        return false;
+    }
+
+    @Override
+    public  boolean onLongClick(View v) {
+        Log.d(TAG,"OnLongClick...");
+        return false;
+    }
+
+    public void onRowItemLongClick(AdapterView<?> parent, View view, int seccionPosition, int position, long id) {
 
     }
 

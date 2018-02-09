@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -30,6 +31,7 @@ import rp3.util.StringUtils;
  */
 public class AnularTransaccionFragment extends BaseFragment {
 
+    private static final String TAG = AnularTransaccionFragment.class.getSimpleName();
     public static final String ARG_TRANSACCION = "transaccion";
 
     public static final int REQ_CODE_SPEECH_INPUT_ANUL = 101;
@@ -49,11 +51,12 @@ public class AnularTransaccionFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG,"onCreate...");
     }
 
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
+        Log.d(TAG,"onAttach...");
         if(getParentFragment()!=null){
             createFragmentListener = (PedidoDetailFragment.PedidoDetailFragmentListener)getParentFragment();
         }else{
@@ -65,6 +68,7 @@ public class AnularTransaccionFragment extends BaseFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG,"onActivityResult...");
         if (resultCode == RESULT_OK && null != data) {
 
             ArrayList<String> result = data
@@ -77,7 +81,7 @@ public class AnularTransaccionFragment extends BaseFragment {
     @Override
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
-
+        Log.d(TAG,"onFragmentCreateView...");
         id = getArguments().getLong(ARG_TRANSACCION);
 
         SimpleGeneralValueAdapter motivoAnulacionAdapter = new SimpleGeneralValueAdapter(getContext(), getDataBase(), Contants.GENERAL_TABLE_MOTIVOS_ANULACION);
@@ -128,6 +132,7 @@ public class AnularTransaccionFragment extends BaseFragment {
     }
 
     private void promptSpeechInput() {
+        Log.d(TAG,"promptSpeechInput...");
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -141,5 +146,41 @@ public class AnularTransaccionFragment extends BaseFragment {
                     "Dispositivo no soporta voz a texto.",
                     Toast.LENGTH_SHORT).show();
         }
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

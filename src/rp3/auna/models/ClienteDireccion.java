@@ -299,8 +299,29 @@ public class ClienteDireccion extends rp3.data.entity.EntityBase<ClienteDireccio
         c.close();
 		return tpd;
 	}
-    
-    public static void deleteClienteDireccionIdCliente(DataBase db, long id)
+
+
+	@Override
+	public String toString() {
+		return "ClienteDireccion{" +
+				"id=" + id +
+				", _idCliente=" + _idCliente +
+				", idCliente=" + idCliente +
+				", idClienteDireccion=" + idClienteDireccion +
+				", direccion='" + direccion + '\'' +
+				", esPrincipal=" + esPrincipal +
+				", tipoDireccion='" + tipoDireccion + '\'' +
+				", idCiudad=" + idCiudad +
+				", telefono1='" + telefono1 + '\'' +
+				", telefono2='" + telefono2 + '\'' +
+				", referencia='" + referencia + '\'' +
+				", latitud=" + latitud +
+				", longitud=" + longitud +
+				", ciudadDescripcion='" + ciudadDescripcion + '\'' +
+				'}';
+	}
+
+	public static void deleteClienteDireccionIdCliente(DataBase db, long id)
     {
     	db.delete(Contract.ClienteDireccion.TABLE_NAME, Contract.ClienteDireccion.COLUMN_CLIENTE_ID + " = ?", id);
     }

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:orientation="vertical" >
+    <LinearLayout
+        android:id="@+id/lyviewcontent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <!--<ImageView-->
+            <!--android:id="@+id/tooltip_nav_up"-->
+            <!--android:layout_width="25dp"-->
+            <!--android:layout_height="25dp"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:background="@drawable/tooltips_nav_up" />-->
+
+        <LinearLayout
+            android:clickable="true"
+            android:id="@+id/tvAgendarLlamada"
+            android:background="@color/White"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <ImageView
+                android:background="@color/White"
+                android:padding="10dp"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_phone"/>
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:background="@color/White"
+                android:padding="10dp"
+                android:fontFamily="sans-serif"
+                android:text="Agendar Llamada"
+                android:textColor="@color/default_text"
+                android:textSize="15sp"
+                />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/viewLine"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/alternative_background"/>
+        <LinearLayout
+            android:clickable="true"
+            android:background="@color/White"
+            android:id="@+id/tvAgendarVisita"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageView
+                android:background="@color/White"
+                android:padding="10dp"
+                android:layout_width="50dp"
+                android:layout_height="42dp"
+                android:src="@drawable/ic_action_action_direction_gray"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="10dp"
+                android:fontFamily="sans-serif"
+                android:text="Agendar Visita"
+                android:textColor="@color/default_text"
+                android:textSize="15sp"/>
+        </LinearLayout>
+        <View
+            android:id="@+id/viewLine"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/alternative_background"/>
+
+        <LinearLayout
+            android:clickable="true"
+            android:id="@+id/viewShared"
+            android:layout_width="250dp"
+            android:background="@color/White"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageView
+                android:background="@color/White"
+                android:padding="10dp"
+                android:layout_width="50dp"
+                android:layout_height="42dp"
+                android:tint="?attr/colorPrimary"
+                android:src="@drawable/ic_action_share"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="10dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="Compartir"
+                android:textColor="@color/default_text"
+                android:textSize="15sp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

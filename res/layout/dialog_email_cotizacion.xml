@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/normal_space"
+    android:background="@color/alternative_background"
+    >
+
+    <TextView
+        android:fontFamily="sans-serif"
+        android:textColor="@color/md_text"
+        android:textSize="15sp"
+        android:id="@+id/tvLlamada"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/padding_between_title_body"
+        android:gravity="center"
+        android:text="RP3 Market Force"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:textColorHint="?attr/colorPrimaryDark"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/etEmailCotizacion"
+                android:inputType="textWebEmailAddress"
+                android:textColor="@color/md_black_1000_75"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:hint="Email Contratante"
+                android:textColorHint="?attr/colorPrimaryDark"
+                />
+        </android.support.design.widget.TextInputLayout>
+
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="10dp"
+        android:gravity="right"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnCancelarEnvioEmail"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/button_padding"
+            android:text="Cancelar"
+            android:textColor="?attr/colorPrimary" />
+
+        <Button
+            android:id="@+id/btnEnviarEmail"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/button_padding"
+            android:text="ENVIAR"
+            android:textColor="?attr/colorPrimary" />
+    </LinearLayout>
+
+</LinearLayout>

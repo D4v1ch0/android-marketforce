@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.speech.RecognizerIntent;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,7 +28,8 @@ import rp3.auna.utils.Utils;
 import rp3.util.StringUtils;
 
 public class ObservacionesFragment extends BaseFragment {
-	
+
+    private static final String TAG = ObservacionesFragment.class.getSimpleName();
 	public static final int MEDIA_TYPE_IMAGE = 1;
 	public static final int PHOTO_1 = 1;
 	public static final int PHOTO_2 = 2;
@@ -60,6 +62,7 @@ public class ObservacionesFragment extends BaseFragment {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG,"onCreate...");
         if (getArguments().containsKey(RutasDetailFragment.ARG_ITEM_ID)) {            
             idAgenda = getArguments().getLong(RutasDetailFragment.ARG_ITEM_ID);   
         }else if(savedInstanceState!=null){
@@ -78,6 +81,7 @@ public class ObservacionesFragment extends BaseFragment {
 	@Override
 	public void onAttach(Activity activity) {    	
 	    super.onAttach(activity);
+        Log.d(TAG,"onAttach...");
 	    setRetainInstance(true);
 	}
 	
@@ -86,12 +90,14 @@ public class ObservacionesFragment extends BaseFragment {
 		switch(item.getItemId())
 		{
 		case R.id.action_save:
+		    Log.d(TAG,"action_save...");
 			agenda.setObservaciones(getTextViewString(R.id.obs_text).trim());
 			Agenda.update(getDataBase(), agenda);
 			closed = true;
 			finish();
 			break;
 		case R.id.action_cancel:
+		    Log.d(TAG,"action_cancel...");
 			closed = true;
 			finish();
 			break;
@@ -101,14 +107,12 @@ public class ObservacionesFragment extends BaseFragment {
 		return super.onOptionsItemSelected(item);
 	}
 	    
-	@Override
-	public void onResume() {
-	    super.onResume();
-	}
+
 	
 	@Override
 	public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
 		super.onFragmentCreateView(rootView, savedInstanceState);
+        Log.d(TAG,"onFragmentCreateView...");
 		parentView = rootView;
 		if(agenda.getFoto1Int() != null)
 			((ImageButton) rootView.findViewById(R.id.obs_foto1)).setImageBitmap(Utils.resizeBitMapImage(agenda.getFoto1Int(), MAX_WIDTH, MAX_HEIGHT, 0));
@@ -187,17 +191,6 @@ public class ObservacionesFragment extends BaseFragment {
         }
     }
 
-    @Override
-    public void onStop() {
-
-        super.onStop();
-    }
-
-    @Override
-    public void onDestroy() {
-
-        super.onDestroy();
-    }
 
     @Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -245,4 +238,39 @@ public class ObservacionesFragment extends BaseFragment {
             }
 	    }
 	}
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
+    }
 }

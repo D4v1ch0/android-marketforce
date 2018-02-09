@@ -3,6 +3,7 @@ package rp3.auna.oportunidad;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +29,7 @@ import rp3.widget.RangeSeekBar;
  */
 public class FiltroOportunidadFragment extends BaseFragment implements TipoOportunidadFragment.EditTiposDialogListener {
 
+    private static final String TAG = FiltroOportunidadFragment.class.getSimpleName();
     private RangeSeekBar<Integer> seekBar, seekBarProb;
     private final static int DESDE_FECHA_CREACION = 1;
     private final static int HASTA_FECHA_CREACION = 2;
@@ -84,25 +86,18 @@ public class FiltroOportunidadFragment extends BaseFragment implements TipoOport
 
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        Log.d(TAG,"onAttach...");
         filtroListener = (OportunidadFiltroListener) activity;
         tryEnableGooglePlayServices(true);
         setContentView(R.layout.fragment_filtro_oportunidad, R.menu.fragment_oportunidad_filtro);
         setRetainInstance(true);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
 
     @Override
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
+        Log.d(TAG,"onFragmentCreateView...");
         if(tipos == null)
             tipos = new ArrayList<>();
         numberFormat = NumberFormat.getInstance();
@@ -380,4 +375,41 @@ public class FiltroOportunidadFragment extends BaseFragment implements TipoOport
         }
         return true;
     }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
+    }
+
 }

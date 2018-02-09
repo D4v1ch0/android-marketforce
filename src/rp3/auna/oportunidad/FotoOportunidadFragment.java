@@ -7,6 +7,7 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -25,6 +26,7 @@ import rp3.auna.utils.DrawableManager;
  */
 public class FotoOportunidadFragment extends BaseFragment {
 
+    private static final String TAG = FotoOportunidadFragment.class.getSimpleName();
     private long id;
     private int tipo;
     private DrawableManager DManager;
@@ -50,11 +52,13 @@ public class FotoOportunidadFragment extends BaseFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        Log.d(TAG,"onAttach...");
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG,"onCreate...");
         if (getArguments().containsKey(FotoOportunidadActivity.ARG_ID)) {
             id = getArguments().getLong(FotoOportunidadActivity.ARG_ID);
         }else if(savedInstanceState!=null){
@@ -73,6 +77,7 @@ public class FotoOportunidadFragment extends BaseFragment {
     @Override
     public void onFragmentCreateView(View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
+        Log.d(TAG,"onFragmentCreateView...");
         if(id != 0)
         {
             switch (tipo)
@@ -160,6 +165,39 @@ public class FotoOportunidadFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d(TAG,"onDestroy...");
         ((ImageView) this.getRootView().findViewById(R.id.image_set)).setImageDrawable(null);
     }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+
 }

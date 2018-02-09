@@ -17,7 +17,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ContactsAdapter extends BaseAdapter {
-	
+
+	private static final String TAG = ContactsAdapter.class.getSimpleName();
 	private Context context;
 	private LayoutInflater inflater;
 	private List<Contacto> list_contactos;

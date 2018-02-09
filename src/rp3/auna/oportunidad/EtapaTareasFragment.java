@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -43,6 +44,7 @@ import rp3.util.StringUtils;
  */
 public class EtapaTareasFragment extends BaseFragment {
 
+    private static final String TAG = EtapaTareasFragment.class.getSimpleName();
     public final static String ARG_ETAPA = "etapa";
     public final static String ARG_OPORTUNIDAD = "oportunidad";
     public final static int REQ_CODE_SPEECH_INPUT = 1200;
@@ -68,7 +70,7 @@ public class EtapaTareasFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Log.d(TAG,"onCreate...");
         if (getParentFragment() == null)
             setRetainInstance(true);
 
@@ -89,7 +91,7 @@ public class EtapaTareasFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-
+        Log.d(TAG,"onResume...");
         final Etapa etapa = Etapa.getEtapaById(getDataBase(), idEtapa);
 
         ((TextView)getRootView().findViewById(R.id.etapa_descripcion)).setText(etapa.getDescripcion());
@@ -182,6 +184,7 @@ public class EtapaTareasFragment extends BaseFragment {
     }
 
     private void promptSpeechInput() {
+        Log.d(TAG,"promptSpeechInput...");
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -199,6 +202,7 @@ public class EtapaTareasFragment extends BaseFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG,"onActivityResult...");
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQ_CODE_SPEECH_INPUT:
@@ -262,6 +266,7 @@ public class EtapaTareasFragment extends BaseFragment {
 
     public void showTareaGrupo(OportunidadTarea agt)
     {
+        Log.d(TAG,"showTareaGrupo...");
         Intent intent = new Intent(getContext(), GrupoActivity.class);
         intent.putExtra(ARG_ITEM_ID, agt.getIdTarea());
         intent.putExtra(ARG_ETAPA, agt.getIdEtapa());
@@ -270,4 +275,35 @@ public class EtapaTareasFragment extends BaseFragment {
         intent.putExtra(ActividadActivity.ARG_TITULO, agt.getTarea().getNombreTarea());
         startActivity(intent);
     }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
+    }
+
 }

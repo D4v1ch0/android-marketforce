@@ -3,6 +3,7 @@ package rp3.auna.marcaciones;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 
 import java.util.List;
 
@@ -13,9 +14,10 @@ import rp3.auna.R;
  * Created by magno_000 on 17/06/2015.
  */
 public class JustificacionPreviaActivity extends BaseActivity {
+    private static final String TAG = JustificacionPreviaActivity.class.getSimpleName();
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
+        Log.d(TAG,"onCreate...");
         super.onCreate(savedInstanceState);
         setHomeAsUpEnabled(true, true);
         setTitle("Permiso Previo");
@@ -38,5 +40,40 @@ public class JustificacionPreviaActivity extends BaseActivity {
             }
         }
 
+    }
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

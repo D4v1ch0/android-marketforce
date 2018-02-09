@@ -22,6 +22,7 @@ import java.io.InputStream;
 
 import rp3.accounts.ServerAuthenticate;
 import rp3.accounts.User;
+import rp3.auna.models.ventanueva.ComisionesVta;
 import rp3.configuration.PreferenceManager;
 import rp3.connection.HttpConnection;
 import rp3.connection.WebService;
@@ -40,7 +41,7 @@ public class Agente {
 
     public static String KEY_MESSAGE = "message";
     public static String KEY_DESCUENTO = "descuento";
-
+    private static final String TAG = "AgenteWS";
     public static Bundle executeSyncSignIn(String user, String pass)
     {
         String authType = User.getAccountType();
@@ -137,6 +138,7 @@ public class Agente {
 			try {
 				webService.invokeWebService();
 				JSONObject jObject = webService.getJSONObjectResponse();
+                Log.d(TAG,"getAgente:"+jObject.toString());
 				PreferenceManager.setValue(Contants.KEY_IDAGENTE, jObject.getInt(Contants.KEY_IDAGENTE));
 				if(!jObject.isNull(Contants.KEY_IDRUTA))
                     PreferenceManager.setValue(Contants.KEY_IDRUTA, jObject.getInt(Contants.KEY_IDRUTA));
@@ -271,7 +273,7 @@ public class Agente {
                 jObject.put("Titulo", title);
                 jObject.put("Mensaje", message);
             }catch (Exception ex)
-            {}
+            {Log.d(TAG,"exception:"+ex.getMessage());}
             webService.addParameter("notification", jObject);
 
 
@@ -388,7 +390,7 @@ public class Agente {
             }
 
             JSONArray types = webService.getJSONArrayResponse();
-
+            Log.d(TAG,"getAgenteS:"+types.toString());
             rp3.auna.models.Agente.deleteAll(db, Contract.Agente.TABLE_NAME);
 
             for (int i = 0; i < types.length(); i++) {
@@ -452,6 +454,50 @@ public class Agente {
             }
 
 
+        } finally {
+            webService.close();
+        }
+
+        return rp3.auna.sync.SyncAdapter.SYNC_EVENT_SUCCESS;
+    }
+
+    public static int executeSyncComisiones(DataBase db) {
+        WebService webService = new WebService("MartketForce", "Comisiones");
+        try {
+            webService.addCurrentAuthToken();
+            webService.addIntParameter("@idagente", PreferenceManager.getInt(Contants.KEY_IDAGENTE));
+            try {
+                webService.invokeWebService();
+                try{
+                    JSONObject jObject = webService.getJSONObjectResponse();
+                    if(jObject!=null){
+                        Log.d(TAG,"jObject!=null...");
+                        ComisionesVta.deleteAll(db, Contract.ComisionAgente.TABLE_NAME);
+                        Log.d(TAG,"despues deleteAll...");
+                        ComisionesVta comisionesVta = new ComisionesVta();
+                        comisionesVta.setIdAgente(jObject.getInt("IdAgente"));
+                        comisionesVta.setPkAsesor(jObject.getInt("PkAsesor"));
+                        comisionesVta.setNombreAsesor(jObject.getString("NombreAsesor"));
+                        comisionesVta.setVentas(String.valueOf(jObject.getInt("Ventas")));
+                        comisionesVta.setComision(String.valueOf(jObject.getDouble("Comision")));
+                        comisionesVta.setIncentivo(String.valueOf(jObject.getDouble("Incentivo")));
+                        ComisionesVta.insert(db, comisionesVta);
+                        Log.d(TAG,"despues del insert...");
+                    }else{
+                        Log.d(TAG,"jObject==null...");
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+
+            } catch (HttpResponseException e) {
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
+                    return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+            } catch (Exception e) {
+                return SyncAdapter.SYNC_EVENT_ERROR;
+            }
         } finally {
             webService.close();
         }

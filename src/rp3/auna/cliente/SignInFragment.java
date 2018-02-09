@@ -2,6 +2,7 @@ package rp3.auna.cliente;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +20,7 @@ import rp3.util.ConnectionUtils;
  */
 public class SignInFragment extends BaseFragment {
 
+    private static final String TAG = SignInFragment.class.getSimpleName();
     public static String ARG_USER = "user";
     public static String ARG_PASS = "pass";
     public String type = "SignIn";
@@ -33,7 +35,7 @@ public class SignInFragment extends BaseFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
+        Log.d(TAG,"...");
         this.setCancelable(false);
         setContentView(R.layout.fragment_sign_in);
         if(getParentFragment()!=null){
@@ -46,6 +48,7 @@ public class SignInFragment extends BaseFragment {
     @Override
     public void onSyncComplete(Bundle data, MessageCollection messages) {
         super.onSyncComplete(data, messages);
+        Log.d(TAG,"...");
         closeDialogProgress();
         if(messages.hasErrorMessage()){
             showDialogMessage(messages);
@@ -65,7 +68,7 @@ public class SignInFragment extends BaseFragment {
     @Override
     public void onFragmentCreateView(final View rootView, Bundle savedInstanceState) {
         super.onFragmentCreateView(rootView, savedInstanceState);
-
+        Log.d(TAG,"...");
         ((Button) rootView.findViewById(R.id.sign_ok)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,5 +102,41 @@ public class SignInFragment extends BaseFragment {
                 dismiss();
             }
         });
+    }
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
     }
 }

@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -20,6 +21,7 @@ import rp3.auna.models.oportunidad.OportunidadTareaActividad;
 
 public class TextoActivity extends ActividadActivity {
 
+    private static final String TAG = TextoActivity.class.getSimpleName();
 	Actividad ata;
 	private OportunidadTareaActividad act;
     boolean actSinGrupo;
@@ -164,5 +166,41 @@ public class TextoActivity extends ActividadActivity {
 		finish();
 		
 	}
+
+    /**
+     *
+     * Ciclo de vida
+     *
+     */
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart...");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG,"onPause...");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop...");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume...");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"onDestroy...");
+    }
 
 }

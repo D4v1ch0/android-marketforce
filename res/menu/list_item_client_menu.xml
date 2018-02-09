@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:id="@+id/item_menu_clientes_crear_visita" android:title="@string/label_crear_visita"></item>
-    
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+    <item android:id="@+id/item_menu_clientes_crear_llamada"
+        android:title="@string/label_crear_llamada">
+    </item>
+    <item
+        android:id="@+id/item_menu_clientes_crear_visita"
+        android:title="@string/label_crear_visita">
+
+    </item>
 
 </menu>
