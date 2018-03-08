@@ -18,7 +18,10 @@ public class InVentasProspecto {
     public String IND_DISP_MAYOR_TDC ;
     public String IND_RANGO_ING ;
     public String IND_AFIL_ONC ;
+    public String IND_DEPENDENCIA;
     public InVentasProspectoAfiliado afiliado ;
+
+    //region Encapsulamiento
 
     public String getCOD_SEGMENTO() {
         return COD_SEGMENTO;
@@ -124,6 +127,14 @@ public class InVentasProspecto {
         this.IND_AFIL_ONC = IND_AFIL_ONC;
     }
 
+    public String getIND_DEPENDENCIA() {
+        return IND_DEPENDENCIA;
+    }
+
+    public void setIND_DEPENDENCIA(String IND_DEPENDENCIA) {
+        this.IND_DEPENDENCIA = IND_DEPENDENCIA;
+    }
+
     public InVentasProspectoAfiliado getAfiliado() {
         return afiliado;
     }
@@ -131,6 +142,9 @@ public class InVentasProspecto {
     public void setAfiliado(InVentasProspectoAfiliado afiliado) {
         this.afiliado = afiliado;
     }
+
+    //endregion
+
 
     @Override
     public String toString() {
@@ -148,6 +162,7 @@ public class InVentasProspecto {
                 ", IND_DISP_MAYOR_TDC='" + IND_DISP_MAYOR_TDC + '\'' +
                 ", IND_RANGO_ING='" + IND_RANGO_ING + '\'' +
                 ", IND_AFIL_ONC='" + IND_AFIL_ONC + '\'' +
+                ", IND_DEPENDENCIA='" + IND_DEPENDENCIA + '\'' +
                 ", afiliado=" + afiliado +
                 '}';
     }

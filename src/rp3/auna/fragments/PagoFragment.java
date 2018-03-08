@@ -9,8 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -70,7 +72,12 @@ public class PagoFragment extends Fragment {
             tvFecha.setText("");
         }
         if(registroPago.getMonto()>0){
-            tvMonto.setText(String.valueOf(registroPago.getMonto()));
+            NumberFormat numberFormat;
+            Locale locale = new Locale("es", "pe");
+            numberFormat = NumberFormat.getInstance(locale);
+            //numberFormat.setMaximumFractionDigits(4);
+            numberFormat.setMinimumFractionDigits(2);
+            tvMonto.setText(String.valueOf(numberFormat.format(registroPago.getMonto())));
         }else{
             tvMonto.setText("");
         }

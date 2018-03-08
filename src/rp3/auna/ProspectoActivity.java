@@ -402,7 +402,7 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
         handler.post(new Runnable() {
             @Override
             public void run() {
-                prospectoVta.setIdAgente(rp3.configuration.PreferenceManager.getInt(Contants.KEY_IDAGENTE));
+                prospectoVta.setIdAgente(rp3.configuration.PreferenceManager.getInt(Contants.KEY_IDAGENTE,0));
                 prospectoVta.setEstado(1);
                 prospectoVta.setEstadoCode("A");
                 Log.d(TAG,"flagdocumento:"+flagDocumento+" opcionProspectar:"+opcionProspectar);
@@ -549,7 +549,7 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
                                     }else{
                                         prospectoEditar.setEstado(1);
                                     }
-                                    prospectoEditar.setIdAgente(rp3.configuration.PreferenceManager.getInt(Contants.KEY_IDAGENTE));
+                                    prospectoEditar.setIdAgente(rp3.configuration.PreferenceManager.getInt(Contants.KEY_IDAGENTE,0));
                                     prospectoEditar.setEstadoCode(Contants.GENERAL_VALUE_CODE_APTO_PROSPECCION);
                                     setDataToEdit();
                                     Log.d(TAG,"ProspectoEditar after:"+prospectoEditar.toString());
@@ -600,7 +600,7 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
                                         }else{
                                             prospectoEditar.setEstado(1);
                                         }
-                                        prospectoEditar.setIdAgente(rp3.configuration.PreferenceManager.getInt(Contants.KEY_IDAGENTE));
+                                        prospectoEditar.setIdAgente(rp3.configuration.PreferenceManager.getInt(Contants.KEY_IDAGENTE,0));
                                         prospectoEditar.setEstadoCode("A");
                                         //prospectoEditar.setEstado(1);
                                         prospectoEditar.setEstadoCode(Contants.GENERAL_VALUE_CODE_APTO_PROSPECCION);
@@ -659,7 +659,7 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
                                         prospectoEditar.setEstado(1);
                                     }
 
-                                    prospectoEditar.setIdAgente(rp3.configuration.PreferenceManager.getInt(Contants.KEY_IDAGENTE));
+                                    prospectoEditar.setIdAgente(rp3.configuration.PreferenceManager.getInt(Contants.KEY_IDAGENTE,0));
                                     prospectoEditar.setEstadoCode("A");
                                     //prospectoEditar.setEstado(1);
                                     prospectoEditar.setEstadoCode(Contants.GENERAL_VALUE_CODE_APTO_PROSPECCION);

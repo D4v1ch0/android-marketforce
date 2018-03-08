@@ -164,6 +164,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         addDefaultMessage(result);
                     }
 
+                    //region Sync Others
                     //result = Cliente.executeSyncInserts(db);
                     //addDefaultMessage(result);
 
@@ -183,6 +184,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                             SyncAudit.insert(SYNC_TYPE_CLIENTE_UPDATE, SYNC_EVENT_SUCCESS);
                         }
                     }*/
+                    //endregion
 
                     if (result == SYNC_EVENT_SUCCESS) {
                         Log.d(TAG,"Agente.executeSync...");
@@ -262,10 +264,13 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         addDefaultMessage(result);
                     }
 
-                    Log.d(TAG,"Iniciar obteniendo las comisiones...");
-                    result = Agente.executeSyncComisiones(db);
-                    addDefaultMessage(result);
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar obteniendo las comisiones...");
+                        result = Agente.executeSyncComisiones(db);
+                        addDefaultMessage(result);
+                    }
 
+                    //region Others Sync
                     //Modulo Oportunidades
                     /*if(PreferenceManager.getBoolean(Contants.KEY_MODULO_OPORTUNIDADES, true)) {
                         if (result == SYNC_EVENT_SUCCESS) {
@@ -398,6 +403,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         addDefaultMessage(result);
                     }*/
 
+                   //endregion
 
                     /***
                      * Sincronizar tokio al inicio
@@ -406,33 +412,52 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                      * Sincronizar Agendas del Agente
                      * */
                     Calendar calendar = Calendar.getInstance();
-                    Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
-                    result = ProspectoVta.executeSyncInserts(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"Iniciar enviando los prospectos en BD sinocronizados...");
-                    result = ProspectoVta.executeSyncSincronizada(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"Iniciar Obteniendo los prospectos...");
-                    result = ProspectoVta.executeSync(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"insertar llamadas pendientes en BD...");
-                    result = LlamadaVta.executeSyncInsert(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"Iniciar actualizando las llamadas sincronizadas...");
-                    result = LlamadaVta.executeSyncUpdate(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"Iniciar obteniendo las llamadas...");
-                    result = LlamadaVta.executeSync(db,Convert.getDotNetTicksFromDate(calendar.getTime()),context);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"insertar visitas pendientes en BD...");
-                    result = VisitaVta.executeSyncInserts(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"Iniciar actualizando las visitas sincronizadas...");
-                    result = VisitaVta.executeSyncUpdate(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"Iniciar obteniendo las visitas...");
-                    result = VisitaVta.executeSync(db,Convert.getDotNetTicksFromDate(calendar.getTime()),context);
-                    addDefaultMessage(result);
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
+                        result = ProspectoVta.executeSyncInserts(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar enviando los prospectos en BD sinocronizados...");
+                        result = ProspectoVta.executeSyncSincronizada(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar Obteniendo los prospectos...");
+                        result = ProspectoVta.executeSync(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"insertar llamadas pendientes en BD...");
+                        result = LlamadaVta.executeSyncInsert(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar actualizando las llamadas sincronizadas...");
+                        result = LlamadaVta.executeSyncUpdate(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar obteniendo las llamadas...");
+                        result = LlamadaVta.executeSync(db,Convert.getDotNetTicksFromDate(calendar.getTime()),context);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"insertar visitas pendientes en BD...");
+                        result = VisitaVta.executeSyncInserts(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar actualizando las visitas sincronizadas...");
+                        result = VisitaVta.executeSyncUpdate(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar obteniendo las visitas...");
+                        result = VisitaVta.executeSync(db,Convert.getDotNetTicksFromDate(calendar.getTime()),context);
+                        addDefaultMessage(result);
+                    }
+
                     //Main2Activity.pruebaAlarm(context);
                     db.commitTransaction();
 
@@ -992,28 +1017,40 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                 }
                 //Actualizar los prospectos modificados
                 else if(syncType.equals(SYNC_TYPE_UPDATE_PROSPECTO)){
-                    Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
-                    result = ProspectoVta.executeSyncInserts(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"Iniciar enviando los prospectos en BD sinocronizados...");
-                    result = ProspectoVta.executeSyncSincronizada(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"Iniciar Obteniendo los prospectos...");
-                    result = ProspectoVta.executeSync(db);
-                    addDefaultMessage(result);
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
+                        result = ProspectoVta.executeSyncInserts(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar enviando los prospectos en BD sinocronizados...");
+                        result = ProspectoVta.executeSyncSincronizada(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar Obteniendo los prospectos...");
+                        result = ProspectoVta.executeSync(db);
+                        addDefaultMessage(result);
+                    }
                 }
                 else if (syncType.equals(SYNC_TYPE_INSERTAR_PROSPECTOVTA)){
                     /*result =ProspectoVta.executeSyncInserts(db);
                     addDefaultMessage(result);*/
-                    Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
-                    result = ProspectoVta.executeSyncInserts(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"Iniciar enviando los prospectos en BD sinocronizados...");
-                    result = ProspectoVta.executeSyncSincronizada(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"Iniciar Obteniendo los prospectos...");
-                    result = ProspectoVta.executeSync(db);
-                    addDefaultMessage(result);
+                    if(result==SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
+                        result = ProspectoVta.executeSyncInserts(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result==SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar enviando los prospectos en BD sinocronizados...");
+                        result = ProspectoVta.executeSyncSincronizada(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result==SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar Obteniendo los prospectos...");
+                        result = ProspectoVta.executeSync(db);
+                        addDefaultMessage(result);
+                    }
                 }
                 else if(syncType.equals(SYNC_TYPE_UPDATE_LLAMADAVTA)){
                     Calendar calendar = Calendar.getInstance();
@@ -1039,125 +1076,186 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 
                 else if(syncType.equals(SYNC_TYPE_UPDATE_VISITA)){
                     Calendar calendar = Calendar.getInstance();
-                    Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
-                    result = ProspectoVta.executeSyncInserts(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"Iniciar enviando los prospectos en BD sinocronizados...");
-                    result = ProspectoVta.executeSyncSincronizada(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"Iniciar Obteniendo los prospectos...");
-                    result = ProspectoVta.executeSync(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"insertar visitas pendientes en BD...");
-                    result = VisitaVta.executeSyncInserts(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"Iniciar actualizando las visitas sincronizadas...");
-                    result = VisitaVta.executeSyncUpdate(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"Iniciar obteniendo las visitas...");
-                    result = VisitaVta.executeSync(db,Convert.getDotNetTicksFromDate(calendar.getTime()),context);
-                    addDefaultMessage(result);
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
+                        result = ProspectoVta.executeSyncInserts(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar enviando los prospectos en BD sinocronizados...");
+                        result = ProspectoVta.executeSyncSincronizada(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar Obteniendo los prospectos...");
+                        result = ProspectoVta.executeSync(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"insertar visitas pendientes en BD...");
+                        result = VisitaVta.executeSyncInserts(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar actualizando las visitas sincronizadas...");
+                        result = VisitaVta.executeSyncUpdate(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar obteniendo las visitas...");
+                        result = VisitaVta.executeSync(db,Convert.getDotNetTicksFromDate(calendar.getTime()),context);
+                        addDefaultMessage(result);
+                    }
                 }
                 //refresh llamada
                 else if(syncType.equals(SYNC_TYPE_REFRESH_LLAMADA)){
                     Long fecha = extras.getLong(AgendaFragment.FECHA);
-
-                    Log.d(TAG,"insertar llamadas pendientes en BD...");
-                    result = LlamadaVta.executeSyncInsert(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"Iniciar actualizando las llamadas sincronizadas...");
-                    result = LlamadaVta.executeSyncUpdate(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"Iniciar obteniendo las llamadas...");
-                    result = LlamadaVta.executeSync(db, fecha,context);
-                    addDefaultMessage(result);
-
-                    Log.d(TAG,"insertar visitas pendientes en BD...");
-                    result = VisitaVta.executeSyncInserts(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"Iniciar actualizando las visitas sincronizadas...");
-                    result = VisitaVta.executeSyncUpdate(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"Iniciar obteniendo las visitas...");
-                    result = VisitaVta.executeSync(db,fecha,context);
-                    addDefaultMessage(result);
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"insertar llamadas pendientes en BD...");
+                        result = LlamadaVta.executeSyncInsert(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar actualizando las llamadas sincronizadas...");
+                        result = LlamadaVta.executeSyncUpdate(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar obteniendo las llamadas...");
+                        result = LlamadaVta.executeSync(db, fecha,context);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"insertar visitas pendientes en BD...");
+                        result = VisitaVta.executeSyncInserts(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar actualizando las visitas sincronizadas...");
+                        result = VisitaVta.executeSyncUpdate(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar obteniendo las visitas...");
+                        result = VisitaVta.executeSync(db,fecha,context);
+                        addDefaultMessage(result);
+                    }
                 }
                 //refresh visita
                 else if(syncType.equals(SYNC_TYPE_REFRESH_VISITA)){
                     Log.d(TAG,"insertar visitas pendientes en BD...");
                     Long fecha = extras.getLong(AgendaFragment.FECHA);
-
-                    Log.d(TAG,"insertar llamadas pendientes en BD...");
-                    result = LlamadaVta.executeSyncInsert(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"Iniciar actualizando las llamadas sincronizadas...");
-                    result = LlamadaVta.executeSyncUpdate(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"Iniciar obteniendo las llamadas...");
-                    result = LlamadaVta.executeSync(db, fecha,context);
-                    addDefaultMessage(result);
-
-                    result = VisitaVta.executeSyncInserts(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"Iniciar actualizando las visitas sincronizadas...");
-                    result = VisitaVta.executeSyncUpdate(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"Iniciar obteniendo las visitas...");
-                    result = VisitaVta.executeSync(db,fecha,context);
-                    addDefaultMessage(result);
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"insertar llamadas pendientes en BD...");
+                        result = LlamadaVta.executeSyncInsert(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar actualizando las llamadas sincronizadas...");
+                        result = LlamadaVta.executeSyncUpdate(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar obteniendo las llamadas...");
+                        result = LlamadaVta.executeSync(db, fecha,context);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        result = VisitaVta.executeSyncInserts(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar actualizando las visitas sincronizadas...");
+                        result = VisitaVta.executeSyncUpdate(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar obteniendo las visitas...");
+                        result = VisitaVta.executeSync(db,fecha,context);
+                        addDefaultMessage(result);
+                    }
                 }
                 //refresh visita reprogramming
                 else if(syncType.equals(SYNC_TYPE_REFRESH_REPROGRAM_CANCELED_VISITA)){
                     Log.d(TAG,"SYNC_TYPE_REFRESH_REPROGRAM_CANCELED_VISITA");
                     Calendar calendar = Calendar.getInstance();
-                    Log.d(TAG,"ApplicationParameters...");
-                    result = ApplicationParameterSync.executeSync(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"Parametros...");
-                    result = rp3.auna.sync.Agente.executeSyncParametros(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"GeneralValues...");
-                    result = rp3.sync.GeneralValue.executeSync(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"GCM...");
-                    if (!TextUtils.isEmpty(PreferenceManager.getString(Contants.KEY_APP_INSTANCE_ID))) {
-                        result = rp3.auna.sync.Agente.executeSyncDeviceId();
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"ApplicationParameters...");
+                        result = ApplicationParameterSync.executeSync(db);
                         addDefaultMessage(result);
                     }
-                    Log.d(TAG,"Iniciar obteniendo las comisiones...");
-                    result = Agente.executeSyncComisiones(db);
-                    addDefaultMessage(result);
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Parametros...");
+                        result = rp3.auna.sync.Agente.executeSyncParametros(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"GeneralValues...");
+                        result = rp3.sync.GeneralValue.executeSync(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"GCM...");
+                        if (!TextUtils.isEmpty(PreferenceManager.getString(Contants.KEY_APP_INSTANCE_ID))) {
+                            result = rp3.auna.sync.Agente.executeSyncDeviceId();
+                            addDefaultMessage(result);
+                        }
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar obteniendo las comisiones...");
+                        result = Agente.executeSyncComisiones(db);
+                        addDefaultMessage(result);
+                    }
 
                     /**
                      * Sincronizar Agendas del Agente
                      * */
-                    Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
-                    result = ProspectoVta.executeSyncInserts(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"Iniciar enviando los prospectos en BD sinocronizados...");
-                    result = ProspectoVta.executeSyncSincronizada(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"Iniciar Obteniendo los prospectos...");
-                    result = ProspectoVta.executeSync(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"insertar llamadas pendientes en BD...");
-                    result = LlamadaVta.executeSyncInsert(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"Iniciar actualizando las llamadas sincronizadas...");
-                    result = LlamadaVta.executeSyncUpdate(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"Iniciar obteniendo las llamadas...");
-                    result = LlamadaVta.executeSync(db,Convert.getDotNetTicksFromDate(calendar.getTime()),context);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"insertar visitas pendientes en BD...");
-                    result = VisitaVta.executeSyncInserts(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"Iniciar actualizando las visitas sincronizadas...");
-                    result = VisitaVta.executeSyncUpdate(db);
-                    addDefaultMessage(result);
-                    Log.d(TAG,"Iniciar obteniendo las visitas...");
-                    result = VisitaVta.executeSync(db,Convert.getDotNetTicksFromDate(calendar.getTime()),context);
-                    addDefaultMessage(result);
+
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
+                        result = ProspectoVta.executeSyncInserts(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar enviando los prospectos en BD sinocronizados...");
+                        result = ProspectoVta.executeSyncSincronizada(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar Obteniendo los prospectos...");
+                        result = ProspectoVta.executeSync(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"insertar llamadas pendientes en BD...");
+                        result = LlamadaVta.executeSyncInsert(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar actualizando las llamadas sincronizadas...");
+                        result = LlamadaVta.executeSyncUpdate(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar obteniendo las llamadas...");
+                        result = LlamadaVta.executeSync(db,Convert.getDotNetTicksFromDate(calendar.getTime()),context);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"insertar visitas pendientes en BD...");
+                        result = VisitaVta.executeSyncInserts(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar actualizando las visitas sincronizadas...");
+                        result = VisitaVta.executeSyncUpdate(db);
+                        addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar obteniendo las visitas...");
+                        result = VisitaVta.executeSync(db,Convert.getDotNetTicksFromDate(calendar.getTime()),context);
+                        addDefaultMessage(result);
+                    }
                 }
                 SyncAudit.insert(syncType, result);
             }

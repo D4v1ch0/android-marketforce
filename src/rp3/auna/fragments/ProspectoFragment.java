@@ -47,6 +47,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TableRow;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -59,6 +60,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rp3.auna.Contants;
 import rp3.auna.CrearLlamadaActivity;
 import rp3.auna.Main2Activity;
 import rp3.auna.ProspectoActivity;
@@ -74,6 +76,7 @@ import rp3.auna.util.recyclerview.DividerItemDecoration;
 import rp3.auna.util.recyclerview.ScrollManagerToolbar;
 import rp3.auna.util.session.SessionManager;
 import rp3.auna.utils.Utils;
+import rp3.configuration.PreferenceManager;
 
 import static rp3.auna.util.helper.Util.isNumber;
 
@@ -149,6 +152,11 @@ public class ProspectoFragment extends Fragment implements SearchView.OnQueryTex
             @Override
             public void prospectoSelected(ProspectoVtaDb prospectoVtaDb, int position,View view) {
                 Log.d(TAG,"prospectoClickSelected...");
+                int idAgente = PreferenceManager.getInt(Contants.KEY_IDAGENTE,0);
+                if(idAgente==0){
+                    Toast.makeText(getActivity(), R.string.generic_show_message_service, Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent intent = new Intent(getActivity(),ProspectoActivity.class);
                 Bundle todo = new Bundle();
                 todo.putInt("Opcion",2);
@@ -363,6 +371,11 @@ public class ProspectoFragment extends Fragment implements SearchView.OnQueryTex
             bundle.putDouble("Latitud",location.getLatitude());
             bundle.putDouble("Longitud",location.getLongitude());
         }
+        int idAgente = PreferenceManager.getInt(Contants.KEY_IDAGENTE,0);
+        if(idAgente==0){
+            Toast.makeText(getActivity(), R.string.generic_show_message_service, Toast.LENGTH_SHORT).show();
+            return;
+        }
         Intent intent = new Intent(getActivity(), CrearLlamadaActivity.class);
         intent.putExtras(bundle);
         getActivity().startActivityForResult(intent,REQUEST_LLAMADA_NUEVO);
@@ -401,6 +414,11 @@ public class ProspectoFragment extends Fragment implements SearchView.OnQueryTex
                         if(location!=null){
                             bundle.putDouble("Latitud",location.getLatitude());
                             bundle.putDouble("Longitud",location.getLongitude());
+                        }
+                        int idAgente = PreferenceManager.getInt(Contants.KEY_IDAGENTE,0);
+                        if(idAgente==0){
+                            Toast.makeText(getActivity(), R.string.generic_show_message_service, Toast.LENGTH_SHORT).show();
+                            return;
                         }
                         Intent intent = new Intent(getActivity(), rp3.auna.CrearVisitaActivity.class);
                         intent.putExtras(bundle);
@@ -442,6 +460,11 @@ public class ProspectoFragment extends Fragment implements SearchView.OnQueryTex
         //noinspection SimplifiableIfStatement
         if (id == R.id.agregar_prospecto) {
             Log.d(TAG,"agregar prospecto item clicked...");
+            int idAgente = PreferenceManager.getInt(Contants.KEY_IDAGENTE,0);
+            if(idAgente==0){
+                Toast.makeText(getActivity(), R.string.generic_show_message_service, Toast.LENGTH_SHORT).show();
+                return true;
+            }
             getActivity().startActivityForResult(new Intent(getActivity(),ProspectoActivity.class),REQUEST_PROSPECTO_NUEVO);
             return true;
         }

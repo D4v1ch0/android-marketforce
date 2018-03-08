@@ -17,7 +17,7 @@ import rp3.auna.R;
  */
 
 public class ValidarSolicitudOncosysClient {
-    private static final String TAG = ValidarTarjetaClient.class.getSimpleName();
+    private static final String TAG = ValidarSolicitudOncosysClient.class.getSimpleName();
     private static final MediaType MEDIA_TYPE_JPEG = MediaType.parse("application/json");
     private String resource = "payme/solicitudoncosys";
     private Context context;
@@ -30,8 +30,8 @@ public class ValidarSolicitudOncosysClient {
 
     public void validar(String json){
         final String url = context.getResources().getString(R.string.url)+resource;
-        Log.d(TAG,url);
-        Log.d(TAG,json);
+        Log.d(TAG,"Url:"+url);
+        Log.d(TAG,"Json:"+json);
         RequestBody requestBody = RequestBody.create(MEDIA_TYPE_JPEG,json);
         Request request = new Request.Builder()
                 .url(url)

@@ -41,6 +41,10 @@ public class ProspectoVta {
         Log.d(TAG,"Iniciar WS executeSync...");
         try {
             Log.d(TAG,"idAgente="+ PreferenceManager.getInt(Contants.KEY_IDAGENTE));
+            int idAgente = PreferenceManager.getInt(Contants.KEY_IDAGENTE,0);
+            if(idAgente==0){
+                return rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+            }
             webService.addParameter("@idagente", PreferenceManager.getInt(Contants.KEY_IDAGENTE));
             webService.addCurrentAuthToken();
             try {
@@ -395,6 +399,7 @@ public class ProspectoVta {
                 failed = true;
                 return rp3.content.SyncAdapter.SYNC_EVENT_ERROR;
             }
+
             //ProspectoVtaDb.deleteAll(db, Contract.ProspectoVta.TABLE_NAME);(db);
             //ProspectoVtaDb.deleteAll(db,Contract.ProspectoVta.TABLE_NAME);
         } finally {

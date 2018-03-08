@@ -41,11 +41,14 @@ public class CalificativoDialog extends DialogFragment {
     @BindView(R.id.tvPlanAfiliado)TextView tvPlanAfiliado;
     @BindView(R.id.tvTitularAfiliado)TextView tvTitularAfiliado;
     @BindView(R.id.tvGFAfiliado)TextView tvGFAfiliado;
+    @BindView(R.id.tvRelacionOncosaludAfiliado)TextView getTvRelacionOncosaludAfiliado;
     //endregion
 
     //region Views Familia
     @BindView(R.id.tvSegmentoStar)TextView tvSegmentoStar;
     @BindView(R.id.tvCantidadHijos)TextView tvCantidadHijos;
+    //Temporal SIN ONCOSALUD
+    @BindView(R.id.tvRelacionOncosalud)TextView tvRelacionOncosalud;
     @BindView(R.id.iv1)ImageView iv1;
     @BindView(R.id.iv2)ImageView iv2;
     @BindView(R.id.iv3)ImageView iv3;
@@ -60,6 +63,7 @@ public class CalificativoDialog extends DialogFragment {
     @BindView(R.id.tvdislineatdc)TextView tvdislineatdc;
     @BindView(R.id.tvdismayorlineatdc)TextView tvdismayorlineatdc;
     @BindView(R.id.tvRangoPromedioIngreso)TextView tvRangoPromedioIngreso;
+    @BindView(R.id.tvDependencia)TextView tvDependencia;
     //endregion
 
     //region View Containers
@@ -153,64 +157,114 @@ public class CalificativoDialog extends DialogFragment {
     }
 
     private void setFamiliar(){
+        viewAfiliadoContent.setVisibility(View.VISIBLE);
         if(!TextUtils.isEmpty(data.getIND_BANCARIZADO())){
             String txt = tvBancarizado.getText().toString()+" ";
-            tvBancarizado.setText(txt+data.getIND_BANCARIZADO());
+            tvBancarizado.setText(txt+data.getIND_BANCARIZADO().trim());
         }else{
 
         }
         if(!TextUtils.isEmpty(data.getIND_CALIF_SBS())){
             String txt = tvsbs.getText().toString()+" ";
-            tvsbs.setText(txt+data.getIND_CALIF_SBS());
+            tvsbs.setText(txt+data.getIND_CALIF_SBS().trim());
         }else{
 
         }
         if(!TextUtils.isEmpty(data.getIND_CALIF_TDC())){
             String txt = tvtdc.getText().toString()+" ";
-            tvtdc.setText(txt+data.getIND_CALIF_TDC());
+            tvtdc.setText(txt+data.getIND_CALIF_TDC().trim());
         }else{
 
         }
         if(!TextUtils.isEmpty(data.getCNT_TDC_REPORTADAS())){
             String txt = tvcantidadtdc.getText().toString()+" ";
-            tvcantidadtdc.setText(txt+data.getCNT_TDC_REPORTADAS());
+            tvcantidadtdc.setText(txt+data.getCNT_TDC_REPORTADAS().trim());
         }else{
 
         }
         if(!TextUtils.isEmpty(data.getCNT_TDC_REP_BANCO())){
             String txt = tvcantidadbanco.getText().toString()+" ";
-            tvcantidadbanco.setText(txt+data.getCNT_TDC_REP_BANCO());
+            tvcantidadbanco.setText(txt+data.getCNT_TDC_REP_BANCO().trim());
         }else{
 
         }
         if(!TextUtils.isEmpty(data.getIND_DISP_TDC())){
             String txt = tvdislineatdc.getText().toString()+" ";
-            tvdislineatdc.setText(txt+data.getIND_DISP_TDC());
+            tvdislineatdc.setText(txt+data.getIND_DISP_TDC().trim());
         }else{
 
         }
         if(!TextUtils.isEmpty(data.getIND_DISP_MAYOR_TDC())){
             String txt = tvdismayorlineatdc.getText().toString()+" ";
-            tvdismayorlineatdc.setText(txt+data.getIND_DISP_MAYOR_TDC());
+            tvdismayorlineatdc.setText(txt+data.getIND_DISP_MAYOR_TDC().trim());
         }else{
 
         }
         if(!TextUtils.isEmpty(data.getIND_RANGO_ING())){
             String txt = tvRangoPromedioIngreso.getText().toString();
-            tvRangoPromedioIngreso.setText(txt+data.getIND_RANGO_ING());
+            tvRangoPromedioIngreso.setText(txt+data.getIND_RANGO_ING().trim());
+        }else{
+
+        }
+        if(!TextUtils.isEmpty(data.getIND_DEPENDENCIA())){
+            String txt = tvDependencia.getText().toString();
+            tvDependencia.setText(txt+data.getIND_DEPENDENCIA().trim());
         }else{
 
         }
         if(!TextUtils.isEmpty(data.getNRO_HIJOS())){
-            tvCantidadHijos.setText(data.getNRO_HIJOS());
+            tvCantidadHijos.setText(data.getNRO_HIJOS().trim());
         }else{
 
+        }
+        //Temporal
+        /*if(data.getAfiliado()!=null){
+            if(data.getAfiliado().getCodigoGrupoFamiliar()!=null){
+                if(!TextUtils.isEmpty(data.getAfiliado().getCodigoGrupoFamiliar().trim())){
+                    tvRelacionOncosalud.setText("GF "+data.getAfiliado().getCodigoGrupoFamiliar().trim());
+                }
+            }
+        }/*/
+        if(data.getAfiliado()!=null){
+            Log.d(TAG,"data.getAfiliado!=null...");
+            if(data.getAfiliado().getCodigoGrupoFamiliar()!=null){
+                Log.d(TAG,"data.getAfiliado!=null...");
+                if((data.getAfiliado().getCodigoGrupoFamiliar().trim().length()>0)){
+                    viewAfiliadoContent.setVisibility(View.VISIBLE);
+                    getTvRelacionOncosaludAfiliado.setVisibility(View.GONE);
+                    tvDocumentoAfiliado.setVisibility(View.VISIBLE);
+                    tvPlanAfiliado.setVisibility(View.VISIBLE);
+                    tvTitularAfiliado.setVisibility(View.VISIBLE);
+                    tvGFAfiliado.setVisibility(View.VISIBLE);
+                }else{
+                    viewAfiliadoContent.setVisibility(View.VISIBLE);
+                    getTvRelacionOncosaludAfiliado.setVisibility(View.VISIBLE);
+                    tvDocumentoAfiliado.setVisibility(View.GONE);
+                    tvPlanAfiliado.setVisibility(View.GONE);
+                    tvTitularAfiliado.setVisibility(View.GONE);
+                    tvGFAfiliado.setVisibility(View.GONE);
+                }
+            }else{
+                viewAfiliadoContent.setVisibility(View.VISIBLE);
+                getTvRelacionOncosaludAfiliado.setVisibility(View.VISIBLE);
+                tvDocumentoAfiliado.setVisibility(View.GONE);
+                tvPlanAfiliado.setVisibility(View.GONE);
+                tvTitularAfiliado.setVisibility(View.GONE);
+                tvGFAfiliado.setVisibility(View.GONE);
+            }
+        }else{
+            viewAfiliadoContent.setVisibility(View.VISIBLE);
+            getTvRelacionOncosaludAfiliado.setVisibility(View.VISIBLE);
+            tvDocumentoAfiliado.setVisibility(View.GONE);
+            tvPlanAfiliado.setVisibility(View.GONE);
+            tvTitularAfiliado.setVisibility(View.GONE);
+            tvGFAfiliado.setVisibility(View.GONE);
         }
     }
 
     private void setStars(){
         viewSegmento.setVisibility(View.VISIBLE);
-        String segmento = data.getCOD_SEGMENTO();
+        String segmento = data.getCOD_SEGMENTO().trim();
         if(segmento!=null){
             if(!segmento.equalsIgnoreCase("")){
                 //Es aqui Ramon!
@@ -364,25 +418,76 @@ public class CalificativoDialog extends DialogFragment {
 
     private void setDataAfiliado(){
         InVentasProspectoAfiliado afiliado = data.getAfiliado();
-        if(!TextUtils.isEmpty(afiliado.getTipoIdentificacion()) && !TextUtils.isEmpty(afiliado.getIdentificacion())){
-            tvDocumentoAfiliado.setText(afiliado.getTipoIdentificacion()+" "+afiliado.getIdentificacion());
+        //Actualizacion para el atributo Dependencia
+        if(data.getAfiliado()==null){
+            viewAfiliadoContent.setVisibility(View.VISIBLE);
+            getTvRelacionOncosaludAfiliado.setVisibility(View.VISIBLE);
+            tvDocumentoAfiliado.setVisibility(View.GONE);
+            tvPlanAfiliado.setVisibility(View.GONE);
+            tvTitularAfiliado.setVisibility(View.GONE);
+            tvGFAfiliado.setVisibility(View.GONE);
         }else{
-            tvDocumentoAfiliado.setText("");
-        }
-        if(!TextUtils.isEmpty(afiliado.getOrigenCliente())){
-            tvPlanAfiliado.setText(afiliado.getOrigenCliente());
-        }else{
-            tvPlanAfiliado.setText("");
-        }
-        if(!TextUtils.isEmpty(afiliado.getCategoria())){
-            tvTitularAfiliado.setText(afiliado.getCategoria());
-        }else{
-            tvTitularAfiliado.setText("");
-        }
-        if(!TextUtils.isEmpty(afiliado.getCodigoGrupoFamiliar())){
-            tvGFAfiliado.setText("GF "+afiliado.getCodigoGrupoFamiliar());
-        }else {
-            tvGFAfiliado.setText("");
+            if(data.getAfiliado().getCodigoGrupoFamiliar()!=null){
+                if((data.getAfiliado().getCodigoGrupoFamiliar().trim().length()==0)){
+                    viewAfiliadoContent.setVisibility(View.VISIBLE);
+                    getTvRelacionOncosaludAfiliado.setVisibility(View.VISIBLE);
+                    tvDocumentoAfiliado.setVisibility(View.GONE);
+                    tvPlanAfiliado.setVisibility(View.GONE);
+                    tvTitularAfiliado.setVisibility(View.GONE);
+                    tvGFAfiliado.setVisibility(View.GONE);
+                }else{
+                    if(!TextUtils.isEmpty(afiliado.getTipoIdentificacion()) && !TextUtils.isEmpty(afiliado.getIdentificacion())){
+                        tvDocumentoAfiliado.setText(afiliado.getTipoIdentificacion().trim()+" "+afiliado.getIdentificacion().trim());
+                    }else{
+                        tvDocumentoAfiliado.setVisibility(View.GONE);
+                        getTvRelacionOncosaludAfiliado.setVisibility(View.VISIBLE);
+                    }
+                    if(!TextUtils.isEmpty(afiliado.getOrigenCliente())){
+                        tvPlanAfiliado.setText(afiliado.getOrigenCliente().trim());
+                    }else{
+                        tvPlanAfiliado.setVisibility(View.GONE);
+                        getTvRelacionOncosaludAfiliado.setVisibility(View.VISIBLE);
+                    }
+                    if(!TextUtils.isEmpty(afiliado.getCategoria())){
+                        tvTitularAfiliado.setText(afiliado.getCategoria().trim());
+                    }else{
+                        tvTitularAfiliado.setVisibility(View.GONE);
+                        getTvRelacionOncosaludAfiliado.setVisibility(View.VISIBLE);
+                    }
+                    if(!TextUtils.isEmpty(afiliado.getCodigoGrupoFamiliar())){
+                        tvGFAfiliado.setText("GF "+afiliado.getCodigoGrupoFamiliar().trim());
+                    }else {
+                        tvGFAfiliado.setVisibility(View.GONE);
+                        getTvRelacionOncosaludAfiliado.setVisibility(View.VISIBLE);
+                    }
+                }
+            }else{
+                if(!TextUtils.isEmpty(afiliado.getTipoIdentificacion()) && !TextUtils.isEmpty(afiliado.getIdentificacion())){
+                    tvDocumentoAfiliado.setText(afiliado.getTipoIdentificacion().trim()+" "+afiliado.getIdentificacion().trim());
+                }else{
+                    tvDocumentoAfiliado.setVisibility(View.GONE);
+                    getTvRelacionOncosaludAfiliado.setVisibility(View.VISIBLE);
+                }
+                if(!TextUtils.isEmpty(afiliado.getOrigenCliente())){
+                    tvPlanAfiliado.setText(afiliado.getOrigenCliente().trim());
+                }else{
+                    tvPlanAfiliado.setVisibility(View.GONE);
+                    getTvRelacionOncosaludAfiliado.setVisibility(View.VISIBLE);
+                }
+                if(!TextUtils.isEmpty(afiliado.getCategoria())){
+                    tvTitularAfiliado.setText(afiliado.getCategoria().trim());
+                }else{
+                    tvTitularAfiliado.setVisibility(View.GONE);
+                    getTvRelacionOncosaludAfiliado.setVisibility(View.VISIBLE);
+                }
+                if(!TextUtils.isEmpty(afiliado.getCodigoGrupoFamiliar())){
+                    tvGFAfiliado.setText("GF "+afiliado.getCodigoGrupoFamiliar().trim());
+                }else {
+                    tvGFAfiliado.setVisibility(View.GONE);
+                    getTvRelacionOncosaludAfiliado.setVisibility(View.VISIBLE);
+                }
+            }
+
         }
     }
     //endregion

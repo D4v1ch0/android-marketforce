@@ -83,6 +83,7 @@ import rp3.auna.util.recyclerview.DividerItemDecoration;
 import rp3.auna.util.session.SessionManager;
 import rp3.auna.utils.Utils;
 import rp3.auna.webservices.NoContactarClient;
+import rp3.configuration.PreferenceManager;
 import rp3.data.models.GeneralValue;
 import rp3.util.Convert;
 
@@ -93,6 +94,7 @@ import static rp3.auna.Contants.GENERAL_VALUE_CODE_LLAMADA_NO_REALIZO_LLAMADA;
 import static rp3.auna.Contants.GENERAL_VALUE_CODE_LLAMADA_PENDIENTE;
 import static rp3.auna.Contants.GENERAL_VALUE_CODE_LLAMADA_REPROGRAMADA;
 import static rp3.auna.Contants.GENERAL_VALUE_CODE_LLAMADA_SI_REALIZO_LLAMADA;
+import static rp3.auna.Contants.KEY_IDAGENTE;
 
 /**
  * Created by Jesus Villa on 17/10/2017.
@@ -157,6 +159,11 @@ public class TabLlamada extends Fragment {
             public void agendaSelected(final LlamadaVta agendaVta, int positionn) {
                 Log.d(TAG,"agendaSelected...");
                 Log.d(TAG,"agenda:"+agendaVta.toString());
+                int idAgente = PreferenceManager.getInt(KEY_IDAGENTE,0);
+                if(idAgente==0){
+                    Toast.makeText(getActivity(), R.string.generic_show_message_service, Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Calendar calendar1 = Calendar.getInstance();
                 Calendar calendar2 = Calendar.getInstance();
                 calendar2.setTime(agendaVta.getFechaLlamada());
@@ -1416,7 +1423,9 @@ public class TabLlamada extends Fragment {
         EventBus.getBus().register(this);
         estado = true;
         refresh();
+        int idAgente = PreferenceManager.getInt(Contants.KEY_IDAGENTE,0);
     }
+
 
     @Override
     public void onStop() {

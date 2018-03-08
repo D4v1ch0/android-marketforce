@@ -71,9 +71,11 @@ import rp3.auna.util.recyclerview.DividerItemDecoration;
 import rp3.auna.util.session.SessionManager;
 import rp3.auna.utils.Utils;
 import rp3.auna.webservices.VisitaDetalleClient;
+import rp3.configuration.PreferenceManager;
 import rp3.util.Convert;
 
 import static rp3.auna.Contants.GENERAL_TABLE_MOTIVOS_REPROGRAMACION_TABLE_ID_CITA;
+import static rp3.auna.Contants.KEY_IDAGENTE;
 
 /**
  * Created by Jesus Villa on 17/10/2017.
@@ -296,7 +298,11 @@ public class TabCita extends Fragment{
             @Override
             public void agendaSelected(VisitaVta agendaVta, int positionn) {
                 Log.d(TAG,"agendaSelected...");
-                Log.d(TAG,"agendaSelected...");
+                int idAgente = PreferenceManager.getInt(KEY_IDAGENTE,0);
+                if(idAgente==0){
+                    Toast.makeText(getActivity(), R.string.generic_show_message_service, Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 agendaSelected = agendaVta;
                 visitaVta = agendaVta;
                 Log.d(TAG,"agenda:"+agendaVta.toString());
@@ -345,6 +351,11 @@ public class TabCita extends Fragment{
             @Override
             public void agendaActionSelected(VisitaVta agendaVta, int position,View v) {
                 Log.d(TAG,"agendaActionSelected...Mostrar detalle consultando ws que obtenga la data..");
+                int idAgente = PreferenceManager.getInt(KEY_IDAGENTE,0);
+                if(idAgente==0){
+                    Toast.makeText(getActivity(), R.string.generic_show_message_service, Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 visitaVta = agendaVta;
                 Log.d(TAG,"agenda:"+agendaVta.toString());
                 /*Calendar calendar1 = Calendar.getInstance();
@@ -470,6 +481,11 @@ public class TabCita extends Fragment{
             visitaVta.setFechaInicio(date);
             SessionManager.getInstance(getActivity()).createVisitaSession(visitaVta);
             Intent intent;
+            int idAgente = PreferenceManager.getInt(Contants.KEY_IDAGENTE,0);
+            if(idAgente==0){
+                Toast.makeText(getActivity(), rp3.core.R.string.generic_show_message_service, Toast.LENGTH_SHORT).show();
+                return;
+            }
             if(visitaVta.getEstado()==6){
                 //Consultar data e iniciar
                 showDetalleVisitaClient(visitaVta.getVisitaId(),2);

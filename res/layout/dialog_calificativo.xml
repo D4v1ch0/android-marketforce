@@ -167,23 +167,42 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <TextView
+                            android:id="@+id/tvHijosCountt"
                             android:textColor="@color/md_text"
                             android:text="Hijos"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
-                        <ImageView
-                            android:layout_alignParentRight="true"
+                        <RelativeLayout
+                            android:layout_marginLeft="5dp"
                             android:layout_width="wrap_content"
-                            android:layout_height="16dp"
-                            android:src="@drawable/circle_shape_count_hijos"/>
+                            android:layout_height="20dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_toEndOf="@+id/tvHijosCountt">
+                            <ImageView
+                                android:visibility="gone"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/circle_shape_count_hijos" />
+                            <TextView
+                                android:background="@drawable/circle_shape_count_hijos"
+                                android:id="@+id/tvCantidadHijos"
+                                android:layout_width="24dp"
+                                android:layout_height="wrap_content"
+                                android:text="0"
+                                android:gravity="center"
+                                android:textColor="@color/whiteA80" />
+                        </RelativeLayout>
+                        <!-- Temporal RELACION ONCOSALUD -->
                         <TextView
-                            android:textColor="@color/whiteA80"
-                            android:text="0"
-                            android:layout_marginRight="11dp"
-                            android:layout_alignParentRight="true"
-                            android:id="@+id/tvCantidadHijos"
+                            android:visibility="gone"
+                            android:id="@+id/tvRelacionOncosalud"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:text="SIN ONCOSALUD"
+                            android:textColor="@color/md_text"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="10dp"
+                            />
 
                     </RelativeLayout>
 
@@ -294,6 +313,15 @@
                                 android:textSize="16sp"
                                 android:text="Laboral"/>
                             <TextView
+                                android:visibility="visible"
+                                android:layout_marginTop="3dp"
+                                android:id="@+id/tvDependencia"
+                                android:text="Dependencia:"
+                                android:textColor="@color/md_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="3dp"/>
+                            <TextView
                                 android:layout_marginTop="3dp"
                                 android:id="@+id/tvRangoPromedioIngreso"
                                 android:text="Rango Promedio Ingreso:"
@@ -318,9 +346,11 @@
                         android:layout_marginRight="16dp"
                         android:layout_marginLeft="16dp"
                         android:orientation="vertical"
+                        android:visibility="visible"
                         android:id="@+id/lyAfiliadoContent"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+
                         <TextView
                             android:textColor="@color/md_text"
                             android:layout_width="wrap_content"
@@ -330,6 +360,17 @@
                             android:textSize="16sp"
                             android:text="Relación con AUNA"/>
                         <TextView
+                            android:visibility="gone"
+                            android:id="@+id/tvRelacionOncosaludAfiliado"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="SIN ONCOSALUD"
+                            android:textColor="@color/md_text"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="10dp"
+                            />
+                        <TextView
+
                             android:layout_marginTop="3dp"
                             android:id="@+id/tvDocumentoAfiliado"
                             android:text="DNI:"

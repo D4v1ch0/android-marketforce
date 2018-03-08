@@ -168,6 +168,8 @@ public class CrearVisitaActivity extends ActionBarActivity implements DialogTime
         return true;
     }
 
+    //Validar Mismo Tiempo
+
     private void initTiempos(){
         adapterDuracion = new SimpleGeneralValueAdapter(this, Utils.getDataBase(this), Contants.GENERAL_TABLE_DURACION_VISITA);
         generalValueList = GeneralValue.getGeneralValues(Utils.getDataBase(this),Contants.GENERAL_TABLE_DURACION_VISITA);
@@ -496,7 +498,7 @@ public class CrearVisitaActivity extends ActionBarActivity implements DialogTime
         direccion = getIntent().getExtras().getString("Direccion",null);
         latitud = getIntent().getExtras().getDouble("Latitud",0);
         longitud = getIntent().getExtras().getDouble("Longitud",0);
-        idAgente = PreferenceManager.getInt(Contants.KEY_IDAGENTE);
+        idAgente = PreferenceManager.getInt(Contants.KEY_IDAGENTE,0);
         tvProspecto.setText(prospecto);
         tvDireccion.setText(direccion);
         service = getIntent().getExtras().getInt("Service",1);
@@ -815,4 +817,7 @@ public class CrearVisitaActivity extends ActionBarActivity implements DialogTime
 
 
     //endregion
+
+
+    //Holaaa
 }

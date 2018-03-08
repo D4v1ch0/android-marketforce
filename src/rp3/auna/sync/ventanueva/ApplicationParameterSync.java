@@ -13,6 +13,7 @@ import rp3.auna.util.constants.Constants;
 import rp3.configuration.PreferenceManager;
 import rp3.connection.HttpConnection;
 import rp3.connection.WebService;
+import rp3.content.SyncAdapter;
 import rp3.db.sqlite.DataBase;
 import rp3.util.Convert;
 
@@ -88,6 +89,8 @@ public class ApplicationParameterSync {
                         Log.d(TAG,insertLlamada?"parameter insertada...":"parameter no fue insertada...");
                     }
                     Log.d(TAG,"Cantidad de parameter:"+ rp3.auna.models.ApplicationParameter.getAll(db).size());
+                }else{
+                    return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
                 }
             } catch (JSONException e) {
                 Log.e("Error", e.toString());
