@@ -114,6 +114,7 @@ import rp3.runtime.Session;
 import rp3.sync.SyncUtils;
 import rp3.util.ConnectionUtils;
 import rp3.util.LocationUtils;
+/**Nuevo Rama para finalizar virtual**/
 
 public class Main2Activity extends AppCompatActivity implements rp3.auna.util.location.LocationProvider.LocationCallback{
 
