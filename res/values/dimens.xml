@@ -16,4 +16,5 @@
 	<dimen name="text_normal">15sp</dimen>
 	<dimen name="edit_text_radius">3dp</dimen>
 	<dimen name="zero">0dp</dimen>
+    <dimen name="fingerprint_icon">80dp</dimen>
 </resources>

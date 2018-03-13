@@ -143,9 +143,9 @@ public class VisitaFisicaClient {
                 .post(requestBody).build();
         OkHttpClient okHttpClient = new OkHttpClient();
         Builder b = new Builder();
-        b.connectTimeout(180, TimeUnit.SECONDS)
-                .writeTimeout(180, TimeUnit.SECONDS)
-                .readTimeout(180, TimeUnit.SECONDS);
+        b.connectTimeout(280, TimeUnit.SECONDS)
+                .writeTimeout(280, TimeUnit.SECONDS)
+                .readTimeout(280, TimeUnit.SECONDS);
 // set other properties
 
         OkHttpClient client = b.build();

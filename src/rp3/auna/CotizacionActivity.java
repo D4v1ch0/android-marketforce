@@ -94,6 +94,7 @@ import rp3.auna.bean.VisitaVtaFinal;
 import rp3.auna.bean.Wallet;
 import rp3.auna.dialog.EmailContratanteDialog;
 import rp3.auna.dialog.EmailCotizacionDialog;
+import rp3.auna.dialog.FingerPrintDialog;
 import rp3.auna.dialog.MotivoCitaDialog;
 import rp3.auna.models.ApplicationParameter;
 import rp3.auna.models.ventanueva.ProspectoVtaDb;
@@ -267,6 +268,10 @@ public class CotizacionActivity extends AppCompatActivity {
     //Si es la primera vez en consultar = 1 , else other
     private int flagConsultoDetalle = 1;
     private int flagRealizoCotizacionInicial = 0;
+
+    //region Solicitud Virtual
+
+    //endregion
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1681,7 +1686,9 @@ public class CotizacionActivity extends AppCompatActivity {
                         public void run() {
                             //Es Cotización Inicial
                             if(estado==1){
-                                setDataSolicitud(idVisita,tipo);
+                                //Aqui preguntar la autenticación por huella
+                                showAutenticationFingerPrint();
+                                //setDataSolicitud(idVisita,tipo);
                             }
                             //Es Cotización Final
                             else if(estado==2){
@@ -4164,4 +4171,22 @@ public class CotizacionActivity extends AppCompatActivity {
 
     //endregion
 
+
+    //region Solicitud Virtual Methods
+
+    private void showAutenticationFingerPrint(){
+        FingerPrintDialog fingerPrintDialog = FingerPrintDialog.newInstance(new FingerPrintDialog.callBackListener() {
+            @Override
+            public void onError(String mensaje) {
+
+            }
+
+            @Override
+            public void onSuccess() {
+
+            }
+        },new Bundle());
+        fingerPrintDialog.setCancelable(true);
+        fingerPrintDialog.show(getSupportFragmentManager(),null);
+    }
 }

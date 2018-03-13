@@ -41,6 +41,7 @@
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -71,6 +72,7 @@
     <uses-feature
         android:name="android.hardware.bluetooth_le"
         android:required="false" />
+
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.BIND_SCREENING_SERVICE" />

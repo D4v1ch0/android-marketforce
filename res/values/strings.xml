@@ -512,9 +512,13 @@
     <!--<string name="urlapi">http://auna.rp3marketforce.com:8085/</string>-->
     <!--<string name="url">http://auna.rp3marketforce.com:8085/api/</string>-->
 
+    <!-- Urls Local -->
+    <!--<string name="urlapi">http://192.168.0.11:55042/</string>-->
+    <!--<string name="url">http://192.168.0.11:55042/api/</string>-->
 
-    <!--<string name="urlapi">http://192.168.0.40:55042/</string>-->
-    <!--<string name="url">http://192.168.0.40:55042/api/</string>-->
+    <!-- Urls DES -->
+    <string name="urlapi">http://201.234.87.198/</string>
+    <string name="url">http://201.234.87.198/api/</string>
 
     <!-- URLS QAS -->
 
@@ -523,8 +527,8 @@
 
     <!--URLS PRODUCCIÓN -->
 
-    <string name="urlapi">https://crm.auna.pe/</string>
-    <string name="url">https://crm.auna.pe/api/</string>
+    <!--<string name="urlapi">https://crm.auna.pe/</string>-->
+    <!--<string name="url">https://crm.auna.pe/api/</string>-->
 
     <!--- Mi cell -->
     <!--<string name="urlapi">http://192.168.43.168:55042/</string>-->
@@ -567,4 +571,6 @@
     <string name="alarm_minutes" formatted="false">\"%d minutos.\"</string>
     <string name="alarm_less_minute" formatted="false">menos de un minuto.</string>
     <string name="generic_show_message_service">"Asegurese de tener conexión a Internet, Sincronize ó reinicie sesión porfavor."</string>
+    <string name="touch_sensor_mkf">Presione el lector</string>
+    <string name="fingerprint_hint">Presione el sensor</string>
 </resources>
