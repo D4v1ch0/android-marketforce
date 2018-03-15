@@ -58,6 +58,8 @@
                         android:layout_height="match_parent"
                         android:orientation="vertical">
 
+                        <!-- Titulo -->
+
                         <TextView
                             android:id="@+id/tvCotizacion"
                             android:layout_width="match_parent"
@@ -71,7 +73,9 @@
                             android:textColor="?attr/colorPrimary"
                             android:textSize="20sp" />
 
-                        <!-- Tipos de Venta -->
+                        <!-- -->
+
+                        <!-- Tipos de Venta: Forma de Pago -->
                         <android.support.v7.widget.CardView
                             android:id="@+id/cvPayme"
                             android:layout_width="match_parent"
@@ -93,6 +97,7 @@
                                 android:paddingRight="10dp"
                                 android:paddingTop="5dp">
 
+                                <!-- Titulo -->
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
@@ -104,6 +109,7 @@
                                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
                                     android:textColor="?attr/colorPrimary"
                                     android:textSize="15sp" />
+                                <!-- Titulo -->
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -118,6 +124,7 @@
                                     android:textSize="12sp"
                                     android:visibility="gone" />
 
+                                <!-- Forma de Pago -->
                                 <RadioGroup
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
@@ -152,6 +159,7 @@
                                         android:text="Regular"
                                         android:textColor="@color/md_text" />
                                 </RadioGroup>
+                                <!-- Forma de Pago -->
 
                                 <TextView
                                     android:visibility="gone"
@@ -436,7 +444,6 @@
                             </LinearLayout>
                         </android.support.v7.widget.CardView>
 
-
                         <!-- Cabecera principal -->
                         <android.support.v7.widget.CardView
                             android:layout_width="match_parent"
@@ -456,6 +463,7 @@
                                 android:paddingRight="10dp"
                                 android:paddingTop="5dp">
 
+                                <!-- Tipo Venta -->
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
@@ -496,7 +504,7 @@
                                                 android:text="Corporativo"
                                                 android:textColor="@color/md_text"
                                                 android:textSize="14sp"
-                                                android:visibility="gone"
+                                                android:visibility="visible"
                                                 app:buttonTint="?attr/colorPrimary" />
 
                                             <android.support.v7.widget.AppCompatRadioButton
@@ -511,6 +519,7 @@
                                         </RadioGroup>
                                     </LinearLayout>
                                 </LinearLayout>
+                                <!-- Tipo Venta -->
 
                                 <!-- Ruc Corporativo -->
                                 <LinearLayout
@@ -549,7 +558,9 @@
                                         android:textSize="14sp" />
 
                                 </LinearLayout>
+                                <!-- Ruc Corporativo -->
 
+                                <!-- Programa -->
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
@@ -597,7 +608,9 @@
 
 
                                 </LinearLayout>
+                                <!-- Programa -->
 
+                                <!-- Campaña -->
                                 <LinearLayout
                                     android:id="@+id/lyCampana"
                                     android:layout_width="match_parent"
@@ -627,8 +640,68 @@
                                         android:buttonTint="?attr/colorPrimary" />
 
                                 </LinearLayout>
+                                <!-- Campaña -->
 
+                                <!-- Cotizacion -->
+                                <LinearLayout
+                                    android:id="@+id/lyCotizador"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="5dp"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_marginRight="5dp"
+                                    android:layout_weight="1"
+                                    android:orientation="horizontal">
 
+                                    <TextView
+                                        android:id="@+id/textView"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="0.2"
+                                        android:fontFamily="sans-serif-medium"
+                                        android:text="Tipo de cotización:"
+                                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
+                                        android:textColor="?attr/colorPrimary"
+                                        android:textSize="14sp" />
+
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="0.4"
+                                        android:orientation="vertical">
+
+                                        <RadioGroup
+                                            android:id="@+id/rbgroupTipoCotizacion"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content">
+
+                                            <android.support.v7.widget.AppCompatRadioButton
+                                                android:id="@+id/rbFisica"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:fontFamily="sans-serif"
+                                                android:text="Fisica"
+                                                android:textColor="@color/md_text"
+                                                android:textSize="14sp"
+                                                android:visibility="visible"
+                                                app:buttonTint="?attr/colorPrimary" />
+
+                                            <android.support.v7.widget.AppCompatRadioButton
+                                                android:id="@+id/rbVirtual"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:fontFamily="sans-serif"
+                                                android:text="Virtual"
+                                                android:textColor="@color/md_text"
+                                                android:textSize="14sp"
+                                                app:buttonTint="?attr/colorPrimary" />
+                                        </RadioGroup>
+                                    </LinearLayout>
+
+                                </LinearLayout>
+                                <!-- Cotizacion -->
+
+                                <!-- Agregar Afiliado -->
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
@@ -653,9 +726,12 @@
                                         android:textSize="14sp" />
 
                                 </LinearLayout>
+                                <!-- Agregar Afiliado -->
 
                             </LinearLayout>
+
                         </android.support.v7.widget.CardView>
+                        <!-- Cabecera principal -->
 
                         <!-- init Contenedor de Afiliados -->
 

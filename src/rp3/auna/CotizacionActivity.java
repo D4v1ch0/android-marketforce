@@ -92,6 +92,7 @@ import rp3.auna.bean.VentaRegularData;
 import rp3.auna.bean.VisitaVtaDetalle;
 import rp3.auna.bean.VisitaVtaFinal;
 import rp3.auna.bean.Wallet;
+import rp3.auna.bean.virtual.CotizacionVirtual;
 import rp3.auna.dialog.EmailContratanteDialog;
 import rp3.auna.dialog.EmailCotizacionDialog;
 import rp3.auna.dialog.FingerPrintDialog;
@@ -119,6 +120,7 @@ import rp3.auna.webservices.UpdateVisitaClient;
 import rp3.auna.webservices.ValidarSolicitudOncosysClient;
 import rp3.auna.webservices.ValidarTarjetaClient;
 import rp3.auna.webservices.WalletClient;
+import rp3.auna.webservices.virtual.CotizadorVirtualClient;
 import rp3.configuration.PreferenceManager;
 import rp3.content.SimpleGeneralValueAdapter;
 import rp3.data.models.GeneralValue;
@@ -270,7 +272,8 @@ public class CotizacionActivity extends AppCompatActivity {
     private int flagRealizoCotizacionInicial = 0;
 
     //region Solicitud Virtual
-
+    @BindView(R.id.rbFisica) RadioButton rbFisica;
+    @BindView(R.id.rbVirtual) RadioButton rbVirtual;
     //endregion
 
     @Override
@@ -4188,5 +4191,76 @@ public class CotizacionActivity extends AppCompatActivity {
         },new Bundle());
         fingerPrintDialog.setCancelable(true);
         fingerPrintDialog.show(getSupportFragmentManager(),null);
+    }
+
+    private void showDialogCotizadorVirtualClient(CotizacionVirtual cotizacionzacionMovil){
+        final ProgressDialog progressDialog = new ProgressDialog(this,R.style.AppCompatAlertDialogStyle);
+        progressDialog.setTitle(R.string.appname_marketforce);
+        progressDialog.setMessage("Consultando Cotización...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        new CotizadorVirtualClient(this, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d(TAG,"onFailure...");
+                progressDialog.dismiss();
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(() -> Toast.makeText(CotizacionActivity.this, "Hubo un problema en el servidor...intentelo mas tarde...", Toast.LENGTH_SHORT).show());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                progressDialog.dismiss();
+                Log.d(TAG,"onResponse...");
+                String json = response.body().string();
+                if(response.isSuccessful()){
+                    Log.d(TAG,"isSuccessful...");
+                    TypeToken<List<Cotizacion>> type = new TypeToken<List<Cotizacion>>(){};
+                    cotizacionList = new Gson().fromJson(json,type.getType());
+                    Log.d(TAG,"Hay "+cotizacionList.size()+" respuestas de cotizacionMovil...");
+                    Log.v(TAG,json);
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(() -> {
+                        boolean procede = true;
+                        for(Cotizacion cotizacion:cotizacionList){
+                            if(cotizacion.getResult().equalsIgnoreCase("1")){
+                                for(GeneralValue generalValue:listExcepcions){
+                                    if(cotizacion.getInfo().contains(generalValue.getCode())){
+                                        Toast.makeText(CotizacionActivity.this, generalValue.getValue(), Toast.LENGTH_SHORT).show();
+                                        Log.v(TAG,"Excepcion General:"+generalValue.toString());
+                                        procede = false;
+                                        break;
+                                    }
+                                }
+                                procede = false;
+                                Log.d(TAG,cotizacion.toString());
+                                //Toast.makeText(CotizacionActivity.this, cotizacion.getInfo(), Toast.LENGTH_SHORT).show();
+                                break;
+                            }
+                        }
+                        if(procede){
+                            Log.v(TAG,"Si procede...");
+                            flagRealizoCotizacionInicial = 1;
+                            cotizacionMovil.setRespuesta(cotizacionList);
+                            selectTipoVenta = tipoVenta;
+                            selectPlanCotizacion = select;
+                            if(tipoVenta == 1){
+                                requestVenta = 1;
+                            }else{
+                                requestVenta = 2;
+                            }
+                            setResponseCotizacion(cotizacionList);
+                        }
+                        else{
+                            Log.v(TAG,"No procede...");
+                        }
+                    });
+                }else{
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(() -> Toast.makeText(CotizacionActivity.this, "Hubo un problema al realizar la cotizacion. Intentelo nuevamente.", Toast.LENGTH_SHORT).show());
+                    Log.d(TAG,"Not isSucessful...");
+                }
+            }
+        }).cotizar(cotizacionzacionMovil);
     }
 }

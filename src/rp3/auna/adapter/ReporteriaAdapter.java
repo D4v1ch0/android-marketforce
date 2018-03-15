@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,12 +19,8 @@ import com.bignerdranch.expandablerecyclerview.ViewHolder.ParentViewHolder;
 import java.util.List;
 
 import rp3.auna.R;
-import rp3.auna.bean.ItemDrawerSubtitle;
-import rp3.auna.bean.ItemDrawerTitle;
-import rp3.auna.bean.ItemSubTitle;
-import rp3.auna.bean.Models.TitleChild;
-import rp3.auna.bean.Models.TitleParent;
-import rp3.auna.bean.TitleMenu;
+import rp3.auna.bean.models.TitleChild;
+import rp3.auna.bean.models.TitleParent;
 
 /**
  * Created by Jesus Villa on 23/01/2018.

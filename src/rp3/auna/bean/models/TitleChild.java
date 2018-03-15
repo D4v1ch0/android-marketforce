@@ -1,4 +1,4 @@
-package rp3.auna.bean.Models;
+package rp3.auna.bean.models;
 
 /**
  * Created by reale on 23/11/2016.

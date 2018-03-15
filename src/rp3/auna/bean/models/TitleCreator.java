@@ -1,4 +1,4 @@
-package rp3.auna.bean.Models;
+package rp3.auna.bean.models;
 
 import android.content.Context;
 import android.content.res.TypedArray;
