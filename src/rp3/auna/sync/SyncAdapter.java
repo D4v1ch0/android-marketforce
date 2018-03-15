@@ -212,11 +212,11 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         result = rp3.auna.sync.Agente.executeSyncAgentes(db);
                         addDefaultMessage(result);
 
-                        result = rp3.auna.sync.Marcaciones.executeSyncPermisosPorAprobar(db);
-                        addDefaultMessage(result);
+                       /* result = rp3.auna.sync.Marcaciones.executeSyncPermisosPorAprobar(db);
+                        addDefaultMessage(result);*/
                     }
 
-                    if (result == SYNC_EVENT_SUCCESS) {
+                    /*if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.auna.sync.Tareas.executeSync(db);
                         addDefaultMessage(result);
                     }
@@ -228,27 +228,28 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                             result = rp3.auna.sync.Tareas.executeSyncTareaActualizacion(db, tar.getIdTarea());
                             addDefaultMessage(result);
                         }
-                    }
+                    }*/
 
-                    if (result == SYNC_EVENT_SUCCESS) {
+                    /*if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.auna.sync.Canal.executeSync(db);
                         addDefaultMessage(result);
-                    }
+                    }*/
 
-                    if (result == SYNC_EVENT_SUCCESS) {
+                    /*if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.auna.sync.TipoCliente.executeSync(db);
                         addDefaultMessage(result);
-                    }
+                    }*/
 
                     if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.auna.sync.Agente.executeSyncParametros(db);
                         addDefaultMessage(result);
                     }
 
+                    /*
                     if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.auna.sync.Calendario.executeSync(db);
                         addDefaultMessage(result);
-                    }
+                    }*/
 
                     if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.auna.sync.Agente.executeSyncGetDeviceId(getContext());
@@ -812,6 +813,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         addDefaultMessage(result);
                     }
 
+                    /*
                     if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.auna.sync.Tareas.executeSync(db);
                         addDefaultMessage(result);
@@ -825,8 +827,9 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                             addDefaultMessage(result);
                         }
                     }
+                    */
 
-                    if (result == SYNC_EVENT_SUCCESS) {
+                    /*if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.auna.sync.Canal.executeSync(db);
                         addDefaultMessage(result);
                     }
@@ -841,6 +844,8 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         addDefaultMessage(result);
                     }
 
+                    */
+                    /*
                     if(PreferenceManager.getBoolean(Contants.KEY_MODULO_POS, true)) {
                         if (result == SYNC_EVENT_SUCCESS) {
                             result = rp3.auna.sync.Pedido.executeSyncPendientes(db);
@@ -908,10 +913,10 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                                 SyncAudit.insert(SYNC_TYPE_DOC_REF, SYNC_EVENT_SUCCESS);
                             addDefaultMessage(result);
                         }
-                    }
+                    }*/
 
                     //Modulo Oportunidades
-                    if(PreferenceManager.getBoolean(Contants.KEY_MODULO_OPORTUNIDADES, true)) {
+                   /* if(PreferenceManager.getBoolean(Contants.KEY_MODULO_OPORTUNIDADES, true)) {
                         if (result == SYNC_EVENT_SUCCESS) {
                             result = rp3.auna.sync.Etapa.executeSyncTipos(db);
                             addDefaultMessage(result);
@@ -936,7 +941,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                             result = rp3.auna.sync.Oportunidad.executeSync(db);
                             addDefaultMessage(result);
                         }
-                    }
+                    }*/
 
                     if(PreferenceManager.getBoolean(Contants.KEY_MODULO_MARCACIONES, true)) {
                         if (result == SYNC_EVENT_SUCCESS) {
@@ -1281,7 +1286,13 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
             }
             db.endTransaction();
 			db.close();
-
+			Log.d(TAG,"finally syncdadapter...");
+            String cargo = PreferenceManager.getString(Contants.KEY_CARGO,null);
+            if(cargo==null){
+                Log.d(TAG,"el cargo es null...");
+            }else{
+                Log.d(TAG,"el cargo es:"+cargo);
+            }
 			notifySyncFinish();
 		}								
 	}

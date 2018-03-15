@@ -1,5 +1,6 @@
 package rp3.auna;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,6 +11,8 @@ import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.NestedScrollView;
@@ -36,6 +39,12 @@ import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
 import com.google.android.gms.common.api.Status;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -46,6 +55,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 import rp3.app.DialogTimePickerChangeListener;
 import rp3.app.DialogTimePickerFragment;
 import rp3.auna.db.Contract;
@@ -56,9 +68,17 @@ import rp3.auna.sync.SyncAdapter;
 import rp3.auna.util.location.LocationProvider;
 import rp3.auna.util.session.SessionManager;
 import rp3.auna.utils.Utils;
+import rp3.auna.webservices.ObtenerLlamadaClient;
+import rp3.auna.webservices.ObtenerVisitaClient;
 import rp3.configuration.PreferenceManager;
 import rp3.content.SimpleGeneralValueAdapter;
+import rp3.data.MessageCollection;
 import rp3.data.models.GeneralValue;
+import rp3.sync.SyncUtils;
+import rp3.util.ConnectionUtils;
+import rp3.util.Convert;
+
+import static rp3.auna.Contants.GENERAL_VALUE_CODE_VISITA_PENDIENTE;
 
 public class CrearVisitaActivity extends ActionBarActivity implements DialogTimePickerChangeListener,
         rp3.auna.util.location.LocationProvider.LocationCallback{
@@ -93,8 +113,8 @@ public class CrearVisitaActivity extends ActionBarActivity implements DialogTime
     private CaldroidFragment caldroidFragment;
     private SimpleDateFormat format1 = new SimpleDateFormat(Contants.DATE_TIME_FORMAT_HH_MM);
     private int idAgente;
-    private long id;
-    private int idProspecto;
+    private long id = 0;
+    private int idProspecto = 0;
     private String prospecto;
     private int estado;
     private String direccion;
@@ -291,11 +311,11 @@ public class CrearVisitaActivity extends ActionBarActivity implements DialogTime
         visita.setMotivoReprogramacionValue(null);//Indisponibilidad del cliente
         visita.setObservacion(null);
         visita.setMotivoVisitaTabla(Contants.GENERAL_TABLE_ESTADOS_VISITA);
-        visita.setMotivoVisitaValue(Contants.GENERAL_VALUE_CODE_VISITA_PENDIENTE);
+        visita.setMotivoVisitaValue(GENERAL_VALUE_CODE_VISITA_PENDIENTE);
         visita.setReferidoTabla(Contants.GENERAL_TABLE_ESTADOS_CONSULTA_REFERIDO);
         visita.setReferidoValue(Contants.GENERAL_VALUE_CONSULTA_REFERIDO_NO);
         visita.setVisitaTabla(Contants.GENERAL_TABLE_ESTADOS_VISITA);
-        visita.setVisitaValue(Contants.GENERAL_VALUE_CODE_VISITA_PENDIENTE);
+        visita.setVisitaValue(GENERAL_VALUE_CODE_VISITA_PENDIENTE);
         visita.setTiempoCode(tiempoCode);
         visita.setDuracionCode(duracionCode);
         if(service==3){
@@ -540,7 +560,97 @@ public class CrearVisitaActivity extends ActionBarActivity implements DialogTime
                     public void onClick(DialogInterface dialog, int which) {
                         try{
                             if(validateCurrentTime()){
-                                saveData();
+                                if(validateCurrentProspectTime()){
+                                    if (ConnectionUtils.isNetAvailable(CrearVisitaActivity.this)) {
+                                        //region Con Internet
+                                        Date fechaProgramada = fechaLlamada.getTime();
+                                        final ProgressDialog progressDialog = new ProgressDialog(CrearVisitaActivity.this,R.style.AppCompatAlertDialogStyle);
+                                        progressDialog.setCancelable(false);
+                                        progressDialog.setTitle(R.string.appname_marketforce);
+                                        progressDialog.setMessage("Validando...");
+                                        progressDialog.show();
+                                        new ObtenerVisitaClient(CrearVisitaActivity.this, new Callback() {
+                                            Handler mHandler = new Handler(Looper.getMainLooper());
+                                            @Override
+                                            public void onFailure(Call call, IOException e) {
+                                                Log.d(TAG,"onFailure...");
+                                                progressDialog.dismiss();
+                                                mHandler.post(() -> {
+                                                    e.printStackTrace();
+                                                    Toast.makeText(CrearVisitaActivity.this, R.string.message_error_sync_connection_http_error, Toast.LENGTH_SHORT).show();
+                                                });
+                                            }
+
+                                            @Override
+                                            public void onResponse(Call call, Response response) throws IOException {
+                                                Log.d(TAG,"onResponse...");
+                                                progressDialog.dismiss();
+                                                final String rpta = response.body().string();
+                                                Log.d(TAG,"Response:"+rpta);
+                                                mHandler.post(()->{
+                                                    if(response.isSuccessful()){
+                                                        Log.d(TAG,"isSuccessful...");
+                                                        try{
+                                                            JSONArray agendas = new JSONArray(rpta);
+                                                            if(agendas!=null){
+                                                                if(agendas.length()==0){
+                                                                    saveData();
+                                                                }else{
+                                                                    for (int i=0;i<agendas.length();i++){
+                                                                        JSONObject jsonObject = agendas.getJSONObject(i);
+                                                                        String value = jsonObject.getString("VisitaValue");
+                                                                        Date fecha = Convert.getDateFromDotNetTicks(jsonObject.getLong("FechaVisita"));
+                                                                        Calendar calendar = Calendar.getInstance();
+                                                                        calendar.setTime(fechaProgramada);
+                                                                        int day = calendar.get(Calendar.DAY_OF_YEAR);
+                                                                        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                                                                        int minute = calendar.get(Calendar.MINUTE);
+                                                                        Calendar calendar1 = Calendar.getInstance();
+                                                                        calendar1.setTime(fecha);
+                                                                        boolean sameDay = calendar1.get(Calendar.DAY_OF_YEAR) == day;
+                                                                        if(sameDay){
+                                                                            if(value.equalsIgnoreCase(GENERAL_VALUE_CODE_VISITA_PENDIENTE)){
+                                                                                int hora = calendar1.get(Calendar.HOUR_OF_DAY);
+                                                                                int minuto = calendar1.get(Calendar.MINUTE);
+                                                                                if(hora == hour && minute == minuto){
+                                                                                    Log.d(TAG,"Hora y minutos son iguales...ahora verificar que sean al mismo cliente...");
+                                                                                    if(idProspecto > 0){
+                                                                                        //Prospecto tiene IdProspecto de Servidor
+                                                                                        if(jsonObject.getInt("IdCliente")==idProspecto){
+                                                                                            Toast.makeText(CrearVisitaActivity.this, "Ya existe una visita programada para ese prospecto a la misma hora. Sincronizar el aplicativo.", Toast.LENGTH_LONG).show();
+                                                                                            //state[0] =  false;
+                                                                                            Log.d(TAG,"Mismo CLiente retornar false...");
+                                                                                            break;
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        if(i==agendas.length()-1){
+                                                                            saveData();
+                                                                        }
+                                                                    }
+                                                                }
+
+                                                            }else {
+                                                                saveData();
+                                                            }
+                                                        }catch (JSONException e){
+                                                            e.printStackTrace();
+                                                            saveData();
+                                                        }
+                                                    }else{
+                                                        Log.d(TAG,"No is sucesssful...");
+                                                        Toast.makeText(CrearVisitaActivity.this, rpta, Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                            }
+                                        }).obtener(idAgente, Convert.getDotNetTicksFromDate(fechaProgramada));
+                                        //endregion
+                                    }else{
+                                        saveData();
+                                    }
+                                }
                             }
                         }catch (Exception e){
                             e.printStackTrace();
@@ -552,6 +662,158 @@ public class CrearVisitaActivity extends ActionBarActivity implements DialogTime
                 .setCancelable(false)
                 .create();
         dialog.show();
+
+    }
+
+    private boolean validateCurrentProspectTime(){
+        final boolean[] state = {true};
+        Date fechaProgramada = fechaLlamada.getTime();
+        //En el día, No puede grabar en la misma hora al mismo cliente -> Ya existe una visita/llamada para ese cliente a la misma hora
+        //region Sin Internet
+        List<VisitaVta> result = VisitaVta.getAll(Utils.getDataBase(this));
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fechaProgramada);
+        int day = calendar.get(Calendar.DAY_OF_YEAR);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        for (VisitaVta llamadaVta:result){
+            Calendar calendar1 = Calendar.getInstance();
+            calendar1.setTime(llamadaVta.getFechaVisita());
+            boolean sameDay = calendar1.get(Calendar.DAY_OF_YEAR) == day;
+            if(sameDay){
+                Log.d(TAG,"sameDay...");
+                if(llamadaVta.getVisitaValue().equalsIgnoreCase(GENERAL_VALUE_CODE_VISITA_PENDIENTE)){
+                    int hora = calendar1.get(Calendar.HOUR_OF_DAY);
+                    int minuto = calendar1.get(Calendar.MINUTE);
+                    if(hora == hour && minute == minuto ){
+                        Log.d(TAG,"Hora y minutos son iguales...ahora verificar que sean al mismo cliente...");
+                        if(llamadaVta.getInsertado()==2){
+                            if(idProspecto > 0){
+                                //Prospecto tiene IdProspecto de Servidor
+                                if(llamadaVta.getIdCliente()==idProspecto){
+                                    Toast.makeText(CrearVisitaActivity.this, "Ya existe una visita programada para ese prospecto a la misma hora. Sincronizar el aplicativo.", Toast.LENGTH_LONG).show();
+                                    state[0] =  false;
+                                    Log.d(TAG,"Mismo CLiente retornar false...");
+                                    break;
+                                }
+                            }else{
+                                //Sigue en bd local
+                                if(llamadaVta.getIdCliente()==id){
+                                    Toast.makeText(CrearVisitaActivity.this, "Ya existe una visita programada para ese prospecto a la misma hora. Sincronizar el aplicativo.", Toast.LENGTH_LONG).show();
+                                    state[0] =  false;
+                                    Log.d(TAG,"Mismo CLiente retornar false...");
+                                    break;
+                                }
+                            }
+                        }else{
+                            if(idProspecto > 0){
+                                //Prospecto tiene IdProspecto de Servidor
+                                if(llamadaVta.getIdCliente()==idProspecto){
+                                    Toast.makeText(CrearVisitaActivity.this, "Ya existe una visita programada para ese prospecto a la misma hora. Sincronizar el aplicativo.", Toast.LENGTH_LONG).show();
+                                    state[0] =  false;
+                                    Log.d(TAG,"Mismo CLiente retornar false...");
+                                    break;
+                                }
+                            }else{
+                                //Sigue en bd local
+                                if(llamadaVta.getIdCliente()==id){
+                                    Toast.makeText(CrearVisitaActivity.this, "Ya existe una visita programada para ese prospecto a la misma hora. Sincronizar el aplicativo.", Toast.LENGTH_LONG).show();
+                                    state[0] =  false;
+                                    Log.d(TAG,"Mismo CLiente retornar false...");
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+
+        }
+        //endregion
+        /*if (ConnectionUtils.isNetAvailable(this)) {
+            if(state[0]){
+                //region Con Internet
+                final ProgressDialog progressDialog = new ProgressDialog(this,R.style.AppCompatAlertDialogStyle);
+                progressDialog.setCancelable(false);
+                progressDialog.setTitle(R.string.appname_marketforce);
+                progressDialog.setMessage("Validando...");
+                progressDialog.show();
+                new ObtenerVisitaClient(this, new Callback() {
+                    Handler mHandler = new Handler(Looper.getMainLooper());
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.d(TAG,"onFailure...");
+                        progressDialog.dismiss();
+                        mHandler.post(() -> {
+                            e.printStackTrace();
+                            Toast.makeText(CrearVisitaActivity.this, R.string.message_error_sync_connection_http_error, Toast.LENGTH_SHORT).show();
+                        });
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        Log.d(TAG,"onResponse...");
+                        progressDialog.dismiss();
+                        final String rpta = response.body().string();
+                        Log.d(TAG,"Response:"+rpta);
+                        mHandler.post(()->{
+                            if(response.isSuccessful()){
+                                Log.d(TAG,"isSuccessful...");
+                                try{
+                                    JSONArray agendas = new JSONArray(rpta);
+                                    if(agendas!=null){
+                                        for (int i=0;i<agendas.length();i++){
+                                            JSONObject jsonObject = agendas.getJSONObject(i);
+                                            String value = jsonObject.getString("VisitaValue");
+                                            Date fecha = Convert.getDateFromDotNetTicks(jsonObject.getLong("FechaVisita"));
+                                            Calendar calendar = Calendar.getInstance();
+                                            calendar.setTime(fechaProgramada);
+                                            int day = calendar.get(Calendar.DAY_OF_YEAR);
+                                            int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                                            int minute = calendar.get(Calendar.MINUTE);
+                                            Calendar calendar1 = Calendar.getInstance();
+                                            calendar1.setTime(fecha);
+                                            boolean sameDay = calendar1.get(Calendar.DAY_OF_YEAR) == day;
+                                            if(sameDay){
+                                                if(value.equalsIgnoreCase(GENERAL_VALUE_CODE_VISITA_PENDIENTE)){
+                                                    int hora = calendar1.get(Calendar.HOUR_OF_DAY);
+                                                    int minuto = calendar1.get(Calendar.MINUTE);
+                                                    if(hora == hour && minute == minuto){
+                                                        Log.d(TAG,"Hora y minutos son iguales...ahora verificar que sean al mismo cliente...");
+                                                            if(idProspecto > 0){
+                                                                //Prospecto tiene IdProspecto de Servidor
+                                                                if(jsonObject.getInt("IdCliente")==idProspecto){
+                                                                    Toast.makeText(CrearVisitaActivity.this, "Ya existe una visita pendiente programada para ese prospecto a la misma hora", Toast.LENGTH_SHORT).show();
+                                                                    state[0] =  false;
+                                                                    Log.d(TAG,"Mismo CLiente retornar false...");
+                                                                    break;
+                                                                }
+                                                            }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }catch (JSONException e){
+                                    e.printStackTrace();
+                                }
+                            }else{
+                                Log.d(TAG,"No is sucesssful...");
+                                Toast.makeText(CrearVisitaActivity.this, rpta, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        if(response.isSuccessful()){
+
+                        }
+                    }
+                }).obtener(idAgente, Convert.getDotNetTicksFromDate(fechaProgramada));
+                //endregion
+            }
+        }*/
+
+
+        return state[0];
 
     }
 

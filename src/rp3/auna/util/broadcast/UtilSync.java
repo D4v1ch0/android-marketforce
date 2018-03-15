@@ -46,7 +46,7 @@ public class UtilSync {
     }
     public  void requestSyncMain(Bundle settingsBundle) {
         if (ConnectionUtils.isNetAvailable(context)) {
-            PreferenceManager.close();
+            //PreferenceManager.close();
             SyncUtils.requestSync(settingsBundle);
             //lockRotation();
         } else {

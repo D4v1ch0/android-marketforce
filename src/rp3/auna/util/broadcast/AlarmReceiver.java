@@ -109,12 +109,18 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
                                     Log.d(TAG,"Tiene una visita habierta en gestion...");
                                 }else{
                                     Log.d(TAG,"No tiene una visita en gestion notificar cn normalidad...");
-                                    VisitaVta visitaVta = VisitaVta.getVisitaId(DataBase.newDataBase(rp3.auna.db.DbOpenHelper.class),idVisita);
+                                    sendAlertAgenda(idVisita+100,context,"Alerta de Visita",alarmJvs.getMensaje());
+                                    /*VisitaVta visitaVta = VisitaVta.getVisitaId(DataBase.newDataBase(rp3.auna.db.DbOpenHelper.class),idVisita);
                                     if(visitaVta!=null){
+                                        Log.d(TAG,"Si hay una visita...");
                                         if(visitaVta.getVisitaValue().equalsIgnoreCase(Contants.GENERAL_VALUE_CODE_VISITA_PENDIENTE)){
                                             sendAlertAgenda(idVisita+100,context,"Alerta de Visita",alarmJvs.getMensaje());
+                                        }else{
+                                            Log.d(TAG,"La visita ya no esta pendiente...");
                                         }
-                                    }
+                                    }else{
+                                        Log.d(TAG,"No hay visita con ese Id...");
+                                    }*/
                                 }
 
                             }
@@ -124,13 +130,19 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
                             else if(alarmJvs.getType()==2){
                                 Log.d(TAG,"type == 2 Se debe alertar que una Llamada esta a punto de comenzar...");
                                 int idLlamada = (alarmJvs.getIdentificador()-200);
-
-                                LlamadaVta llamadaVta = LlamadaVta.getLlamadaId(DataBase.newDataBase(rp3.auna.db.DbOpenHelper.class),idLlamada);
+                                sendAlertAgenda((idLlamada)+200,context,"Alerta de Llamada",alarmJvs.getMensaje());
+                                /*LlamadaVta llamadaVta = LlamadaVta.getLlamadaId(DataBase.newDataBase(rp3.auna.db.DbOpenHelper.class),idLlamada);
                                 if(llamadaVta!=null){
+                                    Log.d(TAG,"llamada!=null...");
                                     if(llamadaVta.getLlamadoValue().equalsIgnoreCase(Contants.GENERAL_VALUE_CODE_LLAMADA_PENDIENTE)){
+                                        Log.d(TAG,"Llamada esta aun pendiente...");
                                         sendAlertAgenda((idLlamada)+200,context,"Alerta de Llamada",alarmJvs.getMensaje());
+                                    }else{
+                                        Log.d(TAG,"Llamada ya no esta pendiente....");
                                     }
-                                }
+                                }else{
+                                    Log.d(TAG,"llamada == null...");
+                                }*/
                             }
                             //endregion
                         }else{
@@ -143,8 +155,6 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
                     }
                 }
             }
-
-
         }catch (Exception e){
             Log.d(TAG,"exception");
             e.printStackTrace();

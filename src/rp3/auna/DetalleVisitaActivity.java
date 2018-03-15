@@ -88,8 +88,8 @@ public class DetalleVisitaActivity extends AppCompatActivity {
         }
     }
 
-    private void setupViewPager(CotizacionVisita inicial,CotizacionVisita _final,SolicitudMovil solicitudMovil,RegistroPago registroPago) {
-        tabsDetalleAdapter = new TabsDetalleAdapter(getSupportFragmentManager(), inicial, _final,solicitudMovil,registroPago);
+    private void setupViewPager(CotizacionVisita inicial,CotizacionVisita _final,SolicitudMovil solicitudMovil,RegistroPago registroPago,Bundle todoPago) {
+        tabsDetalleAdapter = new TabsDetalleAdapter(getSupportFragmentManager(), inicial, _final,solicitudMovil,registroPago,todoPago);
         pager.setAdapter(tabsDetalleAdapter);
         tabLayout.setupWithViewPager(pager);
     }
@@ -251,7 +251,14 @@ public class DetalleVisitaActivity extends AppCompatActivity {
                 registroPago = visitaVtaDetalle.getPago();
             }
             //setear data inicial y final
-            setupViewPager(_inicial,_final,solicitudMovil,registroPago);
+            Bundle todoPago = null;
+            if(visitaVtaDetalle.getTipoVenta()!=null){
+                if(visitaVtaDetalle.getTipoVenta().trim().length()>0){
+                    todoPago = new Bundle();
+                    todoPago.putString("FormaPago",visitaVtaDetalle.getTipoVenta());
+                }
+            }
+            setupViewPager(_inicial,_final,solicitudMovil,registroPago,todoPago);
 
         }else{
             Log.d(TAG,"visitaVtaDetalle==null...");

@@ -47,6 +47,7 @@ public class GeneralAdapter extends RecyclerView.Adapter<GeneralAdapter.GeneralV
     @Override
     public void onBindViewHolder(final GeneralAdapter.GeneralViewHolder viewHolder, final int position) {
         viewHolder.tvDescripcion.setText(_list.get(position));
+        viewHolder.radioButton.setChecked(position == mSelectedItem);
     }
 
     @Override
@@ -83,16 +84,17 @@ public class GeneralAdapter extends RecyclerView.Adapter<GeneralAdapter.GeneralV
                     _callback.onSelected(_list.get(mSelectedItem),getAdapterPosition());
                 }
             };
-            radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            radioButton.setOnClickListener(clickListener);
+            /*radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if(isChecked){
+                    if(isChecked) {
                         mSelectedItem = getAdapterPosition();
                         notifyItemRangeChanged(0, _list.size());
-                        _callback.onSelected(_list.get(mSelectedItem),getAdapterPosition());
+                        _callback.onSelected(_list.get(mSelectedItem), getAdapterPosition());
                     }
                 }
-            });
+            });*/
             //tvDescripcion.setOnClickListener(clickListener);
         }
     }

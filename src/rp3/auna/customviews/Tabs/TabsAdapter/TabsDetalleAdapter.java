@@ -1,5 +1,6 @@
 package rp3.auna.customviews.Tabs.TabsAdapter;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -30,13 +31,13 @@ public class TabsDetalleAdapter extends FragmentStatePagerAdapter {
     private DocumentoFragment documentoFragment;
 
     public TabsDetalleAdapter(FragmentManager fragmentManager, CotizacionVisita listInicio, CotizacionVisita listFinal,
-                              SolicitudMovil solicitudMovil,RegistroPago registroPago){
+                              SolicitudMovil solicitudMovil,RegistroPago registroPago,Bundle todoPago){
         super(fragmentManager);
         Log.d(TAG,"contructor...");
         cotizacionInicialFragment = CotizacionFragment.newInstance(listInicio);
         cotizacionFinalFragment = CotizacionFragment.newInstance(listFinal);
         solicitudFragment = SolicitudFragment.newInstance(solicitudMovil);
-        pagoFragment = PagoFragment.newInstance(registroPago);
+        pagoFragment = PagoFragment.newInstance(registroPago,todoPago);
         documentoFragment = new DocumentoFragment();
         mFragmentTitleList.add("Cotización Inicial");
         mFragmentTitleList.add("Solicitud");

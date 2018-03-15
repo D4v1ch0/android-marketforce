@@ -33,10 +33,14 @@ public class GeneralValueDialog extends DialogFragment {
     private static final String TAG = GeneralValueDialog.class.getSimpleName();
     @BindView(R.id.tvLlamada)TextView tvTitulo;
     @BindView(R.id.rvListGeneral)RecyclerView recyclerView;
+    @BindView(R.id.btnAceptarGeneralValue)Button btnAceptar;
     private callbackGeneralSelected callBack;
     private RecyclerView.LayoutManager llmanager;
     private GeneralAdapter adapter;
     private int selected = -1;
+    //Nuevas variantes
+    private String selectedGeneral = null;
+    private int positionGeneral = -1;
 
     public AlertDialog createCustomDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -53,13 +57,37 @@ public class GeneralValueDialog extends DialogFragment {
         adapter=new GeneralAdapter(getActivity(), new GeneralAdapter.OnSelectedListener() {
             @Override
             public void onSelected(String selected, int position) {
-                callBack.onSelected(selected,position);
-                dismiss();
+                if(getArguments()!=null){
+                    if(getArguments().getString("Aceptar")==null){
+                        callBack.onSelected(selected,position);
+                        dismiss();
+                    }else{
+                        selectedGeneral = selected;
+                        positionGeneral = position;
+                    }
+                }
             }
         });
         adapter.addMoreItems(list);
         recyclerView.setAdapter(adapter);
+        configure();
         return builder.create();
+    }
+
+    private void configure(){
+        if(getArguments()!=null){
+            if(getArguments().getString("Aceptar")!=null){
+                btnAceptar.setVisibility(View.VISIBLE);
+                btnAceptar.setOnClickListener(v -> {
+                    if(selectedGeneral==null && positionGeneral ==-1){
+                        Toast.makeText(getActivity(), "Seleccione un motivo porfavor", Toast.LENGTH_SHORT).show();
+                    }else{
+                        callBack.onSelected(selectedGeneral,positionGeneral);
+                        dismiss();
+                    }
+                });
+            }
+        }
     }
 
     public static GeneralValueDialog newInstance(callbackGeneralSelected callBack){
@@ -76,6 +104,8 @@ public class GeneralValueDialog extends DialogFragment {
     public interface callbackGeneralSelected{
         void onSelected(String selected,int position);
     }
+
+    //region Ciclo de Vida
 
     @NonNull
     @Override
@@ -120,4 +150,6 @@ public class GeneralValueDialog extends DialogFragment {
         Log.d(TAG,"onResume...");
 
     }
+
+    //endregion
 }

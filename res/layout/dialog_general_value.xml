@@ -36,5 +36,23 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/llAddress"
+        android:paddingRight="10dp"
+        android:gravity="right"
+        android:orientation="horizontal">
+        <Button
+            android:visibility="gone"
+            android:id="@+id/btnAceptarGeneralValue"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/button_padding"
+            android:text="ACEPTAR"
+            android:textColor="?attr/colorPrimary" />
+    </LinearLayout>
+
 
 </LinearLayout>

@@ -72,16 +72,34 @@ public class StartActivity extends rp3.app.StartActivity{
 		super.onCreate(savedInstanceState);
         Log.d(TAG,"onCreate...");
         try{
-            if(PreferenceManager.getBoolean(Contants.KEY_FIRST_TIME, true) || PreferenceManager.getBoolean(Contants.KEY_FIRST_TIME, true))
+            if(PreferenceManager.getBoolean(Contants.KEY_FIRST_TIME, true) || PreferenceManager.getBoolean(Contants.KEY_SECOND_TIME, true))
             {
-                Log.d(TAG,"KEY_FIRST_TIME || KEY_FIRST_TIME...");
+                Log.d(TAG,"KEY_FIRST_TIME || KEY_SECOND_TIME...");
+                Log.d(TAG,"Primera vez, iniciarlizar server activity...");
+                //Configuration.reinitializeConfiguration(context, DbOpenHelper.class);
                 startActivity(new Intent(this, ServerActivity.class));
                 finish();
             }
             else{
+                Log.d(TAG,"Tercera vez que abre la aplicacion..,");
                 Configuration.reinitializeConfiguration(context, DbOpenHelper.class);
-                Log.d(TAG,"!KEY_FIRST_TIME || !KEY_FIRST_TIME...");
+                /*if(PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"").equalsIgnoreCase(Session.getUser().getLogonName()) &&
+                        PreferenceManager.getString(Constants.KEY_LAST_PASS,"").equalsIgnoreCase(Session.getUser().getPassword())){
+                    if(Session.IsLogged()){
+                        Log.d(TAG,"Session is Loggeg...");
+                        Configuration.TryInitializeConfiguration(context, DbOpenHelper.class);
+                    }else{
+                        Log.d(TAG,"No ha iniciado session...");
+                        Configuration.reinitializeConfiguration(context, DbOpenHelper.class);
+                    }
 
+                    Log.d(TAG,"Ya Hay uno logeado...");
+                }else{
+                    Log.d(TAG,"No hay nadie logeado reinitizaciliar...");
+                    Configuration.reinitializeConfiguration(context, DbOpenHelper.class);
+                }
+                Log.d(TAG,"!KEY_FIRST_TIME || !KEY_FIRST_TIME...");
+                */
             }
 
             //Configuration.reinitializeConfiguration(context, DbOpenHelper.class);
@@ -117,7 +135,7 @@ public class StartActivity extends rp3.app.StartActivity{
 				
 		Random r = new Random();
 		int i1 = r.nextInt(5);
-		int minIntTrack = PreferenceManager.getInt(Contants.KEY_ALARMA_INTERVALO,2);
+		int minIntTrack = PreferenceManager.getInt(Contants.KEY_ALARMA_INTERVALO,5);
 		Log.d(TAG,"Minutos de intervalo para el tracking:"+minIntTrack);
 		AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
 		//am.cancel(pi); // cancel any existing alarms
@@ -147,6 +165,7 @@ public class StartActivity extends rp3.app.StartActivity{
             }
         }else{
             SessionManager.getInstance(this).removeVisitaSession();
+            //region innecesario
             /*File file2 = new File(Environment.getExternalStorageDirectory() + "/testM.db");
         if(file2.exists() && !PreferenceManager.getBoolean(Contants.KEY_DATABASE_RESTORE, false))
         {
@@ -155,13 +174,13 @@ public class StartActivity extends rp3.app.StartActivity{
         }
         else
             PreferenceManager.setValue(Contants.KEY_DATABASE_RESTORE, true);*/
+
             String proof = PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"");
             String proof2 = PreferenceManager.getString(Constants.KEY_LAST_PASS,"");
             String peer = Session.getUser().getLogonName();
             String peer2 = Session.getUser().getPassword();
             Canal.getCanal(getDataBase(), "1");
-
-
+//endregion
 
             //region Validar Login Antiguo
         /*if(!PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"").equalsIgnoreCase(Session.getUser().getLogonName()) ||
@@ -229,86 +248,88 @@ public class StartActivity extends rp3.app.StartActivity{
         }*/
             //endregion
 
+            if(PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"").equalsIgnoreCase(Session.getUser().getLogonName()) &&
+                    PreferenceManager.getString(Constants.KEY_LAST_PASS,"").equalsIgnoreCase(Session.getUser().getPassword())){
+                Log.d(TAG,"Values Login y pass == SessionUser Logon y Pass...");
+                //region Validar Login Nuevo
+                //region DB TbGeneral
+               /* Agenda.deleteAll(getDataBase(), Contract.Agenda.TABLE_NAME);
+                Agenda.AgendaExt.deleteAll(getDataBase(), Contract.AgendaExt.TABLE_NAME);
+                Tarea.deleteAll(getDataBase(), Contract.Tareas.TABLE_NAME);
+                Cliente.deleteAll(getDataBase(), Contract.Cliente.TABLE_NAME);
+                Cliente.ClientExt.deleteAll(getDataBase(), Contract.ClientExt.TABLE_NAME);
+                ClienteDireccion.deleteAll(getDataBase(), Contract.ClienteDireccion.TABLE_NAME);*/
+                Contacto.deleteAll(getDataBase(), Contract.Contacto.TABLE_NAME);
+                Contacto.ContactoExt.deleteAll(getDataBase(), Contract.ContactoExt.TABLE_NAME);
+                Actividad.deleteAll(getDataBase(), Contract.Actividades.TABLE_NAME);
+                AgendaTarea.deleteAll(getDataBase(), Contract.AgendaTarea.TABLE_NAME);
+                AgendaTareaActividades.deleteAll(getDataBase(), Contract.AgendaTareaActividades.TABLE_NAME);
+                Ubicacion.deleteAll(getDataBase(), Contract.Ubicacion.TABLE_NAME);
+                /*Pedido.deleteAll(getDataBase(), Contract.Pedido.TABLE_NAME);
+                Pedido.PedidoExt.deleteAll(getDataBase(), Contract.PedidoExt.TABLE_NAME);
+                PedidoDetalle.deleteAll(getDataBase(), Contract.PedidoDetalle.TABLE_NAME);
+                Pago.deleteAll(getDataBase(), Contract.Pago.TABLE_NAME);
+                Producto.deleteAll(getDataBase(), Contract.Producto.TABLE_NAME);
+                Producto.ProductoExt.deleteAll(getDataBase(), Contract.ProductoExt.TABLE_NAME);
+                ControlCaja.deleteAll(getDataBase(), Contract.ControlCaja.TABLE_NAME);*/
+                //endregion
 
-            //region Validar Login Nuevo
-            //region DB TbGeneral
-            Agenda.deleteAll(getDataBase(), Contract.Agenda.TABLE_NAME);
-            Agenda.AgendaExt.deleteAll(getDataBase(), Contract.AgendaExt.TABLE_NAME);
-            Tarea.deleteAll(getDataBase(), Contract.Tareas.TABLE_NAME);
-            Cliente.deleteAll(getDataBase(), Contract.Cliente.TABLE_NAME);
-            Cliente.ClientExt.deleteAll(getDataBase(), Contract.ClientExt.TABLE_NAME);
-            ClienteDireccion.deleteAll(getDataBase(), Contract.ClienteDireccion.TABLE_NAME);
-            Contacto.deleteAll(getDataBase(), Contract.Contacto.TABLE_NAME);
-            Contacto.ContactoExt.deleteAll(getDataBase(), Contract.ContactoExt.TABLE_NAME);
-            Actividad.deleteAll(getDataBase(), Contract.Actividades.TABLE_NAME);
-            AgendaTarea.deleteAll(getDataBase(), Contract.AgendaTarea.TABLE_NAME);
-            AgendaTareaActividades.deleteAll(getDataBase(), Contract.AgendaTareaActividades.TABLE_NAME);
-            Ubicacion.deleteAll(getDataBase(), Contract.Ubicacion.TABLE_NAME);
-            Pedido.deleteAll(getDataBase(), Contract.Pedido.TABLE_NAME);
-            Pedido.PedidoExt.deleteAll(getDataBase(), Contract.PedidoExt.TABLE_NAME);
-            PedidoDetalle.deleteAll(getDataBase(), Contract.PedidoDetalle.TABLE_NAME);
-            Pago.deleteAll(getDataBase(), Contract.Pago.TABLE_NAME);
-            Producto.deleteAll(getDataBase(), Contract.Producto.TABLE_NAME);
-            Producto.ProductoExt.deleteAll(getDataBase(), Contract.ProductoExt.TABLE_NAME);
-            ControlCaja.deleteAll(getDataBase(), Contract.ControlCaja.TABLE_NAME);
-            //endregion
+                //region DB VentaNueva
+                ProspectoVtaDb.deleteAll(getDataBase(),Contract.ProspectoVta.TABLE_NAME,true);
+                rp3.auna.models.ventanueva.LlamadaVta.deleteAll(getDataBase(),Contract.LlamadaVta.TABLE_NAME,true);
+                rp3.auna.models.ventanueva.VisitaVta.deleteAll(getDataBase(),Contract.VisitaVta.TABLE_NAME,true);
+                List<AlarmJvs> list = AlarmJvs.getLlamadasAll(getDataBase());
+                for (AlarmJvs jvs:list){
+                    jvs.cancelAlarm(this);
+                    AlarmJvs.delete(getDataBase(),jvs);
+                }
+                List<AlarmJvs> list1 = AlarmJvs.getLlamadasSupervisorAll(getDataBase());
+                for (AlarmJvs jvs:list1){
+                    jvs.cancelAlarm(this);
+                    AlarmJvs.delete(getDataBase(),jvs);
+                }
+                List<AlarmJvs> list2 = AlarmJvs.getVisitasAll(getDataBase());
+                for (AlarmJvs jvs:list2){
+                    jvs.cancelAlarm(this);
+                    AlarmJvs.delete(getDataBase(),jvs);
+                }
+                List<AlarmJvs> list3 = AlarmJvs.getVisitasSupervisorAll(getDataBase());
+                for (AlarmJvs jvs:list3){
+                    jvs.cancelAlarm(this);
+                    AlarmJvs.delete(getDataBase(),jvs);
+                }
+                //endregion
 
-            //region DB VentaNueva
-            ProspectoVtaDb.deleteAll(getDataBase(),Contract.ProspectoVta.TABLE_NAME,true);
-            rp3.auna.models.ventanueva.LlamadaVta.deleteAll(getDataBase(),Contract.LlamadaVta.TABLE_NAME,true);
-            rp3.auna.models.ventanueva.VisitaVta.deleteAll(getDataBase(),Contract.VisitaVta.TABLE_NAME,true);
-            List<AlarmJvs> list = AlarmJvs.getLlamadasAll(getDataBase());
-            for (AlarmJvs jvs:list){
-                jvs.cancelAlarm(this);
-                AlarmJvs.delete(getDataBase(),jvs);
-            }
-            List<AlarmJvs> list1 = AlarmJvs.getLlamadasSupervisorAll(getDataBase());
-            for (AlarmJvs jvs:list1){
-                jvs.cancelAlarm(this);
-                AlarmJvs.delete(getDataBase(),jvs);
-            }
-            List<AlarmJvs> list2 = AlarmJvs.getVisitasAll(getDataBase());
-            for (AlarmJvs jvs:list2){
-                jvs.cancelAlarm(this);
-                AlarmJvs.delete(getDataBase(),jvs);
-            }
-            List<AlarmJvs> list3 = AlarmJvs.getVisitasSupervisorAll(getDataBase());
-            for (AlarmJvs jvs:list3){
-                jvs.cancelAlarm(this);
-                AlarmJvs.delete(getDataBase(),jvs);
-            }
-            //endregion
+                //GeopoliticalStructure.deleteAll(getDataBase(), rp3.data.models.Contract.GeopoliticalStructure.TABLE_NAME);
+                //GeopoliticalStructureExt.deleteAll(getDataBase(), rp3.data.models.Contract.GeopoliticalStructureExt.TABLE_NAME);
+                 /*PreferenceManager.setValue(Contants.KEY_IDAGENTE, 0);
+                 PreferenceManager.setValue(Contants.KEY_IDRUTA, 0);
+                 PreferenceManager.setValue(Contants.KEY_ES_SUPERVISOR, false);
+                 PreferenceManager.setValue(Contants.KEY_ES_AGENTE, false);
+                 PreferenceManager.setValue(Contants.KEY_ES_ADMINISTRADOR, false);
+                 PreferenceManager.setValue(Contants.KEY_CARGO, "");*/
+                //SyncAudit.clearAudit();
+                //endregion
 
-            //GeopoliticalStructure.deleteAll(getDataBase(), rp3.data.models.Contract.GeopoliticalStructure.TABLE_NAME);
-            //GeopoliticalStructureExt.deleteAll(getDataBase(), rp3.data.models.Contract.GeopoliticalStructureExt.TABLE_NAME);
-        /*PreferenceManager.setValue(Contants.KEY_IDAGENTE, 0);
-        PreferenceManager.setValue(Contants.KEY_IDRUTA, 0);
-        PreferenceManager.setValue(Contants.KEY_ES_SUPERVISOR, false);
-        PreferenceManager.setValue(Contants.KEY_ES_AGENTE, false);
-        PreferenceManager.setValue(Contants.KEY_ES_ADMINISTRADOR, false);
-        PreferenceManager.setValue(Contants.KEY_CARGO, "");*/
-            SyncAudit.clearAudit();
-            //endregion
+                PreferenceManager.setValue(Constants.KEY_LAST_LOGIN, Session.getUser().getLogonName());
+                PreferenceManager.setValue(Constants.KEY_LAST_PASS, Session.getUser().getPassword());
+                //List<Cliente> arf = Cliente.getCliente(getDataBase());
 
-            PreferenceManager.setValue(Constants.KEY_LAST_LOGIN, Session.getUser().getLogonName());
-            PreferenceManager.setValue(Constants.KEY_LAST_PASS, Session.getUser().getPassword());
-
-
-
-            //List<Cliente> arf = Cliente.getCliente(getDataBase());
-
-            Long days = SyncAudit.getDaysOfLastSync(SyncAdapter.SYNC_TYPE_GENERAL, SyncAdapter.SYNC_EVENT_SUCCESS);
-            if(days == null || days > 0){
-                Log.d(TAG,"days == null || days > 0...SYNC GENERAL");
-                Bundle bundle = new Bundle();
-                bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_GENERAL);
-                requestSync(bundle);
+                Long days = SyncAudit.getDaysOfLastSync(SyncAdapter.SYNC_TYPE_GENERAL, SyncAdapter.SYNC_EVENT_SUCCESS);
+                if(days == null || days > 0){
+                    Log.d(TAG,"days == null || days > 0...SYNC GENERAL");
+                    Bundle bundle = new Bundle();
+                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_GENERAL);
+                    requestSync(bundle);
+                }else{
+                    Log.d(TAG,"!days == null || days > 0... NO SYNC GENERAL NEXT ACTIVITY igual le meto");
+                    Bundle bundle = new Bundle();
+                    bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_GENERAL);
+                    requestSync(bundle);
+                    //callNextActivity();
+                }
             }else{
-                Log.d(TAG,"!days == null || days > 0... NO SYNC GENERAL NEXT ACTIVITY igual le meto");
-                Bundle bundle = new Bundle();
-                bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_GENERAL);
-                requestSync(bundle);
-                //callNextActivity();
+                callLoginActivity();
             }
         }
 
@@ -326,6 +347,12 @@ public class StartActivity extends rp3.app.StartActivity{
                 Log.d(TAG,"messages.hasErrorMessage()...");
                 if (Session.IsLogged()) {
                     Log.d(TAG,"Session.IsLogged()...");
+                    String cargo = PreferenceManager.getString(Contants.KEY_CARGO,null);
+                    if(cargo==null){
+                        Log.d(TAG,"el cargo es null...");
+                    }else{
+                        Log.d(TAG,"el cargo es:"+cargo);
+                    }
                     callNextActivity();
                 } else {
                     Log.d(TAG,"Session.NoIsLogged()...");
@@ -345,6 +372,12 @@ public class StartActivity extends rp3.app.StartActivity{
                 }
             }
             else {
+                String cargo = PreferenceManager.getString(Contants.KEY_CARGO,null);
+                if(cargo==null){
+                    Log.d(TAG,"el cargo es null...");
+                }else{
+                    Log.d(TAG,"el cargo es:"+cargo);
+                }
                 Log.d(TAG,"!messages.hasErrorMessage()...");
                 callNextActivity();
             }
@@ -472,7 +505,6 @@ public class StartActivity extends rp3.app.StartActivity{
         }
 
     }
-
 
     //region Ciclo de vida
 

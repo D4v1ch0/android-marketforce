@@ -34,6 +34,9 @@ public class PagoFragment extends Fragment {
     @BindView(R.id.tvFecha)TextView tvFecha;
     @BindView(R.id.tvMonto)TextView tvMonto;
     @BindView(R.id.tvNumeroOperacion)TextView tvNumeroOperacion;
+    //Nueva Variante
+    @BindView(R.id.tvFormaPago)TextView tvFormaPago;
+    @BindView(R.id.lyFechaVenta)View lyFormaPago;
 
     @Nullable
     @Override
@@ -57,41 +60,57 @@ public class PagoFragment extends Fragment {
     }
 
     private boolean visualize(){
-        if(registroPago!=null){
-            return true;
+        if(getArguments()==null){
+            return false;
         }
-        return false;
+        return true;
     }
 
     private void setData(){
-        if(registroPago.getFechaPago()>0){
-            SimpleDateFormat dateFormat = new SimpleDateFormat(Constants.DATE_FORMAT);
-            Date date = Convert.getDateFromDotNetTicks(registroPago.getFechaPago());
-            tvFecha.setText(dateFormat.format(date));
+        String formaPago = getArguments().getString("FormaPago");
+        if(formaPago.equalsIgnoreCase("1")){
+            //En Linea
+            lyFormaPago.setVisibility(View.VISIBLE);
+            tvFormaPago.setText("En Línea");
+            if(registroPago.getFechaPago()>0){
+                SimpleDateFormat dateFormat = new SimpleDateFormat(Constants.DATE_FORMAT);
+                Date date = Convert.getDateFromDotNetTicks(registroPago.getFechaPago());
+                tvFecha.setText(dateFormat.format(date));
+            }else{
+                tvFecha.setText("");
+            }
+            if(registroPago.getMonto()>0){
+                NumberFormat numberFormat;
+                Locale locale = new Locale("es", "pe");
+                numberFormat = NumberFormat.getInstance(locale);
+                //numberFormat.setMaximumFractionDigits(4);
+                numberFormat.setMinimumFractionDigits(2);
+                tvMonto.setText(String.valueOf(numberFormat.format(registroPago.getMonto())));
+            }else{
+                tvMonto.setText("");
+            }
+            if(registroPago.getNumeroOperacion()!=null){
+                tvNumeroOperacion.setText(registroPago.getNumeroOperacion());
+            }else{
+                tvNumeroOperacion.setText("");
+            }
+        }else if(formaPago.equalsIgnoreCase("2")){
+            //Efectivo
+            lyFormaPago.setVisibility(View.GONE);
+            tvFormaPago.setText("Efectivo");
         }else{
-            tvFecha.setText("");
+            //Regular
+            lyFormaPago.setVisibility(View.GONE);
+            tvFormaPago.setText("Regular");
         }
-        if(registroPago.getMonto()>0){
-            NumberFormat numberFormat;
-            Locale locale = new Locale("es", "pe");
-            numberFormat = NumberFormat.getInstance(locale);
-            //numberFormat.setMaximumFractionDigits(4);
-            numberFormat.setMinimumFractionDigits(2);
-            tvMonto.setText(String.valueOf(numberFormat.format(registroPago.getMonto())));
-        }else{
-            tvMonto.setText("");
-        }
-        if(registroPago.getNumeroOperacion()!=null){
-            tvNumeroOperacion.setText(registroPago.getNumeroOperacion());
-        }else{
-            tvNumeroOperacion.setText("");
-        }
+
     }
 
     //region Instance
 
-    public static PagoFragment newInstance(RegistroPago list){
+    public static PagoFragment newInstance(RegistroPago list,Bundle todo){
         PagoFragment dialog = new PagoFragment();
+        dialog.setArguments(todo);
         dialog.setPago(list);
         return dialog;
     }

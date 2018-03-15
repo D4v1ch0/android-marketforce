@@ -662,6 +662,7 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
     }
 
     private void logOut(){
+        //PreferenceManager.setValue("LOGIN_RP3_RETAIL",false);
         PreferenceManager.setValue(Constants.KEY_LAST_LOGIN, Session.getUser().getLogonName());
         PreferenceManager.setValue(Constants.KEY_LAST_PASS, Session.getUser().getPassword());
         PreferenceManager.setValue(Constants.KEY_LAST_TOKEN, "temp");
@@ -781,7 +782,7 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
 
     public  void requestSyncMain(Bundle settingsBundle) {
         if (ConnectionUtils.isNetAvailable(this)) {
-            PreferenceManager.close();
+            //PreferenceManager.close();
             SyncUtils.requestSync(settingsBundle);
             //lockRotation();
         } else {

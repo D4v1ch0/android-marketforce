@@ -743,6 +743,7 @@ public class TabLlamada extends Fragment {
         for (GeneralValue obj:motivos){
             list.add(obj.getValue());
         }
+
         GeneralValueDialog dialog = GeneralValueDialog.newInstance(new GeneralValueDialog.callbackGeneralSelected() {
             @Override
             public void onSelected(String selected, int position) {
@@ -769,6 +770,7 @@ public class TabLlamada extends Fragment {
         });
         Bundle todo = new Bundle();
         todo.putStringArrayList("list",list);
+        todo.putString("Aceptar","Aceptar");
         dialog.setArguments(todo);
         dialog.setCancelable(true);
         dialog.show(getFragmentManager(),"");

@@ -140,24 +140,45 @@ public class Agente {
 				JSONObject jObject = webService.getJSONObjectResponse();
 				if(jObject!=null){
                     Log.d(TAG,"getAgente:"+jObject.toString());
+
                     if(!jObject.isNull(Contants.KEY_IDAGENTE)){
                         PreferenceManager.setValue(Contants.KEY_IDAGENTE, jObject.getInt(Contants.KEY_IDAGENTE));
                     }else{
                         return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
                     }
 
-                    if(!jObject.isNull(Contants.KEY_IDRUTA))
+                    if(!jObject.isNull(Contants.KEY_IDRUTA)){
+                        PreferenceManager.setValue(Contants.KEY_IDRUTA, 0);
                         PreferenceManager.setValue(Contants.KEY_IDRUTA, jObject.getInt(Contants.KEY_IDRUTA));
-                    if(!jObject.isNull(Contants.KEY_FOTO))
+                    }
+                    if(!jObject.isNull(Contants.KEY_FOTO)){
                         PreferenceManager.setValue(Contants.KEY_FOTO, jObject.getString(Contants.KEY_FOTO));
-                    PreferenceManager.setValue(Contants.KEY_ES_SUPERVISOR, jObject.getBoolean(Contants.KEY_ES_SUPERVISOR));
-                    if(!jObject.isNull(Contants.KEY_ID_SUPERVISOR))
+                    }
+                    if(!jObject.isNull(Contants.KEY_ES_SUPERVISOR)){
+                        PreferenceManager.setValue(Contants.KEY_ES_SUPERVISOR, false);
+                        PreferenceManager.setValue(Contants.KEY_ES_SUPERVISOR, jObject.getBoolean(Contants.KEY_ES_SUPERVISOR));
+                    }
+
+                    if(!jObject.isNull(Contants.KEY_ID_SUPERVISOR)){
                         PreferenceManager.setValue(Contants.KEY_ID_SUPERVISOR, jObject.getInt(Contants.KEY_ID_SUPERVISOR));
-                    PreferenceManager.setValue(Contants.KEY_ES_AGENTE, jObject.getBoolean(Contants.KEY_ES_AGENTE));
-                    PreferenceManager.setValue(Contants.KEY_ES_ADMINISTRADOR, jObject.getBoolean(Contants.KEY_ES_ADMINISTRADOR));
-                    PreferenceManager.setValue(Contants.KEY_CARGO, jObject.getString(Contants.KEY_CARGO));
-                    if(!jObject.isNull(Contants.KEY_DESCUENTO_MAXIMO))
+                    }
+                    if(!jObject.isNull(Contants.KEY_ES_AGENTE)){
+                        PreferenceManager.setValue(Contants.KEY_ES_AGENTE, false);
+                        PreferenceManager.setValue(Contants.KEY_ES_AGENTE, jObject.getBoolean(Contants.KEY_ES_AGENTE));
+                    }
+                    if(!jObject.isNull(Contants.KEY_ES_ADMINISTRADOR)){
+                        PreferenceManager.setValue(Contants.KEY_ES_ADMINISTRADOR, false);
+                        PreferenceManager.setValue(Contants.KEY_ES_ADMINISTRADOR, jObject.getBoolean(Contants.KEY_ES_ADMINISTRADOR));
+                    }
+                    if(!jObject.isNull(Contants.KEY_CARGO)){
+                        Log.d(TAG,"Si hay cargo...");
+                        PreferenceManager.setValue(Contants.KEY_CARGO, "");
+                        PreferenceManager.setValue(Contants.KEY_CARGO, jObject.getString(Contants.KEY_CARGO));
+                    }
+
+                    if(!jObject.isNull(Contants.KEY_DESCUENTO_MAXIMO)){
                         PreferenceManager.setValue(Contants.KEY_DESCUENTO_MAXIMO, jObject.getInt(Contants.KEY_DESCUENTO_MAXIMO));
+                    }
                 }else{
 				    return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
                 }
@@ -170,6 +191,12 @@ public class Agente {
 			}
 			
 		}finally{
+            String cargo = PreferenceManager.getString(Contants.KEY_CARGO,null);
+            if(cargo==null){
+                Log.d(TAG,"el cargo es null...");
+            }else{
+                Log.d(TAG,"el cargo es:"+cargo);
+            }
 			webService.close();
 		}
 		

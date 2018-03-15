@@ -3764,33 +3764,43 @@ public class CotizacionActivity extends AppCompatActivity {
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
-                                if(response.isSuccessful()){
-                                    Log.d(TAG,"isSuccessful...");
-                                    ProspectoVtaDb prospectoVtaDb = ProspectoVtaDb.getProspectoId(Utils.getDataBase(getApplicationContext()),visitaVta.getIdCliente());
-                                    prospectoVtaDb.setEstadoCode(Contants.GENERAL_VALUE_CODE_VENTA_PROSPECTO);
-                                    prospectoVtaDb.setEstado(2);
-                                    boolean est = ProspectoVtaDb.update(Utils.getDataBase(getApplicationContext()),prospectoVtaDb);
-                                    Log.d(TAG,(est)?"Se actualizo prospecto":"No se actualizo prospecto");
-                                    SessionManager.getInstance(CotizacionActivity.this).removeRegistroPago();
-                                    SessionManager.getInstance(CotizacionActivity.this).removeVentaFisica();
-                                    SessionManager.getInstance(CotizacionActivity.this).removeVentaRegular();
-                                    Toast.makeText(CotizacionActivity.this, "Venta finalizada!",Toast.LENGTH_SHORT).show();
-                                    VisitaVta.update(Utils.getDataBase(CotizacionActivity.this),visitaVta);
+                                try{
+                                    if(response.isSuccessful()){
+                                        Log.d(TAG,"isSuccessful...");
+                                        ProspectoVtaDb prospectoVtaDb = ProspectoVtaDb.getProspectoId(Utils.getDataBase(getApplicationContext()),visitaVta.getIdCliente());
+                                        if(prospectoVtaDb!=null){
+                                            Log.d(TAG,"prospecto si se encontro....");
+                                            prospectoVtaDb.setEstadoCode(Contants.GENERAL_VALUE_CODE_VENTA_PROSPECTO);
+                                            prospectoVtaDb.setEstado(2);
+                                            boolean est = ProspectoVtaDb.update(Utils.getDataBase(getApplicationContext()),prospectoVtaDb);
+                                            Log.d(TAG,(est)?"Se actualizo prospecto":"No se actualizo prospecto");
+                                        }else{
+                                            Log.d(TAG,"prospecto para actualizar y no aparezca en venta no se encontro en base...");
+                                        }
 
-                                    if(estado==4){
-                                        Log.d(TAG,"setResult Online...");
-                                        setResult(RESULT_VISITA_ONLINE_REFERIDO);
-                                        finish();
-                                    }else if(estado == 3){
-                                        setResult(RESULT_VISITA_REGULAR_REFERIDO);
-                                        finish();
-                                    }else if(estado ==7){
-                                        setResult(RESULT_VISITA_REGULAR_REFERIDO);
-                                        finish();
+                                        SessionManager.getInstance(CotizacionActivity.this).removeRegistroPago();
+                                        SessionManager.getInstance(CotizacionActivity.this).removeVentaFisica();
+                                        SessionManager.getInstance(CotizacionActivity.this).removeVentaRegular();
+                                        Toast.makeText(CotizacionActivity.this, "Venta finalizada!",Toast.LENGTH_SHORT).show();
+                                        VisitaVta.update(Utils.getDataBase(CotizacionActivity.this),visitaVta);
+
+                                        if(estado==4){
+                                            Log.d(TAG,"setResult Online...");
+                                            setResult(RESULT_VISITA_ONLINE_REFERIDO);
+                                            finish();
+                                        }else if(estado == 3){
+                                            setResult(RESULT_VISITA_REGULAR_REFERIDO);
+                                            finish();
+                                        }else if(estado ==7){
+                                            setResult(RESULT_VISITA_REGULAR_REFERIDO);
+                                            finish();
+                                        }
+                                    }else{
+                                        Log.d(TAG,"No isSucessful...");
+                                        Toast.makeText(CotizacionActivity.this, R.string.message_error_sync_connection_server_fail, Toast.LENGTH_SHORT).show();
                                     }
-                                }else{
-                                    Log.d(TAG,"No isSucessful...");
-                                    Toast.makeText(CotizacionActivity.this, R.string.message_error_sync_connection_server_fail, Toast.LENGTH_SHORT).show();
+                                }catch (Exception e){
+                                    e.printStackTrace();
                                 }
                             }
                         });
