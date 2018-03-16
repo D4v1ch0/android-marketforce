@@ -198,8 +198,9 @@ public class ProspectoVta {
                 webService.addCurrentAuthToken();
 
                 try {
-                    webService.setTimeOut(35000);
+                    webService.setTimeOut(55000);
                     webService.invokeWebService();
+
                 } catch (HttpResponseException e) {
                     if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED){
                         Log.d(TAG,"e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED...");

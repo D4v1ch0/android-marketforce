@@ -86,7 +86,7 @@ public class ApplicationParameterSync {
                         }
 
                         boolean insertLlamada = rp3.auna.models.ApplicationParameter.insert(db, llamadaVtaDb);
-                        Log.d(TAG,insertLlamada?"parameter insertada...":"parameter no fue insertada...");
+                        //Log.d(TAG,insertLlamada?"parameter insertada...":"parameter no fue insertada...");
                     }
                     Log.d(TAG,"Cantidad de parameter:"+ rp3.auna.models.ApplicationParameter.getAll(db).size());
                 }else{

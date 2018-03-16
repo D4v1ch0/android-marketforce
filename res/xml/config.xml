@@ -28,10 +28,10 @@
             <!--<url>http://192.168.0.35:55042/api</url>-->
 
             <!-- Url QAS-->
-            <url>http://auna.rp3marketforce.com:8080/api</url>
+            <!--<url>http://auna.rp3marketforce.com:8080/api</url>-->
 
             <!-- Url PRD-->
-            <!--<url>https://crm.auna.pe/api</url>-->
+            <url>https://crm.auna.pe/api</url>
 
             <!-- Mi cell -->
             <!--<url>http://192.168.43.168:55042/api</url>-->
@@ -93,10 +93,10 @@
                <!--<url>http://192.168.0.35:55042/api</url>-->
 
                <!-- Url QAS -->
-               <url>http://auna.rp3marketforce.com:8080/api</url>
+               <!--<url>http://auna.rp3marketforce.com:8080/api</url>-->
 
                <!-- Url PRD -->
-               <!--<url>https://crm.auna.pe/api</url>-->
+               <url>https://crm.auna.pe/api</url>
 
 
                <!-- Mi Cell-->

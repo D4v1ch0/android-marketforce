@@ -278,6 +278,7 @@ public class StartActivity extends rp3.app.StartActivity{
                 ProspectoVtaDb.deleteAll(getDataBase(),Contract.ProspectoVta.TABLE_NAME,true);
                 rp3.auna.models.ventanueva.LlamadaVta.deleteAll(getDataBase(),Contract.LlamadaVta.TABLE_NAME,true);
                 rp3.auna.models.ventanueva.VisitaVta.deleteAll(getDataBase(),Contract.VisitaVta.TABLE_NAME,true);
+                /*
                 List<AlarmJvs> list = AlarmJvs.getLlamadasAll(getDataBase());
                 for (AlarmJvs jvs:list){
                     jvs.cancelAlarm(this);
@@ -297,9 +298,9 @@ public class StartActivity extends rp3.app.StartActivity{
                 for (AlarmJvs jvs:list3){
                     jvs.cancelAlarm(this);
                     AlarmJvs.delete(getDataBase(),jvs);
-                }
+                }*/
                 //endregion
-
+                Alarm.removeAllAlarms(getDataBase(),this);
                 //GeopoliticalStructure.deleteAll(getDataBase(), rp3.data.models.Contract.GeopoliticalStructure.TABLE_NAME);
                 //GeopoliticalStructureExt.deleteAll(getDataBase(), rp3.data.models.Contract.GeopoliticalStructureExt.TABLE_NAME);
                  /*PreferenceManager.setValue(Contants.KEY_IDAGENTE, 0);

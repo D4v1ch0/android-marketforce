@@ -45,7 +45,7 @@ public class LlamadaVta {
         Log.d(TAG,"Iniciar WS InsertarLlamadaVta executeSyncInsert...");
         List<rp3.auna.models.ventanueva.LlamadaVta> llamadaVtas = rp3.auna.models.ventanueva.LlamadaVta.getLlamadasInsert(db);
         if(llamadaVtas.size() == 0){
-            Log.d(TAG,"llamadaVtas.size() == 0...");
+            Log.d(TAG,"llamadaVtas.size() Insertas en sqlite == 0...");
             return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
         }
         Log.d(TAG,"cantidad de llamadas para insertar:"+llamadaVtas.size());
@@ -117,7 +117,12 @@ public class LlamadaVta {
             }
         } finally {
             webService.close();
-            Log.d(TAG,"finally...registrado todos los insertados!!!");
+            Log.d(TAG,"finally...llamada insert!!");
+            if(failed){
+                Log.d(TAG,"Ws registrar llamada fallo...");
+            }else{
+                Log.d(TAG,"ws registrar llamada inserto correctamente...");
+            }
             //rp3.auna.models.ventanueva.LlamadaVta.actualizarInsertados(db);
         }
         return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;

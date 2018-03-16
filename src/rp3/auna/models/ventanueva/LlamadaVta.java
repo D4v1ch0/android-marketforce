@@ -473,7 +473,7 @@ public class LlamadaVta extends rp3.data.entity.EntityBase<LlamadaVta> {
 
     public static List<LlamadaVta> getLlamadasInsert(DataBase db) {
         String query = QueryDir.getQuery(Contract.LlamadaVta.QUERY_LLAMADAVTA_INSERTADAS);
-        Log.d(TAG,query);
+        //Log.d(TAG,query);
         Cursor c = db.rawQuery(query);
         List<LlamadaVta> list = new ArrayList<LlamadaVta>();
         if(c.moveToFirst()){
@@ -504,9 +504,9 @@ public class LlamadaVta extends rp3.data.entity.EntityBase<LlamadaVta> {
                 llamadaVta.setLlamadaId(CursorUtils.getInt(c, Contract.LlamadaVta.COLUMN_LLAMADAVTA_LLAMADA_LLAMADAID));
                 llamadaVta.setEstado(CursorUtils.getInt(c, Contract.LlamadaVta.COLUMN_LLAMADAVTA_ESTADO));
                 llamadaVta.setInsertado(CursorUtils.getInt(c, Contract.LlamadaVta.COLUMN_LLAMADAVTA_INSERTADO));
-                Log.d(TAG,llamadaVta.getFechaLlamada().toString());
-                Log.d(TAG,llamadaVta.getFechaInicioLlamada().toString());
-                Log.d(TAG,llamadaVta.getFechaFinLlamada().toString());
+                //Log.d(TAG,llamadaVta.getFechaLlamada().toString());
+                //Log.d(TAG,llamadaVta.getFechaInicioLlamada().toString());
+                //Log.d(TAG,llamadaVta.getFechaFinLlamada().toString());
                 list.add(llamadaVta);
             }while(c.moveToNext());
         }
@@ -548,9 +548,9 @@ public class LlamadaVta extends rp3.data.entity.EntityBase<LlamadaVta> {
                 llamadaVta.setLlamadaId(CursorUtils.getInt(c, Contract.LlamadaVta.COLUMN_LLAMADAVTA_LLAMADA_LLAMADAID));
                 llamadaVta.setEstado(CursorUtils.getInt(c, Contract.LlamadaVta.COLUMN_LLAMADAVTA_ESTADO));
                 llamadaVta.setInsertado(CursorUtils.getInt(c, Contract.LlamadaVta.COLUMN_LLAMADAVTA_INSERTADO));
-                Log.d(TAG,llamadaVta.getFechaLlamada().toString());
-                Log.d(TAG,llamadaVta.getFechaInicioLlamada().toString());
-                Log.d(TAG,llamadaVta.getFechaFinLlamada().toString());
+                //Log.d(TAG,llamadaVta.getFechaLlamada().toString());
+                //Log.d(TAG,llamadaVta.getFechaInicioLlamada().toString());
+                //Log.d(TAG,llamadaVta.getFechaFinLlamada().toString());
                 list.add(llamadaVta);
             }while(c.moveToNext());
         }

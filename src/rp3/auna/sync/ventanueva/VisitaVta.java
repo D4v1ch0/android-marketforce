@@ -128,6 +128,8 @@ public class VisitaVta {
 
             try {
                 webService.invokeWebService();
+
+                //webService.getStringResponse();
             } catch (HttpResponseException e) {
                 if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED){
                     Log.d(TAG,"e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED...");
@@ -148,7 +150,7 @@ public class VisitaVta {
                 Log.d(TAG,"insertado");
                 //rp3.auna.models.ventanueva.VisitaVta.actualizarInsertados(db);
                 //FotoVisitaVta.actualizarInsertados(db);
-                if(rp3.auna.models.ventanueva.VisitaVta.getVisitasInsert(db).size()==0){
+                /*if(rp3.auna.models.ventanueva.VisitaVta.getVisitasInsert(db).size()==0){
                     Log.d(TAG,"Ya no hay Visitas insertados con estado 1 ..se subieron al servidor...");
                 }else{
                     Log.d(TAG,"Si hay Visitas con estado 1insertados...");
@@ -157,7 +159,12 @@ public class VisitaVta {
                     Log.d(TAG,"Ya no hay FotosVisitas insertados con estado 1 ..se subieron al servidor...");
                 }else{
                     Log.d(TAG,"Si hay FotoVisitas con estado 1insertados...");
-                }
+                }*/
+            }
+            if(failed){
+                Log.d(TAG,"Ws registrar llamada fallo...");
+            }else{
+                Log.d(TAG,"ws registrar llamada inserto correctamente...");
             }
             webService.close();
         }

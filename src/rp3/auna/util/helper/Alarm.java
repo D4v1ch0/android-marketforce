@@ -11,6 +11,7 @@ import org.joda.time.DateTime;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import rp3.auna.Contants;
 import rp3.auna.content.AgendaReceiver;
@@ -181,5 +182,29 @@ public class Alarm {
             e.printStackTrace();
         }
 
+    }
+
+    //Eliminar Todas las Alarmas
+    public static void removeAllAlarms(DataBase dataBase,Context context){
+        List<AlarmJvs> list = AlarmJvs.getLlamadasAll(dataBase);
+        for (AlarmJvs jvs:list){
+            jvs.cancelAlarm(context);
+            AlarmJvs.delete(dataBase,jvs);
+        }
+        List<AlarmJvs> list1 = AlarmJvs.getLlamadasSupervisorAll(dataBase);
+        for (AlarmJvs jvs:list1){
+            jvs.cancelAlarm(context);
+            AlarmJvs.delete(dataBase,jvs);
+        }
+        List<AlarmJvs> list2 = AlarmJvs.getVisitasAll(dataBase);
+        for (AlarmJvs jvs:list2){
+            jvs.cancelAlarm(context);
+            AlarmJvs.delete(dataBase,jvs);
+        }
+        List<AlarmJvs> list3 = AlarmJvs.getVisitasSupervisorAll(dataBase);
+        for (AlarmJvs jvs:list3){
+            jvs.cancelAlarm(context);
+            AlarmJvs.delete(dataBase,jvs);
+        }
     }
 }

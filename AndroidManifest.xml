@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="rp3.auna"
-    android:versionCode="11"
+    android:versionCode="13"
     android:versionName="AUNA">
 
     <uses-sdk

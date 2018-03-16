@@ -5,11 +5,13 @@ import rp3.auna.Main2Activity;
 import rp3.auna.actividades.ActualizacionFragment;
 import rp3.auna.actividades.CotizacionActivity;
 import rp3.auna.fragments.AgendaFragment;
+import rp3.auna.models.ventanueva.AlarmJvs;
 import rp3.auna.sync.ventanueva.AgendaVta;
 import rp3.auna.sync.ventanueva.ApplicationParameterSync;
 import rp3.auna.sync.ventanueva.LlamadaVta;
 import rp3.auna.sync.ventanueva.ProspectoVta;
 import rp3.auna.sync.ventanueva.VisitaVta;
+import rp3.auna.util.helper.Alarm;
 import rp3.auna.utils.Utils;
 import rp3.configuration.PreferenceManager;
 import rp3.db.sqlite.DataBase;
@@ -1280,6 +1282,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
             Log.d(TAG,"syncType:"+syncType);
             if(!syncType.equals(SYNC_TYPE_BATCH) || !syncType.equalsIgnoreCase(SYNC_TYPE_SEND_NOTIFICATION)){
                 Log.d(TAG,"Buscar Alertas en SyncAdapter...");
+                Alarm.removeAllAlarms(db,context);
                 Main2Activity.pruebaAlarm(db,context);
             }else{
                 Log.d(TAG,"Se activo un batch o send notification...");
