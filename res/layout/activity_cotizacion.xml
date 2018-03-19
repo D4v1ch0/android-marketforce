@@ -541,7 +541,7 @@
                                         android:fontFamily="sans-serif-medium"
                                         android:text="Ruc:"
                                         android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
-                                        android:textColor="?attr/colorAccent"
+                                        android:textColor="?attr/colorPrimary"
                                         android:textSize="14sp" />
 
                                     <EditText

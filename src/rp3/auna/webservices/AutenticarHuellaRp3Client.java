@@ -31,7 +31,7 @@ public class AutenticarHuellaRp3Client {
     private static final MediaType MEDIA_TYPE_JPEG = MediaType.parse("image/jpeg");
     private static final MediaType MEDIA_TYPE_PDF= MediaType.parse("application/pdf");
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    private String resource = "ventavirtual/VisitaMedia";
+    private String resource = "ventavirtual/AutenticarHuella";
     private Context context;
     private Callback callBack;
 

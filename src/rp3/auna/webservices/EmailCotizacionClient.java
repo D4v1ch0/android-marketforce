@@ -31,12 +31,12 @@ public class EmailCotizacionClient {
         this.context = context;
     }
 
-    public void cotizar(CotizacionMovil movil){
+    public void cotizar(String movil){
         final String url = context.getResources().getString(R.string.url)+resource;
-        final String json = new Gson().toJson(movil);
+        //final String json = new Gson().toJson(movil);
         Log.d(TAG,url);
-        Log.d(TAG,json);
-        RequestBody requestBody = RequestBody.create(MEDIA_TYPE_JPEG,json);
+        Log.d(TAG,movil);
+        RequestBody requestBody = RequestBody.create(MEDIA_TYPE_JPEG,movil);
         Request request = new Request.Builder()
                 .url(url)
                 .addHeader("content-type", "application/json")

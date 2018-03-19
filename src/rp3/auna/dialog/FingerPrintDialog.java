@@ -66,35 +66,45 @@ public class FingerPrintDialog extends DialogFragment {
             switch (status) {
                 case Status.INITIALISED:
                     errorScanner=("Setting up reader");
+                    tvAutenticate.setText("Configurar el lector");
                     break;
                 case Status.SCANNER_POWERED_ON:
                     errorScanner=("Reader powered on");
+                    tvAutenticate.setText("Lector encendido, presione el sensor");
                     break;
                 case Status.READY_TO_SCAN:
                     errorScanner=("Ready to scan finger");
+                    tvAutenticate.setText("Listo para scanear huella");
                     break;
                 case Status.FINGER_DETECTED:
                     errorScanner=("Finger detected");
+                    tvAutenticate.setText("Huella no reconocida por el lector, presione nuevamente.");
                     break;
                 case Status.RECEIVING_IMAGE:
                     errorScanner=("Receiving image");
+                    tvAutenticate.setText("Recibiendo huella...");
                     break;
                 case Status.FINGER_LIFTED:
-                    errorScanner=("Finger has been lifted off reader");
+                    errorScanner=("El dedo ha sido levantado del lesto");
+                    tvAutenticate.setText("Configurar el lector");
                     break;
                 case Status.SCANNER_POWERED_OFF:
                     errorScanner=("Reader is off");
+                    tvAutenticate.setText("El lector esta apagado.");
                     break;
                 case Status.SUCCESS:
                     errorScanner=("Fingerprint successfully captured");
+                    tvAutenticate.setText("Huella reconocida, autenticar...");
                     break;
                 case Status.ERROR:
                     errorScanner=("Error");
                     errorScanner=(msg.getData().getString("errorMessage"));
+                    tvAutenticate.setText(errorScanner);
                     break;
                 default:
                     errorScanner=(String.valueOf(status));
                     errorScanner=(msg.getData().getString("errorMessage"));
+                    tvAutenticate.setText(errorScanner);
                     break;
 
             }
@@ -118,7 +128,7 @@ public class FingerPrintDialog extends DialogFragment {
             Intent intent = new Intent();
             intent.putExtra("status", status);
             if (status == Status.SUCCESS) {
-
+                Log.d(TAG,"statuss== SUCCESS..");
                 image = msg.getData().getByteArray("img");
                 progressDialog = Util.createProgressDialog(getActivity());
                 progressDialog.setCancelable(false);
@@ -129,13 +139,12 @@ public class FingerPrintDialog extends DialogFragment {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         Log.d(TAG,"onFailure...");
+                        Log.d(TAG,"IOException:"+e.getMessage());
+                        e.printStackTrace();
                         progressDialog.dismiss();
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(getActivity(), R.string.message_error_sync_connection_http_error, Toast.LENGTH_SHORT).show();
-                                onDestroy();
-                            }
+                        handler.post(() -> {
+                            Toast.makeText(getActivity(), R.string.message_error_sync_connection_http_error, Toast.LENGTH_SHORT).show();
+                            onDestroy();
                         });
                     }
 
@@ -145,22 +154,27 @@ public class FingerPrintDialog extends DialogFragment {
                         final String rpta = response.message();
                         progressDialog.dismiss();
                         Log.d(TAG,"rpta:"+rpta);
-                        if(response.isSuccessful()){
-                            if(rpta.equalsIgnoreCase("1")){
-                                Log.d(TAG,"Autenticado....");
-                                call.onSuccess();
-                                Toast.makeText(getActivity(), "Autenticado satisfactoriamente!", Toast.LENGTH_SHORT).show();
+                        handler.post(() -> {
+                            if(response.isSuccessful()){
+                                Log.d(TAG,"response.isSuccessful...");
+                                if(rpta.equalsIgnoreCase("1")){
+                                    Log.d(TAG,"Autenticado....");
+                                    call.onSuccess();
+                                    Toast.makeText(getActivity(), "Autenticado satisfactoriamente!", Toast.LENGTH_SHORT).show();
+                                }else{
+                                    Toast.makeText(getActivity(), "No se encuentra registrado.", Toast.LENGTH_SHORT).show();
+                                }
                             }else{
-                                Toast.makeText(getActivity(), "No se encuentra registrado.", Toast.LENGTH_SHORT).show();
+                                Log.d(TAG,"response no is Successful...");
+                                Toast.makeText(getActivity(), rpta, Toast.LENGTH_SHORT).show();
                             }
-                        }else{
-                            Toast.makeText(getActivity(), rpta, Toast.LENGTH_SHORT).show();
-                        }
+                        });
                     }
                 }).autenticar(image);
 
 
             } else {
+                Log.d(TAG,"Status != SUCCESS...");
                 errorMessage = msg.getData().getString("errorMessage");
                 intent.putExtra("errorMessage", errorMessage);
                 Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
@@ -222,13 +236,12 @@ public class FingerPrintDialog extends DialogFragment {
     @Override
     public void onStart() {
         Log.d(TAG,"onStart...");
-        fingerprint.scan(getActivity(), printHandler, updateHandler);
         super.onStart();
     }
 
     @Override
     public void onDestroyView() {
-        fingerprint.turnOffReader();
+
         Log.d(TAG,"onDestroyView...");
         super.onDestroyView();
     }
@@ -236,6 +249,7 @@ public class FingerPrintDialog extends DialogFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        fingerprint.turnOffReader();
         Log.d(TAG,"onDestroy...");
     }
 
@@ -254,6 +268,7 @@ public class FingerPrintDialog extends DialogFragment {
     @Override
     public void onResume() {
         super.onResume();
+        fingerprint.scan(getActivity(), printHandler, updateHandler);
         Log.d(TAG,"onResume...");
 
     }

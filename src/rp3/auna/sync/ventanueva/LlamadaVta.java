@@ -45,10 +45,10 @@ public class LlamadaVta {
         Log.d(TAG,"Iniciar WS InsertarLlamadaVta executeSyncInsert...");
         List<rp3.auna.models.ventanueva.LlamadaVta> llamadaVtas = rp3.auna.models.ventanueva.LlamadaVta.getLlamadasInsert(db);
         if(llamadaVtas.size() == 0){
-            Log.d(TAG,"llamadaVtas.size() == 0...");
+            Log.d(TAG,"llamadaVtas.size()  insertar desde sqlite == 0...");
             return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
         }
-        Log.d(TAG,"cantidad de llamadas para insertar:"+llamadaVtas.size());
+        Log.d(TAG,"cantidad de llamadas para insertar desde sqlite:"+llamadaVtas.size());
         JSONArray array = new JSONArray();
         for(int i = 0;i<llamadaVtas.size();i++){
             rp3.auna.models.ventanueva.LlamadaVta obj = llamadaVtas.get(i);
@@ -117,7 +117,11 @@ public class LlamadaVta {
             }
         } finally {
             webService.close();
-            Log.d(TAG,"finally...registrado todos los insertados!!!");
+            if(false){
+                Log.d(TAG,"Hubo error al registrar llamadas ws...");
+            }else{
+                Log.d(TAG,"No Hubo error al registrar llamadas ws...");
+            }
             //rp3.auna.models.ventanueva.LlamadaVta.actualizarInsertados(db);
         }
         return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
@@ -129,7 +133,7 @@ public class LlamadaVta {
         Log.d(TAG,"Iniciar WS executeSyncUpdateSync...");
         List<rp3.auna.models.ventanueva.LlamadaVta> llamadaVtas = rp3.auna.models.ventanueva.LlamadaVta.getLlamadasSincronizadasAll(db);
         if(llamadaVtas.size() == 0){
-            Log.d(TAG,"llamadaVtas.size() == 0...");
+            Log.d(TAG,"llamadaVtas.size() a actualizar desde sqlite == 0...");
             return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
         }
         Log.d(TAG,"cantidad de llamadas para sincronizar:"+llamadaVtas.size());
@@ -203,7 +207,12 @@ public class LlamadaVta {
             }
         } finally {
             webService.close();
-            Log.d(TAG,"finally...actualizar todo!!!");
+            if(false){
+                Log.d(TAG,"Hubo error al actualizar llamadas ws...");
+            }else{
+                Log.d(TAG,"No Hubo error al actualizar llamadas ws...");
+            }
+            //Log.d(TAG,"finally...actualizar todo!!!");
             //rp3.auna.models.ventanueva.LlamadaVta.actualizarInsertados(db);
             rp3.auna.models.ventanueva.LlamadaVta.deleteAll(db,Contract.LlamadaVta.TABLE_NAME);
         }

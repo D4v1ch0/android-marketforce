@@ -1,4 +1,7 @@
 package rp3.auna;
+/***
+ * Created by Jesús Villa Sánchez
+ * */
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -222,7 +225,7 @@ public class CotizacionActivity extends AppCompatActivity {
     private SolicitudAfiliadoMovil afiliadoContratante;
     private List<LinearLayout> afiliadosLayouts;
     private VisitaVta visitaVta;
-    private CotizacionMovil cotizacionMovil;
+    private CotizacionMovil cotizacionMovil;/**Este es el Cotizador Normal*/
     private List<Cotizacion> cotizacionList;
     private List<Cotizacion> cotizacionAfiliados;
     private List<Cotizacion> cotizacionFraccionamientos;
@@ -230,7 +233,7 @@ public class CotizacionActivity extends AppCompatActivity {
     private double totalTC = 0;
     private double totalTD = 0;
     private int select = -1;
-    private int tipoVenta = 1;
+    private int tipoVenta = -1;
     private boolean email = false;
     private int estado;
     private String agente;
@@ -274,6 +277,9 @@ public class CotizacionActivity extends AppCompatActivity {
     //region Solicitud Virtual
     @BindView(R.id.rbFisica) RadioButton rbFisica;
     @BindView(R.id.rbVirtual) RadioButton rbVirtual;
+    private List<GeneralValue> listExcepcionsVirtual;
+    private int consultarCotizacion = -1;
+    private CotizacionVirtual cotizacionVirtual;/**Este es el Cotizador Virtual model*/
     //endregion
 
     @Override
@@ -288,6 +294,7 @@ public class CotizacionActivity extends AppCompatActivity {
         getData();
         initViews();
         initSelectTipoVenta();
+        initVirtual();
         detailCotizacion();
         //validateVisita();
     }
@@ -316,24 +323,51 @@ public class CotizacionActivity extends AppCompatActivity {
                 Log.d(TAG,"countCuotas:"+countCuotas);
                 //Validar countFracciones para determinar la cantidad
                 precios.add((String.valueOf(removeSoloComas(numberFormat.format(totalAnual)))));
-                //2 cuotas
-                if(countCuotas>0){
-                    Log.d(TAG,"2 cuotas de fraccion...");
-                    precios.add(removeSoloComas(numberFormat.format(Double.parseDouble(cotizacionFraccionamientos.get(0).getTD()))));
+                if(consultarCotizacion==1){
+                    Log.d(TAG,"Es consulta del cotizador normal...");
+                    //2 cuotas
+                    if(countCuotas>0){
+                        Log.d(TAG,"2 cuotas de fraccion...");
+                        precios.add(removeSoloComas(numberFormat.format(Double.parseDouble(cotizacionFraccionamientos.get(0).getTD()))));
+                    }
+                    //3 Cuotas
+                    if(countCuotas>2){
+                        Log.d(TAG,"3 cuotas de fraccion...");
+                        precios.add(removeSoloComas(numberFormat.format(Double.parseDouble(cotizacionFraccionamientos.get(2).getTD()))));
+                    }
+                    //4 Cuotas
+                    if(countCuotas>5){
+                        Log.d(TAG,"4 cuotas de fraccion...");
+                        precios.add(removeSoloComas(numberFormat.format(Double.parseDouble(cotizacionFraccionamientos.get(5).getTD()))));
+                    }
+                }else if(consultarCotizacion==2){
+                    Log.d(TAG,"Es consulta del cotizador virtual...");
+                    //2 cuotas
+                    if(countCuotas>0){
+                        Log.d(TAG,"2 cuotas de fraccion...");
+                        precios.add(removeSoloComas(numberFormat.format(Double.parseDouble(cotizacionFraccionamientos.get(0).getTD()))));
+                    }
+                    //3 Cuotas
+                    if(countCuotas>2){
+                        Log.d(TAG,"3 cuotas de fraccion...");
+                        precios.add(removeSoloComas(numberFormat.format(Double.parseDouble(cotizacionFraccionamientos.get(2).getTD()))));
+                    }
+                    //4 Cuotas
+                    if(countCuotas>5){
+                        Log.d(TAG,"4 cuotas de fraccion...");
+                        precios.add(removeSoloComas(numberFormat.format(Double.parseDouble(cotizacionFraccionamientos.get(5).getTD()))));
+                    }
+
+                }else{
+                    Log.d(TAG,"consultarCotizacion != 1 && != 2...");
+                    return;
                 }
-                //3 Cuotas
-                if(countCuotas>2){
-                    Log.d(TAG,"3 cuotas de fraccion...");
-                    precios.add(removeSoloComas(numberFormat.format(Double.parseDouble(cotizacionFraccionamientos.get(2).getTD()))));
-                }
-                //4 Cuotas
-                if(countCuotas>5){
-                    Log.d(TAG,"4 cuotas de fraccion...");
-                    precios.add(removeSoloComas(numberFormat.format(Double.parseDouble(cotizacionFraccionamientos.get(5).getTD()))));
-                }
-                /*precios.add(replaceComa(numberFormat.format(Double.parseDouble(cotizacionFraccionamientos.get(0).getTD()))));
+
+                //region ocio
+                 /*precios.add(replaceComa(numberFormat.format(Double.parseDouble(cotizacionFraccionamientos.get(0).getTD()))));
                 precios.add(replaceComa(numberFormat.format(Double.parseDouble(cotizacionFraccionamientos.get(2).getTD()))));
                 precios.add(replaceComa(numberFormat.format(Double.parseDouble(cotizacionFraccionamientos.get(5).getTD()))));*/
+                //endregion
             }
         }
         List<GeneralValue> temp = new ArrayList<>();
@@ -469,157 +503,151 @@ public class CotizacionActivity extends AppCompatActivity {
     private void initSelectTipoVenta(){
         listFraccionamientos = GeneralValue.getGeneralValues(Utils.getDataBase(this),Contants.GENERAL_TABLE_COTIZACION_FRACCIONAMIENTO);
         listExcepcions = GeneralValue.getGeneralValues(Utils.getDataBase(this),Contants.GENERAL_TABLE_COTIZACION_TIPOS_ERROR);
-        rbIndividual.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tipoVenta = 1;
-                if(estado==2){
-                    rbIndividual.setChecked(true);
-                    rbCorporativo.setChecked(false);
-                    cvPayme.setVisibility(View.VISIBLE);
-                    ((CheckBox) findViewById(R.id.checkboxcamapana)).setVisibility(View.VISIBLE);
-                    findViewById(R.id.lyCampana).setVisibility(View.VISIBLE);
-                    //si hubo una consulta anterior
-                    if(requestVenta!=-1){
-                        //el ultimo request fue Individual
-                        if(requestVenta == 1){
-                            if(cotizacionList!=null){
-                                if(cotizacionList.size()>0){
-                                    ResponseView.setVisibility(View.VISIBLE);
-                                    EmptyView.setVisibility(View.GONE);
-                                    etRucEmpresa.setVisibility(View.GONE);
-                                    etRucEmpresa.setText(null);
-                                }
-                            }
-                        }else{
-                            //el ultimo request fue Corporativo
-                            if(cotizacionList!=null){
-                                if(cotizacionList.size()>0){
-                                    ResponseView.setVisibility(View.GONE);
-                                    EmptyView.setVisibility(View.VISIBLE);
-                                    lnRucEmpresa.setVisibility(View.GONE);
-                                    etRucEmpresa.setVisibility(View.GONE);
-                                }
+        rbIndividual.setOnClickListener(v -> {
+            tipoVenta = 1;
+            if(estado==2){
+                rbIndividual.setChecked(true);
+                rbCorporativo.setChecked(false);
+                cvPayme.setVisibility(View.VISIBLE);
+                ((CheckBox) findViewById(R.id.checkboxcamapana)).setVisibility(View.VISIBLE);
+                findViewById(R.id.lyCampana).setVisibility(View.VISIBLE);
+                //si hubo una consulta anterior
+                if(requestVenta!=-1){
+                    //el ultimo request fue Individual
+                    if(requestVenta == 1){
+                        if(cotizacionList!=null){
+                            if(cotizacionList.size()>0){
+                                ResponseView.setVisibility(View.VISIBLE);
+                                EmptyView.setVisibility(View.GONE);
+                                etRucEmpresa.setVisibility(View.GONE);
+                                etRucEmpresa.setText(null);
                             }
                         }
                     }else{
-                        //No Hubo consulta anterior solo ocultar el campo RUC y limpiar
-                        lnRucEmpresa.setVisibility(View.GONE);
-                        etRucEmpresa.setText(null);
+                        //el ultimo request fue Corporativo
+                        if(cotizacionList!=null){
+                            if(cotizacionList.size()>0){
+                                ResponseView.setVisibility(View.GONE);
+                                EmptyView.setVisibility(View.VISIBLE);
+                                lnRucEmpresa.setVisibility(View.GONE);
+                                etRucEmpresa.setVisibility(View.GONE);
+                            }
+                        }
                     }
                 }else{
-                    ((CheckBox) findViewById(R.id.checkboxcamapana)).setVisibility(View.VISIBLE);
-                    findViewById(R.id.lyCampana).setVisibility(View.VISIBLE);
-                    //si hubo una consulta anterior
-                    if(requestVenta!=-1){
-                        //el ultimo request fue Individual
-                        if(requestVenta == 1){
-                            if(cotizacionList!=null){
-                                if(cotizacionList.size()>0){
-                                    ResponseView.setVisibility(View.VISIBLE);
-                                    EmptyView.setVisibility(View.GONE);
-                                    etRucEmpresa.setVisibility(View.GONE);
-                                    etRucEmpresa.setText(null);
-                                }
-                            }
-                        }else{
-                            //el ultimo request fue Corporativo
-                            if(cotizacionList!=null){
-                                if(cotizacionList.size()>0){
-                                    ResponseView.setVisibility(View.GONE);
-                                    EmptyView.setVisibility(View.VISIBLE);
-                                    lnRucEmpresa.setVisibility(View.GONE);
-                                    etRucEmpresa.setVisibility(View.GONE);
-                                }
+                    //No Hubo consulta anterior solo ocultar el campo RUC y limpiar
+                    lnRucEmpresa.setVisibility(View.GONE);
+                    etRucEmpresa.setText(null);
+                }
+            }else{
+                ((CheckBox) findViewById(R.id.checkboxcamapana)).setVisibility(View.VISIBLE);
+                findViewById(R.id.lyCampana).setVisibility(View.VISIBLE);
+                //si hubo una consulta anterior
+                if(requestVenta!=-1){
+                    //el ultimo request fue Individual
+                    if(requestVenta == 1){
+                        if(cotizacionList!=null){
+                            if(cotizacionList.size()>0){
+                                ResponseView.setVisibility(View.VISIBLE);
+                                EmptyView.setVisibility(View.GONE);
+                                etRucEmpresa.setVisibility(View.GONE);
+                                etRucEmpresa.setText(null);
                             }
                         }
                     }else{
-                        //No Hubo consulta anterior solo ocultar el campo RUC y limpiar
-                        lnRucEmpresa.setVisibility(View.GONE);
-                        etRucEmpresa.setText(null);
+                        //el ultimo request fue Corporativo
+                        if(cotizacionList!=null){
+                            if(cotizacionList.size()>0){
+                                ResponseView.setVisibility(View.GONE);
+                                EmptyView.setVisibility(View.VISIBLE);
+                                lnRucEmpresa.setVisibility(View.GONE);
+                                etRucEmpresa.setVisibility(View.GONE);
+                            }
+                        }
                     }
+                }else{
+                    //No Hubo consulta anterior solo ocultar el campo RUC y limpiar
+                    lnRucEmpresa.setVisibility(View.GONE);
+                    etRucEmpresa.setText(null);
                 }
             }
         });
 
-        rbCorporativo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tipoVenta = 2;
-                if(estado==2){
-                    rbCorporativo.setChecked(true);
-                    rbIndividual.setChecked(false);
-                    cvPayme.setVisibility(View.GONE);
-                    ((CheckBox) findViewById(R.id.checkboxcamapana)).setVisibility(View.GONE);
-                    findViewById(R.id.lyCampana).setVisibility(View.GONE);
-                    //si hubo una consulta anterior
-                    if(requestVenta!=-1){
-                        //el ultimo request fue Individual
-                        if(requestVenta == 1){
-                            if(cotizacionList!=null){
-                                if(cotizacionList.size()>0){
-                                    ResponseView.setVisibility(View.GONE);
-                                    EmptyView.setVisibility(View.VISIBLE);
-                                    lnRucEmpresa.setVisibility(View.VISIBLE);
-                                    etRucEmpresa.setVisibility(View.VISIBLE);
-                                    etRucEmpresa.setText(null);
-                                    findViewById(R.id.lyCampana).setVisibility(View.GONE);
-                                }
-                            }
-                        }else{
-                            //el ultimo request fue Corporativo
-                            if(cotizacionList!=null){
-                                if(cotizacionList.size()>0){
-                                    ResponseView.setVisibility(View.VISIBLE);
-                                    EmptyView.setVisibility(View.GONE);
-                                    lnRucEmpresa.setVisibility(View.VISIBLE);
-                                    etRucEmpresa.setVisibility(View.VISIBLE);
-                                    findViewById(R.id.lyCampana).setVisibility(View.GONE);
-                                }
+        rbCorporativo.setOnClickListener(v -> {
+            tipoVenta = 2;
+            if(estado==2){
+                rbCorporativo.setChecked(true);
+                rbIndividual.setChecked(false);
+                cvPayme.setVisibility(View.GONE);
+                ((CheckBox) findViewById(R.id.checkboxcamapana)).setVisibility(View.GONE);
+                findViewById(R.id.lyCampana).setVisibility(View.GONE);
+                //si hubo una consulta anterior
+                if(requestVenta!=-1){
+                    //el ultimo request fue Individual
+                    if(requestVenta == 1){
+                        if(cotizacionList!=null){
+                            if(cotizacionList.size()>0){
+                                ResponseView.setVisibility(View.GONE);
+                                EmptyView.setVisibility(View.VISIBLE);
+                                lnRucEmpresa.setVisibility(View.VISIBLE);
+                                etRucEmpresa.setVisibility(View.VISIBLE);
+                                etRucEmpresa.setText(null);
+                                findViewById(R.id.lyCampana).setVisibility(View.GONE);
                             }
                         }
                     }else{
-                        //No hubo consulta anterior solo mostrar el campo RUC
-                        lnRucEmpresa.setVisibility(View.VISIBLE);
-                        findViewById(R.id.lyCampana).setVisibility(View.GONE);
+                        //el ultimo request fue Corporativo
+                        if(cotizacionList!=null){
+                            if(cotizacionList.size()>0){
+                                ResponseView.setVisibility(View.VISIBLE);
+                                EmptyView.setVisibility(View.GONE);
+                                lnRucEmpresa.setVisibility(View.VISIBLE);
+                                etRucEmpresa.setVisibility(View.VISIBLE);
+                                findViewById(R.id.lyCampana).setVisibility(View.GONE);
+                            }
+                        }
                     }
                 }else{
-                    ((CheckBox) findViewById(R.id.checkboxcamapana)).setVisibility(View.GONE);
+                    //No hubo consulta anterior solo mostrar el campo RUC
+                    lnRucEmpresa.setVisibility(View.VISIBLE);
                     findViewById(R.id.lyCampana).setVisibility(View.GONE);
-                    //si hubo una consulta anterior
-                    if(requestVenta!=-1){
-                        //el ultimo request fue Individual
-                        if(requestVenta == 1){
-                            if(cotizacionList!=null){
-                                if(cotizacionList.size()>0){
-                                    ResponseView.setVisibility(View.GONE);
-                                    EmptyView.setVisibility(View.VISIBLE);
-                                    lnRucEmpresa.setVisibility(View.VISIBLE);
-                                    etRucEmpresa.setVisibility(View.VISIBLE);
-                                    etRucEmpresa.setText(null);
-                                    findViewById(R.id.lyCampana).setVisibility(View.GONE);
-                                }
-                            }
-                        }else{
-                            //el ultimo request fue Corporativo
-                            if(cotizacionList!=null){
-                                if(cotizacionList.size()>0){
-                                    ResponseView.setVisibility(View.VISIBLE);
-                                    EmptyView.setVisibility(View.GONE);
-                                    lnRucEmpresa.setVisibility(View.VISIBLE);
-                                    etRucEmpresa.setVisibility(View.VISIBLE);
-                                    findViewById(R.id.lyCampana).setVisibility(View.GONE);
-                                }
+                }
+            }else{
+                ((CheckBox) findViewById(R.id.checkboxcamapana)).setVisibility(View.GONE);
+                findViewById(R.id.lyCampana).setVisibility(View.GONE);
+                //si hubo una consulta anterior
+                if(requestVenta!=-1){
+                    //el ultimo request fue Individual
+                    if(requestVenta == 1){
+                        if(cotizacionList!=null){
+                            if(cotizacionList.size()>0){
+                                ResponseView.setVisibility(View.GONE);
+                                EmptyView.setVisibility(View.VISIBLE);
+                                lnRucEmpresa.setVisibility(View.VISIBLE);
+                                etRucEmpresa.setVisibility(View.VISIBLE);
+                                etRucEmpresa.setText(null);
+                                findViewById(R.id.lyCampana).setVisibility(View.GONE);
                             }
                         }
                     }else{
-                        //No hubo consulta anterior solo mostrar el campo RUC
-                        lnRucEmpresa.setVisibility(View.VISIBLE);
-                        findViewById(R.id.lyCampana).setVisibility(View.GONE);
+                        //el ultimo request fue Corporativo
+                        if(cotizacionList!=null){
+                            if(cotizacionList.size()>0){
+                                ResponseView.setVisibility(View.VISIBLE);
+                                EmptyView.setVisibility(View.GONE);
+                                lnRucEmpresa.setVisibility(View.VISIBLE);
+                                etRucEmpresa.setVisibility(View.VISIBLE);
+                                findViewById(R.id.lyCampana).setVisibility(View.GONE);
+                            }
+                        }
                     }
+                }else{
+                    //No hubo consulta anterior solo mostrar el campo RUC
+                    lnRucEmpresa.setVisibility(View.VISIBLE);
+                    findViewById(R.id.lyCampana).setVisibility(View.GONE);
                 }
-
             }
+
         });
     }
 
@@ -873,8 +901,8 @@ public class CotizacionActivity extends AppCompatActivity {
     //region Todo
 
     private void initViews(){
-        rbIndividual.setChecked(true);
-        tipoVenta = 1;
+        //rbIndividual.setChecked(true);
+        //tipoVenta = 1;
         SelectAnual.setClickable(true);
         afiliadosLayouts = new ArrayList<>();
         //Cargo cotización en el caso de que exista
@@ -1208,81 +1236,164 @@ public class CotizacionActivity extends AppCompatActivity {
 
     private void getDataSelected(){
         if(validate()){
-            int idAgente = PreferenceManager.getInt(Contants.KEY_IDAGENTE);
-            rp3.auna.models.Agente a = rp3.auna.models.Agente.getAgente(Utils.getDataBase(this),idAgente);
-            Log.d(TAG,"Agente:"+a.toString());
-            cotizacionMovil = new CotizacionMovil();
-            cotizacionMovil.setIdCotizacion(0);
-            cotizacionMovil.setEmail("");
-            cotizacionMovil.setEmailAgente(a.getEmail());
-            cotizacionMovil.setIdAgente(idAgente);
-            cotizacionMovil.setIdVisita(visitaVta.getIdVisita());
-            cotizacionMovil.setEstado(estado);
-            cotizacionMovil.setFlag(estado);
-            cotizacionMovil.setAgente(agente);
-            if(estado==1){
-                cotizacionMovil.setNombreProspecto(ProspectoVtaDb.getProspectoNombreByIdVisita(visitaVta.getIdVisita(),Utils.getDataBase(this)));
-            }else if(estado==2){
-                cotizacionMovil.setNombreProspecto(afiliadoContratante.getNombre()+" "+afiliadoContratante.getApellidoPaterno());
-            }
-            List<AfiliadoMovil> afiliadoMovils = new ArrayList<>();
-            JSONArray jsonArray = new JSONArray();
-            JSONObject obj = new JSONObject();
-            for(int i = 0; i < afiliadosLayouts.size(); i++)
-            {
-            LinearLayout afiliado = afiliadosLayouts.get(i);
-            AfiliadoMovil afiliadoMovil = new AfiliadoMovil();
-
-            try
-            {
-                afiliadoMovil.setTipoOperacion(Contants.COTIZADOR_TIPO_OPERACION);
-                afiliadoMovil.setCodigoPrograma(((GeneralValue)((Spinner) findViewById(R.id.cotizacion_programa_movil)).getSelectedItem()).getCode());
-                afiliadoMovil.setFechaNacimiento(((EditText) afiliado.findViewById(R.id.tvafiliado_fecha_movil)).getText().toString());
-                if(((CheckBox) afiliado.findViewById(R.id.checkBox_movil)).isChecked()){
-                    afiliadoMovil.setFlagFumador("True");
-                }else{
-                    afiliadoMovil.setFlagFumador("False");
+            if(consultarCotizacion==1){
+                int idAgente = PreferenceManager.getInt(Contants.KEY_IDAGENTE);
+                rp3.auna.models.Agente a = rp3.auna.models.Agente.getAgente(Utils.getDataBase(this),idAgente);
+                Log.d(TAG,"Agente:"+a.toString());
+                cotizacionMovil = new CotizacionMovil();
+                cotizacionMovil.setIdCotizacion(0);
+                cotizacionMovil.setEmail("");
+                cotizacionMovil.setEmailAgente(a.getEmail());
+                cotizacionMovil.setIdAgente(idAgente);
+                cotizacionMovil.setIdVisita(visitaVta.getIdVisita());
+                cotizacionMovil.setEstado(estado);
+                cotizacionMovil.setFlag(estado);
+                cotizacionMovil.setAgente(agente);
+                if(estado==1){
+                    cotizacionMovil.setNombreProspecto(ProspectoVtaDb.getProspectoNombreByIdVisita(visitaVta.getIdVisita(),Utils.getDataBase(this)));
+                }else if(estado==2){
+                    cotizacionMovil.setNombreProspecto(afiliadoContratante.getNombre()+" "+afiliadoContratante.getApellidoPaterno());
                 }
-                afiliadoMovil.setIdRegistro("00" + (i+1));
-                afiliadoMovil.setOrigenSolicitud(Contants.COTIZADOR_ORIGEN_SOLICITUD);
-                afiliadoMovil.setSexo(((GeneralValue)((Spinner)afiliado.findViewById(R.id.afiliado_sexo_movil)).getSelectedItem()).getCode());
+                List<AfiliadoMovil> afiliadoMovils = new ArrayList<>();
+                JSONArray jsonArray = new JSONArray();
+                JSONObject obj = new JSONObject();
+                for(int i = 0; i < afiliadosLayouts.size(); i++)
+                {
+                    LinearLayout afiliado = afiliadosLayouts.get(i);
+                    AfiliadoMovil afiliadoMovil = new AfiliadoMovil();
 
-                afiliadoMovil.setUserMovil(Contants.COTIZADOR_USER);
-                if(tipoVenta==2){
-                    afiliadoMovil.setRucEmpresa(etRucEmpresa.getText().toString().trim());
-                    afiliadoMovil.setCanal(Contants.COTIZADOR_CANAL_CORPORATIVO_INDIVIDUAL);
-                    afiliadoMovil.setCampana("False");
-                }else{
-                    afiliadoMovil.setRucEmpresa(null);
-                    afiliadoMovil.setCanal(Contants.COTIZADOR_CANAL_FUERZA_VENTA_INDIVIDUAL);
-                    if(((CheckBox) findViewById(R.id.checkboxcamapana)).isChecked()){
-                        afiliadoMovil.setCampana("True");
-                    }else{
-                        afiliadoMovil.setCampana("False");
+                    try
+                    {
+                        afiliadoMovil.setTipoOperacion(Contants.COTIZADOR_TIPO_OPERACION);
+                        afiliadoMovil.setCodigoPrograma(((GeneralValue)((Spinner) findViewById(R.id.cotizacion_programa_movil)).getSelectedItem()).getCode());
+                        afiliadoMovil.setFechaNacimiento(((EditText) afiliado.findViewById(R.id.tvafiliado_fecha_movil)).getText().toString());
+                        if(((CheckBox) afiliado.findViewById(R.id.checkBox_movil)).isChecked()){
+                            afiliadoMovil.setFlagFumador("True");
+                        }else{
+                            afiliadoMovil.setFlagFumador("False");
+                        }
+                        afiliadoMovil.setIdRegistro("00" + (i+1));
+                        afiliadoMovil.setOrigenSolicitud(Contants.COTIZADOR_ORIGEN_SOLICITUD);
+                        afiliadoMovil.setSexo(((GeneralValue)((Spinner)afiliado.findViewById(R.id.afiliado_sexo_movil)).getSelectedItem()).getCode());
+
+                        afiliadoMovil.setUserMovil(Contants.COTIZADOR_USER);
+                        if(tipoVenta==2){
+                            afiliadoMovil.setRucEmpresa(etRucEmpresa.getText().toString().trim());
+                            afiliadoMovil.setCanal(Contants.COTIZADOR_CANAL_CORPORATIVO_INDIVIDUAL);
+                            afiliadoMovil.setCampana("False");
+                        }else{
+                            afiliadoMovil.setRucEmpresa(null);
+                            afiliadoMovil.setCanal(Contants.COTIZADOR_CANAL_FUERZA_VENTA_INDIVIDUAL);
+                            if(((CheckBox) findViewById(R.id.checkboxcamapana)).isChecked()){
+                                afiliadoMovil.setCampana("True");
+                            }else{
+                                afiliadoMovil.setCampana("False");
+                            }
+                        }
+                        Log.d(TAG,afiliadoMovil.toString());
                     }
+                    catch (Exception ex)
+                    {
+                        Log.d(TAG,"bucle for exception:"+ex.getMessage());
+                    }
+                    afiliadoMovils.add(afiliadoMovil);
                 }
-                Log.d(TAG,afiliadoMovil.toString());
+                cotizacionMovil.setAfiliados(afiliadoMovils);
+                try {
+                    obj.put("IdCotizacion",0);
+                    obj.put("IdAgente", PreferenceManager.getInt(Contants.KEY_IDAGENTE));
+                    obj.put("IdVisita",visitaVta.getIdVisita());
+                    obj.put("Email","nvillasanchez@gmail.com");
+                    obj.put("Afiliados",jsonArray);
+                } catch (JSONException e) {
+                    Log.d(TAG,"JSONEXCEPTION:"+e.getMessage());
+                    e.printStackTrace();
+                }
+                Log.d(TAG, obj.toString());
+                Log.d(TAG,"json:"+new Gson().toJson(cotizacionMovil));
+                showDialogCotizarClient(cotizacionMovil);
+            }else if(consultarCotizacion==2){
+                cotizacionVirtual = new CotizacionVirtual();
+                SimpleDateFormat format = new SimpleDateFormat(Constants.DATE_FORMAT);
+                Calendar calendar = Calendar.getInstance();
+                String fechaVenta = format.format(calendar.getTime());
+                cotizacionVirtual.setFechaVenta(fechaVenta);
+                int idAgente = PreferenceManager.getInt(Contants.KEY_IDAGENTE);
+                rp3.auna.models.Agente a = rp3.auna.models.Agente.getAgente(Utils.getDataBase(this),idAgente);
+                Log.d(TAG,"Agente:"+a.toString());
+                cotizacionVirtual.setIdCotizacion(0);
+                cotizacionVirtual.setEmail("");
+                cotizacionVirtual.setEmailAgente(a.getEmail());
+                cotizacionVirtual.setIdAgente(idAgente);
+                cotizacionVirtual.setIdVisita(visitaVta.getIdVisita());
+                cotizacionVirtual.setEstado(estado);
+                cotizacionVirtual.setFlag(estado);
+                cotizacionVirtual.setAgente(agente);
+                if(estado==1){
+                    cotizacionVirtual.setNombreProspecto(ProspectoVtaDb.getProspectoNombreByIdVisita(visitaVta.getIdVisita(),Utils.getDataBase(this)));
+                }else if(estado==2){
+                    cotizacionVirtual.setNombreProspecto(afiliadoContratante.getNombre()+" "+afiliadoContratante.getApellidoPaterno());
+                }
+                List<AfiliadoMovil> afiliadoMovils = new ArrayList<>();
+                JSONArray jsonArray = new JSONArray();
+                JSONObject obj = new JSONObject();
+                for(int i = 0; i < afiliadosLayouts.size(); i++)
+                {
+                    LinearLayout afiliado = afiliadosLayouts.get(i);
+                    AfiliadoMovil afiliadoMovil = new AfiliadoMovil();
+
+                    try
+                    {
+                        afiliadoMovil.setTipoOperacion(Contants.COTIZADOR_TIPO_OPERACION);
+                        afiliadoMovil.setCodigoPrograma(((GeneralValue)((Spinner) findViewById(R.id.cotizacion_programa_movil)).getSelectedItem()).getCode());
+                        afiliadoMovil.setFechaNacimiento(((EditText) afiliado.findViewById(R.id.tvafiliado_fecha_movil)).getText().toString());
+                        if(((CheckBox) afiliado.findViewById(R.id.checkBox_movil)).isChecked()){
+                            afiliadoMovil.setFlagFumador("True");
+                        }else{
+                            afiliadoMovil.setFlagFumador("False");
+                        }
+                        afiliadoMovil.setIdRegistro("00" + (i+1));
+                        afiliadoMovil.setOrigenSolicitud(Contants.COTIZADOR_ORIGEN_SOLICITUD);
+                        afiliadoMovil.setSexo(((GeneralValue)((Spinner)afiliado.findViewById(R.id.afiliado_sexo_movil)).getSelectedItem()).getCode());
+
+                        afiliadoMovil.setUserMovil(Contants.COTIZADOR_USER);
+                        if(tipoVenta==2){
+                            afiliadoMovil.setRucEmpresa(etRucEmpresa.getText().toString().trim());
+                            afiliadoMovil.setCanal(Contants.COTIZADOR_CANAL_CORPORATIVO_INDIVIDUAL);
+                            afiliadoMovil.setCampana("False");
+                        }else{
+                            afiliadoMovil.setRucEmpresa(null);
+                            afiliadoMovil.setCanal(Contants.COTIZADOR_CANAL_FUERZA_VENTA_INDIVIDUAL);
+                            if(((CheckBox) findViewById(R.id.checkboxcamapana)).isChecked()){
+                                afiliadoMovil.setCampana("True");
+                            }else{
+                                afiliadoMovil.setCampana("False");
+                            }
+                        }
+                        Log.d(TAG,afiliadoMovil.toString());
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.d(TAG,"bucle for exception:"+ex.getMessage());
+                    }
+                    afiliadoMovils.add(afiliadoMovil);
+                }
+                cotizacionVirtual.setAfiliados(afiliadoMovils);
+                try {
+                    obj.put("IdCotizacion",0);
+                    obj.put("IdAgente", PreferenceManager.getInt(Contants.KEY_IDAGENTE));
+                    obj.put("IdVisita",visitaVta.getIdVisita());
+                    obj.put("Email","nvillasanchez@gmail.com");
+                    obj.put("Afiliados",jsonArray);
+                } catch (JSONException e) {
+                    Log.d(TAG,"JSONEXCEPTION:"+e.getMessage());
+                    e.printStackTrace();
+                }
+                Log.d(TAG, obj.toString());
+                Log.d(TAG,"json:"+new Gson().toJson(cotizacionMovil));
+                showDialogCotizadorVirtualClient(cotizacionVirtual);
             }
-            catch (Exception ex)
-            {
-                Log.d(TAG,"bucle for exception:"+ex.getMessage());
-            }
-            afiliadoMovils.add(afiliadoMovil);
-        }
-        cotizacionMovil.setAfiliados(afiliadoMovils);
-        try {
-            obj.put("IdCotizacion",0);
-            obj.put("IdAgente", PreferenceManager.getInt(Contants.KEY_IDAGENTE));
-            obj.put("IdVisita",visitaVta.getIdVisita());
-            obj.put("Email","nvillasanchez@gmail.com");
-            obj.put("Afiliados",jsonArray);
-        } catch (JSONException e) {
-            Log.d(TAG,"JSONEXCEPTION:"+e.getMessage());
-            e.printStackTrace();
-        }
-        Log.d(TAG, obj.toString());
-        Log.d(TAG,"json:"+new Gson().toJson(cotizacionMovil));
-        showDialogCotizarClient(cotizacionMovil);
+
         }
     }
 
@@ -1296,7 +1407,8 @@ public class CotizacionActivity extends AppCompatActivity {
         {
             //Control de errores
             NumberFormat numberFormat;
-            numberFormat = NumberFormat.getInstance();
+            Locale locale = new Locale("es", "pe");
+            numberFormat = NumberFormat.getInstance(locale);
             //numberFormat.setMaximumFractionDigits();
             numberFormat.setMinimumFractionDigits(2);
 
@@ -1311,7 +1423,12 @@ public class CotizacionActivity extends AppCompatActivity {
                     cotizacionAfiliados.add(cotizacionAfiliado);
                 }
             }
-            cotizacionMovil.setRespuesta(cotizacion);
+            if(consultarCotizacion==1){
+                cotizacionMovil.setRespuesta(cotizacion);
+            }else{
+                cotizacionVirtual.setRespuesta(cotizacion);
+            }
+
             //cotizacionMovil.setRespuesta(cotizacionAfiliados);
             Log.v(TAG,"setResponseCotizacion Cantidad de Cotizados:"+cotizacionAfiliados.size());
             for(Cotizacion cotizacionFraccion:cotizacion){
@@ -1426,6 +1543,11 @@ public class CotizacionActivity extends AppCompatActivity {
                 return false;
             }
         }
+
+        if(consultarCotizacion==-1){
+            Toast.makeText(this, "Seleccione un tipo de cotización por favor.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
         boolean estado = true;
         for(int j = 0 ; j<afiliadosLayouts.size(); j++){
             LinearLayout afiliado = afiliadosLayouts.get(j);
@@ -1440,14 +1562,28 @@ public class CotizacionActivity extends AppCompatActivity {
     }
 
     private void showDialogEnvioEmail(){
-        if(cotizacionMovil ==null){
-            Toast.makeText(this, "Debe realizar una cotizacion para poder enviar un email...", Toast.LENGTH_SHORT).show();
-            return;
+        if(consultarCotizacion==-1){
+            Toast.makeText(this, "Debe realizar una cotización...", Toast.LENGTH_SHORT).show();
         }
-        if(cotizacionMovil.getRespuesta()==null){
+        if(consultarCotizacion == 1){
+            if(cotizacionMovil == null){
+                Toast.makeText(this, "Debe realizar una cotizacion para poder enviar un email...", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
+        if(consultarCotizacion == 2){
+            if(cotizacionVirtual == null){
+                Toast.makeText(this, "Debe realizar una cotizacion para poder enviar un email...", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
+
+        /*if(cotizacionMovil.getRespuesta()==null || cotizacionVirtual.getRespuesta() == null){
             Toast.makeText(this, "Debe realizar una consulta de cotizacion para poder enviar un email...", Toast.LENGTH_SHORT).show();
             return;
-        }
+        }*/
         if(tipoVenta==-1){
             Toast.makeText(this, "Elija un plan a cotizar...", Toast.LENGTH_SHORT).show();
             return;
@@ -1467,17 +1603,37 @@ public class CotizacionActivity extends AppCompatActivity {
                 Toast.makeText(this, "Seleccione una fraccion porfavor", Toast.LENGTH_SHORT).show();
                 return;
             }
-            cotizacionMovil.setCantidadCuota(((GeneralValue)((Spinner) findViewById(R.id.spFraccionamiento)).getSelectedItem()).getCode());
-            cotizacionMovil.setPrecioCuota(((GeneralValue)((Spinner) findViewById(R.id.spFraccionamiento)).getSelectedItem()).getReference1());
+            if(consultarCotizacion==1){
+                cotizacionMovil.setCantidadCuota(((GeneralValue)((Spinner) findViewById(R.id.spFraccionamiento)).getSelectedItem()).getCode());
+                cotizacionMovil.setPrecioCuota(((GeneralValue)((Spinner) findViewById(R.id.spFraccionamiento)).getSelectedItem()).getReference1());
+            }else{
+                cotizacionVirtual.setCantidadCuota(((GeneralValue)((Spinner) findViewById(R.id.spFraccionamiento)).getSelectedItem()).getCode());
+                cotizacionVirtual.setPrecioCuota(((GeneralValue)((Spinner) findViewById(R.id.spFraccionamiento)).getSelectedItem()).getReference1());
+            }
+
         }else{
-            cotizacionMovil.setCantidadCuota("0");
-            cotizacionMovil.setPrecioCuota("0");
-            cotizacionMovil.setTipoVenta("2");
+            if(consultarCotizacion==1){
+                cotizacionMovil.setCantidadCuota("0");
+                cotizacionMovil.setPrecioCuota("0");
+                cotizacionMovil.setTipoVenta("2");
+            }else{
+                cotizacionVirtual.setCantidadCuota("0");
+                cotizacionVirtual.setPrecioCuota("0");
+                cotizacionVirtual.setTipoVenta("2");
+            }
+
         }
         setTipoCotizacion();
-        cotizacionMovil.setIdVisita(visitaVta.getIdVisita());
-        cotizacionMovil.setPrograma(((GeneralValue)((Spinner) findViewById(R.id.cotizacion_programa_movil)).getSelectedItem()).getValue());
-        cotizacionMovil.setTipoVenta(tipoVenta==1?"1":"2");
+        if(consultarCotizacion==1){
+            cotizacionMovil.setIdVisita(visitaVta.getIdVisita());
+            cotizacionMovil.setPrograma(((GeneralValue)((Spinner) findViewById(R.id.cotizacion_programa_movil)).getSelectedItem()).getValue());
+            cotizacionMovil.setTipoVenta(tipoVenta==1?"1":"2");
+        }else{
+            cotizacionVirtual.setIdVisita(visitaVta.getIdVisita());
+            cotizacionVirtual.setPrograma(((GeneralValue)((Spinner) findViewById(R.id.cotizacion_programa_movil)).getSelectedItem()).getValue());
+            cotizacionVirtual.setTipoVenta(tipoVenta==1?"1":"2");
+        }
+
         String email = null;// = ProspectoVtaDb.getProspectoEmailByIdVisita(visitaVta.getIdVisita(),Utils.getDataBase(this));
         int idProspecto = SessionManager.getInstance(this).getVisitaSession().getIdCliente();
         Log.d(TAG,"idProspecto:"+idProspecto);
@@ -1500,10 +1656,22 @@ public class CotizacionActivity extends AppCompatActivity {
             @Override
             public void onEmailEnviar(String email) {
                 Log.d(TAG,"onEmailEnviar:"+email+"...");
-                cotizacionMovil.setEmail(email);
+                if(consultarCotizacion==1){
+                    cotizacionMovil.setEmail(email);
+                }else{
+                    cotizacionVirtual.setEmail(email);
+                }
+
                 prospecto.setEmail(email);
                 ProspectoVtaDb.update(Utils.getDataBase(getApplicationContext()),prospecto);
-                Log.d(TAG,"json Email:"+new Gson().toJson(cotizacionMovil));
+                String movil = null ;
+                if(consultarCotizacion==1){
+                    movil = new Gson().toJson(cotizacionMovil);
+                    Log.d(TAG,"json Email:"+new Gson().toJson(cotizacionMovil));
+                }else{
+                    movil = new Gson().toJson(cotizacionVirtual);
+                    Log.d(TAG,"json Email:"+new Gson().toJson(cotizacionVirtual));
+                }
                 final ProgressDialog progressDialog = new ProgressDialog(CotizacionActivity.this,R.style.AppCompatAlertDialogStyle);
                 progressDialog.setTitle(CotizacionActivity.this.getResources().getString(R.string.appname_marketforce));
                 progressDialog.setMessage("Enviando Email...");
@@ -1545,7 +1713,7 @@ public class CotizacionActivity extends AppCompatActivity {
                         });
 
                     }
-                }).cotizar(cotizacionMovil);
+                }).cotizar(movil);
             }
         },email,0);
         Bundle todo = new Bundle();
@@ -1555,14 +1723,26 @@ public class CotizacionActivity extends AppCompatActivity {
     }
 
     private void showDialogGrabarCotizacion(int updateVisita){
-        if(cotizacionMovil ==null){
+        if(consultarCotizacion==-1){
+            Toast.makeText(this, "Debe realizar una cotización...", Toast.LENGTH_SHORT).show();
+        }
+        if(consultarCotizacion == 1){
+            if(cotizacionMovil == null){
+                Toast.makeText(this, "Debe realizar una cotizacion para poder enviar un email...", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
+        if(consultarCotizacion == 2){
+            if(cotizacionVirtual == null){
+                Toast.makeText(this, "Debe realizar una cotizacion para poder enviar un email...", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+        /*if(cotizacionMovil.getRespuesta()==null || cotizacionVirtual.getRespuesta()==null){
             Toast.makeText(this, "Debe realizar una cotizacion para poder enviar un email...", Toast.LENGTH_SHORT).show();
             return;
-        }
-        if(cotizacionMovil.getRespuesta()==null){
-            Toast.makeText(this, "Debe realizar una cotizacion para poder enviar un email...", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        }*/
         if(tipoVenta==-1){
             Toast.makeText(this, "Elija un plan a cotizar...", Toast.LENGTH_SHORT).show();
             return;
@@ -1580,15 +1760,32 @@ public class CotizacionActivity extends AppCompatActivity {
                 Toast.makeText(this, "Seleccione una fraccion porfavor", Toast.LENGTH_SHORT).show();
                 return;
             }
-            cotizacionMovil.setCantidadCuota(((GeneralValue)((Spinner) findViewById(R.id.spFraccionamiento)).getSelectedItem()).getCode());
-            cotizacionMovil.setPrecioCuota(((GeneralValue)((Spinner) findViewById(R.id.spFraccionamiento)).getSelectedItem()).getReference1());
+            if(consultarCotizacion==1){
+                cotizacionMovil.setCantidadCuota(((GeneralValue)((Spinner) findViewById(R.id.spFraccionamiento)).getSelectedItem()).getCode());
+                cotizacionMovil.setPrecioCuota(((GeneralValue)((Spinner) findViewById(R.id.spFraccionamiento)).getSelectedItem()).getReference1());
+            }else{
+                cotizacionVirtual.setCantidadCuota(((GeneralValue)((Spinner) findViewById(R.id.spFraccionamiento)).getSelectedItem()).getCode());
+                cotizacionVirtual.setPrecioCuota(((GeneralValue)((Spinner) findViewById(R.id.spFraccionamiento)).getSelectedItem()).getReference1());
+            }
+
         }else{
-            cotizacionMovil.setCantidadCuota("0");
-            cotizacionMovil.setPrecioCuota("0");
+            if(consultarCotizacion==1){
+                cotizacionMovil.setCantidadCuota("0");
+                cotizacionMovil.setPrecioCuota("0");
+            }else{
+                cotizacionVirtual.setCantidadCuota("0");
+                cotizacionVirtual.setPrecioCuota("0");
+            }
+
         }
         setTipoCotizacion();
-        cotizacionMovil.setPrograma(((GeneralValue)((Spinner) findViewById(R.id.cotizacion_programa_movil)).getSelectedItem()).getValue());
-        cotizacionMovil.setTipoVenta(tipoVenta==1?"1":"2");
+        if(consultarCotizacion==1){
+            cotizacionMovil.setPrograma(((GeneralValue)((Spinner) findViewById(R.id.cotizacion_programa_movil)).getSelectedItem()).getValue());
+            cotizacionMovil.setTipoVenta(tipoVenta==1?"1":"2");
+        }else{
+            cotizacionVirtual.setPrograma(((GeneralValue)((Spinner) findViewById(R.id.cotizacion_programa_movil)).getSelectedItem()).getValue());
+            cotizacionVirtual.setTipoVenta(tipoVenta==1?"1":"2");
+        }
 
         if(estado==1){
             if(!validateSendEmail()){
@@ -1625,7 +1822,13 @@ public class CotizacionActivity extends AppCompatActivity {
     }
 
     private void setTipoCotizacion(){
-        List<Cotizacion> cotizaciones = cotizacionMovil.getRespuesta();
+        List<Cotizacion> cotizaciones = null;
+        if(consultarCotizacion==1){
+            cotizaciones= cotizacionMovil.getRespuesta();
+        }else{
+            cotizaciones= cotizacionVirtual.getRespuesta();
+        }
+
         List<Cotizacion> seleccionados = new ArrayList<>();
         switch (select){
             case 1:
@@ -1647,7 +1850,12 @@ public class CotizacionActivity extends AppCompatActivity {
                 }
                 break;
         }
-        cotizacionMovil.setRespuesta(seleccionados);
+        if(consultarCotizacion==1){
+            cotizacionMovil.setRespuesta(seleccionados);
+        }else{
+            cotizacionVirtual.setRespuesta(seleccionados);
+        }
+
     }
 
     private boolean validateSendEmail(){
@@ -1662,6 +1870,13 @@ public class CotizacionActivity extends AppCompatActivity {
         progressDialog.setMessage("Espere porfavor...");
         progressDialog.setCancelable(false);
         progressDialog.show();
+
+        String movil = null;
+        if(consultarCotizacion==1){
+            movil = new Gson().toJson(cotizacionMovil);
+        }else{
+            movil = new Gson().toJson(cotizacionVirtual);
+        }
 
         new SaveCotizacionClient(this, new Callback() {
             Handler handler = new Handler(Looper.getMainLooper());
@@ -1722,7 +1937,7 @@ public class CotizacionActivity extends AppCompatActivity {
                     });
                 }
             }
-        }).cotizar(cotizacionMovil);
+        }).cotizar(movil);
     }
 
     private void setDataSolicitud(int idVisita,String tipo){
@@ -1789,12 +2004,7 @@ public class CotizacionActivity extends AppCompatActivity {
                 Log.d(TAG,"onFailure...");
                 progressDialog.dismiss();
                 Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(CotizacionActivity.this, "Hubo un problema en el servidor...intentelo mas tarde...", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                handler.post(() -> Toast.makeText(CotizacionActivity.this, "Hubo un problema en el servidor...intentelo mas tarde...", Toast.LENGTH_SHORT).show());
             }
 
             @Override
@@ -1809,52 +2019,45 @@ public class CotizacionActivity extends AppCompatActivity {
                     Log.d(TAG,"Hay "+cotizacionList.size()+" respuestas de cotizacionMovil...");
                     Log.v(TAG,json);
                     Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            boolean procede = true;
-                            for(Cotizacion cotizacion:cotizacionList){
-                                if(cotizacion.getResult().equalsIgnoreCase("1")){
-                                    for(GeneralValue generalValue:listExcepcions){
-                                        if(cotizacion.getInfo().contains(generalValue.getCode())){
-                                            Toast.makeText(CotizacionActivity.this, generalValue.getValue(), Toast.LENGTH_SHORT).show();
-                                            Log.v(TAG,"Excepcion General:"+generalValue.toString());
-                                            procede = false;
-                                            break;
-                                        }
+                    handler.post(() -> {
+                        boolean procede = true;
+                        for(Cotizacion cotizacion:cotizacionList){
+                            if(cotizacion.getResult().equalsIgnoreCase("1")){
+                                for(GeneralValue generalValue:listExcepcions){
+                                    if(cotizacion.getInfo().contains(generalValue.getCode())){
+                                        Toast.makeText(CotizacionActivity.this, generalValue.getValue(), Toast.LENGTH_SHORT).show();
+                                        Log.v(TAG,"Excepcion General:"+generalValue.toString());
+                                        procede = false;
+                                        break;
                                     }
-                                    procede = false;
-                                    Log.d(TAG,cotizacion.toString());
-                                    //Toast.makeText(CotizacionActivity.this, cotizacion.getInfo(), Toast.LENGTH_SHORT).show();
-                                    break;
                                 }
+                                procede = false;
+                                Log.d(TAG,cotizacion.toString());
+                                //Toast.makeText(CotizacionActivity.this, cotizacion.getInfo(), Toast.LENGTH_SHORT).show();
+                                break;
                             }
-                            if(procede){
-                                Log.v(TAG,"Si procede...");
-                                flagRealizoCotizacionInicial = 1;
-                                cotizacionMovil.setRespuesta(cotizacionList);
-                                selectTipoVenta = tipoVenta;
-                                selectPlanCotizacion = select;
-                                if(tipoVenta == 1){
-                                    requestVenta = 1;
-                                }else{
-                                    requestVenta = 2;
-                                }
-                                setResponseCotizacion(cotizacionList);
+                        }
+                        if(procede){
+                            Log.v(TAG,"Si procede...");
+                            consultarCotizacion = 1;
+                            flagRealizoCotizacionInicial = 1;
+                            cotizacionMovil.setRespuesta(cotizacionList);
+                            selectTipoVenta = tipoVenta;
+                            selectPlanCotizacion = select;
+                            if(tipoVenta == 1){
+                                requestVenta = 1;
+                            }else{
+                                requestVenta = 2;
                             }
-                            else{
-                                Log.v(TAG,"No procede...");
-                            }
+                            setResponseCotizacion(cotizacionList);
+                        }
+                        else{
+                            Log.v(TAG,"No procede...");
                         }
                     });
                 }else{
                     Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(CotizacionActivity.this, "Hubo un problema al realizar la cotizacion. Intentelo nuevamente.", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    handler.post(() -> Toast.makeText(CotizacionActivity.this, "Hubo un problema al realizar la cotizacion. Intentelo nuevamente.", Toast.LENGTH_SHORT).show());
                     Log.d(TAG,"Not isSucessful...");
                 }
             }
@@ -2346,13 +2549,21 @@ public class CotizacionActivity extends AppCompatActivity {
     }
 
     private void showDialogGrabarCotizaciónInicial(int estado,String code,String motivo,int tipo){
-        if(cotizacionMovil ==null){
-            Toast.makeText(this, "Debe realizar una cotizacion...", Toast.LENGTH_SHORT).show();
-            return;
+        if(consultarCotizacion==-1){
+            Toast.makeText(this, "Debe realizar una cotización...", Toast.LENGTH_SHORT).show();
         }
-        if(cotizacionMovil.getRespuesta()==null){
-            Toast.makeText(this, "Debe realizar una cotizacion...", Toast.LENGTH_SHORT).show();
-            return;
+        if(consultarCotizacion == 1){
+            if(cotizacionMovil == null){
+                Toast.makeText(this, "Debe realizar una cotizacion para poder enviar un email...", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
+        if(consultarCotizacion == 2){
+            if(cotizacionVirtual == null){
+                Toast.makeText(this, "Debe realizar una cotizacion para poder enviar un email...", Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
         if(tipoVenta==-1){
             Toast.makeText(this, "Elija un plan a cotizar...", Toast.LENGTH_SHORT).show();
@@ -2371,15 +2582,39 @@ public class CotizacionActivity extends AppCompatActivity {
                 Toast.makeText(this, "Seleccione una fraccion porfavor", Toast.LENGTH_SHORT).show();
                 return;
             }
-            cotizacionMovil.setCantidadCuota(((GeneralValue)((Spinner) findViewById(R.id.spFraccionamiento)).getSelectedItem()).getCode());
-            cotizacionMovil.setPrecioCuota(((GeneralValue)((Spinner) findViewById(R.id.spFraccionamiento)).getSelectedItem()).getReference1());
+            if(consultarCotizacion==1){
+                cotizacionMovil.setCantidadCuota(((GeneralValue)((Spinner) findViewById(R.id.spFraccionamiento)).getSelectedItem()).getCode());
+                cotizacionMovil.setPrecioCuota(((GeneralValue)((Spinner) findViewById(R.id.spFraccionamiento)).getSelectedItem()).getReference1());
+            }else{
+                cotizacionVirtual.setCantidadCuota(((GeneralValue)((Spinner) findViewById(R.id.spFraccionamiento)).getSelectedItem()).getCode());
+                cotizacionVirtual.setPrecioCuota(((GeneralValue)((Spinner) findViewById(R.id.spFraccionamiento)).getSelectedItem()).getReference1());
+            }
+
         }else{
-            cotizacionMovil.setCantidadCuota("0");
-            cotizacionMovil.setPrecioCuota("0");
+            if(consultarCotizacion==1){
+                cotizacionMovil.setCantidadCuota("0");
+                cotizacionMovil.setPrecioCuota("0");
+            }else{
+                cotizacionVirtual.setCantidadCuota("0");
+                cotizacionVirtual.setPrecioCuota("0");
+            }
+
         }
         setTipoCotizacion();
-        cotizacionMovil.setPrograma(((GeneralValue)((Spinner) findViewById(R.id.cotizacion_programa_movil)).getSelectedItem()).getValue());
-        cotizacionMovil.setTipoVenta(tipoVenta==1?"1":"2");
+        if(consultarCotizacion==1){
+            cotizacionMovil.setPrograma(((GeneralValue)((Spinner) findViewById(R.id.cotizacion_programa_movil)).getSelectedItem()).getValue());
+            cotizacionMovil.setTipoVenta(tipoVenta==1?"1":"2");
+        }else{
+            cotizacionVirtual.setPrograma(((GeneralValue)((Spinner) findViewById(R.id.cotizacion_programa_movil)).getSelectedItem()).getValue());
+            cotizacionVirtual.setTipoVenta(tipoVenta==1?"1":"2");
+        }
+
+        String movil = null;
+        if(consultarCotizacion==1){
+            movil = new Gson().toJson(cotizacionMovil);
+        }else {
+            movil = new Gson().toJson(cotizacionVirtual);
+        }
         final ProgressDialog progressDialog = new ProgressDialog(this,R.style.AppCompatAlertDialogStyle);
         progressDialog.setTitle(R.string.appname_marketforce);
         progressDialog.setMessage("Guardando Cotizacion...");
@@ -2422,7 +2657,7 @@ public class CotizacionActivity extends AppCompatActivity {
                     });
                 }
             }
-        }).cotizar(cotizacionMovil);
+        }).cotizar(movil);
     }
 
     //endregion
@@ -3862,6 +4097,9 @@ public class CotizacionActivity extends AppCompatActivity {
                 selectTipoPagoFinal = -1;
                 selectTipoPago = -1;
                 selectTipoVenta = -1;
+
+               //
+                consultarCotizacion=-1;
                 //
                 ResponseView.setVisibility(View.GONE);
                 rbFrecuenciaAnual.setChecked(false);
@@ -4178,15 +4416,18 @@ public class CotizacionActivity extends AppCompatActivity {
     //region Solicitud Virtual Methods
 
     private void showAutenticationFingerPrint(){
+        Log.d(TAG,"showAutenticationFingerPrint...");
         FingerPrintDialog fingerPrintDialog = FingerPrintDialog.newInstance(new FingerPrintDialog.callBackListener() {
             @Override
             public void onError(String mensaje) {
-
+                Log.d(TAG,"onError:"+mensaje);
+                Toast.makeText(CotizacionActivity.this, mensaje, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onSuccess() {
-
+                Log.d(TAG,"onSuccess...");
+                Toast.makeText(CotizacionActivity.this, "Autenticación correcta.", Toast.LENGTH_SHORT).show();
             }
         },new Bundle());
         fingerPrintDialog.setCancelable(true);
@@ -4240,8 +4481,9 @@ public class CotizacionActivity extends AppCompatActivity {
                         }
                         if(procede){
                             Log.v(TAG,"Si procede...");
+                            consultarCotizacion = 2;
                             flagRealizoCotizacionInicial = 1;
-                            cotizacionMovil.setRespuesta(cotizacionList);
+                            cotizacionVirtual.setRespuesta(cotizacionList);
                             selectTipoVenta = tipoVenta;
                             selectPlanCotizacion = select;
                             if(tipoVenta == 1){
@@ -4262,5 +4504,26 @@ public class CotizacionActivity extends AppCompatActivity {
                 }
             }
         }).cotizar(cotizacionzacionMovil);
+    }
+
+    private void configureViewsVirtual(){
+        rbVirtual.setOnClickListener(v -> {
+            Log.d(TAG,"rbVirtual...");
+            consultarCotizacion=2;
+            rbVirtual.setChecked(true);
+            rbFisica.setChecked(false);
+            Log.d(TAG,"consultarCotizacion es:"+consultarCotizacion);
+        });
+        rbFisica.setOnClickListener(v -> {
+            Log.d(TAG,"rbFisica...");
+            consultarCotizacion=1;
+            rbFisica.setChecked(true);
+            rbVirtual.setChecked(false);
+            Log.d(TAG,"consultarCotizacion es:"+consultarCotizacion);
+        });
+    }
+
+    private void initVirtual(){
+        configureViewsVirtual();
     }
 }
