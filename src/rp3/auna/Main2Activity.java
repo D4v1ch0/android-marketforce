@@ -672,9 +672,12 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
         Intent updateServiceIntent = new Intent(this, EnviarUbicacionReceiver.class);
         PendingIntent pendingUpdateIntent = PendingIntent.getService(this, 0, updateServiceIntent, 0);
         alarmManager.cancel(pendingUpdateIntent);
+        Session.logOut();
+        //Session.getUser().isLogged(false);
+        PreferenceManager.setValue(Constants.KEY_LOGIN_SESSION,"");
         startActivity(new Intent(this, StartActivity.class));
         this.finish();
-        Session.logOut();
+
     }
 
     public void setFragment(int position) {
@@ -781,6 +784,7 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
     };
 
     public  void requestSyncMain(Bundle settingsBundle) {
+        Log.d(TAG,"requestSyncMain...");
         if (ConnectionUtils.isNetAvailable(this)) {
             //PreferenceManager.close();
             SyncUtils.requestSync(settingsBundle);
@@ -1311,6 +1315,11 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
     protected void onPostResume() {
         super.onPostResume();
         Log.d(TAG,"onPostResume...");
+        Log.d(TAG,"Usuario Logeado:"+Session.getUser().toString());
+        String logonName = PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"");
+        String passowrd = PreferenceManager.getString(Constants.KEY_LAST_PASS,"");
+        Log.d(TAG,"LogonName:"+logonName);
+        Log.d(TAG,"Password:"+passowrd);
         validateVisitaSession();
         if(REQUEST_STATE == REQUEST_VISITA_COTIZACION_NUEVO){
             if(RESULT_STATE == RESULT_VISITA_REPROGRAMADA_FINALIZADA ){
@@ -1327,6 +1336,11 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
     protected void onDestroy() {
         super.onDestroy();
         Log.d(TAG,"onDestroy...");
+        Log.d(TAG,"Usuario Logeado:"+Session.getUser().toString());
+        String logonName = PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"");
+        String passowrd = PreferenceManager.getString(Constants.KEY_LAST_PASS,"");
+        Log.d(TAG,"LogonName:"+logonName);
+        Log.d(TAG,"Password:"+passowrd);
         //locationProvider.disconnect();
 
         try {

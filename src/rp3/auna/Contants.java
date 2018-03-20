@@ -137,7 +137,7 @@ public class Contants {
     public final static String IMAGE_FOLDER_PRODUCTOS = "imagesFolderProducto";
     public final static String IMAGE_FOLDER_OPORTUNIDADES = "imagesFolderOportunidad";
 	public final static String KEY_FIRST_TIME = "firstTime1";
-    public final static String KEY_SECOND_TIME = "secondTime";
+    public final static String KEY_SECOND_TIME = "secondTime1";
     public final static String KEY_DATABASE_RESTORE = "db_restore";
 	
 	public final static String ESTADO_GESTIONANDO = "G";

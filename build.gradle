@@ -35,7 +35,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.jakewharton:butterknife:8.1.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.1.0'
-    implementation project(':payme_lib-release_produccion')
+    implementation project(':payme_lib-release_auna_2')
 }
 
 android {
@@ -81,7 +81,7 @@ android {
     }
     buildTypes {
         release {
-            debuggable false
+            debuggable true
         }
     }
 

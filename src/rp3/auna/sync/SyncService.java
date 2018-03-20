@@ -25,6 +25,7 @@ public class SyncService extends Service  {
          * Disallow parallel syncs
          */
         synchronized (sSyncAdapterLock) {
+        	sSyncAdapter=null;
             if (sSyncAdapter == null) {
                 sSyncAdapter = new SyncAdapter(getApplicationContext(), true);                
             }
