@@ -20,8 +20,13 @@ public class AgendaReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Log.d(TAG,"onReceive...");
         Log.d(TAG,"AgendaReceiver...");
-        Intent serviceIntent = new Intent(context,AgendaService.class);
-        serviceIntent.putExtras(intent.getExtras());
-        context.startService(serviceIntent);
+        try {
+            Intent serviceIntent = new Intent(context,AgendaService.class);
+            serviceIntent.putExtras(intent.getExtras());
+            context.startService(serviceIntent);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 }

@@ -51,6 +51,7 @@ import android.widget.TableRow;
 import android.widget.Toast;
 
 import org.json.JSONException;
+import org.spongycastle.asn1.cmp.CAKeyUpdAnnContent;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -120,16 +121,21 @@ public class ProspectoFragment extends Fragment implements SearchView.OnQueryTex
         View view = inflater.inflate(R.layout.fragment_prospectovta, container, false);
         ButterKnife.bind(this,view);
         setHasOptionsMenu(true);
-        sharedPreferences = getActivity().getSharedPreferences("Rp3MarketForceAuna", Context.MODE_PRIVATE);
-        //swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipe_containerProspecto);
-        appBarLayout = (AppBarLayout)getActivity().findViewById(R.id.appBarMain);
-        toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        statusBar = (FrameLayout) getActivity().findViewById(R.id.statusBar);
-        tabLayout = ((Main2Activity) getActivity()).tabLayout;
-        tabLayout.setVisibility(View.GONE);
-        ((Main2Activity) getActivity()).getSupportActionBar().setTitle("Prospectos");
-        toolbarHideShow();
-        recyclerViewDevelop();
+        try {
+            sharedPreferences = getActivity().getSharedPreferences("Rp3MarketForceAuna", Context.MODE_PRIVATE);
+            //swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipe_containerProspecto);
+            appBarLayout = (AppBarLayout)getActivity().findViewById(R.id.appBarMain);
+            toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+            statusBar = (FrameLayout) getActivity().findViewById(R.id.statusBar);
+            tabLayout = ((Main2Activity) getActivity()).tabLayout;
+            tabLayout.setVisibility(View.GONE);
+            ((Main2Activity) getActivity()).getSupportActionBar().setTitle("Prospectos");
+            toolbarHideShow();
+            recyclerViewDevelop();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         return view;
     }
 
@@ -147,95 +153,113 @@ public class ProspectoFragment extends Fragment implements SearchView.OnQueryTex
                 manager.setInitialOffset(appBarLayout.getHeight());
             }
         });*/
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        adapter = new ProspectoAdapter(getActivity(), new ProspectoAdapter.CallbackVerProspecto() {
-            @Override
-            public void prospectoSelected(ProspectoVtaDb prospectoVtaDb, int position,View view) {
-                Log.d(TAG,"prospectoClickSelected...");
-                int idAgente = PreferenceManager.getInt(Contants.KEY_IDAGENTE,0);
-                if(idAgente==0){
-                    Toast.makeText(getActivity(), R.string.generic_show_message_service, Toast.LENGTH_SHORT).show();
-                    return;
+        try{
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+            adapter = new ProspectoAdapter(getActivity(), new ProspectoAdapter.CallbackVerProspecto() {
+                @Override
+                public void prospectoSelected(ProspectoVtaDb prospectoVtaDb, int position,View view) {
+                    Log.d(TAG,"prospectoClickSelected...");
+                    try {
+                        int idAgente = PreferenceManager.getInt(Contants.KEY_IDAGENTE,0);
+                        if(idAgente==0){
+                            Toast.makeText(getActivity(), R.string.generic_show_message_service, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        Intent intent = new Intent(getActivity(),ProspectoActivity.class);
+                        Bundle todo = new Bundle();
+                        todo.putInt("Opcion",2);
+                        intent.putExtras(todo);
+                        Log.d(TAG,prospectoVtaDb.toString());
+                        SessionManager.getInstance(getActivity()).createProspectoEdit(prospectoVtaDb);
+                        getActivity().startActivityForResult(intent,REQUEST_PROSPECTO_EDIT);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
                 }
-                Intent intent = new Intent(getActivity(),ProspectoActivity.class);
-                Bundle todo = new Bundle();
-                todo.putInt("Opcion",2);
-                intent.putExtras(todo);
-                Log.d(TAG,prospectoVtaDb.toString());
-                SessionManager.getInstance(getActivity()).createProspectoEdit(prospectoVtaDb);
-                getActivity().startActivityForResult(intent,REQUEST_PROSPECTO_EDIT);
-            }
-        }, new ProspectoAdapter.CallbackActionProspecto() {
-            @Override
-            public void prospectoSelected(final ProspectoVtaDb prospectoVtaDb, int position, View v) {
-                Log.d(TAG,"prospectoLongSelected...");
-                Log.d(TAG,prospectoVtaDb.toString());
-                if(prospectoVtaDb.getDireccion1()!=null || prospectoVtaDb.getDireccion2()!=null){
-                    if(prospectoVtaDb.getCelular() !=null || prospectoVtaDb.getTelefono()!=null){
-                        if(prospectoVtaDb.getDireccion1().length()>0 || prospectoVtaDb.getDireccion2().length()>0){
-                            if(prospectoVtaDb.getCelular().length()>0 || prospectoVtaDb.getTelefono().length()>0){
-                                Log.d(TAG,"Tiene ambos...");
-                                showWindowPopup(v,0,prospectoVtaDb);
-                            }else{
-                                Log.d(TAG,"Tiene direcciones...");
-                                showWindowPopup(v,2,prospectoVtaDb);
+            }, new ProspectoAdapter.CallbackActionProspecto() {
+                @Override
+                public void prospectoSelected(final ProspectoVtaDb prospectoVtaDb, int position, View v) {
+                    Log.d(TAG,"prospectoLongSelected...");
+                    Log.d(TAG,prospectoVtaDb.toString());
+                    try{
+                        if(prospectoVtaDb.getDireccion1()!=null || prospectoVtaDb.getDireccion2()!=null){
+                            if(prospectoVtaDb.getCelular() !=null || prospectoVtaDb.getTelefono()!=null){
+                                if(prospectoVtaDb.getDireccion1().length()>0 || prospectoVtaDb.getDireccion2().length()>0){
+                                    if(prospectoVtaDb.getCelular().length()>0 || prospectoVtaDb.getTelefono().length()>0){
+                                        Log.d(TAG,"Tiene ambos...");
+                                        showWindowPopup(v,0,prospectoVtaDb);
+                                    }else{
+                                        Log.d(TAG,"Tiene direcciones...");
+                                        showWindowPopup(v,2,prospectoVtaDb);
+                                    }
+                                }else{
+                                    Log.d(TAG,"Tiene telefonos...");
+                                    showWindowPopup(v,1,prospectoVtaDb);
+                                }
                             }
-                        }else{
+                        }
+                        else if(prospectoVtaDb.getDireccion1()!=null || prospectoVtaDb.getDireccion2()!=null){
+                            Log.d(TAG,"Tiene direcciones...");
+                            showWindowPopup(v,2,prospectoVtaDb);
+                        }else if(prospectoVtaDb.getCelular()!=null || prospectoVtaDb.getTelefono()!=null){
                             Log.d(TAG,"Tiene telefonos...");
                             showWindowPopup(v,1,prospectoVtaDb);
                         }
+                    }catch (Exception e){
+                        e.printStackTrace();
                     }
                 }
-                else if(prospectoVtaDb.getDireccion1()!=null || prospectoVtaDb.getDireccion2()!=null){
-                    Log.d(TAG,"Tiene direcciones...");
-                    showWindowPopup(v,2,prospectoVtaDb);
-                }else if(prospectoVtaDb.getCelular()!=null || prospectoVtaDb.getTelefono()!=null){
-                    Log.d(TAG,"Tiene telefonos...");
-                    showWindowPopup(v,1,prospectoVtaDb);
-                }
-            }
-        });
-        // Create the recyclerViewAdapter
-        recyclerView.setAdapter(adapter);
-        progressBar.setVisibility(View.VISIBLE);
+            });
+            // Create the recyclerViewAdapter
+            recyclerView.setAdapter(adapter);
+            progressBar.setVisibility(View.VISIBLE);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void recyclerViewDevelop() {
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity().getResources().getDrawable(android.R.drawable.divider_horizontal_bright)));
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, typedValueToolbarHeight, true);
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            Log.d(TAG,"Orientation_Portait...");
-            if (Build.VERSION.SDK_INT >= 19) {
-                Log.d(TAG,"SDK_INT >= 19...");
-                recyclerViewPaddingTop = TypedValue.complexToDimensionPixelSize(typedValueToolbarHeight.data, getResources().getDisplayMetrics()) + convertToPx(25);
-            }else{
-                Log.d(TAG,"SDK_INT < 19...");
-                recyclerViewPaddingTop = TypedValue.complexToDimensionPixelSize(typedValueToolbarHeight.data, getResources().getDisplayMetrics());
+        try{
+            recyclerView.addItemDecoration(new DividerItemDecoration(getActivity().getResources().getDrawable(android.R.drawable.divider_horizontal_bright)));
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
+            getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, typedValueToolbarHeight, true);
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                Log.d(TAG,"Orientation_Portait...");
+                if (Build.VERSION.SDK_INT >= 19) {
+                    Log.d(TAG,"SDK_INT >= 19...");
+                    recyclerViewPaddingTop = TypedValue.complexToDimensionPixelSize(typedValueToolbarHeight.data, getResources().getDisplayMetrics()) + convertToPx(25);
+                }else{
+                    Log.d(TAG,"SDK_INT < 19...");
+                    recyclerViewPaddingTop = TypedValue.complexToDimensionPixelSize(typedValueToolbarHeight.data, getResources().getDisplayMetrics());
+                }
             }
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                Log.d(TAG,"Orientation_LandScape...");
+                if (Build.VERSION.SDK_INT >= 21) {
+                    Log.d(TAG,"SDK_INT >= 21...");
+                    recyclerViewPaddingTop = TypedValue.complexToDimensionPixelSize(typedValueToolbarHeight.data, getResources().getDisplayMetrics()) + convertToPx(25);
+                }
+                if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21){
+                    Log.d(TAG,"Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21...");
+                    recyclerViewPaddingTop = TypedValue.complexToDimensionPixelSize(typedValueToolbarHeight.data, getResources().getDisplayMetrics()) + convertToPx(25);
+                }
+                if (Build.VERSION.SDK_INT < 19) {
+                    Log.d(TAG,"Build.VERSION.SDK_INT < 19...");
+                    recyclerViewPaddingTop = TypedValue.complexToDimensionPixelSize(typedValueToolbarHeight.data, getResources().getDisplayMetrics());
+                }
+            }
+            recyclerView.setPadding(0, recyclerViewPaddingTop, 0, 0);
+            LoaderProspecto loader = new LoaderProspecto();
+            Bundle args = new Bundle();
+            getLoaderManager().initLoader(0,args,loader);
+            //swipeRefresh();
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            Log.d(TAG,"Orientation_LandScape...");
-            if (Build.VERSION.SDK_INT >= 21) {
-                Log.d(TAG,"SDK_INT >= 21...");
-                recyclerViewPaddingTop = TypedValue.complexToDimensionPixelSize(typedValueToolbarHeight.data, getResources().getDisplayMetrics()) + convertToPx(25);
-            }
-            if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21){
-                Log.d(TAG,"Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21...");
-                recyclerViewPaddingTop = TypedValue.complexToDimensionPixelSize(typedValueToolbarHeight.data, getResources().getDisplayMetrics()) + convertToPx(25);
-            }
-            if (Build.VERSION.SDK_INT < 19) {
-                Log.d(TAG,"Build.VERSION.SDK_INT < 19...");
-                recyclerViewPaddingTop = TypedValue.complexToDimensionPixelSize(typedValueToolbarHeight.data, getResources().getDisplayMetrics());
-            }
-        }
-        recyclerView.setPadding(0, recyclerViewPaddingTop, 0, 0);
-        LoaderProspecto loader = new LoaderProspecto();
-        Bundle args = new Bundle();
-        getLoaderManager().initLoader(0,args,loader);
-        //swipeRefresh();
+
     }
 
     //endregion
@@ -245,16 +269,20 @@ public class ProspectoFragment extends Fragment implements SearchView.OnQueryTex
             @Override
             public void onSelected(int position) {
                 Log.d(TAG,"onSelected option:"+position);
-                switch (position){
-                    case 1:
-                        initSelectedCall(prospectoVtaDb);
-                        break;
-                    case 2:
-                        initSelectedDirection(prospectoVtaDb);
-                        break;
-                    case 3:
-                        initShared(prospectoVtaDb);
-                        break;
+                try {
+                    switch (position){
+                        case 1:
+                            initSelectedCall(prospectoVtaDb);
+                            break;
+                        case 2:
+                            initSelectedDirection(prospectoVtaDb);
+                            break;
+                        case 3:
+                            initShared(prospectoVtaDb);
+                            break;
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
             }
         });
@@ -382,56 +410,57 @@ public class ProspectoFragment extends Fragment implements SearchView.OnQueryTex
     }
 
     private void initSelectedDirection(final ProspectoVtaDb prospectoVtaDb){
-        ArrayList<String> direcciones = new ArrayList<String>();
-        if(prospectoVtaDb.getDireccion1()!=null){
-            if(prospectoVtaDb.getDireccion1().trim().length()>0){
-                direcciones.add(prospectoVtaDb.getDireccion1());
+        try {
+            ArrayList<String> direcciones = new ArrayList<String>();
+            if(prospectoVtaDb.getDireccion1()!=null){
+                if(prospectoVtaDb.getDireccion1().trim().length()>0){
+                    direcciones.add(prospectoVtaDb.getDireccion1());
+                }
             }
-        }
-        if(prospectoVtaDb.getDireccion2()!=null){
-            if(prospectoVtaDb.getDireccion2().trim().length()>0){
-                direcciones.add(prospectoVtaDb.getDireccion2());
+            if(prospectoVtaDb.getDireccion2()!=null){
+                if(prospectoVtaDb.getDireccion2().trim().length()>0){
+                    direcciones.add(prospectoVtaDb.getDireccion2());
+                }
             }
-        }
-        final String [] listDir = new String[direcciones.size()];
-        for (int i=0;i<direcciones.size();i++){
-            listDir[i] = direcciones.get(i);
-        }
-        AlertDialog dialog = new AlertDialog.Builder(getActivity(),R.style.AppCompatAlertDialogStyle)
-                .setItems(listDir, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        /**
-                         * Llamar a la actividad de crear Visita
-                         */
-                        Bundle bundle =new Bundle();
-                        bundle.putString("Prospecto",prospectoVtaDb.getNombre());
-                        bundle.putInt("Estado",prospectoVtaDb.getEstado());
-                        bundle.putInt("IdProspecto",prospectoVtaDb.getIdProspecto());
-                        bundle.putLong("Id",prospectoVtaDb.getID());
-                        bundle.putString("Direccion",listDir[which]);
-                        Location location = ((Main2Activity)getActivity()).location;
-                        if(location!=null){
-                            bundle.putDouble("Latitud",location.getLatitude());
-                            bundle.putDouble("Longitud",location.getLongitude());
+            final String [] listDir = new String[direcciones.size()];
+            for (int i=0;i<direcciones.size();i++){
+                listDir[i] = direcciones.get(i);
+            }
+            AlertDialog dialog = new AlertDialog.Builder(getActivity(),R.style.AppCompatAlertDialogStyle)
+                    .setItems(listDir, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            /**
+                             * Llamar a la actividad de crear Visita
+                             */
+                            Bundle bundle =new Bundle();
+                            bundle.putString("Prospecto",prospectoVtaDb.getNombre());
+                            bundle.putInt("Estado",prospectoVtaDb.getEstado());
+                            bundle.putInt("IdProspecto",prospectoVtaDb.getIdProspecto());
+                            bundle.putLong("Id",prospectoVtaDb.getID());
+                            bundle.putString("Direccion",listDir[which]);
+                            Location location = ((Main2Activity)getActivity()).location;
+                            if(location!=null){
+                                bundle.putDouble("Latitud",location.getLatitude());
+                                bundle.putDouble("Longitud",location.getLongitude());
+                            }
+                            int idAgente = PreferenceManager.getInt(Contants.KEY_IDAGENTE,0);
+                            if(idAgente==0){
+                                Toast.makeText(getActivity(), R.string.generic_show_message_service, Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            Intent intent = new Intent(getActivity(), rp3.auna.CrearVisitaActivity.class);
+                            intent.putExtras(bundle);
+                            getActivity().startActivityForResult(intent,REQUEST_VISITA_NUEVO);
                         }
-                        int idAgente = PreferenceManager.getInt(Contants.KEY_IDAGENTE,0);
-                        if(idAgente==0){
-                            Toast.makeText(getActivity(), R.string.generic_show_message_service, Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        Intent intent = new Intent(getActivity(), rp3.auna.CrearVisitaActivity.class);
-                        intent.putExtras(bundle);
-                        getActivity().startActivityForResult(intent,REQUEST_VISITA_NUEVO);
-                    }
-                })
-                .create();
-        dialog.setTitle("Seleccionar Dirección");
-        dialog.show();
+                    })
+                    .create();
+            dialog.setTitle("Seleccionar Dirección");
+            dialog.show();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
-
-
-
     //region Search and Order Prospecto
 
     @Override
@@ -480,49 +509,50 @@ public class ProspectoFragment extends Fragment implements SearchView.OnQueryTex
         newText=newText.toLowerCase();
         ArrayList<ProspectoVtaDb> newList=new ArrayList<>();
         Log.d(TAG,"newText es = "+newText);
-        if(newText!=null){
-            Log.d(TAG,"newText!=null...");
-            if(newText.trim().length()>0){
-                filterState = true;
-                Log.d(TAG,"newText>0");
-                if(isNumber(newText)){
-                    for(ProspectoVtaDb obj:list){
-                        if(obj.getDocumento()!=null){
-                            if(obj.getDocumento().trim().length()>0 && obj.getTipoDocumento()==1){
-                                String documento=String.valueOf(obj.getDocumento());
-                                if(documento.matches("(?i).*" + newText + ".*")){
-                                    if(newText.trim().length()>0){
-                                        newList.add(obj);
+        try {
+            if(newText!=null){
+                Log.d(TAG,"newText!=null...");
+                if(newText.trim().length()>0){
+                    filterState = true;
+                    Log.d(TAG,"newText>0");
+                    if(isNumber(newText)){
+                        for(ProspectoVtaDb obj:list){
+                            if(obj.getDocumento()!=null){
+                                if(obj.getDocumento().trim().length()>0 && obj.getTipoDocumento()==1){
+                                    String documento=String.valueOf(obj.getDocumento());
+                                    if(documento.matches("(?i).*" + newText + ".*")){
+                                        if(newText.trim().length()>0){
+                                            newList.add(obj);
+                                        }
                                     }
                                 }
                             }
-                        }
 
-                    }
-                    Log.d(TAG,"cantidad de PDV Document search:"+newList.size());
-                    adapter.addMoreItems(newList);
-                }else if(!isNumber(newText)){
-                    for(ProspectoVtaDb obj:list){
-                        String name=String.valueOf(obj.getNombre());
-                        if(name.matches("(?i).*" + newText + ".*")){
-                            newList.add(obj);
                         }
+                        Log.d(TAG,"cantidad de PDV Document search:"+newList.size());
+                        adapter.addMoreItems(newList);
+                    }else if(!isNumber(newText)){
+                        for(ProspectoVtaDb obj:list){
+                            String name=String.valueOf(obj.getNombre());
+                            if(name.matches("(?i).*" + newText + ".*")){
+                                newList.add(obj);
+                            }
+                        }
+                        Log.d(TAG,"cantidad de PDV nombre search:"+newList.size());
+                        adapter.addMoreItems(newList);
                     }
-                    Log.d(TAG,"cantidad de PDV nombre search:"+newList.size());
-                    adapter.addMoreItems(newList);
+                }else{
+                    filterState = false;
+                    Log.d(TAG,"newText==0");
+                    adapter.addMoreItems(list);
                 }
             }else{
+                Log.d(TAG,"newText==null");
                 filterState = false;
-                Log.d(TAG,"newText==0");
-                adapter.addMoreItems(list);
             }
-        }else{
-            Log.d(TAG,"newText==null");
-            filterState = false;
+        }catch (Exception e){
+            e.printStackTrace();
         }
-
-
-
         return false;
     }
 
@@ -540,14 +570,19 @@ public class ProspectoFragment extends Fragment implements SearchView.OnQueryTex
     }
 
     public void orderbyName(){
-        Collections.sort(list, new Comparator<ProspectoVtaDb>() {
-            @Override
-            public int compare(ProspectoVtaDb o1, ProspectoVtaDb o2) {
+        try {
+            Collections.sort(list, new Comparator<ProspectoVtaDb>() {
+                @Override
+                public int compare(ProspectoVtaDb o1, ProspectoVtaDb o2) {
 
-                return o1.getNombre().compareToIgnoreCase(o2.getNombre());
-            }
-        });
-        adapter.addMoreItems(list);
+                    return o1.getNombre().compareToIgnoreCase(o2.getNombre());
+                }
+            });
+            adapter.addMoreItems(list);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     //endregion
@@ -564,35 +599,40 @@ public class ProspectoFragment extends Fragment implements SearchView.OnQueryTex
         @Override
         public void onLoadFinished(Loader<List<ProspectoVtaDb>> arg0, List<ProspectoVtaDb> data) {
             Log.d(TAG,"onLoadFinished...");
-            if(getActivity() != null) {
-                list = data;
-                if (list != null){
-                    if (list.size() > 0) {
-                        Log.d(TAG,"cantidad de prospectos:"+list.size());
-                        toolbar.setTranslationY(0);
-                        //swipeRefreshLayout.setRefreshing(false);
-                        //ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-                        progressBar.setVisibility(View.GONE);
-                        adapter.addMoreItems(list);
-                        recyclerView.setVisibility(View.VISIBLE);
-                        //swipeRefreshLayout.setVisibility(View.VISIBLE);
-                        container.setVisibility(View.GONE);
+            try {
+                if(getActivity() != null) {
+                    list = data;
+                    if (list != null){
+                        if (list.size() > 0) {
+                            Log.d(TAG,"cantidad de prospectos:"+list.size());
+                            toolbar.setTranslationY(0);
+                            //swipeRefreshLayout.setRefreshing(false);
+                            //ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+                            progressBar.setVisibility(View.GONE);
+                            adapter.addMoreItems(list);
+                            recyclerView.setVisibility(View.VISIBLE);
+                            //swipeRefreshLayout.setVisibility(View.VISIBLE);
+                            container.setVisibility(View.GONE);
+                        }else{
+                            Log.d(TAG,"list.prospecto == 0...");
+                            progressBar.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.GONE);
+                            //swipeRefreshLayout.setVisibility(View.GONE);
+                            container.setVisibility(View.VISIBLE);
+                        }
                     }else{
-                        Log.d(TAG,"list.prospecto == 0...");
+                        Log.d(TAG,"list == null...");
                         progressBar.setVisibility(View.GONE);
                         recyclerView.setVisibility(View.GONE);
-                        //swipeRefreshLayout.setVisibility(View.GONE);
                         container.setVisibility(View.VISIBLE);
+                        //swipeRefreshLayout.setVisibility(View.GONE);
+                        Toast.makeText(getActivity(), "No hay Prospectos sincronizados ni registrados...", Toast.LENGTH_SHORT).show();
                     }
-                }else{
-                    Log.d(TAG,"list == null...");
-                    progressBar.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.GONE);
-                    container.setVisibility(View.VISIBLE);
-                    //swipeRefreshLayout.setVisibility(View.GONE);
-                    Toast.makeText(getActivity(), "No hay Prospectos sincronizados ni registrados...", Toast.LENGTH_SHORT).show();
                 }
+            }catch (Exception e){
+                e.printStackTrace();
             }
+
             //swipeRefreshLayout.setRefreshing(false);
         }
 
@@ -643,10 +683,14 @@ public class ProspectoFragment extends Fragment implements SearchView.OnQueryTex
     public void onResume() {
         super.onResume();
         Log.d(TAG,"onResume...");
-        if(!filterState){
-            refresh();
+        try {
+            if(!filterState){
+                refresh();
+            }
+            if(windowPopup!=null)windowPopup.dismissTooltip();
+        } catch (Exception e){
+            e.printStackTrace();
         }
-        if(windowPopup!=null)windowPopup.dismissTooltip();
     }
 
     @Override

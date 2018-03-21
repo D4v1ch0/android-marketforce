@@ -200,13 +200,18 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
         Log.d(TAG,"onCreate...");
         setContentView(R.layout.activity_main2);
         ButterKnife.bind(this);
-        toolbarStatusBar();
-        setFragment(sharedPreferences.getInt("FRAGMENT", 0));
-        configureClickItemDefault();
-        navigationDrawer();
-        toogleButtonDrawer();
-        initLocation();
-        validatePermissionApp();
+        try{
+            toolbarStatusBar();
+            setFragment(sharedPreferences.getInt("FRAGMENT", 0));
+            configureClickItemDefault();
+            navigationDrawer();
+            toogleButtonDrawer();
+            initLocation();
+            validatePermissionApp();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     private void setDefaultItemSelected(){
@@ -785,376 +790,389 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
 
     public  void requestSyncMain(Bundle settingsBundle) {
         Log.d(TAG,"requestSyncMain...");
-        if (ConnectionUtils.isNetAvailable(this)) {
-            //PreferenceManager.close();
-            SyncUtils.requestSync(settingsBundle);
-            //lockRotation();
-        } else {
-            MessageCollection mc = new MessageCollection();
-            mc.addErrorMessage(this.getResources().getString(
-                    rp3.core.R.string.message_error_sync_no_net_available).toString());
-            onSyncComplete(new Bundle(),mc);
+        try {
+            if (ConnectionUtils.isNetAvailable(this)) {
+                //PreferenceManager.close();
+                SyncUtils.requestSync(settingsBundle);
+                //lockRotation();
+            } else {
+                MessageCollection mc = new MessageCollection();
+                mc.addErrorMessage(this.getResources().getString(
+                        rp3.core.R.string.message_error_sync_no_net_available).toString());
+                onSyncComplete(new Bundle(),mc);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
     }
 
     public void invokeSyncLlamada(String titulo,String mensaje,Bundle todo){
-        if (!ConnectionUtils.isNetAvailable(this)) {
-            Log.d(TAG,"!ConnectionUtils.isNetAvailable(this)...");
-            Toast.makeText(this, "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
-        } else {
-            Log.d(TAG,"ConnectionUtils.isNetAvailable(this)...");
-            progressDialog.setTitle(titulo);
-            progressDialog.setMessage(mensaje);
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-            requestSyncMain(todo);
+        try{
+            if (!ConnectionUtils.isNetAvailable(this)) {
+                Log.d(TAG,"!ConnectionUtils.isNetAvailable(this)...");
+                Toast.makeText(this, "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
+            } else {
+                Log.d(TAG,"ConnectionUtils.isNetAvailable(this)...");
+                progressDialog.setTitle(titulo);
+                progressDialog.setMessage(mensaje);
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+                requestSyncMain(todo);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
     }
 
     public void onSyncComplete(Bundle bundle,MessageCollection messageCollection){
         Log.d(TAG,"onSyncComplete...");
-        if (bundle.containsKey(SyncAdapter.ARG_SYNC_TYPE) && bundle.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_UPDATE_PROSPECTO)) {
-            Log.d(TAG,"onsyncfinish Actualizar Prospectos...");
-            if(progressDialog!=null){
-                if(progressDialog.isShowing()){
-                    progressDialog.dismiss();
-                    positionSelected=positiSelectedLast;
-                    try{
-                        //setDefaultItemSelected();
-                        //setFragment(1);
+        try{
+            if (bundle.containsKey(SyncAdapter.ARG_SYNC_TYPE) && bundle.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_UPDATE_PROSPECTO)) {
+                Log.d(TAG,"onsyncfinish Actualizar Prospectos...");
+                if(progressDialog!=null){
+                    if(progressDialog.isShowing()){
+                        progressDialog.dismiss();
+                        positionSelected=positiSelectedLast;
                         try{
-                            //setFragment(positiSelectedLast);
-                            android.support.v4.app.Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment);
-                            if (fragment instanceof ProspectoFragment ) {
-                                Log.v(TAG, "find the current fragment");
-                                ProspectoFragment agendaFragment = (ProspectoFragment) fragment;
-                                agendaFragment.onResume();
+                            //setDefaultItemSelected();
+                            //setFragment(1);
+                            try{
+                                //setFragment(positiSelectedLast);
+                                android.support.v4.app.Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment);
+                                if (fragment instanceof ProspectoFragment ) {
+                                    Log.v(TAG, "find the current fragment");
+                                    ProspectoFragment agendaFragment = (ProspectoFragment) fragment;
+                                    agendaFragment.onResume();
+                                }
+                            }catch (Exception e){
+                                e.printStackTrace();
                             }
                         }catch (Exception e){
                             e.printStackTrace();
                         }
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
 
+                    }
+                }
+                if (messageCollection.hasErrorMessage()) {
+                    Log.d(TAG,"hasErrorSync..");
+                    if(progressDialog!=null){
+                        if(progressDialog.isShowing()){
+                            progressDialog.dismiss();
+                        }
+                    }
+                    showDialogMessage(messageCollection,null);
                 }
             }
-            if (messageCollection.hasErrorMessage()) {
-                Log.d(TAG,"hasErrorSync..");
+            else if (bundle.containsKey(SyncAdapter.ARG_SYNC_TYPE) && bundle.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_SEND_NOTIFICATION)) {
+                Log.d(TAG,"onsyncfinish SendNotification...");
                 if(progressDialog!=null){
                     if(progressDialog.isShowing()){
                         progressDialog.dismiss();
-                    }
-                }
-                showDialogMessage(messageCollection,null);
-            }
-        }
-        else if (bundle.containsKey(SyncAdapter.ARG_SYNC_TYPE) && bundle.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_SEND_NOTIFICATION)) {
-            Log.d(TAG,"onsyncfinish SendNotification...");
-            if(progressDialog!=null){
-                if(progressDialog.isShowing()){
-                    progressDialog.dismiss();
-                    try{
-                        setFragment(1);
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
+                        try{
+                            setFragment(1);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
 
+                    }
+                }
+                if (messageCollection.hasErrorMessage()) {
+                    Log.d(TAG,"hasErrorSync..");
+                    if(progressDialog!=null){
+                        if(progressDialog.isShowing()){
+                            progressDialog.dismiss();
+                        }
+                    }
+                    showDialogMessage(messageCollection,null);
                 }
             }
-            if (messageCollection.hasErrorMessage()) {
-                Log.d(TAG,"hasErrorSync..");
+            else if (bundle.containsKey(SyncAdapter.ARG_SYNC_TYPE) && bundle.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_VENTA_NUEVA)) {
+                Log.d(TAG,"onsyncfinish venta nueva...");
                 if(progressDialog!=null){
                     if(progressDialog.isShowing()){
                         progressDialog.dismiss();
+                        try{
+                            setFragment(positiSelectedLast);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+
                     }
                 }
-                showDialogMessage(messageCollection,null);
-            }
-        }
-        else if (bundle.containsKey(SyncAdapter.ARG_SYNC_TYPE) && bundle.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_VENTA_NUEVA)) {
-            Log.d(TAG,"onsyncfinish venta nueva...");
-            if(progressDialog!=null){
-                if(progressDialog.isShowing()){
-                    progressDialog.dismiss();
-                            try{
-                                setFragment(positiSelectedLast);
-                            }catch (Exception e){
-                                e.printStackTrace();
-                            }
-
+                if (messageCollection.hasErrorMessage()) {
+                    Log.d(TAG,"hasErrorSync..");
+                    if(progressDialog!=null){
+                        if(progressDialog.isShowing()){
+                            progressDialog.dismiss();
+                        }
+                    }
+                    showDialogMessage(messageCollection,null);
                 }
             }
-            if (messageCollection.hasErrorMessage()) {
-                Log.d(TAG,"hasErrorSync..");
+            else if (bundle.containsKey(SyncAdapter.ARG_SYNC_TYPE) && bundle.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_UPDATE_LLAMADAVTA)) {
+                Log.d(TAG,"onsyncfinish actualizar llamada...");
                 if(progressDialog!=null){
                     if(progressDialog.isShowing()){
-                        progressDialog.dismiss();
-                    }
-                }
-                showDialogMessage(messageCollection,null);
-            }
-        }
-        else if (bundle.containsKey(SyncAdapter.ARG_SYNC_TYPE) && bundle.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_UPDATE_LLAMADAVTA)) {
-            Log.d(TAG,"onsyncfinish actualizar llamada...");
-            if(progressDialog!=null){
-                if(progressDialog.isShowing()){
 
-                    try{
-                        if(SessionManager.getInstance(this).getLlamada()!=null){
+                        try{
                             if(SessionManager.getInstance(this).getLlamada()!=null){
-                                if(SessionManager.getInstance(this).getLlamada().equalsIgnoreCase("LlamadaPrograma")){
-                                    Log.d(TAG,"Desea programa....agendarle una visita...");
-                                    Intent intent = new Intent(this, rp3.auna.CrearVisitaActivity.class);
-                                    Bundle bundle1 = new Bundle();
-                                    if(location!=null){
-                                        if(location.getLatitude()>0 && location.getLongitude()>0){
-                                            bundle1.putDouble("Latitud",location.getLatitude());
-                                            bundle1.putDouble("Longitud",location.getLongitude());
+                                if(SessionManager.getInstance(this).getLlamada()!=null){
+                                    if(SessionManager.getInstance(this).getLlamada().equalsIgnoreCase("LlamadaPrograma")){
+                                        Log.d(TAG,"Desea programa....agendarle una visita...");
+                                        Intent intent = new Intent(this, rp3.auna.CrearVisitaActivity.class);
+                                        Bundle bundle1 = new Bundle();
+                                        if(location!=null){
+                                            if(location.getLatitude()>0 && location.getLongitude()>0){
+                                                bundle1.putDouble("Latitud",location.getLatitude());
+                                                bundle1.putDouble("Longitud",location.getLongitude());
+                                            }else{
+                                                bundle1.putDouble("Latitud",0.0);
+                                                bundle1.putDouble("Longitud",0.0);
+                                            }
                                         }else{
                                             bundle1.putDouble("Latitud",0.0);
                                             bundle1.putDouble("Longitud",0.0);
                                         }
+
+                                        bundle1.putInt("Service",2);
+                                        ProspectoVtaDb prospecto = SessionManager.getInstance(this).getProspectoLlamada();
+                                        bundle1.putLong("Id",prospecto.getID());
+                                        bundle1.putInt("IdProspecto",prospecto.getIdProspecto());
+                                        bundle1.putString("Prospecto",prospecto.getNombre());
+                                        if(prospecto.getDireccion1()!=null){
+                                            bundle1.putString("Direccion",prospecto.getDireccion1());
+                                        }else if(prospecto.getDireccion2()!=null){
+                                            bundle1.putString("Direccion",prospecto.getDireccion2());
+                                        }else{
+                                            bundle1.putString("Direccion","");
+                                        }
+                                        bundle1.putInt("Estado",0);
+                                        bundle1.putInt("VisitaId",0);
+                                        int idMaxLlamada = LlamadaVta.getMaxIdLlamadaVta(Utils.getDataBase(this));
+                                        bundle1.putInt("LlamadaId",idMaxLlamada);
+                                        intent.putExtras(bundle1);
+                                        SessionManager.getInstance(this).removeProspectoLlamada();
+                                        startActivityForResult(intent,REQUEST_LLAMADA_SI_DESEA_PROGRAMA);
+                                    }else{
+                                        Log.d(TAG,"Reprogrmar...");
+                                        final Intent intent = new Intent(this, rp3.auna.CrearLlamadaActivity.class);
+                                        final Bundle bundle1 = new Bundle();
+                                        if(location!=null){
+                                            if(location.getLatitude()>0 && location.getLongitude()>0){
+                                                bundle1.putDouble("Latitud",location.getLatitude());
+                                                bundle1.putDouble("Longitud",location.getLongitude());
+
+                                            }else{
+                                                bundle1.putDouble("Latitud",0.0);
+                                                bundle1.putDouble("Longitud",0.0);
+                                            }
+                                        }else{
+                                            //LocationUtils.getLocation(this, new LocationUtils.OnLocationResultListener() {
+                                            //@Override
+                                            //public void getLocationResult(Location location) {
+                                            bundle1.putDouble("Latitud",0.0);
+                                            bundle1.putDouble("Longitud",0.0);
+
+                                            //    }
+                                            //});
+                                        }
+                                        intent.putExtras(bundle1);
+                                        startActivityForResult(intent,REQUEST_LLAMADA_REPROGRAMADA);
+                                    }
+                                }else{
+                                    Log.d(TAG,"Cancelar...");
+                                    SessionManager.getInstance(this).removeLlamada();
+                                    Intent intent = new Intent(this,StartActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            }else{
+                                Log.d(TAG,"Llamada actualizada desde agenda por gestion...");
+                                setFragment(0);
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                        progressDialog.dismiss();
+                    }
+                }
+                if (messageCollection.hasErrorMessage()) {
+                    Log.d(TAG,"hasErrorSync..");
+                    if(progressDialog!=null){
+                        if(progressDialog.isShowing()){
+                            progressDialog.dismiss();
+                        }
+                    }
+                    showDialogMessage(messageCollection,null);
+                }
+            }
+
+            else if (bundle.containsKey(SyncAdapter.ARG_SYNC_TYPE) && bundle.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_UPDATE_VISITA)) {
+                Log.d(TAG,"onsyncfinish actualizar visita...");
+                if(progressDialog!=null){
+                    if(progressDialog.isShowing()){
+                        progressDialog.dismiss();
+                        try{
+                            if(SessionManager.getInstance(this).getVisitaReprogramada()!=null){
+                                Log.d(TAG,"Reprogrmar...");
+                                Intent intent = new Intent(this, rp3.auna.CrearVisitaActivity.class);
+                                Bundle bundle1 = new Bundle();
+                                if(location!=null){
+                                    if(location.getLatitude()>0 && location.getLongitude()>0){
+                                        bundle1.putDouble("Latitud",location.getLatitude());
+                                        bundle1.putDouble("Longitud",location.getLongitude());
                                     }else{
                                         bundle1.putDouble("Latitud",0.0);
                                         bundle1.putDouble("Longitud",0.0);
                                     }
-
-                                    bundle1.putInt("Service",2);
-                                    ProspectoVtaDb prospecto = SessionManager.getInstance(this).getProspectoLlamada();
-                                    bundle1.putLong("Id",prospecto.getID());
-                                    bundle1.putInt("IdProspecto",prospecto.getIdProspecto());
-                                    bundle1.putString("Prospecto",prospecto.getNombre());
-                                    if(prospecto.getDireccion1()!=null){
-                                        bundle1.putString("Direccion",prospecto.getDireccion1());
-                                    }else if(prospecto.getDireccion2()!=null){
-                                        bundle1.putString("Direccion",prospecto.getDireccion2());
-                                    }else{
-                                        bundle1.putString("Direccion","");
-                                    }
-                                    bundle1.putInt("Estado",0);
-                                    bundle1.putInt("VisitaId",0);
-                                    int idMaxLlamada = LlamadaVta.getMaxIdLlamadaVta(Utils.getDataBase(this));
-                                    bundle1.putInt("LlamadaId",idMaxLlamada);
-                                    intent.putExtras(bundle1);
-                                    SessionManager.getInstance(this).removeProspectoLlamada();
-                                    startActivityForResult(intent,REQUEST_LLAMADA_SI_DESEA_PROGRAMA);
-                                }else{
-                                    Log.d(TAG,"Reprogrmar...");
-                                    final Intent intent = new Intent(this, rp3.auna.CrearLlamadaActivity.class);
-                                    final Bundle bundle1 = new Bundle();
-                                    if(location!=null){
-                                        if(location.getLatitude()>0 && location.getLongitude()>0){
-                                            bundle1.putDouble("Latitud",location.getLatitude());
-                                            bundle1.putDouble("Longitud",location.getLongitude());
-
-                                        }else{
-                                            bundle1.putDouble("Latitud",0.0);
-                                            bundle1.putDouble("Longitud",0.0);
-                                        }
-                                    }else{
-                                        //LocationUtils.getLocation(this, new LocationUtils.OnLocationResultListener() {
-                                            //@Override
-                                            //public void getLocationResult(Location location) {
-                                                bundle1.putDouble("Latitud",0.0);
-                                                bundle1.putDouble("Longitud",0.0);
-
-                                        //    }
-                                        //});
-                                    }
-                                    intent.putExtras(bundle1);
-                                    startActivityForResult(intent,REQUEST_LLAMADA_REPROGRAMADA);
-                                }
-                            }else{
-                                Log.d(TAG,"Cancelar...");
-                                SessionManager.getInstance(this).removeLlamada();
-                                Intent intent = new Intent(this,StartActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                        }else{
-                            Log.d(TAG,"Llamada actualizada desde agenda por gestion...");
-                            setFragment(0);
-                        }
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                    progressDialog.dismiss();
-                }
-            }
-            if (messageCollection.hasErrorMessage()) {
-                Log.d(TAG,"hasErrorSync..");
-                if(progressDialog!=null){
-                    if(progressDialog.isShowing()){
-                        progressDialog.dismiss();
-                    }
-                }
-                showDialogMessage(messageCollection,null);
-            }
-        }
-
-        else if (bundle.containsKey(SyncAdapter.ARG_SYNC_TYPE) && bundle.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_UPDATE_VISITA)) {
-            Log.d(TAG,"onsyncfinish actualizar visita...");
-            if(progressDialog!=null){
-                if(progressDialog.isShowing()){
-                    progressDialog.dismiss();
-                    try{
-                        if(SessionManager.getInstance(this).getVisitaReprogramada()!=null){
-                            Log.d(TAG,"Reprogrmar...");
-                            Intent intent = new Intent(this, rp3.auna.CrearVisitaActivity.class);
-                            Bundle bundle1 = new Bundle();
-                            if(location!=null){
-                                if(location.getLatitude()>0 && location.getLongitude()>0){
-                                    bundle1.putDouble("Latitud",location.getLatitude());
-                                    bundle1.putDouble("Longitud",location.getLongitude());
                                 }else{
                                     bundle1.putDouble("Latitud",0.0);
                                     bundle1.putDouble("Longitud",0.0);
                                 }
-                            }else{
-                                bundle1.putDouble("Latitud",0.0);
-                                bundle1.putDouble("Longitud",0.0);
-                            }
-                            ProspectoVtaDb prospecto = null;
-                            Log.d(TAG,"Id Prospecto en visita reprogramar d tabcita:"+SessionManager.getInstance(this).getVisitaReprogramada().toString());
-                            List<ProspectoVtaDb> list = ProspectoVtaDb.getAll(Utils.getDataBase(getApplicationContext()));
-                            if(list!=null){
-                                Log.d(TAG,"list!=null: Prospectos Sincronizados:"+list.size());
-                                if(SessionManager.getInstance(this).getVisitaReprogramada().getInsertado()==1){
-                                    for(ProspectoVtaDb obj:list){
-                                        if(SessionManager.getInstance(this).getVisitaReprogramada().getIdCliente()==obj.getID()){
-                                            prospecto = obj;
-                                            Log.d(TAG,"break:"+prospecto.toString());
-                                            break;
+                                ProspectoVtaDb prospecto = null;
+                                Log.d(TAG,"Id Prospecto en visita reprogramar d tabcita:"+SessionManager.getInstance(this).getVisitaReprogramada().toString());
+                                List<ProspectoVtaDb> list = ProspectoVtaDb.getAll(Utils.getDataBase(getApplicationContext()));
+                                if(list!=null){
+                                    Log.d(TAG,"list!=null: Prospectos Sincronizados:"+list.size());
+                                    if(SessionManager.getInstance(this).getVisitaReprogramada().getInsertado()==1){
+                                        for(ProspectoVtaDb obj:list){
+                                            if(SessionManager.getInstance(this).getVisitaReprogramada().getIdCliente()==obj.getID()){
+                                                prospecto = obj;
+                                                Log.d(TAG,"break:"+prospecto.toString());
+                                                break;
+                                            }
+                                        }
+                                    }else{
+                                        for(ProspectoVtaDb obj:list){
+                                            if(SessionManager.getInstance(this).getVisitaReprogramada().getIdCliente()==obj.getIdProspecto()){
+                                                prospecto = obj;
+                                                Log.d(TAG,"break:"+prospecto.toString());
+                                                break;
+                                            }
                                         }
                                     }
+
+                                    bundle1.putInt("Service",5);
+                                    bundle1.putLong("Id",prospecto.getID());
+                                    bundle1.putInt("IdProspecto",prospecto.getIdProspecto());
+                                    bundle1.putString("Prospecto",prospecto.getNombre());
+                                    bundle1.putString("Direccion",SessionManager.getInstance(this).getVisitaReprogramada().getIdClienteDireccion());
+                                    bundle1.putInt("Estado",0);
+                                    bundle1.putInt("VisitaId",SessionManager.getInstance(this).getVisitaReprogramada().getIdVisita());
+                                    SessionManager.getInstance(this).removeVisitaReprogramada();
+                                    intent.putExtras(bundle1);
+                                    startActivityForResult(intent,REQUEST_VISITA_REPROGRAMADA);
                                 }else{
-                                    for(ProspectoVtaDb obj:list){
-                                        if(SessionManager.getInstance(this).getVisitaReprogramada().getIdCliente()==obj.getIdProspecto()){
-                                            prospecto = obj;
-                                            Log.d(TAG,"break:"+prospecto.toString());
-                                            break;
-                                        }
-                                    }
+                                    Log.d(TAG,"Cancelar...");
+                                    SessionManager.getInstance(this).removeVisitaReprogramada();
+                                    Intent intent1 = new Intent(this,Main2Activity.class);
+                                    startActivity(intent1);
+                                    finish();
                                 }
-
-                                bundle1.putInt("Service",5);
-                                bundle1.putLong("Id",prospecto.getID());
-                                bundle1.putInt("IdProspecto",prospecto.getIdProspecto());
-                                bundle1.putString("Prospecto",prospecto.getNombre());
-                                bundle1.putString("Direccion",SessionManager.getInstance(this).getVisitaReprogramada().getIdClienteDireccion());
-                                bundle1.putInt("Estado",0);
-                                bundle1.putInt("VisitaId",SessionManager.getInstance(this).getVisitaReprogramada().getIdVisita());
-                                SessionManager.getInstance(this).removeVisitaReprogramada();
-                                intent.putExtras(bundle1);
-                                startActivityForResult(intent,REQUEST_VISITA_REPROGRAMADA);
                             }else{
-                                Log.d(TAG,"Cancelar...");
-                                SessionManager.getInstance(this).removeVisitaReprogramada();
-                                Intent intent1 = new Intent(this,Main2Activity.class);
-                                startActivity(intent1);
-                                finish();
+                                Log.d(TAG,"Llamada actualizada desde agenda por gestion...");
+                                setFragment(0);
                             }
-                        }else{
-                            Log.d(TAG,"Llamada actualizada desde agenda por gestion...");
-                            setFragment(0);
+                        }catch (Exception e){
+                            e.printStackTrace();
                         }
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
 
-            }
-            if (messageCollection.hasErrorMessage()) {
-                Log.d(TAG,"hasErrorSync..");
-                if(progressDialog!=null){
-                    if(progressDialog.isShowing()){
-                        progressDialog.dismiss();
                     }
-                }
-                showDialogMessage(messageCollection,null);
-            }
-        }
-        if(progressDialog!=null){
-            if(progressDialog.isShowing()){
-                progressDialog.dismiss();
-            }
-        }
-        }
-
-        //Refresh en Llamadas
-        else if(bundle.containsKey(SyncAdapter.ARG_SYNC_TYPE) && bundle.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_REFRESH_LLAMADA)){
-            Log.d(TAG,"onsyncfinish refresh agenda...");
-            if(progressDialog!=null){
-                if(progressDialog.isShowing()){
-                    progressDialog.dismiss();
-                    //Execute...
-                    Bundle msj = new Bundle();
-                    msj.putString("Llamada","Refresh");
-                    EventBus.getBus().post(new Events.Message(msj));
-                }
-            }
-            if (messageCollection.hasErrorMessage()) {
-                Log.d(TAG,"hasErrorSync..");
-                if(progressDialog!=null){
-                    if(progressDialog.isShowing()){
-                        progressDialog.dismiss();
-                    }
-                }
-                showDialogMessage(messageCollection,null);
-            }
-        }
-        //Refresh en Visitas
-        else if(bundle.containsKey(SyncAdapter.ARG_SYNC_TYPE) && bundle.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_REFRESH_VISITA)){
-            Log.d(TAG,"onsyncfinish refresh visita...");
-            if(progressDialog!=null){
-                if(progressDialog.isShowing()){
-                    progressDialog.dismiss();
-                    //Execute...
-                    Bundle msj = new Bundle();
-                    msj.putString("Llamada","Refresh");
-                    EventBus.getBus().post(new Events.Message(msj));
-                }
-            }
-            if (messageCollection.hasErrorMessage()) {
-                Log.d(TAG,"hasErrorSync..");
-                if(progressDialog!=null){
-                    if(progressDialog.isShowing()){
-                        progressDialog.dismiss();
-                    }
-                }
-                showDialogMessage(messageCollection,null);
-            }
-        }
-        else if(bundle.containsKey(SyncAdapter.ARG_SYNC_TYPE) && bundle.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_REFRESH_REPROGRAM_CANCELED_VISITA)){
-            Log.d(TAG,"onsyncfinish SYNC_TYPE_REFRESH_REPROGRAM_CANCELED_VISITA...");
-            if(progressDialog!=null){
-                if(progressDialog.isShowing()){
-                    progressDialog.dismiss();
-                    //Execute...
-                    try{
-                        //setFragment(positiSelectedLast);
-                        android.support.v4.app.Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment);
-                        if (fragment instanceof AgendaFragment ) {
-                            Log.v(TAG, "find the current fragment");
-                            AgendaFragment agendaFragment = (AgendaFragment) fragment;
-                            agendaFragment.setTabSelection(1);
+                    if (messageCollection.hasErrorMessage()) {
+                        Log.d(TAG,"hasErrorSync..");
+                        if(progressDialog!=null){
+                            if(progressDialog.isShowing()){
+                                progressDialog.dismiss();
+                            }
                         }
-                    }catch (Exception e){
-                        e.printStackTrace();
+                        showDialogMessage(messageCollection,null);
                     }
                 }
-            }
-            if (messageCollection.hasErrorMessage()) {
-                Log.d(TAG,"hasErrorSync..");
                 if(progressDialog!=null){
                     if(progressDialog.isShowing()){
                         progressDialog.dismiss();
                     }
                 }
-                showDialogMessage(messageCollection,null);
             }
-        }
 
+            //Refresh en Llamadas
+            else if(bundle.containsKey(SyncAdapter.ARG_SYNC_TYPE) && bundle.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_REFRESH_LLAMADA)){
+                Log.d(TAG,"onsyncfinish refresh agenda...");
+                if(progressDialog!=null){
+                    if(progressDialog.isShowing()){
+                        progressDialog.dismiss();
+                        //Execute...
+                        Bundle msj = new Bundle();
+                        msj.putString("Llamada","Refresh");
+                        EventBus.getBus().post(new Events.Message(msj));
+                    }
+                }
+                if (messageCollection.hasErrorMessage()) {
+                    Log.d(TAG,"hasErrorSync..");
+                    if(progressDialog!=null){
+                        if(progressDialog.isShowing()){
+                            progressDialog.dismiss();
+                        }
+                    }
+                    showDialogMessage(messageCollection,null);
+                }
+            }
+            //Refresh en Visitas
+            else if(bundle.containsKey(SyncAdapter.ARG_SYNC_TYPE) && bundle.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_REFRESH_VISITA)){
+                Log.d(TAG,"onsyncfinish refresh visita...");
+                if(progressDialog!=null){
+                    if(progressDialog.isShowing()){
+                        progressDialog.dismiss();
+                        //Execute...
+                        Bundle msj = new Bundle();
+                        msj.putString("Llamada","Refresh");
+                        EventBus.getBus().post(new Events.Message(msj));
+                    }
+                }
+                if (messageCollection.hasErrorMessage()) {
+                    Log.d(TAG,"hasErrorSync..");
+                    if(progressDialog!=null){
+                        if(progressDialog.isShowing()){
+                            progressDialog.dismiss();
+                        }
+                    }
+                    showDialogMessage(messageCollection,null);
+                }
+            }
+            else if(bundle.containsKey(SyncAdapter.ARG_SYNC_TYPE) && bundle.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_REFRESH_REPROGRAM_CANCELED_VISITA)){
+                Log.d(TAG,"onsyncfinish SYNC_TYPE_REFRESH_REPROGRAM_CANCELED_VISITA...");
+                if(progressDialog!=null){
+                    if(progressDialog.isShowing()){
+                        progressDialog.dismiss();
+                        //Execute...
+                        try{
+                            //setFragment(positiSelectedLast);
+                            android.support.v4.app.Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment);
+                            if (fragment instanceof AgendaFragment ) {
+                                Log.v(TAG, "find the current fragment");
+                                AgendaFragment agendaFragment = (AgendaFragment) fragment;
+                                agendaFragment.setTabSelection(1);
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                if (messageCollection.hasErrorMessage()) {
+                    Log.d(TAG,"hasErrorSync..");
+                    if(progressDialog!=null){
+                        if(progressDialog.isShowing()){
+                            progressDialog.dismiss();
+                        }
+                    }
+                    showDialogMessage(messageCollection,null);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         //Alarmar
         //pruebaAlarm(Utils.getDataBase()getApplicationContext());
     }
@@ -1222,28 +1240,31 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
 
     private void validateVisitaSession(){
         Log.d(TAG,"validateVisitaSession...");
-        //Iniciar la Cotizacion Inicial
-        VisitaVta visitaVta = SessionManager.getInstance(this).getVisitaSession();
-        if(visitaVta!=null){
-            if(visitaVta.getEstado()==1){
-                Intent intent = new Intent(this, CotizacionActivity.class);
-                intent.putExtra("Estado",1);
-                startActivityForResult(intent,REQUEST_VISITA_COTIZACION_NUEVO);
-            }else if(visitaVta.getEstado()==3){
-                //Iniciar la visita fisica (Subir Documentos)
+        try{
+            //Iniciar la Cotizacion Inicial
+            VisitaVta visitaVta = SessionManager.getInstance(this).getVisitaSession();
+            if(visitaVta!=null){
+                if(visitaVta.getEstado()==1){
+                    Intent intent = new Intent(this, CotizacionActivity.class);
+                    intent.putExtra("Estado",1);
+                    startActivityForResult(intent,REQUEST_VISITA_COTIZACION_NUEVO);
+                }else if(visitaVta.getEstado()==3){
+                    //Iniciar la visita fisica (Subir Documentos)
                 /*Intent intent = new Intent(this, VisitaMediaActivity.class);
                 intent.putExtra("Estado",1);
                 intent.putExtra("VisitaId",visitaVta.getVisitaId());
                 startActivityForResult(intent,REQUEST_VISITA_PAGO_FISICO_DOCUMENTOS);*/
-            }else if(visitaVta.getEstado()==6){
-                Intent intent = new Intent(this, CotizacionActivity.class);
-                intent.putExtra("Estado",1);
-                startActivityForResult(intent,REQUEST_VISITA_COTIZACION_NUEVO);
+                }else if(visitaVta.getEstado()==6){
+                    Intent intent = new Intent(this, CotizacionActivity.class);
+                    intent.putExtra("Estado",1);
+                    startActivityForResult(intent,REQUEST_VISITA_COTIZACION_NUEVO);
+                }
+            }else{
+                SessionManager.getInstance(this).removeVisitaSession();
             }
-        }else{
-            SessionManager.getInstance(this).removeVisitaSession();
+        }catch (Exception e){
+            e.printStackTrace();
         }
-
     }
 
     //region Ciclo de vida
@@ -1258,20 +1279,27 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
     protected void onPause() {
         super.onPause();
         Log.d(TAG,"onPause...");
-        if(busFlag){
-            EventBus.getBus().unregister(this);
-            busFlag=false;
+        try{
+            if(busFlag){
+                EventBus.getBus().unregister(this);
+                busFlag=false;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
 
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-
-
-        locationProvider.disconnect();
         Log.d(TAG,"onStop...");
+        try{
+            locationProvider.disconnect();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -1294,20 +1322,24 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
     protected void onResume() {
         super.onResume();
         Log.d(TAG,"onResume...");
-        if(!busFlag){
-            EventBus.getBus().register(this);
-            busFlag = true;
-        }
-        //alarmTest();
-        SessionManager.getInstance(this).removeLlamadaGestion();
-        locationProvider.connect();
-        //sendNotification();
-        //Util.setAlarmAgenda(Main2Activity.this);
-        try {
-            registerReceiver(syncFinishedReceiverr, new IntentFilter(
-                    rp3.content.SyncAdapter.SYNC_FINISHED));
-        } catch (IllegalArgumentException e) {
-            Log.d(TAG,"receiver:"+e.getMessage());
+        try{
+            if(!busFlag){
+                EventBus.getBus().register(this);
+                busFlag = true;
+            }
+            //alarmTest();
+            SessionManager.getInstance(this).removeLlamadaGestion();
+            locationProvider.connect();
+            //sendNotification();
+            //Util.setAlarmAgenda(Main2Activity.this);
+            try {
+                registerReceiver(syncFinishedReceiverr, new IntentFilter(
+                        rp3.content.SyncAdapter.SYNC_FINISHED));
+            } catch (IllegalArgumentException e) {
+                Log.d(TAG,"receiver:"+e.getMessage());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -1315,19 +1347,23 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
     protected void onPostResume() {
         super.onPostResume();
         Log.d(TAG,"onPostResume...");
-        Log.d(TAG,"Usuario Logeado:"+Session.getUser().toString());
-        String logonName = PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"");
-        String passowrd = PreferenceManager.getString(Constants.KEY_LAST_PASS,"");
-        Log.d(TAG,"LogonName:"+logonName);
-        Log.d(TAG,"Password:"+passowrd);
-        validateVisitaSession();
-        if(REQUEST_STATE == REQUEST_VISITA_COTIZACION_NUEVO){
-            if(RESULT_STATE == RESULT_VISITA_REPROGRAMADA_FINALIZADA ){
+        try{
+            Log.d(TAG,"Usuario Logeado:"+Session.getUser().toString());
+            String logonName = PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"");
+            String passowrd = PreferenceManager.getString(Constants.KEY_LAST_PASS,"");
+            Log.d(TAG,"LogonName:"+logonName);
+            Log.d(TAG,"Password:"+passowrd);
+            validateVisitaSession();
+            if(REQUEST_STATE == REQUEST_VISITA_COTIZACION_NUEVO){
+                if(RESULT_STATE == RESULT_VISITA_REPROGRAMADA_FINALIZADA ){
 
-            }else if(RESULT_STATE == RESULT_VISITA_CANCELADA_FINALIZADA){
+                }else if(RESULT_STATE == RESULT_VISITA_CANCELADA_FINALIZADA){
+
+                }
+            }else{
 
             }
-        }else{
+        }catch (Exception e){
 
         }
     }
@@ -1401,42 +1437,43 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
         REQUEST_STATE = requestCode;
         RESULT_STATE = resultCode;
         Log.d(TAG,"requestCode:"+requestCode+" resultCode:"+resultCode);
-        if(requestCode == REQUEST_PROSPECTO_NUEVO && resultCode == RESULT_PROSPECTO_NUEVO){
-            Log.d(TAG,"REQUEST_PROSPECTO_NUEVO...RESULT_PROSPECTO_NUEVO...");
-            Bundle bundle = new Bundle();
-            bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_INSERTAR_PROSPECTOVTA);
-            //requestSyncMain(bundle);
-            invokeSync("Prospecto","Actualizando prospectos...");
-        }
-        else if(requestCode == REQUEST_LLAMADA_NUEVO && resultCode == RESULT_LLAMADA_NUEVO){
-            Log.d(TAG,"REQUEST_LLAMADA_NUEVO...RESULT_LLAMADA_NUEVO...");
-            List<rp3.auna.models.ventanueva.LlamadaVta> llamadaVtas = rp3.auna.models.ventanueva.LlamadaVta.getLlamadasInsert(Utils.getDataBase(this));
-            Log.d(TAG,"Cantidad de llamadas insertadas:"+llamadaVtas.size());
-            Bundle bundle = new Bundle();
-            bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPDATE_LLAMADAVTA);
-            //requestSyncMain(bundle);
-            invokeSync("Agenda","Actualizando llamadas...");
-        }
-        else if(requestCode == REQUEST_LLAMADA_REPROGRAMADA && resultCode == RESULT_LLAMADA_REPROGRAMADA){
-            Log.d(TAG,"REQUEST_LLAMADA_REPROGRAMADA...RESULT_LLAMADA_REPROGRAMADA...");
-            Bundle bundle = new Bundle();
-            bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPDATE_LLAMADAVTA);
-            //requestSyncMain(bundle);
-            invokeSync("Agenda","Actualizando llamadas...");
-        }else if(requestCode == REQUEST_LLAMADA_SI_DESEA_PROGRAMA && resultCode == RESULT_LLAMADA_SI_DESEA_PROGRAMA){
-            Log.d(TAG,"VISITA: REQUEST_LLAMADA_SI_DESEA_PROGRAMA...RESULT_LLAMADA_SI_DESEA_PROGRAMA...");
-            Bundle bundle = new Bundle();
-            bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPDATE_VISITA);
-            //requestSyncMain(bundle);
-            invokeSync("Agenda","Actualizando llamadas...");
-        }
-        else if(requestCode == REQUEST_VISITA_NUEVO && resultCode == RESULT_VISITA_NUEVO){
-            Log.d(TAG,"REQUEST_VISITA_NUEVO...RESULT_VISITA_NUEVO...");
-            Bundle bundle = new Bundle();
-            bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPDATE_VISITA);
-            //requestSyncMain(bundle);
-            invokeSync("Agenda","Actualizando Visitas...");
-        }
+        try{
+            if(requestCode == REQUEST_PROSPECTO_NUEVO && resultCode == RESULT_PROSPECTO_NUEVO){
+                Log.d(TAG,"REQUEST_PROSPECTO_NUEVO...RESULT_PROSPECTO_NUEVO...");
+                Bundle bundle = new Bundle();
+                bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_INSERTAR_PROSPECTOVTA);
+                //requestSyncMain(bundle);
+                invokeSync("Prospecto","Actualizando prospectos...");
+            }
+            else if(requestCode == REQUEST_LLAMADA_NUEVO && resultCode == RESULT_LLAMADA_NUEVO){
+                Log.d(TAG,"REQUEST_LLAMADA_NUEVO...RESULT_LLAMADA_NUEVO...");
+                List<rp3.auna.models.ventanueva.LlamadaVta> llamadaVtas = rp3.auna.models.ventanueva.LlamadaVta.getLlamadasInsert(Utils.getDataBase(this));
+                Log.d(TAG,"Cantidad de llamadas insertadas:"+llamadaVtas.size());
+                Bundle bundle = new Bundle();
+                bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPDATE_LLAMADAVTA);
+                //requestSyncMain(bundle);
+                invokeSync("Agenda","Actualizando llamadas...");
+            }
+            else if(requestCode == REQUEST_LLAMADA_REPROGRAMADA && resultCode == RESULT_LLAMADA_REPROGRAMADA){
+                Log.d(TAG,"REQUEST_LLAMADA_REPROGRAMADA...RESULT_LLAMADA_REPROGRAMADA...");
+                Bundle bundle = new Bundle();
+                bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPDATE_LLAMADAVTA);
+                //requestSyncMain(bundle);
+                invokeSync("Agenda","Actualizando llamadas...");
+            }else if(requestCode == REQUEST_LLAMADA_SI_DESEA_PROGRAMA && resultCode == RESULT_LLAMADA_SI_DESEA_PROGRAMA){
+                Log.d(TAG,"VISITA: REQUEST_LLAMADA_SI_DESEA_PROGRAMA...RESULT_LLAMADA_SI_DESEA_PROGRAMA...");
+                Bundle bundle = new Bundle();
+                bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPDATE_VISITA);
+                //requestSyncMain(bundle);
+                invokeSync("Agenda","Actualizando llamadas...");
+            }
+            else if(requestCode == REQUEST_VISITA_NUEVO && resultCode == RESULT_VISITA_NUEVO){
+                Log.d(TAG,"REQUEST_VISITA_NUEVO...RESULT_VISITA_NUEVO...");
+                Bundle bundle = new Bundle();
+                bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPDATE_VISITA);
+                //requestSyncMain(bundle);
+                invokeSync("Agenda","Actualizando Visitas...");
+            }
         /*if(requestCode == REQUEST_VISITA_COTIZACION_NUEVO){
             Log.d(TAG,"REQUEST_VISITA_COTIZACION_NUEVO...Verificar su RESULT...");
             if(resultCode == RESULT_VISITA_NUEVA_PAGO_FISICO){
@@ -1445,13 +1482,13 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
                 invokeSync("Agenda","Actualizando Visitas...");
             }
         }*/
-        else if(requestCode == REQUEST_VISITA_COTIZACION_NUEVO){
-            Log.d(TAG,"REQUEST_VISITA_COTIZACION_NUEVO...Verificar su RESULT...");
-            if(resultCode == RESULT_VISITA_NUEVA_PAGO_FISICO){
-                Log.d(TAG,"RESULT == RESULT_VISITA_NUEVA_PAGO_FISICO...");
-                Log.d(TAG,"Se creo una visita por y el tipo de pago fue fisico se necesita registrar las visitas en agenda...");
-                invokeSync("Agenda","Actualizando Visitas...");
-            }
+            else if(requestCode == REQUEST_VISITA_COTIZACION_NUEVO){
+                Log.d(TAG,"REQUEST_VISITA_COTIZACION_NUEVO...Verificar su RESULT...");
+                if(resultCode == RESULT_VISITA_NUEVA_PAGO_FISICO){
+                    Log.d(TAG,"RESULT == RESULT_VISITA_NUEVA_PAGO_FISICO...");
+                    Log.d(TAG,"Se creo una visita por y el tipo de pago fue fisico se necesita registrar las visitas en agenda...");
+                    invokeSync("Agenda","Actualizando Visitas...");
+                }
             /*else if(resultCode == RESULT_VISITA_REPROGRAMM_CANCEL){
                 Log.d(TAG,"RESULT == RESULT_VISITA_REPROGRAMADA_FINALIZADA...");
                 Log.d(TAG,"Se creo una visita y se reprogramo..");
@@ -1471,88 +1508,92 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
                 Log.d(TAG,"Se creo una visita y se reprogramo..");
                 //invokeSync("Agenda","Actualizando Visitas...");
             }*/
-            //Verificar el resultado con respecto a los referidos
-            else if(resultCode == RESULT_VISITA_ONLINE_REFERIDO){
-                Log.d(TAG,"RESULT == RESULT_VISITA_ONLINE_REFERIDO...");
-                Log.d(TAG,"Se creo una visita se finalizo en forma de pago online...ahora solicitar referidos..");
-                Intent intent = new Intent(this,ProspectoActivity.class);
-                Bundle todo = new Bundle();
-                todo.putInt("Opcion",3);
-                intent.putExtras(todo);
-                startActivityForResult(intent,REQUEST_REFERIDOS_FROM_VISITA);
-            }
-            else if(resultCode == RESULT_VISITA_EFECTIVO_REFERIDO){
-                Log.d(TAG,"RESULT == RESULT_VISITA_EFECTIVO_REFERIDO...");
-                Log.d(TAG,"Se creo una visita se finalizo en forma de pago efectivo...ahora solicitar referidos");
-                Intent intent = new Intent(this,ProspectoActivity.class);
-                Bundle todo = new Bundle();
-                todo.putInt("Opcion",3);
-                intent.putExtras(todo);
-                startActivityForResult(intent,REQUEST_REFERIDOS_FROM_VISITA);
-            }
-            else if(resultCode == RESULT_VISITA_REGULAR_REFERIDO){
-                Log.d(TAG,"RESULT == RESULT_VISITA_REGULAR_REFERIDO...");
-                Log.d(TAG,"Se creo una visita, se finalizo en forma de pago regular...ahora solicitar referidos");
-                Intent intent = new Intent(this,ProspectoActivity.class);
-                Bundle todo = new Bundle();
-                todo.putInt("Opcion",3);
-                intent.putExtras(todo);
-                startActivityForResult(intent,REQUEST_REFERIDOS_FROM_VISITA);
-            }
+                //Verificar el resultado con respecto a los referidos
+                else if(resultCode == RESULT_VISITA_ONLINE_REFERIDO){
+                    Log.d(TAG,"RESULT == RESULT_VISITA_ONLINE_REFERIDO...");
+                    Log.d(TAG,"Se creo una visita se finalizo en forma de pago online...ahora solicitar referidos..");
+                    Intent intent = new Intent(this,ProspectoActivity.class);
+                    Bundle todo = new Bundle();
+                    todo.putInt("Opcion",3);
+                    intent.putExtras(todo);
+                    startActivityForResult(intent,REQUEST_REFERIDOS_FROM_VISITA);
+                }
+                else if(resultCode == RESULT_VISITA_EFECTIVO_REFERIDO){
+                    Log.d(TAG,"RESULT == RESULT_VISITA_EFECTIVO_REFERIDO...");
+                    Log.d(TAG,"Se creo una visita se finalizo en forma de pago efectivo...ahora solicitar referidos");
+                    Intent intent = new Intent(this,ProspectoActivity.class);
+                    Bundle todo = new Bundle();
+                    todo.putInt("Opcion",3);
+                    intent.putExtras(todo);
+                    startActivityForResult(intent,REQUEST_REFERIDOS_FROM_VISITA);
+                }
+                else if(resultCode == RESULT_VISITA_REGULAR_REFERIDO){
+                    Log.d(TAG,"RESULT == RESULT_VISITA_REGULAR_REFERIDO...");
+                    Log.d(TAG,"Se creo una visita, se finalizo en forma de pago regular...ahora solicitar referidos");
+                    Intent intent = new Intent(this,ProspectoActivity.class);
+                    Bundle todo = new Bundle();
+                    todo.putInt("Opcion",3);
+                    intent.putExtras(todo);
+                    startActivityForResult(intent,REQUEST_REFERIDOS_FROM_VISITA);
+                }
 
-            //Control de cambios al reprogramar o cancelar visita
-            else if(resultCode == RESULT_VISITA_REPROGRAMM_CANCEL){
-                Log.d(TAG,"resultCode == RESULT_VISITA_REPROGRAMM_CANCEL)...");
-                Bundle todo = new Bundle();
-                SessionManager.getInstance(this).removeVisitaSession();
-                todo.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_REFRESH_REPROGRAM_CANCELED_VISITA);
-                invokeSyncLlamada("Agenda","Actualizando...",todo);
-            }
-        }
-        else if(requestCode == REQUEST_PROSPECTO_EDIT && resultCode == RESULT_PROSPECTO_EDIT){
-            Log.d(TAG,"REQUEST_PROSPECTO_EDIT...RESULT_PROSPECTO_EDIT...");
-            Bundle bundle = new Bundle();
-            bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPDATE_PROSPECTO);
-            //requestSyncMain(bundle);
-            invokeSyncLlamada("RP3 Market Force","Actualizando Prospectos...",bundle);
-            //invokeSync("RP3 Market Force","Actualizando Prospectos...");
-        }
-        else if(requestCode == REQUEST_CHECK_SETTINGS && resultCode == RESULT_OK){
-            Log.d(TAG,"REQUEST_CHECK_SETTINGS...RESULT_OK...");
-            Log.d(TAG,"RESULT_OK FOR GOOGLEAPICLIENT LOCATION");
-            GPS = true;
-            //invokeSync();
-            //status=null;
-        }
-        else if(requestCode == REQUEST_CHECK_SETTINGS && resultCode == RESULT_CANCELED){
-            Log.d(TAG,"REQUEST_CHECK_SETTINGS...RESULT_CANCELED...");
-            Log.d(TAG,"RESULT_CANCELED FOR GOOGLEAPICLIENT LOCATION");
-            GPS =false;
-            showDialogGps();
-            if(status!=null){
-                Log.d(TAG,"status!=null...");
-                try {
-                    status.startResolutionForResult(this,REQUEST_CHECK_SETTINGS);
-                } catch (IntentSender.SendIntentException e) {
-                    e.printStackTrace();
-                    Log.d(TAG,"IntentSender.SendIntentException e...");
-                    Log.d(TAG,e.getLocalizedMessage());
+                //Control de cambios al reprogramar o cancelar visita
+                else if(resultCode == RESULT_VISITA_REPROGRAMM_CANCEL){
+                    Log.d(TAG,"resultCode == RESULT_VISITA_REPROGRAMM_CANCEL)...");
+                    Bundle todo = new Bundle();
+                    SessionManager.getInstance(this).removeVisitaSession();
+                    todo.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_REFRESH_REPROGRAM_CANCELED_VISITA);
+                    invokeSyncLlamada("Agenda","Actualizando...",todo);
                 }
             }
-        }
-        else if (requestCode == REQUEST_VISITA_REPROGRAMADA && resultCode == RESULT_VISITA_REPROGRAMADA){
-            Log.d(TAG,"requestCode == REQUEST_VISITA_REPROGRAMADA && resultCode == RESULT_VISITA_REPROGRAMADA");
-            Log.d(TAG,"Se creo una visita de la reprogramacion en TabCita..");
-            invokeSync("Agenda","Actualizando Visitas...");
-        }
+            else if(requestCode == REQUEST_PROSPECTO_EDIT && resultCode == RESULT_PROSPECTO_EDIT){
+                Log.d(TAG,"REQUEST_PROSPECTO_EDIT...RESULT_PROSPECTO_EDIT...");
+                Bundle bundle = new Bundle();
+                bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_UPDATE_PROSPECTO);
+                //requestSyncMain(bundle);
+                invokeSyncLlamada("RP3 Market Force","Actualizando Prospectos...",bundle);
+                //invokeSync("RP3 Market Force","Actualizando Prospectos...");
+            }
+            else if(requestCode == REQUEST_CHECK_SETTINGS && resultCode == RESULT_OK){
+                Log.d(TAG,"REQUEST_CHECK_SETTINGS...RESULT_OK...");
+                Log.d(TAG,"RESULT_OK FOR GOOGLEAPICLIENT LOCATION");
+                GPS = true;
+                //invokeSync();
+                //status=null;
+            }
+            else if(requestCode == REQUEST_CHECK_SETTINGS && resultCode == RESULT_CANCELED){
+                Log.d(TAG,"REQUEST_CHECK_SETTINGS...RESULT_CANCELED...");
+                Log.d(TAG,"RESULT_CANCELED FOR GOOGLEAPICLIENT LOCATION");
+                GPS =false;
+                showDialogGps();
+                if(status!=null){
+                    Log.d(TAG,"status!=null...");
+                    try {
+                        status.startResolutionForResult(this,REQUEST_CHECK_SETTINGS);
+                    } catch (IntentSender.SendIntentException e) {
+                        e.printStackTrace();
+                        Log.d(TAG,"IntentSender.SendIntentException e...");
+                        Log.d(TAG,e.getLocalizedMessage());
+                    }
+                }
+            }
+            else if (requestCode == REQUEST_VISITA_REPROGRAMADA && resultCode == RESULT_VISITA_REPROGRAMADA){
+                Log.d(TAG,"requestCode == REQUEST_VISITA_REPROGRAMADA && resultCode == RESULT_VISITA_REPROGRAMADA");
+                Log.d(TAG,"Se creo una visita de la reprogramacion en TabCita..");
+                invokeSync("Agenda","Actualizando Visitas...");
+            }
 
 
 
-        //Request and result de prospextos
-        else if(requestCode == REQUEST_REFERIDOS_FROM_VISITA && resultCode == RESULT_REFERIDOS_FROM_VISITA){
-            Log.d(TAG,"requestCode == REQUEST_REFERIDOS_FROM_VISITA && resultCode == RESULT_REFERIDOS_FROM_VISITA");
-            invokeSync("Agenda","Actualizando...");
+            //Request and result de prospextos
+            else if(requestCode == REQUEST_REFERIDOS_FROM_VISITA && resultCode == RESULT_REFERIDOS_FROM_VISITA){
+                Log.d(TAG,"requestCode == REQUEST_REFERIDOS_FROM_VISITA && resultCode == RESULT_REFERIDOS_FROM_VISITA");
+                invokeSync("Agenda","Actualizando...");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
     }
 
     // region Events
@@ -1867,67 +1908,68 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
     //region Drawer Items
 
     private void setDrawersMain(){
-        final TypedValue typedValue = new TypedValue();
-        Main2Activity.this.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
-        final int color = typedValue.data;
-        recyclerViewDrawer = (RecyclerView) findViewById(R.id.recyclerViewDrawerMain);
-        recyclerViewDrawer.setHasFixedSize(true);
-        recyclerViewDrawer.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ReporteriaAdapter(this, initData(), new ReporteriaAdapter.ListenerItems() {
-            @Override
-            public void setParent(final int position) {
-                Log.d(TAG,"positionParent:"+position);
-                //region Pintar
-                positionSelected = position;
-                /**
-                 * Configurar clicks en cada item del recycler
-                 * **/
-                try{
-                    //region Clicked Position
-                    if(position==0 || position ==1 || position ==4 || position ==2){
-                        positiSelectedLast = position;
-                        Log.d(TAG,"click position 0 || 1 || 4 || 2...es="+position);
-                        //
-                        int countDrawer = recyclerViewDrawer.getChildCount();
-                        Log.d(TAG,"Count Recycler child: "+countDrawer);
-                        for(int i=0;i<countDrawer;i++){
-                            if(i==position){
-                                ImageView imageViewDrawerIcon = (ImageView) recyclerViewDrawer.getChildAt(i).findViewById(R.id.imageViewDrawerIconMain11);
-                                TextView textViewDrawerTitle = (TextView) recyclerViewDrawer.getChildAt(i).findViewById(R.id.textViewDrawerItemTitleMain11);
-                                RelativeLayout relativeLayoutDrawerItem = (RelativeLayout) recyclerViewDrawer.getChildAt(i).findViewById(R.id.relativeLayoutDrawerItem11);
-                                if(imageViewDrawerIcon!=null && textViewDrawerTitle !=null && relativeLayoutDrawerItem!=null){
-                                    imageViewDrawerIcon.setColorFilter(color);
-                                    if (Build.VERSION.SDK_INT > 15) {
-                                        imageViewDrawerIcon.setImageAlpha(255);
-                                    } else {
-                                        imageViewDrawerIcon.setAlpha(255);
+        try{
+            final TypedValue typedValue = new TypedValue();
+            Main2Activity.this.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
+            final int color = typedValue.data;
+            recyclerViewDrawer = (RecyclerView) findViewById(R.id.recyclerViewDrawerMain);
+            recyclerViewDrawer.setHasFixedSize(true);
+            recyclerViewDrawer.setLayoutManager(new LinearLayoutManager(this));
+            adapter = new ReporteriaAdapter(this, initData(), new ReporteriaAdapter.ListenerItems() {
+                @Override
+                public void setParent(final int position) {
+                    Log.d(TAG,"positionParent:"+position);
+                    //region Pintar
+                    positionSelected = position;
+                    /**
+                     * Configurar clicks en cada item del recycler
+                     * **/
+                    try{
+                        //region Clicked Position
+                        if(position==0 || position ==1 || position ==4 || position ==2){
+                            positiSelectedLast = position;
+                            Log.d(TAG,"click position 0 || 1 || 4 || 2...es="+position);
+                            //
+                            int countDrawer = recyclerViewDrawer.getChildCount();
+                            Log.d(TAG,"Count Recycler child: "+countDrawer);
+                            for(int i=0;i<countDrawer;i++){
+                                if(i==position){
+                                    ImageView imageViewDrawerIcon = (ImageView) recyclerViewDrawer.getChildAt(i).findViewById(R.id.imageViewDrawerIconMain11);
+                                    TextView textViewDrawerTitle = (TextView) recyclerViewDrawer.getChildAt(i).findViewById(R.id.textViewDrawerItemTitleMain11);
+                                    RelativeLayout relativeLayoutDrawerItem = (RelativeLayout) recyclerViewDrawer.getChildAt(i).findViewById(R.id.relativeLayoutDrawerItem11);
+                                    if(imageViewDrawerIcon!=null && textViewDrawerTitle !=null && relativeLayoutDrawerItem!=null){
+                                        imageViewDrawerIcon.setColorFilter(color);
+                                        if (Build.VERSION.SDK_INT > 15) {
+                                            imageViewDrawerIcon.setImageAlpha(255);
+                                        } else {
+                                            imageViewDrawerIcon.setAlpha(255);
+                                        }
+                                        textViewDrawerTitle.setTextColor(color);
+                                        TypedValue typedValueDrawerSelected = new TypedValue();
+                                        getTheme().resolveAttribute(R.attr.colorAccent, typedValueDrawerSelected, true);
+                                        int colorDrawerItemSelected = typedValueDrawerSelected.data;
+                                        colorDrawerItemSelected = (colorDrawerItemSelected & 0x00FFFFFF) | 0x30000000;
+                                        relativeLayoutDrawerItem.setBackgroundColor(colorDrawerItemSelected);
                                     }
-                                    textViewDrawerTitle.setTextColor(color);
-                                    TypedValue typedValueDrawerSelected = new TypedValue();
-                                    getTheme().resolveAttribute(R.attr.colorAccent, typedValueDrawerSelected, true);
-                                    int colorDrawerItemSelected = typedValueDrawerSelected.data;
-                                    colorDrawerItemSelected = (colorDrawerItemSelected & 0x00FFFFFF) | 0x30000000;
-                                    relativeLayoutDrawerItem.setBackgroundColor(colorDrawerItemSelected);
-                                }
-                            }else{
-                                ImageView imageViewDrawerIcon = (ImageView) recyclerViewDrawer.getChildAt(i).findViewById(R.id.imageViewDrawerIconMain11);
-                                TextView textViewDrawerTitle = (TextView) recyclerViewDrawer.getChildAt(i).findViewById(R.id.textViewDrawerItemTitleMain11);
-                                RelativeLayout relativeLayoutDrawerItem = (RelativeLayout) recyclerViewDrawer.getChildAt(i).findViewById(R.id.relativeLayoutDrawerItem11);
+                                }else{
+                                    ImageView imageViewDrawerIcon = (ImageView) recyclerViewDrawer.getChildAt(i).findViewById(R.id.imageViewDrawerIconMain11);
+                                    TextView textViewDrawerTitle = (TextView) recyclerViewDrawer.getChildAt(i).findViewById(R.id.textViewDrawerItemTitleMain11);
+                                    RelativeLayout relativeLayoutDrawerItem = (RelativeLayout) recyclerViewDrawer.getChildAt(i).findViewById(R.id.relativeLayoutDrawerItem11);
 
-                                if(imageViewDrawerIcon!=null && textViewDrawerTitle !=null && relativeLayoutDrawerItem!=null){
-                                    imageViewDrawerIcon.setColorFilter(getResources().getColor(R.color.md_text));
-                                    if (Build.VERSION.SDK_INT > 15) {
-                                        imageViewDrawerIcon.setImageAlpha(138);
-                                    } else {
-                                        imageViewDrawerIcon.setAlpha(138);
+                                    if(imageViewDrawerIcon!=null && textViewDrawerTitle !=null && relativeLayoutDrawerItem!=null){
+                                        imageViewDrawerIcon.setColorFilter(getResources().getColor(R.color.md_text));
+                                        if (Build.VERSION.SDK_INT > 15) {
+                                            imageViewDrawerIcon.setImageAlpha(138);
+                                        } else {
+                                            imageViewDrawerIcon.setAlpha(138);
+                                        }
+                                        textViewDrawerTitle.setTextColor(getResources().getColor(R.color.md_text));
+                                        relativeLayoutDrawerItem.setBackgroundColor(getResources().getColor(R.color.md_white_1000));
                                     }
-                                    textViewDrawerTitle.setTextColor(getResources().getColor(R.color.md_text));
-                                    relativeLayoutDrawerItem.setBackgroundColor(getResources().getColor(R.color.md_white_1000));
                                 }
                             }
-                        }
 
-                        //region reemplazo
+                            //region reemplazo
                         /*
                         if (position == 2) {
                             Log.d(TAG,"click position 0 pintar...");
@@ -2077,40 +2119,40 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
                         relativeLayoutDrawerItem.setBackgroundColor(getResources().getColor(R.color.md_white_1000));
                     }
                     */
-                    //endregion
+                            //endregion
 
-                    //endregion
-                    }
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            // Do something after some time
-                            setFragment(position);
+                            //endregion
                         }
-                    }, 250);
-                    if(position!=2){
-                        mDrawerLayout.closeDrawers();
+                        final Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Do something after some time
+                                setFragment(position);
+                            }
+                        }, 250);
+                        if(position!=2){
+                            mDrawerLayout.closeDrawers();
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
                     }
-                }catch (Exception e){
-                    e.printStackTrace();
+
                 }
 
-            }
-
-            @Override
-            public void setChild(final int i,TitleChild position) {
-                Log.d(TAG,"posiiton:"+i+" setChild:"+position.toString());
-                Intent intent = new Intent(Main2Activity.this,ReporteActivity.class);
-                intent.putExtra("Option",position.getOption());
-                intent.putExtra("Title","Reporte "+position.getSubtitle());
-                startActivity(intent);
-            }
-        });
-        adapter.setParentClickableViewAnimationDefaultDuration();
-        adapter.setParentAndIconExpandOnClick(true);
-        recyclerViewDrawer.setAdapter(adapter);
-        //region inusual
+                @Override
+                public void setChild(final int i,TitleChild position) {
+                    Log.d(TAG,"posiiton:"+i+" setChild:"+position.toString());
+                    Intent intent = new Intent(Main2Activity.this,ReporteActivity.class);
+                    intent.putExtra("Option",position.getOption());
+                    intent.putExtra("Title","Reporte "+position.getSubtitle());
+                    startActivity(intent);
+                }
+            });
+            adapter.setParentClickableViewAnimationDefaultDuration();
+            adapter.setParentAndIconExpandOnClick(true);
+            recyclerViewDrawer.setAdapter(adapter);
+            //region inusual
         /*ArrayList<DrawerItem> drawerItems = new ArrayList<>();
         List<TitleMenu> titulos = new ArrayList<>();
         final String[] drawerTitles = getResources().getStringArray(R.array.drawer);
@@ -2152,9 +2194,11 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
 
         }
         drawerIcons.recycle();*/
-        //adapterDrawer = new DrawerAdapter(drawerItems);
-        //endregion
-
+            //adapterDrawer = new DrawerAdapter(drawerItems);
+            //endregion
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private List<ParentObject> initData() {

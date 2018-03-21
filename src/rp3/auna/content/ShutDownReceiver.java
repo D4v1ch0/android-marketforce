@@ -15,10 +15,15 @@ public class ShutDownReceiver extends BroadcastReceiver{
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d(TAG,"onReceive...");
-        if (intent.getAction().equalsIgnoreCase(Intent.ACTION_SHUTDOWN)) {
-            Log.d(TAG,"shutdown is on...");
-        } else {
-            Log.d(TAG,"shutdown is off...");
+        try{
+            if (intent.getAction().equalsIgnoreCase(Intent.ACTION_SHUTDOWN)) {
+                Log.d(TAG,"shutdown is on...");
+            } else {
+                Log.d(TAG,"shutdown is off...");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
     }
 }

@@ -77,23 +77,27 @@ public class AgendaFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_agenda,container,false);
         ButterKnife.bind(this,view);
         setHasOptionsMenu(true);
-        appBarLayout = (AppBarLayout)getActivity().findViewById(R.id.appBarMain);
-        toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        statusBar = (FrameLayout) getActivity().findViewById(R.id.statusBar);
-        tabLayout = ((Main2Activity) getActivity()).tabLayout;
-        tabLayout.setVisibility(View.VISIBLE);
-        ((Main2Activity) getActivity()).getSupportActionBar().setTitle("Agenda");
-        setupTabs();
         try {
-            setParametersDate();
+            appBarLayout = (AppBarLayout)getActivity().findViewById(R.id.appBarMain);
+            toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+            statusBar = (FrameLayout) getActivity().findViewById(R.id.statusBar);
+            tabLayout = ((Main2Activity) getActivity()).tabLayout;
+            tabLayout.setVisibility(View.VISIBLE);
+            ((Main2Activity) getActivity()).getSupportActionBar().setTitle("Agenda");
+            setupTabs();
+            try {
+                setParametersDate();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+            Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat formatTile = new SimpleDateFormat(Contants.DATE_FORMAT_AGENDA_TITLE);
+            String title = formatTile.format(calendar.getTime());
+            ((Main2Activity) getActivity()).getSupportActionBar().setTitle("Agenda "+title);
         }catch (Exception e){
             e.printStackTrace();
         }
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat formatTile = new SimpleDateFormat(Contants.DATE_FORMAT_AGENDA_TITLE);
-        String title = formatTile.format(calendar.getTime());
-        ((Main2Activity) getActivity()).getSupportActionBar().setTitle("Agenda "+title);
         return view;
     }
 
@@ -240,17 +244,21 @@ public class AgendaFragment extends Fragment{
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 final String selectedDate = dayOfMonth + " / " + (month+1) + " / " + year;
                 Log.d(TAG,"selectedDate:"+selectedDate);
-                SimpleDateFormat format=new SimpleDateFormat(Contants.DATE_FORMAT);
-                SimpleDateFormat formatTile = new SimpleDateFormat(Contants.DATE_FORMAT_AGENDA_TITLE);
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(year,(month),dayOfMonth);
-                final String date = format.format(calendar.getTime());
-                final String title = formatTile.format(calendar.getTime());
-                Log.d(TAG,"dateselected:"+date);
-                ((Main2Activity) getActivity()).getSupportActionBar().setTitle("Agenda "+title);
-                dateSelected = calendar.getTime();
-                //tabsDesignViewPagerAdapter.setDate(dateSelected);
-                setDate(calendar.getTime());
+                try {
+                    SimpleDateFormat format=new SimpleDateFormat(Contants.DATE_FORMAT);
+                    SimpleDateFormat formatTile = new SimpleDateFormat(Contants.DATE_FORMAT_AGENDA_TITLE);
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(year,(month),dayOfMonth);
+                    final String date = format.format(calendar.getTime());
+                    final String title = formatTile.format(calendar.getTime());
+                    Log.d(TAG,"dateselected:"+date);
+                    ((Main2Activity) getActivity()).getSupportActionBar().setTitle("Agenda "+title);
+                    dateSelected = calendar.getTime();
+                    //tabsDesignViewPagerAdapter.setDate(dateSelected);
+                    setDate(calendar.getTime());
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         },dateMaxLlamada,dateMinLlamada);
         newFragment.show(getFragmentManager(), "datePicker");

@@ -78,21 +78,25 @@ public class TabsDesignViewPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     public void setDate(Date date){
-        dateSelected = date;
-        Log.d(TAG,"dateSelected:"+dateSelected.toString());
-        if(tabCita.isResumed()){
-            Log.d(TAG,"tabCita.isResumed()...");
-            if(tabCita.isVisible()){
-                Log.d(TAG,"tabCita.isVisible()...");
-                tabCita.obtenerDate(Convert.getDotNetTicksFromDate(dateSelected));
+        try {
+            dateSelected = date;
+            Log.d(TAG,"dateSelected:"+dateSelected.toString());
+            if(tabCita.isResumed()){
+                Log.d(TAG,"tabCita.isResumed()...");
+                if(tabCita.isVisible()){
+                    Log.d(TAG,"tabCita.isVisible()...");
+                    tabCita.obtenerDate(Convert.getDotNetTicksFromDate(dateSelected));
+                }
             }
-        }
-        if(tabLlamada.isResumed()){
-            Log.d(TAG,"tabLlamada.isResumed()...");
-            if(tabLlamada.isVisible()){
-                Log.d(TAG,"tabLlamada.isVisible()...");
-                tabLlamada.obtenerDate(Convert.getDotNetTicksFromDate(dateSelected));
+            if(tabLlamada.isResumed()){
+                Log.d(TAG,"tabLlamada.isResumed()...");
+                if(tabLlamada.isVisible()){
+                    Log.d(TAG,"tabLlamada.isVisible()...");
+                    tabLlamada.obtenerDate(Convert.getDotNetTicksFromDate(dateSelected));
+                }
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 

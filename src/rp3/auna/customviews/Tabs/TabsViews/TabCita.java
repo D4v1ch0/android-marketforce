@@ -116,9 +116,13 @@ public class TabCita extends Fragment{
         ButterKnife.bind(this,view);
         Log.d(TAG,"onCreateView...");
 
-        //dateSelected = Calendar.getInstance().getTime();
-        recyclerViewDesign(view);
-        initAdapter();
+        try{
+            //dateSelected = Calendar.getInstance().getTime();
+            recyclerViewDesign(view);
+            initAdapter();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return view;
     }
 
@@ -298,66 +302,72 @@ public class TabCita extends Fragment{
             @Override
             public void agendaSelected(VisitaVta agendaVta, int positionn) {
                 Log.d(TAG,"agendaSelected...");
-                int idAgente = PreferenceManager.getInt(KEY_IDAGENTE,0);
-                if(idAgente==0){
-                    Toast.makeText(getActivity(), R.string.generic_show_message_service, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                agendaSelected = agendaVta;
-                visitaVta = agendaVta;
-                Log.d(TAG,"agenda:"+agendaVta.toString());
-                Calendar calendar1 = Calendar.getInstance();
-                Calendar calendar2 = Calendar.getInstance();
-                calendar2.setTime(agendaVta.getFechaVisita());
-                boolean sameDay = calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR) &&
-                        calendar1.get(Calendar.DAY_OF_YEAR) == calendar2.get(Calendar.DAY_OF_YEAR);
-                if(agendaVta.getVisitaValue().equalsIgnoreCase(Contants.GENERAL_VALUE_CODE_VISITA_REALIZADA)){
-                    Log.d(TAG,"Visita detalle obtener...");
-                    if(visitaVta.getIdVisita()>0){
-                        showDetalleVisitaClient(visitaVta.getIdVisita(),1);
+                try {
+                    int idAgente = PreferenceManager.getInt(KEY_IDAGENTE,0);
+                    if(idAgente==0){
+                        Toast.makeText(getActivity(), R.string.generic_show_message_service, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    agendaSelected = agendaVta;
+                    visitaVta = agendaVta;
+                    Log.d(TAG,"agenda:"+agendaVta.toString());
+                    Calendar calendar1 = Calendar.getInstance();
+                    Calendar calendar2 = Calendar.getInstance();
+                    calendar2.setTime(agendaVta.getFechaVisita());
+                    boolean sameDay = calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR) &&
+                            calendar1.get(Calendar.DAY_OF_YEAR) == calendar2.get(Calendar.DAY_OF_YEAR);
+                    if(agendaVta.getVisitaValue().equalsIgnoreCase(Contants.GENERAL_VALUE_CODE_VISITA_REALIZADA)){
+                        Log.d(TAG,"Visita detalle obtener...");
+                        if(visitaVta.getIdVisita()>0){
+                            showDetalleVisitaClient(visitaVta.getIdVisita(),1);
+                        }else {
+                            Toast.makeText(getActivity(), "Necesita sincronizar esta información con el servidor.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    else if(sameDay){
+                        Log.d(TAG,"Hoy Si es la fecha en que se programo esa visita...");
+                        if(agendaVta.getVisitaValue().equalsIgnoreCase(Contants.GENERAL_VALUE_CODE_VISITA_PENDIENTE)){
+                            Log.d(TAG,"Visita estado pendiente...");
+                            Log.d(TAG,"Estado Visita:"+agendaVta.getVisitaValue());
+                            positionnn = positionn;
+                            showOptionsVisita();
+                        }else if(agendaVta.getVisitaValue().equalsIgnoreCase(Contants.GENERAL_VALUE_CODE_VISITA_CANCELADA)){
+                            Toast.makeText(getActivity(), "Esta visita fue cancelada.", Toast.LENGTH_SHORT).show();
+                        }
+                        else if(agendaVta.getVisitaValue().equalsIgnoreCase(Contants.GENERAL_VALUE_CODE_VISITA_REPROGRAMADA)){
+                            Toast.makeText(getActivity(), "Esta visita fue reprogramada.", Toast.LENGTH_SHORT).show();
+                        }
+                        else if(agendaVta.getVisitaValue().equalsIgnoreCase(Contants.GENERAL_VALUE_CODE_VISITA_NO_REALIZADA)){
+                            Toast.makeText(getActivity(), "Esta visita no fue realizada.", Toast.LENGTH_SHORT).show();
+                        }
+                        else if(agendaVta.getVisitaValue().equalsIgnoreCase(Contants.GENERAL_VALUE_CODE_VISITA_REALIZADA)){
+                            Log.d(TAG,"visita realizada...");
+                        }
+                        else{
+                            Log.d(TAG,"Valor de la visita:"+agendaVta.getVisitaValue());
+                            Toast.makeText(getActivity(), "Esta visita no esta pendiente.", Toast.LENGTH_SHORT).show();
+                        }
                     }else {
-                        Toast.makeText(getActivity(), "Necesita sincronizar esta información con el servidor.", Toast.LENGTH_SHORT).show();
+                        Log.d(TAG,"Hoy no es la fecha en que se programo esa llamada...");
+                        Toast.makeText(getActivity(), "La fecha de hoy no coincide con la fecha programada.", Toast.LENGTH_SHORT).show();
                     }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
-                else if(sameDay){
-                    Log.d(TAG,"Hoy Si es la fecha en que se programo esa visita...");
-                    if(agendaVta.getVisitaValue().equalsIgnoreCase(Contants.GENERAL_VALUE_CODE_VISITA_PENDIENTE)){
-                        Log.d(TAG,"Visita estado pendiente...");
-                        Log.d(TAG,"Estado Visita:"+agendaVta.getVisitaValue());
-                        positionnn = positionn;
-                        showOptionsVisita();
-                    }else if(agendaVta.getVisitaValue().equalsIgnoreCase(Contants.GENERAL_VALUE_CODE_VISITA_CANCELADA)){
-                        Toast.makeText(getActivity(), "Esta visita fue cancelada.", Toast.LENGTH_SHORT).show();
-                    }
-                    else if(agendaVta.getVisitaValue().equalsIgnoreCase(Contants.GENERAL_VALUE_CODE_VISITA_REPROGRAMADA)){
-                        Toast.makeText(getActivity(), "Esta visita fue reprogramada.", Toast.LENGTH_SHORT).show();
-                    }
-                    else if(agendaVta.getVisitaValue().equalsIgnoreCase(Contants.GENERAL_VALUE_CODE_VISITA_NO_REALIZADA)){
-                        Toast.makeText(getActivity(), "Esta visita no fue realizada.", Toast.LENGTH_SHORT).show();
-                    }
-                    else if(agendaVta.getVisitaValue().equalsIgnoreCase(Contants.GENERAL_VALUE_CODE_VISITA_REALIZADA)){
-                        Log.d(TAG,"visita realizada...");
-                    }
-                    else{
-                        Log.d(TAG,"Valor de la visita:"+agendaVta.getVisitaValue());
-                        Toast.makeText(getActivity(), "Esta visita no esta pendiente.", Toast.LENGTH_SHORT).show();
-                    }
-                }else {
-                    Log.d(TAG,"Hoy no es la fecha en que se programo esa llamada...");
-                    Toast.makeText(getActivity(), "La fecha de hoy no coincide con la fecha programada.", Toast.LENGTH_SHORT).show();
-                }
+
             }
         }, new AgendaVisitaAdapter.CallbackAction() {
             @Override
             public void agendaActionSelected(VisitaVta agendaVta, int position,View v) {
                 Log.d(TAG,"agendaActionSelected...Mostrar detalle consultando ws que obtenga la data..");
-                int idAgente = PreferenceManager.getInt(KEY_IDAGENTE,0);
-                if(idAgente==0){
-                    Toast.makeText(getActivity(), R.string.generic_show_message_service, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                visitaVta = agendaVta;
-                Log.d(TAG,"agenda:"+agendaVta.toString());
+                try{
+                    int idAgente = PreferenceManager.getInt(KEY_IDAGENTE,0);
+                    if(idAgente==0){
+                        Toast.makeText(getActivity(), R.string.generic_show_message_service, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    visitaVta = agendaVta;
+                    Log.d(TAG,"agenda:"+agendaVta.toString());
                 /*Calendar calendar1 = Calendar.getInstance();
                 Calendar calendar2 = Calendar.getInstance();
                 calendar2.setTime(agendaVta.getFechaVisita());
@@ -372,7 +382,9 @@ public class TabCita extends Fragment{
                         showDetailVisitaClient();
                     }
                 }*/
-
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -449,19 +461,24 @@ public class TabCita extends Fragment{
 
             @Override
             public void onOpcionElegida(int position) {
-                switch (position){
-                    case 0:
-                        Log.d(TAG,"Eligio gestionar cita...");
-                        showInicioGestion();
-                        break;
-                    case 1:
-                        Log.d(TAG,"Eligio reprogramar cita...");
-                        showOpcionElegida(agendaSelected,1);
-                        break;
-                    case 2:
-                        Log.d(TAG,"Eligio cancelar cita...");
-                        showOpcionElegida(agendaSelected,2);
-                        break;
+                Log.d(TAG,"onOpcionElegida..");
+                try{
+                    switch (position){
+                        case 0:
+                            Log.d(TAG,"Eligio gestionar cita...");
+                            showInicioGestion();
+                            break;
+                        case 1:
+                            Log.d(TAG,"Eligio reprogramar cita...");
+                            showOpcionElegida(agendaSelected,1);
+                            break;
+                        case 2:
+                            Log.d(TAG,"Eligio cancelar cita...");
+                            showOpcionElegida(agendaSelected,2);
+                            break;
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
             }
         });
@@ -472,34 +489,35 @@ public class TabCita extends Fragment{
     private void showInicioGestion(){
         Log.d(TAG,"showInicioGestion");
         Log.d(TAG,visitaVta.toString());
-        if(visitaVta.getIdVisita()>0){
+        try{
+            if(visitaVta.getIdVisita()>0){
 
-            //visitaVta = vtaList.get(position);
-            Calendar calendar = Calendar.getInstance();
-            Date date = new Date();
-            date.setTime(calendar.getTimeInMillis());
-            visitaVta.setFechaInicio(date);
-            SessionManager.getInstance(getActivity()).createVisitaSession(visitaVta);
-            Intent intent;
-            int idAgente = PreferenceManager.getInt(Contants.KEY_IDAGENTE,0);
-            if(idAgente==0){
-                Toast.makeText(getActivity(), rp3.core.R.string.generic_show_message_service, Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if(visitaVta.getEstado()==6){
-                //Consultar data e iniciar
-                showDetalleVisitaClient(visitaVta.getVisitaId(),2);
-            }else{
-                //Iniciar la Cotizacion Inicial
-                intent = new Intent(getActivity(), CotizacionActivity.class);
-                intent.putExtra("Estado",1);
-                getActivity().startActivityForResult(intent,REQUEST_VISITA_COTIZACION_NUEVO);
-            }
+                //visitaVta = vtaList.get(position);
+                Calendar calendar = Calendar.getInstance();
+                Date date = new Date();
+                date.setTime(calendar.getTimeInMillis());
+                visitaVta.setFechaInicio(date);
+                SessionManager.getInstance(getActivity()).createVisitaSession(visitaVta);
+                Intent intent;
+                int idAgente = PreferenceManager.getInt(Contants.KEY_IDAGENTE,0);
+                if(idAgente==0){
+                    Toast.makeText(getActivity(), rp3.core.R.string.generic_show_message_service, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(visitaVta.getEstado()==6){
+                    //Consultar data e iniciar
+                    showDetalleVisitaClient(visitaVta.getVisitaId(),2);
+                }else{
+                    //Iniciar la Cotizacion Inicial
+                    intent = new Intent(getActivity(), CotizacionActivity.class);
+                    intent.putExtra("Estado",1);
+                    getActivity().startActivityForResult(intent,REQUEST_VISITA_COTIZACION_NUEVO);
+                }
 
-            /**
-             * Queda pendientes estas notas
-             */
-            //region Notas
+                /**
+                 * Queda pendientes estas notas
+                 */
+                //region Notas
             /*if(visitaVta.getEstado()==1){
                 intent = new Intent(getActivity(), CotizacionActivity.class);
                 intent.putExtra("Estado",1);
@@ -524,10 +542,14 @@ public class TabCita extends Fragment{
                 getActivity().startActivityForResult(intent,REQUEST_VISITA_COTIZACION_NUEVO);
             }*/
 //endregion
-        }else{
-            Log.d(TAG,"Visita == 0");
-            Toast.makeText(getActivity(), "Se necesita que sincronize la informacion con el servidor porfavor...", Toast.LENGTH_SHORT).show();
+            }else{
+                Log.d(TAG,"Visita == 0");
+                Toast.makeText(getActivity(), "Se necesita que sincronize la informacion con el servidor porfavor...", Toast.LENGTH_SHORT).show();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
     }
 
     private void showOpcionElegida(final VisitaVta agenda,final int tipo){
@@ -537,11 +559,17 @@ public class TabCita extends Fragment{
         final MotivoCitaDialog dialog = MotivoCitaDialog.newInstance(new MotivoCitaDialog.callbackElegir() {
             @Override
             public void onGeneralSelected(String code,String motivo) {
-                if(tipo == 1){
-                    reprogramarCita(agenda,code,motivo);
-                }else{
-                    cancelarCita(agenda,code,motivo);
+                Log.d(TAG,"onGeneralSelected...");
+                try{
+                    if(tipo == 1){
+                        reprogramarCita(agenda,code,motivo);
+                    }else{
+                        cancelarCita(agenda,code,motivo);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
+
             }
         });
         dialog.setArguments(arg);
@@ -674,16 +702,21 @@ public class TabCita extends Fragment{
     //region Refresh Data
     public void refresh(){
         Log.d(TAG,"refresh...");
-        if(getLoaderManager().getLoader(0)!=null){
-            Log.d(TAG,"getLoaderManager().getLoader(0)!=null...");
-            getLoaderManager().destroyLoader(0);
-            LoaderAgendaVta loaderAgendaVta = new LoaderAgendaVta();
-            getLoaderManager().initLoader(0,new Bundle(),loaderAgendaVta);
-        }else{
-            Log.d(TAG,"getLoaderManager().getLoader(0)==null...");
-            LoaderAgendaVta loaderAgendaVta = new LoaderAgendaVta();
-            getLoaderManager().initLoader(0,new Bundle(),loaderAgendaVta);
+        try{
+            if(getLoaderManager().getLoader(0)!=null){
+                Log.d(TAG,"getLoaderManager().getLoader(0)!=null...");
+                getLoaderManager().destroyLoader(0);
+                LoaderAgendaVta loaderAgendaVta = new LoaderAgendaVta();
+                getLoaderManager().initLoader(0,new Bundle(),loaderAgendaVta);
+            }else{
+                Log.d(TAG,"getLoaderManager().getLoader(0)==null...");
+                LoaderAgendaVta loaderAgendaVta = new LoaderAgendaVta();
+                getLoaderManager().initLoader(0,new Bundle(),loaderAgendaVta);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
     }
 
     public class LoaderAgendaVta implements LoaderManager.LoaderCallbacks<List<VisitaVta>> {
@@ -697,53 +730,57 @@ public class TabCita extends Fragment{
         @Override
         public void onLoadFinished(Loader<List<VisitaVta>> arg0,List<VisitaVta> data) {
             Log.d(TAG,"onLoadFinished...");
-            if(getActivity() != null) {
-                //list = data;
-                Log.d(TAG,"getActivity() != null...");
-                if (data != null){
-                    Log.d(TAG,"data != null...");
-                    if (data.size() > 0) {
-                        Log.d(TAG,"cantidad de citas agenda:"+data.size());
-                        toolbar.setTranslationY(0);
-                        appBarLayout.setTranslationY(0);
-                        list = new ArrayList<>();
-                        for(VisitaVta obj:data){
-                            list.add(obj);
+            try{
+                if(getActivity() != null) {
+                    //list = data;
+                    Log.d(TAG,"getActivity() != null...");
+                    if (data != null){
+                        Log.d(TAG,"data != null...");
+                        if (data.size() > 0) {
+                            Log.d(TAG,"cantidad de citas agenda:"+data.size());
+                            toolbar.setTranslationY(0);
+                            appBarLayout.setTranslationY(0);
+                            list = new ArrayList<>();
+                            for(VisitaVta obj:data){
+                                list.add(obj);
+                            }
+                            Log.d(TAG,"cantidad de citas:"+list.size());
+                            if(list.size()==0){
+                                Log.d(TAG,"list.size()==0...");
+                                recyclerView.setVisibility(View.GONE);
+                                progressBar.setVisibility(View.GONE);
+                                container.setVisibility(View.VISIBLE);
+                                //Toast.makeText(getActivity(), "No hay Citas sincronizados ni registradas...", Toast.LENGTH_SHORT).show();
+                            }else{
+                                Log.d(TAG,"list.size()>0...");
+                                Calendar calendar = Calendar.getInstance();
+                                filtrarFecha(dateSelected);
+                                //adapter.addMoreItems(list);
+                                recyclerView.setVisibility(View.VISIBLE);
+                                progressBar.setVisibility(View.GONE);
+                                container.setVisibility(View.GONE);
+                            }
+
                         }
-                        Log.d(TAG,"cantidad de citas:"+list.size());
-                        if(list.size()==0){
-                            Log.d(TAG,"list.size()==0...");
+                        else {
+                            Log.d(TAG,"...");
                             recyclerView.setVisibility(View.GONE);
                             progressBar.setVisibility(View.GONE);
                             container.setVisibility(View.VISIBLE);
                             //Toast.makeText(getActivity(), "No hay Citas sincronizados ni registradas...", Toast.LENGTH_SHORT).show();
-                        }else{
-                            Log.d(TAG,"list.size()>0...");
-                            Calendar calendar = Calendar.getInstance();
-                            filtrarFecha(dateSelected);
-                            //adapter.addMoreItems(list);
-                            recyclerView.setVisibility(View.VISIBLE);
-                            progressBar.setVisibility(View.GONE);
-                            container.setVisibility(View.GONE);
                         }
-
-                    }
-                    else {
-                        Log.d(TAG,"...");
+                    }else{
+                        Log.d(TAG,"DATA==...");
                         recyclerView.setVisibility(View.GONE);
                         progressBar.setVisibility(View.GONE);
                         container.setVisibility(View.VISIBLE);
                         //Toast.makeText(getActivity(), "No hay Citas sincronizados ni registradas...", Toast.LENGTH_SHORT).show();
                     }
-                }else{
-                    Log.d(TAG,"DATA==...");
-                    recyclerView.setVisibility(View.GONE);
-                    progressBar.setVisibility(View.GONE);
-                    container.setVisibility(View.VISIBLE);
-                    //Toast.makeText(getActivity(), "No hay Citas sincronizados ni registradas...", Toast.LENGTH_SHORT).show();
+                }else {
+                    Log.d(TAG,"getActivity() == null...");
                 }
-            }else {
-                Log.d(TAG,"getActivity() == null...");
+            }catch (Exception e){
+                e.printStackTrace();
             }
         }
 
@@ -761,9 +798,14 @@ public class TabCita extends Fragment{
     public void onResume() {
         super.onResume();
         Log.d(TAG,"onResume...");
-        estado = true;
-        EventBus.getBus().register(this);
-        refresh();
+        try{
+            estado = true;
+            EventBus.getBus().register(this);
+            refresh();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -824,14 +866,17 @@ public class TabCita extends Fragment{
     public void recievedMessage(Events.Message msj){
         Log.d(TAG,"recievedMessage visita...");
         Bundle todo = msj.getMessage();
-        if(todo!=null){
-            if (todo.getString("Llamada")!=null){
-                if(todo.getString("Llamada").equalsIgnoreCase("Refresh")){
-                    refresh();
+        try {
+            if(todo!=null){
+                if (todo.getString("Llamada")!=null){
+                    if(todo.getString("Llamada").equalsIgnoreCase("Refresh")){
+                        refresh();
+                    }
                 }
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
-
     }
 
     //endregion

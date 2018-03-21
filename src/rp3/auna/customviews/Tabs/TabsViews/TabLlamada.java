@@ -135,8 +135,13 @@ public class TabLlamada extends Fragment {
         View view = inflater.inflate(R.layout.tab_agenda, container, false);
         ButterKnife.bind(this,view);
         Log.d(TAG,"onCreateView...");
-        recyclerViewDesign();
-        adapterView();
+        try{
+            recyclerViewDesign();
+            adapterView();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         return view;
     }
 
@@ -154,85 +159,94 @@ public class TabLlamada extends Fragment {
     }
 
     private void adapterView(){
-        adapter = new AgendaLlamadaAdapter(getActivity(), new AgendaLlamadaAdapter.CallbackVer() {
-            @Override
-            public void agendaSelected(final LlamadaVta agendaVta, int positionn) {
-                Log.d(TAG,"agendaSelected...");
-                Log.d(TAG,"agenda:"+agendaVta.toString());
-                int idAgente = PreferenceManager.getInt(KEY_IDAGENTE,0);
-                if(idAgente==0){
-                    Toast.makeText(getActivity(), R.string.generic_show_message_service, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                Calendar calendar1 = Calendar.getInstance();
-                Calendar calendar2 = Calendar.getInstance();
-                calendar2.setTime(agendaVta.getFechaLlamada());
-                llamadaRepro = agendaVta;
-                boolean sameDay = calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR) &&
-                        calendar1.get(Calendar.DAY_OF_YEAR) == calendar2.get(Calendar.DAY_OF_YEAR);
-                if(sameDay){
-                    Log.d(TAG,"Hoy Si es la fecha en que se programo esa llamada...");
-                    if(agendaVta.getLlamadoValue().equalsIgnoreCase(GENERAL_VALUE_CODE_LLAMADA_PENDIENTE)){
-                        Log.d(TAG,"Llamada estado pendiente...");
-                        Log.d(TAG,"Estado llamada:"+agendaVta.getLlamadoValue());
-                        position = positionn;
-                        ElegirLlamadaDialog dialog = ElegirLlamadaDialog.newInstance(new ElegirLlamadaDialog.callbackLlamadaelegir() {
-                            @Override
-                            public void onSelectedFinalizar() {
-                                Log.d(TAG,"Cancelo la eleccion...");
-                            }
+        try{
+            adapter = new AgendaLlamadaAdapter(getActivity(), new AgendaLlamadaAdapter.CallbackVer() {
+                @Override
+                public void agendaSelected(final LlamadaVta agendaVta, int positionn) {
+                    Log.d(TAG,"agendaSelected...");
+                    Log.d(TAG,"agenda:"+agendaVta.toString());
+                    try{
+                        int idAgente = PreferenceManager.getInt(KEY_IDAGENTE,0);
+                        if(idAgente==0){
+                            Toast.makeText(getActivity(), R.string.generic_show_message_service, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        Calendar calendar1 = Calendar.getInstance();
+                        Calendar calendar2 = Calendar.getInstance();
+                        calendar2.setTime(agendaVta.getFechaLlamada());
+                        llamadaRepro = agendaVta;
+                        boolean sameDay = calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR) &&
+                                calendar1.get(Calendar.DAY_OF_YEAR) == calendar2.get(Calendar.DAY_OF_YEAR);
+                        if(sameDay){
+                            Log.d(TAG,"Hoy Si es la fecha en que se programo esa llamada...");
+                            if(agendaVta.getLlamadoValue().equalsIgnoreCase(GENERAL_VALUE_CODE_LLAMADA_PENDIENTE)){
+                                Log.d(TAG,"Llamada estado pendiente...");
+                                Log.d(TAG,"Estado llamada:"+agendaVta.getLlamadoValue());
+                                position = positionn;
+                                ElegirLlamadaDialog dialog = ElegirLlamadaDialog.newInstance(new ElegirLlamadaDialog.callbackLlamadaelegir() {
+                                    @Override
+                                    public void onSelectedFinalizar() {
+                                        Log.d(TAG,"Cancelo la eleccion...");
+                                    }
 
-                            @Override
-                            public void onNumeroSelected(int position) {
-                                Log.d(TAG,"Selecciono la opcion...");
-                                switch (position){
-                                    case 0:
-                                        Log.d(TAG,"Gestionar...");
-                                        showLlamada(agendaVta);
-                                        break;
-                                    case 1:
-                                        Log.d(TAG,"Reprogramar...");
-                                        showDialogMotivo(agendaVta,1);
-                                        break;
-                                    case 2:
-                                        Log.d(TAG,"Cancelar...");
-                                        showDialogMotivo(agendaVta,2);
-                                        break;
-                                }
+                                    @Override
+                                    public void onNumeroSelected(int position) {
+                                        Log.d(TAG,"Selecciono la opcion...");
+                                        switch (position){
+                                            case 0:
+                                                Log.d(TAG,"Gestionar...");
+                                                showLlamada(agendaVta);
+                                                break;
+                                            case 1:
+                                                Log.d(TAG,"Reprogramar...");
+                                                showDialogMotivo(agendaVta,1);
+                                                break;
+                                            case 2:
+                                                Log.d(TAG,"Cancelar...");
+                                                showDialogMotivo(agendaVta,2);
+                                                break;
+                                        }
+                                    }
+                                });
+                                dialog.show(getFragmentManager(),"ElegirLlamadaDialog");
+                            }else if(agendaVta.getLlamadoValue().equalsIgnoreCase(Contants.GENERAL_VALUE_CODE_LLAMADA_REPROGRAMADA)){
+                                Toast.makeText(getActivity(), "Esta llamada fue reprogramada.", Toast.LENGTH_SHORT).show();
+                            }else if(agendaVta.getLlamadoValue().equalsIgnoreCase(Contants.GENERAL_VALUE_CODE_LLAMADA_CANCELADA)){
+                                Toast.makeText(getActivity(), "Esta llamada fue cancelada.", Toast.LENGTH_SHORT).show();
                             }
-                        });
-                        dialog.show(getFragmentManager(),"ElegirLlamadaDialog");
-                    }else if(agendaVta.getLlamadoValue().equalsIgnoreCase(Contants.GENERAL_VALUE_CODE_LLAMADA_REPROGRAMADA)){
-                        Toast.makeText(getActivity(), "Esta llamada fue reprogramada.", Toast.LENGTH_SHORT).show();
-                    }else if(agendaVta.getLlamadoValue().equalsIgnoreCase(Contants.GENERAL_VALUE_CODE_LLAMADA_CANCELADA)){
-                        Toast.makeText(getActivity(), "Esta llamada fue cancelada.", Toast.LENGTH_SHORT).show();
+                            else if(agendaVta.getLlamadoValue().equalsIgnoreCase(Contants.GENERAL_VALUE_CODE_LLAMADA_NO_REALIZO_LLAMADA)){
+                                Toast.makeText(getActivity(), "Esta llamada no fue realizada.", Toast.LENGTH_SHORT).show();
+                            }
+                            else if(agendaVta.getLlamadoValue().equalsIgnoreCase(Contants.GENERAL_VALUE_CODE_LLAMADA_SI_REALIZO_LLAMADA)){
+                                Toast.makeText(getActivity(), "Esta llamada fue realizada.", Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                Log.d(TAG,"Valor de la llamada:"+agendaVta.getLlamadoValue());
+                                Toast.makeText(getActivity(), "Esta llamada no esta pendiente.", Toast.LENGTH_SHORT).show();
+                            }
+                        }else {
+                            Log.d(TAG,"Hoy no es la fecha en que se programo esa llamada.");
+                            Toast.makeText(getActivity(), "La fecha de hoy no coincide con la fecha programada...", Toast.LENGTH_SHORT).show();
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
                     }
-                    else if(agendaVta.getLlamadoValue().equalsIgnoreCase(Contants.GENERAL_VALUE_CODE_LLAMADA_NO_REALIZO_LLAMADA)){
-                        Toast.makeText(getActivity(), "Esta llamada no fue realizada.", Toast.LENGTH_SHORT).show();
-                    }
-                    else if(agendaVta.getLlamadoValue().equalsIgnoreCase(Contants.GENERAL_VALUE_CODE_LLAMADA_SI_REALIZO_LLAMADA)){
-                        Toast.makeText(getActivity(), "Esta llamada fue realizada.", Toast.LENGTH_SHORT).show();
-                    }
-                    else{
-                        Log.d(TAG,"Valor de la llamada:"+agendaVta.getLlamadoValue());
-                        Toast.makeText(getActivity(), "Esta llamada no esta pendiente.", Toast.LENGTH_SHORT).show();
-                    }
-                }else {
-                    Log.d(TAG,"Hoy no es la fecha en que se programo esa llamada.");
-                    Toast.makeText(getActivity(), "La fecha de hoy no coincide con la fecha programada...", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }, new AgendaLlamadaAdapter.CallbackAction() {
-            @Override
-            public void agendaActionSelected(LlamadaVta agendaVta, int position,View v) {
-                Log.d(TAG,"agendaActionSelected...");
 
-            }
-        });
-        recyclerView.setAdapter(adapter);
-        LoaderAgendaVta loader = new LoaderAgendaVta();
-        Bundle args = new Bundle();
-        getLoaderManager().initLoader(0,args,loader);
+                }
+            }, new AgendaLlamadaAdapter.CallbackAction() {
+                @Override
+                public void agendaActionSelected(LlamadaVta agendaVta, int position,View v) {
+                    Log.d(TAG,"agendaActionSelected...");
+
+                }
+            });
+            recyclerView.setAdapter(adapter);
+            LoaderAgendaVta loader = new LoaderAgendaVta();
+            Bundle args = new Bundle();
+            getLoaderManager().initLoader(0,args,loader);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void showDialogMotivo(final LlamadaVta agendaVta,final int tipo){
@@ -242,10 +256,15 @@ public class TabLlamada extends Fragment {
         final MotivoLlamadaDialog dialog = MotivoLlamadaDialog.newInstance(new MotivoLlamadaDialog.callbackElegir() {
             @Override
             public void onGeneralSelected(String code,String motivo) {
-                if(tipo == 1){
-                    reprogramarCall(agendaVta,code,motivo);
-                }else{
-                    cancelarCall(agendaVta,code,motivo);
+                Log.d(TAG,"onGeneralSelected...");
+                try{
+                    if(tipo == 1){
+                        reprogramarCall(agendaVta,code,motivo);
+                    }else{
+                        cancelarCall(agendaVta,code,motivo);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
             }
         });
@@ -345,7 +364,7 @@ public class TabLlamada extends Fragment {
         final ArrayList<String> list = new ArrayList<>();
         int idProspecto = model.getIdCliente();
         Log.d(TAG,"idProspecto:"+idProspecto);
-        List<ProspectoVtaDb> prospectoVtaDb = ProspectoVtaDb.getAll(Utils.getDataBase(getActivity()));
+        List<ProspectoVtaDb> prospectoVtaDb = ProspectoVtaDb.getAllEstado(Utils.getDataBase(getActivity()));
         ProspectoVtaDb objeto=null;
         if(model.getInsertado()==1){
             Log.d(TAG,"la agenda esta en bd sqlite...");
@@ -1259,65 +1278,74 @@ public class TabLlamada extends Fragment {
 
     public void filtrarFecha(Date date){
         Log.d(TAG,"filtrarFecha...");
-        vtaList = new ArrayList<>();
-        dateSelected = date;
-        Calendar calendar1 = Calendar.getInstance();
-        Calendar calendar2 = Calendar.getInstance();
-        calendar1.setTime(date);
-        Log.d(TAG,"Date filtrada:"+calendar1.getTime().toString());
-        if(list!=null){
-            for(int i = 0;i<list.size();i++){
-                calendar2.setTime(list.get(i).getFechaLlamada());
-                Log.d(TAG,"Date comparar:"+calendar2.getTime().toString());
-                Log.d(TAG,"Año1:"+calendar1.get(Calendar.YEAR)+"DayOfYear1:"+calendar1.get(Calendar.DAY_OF_YEAR));
-                Log.d(TAG,"Año2:"+calendar2.get(Calendar.YEAR)+"DayOfYear1:"+calendar2.get(Calendar.DAY_OF_YEAR));
-                boolean sameDay = calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR) &&
-                        calendar1.get(Calendar.DAY_OF_YEAR) == calendar2.get(Calendar.DAY_OF_YEAR);
-                if(sameDay){
-                    Log.d(TAG,"sameDay == true...");
-                    vtaList.add(list.get(i));
-                }else{
-                    Log.d(TAG,"sameDay == false..");
+        try{
+            vtaList = new ArrayList<>();
+            dateSelected = date;
+            Calendar calendar1 = Calendar.getInstance();
+            Calendar calendar2 = Calendar.getInstance();
+            calendar1.setTime(date);
+            Log.d(TAG,"Date filtrada:"+calendar1.getTime().toString());
+            if(list!=null){
+                for(int i = 0;i<list.size();i++){
+                    calendar2.setTime(list.get(i).getFechaLlamada());
+                    Log.d(TAG,"Date comparar:"+calendar2.getTime().toString());
+                    Log.d(TAG,"Año1:"+calendar1.get(Calendar.YEAR)+"DayOfYear1:"+calendar1.get(Calendar.DAY_OF_YEAR));
+                    Log.d(TAG,"Año2:"+calendar2.get(Calendar.YEAR)+"DayOfYear1:"+calendar2.get(Calendar.DAY_OF_YEAR));
+                    boolean sameDay = calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR) &&
+                            calendar1.get(Calendar.DAY_OF_YEAR) == calendar2.get(Calendar.DAY_OF_YEAR);
+                    if(sameDay){
+                        Log.d(TAG,"sameDay == true...");
+                        vtaList.add(list.get(i));
+                    }else{
+                        Log.d(TAG,"sameDay == false..");
+                    }
                 }
             }
-        }
         /*
         if(list!=null){
             for(int i = 0;i<list.size();i++){
                 vtaList.add(list.get(i));
             }
         }*/
-        adapter.addMoreItems(vtaList);
-        Log.d(TAG,"vtaList a veR:"+vtaList.size());
-        if(vtaList!=null){
-            Log.d(TAG,"vtaList!=null..");
-            if(vtaList.size()>0){
-                recyclerView.setAdapter(adapter);
-                recyclerView.setVisibility(View.VISIBLE);
-                Log.d(TAG,"count de items..."+recyclerView.getAdapter().getItemCount());
+            adapter.addMoreItems(vtaList);
+            Log.d(TAG,"vtaList a veR:"+vtaList.size());
+            if(vtaList!=null){
+                Log.d(TAG,"vtaList!=null..");
+                if(vtaList.size()>0){
+                    recyclerView.setAdapter(adapter);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    Log.d(TAG,"count de items..."+recyclerView.getAdapter().getItemCount());
 
-                Log.d(TAG,"vtaList.size>0");
-                showInformacion(false);
+                    Log.d(TAG,"vtaList.size>0");
+                    showInformacion(false);
+                }else{
+                    Log.d(TAG,"vtaList.SIZE>0");
+                    showInformacion(true);
+                }
             }else{
-                Log.d(TAG,"vtaList.SIZE>0");
+                Log.d(TAG,"vtaList==null...");
                 showInformacion(true);
             }
-        }else{
-            Log.d(TAG,"vtaList==null...");
-            showInformacion(true);
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
     private void showInformacion(boolean bool){
-        if(bool){
-            container.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
-            progressBar.setVisibility(View.GONE);
-        }else{
-            container.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.GONE);
+        try{
+            if(bool){
+                container.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+                progressBar.setVisibility(View.GONE);
+            }else{
+                container.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
     }
 
     //region Loader and refresh
@@ -1336,49 +1364,53 @@ public class TabLlamada extends Fragment {
         @Override
         public void onLoadFinished(Loader<List<LlamadaVta>> arg0, List<LlamadaVta> data) {
             Log.d(TAG,"onLoadFinished...");
-            if(getActivity() != null) {
-                Log.d(TAG,"getActivity() != null...");
-                if (data != null){
-                    Log.d(TAG,"data != null...");
-                    if (data.size() > 0) {
-                        Log.d(TAG,"cantidad de llamadas agenda:"+data.size());
-                        toolbar.setTranslationY(0);
-                        appBarLayout.setTranslationY(0);
-                        list = new ArrayList<>();
-                        for(LlamadaVta obj:data){
+            try{
+                if(getActivity() != null) {
+                    Log.d(TAG,"getActivity() != null...");
+                    if (data != null){
+                        Log.d(TAG,"data != null...");
+                        if (data.size() > 0) {
+                            Log.d(TAG,"cantidad de llamadas agenda:"+data.size());
+                            toolbar.setTranslationY(0);
+                            appBarLayout.setTranslationY(0);
+                            list = new ArrayList<>();
+                            for(LlamadaVta obj:data){
                                 list.add(obj);
+                            }
+                            Log.d(TAG,"cantidad de llamadas:"+list.size());
+                            if(list.size()==0){
+                                Log.d(TAG,"list.size()==0...");
+                                recyclerView.setVisibility(View.GONE);
+                                progressBar.setVisibility(View.GONE);
+                                container.setVisibility(View.VISIBLE);
+                            }else{
+                                Log.d(TAG,"list.size()="+list.size());
+                                Log.d(TAG,"list.size()>0...");
+                                //Calendar calendar = Calendar.getInstance();
+                                filtrarFecha(dateSelected);
+                                recyclerView.setVisibility(View.VISIBLE);
+                                progressBar.setVisibility(View.GONE);
+                                container.setVisibility(View.GONE);
+                            }
                         }
-                        Log.d(TAG,"cantidad de llamadas:"+list.size());
-                        if(list.size()==0){
-                            Log.d(TAG,"list.size()==0...");
+                        else
+                        {
+                            Log.d(TAG,"cantidad de prospectos visita==0...");
                             recyclerView.setVisibility(View.GONE);
                             progressBar.setVisibility(View.GONE);
                             container.setVisibility(View.VISIBLE);
-                        }else{
-                            Log.d(TAG,"list.size()="+list.size());
-                            Log.d(TAG,"list.size()>0...");
-                            //Calendar calendar = Calendar.getInstance();
-                            filtrarFecha(dateSelected);
-                            recyclerView.setVisibility(View.VISIBLE);
-                            progressBar.setVisibility(View.GONE);
-                            container.setVisibility(View.GONE);
                         }
-                    }
-                    else
-                    {
-                        Log.d(TAG,"cantidad de prospectos visita==0...");
+                    }else{
+                        Log.d(TAG,"data==null...");
                         recyclerView.setVisibility(View.GONE);
                         progressBar.setVisibility(View.GONE);
                         container.setVisibility(View.VISIBLE);
                     }
                 }else{
-                    Log.d(TAG,"data==null...");
-                    recyclerView.setVisibility(View.GONE);
-                    progressBar.setVisibility(View.GONE);
-                    container.setVisibility(View.VISIBLE);
+                    Log.d(TAG,"getActivity == null...");
                 }
-            }else{
-                Log.d(TAG,"getActivity == null...");
+            }catch (Exception e){
+                e.printStackTrace();
             }
         }
 
@@ -1390,16 +1422,21 @@ public class TabLlamada extends Fragment {
 
     public void refresh(){
         Log.d(TAG,"refresh...");
-        if(getLoaderManager().getLoader(0)!=null){
-            Log.d(TAG,"getLoaderManager().getLoader(0)!=null...");
-            getLoaderManager().destroyLoader(0);
-            LoaderAgendaVta loaderAgendaVta = new LoaderAgendaVta();
-            getLoaderManager().initLoader(0,new Bundle(),loaderAgendaVta);
-        }else{
-            Log.d(TAG,"getLoaderManager().getLoader(0)==null...");
-            LoaderAgendaVta loaderAgendaVta = new LoaderAgendaVta();
-            getLoaderManager().initLoader(0,new Bundle(),loaderAgendaVta);
+        try {
+            if(getLoaderManager().getLoader(0)!=null){
+                Log.d(TAG,"getLoaderManager().getLoader(0)!=null...");
+                getLoaderManager().destroyLoader(0);
+                LoaderAgendaVta loaderAgendaVta = new LoaderAgendaVta();
+                getLoaderManager().initLoader(0,new Bundle(),loaderAgendaVta);
+            }else{
+                Log.d(TAG,"getLoaderManager().getLoader(0)==null...");
+                LoaderAgendaVta loaderAgendaVta = new LoaderAgendaVta();
+                getLoaderManager().initLoader(0,new Bundle(),loaderAgendaVta);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
     }
 
     //endregion
@@ -1422,10 +1459,15 @@ public class TabLlamada extends Fragment {
     public void onResume() {
         super.onResume();
         Log.d(TAG,"onResume...");
-        EventBus.getBus().register(this);
-        estado = true;
-        refresh();
-        int idAgente = PreferenceManager.getInt(Contants.KEY_IDAGENTE,0);
+        try{
+            EventBus.getBus().register(this);
+            estado = true;
+            refresh();
+            int idAgente = PreferenceManager.getInt(Contants.KEY_IDAGENTE,0);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -1446,9 +1488,13 @@ public class TabLlamada extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        estado = false;
-        EventBus.getBus().unregister(this);
         Log.d(TAG,"onPause...");
+        try{
+            estado = false;
+            EventBus.getBus().unregister(this);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -1483,25 +1529,35 @@ public class TabLlamada extends Fragment {
     //region Events
 
     public void obtenerDate(long date){
-        dateSelected = Convert.getDateFromDotNetTicks(date);
-        Log.d(TAG,"obtenerDate:"+dateSelected.toString());
-        Bundle bundle = new Bundle();
-        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_REFRESH_LLAMADA);
-        bundle.putLong(AgendaFragment.FECHA,date);
-        ((Main2Activity)getActivity()).invokeSyncLlamada("Agenda","Obteniendo...",bundle);
+        try {
+            dateSelected = Convert.getDateFromDotNetTicks(date);
+            Log.d(TAG,"obtenerDate:"+dateSelected.toString());
+            Bundle bundle = new Bundle();
+            bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_REFRESH_LLAMADA);
+            bundle.putLong(AgendaFragment.FECHA,date);
+            ((Main2Activity)getActivity()).invokeSyncLlamada("Agenda","Obteniendo...",bundle);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     @Subscribe
     public void recievedMessage(Events.Message msj){
         Log.d(TAG,"recievedMessage llamada...");
-        Bundle todo = msj.getMessage();
-        if(todo!=null){
-            if (todo.getString("Llamada")!=null){
-                if(todo.getString("Llamada").equalsIgnoreCase("Refresh")){
-                    refresh();
+        try{
+            Bundle todo = msj.getMessage();
+            if(todo!=null){
+                if (todo.getString("Llamada")!=null){
+                    if(todo.getString("Llamada").equalsIgnoreCase("Refresh")){
+                        refresh();
+                    }
                 }
             }
+        }catch (Exception e){
+
         }
+
 
     }
 

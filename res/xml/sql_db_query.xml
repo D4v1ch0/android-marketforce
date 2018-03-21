@@ -2122,6 +2122,7 @@
         SELECT * FROM tbProspectoVta WHERE EstadoCode = 'A'
     </statement>
 
+
     <statement name="ProspectosAllEstado">
         SELECT * FROM tbProspectoVta
     </statement>

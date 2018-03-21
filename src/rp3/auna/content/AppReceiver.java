@@ -15,10 +15,15 @@ public class AppReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d(TAG,"onReceive...");
-        if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
-            Log.d(TAG,"ScreenEventReceiver ON");
-        } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
-            Log.d(TAG,"ScreenEventReceiverON");
+        try{
+            if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+                Log.d(TAG,"ScreenEventReceiver ON");
+            } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+                Log.d(TAG,"ScreenEventReceiverON");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
     }
 }

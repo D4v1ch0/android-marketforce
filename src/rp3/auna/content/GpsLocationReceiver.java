@@ -29,11 +29,12 @@ public class GpsLocationReceiver extends BroadcastReceiver{
     public void onReceive(Context context, Intent intent) {
         Log.d(TAG,"onReceive...");
         //this.listener = (OnGpsReceivedListener) context;
-        if (intent.getAction().matches("android.location.PROVIDERS_CHANGED")) {
-            Log.d(TAG,"providers changed...");
+        try{
+            if (intent.getAction().matches("android.location.PROVIDERS_CHANGED")) {
+                Log.d(TAG,"providers changed...");
 
-            final LocationManager manager = (LocationManager) context.getSystemService( Context.LOCATION_SERVICE );
-            Bundle msj = new Bundle();
+                final LocationManager manager = (LocationManager) context.getSystemService( Context.LOCATION_SERVICE );
+                Bundle msj = new Bundle();
 
             /*try{
                 if(isAppRunning(context,context.getPackageName().toString())){
@@ -54,22 +55,26 @@ public class GpsLocationReceiver extends BroadcastReceiver{
             }else{
                 Log.d(TAG,"App not show is running...");
             }*/
-            if (manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
-                //do something
-                Log.d(TAG,"Prendido");
-                msj.putString("GpsReceiver","Prendido");
-                EventBus.getBus().post(new Events.Message(msj));
+                if (manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+                    //do something
+                    Log.d(TAG,"Prendido");
+                    msj.putString("GpsReceiver","Prendido");
+                    EventBus.getBus().post(new Events.Message(msj));
+                }
+                else
+                {
+                    Log.d(TAG,"Apagado");
+                    msj.putString("GpsReceiver","Apagado");
+                    EventBus.getBus().post(new Events.Message(msj));
+                    //do something else
+                }
+                //Intent pushIntent = new Intent(context, LocalService.class);
+                //context.startService(pushIntent);
             }
-            else
-            {
-                Log.d(TAG,"Apagado");
-                msj.putString("GpsReceiver","Apagado");
-                EventBus.getBus().post(new Events.Message(msj));
-                //do something else
-            }
-            //Intent pushIntent = new Intent(context, LocalService.class);
-            //context.startService(pushIntent);
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
     }
 
     public interface OnGpsReceivedListener {
