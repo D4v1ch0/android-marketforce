@@ -176,6 +176,7 @@
                                 android:textSize="15sp"
                                 android:inputType="number"
                                 android:textColor="#8a000000"
+                                android:imeOptions="actionDone"
                                 android:hint="Opcional"
                                 android:textColorHint="@color/md_black_1000_15"
                                 android:id="@+id/etDocumento"

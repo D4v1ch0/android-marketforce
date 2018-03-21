@@ -23,10 +23,12 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -49,6 +51,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnTextChanged;
+import butterknife.OnEditorAction;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -169,6 +172,7 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
     private IdentificationType identificationType = null;
     private int flagShowCalificacion = 0;
     private int flagDocumentValidate = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -855,9 +859,11 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
             prospectoEditar.setContactoNombre(etNombre.getText().toString().trim());
             prospectoEditar.setContactoApellidoPaterno(etApellidoPaterno.getText().toString().trim());
             prospectoEditar.setCelular(celular);
-            if(idTipoDocumentoSelected!=0 && !TextUtils.isEmpty(etDocumento.getText())){
+            if(idTipoDocumentoSelected!=0 && !TextUtils.isEmpty(etDocumento.getText()) && identificationType!=null){
+                int minLength = identificationType.getMaskType();
+                int maxLength = identificationType.getLenght();
                 if(idTipoDocumentoSelected == 1){
-                    if(etDocumento.getText().toString().trim().length()==8){
+                    if(etDocumento.getText().toString().trim().length()==minLength){
                         prospectoEditar.setDocumento(etDocumento.getText().toString());
                         prospectoEditar.setTipoDocumento(idTipoDocumentoSelected);
                     }
@@ -867,8 +873,8 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
                         return;
                     }
                 }else{
-                    if(etDocumento.getText().toString().trim().length()>11){
-                        etDocumento.setError("Requiere digitos menor a 20");
+                    if(etDocumento.getText().toString().trim().length()<minLength){
+                        etDocumento.setError("Requiere digitos "+minLength+" minimos");
                         return;
                     }else{
                         prospectoEditar.setTipoDocumento(idTipoDocumentoSelected);
@@ -946,6 +952,27 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
 
     //region Events Text
 
+    /*private void setInputEditText(){
+        etDocumento.setImeActionLabel("Consultar", EditorInfo.IME_ACTION_DONE);
+        etDocumento.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        etDocumento.setOnEditorActionListener((v, actionId, event) -> {
+            boolean handled = false;
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                Log.d(TAG,"onDocumentDone...");
+                Log.d(TAG,"actionId:"+actionId);
+                Log.d(TAG,"Event:"+event.toString());
+                Log.d(TAG,"View editText:"+v.getId());
+                onNextClick(message);
+                handled = true;
+            }
+            return handled;
+        });
+    }*/
+
+    private void filterDocumentMinMax(){
+
+    }
+
     @OnTextChanged(R.id.etDocumento)
     void onDniTextChanged(CharSequence documentoCode, int start, int count, int after) {
         Log.d(TAG,"onDniTextChanged...");
@@ -953,120 +980,282 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
         Log.d(TAG,"lenth:"+(documentoCode.toString().trim().length()));
         Log.d(TAG,"idTipoDocumento:"+idTipoDocumentoSelected);
 
-        //Validar si es menor a 8 cuando sea documento
-        if(idTipoDocumentoSelected>0){
-            if(idTipoDocumentoSelected==1 && count<8){
-                validateDocument = true;
-                flagDocumento = 0;
-            }else {
-                if(count<=5){
+
+        if(identificationType!=null){
+            int minLegnth = identificationType.getMaskType();
+            int maxLenght = identificationType.getLenght();
+            Log.d(TAG,"identificationType!=null...");
+            //region Validar si es menor a 8 cuando sea documento
+            if(idTipoDocumentoSelected>0){
+                if(idTipoDocumentoSelected==1 && count<minLegnth){
                     validateDocument = true;
                     flagDocumento = 0;
+                }else {
+                    if(count<=minLegnth){
+                        validateDocument = true;
+                        flagDocumento = 0;
+                    }
                 }
+            }else{
+                validateDocument = true;
+                flagDocumento = 0;
             }
-        }else{
-            validateDocument = true;
-            flagDocumento = 0;
-        }
+            //endregion
 
-        //
-        if(opcionProspectar==2){
-            Log.d(TAG,"es Editar prospecto...");
-            //region Validacion del documento cuando se edita un prospecto
-            if(prospectoEditar!=null){
-                if(prospectoEditar.getDocumento()!=null){
-                    Log.d(TAG,"prospectoEditar.getDocumento!n=null...");
-                    if(documentEditarFirstTime == false){
-                        Log.d(TAG,"documentEditarFirstTime==false...");
-                        int length = (documentoCode.toString().trim().length());
-                        if(length == 8 && idTipoDocumentoSelected==1){
-                            if(documentoCode.toString().equalsIgnoreCase(documentoProspectoEditar)){
-                                Log.d(TAG,"documentoCode.toString().equalsIgnoreCase(documentoProspectoEditar),CHanged == 8...");
-                                if(flagShowCalificacion==0){
-                                    Util.dismissKeyboard(ProspectoActivity.this);
-                                    flagDocumento = 0;
-                                    validateDocument = true;
-                                    showCalificacionClient();
+            //
+            if(opcionProspectar==2){
+                Log.d(TAG,"es Editar prospecto...");
+                //region Validacion del documento cuando se edita un prospecto
+                if(prospectoEditar!=null){
+                    if(prospectoEditar.getDocumento()!=null){
+                        Log.d(TAG,"prospectoEditar.getDocumento!n=null...");
+                        if(documentEditarFirstTime == false){
+                            Log.d(TAG,"documentEditarFirstTime==false...");
+                            int length = (documentoCode.toString().trim().length());
+                            if(length == minLegnth && idTipoDocumentoSelected==1){
+                                if(documentoCode.toString().equalsIgnoreCase(documentoProspectoEditar)){
+                                    Log.d(TAG,"documentoCode.toString().equalsIgnoreCase(documentoProspectoEditar),CHanged == 8...");
+                                    if(flagShowCalificacion==0){
+                                        Util.dismissKeyboard(ProspectoActivity.this);
+                                        flagDocumento = 0;
+                                        validateDocument = true;
+                                        showCalificacionClient();
+                                    }
+                                }else{
+                                    Log.d(TAG,"!!documentoCode.toString().equalsIgnoreCase(documentoProspectoEditar)CHanged == 8...");
+                                    if(flagDocumentValidate==0){
+                                        flagDocumento = -1;
+                                        validateDocument = false;
+                                        showValidateDocumentClient(documentoCode.toString());
+                                        Util.dismissKeyboard(ProspectoActivity.this);
+                                    }
+
                                 }
-                            }else{
-                                Log.d(TAG,"!!documentoCode.toString().equalsIgnoreCase(documentoProspectoEditar)CHanged == 8...");
+                            }
+                            /*else if (length>maxLenght && idTipoDocumentoSelected>1){
+                                Log.d(TAG,"length>5 && idTipoDocumentoSelected>1...");
                                 if(flagDocumentValidate==0){
                                     flagDocumento = -1;
                                     validateDocument = false;
                                     showValidateDocumentClient(documentoCode.toString());
                                     Util.dismissKeyboard(ProspectoActivity.this);
                                 }
-
-                            }
-                        }else if (length>5 && idTipoDocumentoSelected>1){
-                            Log.d(TAG,"length>5 && idTipoDocumentoSelected>1...");
-                            if(flagDocumentValidate==0){
-                                flagDocumento = -1;
-                                validateDocument = false;
-                                showValidateDocumentClient(documentoCode.toString());
-                                Util.dismissKeyboard(ProspectoActivity.this);
-                            }
-                        }
-                    }else{
-                        documentEditarFirstTime = false;
-                        Log.d(TAG,"documentEditarFirstTime==true...");
-                        int length = (documentoCode.toString().trim().length());
-                        if(length == 8 && idTipoDocumentoSelected==1){
-                            Log.d(TAG,"length == 8 && idTipoDocumentoSelected==1...");
-                            if(documentoCode.toString().equalsIgnoreCase(documentoProspectoEditar)){
-                                Log.d(TAG,"documentoCode.toString().equalsIgnoreCase(documentoProspectoEditar) CHanged == 8...");
-                                Util.dismissKeyboard(ProspectoActivity.this);
-                                if(flagShowCalificacion==0){
-                                    showCalificacionClient();
+                            }*/
+                        }else{
+                            documentEditarFirstTime = false;
+                            Log.d(TAG,"documentEditarFirstTime==true...");
+                            int length = (documentoCode.toString().trim().length());
+                            if(length == minLegnth && idTipoDocumentoSelected==1){
+                                Log.d(TAG,"length == 8 && idTipoDocumentoSelected==1...");
+                                if(documentoCode.toString().equalsIgnoreCase(documentoProspectoEditar)){
+                                    Log.d(TAG,"documentoCode.toString().equalsIgnoreCase(documentoProspectoEditar) CHanged == 8...");
+                                    Util.dismissKeyboard(ProspectoActivity.this);
+                                    if(flagShowCalificacion==0){
+                                        showCalificacionClient();
+                                    }
                                 }
-                            }
-                            else{
-                                Log.d(TAG,"!!documentoCode.toString().equalsIgnoreCase(documentoProspectoEditar)CHanged == 8...");
+                                else{
+                                    Log.d(TAG,"!!documentoCode.toString().equalsIgnoreCase(documentoProspectoEditar)CHanged == 8...");
+                                    if(flagDocumentValidate==0){
+                                        flagDocumento = -1;
+                                        validateDocument = false;
+                                        showValidateDocumentClient(documentoCode.toString());
+                                        Util.dismissKeyboard(ProspectoActivity.this);
+                                    }
+                                }
+                            }/*else if (length>minLegnth && idTipoDocumentoSelected>1){
+                                Log.d(TAG,"length>5 && idTipoDocumentoSelected>1...");
                                 if(flagDocumentValidate==0){
                                     flagDocumento = -1;
                                     validateDocument = false;
                                     showValidateDocumentClient(documentoCode.toString());
                                     Util.dismissKeyboard(ProspectoActivity.this);
                                 }
-                            }
-                        }else if (length>5 && idTipoDocumentoSelected>1){
-                            Log.d(TAG,"length>5 && idTipoDocumentoSelected>1...");
-                            if(flagDocumentValidate==0){
-                                flagDocumento = -1;
-                                validateDocument = false;
-                                showValidateDocumentClient(documentoCode.toString());
-                                Util.dismissKeyboard(ProspectoActivity.this);
-                            }
+                            }*/
                         }
                     }
                 }
-            }
-            //endregion
-        }else{
-            Log.d(TAG,"es crear prospecto...");
-            //region Validacion del documento cuando se crea un prospecto
-            int length = (documentoCode.toString().trim().length());
-            if(length == 8 && idTipoDocumentoSelected==1){
-                Log.d(TAG,"length == 8 && idTipoDocumentoSelected==1...");
+                //endregion
+            }else{
+                Log.d(TAG,"es crear prospecto...");
+                //region Validacion del documento cuando se crea un prospecto
+                int length = (documentoCode.toString().trim().length());
+                if(length == minLegnth && idTipoDocumentoSelected==1){
+                    Log.d(TAG,"length == 8 && idTipoDocumentoSelected==1...");
                     Log.d(TAG,"CHanged == 8...");
-                if(flagDocumentValidate==0){
-                    flagDocumento = -1;
-                    validateDocument = false;
-                    showValidateDocumentClient(documentoCode.toString());
-                    Util.dismissKeyboard(ProspectoActivity.this);
+                    if(flagDocumentValidate==0){
+                        flagDocumento = -1;
+                        validateDocument = false;
+                        showValidateDocumentClient(documentoCode.toString());
+                        Util.dismissKeyboard(ProspectoActivity.this);
+                    }
                 }
-            }else if (length>5 && idTipoDocumentoSelected>1){
-                Log.d(TAG,"length>5 && idTipoDocumentoSelected>1...");
-                if(flagDocumentValidate==0){
-                    flagDocumento = -1;
-                    validateDocument = false;
-                    showValidateDocumentClient(documentoCode.toString());
-                    Util.dismissKeyboard(ProspectoActivity.this);
+                /*else if (length>minLegnth && idTipoDocumentoSelected>1){
+                    Log.d(TAG,"length>5 && idTipoDocumentoSelected>1...");
+                    if(flagDocumentValidate==0){
+                        flagDocumento = -1;
+                        validateDocument = false;
+                        showValidateDocumentClient(documentoCode.toString());
+                        Util.dismissKeyboard(ProspectoActivity.this);
+                    }
+                }*/
+                //endregion
+            }
+        }
+
+
+
+    }
+
+    @OnEditorAction(value = R.id.etDocumento)
+    boolean onDocumentDone(EditText v, int actionId, android.view.KeyEvent event) {
+        Log.d(TAG,"onDocumentDone...");
+        Log.d(TAG,"actionId:"+actionId);
+        if(event!=null){
+            Log.d(TAG,"event!=null...");
+            Log.d(TAG,"Event:"+event.toString());
+        }else{
+            Log.d(TAG,"event==null");
+        }
+        //Log.d(TAG,"Event:"+event.toString());
+        Log.d(TAG,"View editText:"+v.getId());
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
+            //do here your stuff f
+            Log.d(TAG,"actionId == EditorInfo.IME_ACTION_DONE...");
+            //Establecer variables de EditText.getCount, minLenght and maxLegnth
+            if(identificationType!=null){
+                Log.d(TAG,"identificationType!=null...");
+                int length = etDocumento.getText().toString().trim().length();
+                int minLength = identificationType.getMaskType();
+                int maxLength = identificationType.getLenght();
+                Log.d(TAG,"Lenght:"+length);
+                Log.d(TAG,"minLength:"+minLength);
+                Log.d(TAG,"maxLength:"+maxLength);
+                Log.d(TAG,"idTipoDocumentoSelected:"+idTipoDocumentoSelected);
+                //region Validar si es menor a 8 cuando sea documento
+                if(idTipoDocumentoSelected>0){
+                    if(idTipoDocumentoSelected==1 && length<minLength){
+                        validateDocument = true;
+                        flagDocumento = 0;
+                    }else {
+                        if(length<=minLength){
+                            validateDocument = true;
+                            flagDocumento = 0;
+                        }
+                    }
+                }else{
+                    validateDocument = true;
+                    flagDocumento = 0;
+                }
+                //endregion
+                //
+                if(opcionProspectar==2){
+                    Log.d(TAG,"es Editar prospecto...");
+                    //region Validacion del documento cuando se edita un prospecto
+                    if(prospectoEditar!=null){
+                        if(prospectoEditar.getDocumento()!=null){
+                            Log.d(TAG,"prospectoEditar.getDocumento!n=null...");
+                            documentEditarFirstTime = true;
+                            if(documentEditarFirstTime == false){
+
+                                Log.d(TAG,"documentEditarFirstTime==false...");
+                                //int length = (documentoCode.toString().trim().length());
+                                /*if(length == minLength && idTipoDocumentoSelected==1){
+                                    if(etDocumento.getText().toString().trim().equalsIgnoreCase(documentoProspectoEditar)){
+                                        Log.d(TAG,"documentoCode.toString().equalsIgnoreCase(documentoProspectoEditar),CHanged == 8...");
+                                        if(flagShowCalificacion==0){
+                                            Util.dismissKeyboard(ProspectoActivity.this);
+                                            flagDocumento = 0;
+                                            validateDocument = true;
+                                            showCalificacionClient();
+                                        }
+                                    }else{
+                                        Log.d(TAG,"!!documentoCode.toString().equalsIgnoreCase(documentoProspectoEditar)CHanged == 8...");
+                                        if(flagDocumentValidate==0){
+                                            flagDocumento = -1;
+                                            validateDocument = false;
+                                            showValidateDocumentClient(etDocumento.getText().toString().trim());
+                                            Util.dismissKeyboard(ProspectoActivity.this);
+                                        }
+
+                                    }
+                                }
+                                else */if (length>=minLength && idTipoDocumentoSelected>1){
+                                    Log.d(TAG,"length>5 && idTipoDocumentoSelected>1...");
+                                    if(flagDocumentValidate==0){
+                                        flagDocumento = -1;
+                                        validateDocument = false;
+                                        showValidateDocumentClient(etDocumento.getText().toString().trim());
+                                        Util.dismissKeyboard(ProspectoActivity.this);
+                                    }
+                                }
+                            }else{
+                                //documentEditarFirstTime = false;
+                                Log.d(TAG,"documentEditarFirstTime==true...");
+                                //int length = (documentoCode.toString().trim().length());
+                                /*if(length == minLength && idTipoDocumentoSelected==1){
+                                    Log.d(TAG,"length == 8 && idTipoDocumentoSelected==1...");
+                                    if(etDocumento.getText().toString().trim().equalsIgnoreCase(documentoProspectoEditar)){
+                                        Log.d(TAG,"documentoCode.toString().equalsIgnoreCase(documentoProspectoEditar) CHanged == 8...");
+                                        Util.dismissKeyboard(ProspectoActivity.this);
+                                        if(flagShowCalificacion==0){
+                                            showCalificacionClient();
+                                        }
+                                    }
+                                    else{
+                                        Log.d(TAG,"!!documentoCode.toString().equalsIgnoreCase(documentoProspectoEditar)CHanged == 8...");
+                                        if(flagDocumentValidate==0){
+                                            flagDocumento = -1;
+                                            validateDocument = false;
+                                            showValidateDocumentClient(etDocumento.getText().toString().trim());
+                                            Util.dismissKeyboard(ProspectoActivity.this);
+                                        }
+                                    }
+                                }else*/ if (length>=minLength && idTipoDocumentoSelected>1){
+                                    Log.d(TAG,"length>5 && idTipoDocumentoSelected>1...");
+                                    if(flagDocumentValidate==0){
+                                        flagDocumento = -1;
+                                        validateDocument = false;
+                                        showValidateDocumentClient(etDocumento.getText().toString().trim());
+                                        Util.dismissKeyboard(ProspectoActivity.this);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    //endregion
+                }else{
+                    Log.d(TAG,"es crear prospecto...");
+                    //region Validacion del documento cuando se crea un prospecto
+                    //int length = (documentoCode.toString().trim().length());
+                    if(length == minLength && idTipoDocumentoSelected==1){
+                        Log.d(TAG,"length == 8 && idTipoDocumentoSelected==1...");
+                        Log.d(TAG,"CHanged == 8...");
+                        if(flagDocumentValidate==0){
+                            flagDocumento = -1;
+                            validateDocument = false;
+                            showValidateDocumentClient(etDocumento.getText().toString().trim());
+                            Util.dismissKeyboard(ProspectoActivity.this);
+                        }
+                    }
+                    else if (length>=minLength && idTipoDocumentoSelected>1){
+                        Log.d(TAG,"length>5 && idTipoDocumentoSelected>1...");
+                        if(flagDocumentValidate==0){
+                            flagDocumento = -1;
+                            validateDocument = false;
+                            showValidateDocumentClient(etDocumento.getText().toString().trim());
+                            Util.dismissKeyboard(ProspectoActivity.this);
+                        }
+                    }
+                    //endregion
                 }
             }
-            //endregion
+
+            return true;
         }
+        return false;
     }
+
 
     //region Events Not Used.
     /*@OnTextChanged(R.id.etNombre)
@@ -1189,11 +1378,14 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
                         tipoDocumentoSelected = null;
                         idTipoDocumentoSelected = 0;
                         etDocumento.setText(null);
+                        identificationType = null;
                     }else {
                         Log.d(TAG,"position == "+position);
                         int i = position - 1;
                         identificationType = documentos.get(i);
-                        Log.d(TAG,"identificationType:"+identificationType.toString());
+                        Log.d(TAG,"identificationType Select:"+identificationType.toString());
+
+                        //region Editar prospecto Identificación
                         if(opcionProspectar==2){
                             Log.d(TAG,"opcionProspectar==2...");
                             if(prospectoEditar!=null){
@@ -1213,9 +1405,9 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
                                             tipoDocumentoSelected = listTipoDocumento.get(position);
                                             idTipoDocumentoSelected = (int) documentos.get(i).getID();
                                             Log.d(TAG,"idTIpoDocumentoSelected:"+idTipoDocumentoSelected);
-                                            int maxLength = 15;
+                                            int maxLength = identificationType.getLenght();
                                             if(idTipoDocumentoSelected==1){
-                                                maxLength = 8;
+                                                //maxLength = 8;
                                                 MinMaxFilter filter = new MinMaxFilter(8,8);
                                                 InputFilter[] fArray = new InputFilter[1];
                                                 //fArray[0] = filter;
@@ -1223,7 +1415,7 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
                                                 etDocumento.setFilters(fArray);
                                                 etDocumento.setInputType(InputType.TYPE_CLASS_NUMBER);
                                             }else{
-                                                maxLength = identificationType.getLenght();
+                                                //maxLength = identificationType.getLenght();
                                                 InputFilter[] fArray = new InputFilter[1];
                                                 fArray[0] = new InputFilter.LengthFilter(maxLength);
                                                 etDocumento.setFilters(fArray);
@@ -1237,9 +1429,9 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
                                             //int i = position - 1;
                                             idTipoDocumentoSelected = (int) documentos.get(i).getID();
                                             Log.d(TAG,"idTIpoDocumentoSelected:"+idTipoDocumentoSelected);
-                                            int maxLength = 15;
+                                            int maxLength = identificationType.getLenght();
                                             if(idTipoDocumentoSelected==1){
-                                                maxLength = 8;
+                                                //maxLength = 8;
                                                 MinMaxFilter filter = new MinMaxFilter(8,8);
                                                 InputFilter[] fArray = new InputFilter[1];
                                                 fArray[0] = new InputFilter.LengthFilter(maxLength);
@@ -1264,9 +1456,9 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
                                         //int i = position - 1;
                                         idTipoDocumentoSelected = (int) documentos.get(i).getID();
                                         Log.d(TAG,"idTIpoDocumentoSelected:"+idTipoDocumentoSelected);
-                                        int maxLength = 15;
+                                        int maxLength = identificationType.getLenght();
                                         if(idTipoDocumentoSelected==1){
-                                            maxLength = 8;
+                                            //maxLength = 8;
                                             MinMaxFilter filter = new MinMaxFilter(8,8);
                                             InputFilter[] fArray = new InputFilter[1];
                                             fArray[0] = new InputFilter.LengthFilter(maxLength);
@@ -1291,9 +1483,9 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
                                     //int i = position - 1;
                                     idTipoDocumentoSelected = (int) documentos.get(i).getID();
                                     Log.d(TAG,"idTIpoDocumentoSelected:"+idTipoDocumentoSelected);
-                                    int maxLength = 15;
+                                    int maxLength = identificationType.getLenght();
                                     if(idTipoDocumentoSelected==1){
-                                        maxLength = 8;
+                                        //maxLength = 8;
                                         MinMaxFilter filter = new MinMaxFilter(8,8);
                                         InputFilter[] fArray = new InputFilter[1];
                                         fArray[0] = new InputFilter.LengthFilter(maxLength);
@@ -1310,7 +1502,11 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
                                     }
                                 }
                             }
-                        }else{
+                        }
+                        //endregion
+
+                        //region Agregar prospecto Identificación
+                        else{
                             etDocumento.setText(null);
                             Log.d(TAG, "onItemSelected..." + listTipoDocumento.get(position));
                             tipoDocumentoSelected = listTipoDocumento.get(position);
@@ -1321,9 +1517,10 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
                             identificationType = documentos.get(i);
                             //
                             Log.d(TAG,"idTIpoDocumentoSelected:"+idTipoDocumentoSelected);
-                            int maxLength = 15;
+
+                            int maxLength = identificationType.getLenght();
                             if(idTipoDocumentoSelected==1){
-                                maxLength = 8;
+                                //maxLength = 8;
                                 MinMaxFilter filter = new MinMaxFilter(8,8);
                                 InputFilter[] fArray = new InputFilter[1];
                                 fArray[0] = new InputFilter.LengthFilter(maxLength);
@@ -1339,6 +1536,7 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
                                 etDocumento.setInputType(InputType.TYPE_CLASS_TEXT);
                             }
                         }
+                        //endregion
                     }
                 }catch (Exception e){
                     e.printStackTrace();
@@ -1495,22 +1693,25 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
         prospectoVta.setContactoApellidoPaterno(etApellidoPaterno.getText().toString().trim());
         prospectoVta.setCelular(celular);
         prospectoVta.setTipoDocumento(idTipoDocumentoSelected);
-        if(idTipoDocumentoSelected!=0 && !TextUtils.isEmpty(etDocumento.getText())){
+        if(idTipoDocumentoSelected!=0 && !TextUtils.isEmpty(etDocumento.getText()) && identificationType!=null){
+            //Asignar minimos y maximos
+            int minLegnthDocument = identificationType.getMaskType();
+            int maxLenghtDocument = identificationType.getLenght();
             if(idTipoDocumentoSelected == 1){
-                if(etDocumento.getText().toString().trim().length()==8){
+                if(etDocumento.getText().toString().trim().length()==minLegnthDocument){
                     prospectoVta.setDocumento(etDocumento.getText().toString());
                     prospectoVta.setTipoDocumento(idTipoDocumentoSelected);
                 }
                 else{
-                    etDocumento.setError("Requiere 8 digitos");
+                    etDocumento.setError("Requiere "+minLegnthDocument+" caracteres.");
                     Log.d(TAG,"Requiere 8 digitos...");
                     Toast.makeText(this, "Requiere 8 digitos el documento", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }else{
-                if(etDocumento.getText().toString().trim().length()<5){
-                    etDocumento.setError("Requiere digitos menor a 5");
-                    Toast.makeText(this, "El documento Requiere digitos mayor a 5", Toast.LENGTH_SHORT).show();
+                if(etDocumento.getText().toString().trim().length()<minLegnthDocument){
+                    etDocumento.setError("Requiere digitos menor a "+minLegnthDocument+" caracteres.");
+                    Toast.makeText(this, "El documento Requiere digitos mayor a "+minLegnthDocument+" caracteres", Toast.LENGTH_SHORT).show();
                     return;
                 }else{
                     prospectoVta.setTipoDocumento(idTipoDocumentoSelected);
