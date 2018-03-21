@@ -61,6 +61,7 @@ public class Contants {
     public static final int GENERAL_TABLE_CONTROL_ERRORES_WS_VALIDAR_PAGO = 1855;
     public static final int GENERAL_TABLE_MODO_TARIFA_TIPO_PAGO = 1806;
     public static final int GENERAL_TABLE_TIPO_DOCUMENTO = 1824;
+    public static final int GENERAL_TABLE_ERRORES_SERVICIO_VIRTUAL = 1857;
     //Code values
     public final static String GENERAL_VALUE_SOLICITUD_VALIDAR_TITULAR_SI = "S";
     public final static String GENERAL_VALUE_SOLICITUD_VALIDAR_TITULAR_NO = "N";

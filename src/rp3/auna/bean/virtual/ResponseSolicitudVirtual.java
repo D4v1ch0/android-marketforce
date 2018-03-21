@@ -63,4 +63,14 @@ public class ResponseSolicitudVirtual {
     //endregion
 
 
+    @Override
+    public String toString() {
+        return "ResponseSolicitudVirtual{" +
+                "indTabla='" + indTabla + '\'' +
+                ", idReg='" + idReg + '\'' +
+                ", numeroSolicitud='" + numeroSolicitud + '\'' +
+                ", result='" + result + '\'' +
+                ", info='" + info + '\'' +
+                '}';
+    }
 }
