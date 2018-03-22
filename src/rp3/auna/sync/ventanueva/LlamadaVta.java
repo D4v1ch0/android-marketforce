@@ -223,7 +223,7 @@ public class LlamadaVta {
         WebService webService = new WebService("MartketForce", "ObtenerLlamadaVta");
         Log.d(TAG,"Iniciar WS executeSync...");
         try {
-            Log.d(TAG,"idAgente="+ PreferenceManager.getInt(Contants.KEY_IDAGENTE));
+            Log.d(TAG,"idAgente="+ PreferenceManager.getInt(Contants.KEY_IDAGENTE,0));
             webService.addParameter("@idagente", PreferenceManager.getInt(Contants.KEY_IDAGENTE));
             webService.addParameter("@fecha", fecha);
             webService.addCurrentAuthToken();
