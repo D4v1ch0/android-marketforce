@@ -2310,11 +2310,17 @@ public class CotizacionActivity extends AppCompatActivity {
         final MotivoCitaDialog dialog = MotivoCitaDialog.newInstance(new MotivoCitaDialog.callbackElegir() {
             @Override
             public void onGeneralSelected(String code,String motivo) {
-                if(tipo == 1){
-                    reprogramarVisita(tipo,code,motivo);
-                }else{
-                    reprogramarVisita(tipo,code,motivo);
+                try{
+                    if(tipo == 1){
+                        reprogramarVisita(tipo,code,motivo);
+                    }else{
+                        reprogramarVisita(tipo,code,motivo);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Toast.makeText(CotizacionActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
+
             }
         });
         dialog.setArguments(arg);

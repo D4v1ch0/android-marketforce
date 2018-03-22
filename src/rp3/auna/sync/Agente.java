@@ -534,6 +534,8 @@ public class Agente {
 
 
             } catch (HttpResponseException e) {
+                Log.d(TAG,"HttpResponseException...");
+                e.printStackTrace();
                 if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
                     return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
                 return SyncAdapter.SYNC_EVENT_HTTP_ERROR;

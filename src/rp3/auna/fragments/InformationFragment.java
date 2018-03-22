@@ -77,10 +77,11 @@ public class InformationFragment extends Fragment {
             e.printStackTrace();
         }
         String version = pInfo.versionName;
+        int code = pInfo.versionCode;
 
         Spanned sp = Html.fromHtml(getString(R.string.message_information1));
         ((TextView) v.findViewById(R.id.label_link)).setText(sp);
-        ((TextView) v.findViewById(R.id.information_app)).setText(getString(R.string.message_info) + " " + version);
+        ((TextView) v.findViewById(R.id.information_app)).setText(getString(R.string.message_info) + " " + version+ " "+code);
         v.findViewById(R.id.information_help).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
