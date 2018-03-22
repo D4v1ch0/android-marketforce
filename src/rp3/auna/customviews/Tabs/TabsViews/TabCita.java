@@ -63,15 +63,18 @@ import rp3.auna.events.Events;
 import rp3.auna.fragments.AgendaFragment;
 import rp3.auna.loader.ventanueva.LlamadaVtaLoader;
 import rp3.auna.loader.ventanueva.VisitaVtaLoader;
+import rp3.auna.models.ApplicationParameter;
 import rp3.auna.models.ventanueva.AgendaVta;
 import rp3.auna.models.ventanueva.ProspectoVtaDb;
 import rp3.auna.models.ventanueva.VisitaVta;
 import rp3.auna.sync.SyncAdapter;
+import rp3.auna.util.constants.Constants;
 import rp3.auna.util.recyclerview.DividerItemDecoration;
 import rp3.auna.util.session.SessionManager;
 import rp3.auna.utils.Utils;
 import rp3.auna.webservices.VisitaDetalleClient;
 import rp3.configuration.PreferenceManager;
+import rp3.data.models.GeneralValue;
 import rp3.util.Convert;
 
 import static rp3.auna.Contants.GENERAL_TABLE_MOTIVOS_REPROGRAMACION_TABLE_ID_CITA;
@@ -395,6 +398,11 @@ public class TabCita extends Fragment{
     }
 
     private void showDetalleVisitaClient(int idVisita,int type){
+        if(type==2){
+            if(!validateNext()){
+                return;
+            }
+        }
         final ProgressDialog progressDialog = new ProgressDialog(getActivity(),R.style.AppCompatAlertDialogStyle);
         progressDialog.setTitle(getActivity().getResources().getString(R.string.appname_marketforce));
         progressDialog.setMessage("Espere porfavor...");
@@ -509,9 +517,14 @@ public class TabCita extends Fragment{
                     showDetalleVisitaClient(visitaVta.getVisitaId(),2);
                 }else{
                     //Iniciar la Cotizacion Inicial
-                    intent = new Intent(getActivity(), CotizacionActivity.class);
-                    intent.putExtra("Estado",1);
-                    getActivity().startActivityForResult(intent,REQUEST_VISITA_COTIZACION_NUEVO);
+                    if(validateNext()){
+                        intent = new Intent(getActivity(), CotizacionActivity.class);
+                        intent.putExtra("Estado",1);
+                        getActivity().startActivityForResult(intent,REQUEST_VISITA_COTIZACION_NUEVO);
+                    }else{
+                        Toast.makeText(getActivity(), "Se ha detectado falta de información para iniciar la visita, sincronize la información por favor.", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
 
                 /**
@@ -880,4 +893,25 @@ public class TabCita extends Fragment{
     }
 
     //endregion
+
+    private boolean validateNext(){
+        Log.d(TAG,"validateNext...");
+        try{
+            List<GeneralValue> list = GeneralValue.getGeneralValues(Utils.getDataBase(getActivity()),Contants.GENERAL_TABLE_PROCESADORA);
+            if(list==null){
+                return false;
+            }
+            if(list.size()==0){
+                return false;
+            }
+            ApplicationParameter applicationParameter = ApplicationParameter.getParameter(Utils.getDataBase(getActivity()), Constants.PARAMETERID_ANO_MAX_FECHA,Constants.LABEL_COTIZACION_AFILIADO);
+            if(applicationParameter==null){
+                return false;
+            }
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return true;
+        }
+    }
 }
