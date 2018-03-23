@@ -40,7 +40,7 @@ public class SyncServicio {
     private static final String TAG = GeneralValue.class.getSimpleName();
 
     public static int executeSync(DataBase db, Context context) throws JSONException {
-        WebService webService = new WebService("MarketForce","SyncService");
+        WebService webService = new WebService("Core","SyncService");
         Log.d(TAG,"Iniciar WS Sincronizar...");
         //Asignar modelo a enviar
         JSONObject jsonObject = new JSONObject();
@@ -694,7 +694,7 @@ public class SyncServicio {
     }
 
     public static int executeSyncAgenda(DataBase db,Context context,long fecha)throws JSONException{
-        WebService webService = new WebService("MarketForce","SyncAgenda");
+        WebService webService = new WebService("Core","SyncAgenda");
         Log.d(TAG,"Iniciar WS Agendas totales...");
         try{
             Log.d(TAG,"idAgente="+ PreferenceManager.getInt(Contants.KEY_IDAGENTE,0));

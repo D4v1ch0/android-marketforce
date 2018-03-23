@@ -53,6 +53,18 @@
                     <contentEncoding>gzip</contentEncoding>
                 </method>
                 <method>
+                    <name>SyncService</name>
+                    <action>servicios/servicios</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>SyncAgenda</name>
+                    <action>servicios/getagenda?idagente=@idagente&amp;fecha=@fecha</action>
+                    <webMethod>GET</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
                     <name>GetGeopoliticalStructures</name>
                     <action>General/GetGeopoliticalStructuresView?lastUpdate=@lastUpdate&amp;page=@page&amp;pageSize=@size</action>
                     <webMethod>GET</webMethod>
@@ -663,18 +675,7 @@
                     <webMethod>POST</webMethod>
                     <contentEncoding>gzip</contentEncoding>
                 </method>
-                <method>
-                    <name>SyncService</name>
-                    <action>servicios/servicios</action>
-                    <webMethod>POST</webMethod>
-                    <contentEncoding>gzip</contentEncoding>
-                </method>
-                <method>
-                    <name>SyncAgenda</name>
-                    <action>servicios/getagenda?idagente=@idagente&amp;fecha=@fecha</action>
-                    <webMethod>GET</webMethod>
-                    <contentEncoding>gzip</contentEncoding>
-                </method>
+
             </methods>     
         </webServiceData>
            <webServiceData>

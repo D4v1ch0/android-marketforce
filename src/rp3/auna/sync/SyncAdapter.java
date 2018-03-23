@@ -150,7 +150,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 
                     //region TODOS LOS SERVICIOS
 
-                    /*
+
                     if (result == SYNC_EVENT_SUCCESS) {
                         Log.d(TAG,"GeneralValue...");
                         result = rp3.sync.GeneralValue.executeSync(db);
@@ -168,7 +168,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         result = ApplicationParameterSync.executeSync(db);
                         addDefaultMessage(result);
                     }
-                    */
+
                     //region Sync Others
                     //result = Cliente.executeSyncInserts(db);
                     //addDefaultMessage(result);
@@ -440,46 +440,46 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         addDefaultMessage(result);
                     }*/
                     //endregion
-                    //if(result == SYNC_EVENT_SUCCESS){
+                    if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"insertar llamadas pendientes en BD...");
                         result = LlamadaVta.executeSyncInsert(db);
                         //addDefaultMessage(result);
-                    //}
-                    //if(result == SYNC_EVENT_SUCCESS){
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar actualizando las llamadas sincronizadas...");
                         result = LlamadaVta.executeSyncUpdate(db);
                         //addDefaultMessage(result);
-                    //}
+                    }
                     //region Anterior GetLlamada
-                    /*if(result == SYNC_EVENT_SUCCESS){
+                    if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar obteniendo las llamadas...");
                         result = LlamadaVta.executeSync(db,Convert.getDotNetTicksFromDate(calendar.getTime()),context);
                         addDefaultMessage(result);
-                    }*/
+                    }
                     //endregion
-                    //if(result == SYNC_EVENT_SUCCESS){
+                    if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"insertar visitas pendientes en BD...");
                         result = VisitaVta.executeSyncInserts(db);
                         //addDefaultMessage(result);
-                    //}
-                    //if(result == SYNC_EVENT_SUCCESS){
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar actualizando las visitas sincronizadas...");
                         result = VisitaVta.executeSyncUpdate(db);
                         //addDefaultMessage(result);
-                    //}
+                    }
                     //region Anterior GetVisita
-                    /*if(result == SYNC_EVENT_SUCCESS){
+                    if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar obteniendo las visitas...");
                         result = VisitaVta.executeSync(db,Convert.getDotNetTicksFromDate(calendar.getTime()),context);
                         addDefaultMessage(result);
-                    }*/
+                    }
                     //endregion
 
                     //endregion
 
                     //region SINCRONIZAR TODO
                     result = SyncServicio.executeSync(db,context);
-                    addDefaultMessageAuna(result,null);
+                    //addDefaultMessageAuna(result,null);
                     //endregion
 
                     //Main2Activity.pruebaAlarm(context);

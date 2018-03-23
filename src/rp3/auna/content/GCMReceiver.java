@@ -72,7 +72,7 @@ public class GCMReceiver extends GcmListenerService {
         }
 
 
-        Utils.ErrorToFile("Context is null - " + from + " - " + message + " - " + title + " - " + Calendar.getInstance().getTime().toString());
+        //Utils.ErrorToFile("Context is null - " + from + " - " + message + " - " + title + " - " + Calendar.getInstance().getTime().toString());
 
         if(TextUtils.isEmpty(title))
         {
@@ -90,7 +90,7 @@ public class GCMReceiver extends GcmListenerService {
                 int posGuion = footer.indexOf("-");
                 toSpeech = "Mensaje de " + footer.substring(posPuntos, posGuion);
                 if(getApplicationContext() == null)
-                    Utils.ErrorToFile("Context is null - " + Calendar.getInstance().getTime().toString());
+                    //Utils.ErrorToFile("Context is null - " + Calendar.getInstance().getTime().toString());
                 if(PreferenceManager.getInt(Contants.KEY_IDAGENTE)>0){
                     Log.d(TAG,"Si hay IdAgente logeado...");
                     int idAgenteLoged = PreferenceManager.getInt(Contants.KEY_IDAGENTE);
@@ -133,7 +133,7 @@ public class GCMReceiver extends GcmListenerService {
                         if (ultimaMarcacion == null || rp3.auna.models.marcacion.Marcacion.getMarcacionesPendientes(db).size() == 0) {
                             toSpeech = title;
                             if(getApplicationContext() == null)
-                                Utils.ErrorToFile("Context is null - " + Calendar.getInstance().getTime().toString());
+                                //Utils.ErrorToFile("Context is null - " + Calendar.getInstance().getTime().toString());
                             NotificationPusher.pushNotification(1, getApplicationContext(), message, title, MarcacionActivity.class);
                         }
 
@@ -149,7 +149,7 @@ public class GCMReceiver extends GcmListenerService {
                 else if(type.equalsIgnoreCase(NOTIFICATION_TYPE_APROBAR_JUSTIFICACION)) {
                     toSpeech = title;
                     if(getApplicationContext() == null)
-                        Utils.ErrorToFile("Context is null - " + Calendar.getInstance().getTime().toString());
+                        //Utils.ErrorToFile("Context is null - " + Calendar.getInstance().getTime().toString());
                     NotificationPusher.pushNotification(1, getApplicationContext(), message, title, PermisoActivity.class);
                 }else if(type.equalsIgnoreCase("Movil")){
                     int idAgenteLoged = PreferenceManager.getInt(Contants.KEY_IDAGENTE);
@@ -182,7 +182,7 @@ public class GCMReceiver extends GcmListenerService {
                     int posGuion = footer.indexOf("-");
                     toSpeech = "Mensaje de " + footer.substring(posPuntos, posGuion);
                     if(getApplicationContext() == null)
-                        Utils.ErrorToFile("Context is null - " + Calendar.getInstance().getTime().toString());
+                        //Utils.ErrorToFile("Context is null - " + Calendar.getInstance().getTime().toString());
                     NotificationPusher.pushNotification(1, getApplicationContext(), message, title, footer);
                 }
             }
