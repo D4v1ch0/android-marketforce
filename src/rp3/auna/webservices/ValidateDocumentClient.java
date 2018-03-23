@@ -10,6 +10,7 @@ import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import rp3.auna.R;
+import rp3.runtime.Session;
 
 /**
  * Created by Jesus Villa on 01/01/2018.
@@ -21,10 +22,17 @@ public class ValidateDocumentClient {
     private String resource = "VentaNueva/ValidateDocumentProspecto";
     private Context context;
     private Callback callBack;
+    //headers
+    private String ClientId ="android-app-marketforce";
+    private String ClientSecret = "rp3-marketforce2014";
+    private String AuthTypeToken = "rp3.marketforce";
+    private String AuthToken;
+    //
 
-    public ValidateDocumentClient(Context context, Callback callback){
+    public ValidateDocumentClient(Context context, Callback callback,String authToken){
         this.callBack = callback;
         this.context = context;
+        AuthToken = authToken;
     }
 
     public void validar(String documento){
@@ -33,6 +41,10 @@ public class ValidateDocumentClient {
         Request request = new Request.Builder()
                 .url(url)
                 .addHeader("content-type", "application/json")
+                .addHeader("ClientId",ClientId)
+                .addHeader("ClientSecret",ClientSecret)
+                .addHeader("AuthTypeToken",AuthTypeToken)
+                .addHeader("AuthToken",AuthToken)
                 .get()
                 .build();
         OkHttpClient.Builder b = new OkHttpClient.Builder();

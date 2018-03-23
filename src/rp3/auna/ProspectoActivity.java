@@ -73,6 +73,7 @@ import rp3.auna.webservices.SpiClient;
 import rp3.auna.webservices.ValidateDocumentClient;
 import rp3.data.models.IdentificationType;
 import rp3.db.sqlite.DataBase;
+import rp3.runtime.Session;
 
 import static rp3.data.entity.EntityBase.ACTION_UPDATE;
 
@@ -172,6 +173,7 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
     private IdentificationType identificationType = null;
     private int flagShowCalificacion = 0;
     private int flagDocumentValidate = 0;
+    private String authToken = Session.getUser().getAuthToken();
 
 
     @Override
@@ -2261,7 +2263,7 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
                     }
                 });
             }
-        }).validar(documento);
+        },authToken).validar(documento);
     }
 
     private void showDialogBuildCalificacionDialog(InVentasProspecto inVentasProspecto){
