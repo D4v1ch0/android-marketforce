@@ -96,12 +96,7 @@ public class ServerActivity extends BaseActivity {
 	    }
 
 
-	/**
-	 *
-	 * Ciclo de vida
-	 *
-	 */
-
+	//region Ciclo de vida
 	@Override
 	protected void onStart() {
 		super.onStart();
@@ -131,5 +126,8 @@ public class ServerActivity extends BaseActivity {
 		super.onDestroy();
 		Log.d(TAG,"onDestroy...");
 	}
+	 //endregion
+
+
 
 }

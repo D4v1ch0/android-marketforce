@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rp3.accounts.User;
+import rp3.auna.Contants;
 import rp3.auna.bean.LlamadaData;
 import rp3.auna.bean.RegistroPago;
 import rp3.auna.bean.SolicitudMovil;
@@ -58,6 +59,9 @@ public class SessionManager {
     //VentaRegular
     private SharedPreferences _prefVentaRegular;
 
+    //Guardar Session
+    private SharedPreferences _prefSessionInit;
+
     private SessionManager(Context applicationContext)
     {
         _applicationContext = applicationContext;
@@ -75,6 +79,7 @@ public class SessionManager {
         _prefRegistroPago = applicationContext.getSharedPreferences(Constants.DATA_PRIVATE_PREFERENCES_REGISTROPAGO,Context.MODE_PRIVATE);
         _prefVentaFisica = applicationContext.getSharedPreferences(Constants.DATA_PRIVATE_PREFERENCES_VISITAFISICA,Context.MODE_PRIVATE);
         _prefVentaRegular = applicationContext.getSharedPreferences(Constants.DATA_PRIVATE_PREFERENCES_VISITAREGULAR,Context.MODE_PRIVATE);
+        _prefSessionInit = applicationContext.getSharedPreferences(Constants.DATA_PRIVATE_PREFERENCES_SESION_INICIADA,Context.MODE_PRIVATE| Context.MODE_MULTI_PROCESS);
     }
 
     public static SessionManager getInstance(Context applicationContext) {
@@ -84,6 +89,33 @@ public class SessionManager {
          }
          return (_sessionManager) ;
     }
+
+    //region Session Init
+    public void createSessionInit(String sesion) {
+        removeDetalleVisita();
+        SharedPreferences.Editor prefsEditor = _prefSessionInit.edit();
+        Log.d(TAG, "grabando valor _prefSessionInit :"+sesion);
+        prefsEditor.putString(Constants.DATA_PRIVATE_PREFERENCES_SESION_INICIADA, sesion);
+        prefsEditor.commit();
+    }
+
+    public void removeSessionInit(){
+        //eliminar session de _prefDataVisitaReprogramada creada.
+        SharedPreferences.Editor prefsEditor = _prefSessionInit.edit();
+        prefsEditor.clear();
+        prefsEditor.remove(Constants.DATA_PRIVATE_PREFERENCES_SESION_INICIADA);
+        prefsEditor.commit();
+    }
+
+    public String getSessionInit() {
+        String s_user = _prefSessionInit.getString(Constants.DATA_PRIVATE_PREFERENCES_SESION_INICIADA, null);
+        if(s_user==null){
+            Log.d(TAG,"null _prefSessionInit...");
+            return null;}
+        return s_user;
+    }
+
+    //endregion
 
     //region Detalle de la visita
     public void createDetalleVisita(VisitaVtaDetalle visitaVta) {

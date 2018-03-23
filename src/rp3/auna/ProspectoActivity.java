@@ -173,7 +173,8 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
     private IdentificationType identificationType = null;
     private int flagShowCalificacion = 0;
     private int flagDocumentValidate = 0;
-    private String authToken = Session.getUser().getAuthToken();
+    private String authToken = null;
+    private String authTokenSession = null;
 
 
     @Override
@@ -185,6 +186,7 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
         toolbarStatusBar();
         navigationBarStatusBar();
         try{
+
             validateEditNew();
             initData();
             setTextCapFields();
@@ -2069,9 +2071,33 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
     protected void onResume() {
         super.onResume();
         Log.d(TAG,"onResume...");
+
         if(opcionProspectar==0){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        Log.d(TAG,"onPostResume...");
+        String token = rp3.configuration.PreferenceManager.getString(rp3.data.Constants.KEY_TOKEN_RP3_MARKETFORCE,null);
+        authTokenSession = Session.getUser().getAuthToken();
+        Log.d(TAG,"authTokenSession:"+authTokenSession);
+        if(token==null){
+            Log.d(TAG,"token==null...");
+            authToken = authTokenSession;
+        }else{
+            Log.d(TAG,"token != null...");
+            if(token.trim().length()>0){
+                Log.d(TAG,"token.trim().length()>0...");
+                authToken = token;
+            }else{
+                Log.d(TAG,"token.trim().length()==0...");
+                authToken = Session.getUser().getAuthToken();
+            }
+        }
+        Log.d(TAG,"AuthToken:"+authToken);
     }
 
     @Override

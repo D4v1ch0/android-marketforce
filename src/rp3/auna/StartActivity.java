@@ -82,7 +82,7 @@ public class StartActivity extends rp3.app.StartActivity{
             }
             else{
                 Log.d(TAG,"Tercera vez que abre la aplicacion..,");
-                Configuration.reinitializeConfiguration(context, DbOpenHelper.class);
+                Configuration.reinitializeConfiguration(this, DbOpenHelper.class);
                 /*if(PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"").equalsIgnoreCase(Session.getUser().getLogonName()) &&
                         PreferenceManager.getString(Constants.KEY_LAST_PASS,"").equalsIgnoreCase(Session.getUser().getPassword())){
                     if(Session.IsLogged()){
@@ -384,8 +384,14 @@ public class StartActivity extends rp3.app.StartActivity{
             }
 
         }else{
-            Log.d(TAG,"Data sync type no is General ni resumen...");
-            callNextActivity();
+            Log.d(TAG,"Data sync type no is General ni resumen...quizas es de tracking...");
+            if (Session.IsLogged()) {
+                Log.d(TAG,"SessionIsLogged...");
+                callNextActivity();
+            }else{
+                Log.d(TAG,"Dejar ahi nada mas...");
+            }
+
         }
     }
 

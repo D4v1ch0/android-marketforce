@@ -679,7 +679,9 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
         alarmManager.cancel(pendingUpdateIntent);
         Session.logOut();
         //Session.getUser().isLogged(false);
+        PreferenceManager.close();
         PreferenceManager.setValue(Constants.KEY_LOGIN_SESSION,"");
+
         startActivity(new Intent(this, StartActivity.class));
         this.finish();
 
