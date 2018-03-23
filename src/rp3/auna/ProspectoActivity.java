@@ -2238,11 +2238,17 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
 
     private void showValidateDocumentClient(String documento){
         flagDocumentValidate = 1;
+        final ProgressDialog progressDialogg =new ProgressDialog(ProspectoActivity.this,R.style.AppCompatAlertDialogStyle);
+        progressDialogg.setTitle(this.getResources().getString(R.string.appname_marketforce));
+        progressDialogg.setMessage("Validando documento...");
+        progressDialogg.setCancelable(false);
+        progressDialogg.show();
         new ValidateDocumentClient(this, new Callback() {
             Handler handler = new Handler(Looper.getMainLooper());
             @Override
             public void onFailure(Call call, final IOException e) {
                 Log.d(TAG,"onFailure...");
+                progressDialogg.dismiss();
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -2256,6 +2262,7 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
                 Log.d(TAG,"onResponse...");
+                progressDialogg.dismiss();
                 flagDocumentValidate = 0;
                 final String json = response.body().string();
                 handler.post(new Runnable() {
