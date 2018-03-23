@@ -26,6 +26,7 @@ public class Constants {
     public static final String DATA_PRIVATE_PREFERENCES_REGISTROPAGO = "dataPrivPrefUserSVisitaRegistroPago";
     public static final String DATA_PRIVATE_PREFERENCES_VISITAREGULAR = "dataPrivPrefUserSVisitaRegular";
     public static final String DATA_PRIVATE_PREFERENCES_VISITAFISICA = "dataPrivPrefUserSVisitaFisica";
+    public static final String DATA_PRIVATE_PREFERENCES_SESION_INICIADA = "dataPrivPrefUserSessionInit";
 
     public static final String DATA_PROYECTO_PRIVATE_PREFERENCES = "dataProyectoPrivPrefUser";
     public static final String DATA_KEY="DataSessionKeyUser";

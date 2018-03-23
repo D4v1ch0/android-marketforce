@@ -492,7 +492,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                 } else if (syncType.equals(SYNC_TYPE_SERVER_CODE)) {
                     String code = extras.getString(ServerActivity.SERVER_CODE);
                     result = Server.executeSync(code);
-                    addDefaultMessage(result);
+                    addDefaultMessageAuna(result,null);
                 } else if (syncType.equals(SYNC_TYPE_SEND_NOTIFICATION)) {
                     int idAgente = extras.getInt(AgenteDetalleFragment.ARG_AGENTE);
                     String title = extras.getString(AgenteDetalleFragment.ARG_TITLE);
@@ -603,7 +603,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     addDefaultMessage(result);
                     if(result == SYNC_EVENT_SUCCESS){
                         result = AgendaVta.executeSync(db);
-                        addDefaultMessage(result);
+                        addDefaultMessageAuna(result,null);
                     }
                 }
                 else if (syncType.equals(SYNC_TYPE_UPLOAD_PENDIENTES_PERMISO)) {

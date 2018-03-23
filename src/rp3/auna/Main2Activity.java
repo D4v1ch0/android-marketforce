@@ -680,6 +680,7 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
         Session.logOut();
         //Session.getUser().isLogged(false);
         PreferenceManager.setValue(Constants.KEY_LOGIN_SESSION,"");
+        PreferenceManager.close();
         startActivity(new Intent(this, StartActivity.class));
         this.finish();
 
