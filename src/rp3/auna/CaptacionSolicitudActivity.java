@@ -120,6 +120,11 @@ public class CaptacionSolicitudActivity extends AppCompatActivity {
         programa = getIntent().getStringExtra("Programa");
         costo = getIntent().getStringExtra("Costo");
         esNuevo = getIntent().getIntExtra("EsNuevo",1);
+        if(tipoSolicitud.equalsIgnoreCase("F")){
+            getSupportActionBar().setTitle("Registro de Solicitud Fisica");
+        }else{
+            getSupportActionBar().setTitle("Registro de Solicitud Virtual");
+        }
         if(validate()){
             containerOff.setVisibility(View.GONE);
             webView.setVisibility(View.VISIBLE);

@@ -152,6 +152,7 @@ public class StartActivity extends rp3.app.StartActivity{
         super.onContinue();
         rp3.auna.models.ventanueva.VisitaVta visitaVta = SessionManager.getInstance(this).getVisitaSession();
         if(visitaVta!=null){
+            callNextActivity();
             if(visitaVta.getEstado()==1){
                 callNextActivity();
             }else if(visitaVta.getEstado()==3){
@@ -163,7 +164,8 @@ public class StartActivity extends rp3.app.StartActivity{
             }else if(visitaVta.getEstado()==6){
                 callNextActivity();
             }
-        }else{
+        }
+        else{
             SessionManager.getInstance(this).removeVisitaSession();
             //region innecesario
             /*File file2 = new File(Environment.getExternalStorageDirectory() + "/testM.db");

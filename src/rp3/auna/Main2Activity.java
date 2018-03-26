@@ -184,6 +184,7 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
         toolbarStatusBar();
         setFragment(sharedPreferences.getInt("FRAGMENT", 0));
         configureClickItemDefault();
+
         navigationDrawer();
         toogleButtonDrawer();
         initLocation();
@@ -332,8 +333,13 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
 
     public void navigationDrawer() {
         //Setup  User data
-        this.tvName.setText(Session.getUser().getFullName());
-        this.tvPerfil.setText(PreferenceManager.getString(Contants.KEY_CARGO));
+        try {
+            this.tvName.setText(Session.getUser().getFullName());
+            this.tvPerfil.setText(PreferenceManager.getString(Contants.KEY_CARGO));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
 
         // Fix right margin to 56dp (portrait)
         View drawer = findViewById(R.id.scrimInsetsFrameLayout);

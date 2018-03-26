@@ -17,6 +17,7 @@
         android:name="rp3.auna.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
+
     <uses-permission android:name="rp3.marketforce.permission.C2D_MESSAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
@@ -72,6 +73,8 @@
     <uses-feature
         android:name="android.hardware.bluetooth_le"
         android:required="false" />
+    <uses-feature
+        android:name="android.hardware.usb.UsbManager"/>
 
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />

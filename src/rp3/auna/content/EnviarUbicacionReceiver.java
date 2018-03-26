@@ -62,7 +62,7 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
             DiaLaboral diaLaboral = DiaLaboral.getDia(DataBase.newDataBase(rp3.auna.db.DbOpenHelper.class), Utils.getDayOfWeek(calendarCurrent));
 			if(context == null) {
 				//Log.d(TAG,"Context is null:"+Calendar.getInstance().getTime().toString());
-				Utils.ErrorToFile("Context is null - " + Calendar.getInstance().getTime().toString());
+				//Utils.ErrorToFile("Context is null - " + Calendar.getInstance().getTime().toString());
 			}else {
 				String gps = "";
 				String net = "";
@@ -91,7 +91,7 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 						}
 					}
 				}
-				Utils.ErrorToFile("Context is ok - GPS: " + gps + " - NET: " + net + " - BATTERY: " + getBatteryLevel(context) + " - " + Calendar.getInstance().getTime().toString());
+				//Utils.ErrorToFile("Context is ok - GPS: " + gps + " - NET: " + net + " - BATTERY: " + getBatteryLevel(context) + " - " + Calendar.getInstance().getTime().toString());
 			}
 			if(calendarCurrent.getTimeInMillis() < calendar.getTimeInMillis() && diaLaboral.isEsLaboral())
 			{
@@ -129,6 +129,7 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 						catch(Exception e)
 						{
 							Log.d(TAG,"LocationsUtils:"+e.getMessage());
+							e.printStackTrace();
 							//Utils.ErrorToFile(e);
 						}
 					}
@@ -163,7 +164,8 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 	        alarmManager.cancel(pendingUpdateIntent);
 	        restartAlarm(context);
 	    } catch (Exception e) {
-	        Log.e("AlarmEnviarUbicacion", "Alarm update was not canceled. " + e.toString());
+	    	e.printStackTrace();
+	        //Log.e("AlarmEnviarUbicacion", "Alarm update was not canceled. " + e.toString());
 	    }
 	}
 	

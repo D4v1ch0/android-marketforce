@@ -288,14 +288,20 @@ public class CotizacionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cotizacion);
         Log.d(TAG,"onCreate...");
         ButterKnife.bind(this);
-        toolbarStatusBar();
-        setParametersDatesAfiliado();
-        navigationBarStatusBar();
-        getData();
-        initViews();
-        initSelectTipoVenta();
-        initVirtual();
-        detailCotizacion();
+        try{
+            toolbarStatusBar();
+            setParametersDatesAfiliado();
+            navigationBarStatusBar();
+            getData();
+            initViews();
+            initSelectTipoVenta();
+            initVirtual();
+            configureInitCheck();
+            detailCotizacion();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         //validateVisita();
     }
 
@@ -1905,6 +1911,7 @@ public class CotizacionActivity extends AppCompatActivity {
                             //Es Cotización Inicial
                             if(estado==1){
                                 //Aqui preguntar la autenticación por huella
+                                //setDataSolicitud(visitaVta.getIdVisita(),"V");
                                 showAutenticationFingerPrint();
                                 //setDataSolicitud(idVisita,tipo);
                             }
@@ -1941,24 +1948,29 @@ public class CotizacionActivity extends AppCompatActivity {
     }
 
     private void setDataSolicitud(int idVisita,String tipo){
-        Intent intent = new Intent(this,CaptacionSolicitudActivity.class);
-        intent.putExtra("IdVisita",idVisita);
-        intent.putExtra("Tipo",tipo);
-        intent.putExtra("Venta",tipoVenta);
-        intent.putExtra("Programa",((GeneralValue)((Spinner) findViewById(R.id.cotizacion_programa_movil)).getSelectedItem()).getCode());
-        intent.putExtra("EsNuevo",1);
-        String costo;
-        if(selectPlanCotizacion==1){
-            costo = String.valueOf(totalAnual);
-        }else if(selectPlanCotizacion==2){
-            costo = String.valueOf(totalTC);
-        }else {
-            costo = String.valueOf(totalTD);
+        try{
+            Intent intent = new Intent(this,CaptacionSolicitudActivity.class);
+            intent.putExtra("IdVisita",idVisita);
+            intent.putExtra("Tipo",tipo);
+            intent.putExtra("Venta",tipoVenta);
+            intent.putExtra("Programa",((GeneralValue)((Spinner) findViewById(R.id.cotizacion_programa_movil)).getSelectedItem()).getCode());
+            intent.putExtra("EsNuevo",1);
+            String costo;
+            if(selectPlanCotizacion==1){
+                costo = String.valueOf(totalAnual);
+            }else if(selectPlanCotizacion==2){
+                costo = String.valueOf(totalTC);
+            }else {
+                costo = String.valueOf(totalTD);
+            }
+            intent.putExtra("Costo",costo);
+            visitaVta.setEstado(2);
+            SessionManager.getInstance(CotizacionActivity.this).createVisitaSession(visitaVta);
+            startActivityForResult(intent,REQUEST_VISITA_SOLICITUD_COTIZACION_INICIAL);
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        intent.putExtra("Costo",costo);
-        visitaVta.setEstado(2);
-        SessionManager.getInstance(this).createVisitaSession(visitaVta);
-        startActivityForResult(intent,REQUEST_VISITA_SOLICITUD_COTIZACION_INICIAL);
+
     }
 
     private void setDataSolicitudBack(int idVisita,String tipo){
@@ -4418,16 +4430,55 @@ public class CotizacionActivity extends AppCompatActivity {
     private void showAutenticationFingerPrint(){
         Log.d(TAG,"showAutenticationFingerPrint...");
         FingerPrintDialog fingerPrintDialog = FingerPrintDialog.newInstance(new FingerPrintDialog.callBackListener() {
+            Handler handler = new Handler(Looper.getMainLooper());
             @Override
             public void onError(String mensaje) {
                 Log.d(TAG,"onError:"+mensaje);
-                Toast.makeText(CotizacionActivity.this, mensaje, Toast.LENGTH_SHORT).show();
+
+                try{
+                    setDataSolicitud(visitaVta.getIdVisita(),"V");
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                /*try{
+                    new Thread(() -> {
+                        //Toast.makeText(CotizacionActivity.this, mensaje, Toast.LENGTH_SHORT).show();
+
+                    }).start();
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }*/
+
+                /*handler.post(() -> {
+                    Toast.makeText(CotizacionActivity.this, mensaje, Toast.LENGTH_SHORT).show();
+
+                });*/
+
             }
 
             @Override
             public void onSuccess() {
                 Log.d(TAG,"onSuccess...");
-                Toast.makeText(CotizacionActivity.this, "Autenticación correcta.", Toast.LENGTH_SHORT).show();
+                try{
+                    setDataSolicitud(visitaVta.getIdVisita(),"V");
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                /*try{
+                    Log.d(TAG,"Iniciar Virtual...");
+                    new Thread(() -> {
+                        //Toast.makeText(CotizacionActivity.this, mensaje, Toast.LENGTH_SHORT).show();
+                        setDataSolicitud(visitaVta.getIdVisita(),"V");
+                    }).start();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }*/
+
+                /*handler.post(() -> {
+                    Toast.makeText(CotizacionActivity.this, "Autenticación correcta.", Toast.LENGTH_SHORT).show();
+
+                });*/
             }
         },new Bundle());
         fingerPrintDialog.setCancelable(true);
@@ -4525,5 +4576,12 @@ public class CotizacionActivity extends AppCompatActivity {
 
     private void initVirtual(){
         configureViewsVirtual();
+    }
+
+    private void configureInitCheck(){
+        rbFisica.setChecked(true);
+        consultarCotizacion=2;
+        rbIndividual.setChecked(true);
+        tipoVenta = 1;
     }
 }

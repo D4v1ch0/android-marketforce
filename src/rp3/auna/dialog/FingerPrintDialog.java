@@ -34,8 +34,10 @@ import asia.kanopi.fingerscan.Status;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+import rp3.auna.CotizacionActivity;
 import rp3.auna.R;
 import rp3.auna.util.helper.Util;
+import rp3.auna.util.print.FingerPrint;
 import rp3.auna.webservices.AutenticarHuellaRp3Client;
 
 /**
@@ -51,6 +53,7 @@ public class FingerPrintDialog extends DialogFragment {
     String errorScanner;
     ProgressDialog progressDialog;
     //region Handlers Scanner
+    Handler handler = new Handler(Looper.getMainLooper());
     Handler updateHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
@@ -135,40 +138,77 @@ public class FingerPrintDialog extends DialogFragment {
                 progressDialog.setMessage("Autenticando...");
                 progressDialog.show();
                 new AutenticarHuellaRp3Client(getActivity(), new okhttp3.Callback() {
-                    Handler handler =new Handler(Looper.getMainLooper());
+
                     @Override
-                    public void onFailure(Call call, IOException e) {
+                    public void onFailure(Call call1, IOException e) {
                         Log.d(TAG,"onFailure...");
                         Log.d(TAG,"IOException:"+e.getMessage());
                         e.printStackTrace();
-                        progressDialog.dismiss();
-                        handler.post(() -> {
-                            Toast.makeText(getActivity(), R.string.message_error_sync_connection_http_error, Toast.LENGTH_SHORT).show();
-                            onDestroy();
-                        });
+                        try{
+                            progressDialog.dismiss();
+                            call.onError(getActivity().getString(R.string.message_error_sync_connection_http_error));
+                        }catch (Exception ee){
+                            ee.printStackTrace();
+                        }
+
+                       /* try{
+                            handler.post(() -> {
+
+                            });
+                        }catch (Exception ee){
+                            ee.printStackTrace();
+                        }*/
                     }
 
                     @Override
                     public void onResponse(Call calll, Response response) throws IOException {
                         Log.d(TAG,"onResponse...");
-                        final String rpta = response.message();
-                        progressDialog.dismiss();
-                        Log.d(TAG,"rpta:"+rpta);
-                        handler.post(() -> {
+                        try{
+                            final String rpta = response.body().string();
+                            progressDialog.dismiss();
+                            Log.d(TAG,"rpta autentication huella:"+rpta);
                             if(response.isSuccessful()){
                                 Log.d(TAG,"response.isSuccessful...");
-                                if(rpta.equalsIgnoreCase("1")){
+                                if(rpta.trim().equalsIgnoreCase("1") || rpta.trim().equalsIgnoreCase("\"1\"")){
                                     Log.d(TAG,"Autenticado....");
                                     call.onSuccess();
-                                    Toast.makeText(getActivity(), "Autenticado satisfactoriamente!", Toast.LENGTH_SHORT).show();
                                 }else{
-                                    Toast.makeText(getActivity(), "No se encuentra registrado.", Toast.LENGTH_SHORT).show();
+                                    call.onError("No se encuentra registrado.");
                                 }
                             }else{
+                                call.onError("No se encuentra registrado.");
                                 Log.d(TAG,"response no is Successful...");
-                                Toast.makeText(getActivity(), rpta, Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getActivity(), rpta, Toast.LENGTH_SHORT).show();
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+
+                        /*
+                        handler.post(() -> {
+                            try{
+                                if(response.isSuccessful()){
+                                    Log.d(TAG,"response.isSuccessful...");
+                                    if(rpta.trim().equalsIgnoreCase("1") || rpta.trim().equalsIgnoreCase("\"1\"")){
+                                        Log.d(TAG,"Autenticado....");
+                                        call.onSuccess();
+                                    }else{
+                                        call.onError("No se encuentra registrado.");
+                                    }
+                                }else{
+                                    call.onError("No se encuentra registrado.");
+                                    Log.d(TAG,"response no is Successful...");
+                                    //Toast.makeText(getActivity(), rpta, Toast.LENGTH_SHORT).show();
+                                }
+                            }catch (Exception e){
+                                e.printStackTrace();
                             }
                         });
+                        */
+
+                        /*handler.post(() -> {
+
+                        });*/
                     }
                 }).autenticar(image);
 
@@ -177,7 +217,8 @@ public class FingerPrintDialog extends DialogFragment {
                 Log.d(TAG,"Status != SUCCESS...");
                 errorMessage = msg.getData().getString("errorMessage");
                 intent.putExtra("errorMessage", errorMessage);
-                Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
+                call.onError(errorMessage);
+                //Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
             }
             //setResult(RESULT_OK, intent);
             //finish();
@@ -237,6 +278,12 @@ public class FingerPrintDialog extends DialogFragment {
     public void onStart() {
         Log.d(TAG,"onStart...");
         super.onStart();
+        try {
+            fingerprint.scan(((CotizacionActivity)getActivity()), printHandler, updateHandler);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -249,8 +296,14 @@ public class FingerPrintDialog extends DialogFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        fingerprint.turnOffReader();
         Log.d(TAG,"onDestroy...");
+        try{
+            fingerprint.turnOffReader();
+        }catch (Exception e){
+           e.printStackTrace();
+        }
+
+
     }
 
     @Override
@@ -268,7 +321,6 @@ public class FingerPrintDialog extends DialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        fingerprint.scan(getActivity(), printHandler, updateHandler);
         Log.d(TAG,"onResume...");
 
     }
