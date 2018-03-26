@@ -69,8 +69,9 @@ public class EnviarUbicacion {
 			
 							
 		}catch(Exception ex){
-			if(ex!=null)
-				Log.e("SetUbicacion", ex.getMessage());
+			if(ex!=null){
+				ex.printStackTrace();
+			}
 		}
 		return SyncAdapter.SYNC_EVENT_SUCCESS;		
 	}

@@ -45,12 +45,13 @@ public class VisitaVta {
         JSONArray jArray = new JSONArray();
         Log.d(TAG,"Cantidad de Visitas a insertar en el servidor:"+ agendaVtas.size());
 
-        for(int s = 0; s < agendaVtas.size(); s ++)
+        try
         {
-            rp3.auna.models.ventanueva.VisitaVta cl = agendaVtas.get(s);
-            Log.d(TAG,cl.toString());
-            try
+            for(int s = 0; s < agendaVtas.size(); s ++)
             {
+                rp3.auna.models.ventanueva.VisitaVta cl = agendaVtas.get(s);
+                Log.d(TAG,cl.toString());
+
                 Log.d(TAG,(s+1) +" visita a insertar");
                 JSONObject visita = new JSONObject();
                 visita.put("IdVisita",cl.getIdVisita());
@@ -97,7 +98,8 @@ public class VisitaVta {
                 visita.put("VisitaId",cl.getVisitaId());
                 visita.put("LlamadaId",cl.getLlamadaId());
                 visita.put("Estado",cl.getEstado());
-                JSONArray fotos = new JSONArray();
+                visita.put("Fotos",null);
+                /*JSONArray fotos = new JSONArray();
                 if(cl.getFotos()!=null){
                     if(cl.getFotos().size()>0){
                     for(FotoVisitaVta foto:cl.getFotos()){
@@ -112,23 +114,23 @@ public class VisitaVta {
                     }
                 }else{
                     visita.put("Fotos",null);
-                }
+                }*/
                 visita.put("Estado", cl.getEstado());
                 jArray.put(visita);
             }
-            catch(Exception ex)
-            {
-                Log.d(TAG,"Exception:"+ex.getMessage());
-            }
+
+        }
+        catch(Exception ex)
+        {
+            Log.d(TAG,"Exception:"+ex.getMessage());
+            ex.printStackTrace();
         }
         webService.addParameter("visita", jArray);
 
         try {
             webService.addCurrentAuthToken();
-
             try {
                 webService.invokeWebService();
-
                 //webService.getStringResponse();
             } catch (HttpResponseException e) {
                 if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED){
@@ -136,35 +138,20 @@ public class VisitaVta {
                     failed = true;
                     return rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR;
                 }
-                Log.d(TAG,"..."+e.getMessage());
+                e.printStackTrace();
                 failed = true;
                 return rp3.content.SyncAdapter.SYNC_EVENT_HTTP_ERROR;
             } catch (Exception e) {
                 Log.d(TAG,"Exception e:"+e.getMessage());
+                e.printStackTrace();
                 failed = true;
                 return rp3.content.SyncAdapter.SYNC_EVENT_ERROR;
             }
-
         } finally {
-            if(failed==false){
-                Log.d(TAG,"insertado");
-                //rp3.auna.models.ventanueva.VisitaVta.actualizarInsertados(db);
-                //FotoVisitaVta.actualizarInsertados(db);
-                /*if(rp3.auna.models.ventanueva.VisitaVta.getVisitasInsert(db).size()==0){
-                    Log.d(TAG,"Ya no hay Visitas insertados con estado 1 ..se subieron al servidor...");
-                }else{
-                    Log.d(TAG,"Si hay Visitas con estado 1insertados...");
-                }
-                if(rp3.auna.models.ventanueva.FotoVisitaVta.getFotoVisitasInsert(db).size()==0){
-                    Log.d(TAG,"Ya no hay FotosVisitas insertados con estado 1 ..se subieron al servidor...");
-                }else{
-                    Log.d(TAG,"Si hay FotoVisitas con estado 1insertados...");
-                }*/
-            }
             if(failed){
-                Log.d(TAG,"Ws registrar llamada fallo...");
+                Log.d(TAG,"Ws registrar visita fallo...");
             }else{
-                Log.d(TAG,"ws registrar llamada inserto correctamente...");
+                Log.d(TAG,"ws registrar visita inserto correctamente...");
             }
             webService.close();
         }
@@ -209,6 +196,8 @@ public class VisitaVta {
                      * Obtener las alertas de visitas para elimnarlas e insertar las nuevas
                      *
                      */
+
+                    //region Otheeers
 
                     //Calendar calendarToday = Calendar.getInstance();
                     //region Eliminar Alertas Visita filtro fecha
@@ -266,6 +255,9 @@ public class VisitaVta {
                     int valueSupervisor = Integer.parseInt(tiempoNotificarSupervisor.getValue());
                     Log.d(TAG,"Valor de notificar visita:"+value);
                     Log.d(TAG,"Valor de supervisor visita alertar:"+valueSupervisor);*/
+
+                    //endregion
+
                     for (int i = 0; i < agendas.length(); i++) {
 
                         JSONObject visita = agendas.getJSONObject(i);
@@ -422,8 +414,10 @@ public class VisitaVta {
                             visitaDb.setFotos(null);
                             }
                         visitaDb.setInsertado(2);
-                        boolean insertVisita = rp3.auna.models.ventanueva.VisitaVta.insert(db,visitaDb );
-                        Log.d(TAG,insertVisita?"VisitaVta insertada...":"VisitaVta no fue insertada");
+                        //boolean insertVisita = rp3.auna.models.ventanueva.VisitaVta.insert(db,visitaDb );
+                        //Log.d(TAG,insertVisita?"VisitaVta insertada...":"VisitaVta no fue insertada");
+
+                        //region inserción anterior
                         /*Calendar calendarFilter = Calendar.getInstance();
                         calendarFilter.setTime(visitaDb.getFechaVisita());
                         boolean sameDay = calendarToday.get(Calendar.YEAR) == calendarFilter.get(Calendar.YEAR) &&
@@ -458,6 +452,7 @@ public class VisitaVta {
 
                         }*/
 
+                        //endregion
                     }
                     Log.d(TAG,"Cantidad totales de visitas:"+ rp3.auna.models.ventanueva.VisitaVta.getAll(db).size());
                     //Log.d(TAG,"Cantidad de fotovisitas:"+ rp3.auna.models.ventanueva.FotoVisitaVta.getAll(db).size());

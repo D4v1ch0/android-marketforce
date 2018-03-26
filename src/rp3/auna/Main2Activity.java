@@ -1366,13 +1366,18 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
 
             }
         }catch (Exception e){
-
+            e.printStackTrace();
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        try{
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         Log.d(TAG,"onDestroy...");
         Log.d(TAG,"Usuario Logeado:"+Session.getUser().toString());
         String logonName = PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"");
@@ -1391,13 +1396,22 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        adapter.onSaveInstanceState(outState);
+        try{
+            adapter.onSaveInstanceState(outState);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        adapter.onRestoreInstanceState(savedInstanceState);
+        try{
+            adapter.onRestoreInstanceState(savedInstanceState);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -1604,43 +1618,46 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
     public void recievedMessage(Events.Message msj){
         Log.d(TAG,"recievedMessage...");
         Bundle todo = msj.getMessage();
-        if(todo!=null){
-            if(todo.getString("GpsReceiver")!=null){
-                if(todo.getString("GpsReceiver").equalsIgnoreCase("Apagado")){
-                    Log.d(TAG,"GPS apagado...");
-                    if(dialogGps!=null){
-                        if(dialogGps.isShowing()){
-                            dialogGps.dismiss();
+        try{
+            if(todo!=null){
+                if(todo.getString("GpsReceiver")!=null){
+                    if(todo.getString("GpsReceiver").equalsIgnoreCase("Apagado")){
+                        Log.d(TAG,"GPS apagado...");
+                        if(dialogGps!=null){
+                            if(dialogGps.isShowing()){
+                                dialogGps.dismiss();
+                            }
                         }
-                    }
-                    showDialogGps();
-                    GPS = false;
-                    if(status!=null){
-                        Log.d(TAG,"status!=null...");
-                        Log.d(TAG,"status!=null...");
-                        try {
-                            status.startResolutionForResult(this,REQUEST_CHECK_SETTINGS);
-                        } catch (IntentSender.SendIntentException e) {
-                            e.printStackTrace();
-                            Log.d(TAG,"IntentSender.SendIntentException e...");
-                            Log.d(TAG,e.getLocalizedMessage());
+                        showDialogGps();
+                        GPS = false;
+                        if(status!=null){
+                            Log.d(TAG,"status!=null...");
+                            Log.d(TAG,"status!=null...");
+                            try {
+                                status.startResolutionForResult(this,REQUEST_CHECK_SETTINGS);
+                            } catch (IntentSender.SendIntentException e) {
+                                e.printStackTrace();
+                                Log.d(TAG,"IntentSender.SendIntentException e...");
+                                Log.d(TAG,e.getLocalizedMessage());
+                            }
+                        }else{
+                            Log.d(TAG,"status==null...");
+                            locationProvider.request();
                         }
                     }else{
-                        Log.d(TAG,"status==null...");
-                        locationProvider.request();
-                    }
-                }else{
-                    GPS = true;
-                    if(dialogGps!=null){
-                        if(dialogGps.isShowing()){
-                            dialogGps.dismiss();
+                        GPS = true;
+                        if(dialogGps!=null){
+                            if(dialogGps.isShowing()){
+                                dialogGps.dismiss();
+                            }
                         }
+                        Log.d(TAG,"GPS encendido...");
                     }
-                    Log.d(TAG,"GPS encendido...");
                 }
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
-
     }
 
     @Override
@@ -1762,14 +1779,38 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
                         int minutos = calendarLlamadaAlertar.get(Calendar.MINUTE);
                         Log.d(TAG,"Llamada Alertar:Hora del dia:"+hora+", minutos:"+minutos);
 
-                        ProspectoVtaDb prospectoVtaDb = ProspectoVtaDb.getProspectoIdProspecto(db,a.getIdCliente());
-                        if(prospectoVtaDb!=null){
-                            String mensaje = "Tienes una llamada por realizar a "+prospectoVtaDb.getNombre();
-                            Alarm.setAlarmLlamada(fechaAlertarLlamada,db,context,hora,minutos,(a.getIdLlamada()+200),mensaje);
+                        if(a.getInsertado()==1){
+                            //Es una llamada temporal
+                            ProspectoVtaDb prospectoVtaDb = ProspectoVtaDb.getProspectoIdProspecto(db,a.getIdCliente());
+                            if(prospectoVtaDb!=null){
+                                //Este prospecto si esta en base sincronizado
+                                String mensaje = "Tienes una llamada por realizar a "+prospectoVtaDb.getNombre();
+                                Alarm.setAlarmLlamada(fechaAlertarLlamada,db,context,hora,minutos,(a.getIdLlamada()+200),mensaje);
+                            }else{
+                                //Este prospecto no esta en base sincronizado
+                                ProspectoVtaDb prospectoVtaDb1 = ProspectoVtaDb.getProspectoIdProspectoBD(db,a.getIdCliente());
+                                if(prospectoVtaDb1!=null){
+                                    Log.d(TAG,"prospectoVtaDb1!=null...");
+                                    String mensaje = "Tienes una llamada por realizar a "+prospectoVtaDb1.getNombre();
+                                    Alarm.setAlarmLlamada(fechaAlertarLlamada,db,context,hora,minutos,(a.getIdLlamada()+200),mensaje);
+                                }else{
+                                    Log.d(TAG,"prospectoVtaDb1==null...");
+                                    String mensaje = "Tienes una llamada por realizar a "+prospectoVtaDb1.getNombre();
+                                    Alarm.setAlarmLlamada(fechaAlertarLlamada,db,context,hora,minutos,(a.getIdLlamada()+200),mensaje);
+                                }
+                            }
                         }else{
-                            String mensaje = "Tienes una llamada por realizar en "+value+" minutos.";
-                            Alarm.setAlarmLlamada(fechaAlertarLlamada,db,context,hora,minutos,(a.getIdLlamada()+200),mensaje);
+                            //Es una llamada ya sincronizada
+                            ProspectoVtaDb prospectoVtaDb = ProspectoVtaDb.getProspectoIdProspecto(db,a.getIdCliente());
+                            if(prospectoVtaDb!=null){
+                                String mensaje = "Tienes una llamada por realizar a "+prospectoVtaDb.getNombre();
+                                Alarm.setAlarmLlamada(fechaAlertarLlamada,db,context,hora,minutos,(a.getIdLlamada()+200),mensaje);
+                            }else{
+                                String mensaje = "Tienes una llamada por realizar en "+value+" minutos.";
+                                Alarm.setAlarmLlamada(fechaAlertarLlamada,db,context,hora,minutos,(a.getIdLlamada()+200),mensaje);
+                            }
                         }
+
                     }
                 }
             }

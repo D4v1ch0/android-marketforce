@@ -99,7 +99,6 @@ public class Alarm {
         }catch (Exception e){
             e.printStackTrace();
         }
-
     }
 
     public static void setAlarmTest(DataBase db,Context context,int hour,int minute,int identificador){

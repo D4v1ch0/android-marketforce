@@ -2131,7 +2131,7 @@
         SELECT * FROM tbProspectoVta WHERE Estado = 3
     </statement>
     <statement name="ProspectosSincronizadasId">
-        SELECT * FROM tbProspectoVta WHERE Estado = 3 and IdProspecto = ?
+        SELECT * FROM tbProspectoVta WHERE Estado > 1 and IdProspecto = ?
     </statement>
     <statement name="ProspectosSincronizadasIdBd">
         SELECT * FROM tbProspectoVta WHERE _id = ?
@@ -2199,7 +2199,7 @@
 
     </statement>
     <statement name="LlamadasAllPendiente">
-        SELECT * FROM tbLlamadaVta WHERE LlamadoValue = 'D' AND INSERTADO = 2 ORDER BY FechaLlamada DESC
+        SELECT * FROM tbLlamadaVta WHERE LlamadoValue = 'D' ORDER BY FechaLlamada DESC
     </statement>
     <statement name="LlamadasActualizadas">
         SELECT * FROM tbLlamadaVta WHERE Insertado = 2

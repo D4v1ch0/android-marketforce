@@ -128,75 +128,74 @@ public class ProspectoVta {
             return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
         }
         Log.d(TAG,"Prospecto Insertados a enviar:"+prospectoVtaDbs.size());
-        /*Collections.sort(prospectoVtaDbs, new Comparator<ProspectoVtaDb>() {
-            @Override
-            public int compare(ProspectoVtaDb o1, ProspectoVtaDb o2) {
-                return (o1.getIdAgente() - o2.getIdAgente());
+        System.out.print(prospectoVtaDbs);
+        try {
+            JSONArray array = new JSONArray();
+            for(int i = 0;i<prospectoVtaDbs.size();i++){
+                rp3.auna.bean.ProspectoVta obj = new rp3.auna.bean.ProspectoVta();
+                ProspectoVtaDb inf = prospectoVtaDbs.get(i);
+                Log.d(TAG,"inf:"+inf.toString());
+                obj.setEmail(inf.getEmail());
+                obj.setLlamadaReferido(inf.getLlamadaReferido());
+                obj.setVisitaReferido(inf.getVisitaReferido());
+                obj.setIdAgente(inf.getIdAgente());
+                obj.setTipoPersonaCode(inf.getTipoPersonaCode());
+                obj.setDireccion1(inf.getDireccion1());
+                obj.setDireccion2(inf.getDireccion2());
+                obj.setNombre(inf.getNombre());
+                obj.setRuc(inf.getRuc());
+                obj.setCelular(inf.getCelular());
+                obj.setContactoApellidoMaterno(inf.getContactoApellidoMaterno());
+                obj.setContactoApellidoPaterno(inf.getContactoApellidoPaterno());
+                obj.setContactoNombre(inf.getContactoNombre());
+                obj.setDocumento(inf.getDocumento());
+                obj.setTipoDocumento(inf.getTipoDocumento());
+                obj.setContactoTelefono(inf.getContactoTelefono());
+                obj.setNombres(inf.getNombres());
+                obj.setApellidoPaterno(inf.getApellidoPaterno());
+                obj.setApellidoMaterno(inf.getApellidoMaterno());
+                obj.setEmpresaTelefono(inf.getEmpresaTelefono());
+                obj.setRazonSocial(inf.getRazonSocial());
+                obj.setTelefono(inf.getTelefono());
+                obj.setOrigenCode(inf.getOrigenCode());
+                obj.setEstadoCode(inf.getEstadoCode());
+                JSONObject object = new JSONObject();
+                object.put("IdProspectom",0);
+                object.put("Nombre",obj.getNombre());
+                object.put("Celular",obj.getCelular());
+                object.put("Telefono",obj.getTelefono());
+                object.put("TipoDocumento",obj.getTipoDocumento());
+                object.put("Documento",obj.getDocumento());
+                object.put("Direccion1",obj.getDireccion1());
+                object.put("Direccion2",obj.getDireccion2());
+                object.put("TipoPersonaCode",obj.getTipoPersonaCode());
+                object.put("Ruc",obj.getRuc());
+                object.put("RazonSocial",obj.getRazonSocial());
+                object.put("Nombres",obj.getNombres());
+                object.put("ApellidoPaterno",obj.getApellidoPaterno());
+                object.put("ApellidoMaterno",obj.getApellidoMaterno());
+                object.put("ContactoNombre",obj.getContactoNombre());
+                object.put("ContactoApellidoPaterno",obj.getContactoApellidoPaterno());
+                object.put("ContactoApellidoMaterno",obj.getContactoApellidoMaterno());
+                object.put("ContactoTelefono",obj.getContactoTelefono());
+                object.put("EmpresaTelefono",obj.getEmpresaTelefono());
+                object.put("Email",obj.getEmail());
+                object.put("LlamadaReferido",obj.getLlamadaReferido());
+                object.put("VisitaReferido",obj.getVisitaReferido());
+                object.put("IdAgente",obj.getIdAgente());
+                object.put("OrigenCode",obj.getOrigenCode());
+                object.put("EstadoCode",obj.getEstadoCode());
+                object.put("Referente",obj.getReferente());
+                array.put(object);
             }
-        });*/
-        JSONArray array = new JSONArray();
-        for(int i = 0;i<prospectoVtaDbs.size();i++){
-            rp3.auna.bean.ProspectoVta obj = new rp3.auna.bean.ProspectoVta();
-            ProspectoVtaDb inf = prospectoVtaDbs.get(i);
-            Log.d(TAG,"inf:"+inf.toString());
-            obj.setEmail(inf.getEmail());
-            obj.setLlamadaReferido(inf.getLlamadaReferido());
-            obj.setVisitaReferido(inf.getVisitaReferido());
-            obj.setIdAgente(inf.getIdAgente());
-            obj.setTipoPersonaCode(inf.getTipoPersonaCode());
-            obj.setDireccion1(inf.getDireccion1());
-            obj.setDireccion2(inf.getDireccion2());
-            obj.setNombre(inf.getNombre());
-            obj.setRuc(inf.getRuc());
-            obj.setCelular(inf.getCelular());
-            obj.setContactoApellidoMaterno(inf.getContactoApellidoMaterno());
-            obj.setContactoApellidoPaterno(inf.getContactoApellidoPaterno());
-            obj.setContactoNombre(inf.getContactoNombre());
-            obj.setDocumento(inf.getDocumento());
-            obj.setTipoDocumento(inf.getTipoDocumento());
-            obj.setContactoTelefono(inf.getContactoTelefono());
-            obj.setNombres(inf.getNombres());
-            obj.setApellidoPaterno(inf.getApellidoPaterno());
-            obj.setApellidoMaterno(inf.getApellidoMaterno());
-            obj.setEmpresaTelefono(inf.getEmpresaTelefono());
-            obj.setRazonSocial(inf.getRazonSocial());
-            obj.setTelefono(inf.getTelefono());
-            obj.setOrigenCode(inf.getOrigenCode());
-            obj.setEstadoCode(inf.getEstadoCode());
-            JSONObject object = new JSONObject();
-            object.put("IdProspectom",0);
-            object.put("Nombre",obj.getNombre());
-            object.put("Celular",obj.getCelular());
-            object.put("Telefono",obj.getTelefono());
-            object.put("TipoDocumento",obj.getTipoDocumento());
-            object.put("Documento",obj.getDocumento());
-            object.put("Direccion1",obj.getDireccion1());
-            object.put("Direccion2",obj.getDireccion2());
-            object.put("TipoPersonaCode",obj.getTipoPersonaCode());
-            object.put("Ruc",obj.getRuc());
-            object.put("RazonSocial",obj.getRazonSocial());
-            object.put("Nombres",obj.getNombres());
-            object.put("ApellidoPaterno",obj.getApellidoPaterno());
-            object.put("ApellidoMaterno",obj.getApellidoMaterno());
-            object.put("ContactoNombre",obj.getContactoNombre());
-            object.put("ContactoApellidoPaterno",obj.getContactoApellidoPaterno());
-            object.put("ContactoApellidoMaterno",obj.getContactoApellidoMaterno());
-            object.put("ContactoTelefono",obj.getContactoTelefono());
-            object.put("EmpresaTelefono",obj.getEmpresaTelefono());
-            object.put("Email",obj.getEmail());
-            object.put("LlamadaReferido",obj.getLlamadaReferido());
-            object.put("VisitaReferido",obj.getVisitaReferido());
-            object.put("IdAgente",obj.getIdAgente());
-            object.put("OrigenCode",obj.getOrigenCode());
-            object.put("EstadoCode",obj.getEstadoCode());
-            object.put("Referente",obj.getReferente());
-            array.put(object);
-        }
 
+            Log.d(TAG,"Array a enviar...");
+            System.out.print(array);
+            String json = new Gson().toJson(array);
+            System.out.println(json);
             webService.addParameter("model", array);
             try {
                 webService.addCurrentAuthToken();
-
                 try {
                     webService.setTimeOut(55000);
                     webService.invokeWebService();
@@ -217,6 +216,7 @@ public class ProspectoVta {
                     return rp3.content.SyncAdapter.SYNC_EVENT_ERROR;
                 }
                 JSONArray prospectos = webService.getJSONArrayResponse();
+                System.out.print(prospectos);
                 TypeToken<List<rp3.auna.bean.ProspectoVta>> token = new TypeToken<List<rp3.auna.bean.ProspectoVta>>() {};
                 List<rp3.auna.bean.ProspectoVta> prospectoVtaList = new Gson().fromJson(prospectos.toString(),token.getType());
                 if(prospectos!=null){
@@ -266,10 +266,12 @@ public class ProspectoVta {
                             Log.d(TAG,"Obj Despues:"+obj.toString());
                             ProspectoVtaDb.update(db,obj);
                             //AgendaVta agendaVta = AgendaVta.getAgendaBDByProspectoBD(db,(int)obj.getID());
+                            //Estas son visitas temporales
                             List<rp3.auna.models.ventanueva.VisitaVta> visitaVta = rp3.auna.models.ventanueva.VisitaVta.getVisitasfromProspectoBD(db,(int)obj.getID());
+                            Log.d(TAG,"Cantidad de visitas temporales con este Id::"+obj.getID()+" son:"+visitaVta.size());
                             List<LlamadaVta> llamadaVta = LlamadaVta.getLlamadasFromProspectoBD(db,(int)obj.getID());
+                            Log.d(TAG,"Cantidad de llamadas temporales con este Id:"+obj.getID()+ " son:"+llamadaVta.size());
                             if(visitaVta.size()>0){
-                                Log.d(TAG,"Si hay visitas temporales con este Id Prospecto temporal...");
                                 for(rp3.auna.models.ventanueva.VisitaVta v:visitaVta){
                                     v.setIdCliente(obj.getIdProspecto());
                                     boolean res = VisitaVta.update(db,v);
@@ -286,7 +288,7 @@ public class ProspectoVta {
                             }
                         }
                         //Log.d(TAG,"Cantidad de prospectos DB Insert:"+ProspectoVtaDb.getProspectoInsert(db).size());
-                        Log.d(TAG,"Cantidad de prospectos DB Totales:"+ProspectoVtaDb.getAll(db).size());
+                        Log.d(TAG,"Cantidad de prospectos DB Totales:"+ProspectoVtaDb.getAllEstado(db).size());
                         Log.d(TAG,"Cantidad de prospectos DB Insertados:"+ ProspectoVtaDb.getProspectoInsert(db).size());
                     }
                     else{
@@ -299,6 +301,16 @@ public class ProspectoVta {
                 Log.d(TAG,"finally ws prospecto");
                 webService.close();
             }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        /*Collections.sort(prospectoVtaDbs, new Comparator<ProspectoVtaDb>() {
+            @Override
+            public int compare(ProspectoVtaDb o1, ProspectoVtaDb o2) {
+                return (o1.getIdAgente() - o2.getIdAgente());
+            }
+        });*/
+
         return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
     }
 
@@ -422,93 +434,103 @@ public class ProspectoVta {
         }
         Log.d(TAG,"Cantidad de Prospectos en Lista Negra a enviar:"+prospectoVtaDbs.size());
 
-        JSONArray array = new JSONArray();
-        for(int i = 0;i<prospectoVtaDbs.size();i++){
-            rp3.auna.bean.ProspectoVta obj = new rp3.auna.bean.ProspectoVta();
-            ProspectoVtaDb inf = prospectoVtaDbs.get(i);
-            obj.setIdProspecto(inf.getIdProspecto());
-            obj.setEmail(inf.getEmail());
-            obj.setLlamadaReferido(inf.getLlamadaReferido());
-            obj.setVisitaReferido(inf.getVisitaReferido());
-            obj.setIdAgente(inf.getIdAgente());
-            obj.setTipoPersonaCode(inf.getTipoPersonaCode());
-            obj.setDireccion1(inf.getDireccion1());
-            obj.setDireccion2(inf.getDireccion2());
-            obj.setNombre(inf.getNombre());
-            obj.setRuc(inf.getRuc());
-            obj.setCelular(inf.getCelular());
-            obj.setContactoApellidoMaterno(inf.getContactoApellidoMaterno());
-            obj.setContactoApellidoPaterno(inf.getContactoApellidoPaterno());
-            obj.setContactoNombre(inf.getContactoNombre());
-            obj.setDocumento(inf.getDocumento());
-            obj.setTipoDocumento(inf.getTipoDocumento());
-            obj.setContactoTelefono(inf.getContactoTelefono());
-            obj.setNombres(inf.getNombres());
-            obj.setApellidoPaterno(inf.getApellidoPaterno());
-            obj.setApellidoMaterno(inf.getApellidoMaterno());
-            obj.setEmpresaTelefono(inf.getEmpresaTelefono());
-            obj.setRazonSocial(inf.getRazonSocial());
-            obj.setTelefono(inf.getTelefono());
-            obj.setOrigenCode(inf.getOrigenCode());
-            obj.setEstadoCode(inf.getEstadoCode());
-            obj.setReferente(inf.getReferente());
-            JSONObject object = new JSONObject();
-            object.put("IdProspecto",obj.getIdProspecto());
-            object.put("Nombre",obj.getNombre());
-            object.put("Celular",obj.getCelular());
-            object.put("Telefono",obj.getTelefono());
-            object.put("TipoDocumento",obj.getTipoDocumento());
-            object.put("Documento",obj.getDocumento());
-            object.put("Direccion1",obj.getDireccion1());
-            object.put("Direccion2",obj.getDireccion2());
-            object.put("TipoPersonaCode",obj.getTipoPersonaCode());
-            object.put("Ruc",obj.getRuc());
-            object.put("RazonSocial",obj.getRazonSocial());
-            object.put("Nombres",obj.getNombres());
-            object.put("ApellidoPaterno",obj.getApellidoPaterno());
-            object.put("ApellidoMaterno",obj.getApellidoMaterno());
-            object.put("ContactoNombre",obj.getContactoNombre());
-            object.put("ContactoApellidoPaterno",obj.getContactoApellidoPaterno());
-            object.put("ContactoApellidoMaterno",obj.getContactoApellidoMaterno());
-            object.put("ContactoTelefono",obj.getContactoTelefono());
-            object.put("EmpresaTelefono",obj.getEmpresaTelefono());
-            object.put("Email",obj.getEmail());
-            object.put("LlamadaReferido",obj.getLlamadaReferido());
-            object.put("VisitaReferido",obj.getVisitaReferido());
-            object.put("IdAgente",obj.getIdAgente());
-            object.put("OrigenCode",obj.getOrigenCode());
-            object.put("EstadoCode",obj.getEstadoCode());
-            object.put("Referente",obj.getReferente());
-            array.put(object);
-        }
-
-        webService.addParameter("model", array);
-        try {
-            webService.addCurrentAuthToken();
-
-            try {
-                webService.setTimeOut(40000);
-                webService.invokeWebService();
-            } catch (HttpResponseException e) {
-                if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED){
-                    Log.d(TAG,"e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED...");
-                    Log.d(TAG,"STATUScODE = "+e.getStatusCode());
-                    failed = true;
-                    return rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR;
-                }
-                Log.d(TAG,"..."+e.getMessage());
-                failed = true;
-                return rp3.content.SyncAdapter.SYNC_EVENT_HTTP_ERROR;
-            } catch (Exception e) {
-                Log.d(TAG,"Exception e:"+e.getMessage());
-                failed = true;
-                return rp3.content.SyncAdapter.SYNC_EVENT_ERROR;
+        try{
+            JSONArray array = new JSONArray();
+            for(int i = 0;i<prospectoVtaDbs.size();i++){
+                rp3.auna.bean.ProspectoVta obj = new rp3.auna.bean.ProspectoVta();
+                ProspectoVtaDb inf = prospectoVtaDbs.get(i);
+                obj.setIdProspecto(inf.getIdProspecto());
+                obj.setEmail(inf.getEmail());
+                obj.setLlamadaReferido(inf.getLlamadaReferido());
+                obj.setVisitaReferido(inf.getVisitaReferido());
+                obj.setIdAgente(inf.getIdAgente());
+                obj.setTipoPersonaCode(inf.getTipoPersonaCode());
+                obj.setDireccion1(inf.getDireccion1());
+                obj.setDireccion2(inf.getDireccion2());
+                obj.setNombre(inf.getNombre());
+                obj.setRuc(inf.getRuc());
+                obj.setCelular(inf.getCelular());
+                obj.setContactoApellidoMaterno(inf.getContactoApellidoMaterno());
+                obj.setContactoApellidoPaterno(inf.getContactoApellidoPaterno());
+                obj.setContactoNombre(inf.getContactoNombre());
+                obj.setDocumento(inf.getDocumento());
+                obj.setTipoDocumento(inf.getTipoDocumento());
+                obj.setContactoTelefono(inf.getContactoTelefono());
+                obj.setNombres(inf.getNombres());
+                obj.setApellidoPaterno(inf.getApellidoPaterno());
+                obj.setApellidoMaterno(inf.getApellidoMaterno());
+                obj.setEmpresaTelefono(inf.getEmpresaTelefono());
+                obj.setRazonSocial(inf.getRazonSocial());
+                obj.setTelefono(inf.getTelefono());
+                obj.setOrigenCode(inf.getOrigenCode());
+                obj.setEstadoCode(inf.getEstadoCode());
+                obj.setReferente(inf.getReferente());
+                JSONObject object = new JSONObject();
+                object.put("IdProspecto",obj.getIdProspecto());
+                object.put("Nombre",obj.getNombre());
+                object.put("Celular",obj.getCelular());
+                object.put("Telefono",obj.getTelefono());
+                object.put("TipoDocumento",obj.getTipoDocumento());
+                object.put("Documento",obj.getDocumento());
+                object.put("Direccion1",obj.getDireccion1());
+                object.put("Direccion2",obj.getDireccion2());
+                object.put("TipoPersonaCode",obj.getTipoPersonaCode());
+                object.put("Ruc",obj.getRuc());
+                object.put("RazonSocial",obj.getRazonSocial());
+                object.put("Nombres",obj.getNombres());
+                object.put("ApellidoPaterno",obj.getApellidoPaterno());
+                object.put("ApellidoMaterno",obj.getApellidoMaterno());
+                object.put("ContactoNombre",obj.getContactoNombre());
+                object.put("ContactoApellidoPaterno",obj.getContactoApellidoPaterno());
+                object.put("ContactoApellidoMaterno",obj.getContactoApellidoMaterno());
+                object.put("ContactoTelefono",obj.getContactoTelefono());
+                object.put("EmpresaTelefono",obj.getEmpresaTelefono());
+                object.put("Email",obj.getEmail());
+                object.put("LlamadaReferido",obj.getLlamadaReferido());
+                object.put("VisitaReferido",obj.getVisitaReferido());
+                object.put("IdAgente",obj.getIdAgente());
+                object.put("OrigenCode",obj.getOrigenCode());
+                object.put("EstadoCode",obj.getEstadoCode());
+                object.put("Referente",obj.getReferente());
+                array.put(object);
             }
-        } finally {
-            Log.d(TAG,"finally ws prospecto lista negra");
-            ProspectoVtaDb.deleteAll(db, Contract.ProspectoVta.TABLE_NAME);
-            webService.close();
+
+            webService.addParameter("model", array);
+            try {
+                webService.addCurrentAuthToken();
+
+                try {
+                    webService.setTimeOut(40000);
+                    webService.invokeWebService();
+                } catch (HttpResponseException e) {
+                    if (e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED){
+                        Log.d(TAG,"e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED...");
+                        Log.d(TAG,"STATUScODE = "+e.getStatusCode());
+                        failed = true;
+                        //return rp3.content.SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                        return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
+                    }
+                    Log.d(TAG,"..."+e.getMessage());
+                    e.printStackTrace();
+                    failed = true;
+                    return rp3.content.SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+                } catch (Exception e) {
+                    Log.d(TAG,"Exception e:"+e.getMessage());
+                    failed = true;
+                    return rp3.content.SyncAdapter.SYNC_EVENT_ERROR;
+                }
+            } finally {
+                Log.d(TAG,"finally ws prospecto lista negra");
+                ProspectoVtaDb.deleteAll(db, Contract.ProspectoVta.TABLE_NAME);
+                webService.close();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
         }
+
+
+
         return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
     }
 }
