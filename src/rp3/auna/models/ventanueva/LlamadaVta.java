@@ -339,8 +339,11 @@ public class LlamadaVta extends rp3.data.entity.EntityBase<LlamadaVta> {
 
     public static List<LlamadaVta>  getLlamadasFromProspectoBD(DataBase db,int idProspecto) {
         String query = QueryDir.getQuery(Contract.LlamadaVta.QUERY_LLAMADAVTA_SINCRONIZADAIDBDPROSPECTOBD);
+        String newQuery = "SELECT * FROM tbLlamadaVta WHERE Insertado = 1 and IdCliente = "+idProspecto;
         Cursor c = null;
-        c = db.rawQuery(query, new String[] {idProspecto + ""});
+        Log.d(TAG,"QUERY LLAMADAS POR UN PROSPECTO EN SQLITE:"+newQuery);
+        //c = db.rawQuery(query, new String[] {idProspecto + ""});
+        c = db.rawQuery(newQuery);
         List<LlamadaVta> list = new ArrayList<LlamadaVta>();
         if(c.moveToFirst()){
             do
@@ -474,6 +477,7 @@ public class LlamadaVta extends rp3.data.entity.EntityBase<LlamadaVta> {
     public static List<LlamadaVta> getLlamadasInsert(DataBase db) {
         String query = QueryDir.getQuery(Contract.LlamadaVta.QUERY_LLAMADAVTA_INSERTADAS);
         //Log.d(TAG,query);
+        Log.d(TAG,"QUERY LLAMADAS INSERTADAS:"+query);
         Cursor c = db.rawQuery(query);
         List<LlamadaVta> list = new ArrayList<LlamadaVta>();
         if(c.moveToFirst()){
@@ -666,6 +670,7 @@ public class LlamadaVta extends rp3.data.entity.EntityBase<LlamadaVta> {
         String query = QueryDir.getQuery(Contract.LlamadaVta.QUERY_LLAMADAVTA_SINCRONIZADAS);
 
         Cursor c = db.rawQuery(query);
+        Log.d(TAG,"QUERY LLAMADAS ACTUALIZADAS:"+query);
         List<LlamadaVta> list = new ArrayList<LlamadaVta>();
 
         if(c.moveToFirst()){

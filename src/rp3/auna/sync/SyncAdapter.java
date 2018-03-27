@@ -273,7 +273,8 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar obteniendo las comisiones...");
                         result = Agente.executeSyncComisiones(db);
-                        addDefaultMessageAuna(result," Comisiones.");
+                        result = SYNC_EVENT_SUCCESS;
+                        //addDefaultMessageAuna(result," Comisiones.");
                     }
 
                     //region Others Sync
@@ -1058,7 +1059,8 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     if(result==SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar obteniendo las comisiones...");
                         result = Agente.executeSyncComisiones(db);
-                        addDefaultMessageAuna(result," Comisiones.");
+                        result = SYNC_EVENT_SUCCESS;
+                        //addDefaultMessageAuna(result," Comisiones.");
                     }
 
                     /**

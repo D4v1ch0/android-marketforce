@@ -412,6 +412,7 @@
         <activity android:name=".ventanueva.DetailClienteActivity" />
         <activity
             android:name=".Main2Activity"
+            android:screenOrientation="portrait"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@style/AppThemeMD">
 
@@ -424,14 +425,17 @@
         </activity>
         <activity
             android:name=".ProspectoActivity"
+            android:screenOrientation="portrait"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@style/AppThemeMD" />
         <activity
             android:name=".CrearLlamadaActivity"
+            android:screenOrientation="portrait"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@style/AppThemeMD" />
         <activity
             android:name=".CrearVisitaActivity"
+            android:screenOrientation="portrait"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@style/AppThemeMD" />
         <activity

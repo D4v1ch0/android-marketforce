@@ -53,6 +53,8 @@ public class AlarmJvs extends rp3.data.entity.EntityBase<AlarmJvs> implements Pa
     private Date fecha;
     private String mensaje;
     private int idAgente;
+    private long identificadorTemp;
+    private int sync;
     private Context context;
 
     public AlarmJvs() {
@@ -87,12 +89,30 @@ public class AlarmJvs extends rp3.data.entity.EntityBase<AlarmJvs> implements Pa
                 ", fecha=" + fecha +
                 ", mensaje='" + mensaje + '\'' +
                 ", idAgente=" + idAgente +
+                ", identificadorTemp=" + identificadorTemp +
+                ", sync=" + sync +
                 ", context=" + context +
                 '}';
     }
 
     //region Encapsulamiento
 
+
+    public long getIdentificadorTemp() {
+        return identificadorTemp;
+    }
+
+    public void setIdentificadorTemp(long identificadorTemp) {
+        this.identificadorTemp = identificadorTemp;
+    }
+
+    public int getSync() {
+        return sync;
+    }
+
+    public void setSync(int sync) {
+        this.sync = sync;
+    }
 
     public int getIdAgente() {
         return idAgente;
@@ -263,6 +283,8 @@ public class AlarmJvs extends rp3.data.entity.EntityBase<AlarmJvs> implements Pa
         setValue(Contract.AlarmManagerJVS.COLUMN_ALARM_MANAGER_ALARM_FECHA,this.fecha);
         setValue(Contract.AlarmManagerJVS.COLUMN_ALARM_MANAGER_ALARM_MENSAJE,this.fecha);
         setValue(Contract.AlarmManagerJVS.COLUMN_ALARM_MANAGER_ALARM_AGENTE,this.idAgente);
+        setValue(Contract.AlarmManagerJVS.COLUMN_ALARM_MANAGER_ALARM_IDENTIFICADOR_TEMP,this.identificadorTemp);
+        setValue(Contract.AlarmManagerJVS.COLUMN_ALARM_MANAGER_ALARM_SYNC,this.sync);
     }
 
     @Override
@@ -321,8 +343,6 @@ public class AlarmJvs extends rp3.data.entity.EntityBase<AlarmJvs> implements Pa
                 }
             }
         }
-
-
         return message;
     }
 
@@ -339,6 +359,8 @@ public class AlarmJvs extends rp3.data.entity.EntityBase<AlarmJvs> implements Pa
         dest.writeLong(fecha.getTime());
         dest.writeString(mensaje);
         dest.writeInt(idAgente);
+        dest.writeLong(identificadorTemp);
+        dest.writeInt(sync);
     }
 
     public static final Parcelable.Creator<AlarmJvs> CREATOR = new Parcelable.Creator<AlarmJvs>() {
@@ -357,6 +379,8 @@ public class AlarmJvs extends rp3.data.entity.EntityBase<AlarmJvs> implements Pa
             alarm.setFecha(new Date(source.readLong()));
             alarm.setMensaje(source.readString());
             alarm.setIdAgente(source.readInt());
+            alarm.setIdentificadorTemp(source.readLong());
+            alarm.setSync(source.readInt());
             return alarm;
         }
 
@@ -554,7 +578,7 @@ public class AlarmJvs extends rp3.data.entity.EntityBase<AlarmJvs> implements Pa
         Log.d(TAG,"dateTime Type:"+getType());
         Log.d(TAG,"Mes:"+dateTime.getMonthOfYear()+" Dia del mes:"+dateTime.getDayOfMonth()+" Hora del dia:"+dateTime.getHourOfDay()+" Minuto de hora:"+dateTime.getMinuteOfHour());
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, this.getIdentificador(), myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, (int) this.getIdentificadorTemp(), myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Calendar calendar = Calendar.getInstance();

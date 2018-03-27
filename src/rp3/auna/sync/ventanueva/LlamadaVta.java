@@ -210,7 +210,6 @@ public class LlamadaVta {
             webService.close();
             Log.d(TAG,"finally...actualizar todo!!!");
             //rp3.auna.models.ventanueva.LlamadaVta.actualizarInsertados(db);
-            rp3.auna.models.ventanueva.LlamadaVta.deleteAll(db,Contract.LlamadaVta.TABLE_NAME);
         }
         return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
     }

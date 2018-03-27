@@ -862,7 +862,9 @@
         Alarm_Identificador INTEGER,
         Alarm_Fecha INTEGER,
         Alarm_Mensaje TEXT,
-        Alarm_Agente INT
+        Alarm_Agente INT,
+        Alarm_IdentificadorTemp INTEGER,
+        Alarm_Sync INTEGER
         )
     </statement>
     <statement>

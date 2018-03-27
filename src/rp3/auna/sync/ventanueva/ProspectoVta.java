@@ -68,7 +68,7 @@ public class ProspectoVta {
             List<rp3.auna.bean.ProspectoVta> prospectoVtaList = new Gson().fromJson(prospectos.toString(),token.getType());
             if(prospectos!=null){
                 if(prospectos.length()>0){
-                    ProspectoVtaDb.deleteAll(db, Contract.ProspectoVta.TABLE_NAME);
+                    ProspectoVtaDb.deleteAll(db, Contract.ProspectoVta.TABLE_NAME,true);
                     Log.d(TAG,"cantidad de prospectos WS por idAgente:"+prospectos.length());
                     for(rp3.auna.bean.ProspectoVta prospectoVta:prospectoVtaList){
                         Log.d(TAG,prospectoVta.toString());
@@ -417,7 +417,6 @@ public class ProspectoVta {
             //ProspectoVtaDb.deleteAll(db,Contract.ProspectoVta.TABLE_NAME);
         } finally {
             Log.d(TAG,"finally ws prospecto");
-            ProspectoVtaDb.deleteAll(db, Contract.ProspectoVta.TABLE_NAME);
             webService.close();
         }
         return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;

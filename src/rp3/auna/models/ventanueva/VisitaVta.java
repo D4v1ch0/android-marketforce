@@ -392,6 +392,7 @@ public class VisitaVta extends rp3.data.entity.EntityBase<VisitaVta>  {
     public static List<VisitaVta> getVisitasInsert(DataBase db) {
             String query = QueryDir.getQuery(Contract.VisitaVta.QUERY_VISITAVTA_INSERTADAS);
             Cursor c = db.rawQuery(query);
+            Log.d("VisitaVta","QUERY VISITAS INSERTADAS:"+query);
             List<VisitaVta> list = new ArrayList<>();
             if(c.moveToFirst()){
                 do
@@ -802,8 +803,11 @@ public class VisitaVta extends rp3.data.entity.EntityBase<VisitaVta>  {
 
     public static List<VisitaVta> getVisitasfromProspectoBD(DataBase db,int idProspecto) {
         String query = QueryDir.getQuery(Contract.VisitaVta.QUERY_VISITAVTA_SINCRONIZADAIDBDPROSPECTOBD);
+        String newQuery = "SELECT * FROM tbVisitaVta WHERE Insertado = 1 and IdCliente = "+idProspecto;
         Cursor c = null;
-        c = db.rawQuery(query, new String[] {idProspecto + ""});
+        Log.d("VisitaVta:","QUERY VISITAS POR UN PROSPECTO SQLITE:"+newQuery);
+        //c = db.rawQuery(query, new String[] {idProspecto + ""});
+        c = db.rawQuery(newQuery);
         List<VisitaVta> list = new ArrayList<>();
         if(c.moveToFirst()){
             do
@@ -988,7 +992,7 @@ public class VisitaVta extends rp3.data.entity.EntityBase<VisitaVta>  {
 
     public static List<VisitaVta> getVisitaSincronizadas(DataBase db) {
         String query = QueryDir.getQuery(Contract.VisitaVta.QUERY_VISITAVTA_SINCRONIZADAS);
-        Log.d("Visitata","query:"+query);
+        Log.d("Visitata","QUEYR VISITAS ACTUALIZADAS:"+query);
         Cursor c = db.rawQuery(query);
         List<VisitaVta>  visitaVtas = new ArrayList<>();
         if(c.moveToFirst()){

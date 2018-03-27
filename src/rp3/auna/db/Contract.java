@@ -1502,6 +1502,8 @@ public final class Contract {
 		public static final String COLUMN_ALARM_MANAGER_ALARM_FECHA = "Alarm_Fecha";
 		public static final String COLUMN_ALARM_MANAGER_ALARM_MENSAJE = "Alarm_Mensaje";
 		public static final String COLUMN_ALARM_MANAGER_ALARM_AGENTE = "Alarm_Agente";
+		public static final String COLUMN_ALARM_MANAGER_ALARM_IDENTIFICADOR_TEMP = "Alarm_IdentificadorTemp";
+		public static final String COLUMN_ALARM_MANAGER_ALARM_SYNC = "Alarm_Sync";
 
 		public static final String QUERY_ALL = "SELECT * FROM "+TABLE_NAME;
 		public static final String QUERY_LLAMADAS_ALL = "SELECT * FROM tbAlarmManagerJVS WHERE Alarm_Type = 2";

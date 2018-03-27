@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 import rp3.auna.Contants;
+import rp3.auna.adapter.AgendaLlamadaAdapter;
 import rp3.auna.content.AgendaReceiver;
 import rp3.auna.models.ventanueva.AlarmJvs;
 import rp3.configuration.PreferenceManager;
@@ -35,10 +36,10 @@ public class Alarm {
         myIntent.putExtras(todo);
         PendingIntent pending_intent = PendingIntent.getBroadcast(context, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pending_intent);
-
     }
 
-    public static void setAlarmVisita(Date fecha,DataBase db, Context context, int hour, int minute,int identificador,String mensaje){
+    public static void setAlarmVisita(Date fecha,DataBase db, Context context, int hour, int minute,int identificador,String mensaje,long identificadorTemp,
+                                      int sync){
         AlarmJvs alarmJvs = new AlarmJvs();
         final int idAgente = PreferenceManager.getInt(Contants.KEY_IDAGENTE);
         alarmJvs.setActive(false);
@@ -48,7 +49,6 @@ public class Alarm {
         setTime = setTime.withMillisOfSecond(0);
         setTime = setTime.withSecondOfMinute(0);
         Log.d(TAG,"Hora del dia:"+hour+" ,Minuto del dia:"+minute);
-
         // user set a time in the past (for the next day)
         if (setTime.isBeforeNow()) {
             setTime = setTime.plusDays(1);
@@ -61,6 +61,8 @@ public class Alarm {
         alarmJvs.setFecha(fecha);
         alarmJvs.setMensaje(mensaje);
         alarmJvs.setIdAgente(idAgente);
+        alarmJvs.setIdentificadorTemp(identificadorTemp);
+        alarmJvs.setSync(sync);
         alarmJvs.schedule(context);
         try {
             boolean o = AlarmJvs.insert(db,alarmJvs);
@@ -68,10 +70,9 @@ public class Alarm {
         }catch (Exception e){
             e.printStackTrace();
         }
-
     }
 
-    public static void setAlarmLlamada(Date fecha,DataBase db,Context context,int hour,int minute,int identificador,String mensaje){
+    public static void setAlarmLlamada(Date fecha,DataBase db,Context context,int hour,int minute,int identificador,String mensaje,long identificadorTemp, int sync){
         AlarmJvs alarmJvs = new AlarmJvs();
         final int idAgente = PreferenceManager.getInt(Contants.KEY_IDAGENTE);
         alarmJvs.setActive(false);
@@ -92,6 +93,8 @@ public class Alarm {
         alarmJvs.setFecha(fecha);
         alarmJvs.setMensaje(mensaje);
         alarmJvs.setIdAgente(idAgente);
+        alarmJvs.setIdentificadorTemp(identificadorTemp);
+        alarmJvs.setSync(sync);
         alarmJvs.schedule(context);
         try {
             boolean o = AlarmJvs.insert(db,alarmJvs);
@@ -142,6 +145,8 @@ public class Alarm {
         alarmJvs.setIdentificador(identificador);
         alarmJvs.setFecha(fecha);
         alarmJvs.setIdAgente(idAgente);
+        alarmJvs.setIdentificadorTemp(identificador);
+        alarmJvs.setSync(1);
         alarmJvs.schedule(context);
         try {
             boolean o = AlarmJvs.insert(db,alarmJvs);
@@ -173,6 +178,8 @@ public class Alarm {
         alarmJvs.setIdentificador(identificador);
         alarmJvs.setFecha(fecha);
         alarmJvs.setIdAgente(idAgente);
+        alarmJvs.setIdentificadorTemp(identificador);
+        alarmJvs.setSync(1);
         alarmJvs.schedule(context);
         try {
             boolean o = AlarmJvs.insert(db,alarmJvs);

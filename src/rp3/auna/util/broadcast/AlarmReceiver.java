@@ -102,13 +102,14 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
                             //region  Verificar Alerta de Visita
                             else if(alarmJvs.getType()==1){
                                 Log.d(TAG,"type = 1 Se debe alertar que una Visita esta a punto de comenzar...");
-                                int idVisita = (alarmJvs.getIdentificador()-100);
+                                int idVisita = (int) (alarmJvs.getIdentificadorTemp()-100);
                                 Log.d(TAG,"idvisita:"+idVisita);
                                 VisitaVta visitaVta1 = SessionManager.getInstance(context).getVisitaSession();
                                 if(visitaVta1!=null){
                                     Log.d(TAG,"Tiene una visita habierta en gestion...");
                                 }else{
                                     Log.d(TAG,"No tiene una visita en gestion notificar cn normalidad...");
+
                                     sendAlertAgenda(idVisita+100,context,"Alerta de Visita",alarmJvs.getMensaje());
                                     /*VisitaVta visitaVta = VisitaVta.getVisitaId(DataBase.newDataBase(rp3.auna.db.DbOpenHelper.class),idVisita);
                                     if(visitaVta!=null){
@@ -129,8 +130,15 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
                             //region Verificar Alerta de Llamada
                             else if(alarmJvs.getType()==2){
                                 Log.d(TAG,"type == 2 Se debe alertar que una Llamada esta a punto de comenzar...");
-                                int idLlamada = (alarmJvs.getIdentificador()-200);
+                                int idLlamada = (int) (alarmJvs.getIdentificadorTemp()-200);
                                 sendAlertAgenda((idLlamada)+200,context,"Alerta de Llamada",alarmJvs.getMensaje());
+                                /*if(alarmJvs.getSync()==1){
+                                    Log.d(TAG," Es una llamada sincronizada...");
+                                }else{
+                                    Log.d(TAG," Es una llamada desde sqlite...");
+
+                                }*/
+
                                 /*LlamadaVta llamadaVta = LlamadaVta.getLlamadaId(DataBase.newDataBase(rp3.auna.db.DbOpenHelper.class),idLlamada);
                                 if(llamadaVta!=null){
                                     Log.d(TAG,"llamada!=null...");

@@ -128,6 +128,7 @@ public class VisitaVta {
         webService.addParameter("visita", jArray);
 
         try {
+            webService.setTimeOut(45000);
             webService.addCurrentAuthToken();
             try {
                 webService.invokeWebService();
@@ -190,7 +191,7 @@ public class VisitaVta {
                 Log.d(TAG,"cantidad de visitas para insertar en agenda:"+agendas.length());
                 if(agendas.length()>0) {
                     rp3.auna.models.ventanueva.VisitaVta.deleteAll(db,Contract.VisitaVta.TABLE_NAME,true);
-                    rp3.auna.models.ventanueva.FotoVisitaVta.deleteAll(db,Contract.FotoVisitaVta.TABLE_NAME,true);
+                    //rp3.auna.models.ventanueva.FotoVisitaVta.deleteAll(db,Contract.FotoVisitaVta.TABLE_NAME,true);
                     /**
                      *
                      * Obtener las alertas de visitas para elimnarlas e insertar las nuevas
@@ -414,8 +415,8 @@ public class VisitaVta {
                             visitaDb.setFotos(null);
                             }
                         visitaDb.setInsertado(2);
-                        //boolean insertVisita = rp3.auna.models.ventanueva.VisitaVta.insert(db,visitaDb );
-                        //Log.d(TAG,insertVisita?"VisitaVta insertada...":"VisitaVta no fue insertada");
+                        boolean insertVisita = rp3.auna.models.ventanueva.VisitaVta.insert(db,visitaDb );
+                        Log.d(TAG,insertVisita?"VisitaVta insertada...":"VisitaVta no fue insertada");
 
                         //region inserción anterior
                         /*Calendar calendarFilter = Calendar.getInstance();
@@ -559,8 +560,8 @@ public class VisitaVta {
             webService.close();
             Log.d(TAG,"finally...actualizar todo!!!");
             //rp3.auna.models.ventanueva.VisitaVta.actualizarInsertados(db);
-            rp3.auna.models.ventanueva.VisitaVta.deleteAll(db, Contract.VisitaVta.TABLE_NAME);
-            rp3.auna.models.ventanueva.FotoVisitaVta.deleteAll(db,Contract.FotoVisitaVta.TABLE_NAME);
+
+            //rp3.auna.models.ventanueva.FotoVisitaVta.deleteAll(db,Contract.FotoVisitaVta.TABLE_NAME);
         }
         return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;
     }

@@ -2271,7 +2271,7 @@
     </statement>
 
     <statement name="VisitasPendienteAll">
-        SELECT * FROM tbVisitaVta WHERE VisitaValue = 'D' AND INSERTADO = 2 ORDER BY FECHAVISITA DESC
+        SELECT * FROM tbVisitaVta WHERE VisitaValue = 'D' ORDER BY FECHAVISITA DESC
     </statement>
 
     <statement name="VisitasSincronizadas">

@@ -2081,23 +2081,28 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
     protected void onPostResume() {
         super.onPostResume();
         Log.d(TAG,"onPostResume...");
-        String token = rp3.configuration.PreferenceManager.getString(rp3.data.Constants.KEY_TOKEN_RP3_MARKETFORCE,null);
-        authTokenSession = Session.getUser().getAuthToken();
-        Log.d(TAG,"authTokenSession:"+authTokenSession);
-        if(token==null){
-            Log.d(TAG,"token==null...");
-            authToken = authTokenSession;
-        }else{
-            Log.d(TAG,"token != null...");
-            if(token.trim().length()>0){
-                Log.d(TAG,"token.trim().length()>0...");
-                authToken = token;
+        try{
+            String token = rp3.configuration.PreferenceManager.getString(rp3.data.Constants.KEY_TOKEN_RP3_MARKETFORCE,null);
+            authTokenSession = Session.getUser().getAuthToken();
+            Log.d(TAG,"authTokenSession:"+authTokenSession);
+            if(token==null){
+                Log.d(TAG,"token==null...");
+                authToken = authTokenSession;
             }else{
-                Log.d(TAG,"token.trim().length()==0...");
-                authToken = Session.getUser().getAuthToken();
+                Log.d(TAG,"token != null...");
+                if(token.trim().length()>0){
+                    Log.d(TAG,"token.trim().length()>0...");
+                    authToken = token;
+                }else{
+                    Log.d(TAG,"token.trim().length()==0...");
+                    authToken = Session.getUser().getAuthToken();
+                }
             }
+            Log.d(TAG,"AuthToken:"+authToken);
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        Log.d(TAG,"AuthToken:"+authToken);
+
     }
 
     @Override

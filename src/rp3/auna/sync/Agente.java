@@ -132,7 +132,8 @@ public class Agente {
 		WebService webService = new WebService("MartketForce","GetAgente");			
 			
 		try
-		{			
+		{
+		    webService.setTimeOut(35000);
 			webService.addCurrentAuthToken();
 			
 			try {
@@ -270,6 +271,7 @@ public class Agente {
 
         try
         {
+            webService.setTimeOut(15000);
             webService.addCurrentAuthToken();
             JSONObject jObject = new JSONObject();
             try {
@@ -416,6 +418,7 @@ public class Agente {
     public static int executeSyncAgentes(DataBase db) {
         WebService webService = new WebService("MartketForce", "GetAgentesOportunidad");
         try {
+            webService.setTimeOut(55000);
             webService.addCurrentAuthToken();
 
             try {
@@ -532,15 +535,18 @@ public class Agente {
                     e.printStackTrace();
                 }
 
-
             } catch (HttpResponseException e) {
                 Log.d(TAG,"HttpResponseException...");
                 e.printStackTrace();
-                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED)
-                    return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
-                return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+                if(e.getStatusCode() == HttpConnection.HTTP_STATUS_UNAUTHORIZED){
+                    return rp3.auna.sync.SyncAdapter.SYNC_EVENT_SUCCESS;
+                    //return SyncAdapter.SYNC_EVENT_AUTH_ERROR;
+                }
+                //return SyncAdapter.SYNC_EVENT_HTTP_ERROR;
+                return rp3.auna.sync.SyncAdapter.SYNC_EVENT_SUCCESS;
             } catch (Exception e) {
-                return SyncAdapter.SYNC_EVENT_ERROR;
+                //return SyncAdapter.SYNC_EVENT_ERROR;
+                return rp3.auna.sync.SyncAdapter.SYNC_EVENT_SUCCESS;
             }
         } finally {
             webService.close();
