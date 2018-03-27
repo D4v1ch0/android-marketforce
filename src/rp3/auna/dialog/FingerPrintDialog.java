@@ -114,7 +114,9 @@ public class FingerPrintDialog extends DialogFragment {
         }
     };
 
-    Handler printHandler = new Handler(Looper.getMainLooper()) {
+    Handler printHandler =
+
+            new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             Log.d(TAG,"printHandler...");
@@ -211,8 +213,6 @@ public class FingerPrintDialog extends DialogFragment {
                         });*/
                     }
                 }).autenticar(image);
-
-
             } else {
                 Log.d(TAG,"Status != SUCCESS...");
                 errorMessage = msg.getData().getString("errorMessage");
@@ -242,15 +242,17 @@ public class FingerPrintDialog extends DialogFragment {
         fingerprint = new Fingerprint();
     }
 
-    public static FingerPrintDialog newInstance(FingerPrintDialog.callBackListener call, Bundle todo){
+    public static FingerPrintDialog newInstance(FingerPrintDialog.callBackListener call, Bundle todo,Handler updateHandler,Handler printHandler){
         FingerPrintDialog dialog = new FingerPrintDialog();
         dialog.setArguments(todo);
-        dialog.setListener(call);
+        dialog.setListener(call,updateHandler,printHandler);
         return dialog;
     }
 
-    public void setListener(FingerPrintDialog.callBackListener call) {
+    public void setListener(FingerPrintDialog.callBackListener call,Handler updateHandler,Handler printHandler) {
         this.call = call;
+        //this.updateHandler = updateHandler;
+        this.printHandler = printHandler;
     }
 
 

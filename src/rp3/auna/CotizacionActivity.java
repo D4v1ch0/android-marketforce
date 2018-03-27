@@ -12,6 +12,7 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -62,6 +63,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import asia.kanopi.fingerscan.Status;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.Call;
@@ -108,6 +110,7 @@ import rp3.auna.util.helper.Util;
 import rp3.auna.util.session.SessionManager;
 import rp3.auna.utils.NothingSelectedSpinnerAdapter;
 import rp3.auna.utils.Utils;
+import rp3.auna.webservices.AutenticarHuellaRp3Client;
 import rp3.auna.webservices.CotizacionVisitaClient;
 import rp3.auna.webservices.CotizadorClient;
 import rp3.auna.webservices.EmailAfiliacionProcesoClient;
@@ -4436,53 +4439,110 @@ public class CotizacionActivity extends AppCompatActivity {
                 Log.d(TAG,"onError:"+mensaje);
 
                 try{
-                    setDataSolicitud(visitaVta.getIdVisita(),"V");
+                    //setDataSolicitud(visitaVta.getIdVisita(),"V");
                 }catch (Exception e){
                     e.printStackTrace();
                 }
-                /*try{
-                    new Thread(() -> {
-                        //Toast.makeText(CotizacionActivity.this, mensaje, Toast.LENGTH_SHORT).show();
-
-                    }).start();
-
-                }catch (Exception e){
-                    e.printStackTrace();
-                }*/
-
-                /*handler.post(() -> {
-                    Toast.makeText(CotizacionActivity.this, mensaje, Toast.LENGTH_SHORT).show();
-
-                });*/
-
             }
 
             @Override
             public void onSuccess() {
                 Log.d(TAG,"onSuccess...");
                 try{
-                    setDataSolicitud(visitaVta.getIdVisita(),"V");
+                    //setDataSolicitud(visitaVta.getIdVisita(),"V");
                 }catch (Exception e){
                     e.printStackTrace();
                 }
-                /*try{
-                    Log.d(TAG,"Iniciar Virtual...");
-                    new Thread(() -> {
-                        //Toast.makeText(CotizacionActivity.this, mensaje, Toast.LENGTH_SHORT).show();
-                        setDataSolicitud(visitaVta.getIdVisita(),"V");
-                    }).start();
-                }catch (Exception e){
-                    e.printStackTrace();
-                }*/
-
-                /*handler.post(() -> {
-                    Toast.makeText(CotizacionActivity.this, "Autenticación correcta.", Toast.LENGTH_SHORT).show();
-
-                });*/
             }
-        },new Bundle());
+        },
+                new Bundle(),
+                new Handler(Looper.getMainLooper()){
+                    public void handleMessage(Message msg) {
+
+                    }
+
+        } ,
+                new Handler(Looper.getMainLooper()){
+                    public void handleMessage(Message msg) {
+                        Log.d(TAG,"printHandler...");
+
+                        if(msg!=null){
+                            Log.d(TAG,"msg!=null...");
+                            System.out.println(msg);
+                        }else{
+                            Log.d(TAG,"msg==null...");
+                        }
+                        byte[] image;
+                        String errorMessage = "empty";
+                        int status = msg.getData().getInt("status");
+                        Intent intent = new Intent();
+                        intent.putExtra("status", status);
+                        if (status == Status.SUCCESS) {
+                            Log.d(TAG,"statuss== SUCCESS..");
+                            image = msg.getData().getByteArray("img");
+                            showDialogPrintAuthenticate(image);
+                        } else {
+                            Log.d(TAG,"Status != SUCCESS...");
+                            errorMessage = msg.getData().getString("errorMessage");
+                            intent.putExtra("errorMessage", errorMessage);
+                            Toast.makeText(CotizacionActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+        });
         fingerPrintDialog.setCancelable(true);
         fingerPrintDialog.show(getSupportFragmentManager(),null);
+    }
+
+    private void showDialogPrintAuthenticate(byte[] image){
+        final ProgressDialog progressDialog = new ProgressDialog(this,R.style.AppCompatAlertDialogStyle);
+        progressDialog.setTitle(R.string.appname_marketforce);
+        progressDialog.setMessage("Autenticando huella...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        new AutenticarHuellaRp3Client(CotizacionActivity.this, new Callback() {
+            @Override
+            public void onFailure(Call call1, IOException e) {
+                Log.d(TAG,"onFailure...");
+                Log.d(TAG,"IOException:"+e.getMessage());
+                e.printStackTrace();
+                try{
+                    progressDialog.dismiss();
+                }catch (Exception ee){
+                    ee.printStackTrace();
+                }
+            }
+            @Override
+            public void onResponse(Call calll, Response response) throws IOException {
+                Log.d(TAG,"onResponse...");
+                progressDialog.dismiss();
+                try{
+                    final String rpta = response.body().string();
+
+                    Log.d(TAG,"rpta autentication huella:"+rpta);
+                    if(response.isSuccessful()){
+                        Log.d(TAG,"response.isSuccessful...");
+                        if(rpta.trim().equalsIgnoreCase("1") || rpta.trim().equalsIgnoreCase("\"1\"")){
+                            Log.d(TAG,"Autenticado....");
+                            setDataSolicitud(visitaVta.getIdVisita(),"V");
+                        }else{
+                            Toast.makeText(CotizacionActivity.this, "No se encuentra registrado.", Toast.LENGTH_SHORT).show();
+                            setDataSolicitud(visitaVta.getIdVisita(),"V");
+                            //call.onError("No se encuentra registrado.");
+                        }
+                    }else{
+                        Log.d(TAG,"response no is Successful...");
+                        Toast.makeText(CotizacionActivity.this, "No se encuentra registrado.", Toast.LENGTH_SHORT).show();
+                        //call.onError("No se encuentra registrado.");
+
+                        //Toast.makeText(getActivity(), rpta, Toast.LENGTH_SHORT).show();
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }).autenticar(image);
     }
 
     private void showDialogCotizadorVirtualClient(CotizacionVirtual cotizacionzacionMovil){
