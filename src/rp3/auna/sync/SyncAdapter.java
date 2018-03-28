@@ -141,6 +141,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 		
 		try{
             db = DataBase.newDataBase(rp3.auna.db.DbOpenHelper.class);
+            //db.beginTransaction();
             //Log.d(TAG,"SQLITEVERSION:"+db.getSQLiteVersion());
             if(db == null){
                 Log.e(TAG,"db is null");
@@ -1028,6 +1029,17 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                 else if (syncType.equals(SYNC_TYPE_VENTA_NUEVA)){
                     Calendar calendar = Calendar.getInstance();
 
+                    if(result==SYNC_EVENT_SUCCESS){
+                        result = EnviarUbicacion.executeSyncPendientes(db);
+                        result = SYNC_EVENT_SUCCESS;
+                        //addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        result = ProspectoVta.executeSyncRobinson(db);
+                        result = SYNC_EVENT_SUCCESS;
+                        //addDefaultMessage(result);
+                    }
+
                     if (result == SYNC_EVENT_SUCCESS) {
                         Log.d(TAG,"Agente.executeSync...");
                         result = rp3.auna.sync.Agente.executeSync(db);
@@ -1118,6 +1130,16 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                 //Cerrar sesión
                 else if (syncType.equals(SYNC_TYPE_LOGOUT_SESSION)){
                     Calendar calendar = Calendar.getInstance();
+                    if(result==SYNC_EVENT_SUCCESS){
+                        result = EnviarUbicacion.executeSyncPendientes(db);
+                        result = SYNC_EVENT_SUCCESS;
+                        //addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        result = ProspectoVta.executeSyncRobinson(db);
+                        result = SYNC_EVENT_SUCCESS;
+                        //addDefaultMessage(result);
+                    }
 
                     if (result == SYNC_EVENT_SUCCESS) {
                         Log.d(TAG,"Agente.executeSync...");
@@ -1217,6 +1239,16 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 
                 //Actualizar los prospectos modificados
                 else if(syncType.equals(SYNC_TYPE_UPDATE_PROSPECTO)){
+                    if(result==SYNC_EVENT_SUCCESS){
+                        result = EnviarUbicacion.executeSyncPendientes(db);
+                        result = SYNC_EVENT_SUCCESS;
+                        //addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        result = ProspectoVta.executeSyncRobinson(db);
+                        result = SYNC_EVENT_SUCCESS;
+                        //addDefaultMessage(result);
+                    }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
                         result = ProspectoVta.executeSyncInserts(db);
@@ -1234,6 +1266,16 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     }
                 }
                 else if (syncType.equals(SYNC_TYPE_INSERTAR_PROSPECTOVTA)){
+                    if(result==SYNC_EVENT_SUCCESS){
+                        result = EnviarUbicacion.executeSyncPendientes(db);
+                        result = SYNC_EVENT_SUCCESS;
+                        //addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        result = ProspectoVta.executeSyncRobinson(db);
+                        result = SYNC_EVENT_SUCCESS;
+                        //addDefaultMessage(result);
+                    }
                     /*result =ProspectoVta.executeSyncInserts(db);
                     addDefaultMessage(result);*/
                     if(result==SYNC_EVENT_SUCCESS){
@@ -1254,6 +1296,16 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                 }
                 else if(syncType.equals(SYNC_TYPE_UPDATE_LLAMADAVTA)){
                     Calendar calendar = Calendar.getInstance();
+                    if(result==SYNC_EVENT_SUCCESS){
+                        result = EnviarUbicacion.executeSyncPendientes(db);
+                        result = SYNC_EVENT_SUCCESS;
+                        //addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        result = ProspectoVta.executeSyncRobinson(db);
+                        result = SYNC_EVENT_SUCCESS;
+                        //addDefaultMessage(result);
+                    }
                     if(result==SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
                         result = ProspectoVta.executeSyncInserts(db);
@@ -1303,6 +1355,16 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                 //Actualizar Visita
                 else if(syncType.equals(SYNC_TYPE_UPDATE_VISITA)){
                     Calendar calendar = Calendar.getInstance();
+                    if(result==SYNC_EVENT_SUCCESS){
+                        result = EnviarUbicacion.executeSyncPendientes(db);
+                        result = SYNC_EVENT_SUCCESS;
+                        //addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        result = ProspectoVta.executeSyncRobinson(db);
+                        result = SYNC_EVENT_SUCCESS;
+                        //addDefaultMessage(result);
+                    }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
                         result = ProspectoVta.executeSyncInserts(db);
@@ -1352,6 +1414,16 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                 //refresh llamada
                 else if(syncType.equals(SYNC_TYPE_REFRESH_LLAMADA)){
                     Long fecha = extras.getLong(AgendaFragment.FECHA);
+                    if(result==SYNC_EVENT_SUCCESS){
+                        result = EnviarUbicacion.executeSyncPendientes(db);
+                        result = SYNC_EVENT_SUCCESS;
+                        //addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        result = ProspectoVta.executeSyncRobinson(db);
+                        result = SYNC_EVENT_SUCCESS;
+                        //addDefaultMessage(result);
+                    }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
                         result = ProspectoVta.executeSyncInserts(db);
@@ -1404,6 +1476,16 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                 else if(syncType.equals(SYNC_TYPE_REFRESH_VISITA)){
                     Log.d(TAG,"insertar visitas pendientes en BD...");
                     Long fecha = extras.getLong(AgendaFragment.FECHA);
+                    if(result==SYNC_EVENT_SUCCESS){
+                        result = EnviarUbicacion.executeSyncPendientes(db);
+                        result = SYNC_EVENT_SUCCESS;
+                        //addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        result = ProspectoVta.executeSyncRobinson(db);
+                        result = SYNC_EVENT_SUCCESS;
+                        //addDefaultMessage(result);
+                    }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
                         result = ProspectoVta.executeSyncInserts(db);
@@ -1487,7 +1569,16 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     /**
                      * Sincronizar Agendas del Agente
                      * */
-
+                    if(result==SYNC_EVENT_SUCCESS){
+                        result = EnviarUbicacion.executeSyncPendientes(db);
+                        result = SYNC_EVENT_SUCCESS;
+                        //addDefaultMessage(result);
+                    }
+                    if(result == SYNC_EVENT_SUCCESS){
+                        result = ProspectoVta.executeSyncRobinson(db);
+                        result = SYNC_EVENT_SUCCESS;
+                        //addDefaultMessage(result);
+                    }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
                         result = ProspectoVta.executeSyncInserts(db);
@@ -1543,22 +1634,34 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
             }
 				
 		}catch (Exception e) {			
-			Log.e(TAG, "Exception dentro del Sync: " + e.getMessage());
+			Log.e(TAG, "Exception dentro del SyncAdaptadertrycatch general: " + e.getMessage());
 			e.printStackTrace();
             addDefaultMessageAuna(SYNC_EVENT_ERROR,".");
 			//SyncAudit.insert(syncType, SYNC_EVENT_ERROR);
 		} 
 		finally{
             Log.d(TAG,"syncType:"+syncType);
-            if(!syncType.equals(SYNC_TYPE_BATCH) || !syncType.equalsIgnoreCase(SYNC_TYPE_SEND_NOTIFICATION)){
+            if(!syncType.equals(SYNC_TYPE_BATCH) || !syncType.equalsIgnoreCase(SYNC_TYPE_SEND_NOTIFICATION) || syncType.equalsIgnoreCase(SYNC_TYPE_LOGOUT_SESSION)){
                 Log.d(TAG,"Buscar Alertas en SyncAdapter...");
-                Alarm.removeAllAlarms(db,context);
-                Main2Activity.pruebaAlarm(db,context);
+                if(db!=null){
+                    Log.d(TAG,"db!=null...");
+                    Alarm.removeAllAlarms(db,context);
+                    Main2Activity.pruebaAlarm(db,context);
+                }else{
+                    Log.d(TAG,"db==null...");
+                }
+
             }else{
                 Log.d(TAG,"Se activo un batch o send notification...");
             }
-            db.endTransaction();
-			db.close();
+            if(db!=null){
+                Log.d(TAG,"db!=null...");
+                db.endTransaction();
+                db.close();
+            }else{
+                Log.d(TAG,"db==null...");
+            }
+
 			Log.d(TAG,"finally syncdadapter...");
             String cargo = PreferenceManager.getString(Contants.KEY_CARGO,null);
             if(cargo==null){

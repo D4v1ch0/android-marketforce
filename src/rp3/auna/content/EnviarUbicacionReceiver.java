@@ -95,53 +95,71 @@ public class EnviarUbicacionReceiver extends BroadcastReceiver    {
 			}
 			if(calendarCurrent.getTimeInMillis() < calendar.getTimeInMillis() && diaLaboral.isEsLaboral())
 			{
-				LocationUtils.getLocation(context, new OnLocationResultListener() {
-					
-					@Override
-					public void getLocationResult(Location location) {
-						Log.d(TAG,"getLocationResult...");
-						try
-						{
-							if(location!=null){
-								Log.d(TAG,"location!=null...");
-                                if(Session.IsLogged()) {
-                                    if (ConnectionUtils.isNetAvailable(context)) {
-                                        Ubicacion ub = new Ubicacion();
-                                        ub.setLatitud(location.getLatitude());
-                                        ub.setLongitud(location.getLongitude());
-                                        ub.setFecha(Calendar.getInstance().getTimeInMillis());
-                                        ub.setPendiente(true);
-                                        Ubicacion.insert(DataBase.newDataBase(rp3.auna.db.DbOpenHelper.class), ub);
-                                        Bundle bundle = new Bundle();
-                                        bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_BATCH);
-                                        rp3.sync.SyncUtils.requestSync(bundle);
-                                    } else {
-                                        Ubicacion ub = new Ubicacion();
-                                        ub.setLatitud(location.getLatitude());
-                                        ub.setLongitud(location.getLongitude());
-                                        ub.setFecha(Calendar.getInstance().getTimeInMillis());
-                                        ub.setPendiente(true);
-                                        Ubicacion.insert(DataBase.newDataBase(rp3.auna.db.DbOpenHelper.class), ub);
-                                    }
-                                }
-							}	
-						}
-						catch(Exception e)
-						{
-							Log.d(TAG,"LocationsUtils:"+e.getMessage());
-							//Utils.ErrorToFile(e);
-						}
-					}
-				});
+				LocationUtils.getLocation(context, location -> {
+                    Log.d(TAG,"getLocationResult...");
+                    try
+                    {
+                        if(location!=null){
+                            Log.d(TAG,"location!=null...");
+                            if(Session.IsLogged()) {
+                            	if (ConnectionUtils.isNetAvailable(context)) {
+                            		Ubicacion ub = new Ubicacion();
+                            		ub.setLatitud(location.getLatitude());
+									ub.setLongitud(location.getLongitude());
+									ub.setFecha(Calendar.getInstance().getTimeInMillis());
+									ub.setPendiente(true);
+									//Utils.getDataBase(context);
+									new Thread(() -> {
+										Log.d(TAG,"Theread Conexion...");
+										DataBase dataBase = DataBase.newDataBase(rp3.auna.db.DbOpenHelper.class);
+										if(dataBase!=null){
+											Log.d(TAG,"dataBase!=null...");
+											Ubicacion.insert(dataBase, ub);
+											Bundle bundle = new Bundle();
+											bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_BATCH);
+											dataBase.close();
+											//rp3.sync.SyncUtils.requestSync(bundle);
+										}else{
+											Log.d(TAG,"dataBase==null...");
+										}
+                                    }).start();
+								} else {
+									new Thread(() -> {
+										Log.d(TAG,"Theread Sin Conexion...");
+										Ubicacion ub = new Ubicacion();
+										ub.setLatitud(location.getLatitude());
+										ub.setLongitud(location.getLongitude());
+										ub.setFecha(Calendar.getInstance().getTimeInMillis());
+										ub.setPendiente(true);
+										DataBase dataBase = DataBase.newDataBase(rp3.auna.db.DbOpenHelper.class);
+										if(dataBase!=null){
+											Log.d(TAG,"dataBase!=null...");
+											Ubicacion.insert(DataBase.newDataBase(rp3.auna.db.DbOpenHelper.class), ub);
+											dataBase.close();
+										}else{
+											Log.d(TAG,"dataBase==null...");
+										}
+									}).start();
+
+                            	}
+                            }
+                        }
+                    }
+                    catch(Exception e)
+					{
+						Log.d(TAG,"LocationsUtils:"+e.getMessage());
+                        //Utils.ErrorToFile(e);
+                    }
+                });
 			}
 			else
 			{
-				DataBase db = DataBase.newDataBase(rp3.auna.db.DbOpenHelper.class);
+				/*DataBase db = DataBase.newDataBase(rp3.auna.db.DbOpenHelper.class);
 				if(Agenda.getCountVisitados(db, Contants.ESTADO_GESTIONANDO, 0, Agenda.getLastAgenda(db)) > 0)
 				{
 					NotificationPusher.pushNotification(2, context, "Aun tiene una agenda en estado Gestionando. Por favor no olvidar cerrarla.", "Agenda Pendiente");
 				}
-				cancelAlarm(context);
+				cancelAlarm(context);*/
 			}
 		}
 		catch(Exception ex)
