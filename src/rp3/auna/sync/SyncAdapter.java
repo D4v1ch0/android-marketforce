@@ -114,6 +114,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
     public static String SYNC_TYPE_REFRESH_AGENDA = "refreshAgenda";
     public static final String SYNC_TYPE_REFRESH_REPROGRAM_CANCELED_VISITA = "reprogramcanceledvisita";
     public static final String SYNC_TYPE_VENTA_NUEVA = "VentaNueva";
+    public static final String SYNC_TYPE_LOGOUT_SESSION = "LogoutSession";
 
     private Context context;
 
@@ -260,7 +261,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 
                     if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.auna.sync.Agente.executeSyncGetDeviceId(getContext());
-                        addDefaultMessageAuna(result,null);
+                        addDefaultMessageAuna(result,"");
                     }
                     if (result == SYNC_EVENT_SUCCESS){
                         result = rp3.auna.sync.Agente.executeSyncAgentes(db);
@@ -269,7 +270,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 
                     if (result == SYNC_EVENT_SUCCESS && !TextUtils.isEmpty(PreferenceManager.getString(Contants.KEY_APP_INSTANCE_ID))) {
                         result = rp3.auna.sync.Agente.executeSyncDeviceId();
-                        addDefaultMessageAuna(result,null);
+                        addDefaultMessageAuna(result,"");
                     }
 
                     if(result == SYNC_EVENT_SUCCESS){
@@ -495,7 +496,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                 } else if (syncType.equals(SYNC_TYPE_SERVER_CODE)) {
                     String code = extras.getString(ServerActivity.SERVER_CODE);
                     result = Server.executeSync(code);
-                    addDefaultMessageAuna(result,null);
+                    addDefaultMessageAuna(result,"");
                 }  else if (syncType.equals(SYNC_TYPE_AGENTES_UBICACION)) {
                     result = rp3.auna.sync.Agente.executeSyncGetUbicaciones(db);
                     addDefaultMessage(result);
@@ -1114,6 +1115,106 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                         addDefaultMessageAuna(result," Visitas.");
                     }
                 }
+                //Cerrar sesión
+                else if (syncType.equals(SYNC_TYPE_LOGOUT_SESSION)){
+                    Calendar calendar = Calendar.getInstance();
+
+                    if (result == SYNC_EVENT_SUCCESS) {
+                        Log.d(TAG,"Agente.executeSync...");
+                        result = rp3.auna.sync.Agente.executeSync(db);
+                        //addDefaultMessageAuna(result, "Usuarios.");
+                    }
+                    if (result == SYNC_EVENT_SUCCESS){
+                        result = rp3.auna.sync.Agente.executeSyncAgentes(db);
+                        //addDefaultMessageAuna(result," Usuarios.");
+                    }
+                    if(result==SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Parametros...");
+                        result = ApplicationParameterSync.executeSync(db);
+                        //addDefaultMessageAuna(result," Parametros.");
+                    }
+                    if(result==SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Parametros de Agente...");
+                        result = rp3.auna.sync.Agente.executeSyncParametros(db);
+                        //addDefaultMessageAuna(result," Parametros de usuario.");
+                    }
+                    if(result==SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"GeneralValues...");
+                        result = rp3.sync.GeneralValue.executeSync(db);
+                        //addDefaultMessageAuna(result," Parametros generales.");
+                    }
+                    if(result==SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"GCM...");
+                        if (!TextUtils.isEmpty(PreferenceManager.getString(Contants.KEY_APP_INSTANCE_ID))) {
+                            result = rp3.auna.sync.Agente.executeSyncDeviceId();
+                            //addDefaultMessageAuna(result,".");
+                        }
+                    }
+                    if(result==SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar obteniendo las comisiones...");
+                        result = Agente.executeSyncComisiones(db);
+                        result = SYNC_EVENT_SUCCESS;
+                        //addDefaultMessageAuna(result," Comisiones.");
+                    }
+
+                    /**
+                     * Sincronizar Agendas del Agente
+                     * */
+                    if(result==SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
+                        result = ProspectoVta.executeSyncInserts(db);
+                        //addDefaultMessageAuna(result," Prospectos registrados.");
+                    }
+                    if(result==SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar enviando los prospectos en BD sinocronizados...");
+                        result = ProspectoVta.executeSyncSincronizada(db);
+                        //addDefaultMessageAuna(result," Prospectos modificados.");
+                    }
+                    if(result==SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar Obteniendo los Prospectos...");
+                        result = ProspectoVta.executeSync(db);
+                        //addDefaultMessageAuna(result," Prospectos.");
+                    }
+                    if(result==SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"insertar llamadas pendientes en BD...");
+                        result = LlamadaVta.executeSyncInsert(db);
+                        //addDefaultMessageAuna(result," Llamadas registradas.");
+                    }
+                    if(result==SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar actualizando las llamadas sincronizadas...");
+                        result = LlamadaVta.executeSyncUpdate(db);
+                        //addDefaultMessageAuna(result," Llamadas modificadas.");
+                    }
+                    if(result==SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar obteniendo las llamadas...");
+                        result = LlamadaVta.executeSync(db,Convert.getDotNetTicksFromDate(calendar.getTime()),context);
+                        //addDefaultMessageAuna(result," Llamadas.");
+                    }
+                    if(result==SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"insertar visitas pendientes en BD...");
+                        result = VisitaVta.executeSyncInserts(db);
+                        //addDefaultMessageAuna(result," Visitas registradas.");
+                    }
+                    if(result==SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar actualizando las visitas sincronizadas...");
+                        result = VisitaVta.executeSyncUpdate(db);
+                        //addDefaultMessageAuna(result," Visitas modificadas.");
+                    }
+                    if(result==SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Iniciar obteniendo las visitas...");
+                        result = VisitaVta.executeSync(db,Convert.getDotNetTicksFromDate(calendar.getTime()),context);
+                        //addDefaultMessageAuna(result," Visitas.");
+                    }
+                    if(result!=SYNC_EVENT_SUCCESS){
+                        Log.d(TAG,"Fallo en un servicio...");
+                        //addErrorMessage("No se pudo cerrar sesión correctamente,");
+                        addDefaultMessageAuna(result,"");
+                    }else{
+                        Log.d(TAG,"No Fallo fue success el cierre de sessión...");
+                    }
+                }
+
+
                 //Actualizar los prospectos modificados
                 else if(syncType.equals(SYNC_TYPE_UPDATE_PROSPECTO)){
                     if(result == SYNC_EVENT_SUCCESS){

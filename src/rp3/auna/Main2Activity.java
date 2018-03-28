@@ -656,7 +656,8 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
                     public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
                         Log.d(TAG, "Cerrando Sesion...");
                         dialog.dismiss();
-                        logOut();
+                        //logOut();
+                        showDialogCloseSession();
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -666,6 +667,24 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
                 });
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    private void showDialogCloseSession(){
+        if (!ConnectionUtils.isNetAvailable(this)) {
+            Log.d(TAG,"!ConnectionUtils.isNetAvailable(this)...");
+            Alarm.removeAllAlarms(Utils.getDataBase(this),this);
+            Main2Activity.pruebaAlarm(Utils.getDataBase(this),this);
+            Toast.makeText(this, "Sin Conexión. Active el acceso a internet para entrar a esta opción.", Toast.LENGTH_LONG).show();
+        } else {
+            Log.d(TAG,"ConnectionUtils.isNetAvailable(this)...");
+            progressDialog.setTitle(R.string.appname_marketforce);
+            progressDialog.setMessage("Cerrando sesión...");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+            Bundle bundle = new Bundle();
+            bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_LOGOUT_SESSION);
+            requestSyncMain(bundle);
+        }
     }
 
     private void logOut(){
@@ -720,7 +739,7 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
                 break;*/
             case 3:
                 Log.d(TAG,"item selected:sincronizacion");
-                invokeSync("Sincronizando","Espere porfavor...");
+                invokeSync("Sincronizando","Espere por favor...");
                 break;
             case 4:
                 Log.d(TAG,"item selected:informacion");
@@ -739,7 +758,7 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
             //Case by expanded:
             case 8:
                 Log.d(TAG,"item selected:sincronizacion");
-                invokeSync("Sincronizando","Espere porfavor...");
+                invokeSync("Sincronizando","Espere por favor...");
                 break;
             case 9:
                 Log.d(TAG,"item selected:informacion");
@@ -766,7 +785,7 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
         if(dialogGps!=null){dialogGps.dismiss();}
         dialogGps = new AlertDialog.Builder(this,R.style.AppCompatAlertDialogStyle)
                 .setTitle(getResources().getString(R.string.appname_marketforce))
-                .setMessage("Debe Mantener el GPS encendido porfavor.")
+                .setMessage("Debe Mantener el GPS encendido por favor.")
                 .setCancelable(false)
                 .setNeutralButton(R.string.gpsdialog, new DialogInterface.OnClickListener() {
                     @Override
@@ -1174,6 +1193,28 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
                         }
                     }
                     showDialogMessage(messageCollection,null);
+                }
+            }
+            //Receiver Cerrar sessión
+            else if(bundle.containsKey(SyncAdapter.ARG_SYNC_TYPE) && bundle.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_LOGOUT_SESSION)){
+                Log.d(TAG,"nsyncfinish SYNC_TYPE_LOGOUT_SESSION...");
+                if(progressDialog!=null){
+                    if(progressDialog.isShowing()){
+                        progressDialog.dismiss();
+                        //Execute...
+                        try{
+
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                if (messageCollection.hasErrorMessage()) {
+                    Log.d(TAG,"hasErrorSync..");
+                    showDialogMessage(messageCollection,null);
+                }else{
+                    Log.d(TAG,"notHasErrorSync...Logout...");
+                    logOut();
                 }
             }
         }catch (Exception e){
