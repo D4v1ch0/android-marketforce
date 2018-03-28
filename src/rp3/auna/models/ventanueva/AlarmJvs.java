@@ -436,6 +436,8 @@ public class AlarmJvs extends rp3.data.entity.EntityBase<AlarmJvs> implements Pa
                 alarmJvs.setFecha(CursorUtils.getDate(c,Contract.AlarmManagerJVS.COLUMN_ALARM_MANAGER_ALARM_FECHA));
                 alarmJvs.setMensaje(CursorUtils.getString(c,Contract.AlarmManagerJVS.COLUMN_ALARM_MANAGER_ALARM_MENSAJE));
                 alarmJvs.setIdAgente(CursorUtils.getInt(c,Contract.AlarmManagerJVS.COLUMN_ALARM_MANAGER_ALARM_AGENTE));
+                alarmJvs.setIdentificadorTemp(CursorUtils.getInt(c,Contract.AlarmManagerJVS.COLUMN_ALARM_MANAGER_ALARM_IDENTIFICADOR_TEMP));
+                alarmJvs.setSync(CursorUtils.getInt(c,Contract.AlarmManagerJVS.COLUMN_ALARM_MANAGER_ALARM_SYNC));
                 Log.d(TAG,alarmJvs.toString());
                 list.add(alarmJvs);
             }while(c.moveToNext());
@@ -465,6 +467,8 @@ public class AlarmJvs extends rp3.data.entity.EntityBase<AlarmJvs> implements Pa
                 alarmJvs.setFecha(CursorUtils.getDate(c,Contract.AlarmManagerJVS.COLUMN_ALARM_MANAGER_ALARM_FECHA));
                 alarmJvs.setMensaje(CursorUtils.getString(c,Contract.AlarmManagerJVS.COLUMN_ALARM_MANAGER_ALARM_MENSAJE));
                 alarmJvs.setIdAgente(CursorUtils.getInt(c,Contract.AlarmManagerJVS.COLUMN_ALARM_MANAGER_ALARM_AGENTE));
+                //alarmJvs.setIdentificadorTemp(CursorUtils.getInt(c,Contract.AlarmManagerJVS.COLUMN_ALARM_MANAGER_ALARM_IDENTIFICADOR_TEMP));
+                //alarmJvs.setSync(CursorUtils.getInt(c,Contract.AlarmManagerJVS.COLUMN_ALARM_MANAGER_ALARM_SYNC));
                 Log.d(TAG,alarmJvs.toString());
                 list.add(alarmJvs);
             }while(c.moveToNext());
@@ -494,6 +498,8 @@ public class AlarmJvs extends rp3.data.entity.EntityBase<AlarmJvs> implements Pa
                 alarmJvs.setFecha(CursorUtils.getDate(c,Contract.AlarmManagerJVS.COLUMN_ALARM_MANAGER_ALARM_FECHA));
                 alarmJvs.setMensaje(CursorUtils.getString(c,Contract.AlarmManagerJVS.COLUMN_ALARM_MANAGER_ALARM_MENSAJE));
                 alarmJvs.setIdAgente(CursorUtils.getInt(c,Contract.AlarmManagerJVS.COLUMN_ALARM_MANAGER_ALARM_AGENTE));
+                //alarmJvs.setIdentificadorTemp(CursorUtils.getInt(c,Contract.AlarmManagerJVS.COLUMN_ALARM_MANAGER_ALARM_IDENTIFICADOR_TEMP));
+                //alarmJvs.setSync(CursorUtils.getInt(c,Contract.AlarmManagerJVS.COLUMN_ALARM_MANAGER_ALARM_SYNC));
                 Log.d(TAG,alarmJvs.toString());
                 list.add(alarmJvs);
             }while(c.moveToNext());
@@ -523,6 +529,8 @@ public class AlarmJvs extends rp3.data.entity.EntityBase<AlarmJvs> implements Pa
                 alarmJvs.setFecha(CursorUtils.getDate(c,Contract.AlarmManagerJVS.COLUMN_ALARM_MANAGER_ALARM_FECHA));
                 alarmJvs.setMensaje(CursorUtils.getString(c,Contract.AlarmManagerJVS.COLUMN_ALARM_MANAGER_ALARM_MENSAJE));
                 alarmJvs.setIdAgente(CursorUtils.getInt(c,Contract.AlarmManagerJVS.COLUMN_ALARM_MANAGER_ALARM_AGENTE));
+                //alarmJvs.setIdentificadorTemp(CursorUtils.getInt(c,Contract.AlarmManagerJVS.COLUMN_ALARM_MANAGER_ALARM_IDENTIFICADOR_TEMP));
+                //alarmJvs.setSync(CursorUtils.getInt(c,Contract.AlarmManagerJVS.COLUMN_ALARM_MANAGER_ALARM_SYNC));
                 Log.d(TAG,alarmJvs.toString());
                 list.add(alarmJvs);
             }while(c.moveToNext());
@@ -552,6 +560,8 @@ public class AlarmJvs extends rp3.data.entity.EntityBase<AlarmJvs> implements Pa
                 alarmJvs.setFecha(CursorUtils.getDate(c,Contract.AlarmManagerJVS.COLUMN_ALARM_MANAGER_ALARM_FECHA));
                 alarmJvs.setMensaje(CursorUtils.getString(c,Contract.AlarmManagerJVS.COLUMN_ALARM_MANAGER_ALARM_MENSAJE));
                 alarmJvs.setIdAgente(CursorUtils.getInt(c,Contract.AlarmManagerJVS.COLUMN_ALARM_MANAGER_ALARM_AGENTE));
+                //alarmJvs.setIdentificadorTemp(CursorUtils.getInt(c,Contract.AlarmManagerJVS.COLUMN_ALARM_MANAGER_ALARM_IDENTIFICADOR_TEMP));
+                //alarmJvs.setSync(CursorUtils.getInt(c,Contract.AlarmManagerJVS.COLUMN_ALARM_MANAGER_ALARM_SYNC));
                 Log.d(TAG,alarmJvs.toString());
                 list.add(alarmJvs);
             }while(c.moveToNext());
@@ -582,11 +592,13 @@ public class AlarmJvs extends rp3.data.entity.EntityBase<AlarmJvs> implements Pa
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Calendar calendar = Calendar.getInstance();
+
         calendar.set(Calendar.HOUR_OF_DAY,dateTime.getHourOfDay());
         calendar.set(Calendar.MINUTE,dateTime.getMinuteOfHour());
         calendar.set(Calendar.SECOND,0);
         Calendar fechita = Calendar.getInstance();
         fechita.setTime(this.getFecha());
+        calendar.set(Calendar.DAY_OF_YEAR,fechita.get(Calendar.DAY_OF_YEAR));
         try {
             tonePath = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM).toString();
         } catch (Exception e) {

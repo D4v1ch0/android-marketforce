@@ -9,14 +9,16 @@ import rp3.sync.SyncAudit;
 
 public class DbOpenHelper extends rp3.db.sqlite.DataBaseOpenHelper {
 
+	private static final String TAG = DbOpenHelper.class.getSimpleName();
 	public DbOpenHelper(Context context) {
-		super(context);		
+		super(context);
+		Log.d(TAG,"init...");
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		super.onUpgrade(db, oldVersion, newVersion);
-		Log.e("Tag", "OnUpgrade SQLite");
+		Log.d(TAG, "OnUpgrade SQLite oldVersion:"+oldVersion+" newVersion:"+newVersion);
 		for(int i = oldVersion + 1; i <= newVersion; i++ )
 		{
 			switch (i)

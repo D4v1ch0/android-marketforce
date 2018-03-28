@@ -850,21 +850,27 @@
         Description TEXT
         )
     </statement>
+    <!--<statement>-->
+        <!--CREATE TABLE tbAlarmManagerJVS(-->
+        <!--_id INTEGER PRIMARY KEY AUTOINCREMENT,-->
+        <!--Alarm_Active INTEGER,-->
+        <!--Alarm_Time TEXT,-->
+        <!--Alarm_Tone TEXT,-->
+        <!--Alarm_Vibrate INTEGER,-->
+        <!--Alarm_Name TEXT,-->
+        <!--Alarm_Type INTEGER,-->
+        <!--Alarm_Identificador INTEGER,-->
+        <!--Alarm_Fecha INTEGER,-->
+        <!--Alarm_Mensaje TEXT,-->
+        <!--Alarm_Agente INT,-->
+        <!--Alarm_IdentificadorTemp INTEGER,-->
+        <!--Alarm_Sync INTEGER-->
+        <!--)-->
+    <!--</statement>-->
     <statement>
-        CREATE TABLE tbAlarmManagerJVS(
+        CREATE TABLE tbPruebaEnExecucion(
         _id INTEGER PRIMARY KEY AUTOINCREMENT,
-        Alarm_Active INTEGER,
-        Alarm_Time TEXT,
-        Alarm_Tone TEXT,
-        Alarm_Vibrate INTEGER,
-        Alarm_Name TEXT,
-        Alarm_Type INTEGER,
-        Alarm_Identificador INTEGER,
-        Alarm_Fecha INTEGER,
-        Alarm_Mensaje TEXT,
-        Alarm_Agente INT,
-        Alarm_IdentificadorTemp INTEGER,
-        Alarm_Sync INTEGER
+        IdPrueba INTEGER
         )
     </statement>
     <statement>

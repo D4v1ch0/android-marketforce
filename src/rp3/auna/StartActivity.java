@@ -179,7 +179,7 @@ public class StartActivity extends rp3.app.StartActivity{
             String proof2 = PreferenceManager.getString(Constants.KEY_LAST_PASS,"");
             String peer = Session.getUser().getLogonName();
             String peer2 = Session.getUser().getPassword();
-            Canal.getCanal(getDataBase(), "1");
+            //Canal.getCanal(getDataBase(), "1");
 //endregion
 
             //region Validar Login Antiguo
@@ -264,11 +264,11 @@ public class StartActivity extends rp3.app.StartActivity{
                 Cliente.deleteAll(getDataBase(), Contract.Cliente.TABLE_NAME);
                 Cliente.ClientExt.deleteAll(getDataBase(), Contract.ClientExt.TABLE_NAME);
                 ClienteDireccion.deleteAll(getDataBase(), Contract.ClienteDireccion.TABLE_NAME);*/
-                    Contacto.deleteAll(getDataBase(), Contract.Contacto.TABLE_NAME);
-                    Contacto.ContactoExt.deleteAll(getDataBase(), Contract.ContactoExt.TABLE_NAME);
-                    Actividad.deleteAll(getDataBase(), Contract.Actividades.TABLE_NAME);
-                    AgendaTarea.deleteAll(getDataBase(), Contract.AgendaTarea.TABLE_NAME);
-                    AgendaTareaActividades.deleteAll(getDataBase(), Contract.AgendaTareaActividades.TABLE_NAME);
+                    //Contacto.deleteAll(getDataBase(), Contract.Contacto.TABLE_NAME);
+                    //Contacto.ContactoExt.deleteAll(getDataBase(), Contract.ContactoExt.TABLE_NAME);
+                    //Actividad.deleteAll(getDataBase(), Contract.Actividades.TABLE_NAME);
+                    //AgendaTarea.deleteAll(getDataBase(), Contract.AgendaTarea.TABLE_NAME);
+                   // AgendaTareaActividades.deleteAll(getDataBase(), Contract.AgendaTareaActividades.TABLE_NAME);
                     Ubicacion.deleteAll(getDataBase(), Contract.Ubicacion.TABLE_NAME);
                 /*Pedido.deleteAll(getDataBase(), Contract.Pedido.TABLE_NAME);
                 Pedido.PedidoExt.deleteAll(getDataBase(), Contract.PedidoExt.TABLE_NAME);
@@ -305,7 +305,7 @@ public class StartActivity extends rp3.app.StartActivity{
                     AlarmJvs.delete(getDataBase(),jvs);
                 }*/
                     //endregion
-                    Alarm.removeAllAlarms(getDataBase(),this);
+                    //Alarm.removeAllAlarms(getDataBase(),this);
                     //GeopoliticalStructure.deleteAll(getDataBase(), rp3.data.models.Contract.GeopoliticalStructure.TABLE_NAME);
                     //GeopoliticalStructureExt.deleteAll(getDataBase(), rp3.data.models.Contract.GeopoliticalStructureExt.TABLE_NAME);
                  /*PreferenceManager.setValue(Contants.KEY_IDAGENTE, 0);

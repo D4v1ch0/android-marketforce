@@ -140,8 +140,10 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 		
 		try{
             db = DataBase.newDataBase(rp3.auna.db.DbOpenHelper.class);
-            if(db == null)
-                Log.e("Error:","db is null");
+            //Log.d(TAG,"SQLITEVERSION:"+db.getSQLiteVersion());
+            if(db == null){
+                Log.e(TAG,"db is null");
+            }
             if(TestConnection.executeSync()) {
                 Log.d(TAG,"TestConnection.executeSync()...");
                 Log.d(TAG,"SyncType:"+syncType);

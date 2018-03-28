@@ -14,7 +14,7 @@
     </appConfiguration>
     <dataBaseConfiguration>       
        <name>Rp3MarketForce.db</name>
-       <version>11</version>
+       <version>16</version>
     </dataBaseConfiguration>        
     <webServiceConfiguration>                
         <webServiceData>
@@ -653,6 +653,12 @@
                 </method>
                 <method>
                     <name>ListaNegraProspectoVta</name>
+                    <action>ProspectoVta/Robinson</action>
+                    <webMethod>POST</webMethod>
+                    <contentEncoding>gzip</contentEncoding>
+                </method>
+                <method>
+                    <name>PruebaMe</name>
                     <action>ProspectoVta/Robinson</action>
                     <webMethod>POST</webMethod>
                     <contentEncoding>gzip</contentEncoding>

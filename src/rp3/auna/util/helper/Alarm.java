@@ -53,6 +53,9 @@ public class Alarm {
         if (setTime.isBeforeNow()) {
             setTime = setTime.plusDays(1);
         }
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fecha);
+        Log.d(TAG,"Día del año:"+calendar.get(Calendar.DAY_OF_YEAR));
         alarmJvs.setDateTime(setTime);
         alarmJvs.setShouldVibrate(true);
         alarmJvs.setName("Alerta de Visita");
@@ -77,10 +80,14 @@ public class Alarm {
         final int idAgente = PreferenceManager.getInt(Contants.KEY_IDAGENTE);
         alarmJvs.setActive(false);
         DateTime setTime = DateTime.now();
+        //setTime = setTime.withDayOfYear(fecha.getYear());
         setTime = setTime.withHourOfDay(hour);
         setTime = setTime.withMinuteOfHour(minute);
         setTime = setTime.withSecondOfMinute(0);
         Log.d(TAG,"Hora del dia:"+hour+" ,Minuto del dia:"+minute);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fecha);
+        Log.d(TAG,"Día del año:"+calendar.get(Calendar.DAY_OF_YEAR));
         // user set a time in the past (for the next day)
         if (setTime.isBeforeNow()) {
             setTime = setTime.plusDays(1);
@@ -131,6 +138,9 @@ public class Alarm {
         final int idAgente = PreferenceManager.getInt(Contants.KEY_IDAGENTE);
         DateTime setTime = DateTime.now();
         Log.d(TAG,"Hora del dia:"+hour+" ,Minuto del dia:"+minute);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fecha);
+        Log.d(TAG,"Día del año:"+calendar.get(Calendar.DAY_OF_YEAR));
         setTime = setTime.withHourOfDay(hour);
         setTime = setTime.withMinuteOfHour(minute);
         setTime = setTime.withSecondOfMinute(0);
@@ -167,6 +177,9 @@ public class Alarm {
         setTime = setTime.withMinuteOfHour(minute);
         setTime = setTime.withSecondOfMinute(0);
         Log.d(TAG,"Hora del dia:"+hour+" ,Minuto del dia:"+minute);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fecha);
+        Log.d(TAG,"Día del año:"+calendar.get(Calendar.DAY_OF_YEAR));
         // user set a time in the past (for the next day)
         if (setTime.isBeforeNow()) {
             setTime = setTime.plusDays(1);
@@ -192,25 +205,73 @@ public class Alarm {
 
     //Eliminar Todas las Alarmas
     public static void removeAllAlarms(DataBase dataBase,Context context){
+        Log.d(TAG,"removeAllAlarms...");
         List<AlarmJvs> list = AlarmJvs.getLlamadasAll(dataBase);
+        Calendar calendar = Calendar.getInstance();
+        int sameDay = calendar.get(Calendar.DAY_OF_YEAR);
+
+        DateTime dateTimeNow = new DateTime(calendar.getTimeInMillis());
+        int diaHoy = dateTimeNow.getDayOfMonth();
+        int mesHoy = dateTimeNow.getMonthOfYear();
+        Log.d(TAG,"Día actual del mes:"+diaHoy+" mes actual:"+mesHoy);
         for (AlarmJvs jvs:list){
-            jvs.cancelAlarm(context);
-            AlarmJvs.delete(dataBase,jvs);
+            DateTime dateTimeNow1 = new DateTime(jvs.getFecha().getTime());
+            int day = dateTimeNow1.getDayOfMonth();
+            int mes = dateTimeNow1.getMonthOfYear();
+            System.out.println(jvs);
+            Log.d(TAG,"día actual de la alerta llamada:"+day+" mes actual de la llamada:"+mes);
+            if(sameDay==day && mes == mesHoy){
+                Log.d(TAG,"llamada es del día de hoy, eliminar...");
+                jvs.cancelAlarm(context);
+                AlarmJvs.delete(dataBase,jvs);
+            }else{
+                Log.d(TAG,"llamada No es del día de hoy , persistir...");
+            }
         }
         List<AlarmJvs> list1 = AlarmJvs.getLlamadasSupervisorAll(dataBase);
         for (AlarmJvs jvs:list1){
-            jvs.cancelAlarm(context);
-            AlarmJvs.delete(dataBase,jvs);
+            DateTime dateTimeNow1 = new DateTime(jvs.getFecha().getTime());
+            int day = dateTimeNow1.getDayOfMonth();
+            int mes = dateTimeNow1.getMonthOfYear();
+            System.out.println(jvs);
+            Log.d(TAG,"día actual de la alerta llamada supervisor:"+day+" mesactual:"+mes);
+            if(sameDay==day && mes == mesHoy){
+                Log.d(TAG,"llamada supervisor es del día de hoy, eliminar...");
+                jvs.cancelAlarm(context);
+                AlarmJvs.delete(dataBase,jvs);
+            }else{
+                Log.d(TAG,"llamada supervisor No es del día de hoy , persistir...");
+            }
         }
         List<AlarmJvs> list2 = AlarmJvs.getVisitasAll(dataBase);
         for (AlarmJvs jvs:list2){
-            jvs.cancelAlarm(context);
-            AlarmJvs.delete(dataBase,jvs);
+            DateTime dateTimeNow1 = new DateTime(jvs.getFecha().getTime());
+            int day = dateTimeNow1.getDayOfMonth();
+            int mes = dateTimeNow1.getMonthOfYear();
+            System.out.println(jvs);
+            Log.d(TAG,"día actual de la alerta visita:"+day+" mesactual:"+mes);
+            if(sameDay==day && mes == mesHoy){
+                Log.d(TAG,"visita es del día de hoy, eliminar...");
+                jvs.cancelAlarm(context);
+                AlarmJvs.delete(dataBase,jvs);
+            }else{
+                Log.d(TAG,"visita No es del día de hoy , persistir...");
+            }
         }
         List<AlarmJvs> list3 = AlarmJvs.getVisitasSupervisorAll(dataBase);
         for (AlarmJvs jvs:list3){
-            jvs.cancelAlarm(context);
-            AlarmJvs.delete(dataBase,jvs);
+            DateTime dateTimeNow1 = new DateTime(jvs.getFecha().getTime());
+            int day = dateTimeNow1.getDayOfMonth();
+            int mes = dateTimeNow1.getMonthOfYear();
+            System.out.println(jvs);
+            Log.d(TAG,"día actual de la alerta visita supervisor:"+day+" mesactual:"+mes);
+            if(sameDay==day && mes == mesHoy){
+                Log.d(TAG,"visita supervisor es del día de hoy, eliminar...");
+                jvs.cancelAlarm(context);
+                AlarmJvs.delete(dataBase,jvs);
+            }else{
+                Log.d(TAG,"visita supervisor No es del día de hoy , persistir...");
+            }
         }
     }
 }

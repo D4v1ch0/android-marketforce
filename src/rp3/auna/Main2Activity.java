@@ -1904,18 +1904,18 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
                             if(prospectoVtaDb2!=null){
                                 //Este prospecto si esta en base sincronizado
                                 String mensaje = "Tienes una visita por realizar a "+prospectoVtaDb2.getNombre();
-                                Alarm.setAlarmLlamada(fechaAlertarVisita,db,context,hora,minutos,(b.getIdVisita()+100),mensaje,(b.getID()+100),0);
+                                Alarm.setAlarmVisita(fechaAlertarVisita,db,context,hora,minutos,(b.getIdVisita()+100),mensaje,(b.getID()+100),0);
                             }else{
                                 //Este prospecto no esta en base sincronizado
                                 ProspectoVtaDb prospectoVtaDb3 = ProspectoVtaDb.getProspectoIdProspectoBD(db,b.getIdCliente());
                                 if(prospectoVtaDb3!=null){
                                     Log.d(TAG,"prospectoVtaDb1!=null...");
                                     String mensaje = "Tienes una visita por realizar a "+prospectoVtaDb3.getNombre();
-                                    Alarm.setAlarmLlamada(fechaAlertarVisita,db,context,hora,minutos,(b.getIdVisita()+100),mensaje,(b.getID()+100),0);
+                                    Alarm.setAlarmVisita(fechaAlertarVisita,db,context,hora,minutos,(b.getIdVisita()+100),mensaje,(b.getID()+100),0);
                                 }else{
                                     Log.d(TAG,"prospectoVtaDb1==null...");
                                     String mensaje = "Tienes una visita por realizar a "+prospectoVtaDb3.getNombre();
-                                    Alarm.setAlarmLlamada(fechaAlertarVisita,db,context,hora,minutos,(b.getIdVisita()+100),mensaje,(b.getID()+100),0);
+                                    Alarm.setAlarmVisita(fechaAlertarVisita,db,context,hora,minutos,(b.getIdVisita()+100),mensaje,(b.getID()+100),0);
                                 }
                             }
                         }else{
@@ -1923,10 +1923,10 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
                             ProspectoVtaDb prospectoVtaDb4 = ProspectoVtaDb.getProspectoIdProspecto(db,b.getIdCliente());
                             if(prospectoVtaDb4!=null){
                                 String mensaje = "Tienes una visita por realizar a "+prospectoVtaDb4.getNombre();
-                                Alarm.setAlarmLlamada(fechaAlertarVisita,db,context,hora,minutos,(b.getIdVisita()+100),mensaje,(b.getID()+100),1);
+                                Alarm.setAlarmVisita(fechaAlertarVisita,db,context,hora,minutos,(b.getIdVisita()+100),mensaje,(b.getID()+100),1);
                             }else{
                                 String mensaje = "Tienes una visita por realizar en "+value+" minutos.";
-                                Alarm.setAlarmLlamada(fechaAlertarVisita,db,context,hora,minutos,(b.getIdVisita()+100),mensaje,(b.getID()+100),1);
+                                Alarm.setAlarmVisita(fechaAlertarVisita,db,context,hora,minutos,(b.getIdVisita()+100),mensaje,(b.getID()+100),1);
                             }
                         }
 
