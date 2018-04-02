@@ -68,7 +68,9 @@ public class ServerActivity extends BaseActivity {
 
 	        @Override
 	        protected String doInBackground(String... params) {
+	        	Log.d(TAG,"doInBackground...");
 	            int code = Server.executeSync(params[0]);
+	            Log.d(TAG,"CODE: "+code);
 	            if(code == SyncAdapter.SYNC_EVENT_SUCCESS)
 	            	return "";
 	            else
@@ -77,6 +79,7 @@ public class ServerActivity extends BaseActivity {
 
 	        @Override
 	        protected void onPostExecute(String result) {
+				Log.d(TAG,"onPostExecute...");
 	        	closeDialogProgress();
 	        	if(result.equalsIgnoreCase("")) {
 					IrStart();

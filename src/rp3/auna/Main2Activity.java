@@ -798,7 +798,6 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
     }
 
     private BroadcastReceiver syncFinishedReceiverr = new BroadcastReceiver() {
-
         @Override
         public void onReceive(Context context, Intent intent) {
             //resetRotation();
@@ -854,7 +853,11 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
     public void onSyncComplete(Bundle bundle,MessageCollection messageCollection){
         Log.d(TAG,"onSyncComplete...");
         try{
-            if (bundle.containsKey(SyncAdapter.ARG_SYNC_TYPE) && bundle.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_UPDATE_PROSPECTO)) {
+            if(bundle.containsKey(SyncAdapter.ARG_SYNC_TYPE) && bundle.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_GENERAL)){
+                Log.d(TAG,"onSyncGENERAL...");
+
+            }
+            else if (bundle.containsKey(SyncAdapter.ARG_SYNC_TYPE) && bundle.getString(SyncAdapter.ARG_SYNC_TYPE).equals(SyncAdapter.SYNC_TYPE_UPDATE_PROSPECTO)) {
                 Log.d(TAG,"onsyncfinish Actualizar Prospectos...");
                 if(progressDialog!=null){
                     if(progressDialog.isShowing()){
@@ -1216,6 +1219,27 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
                     Log.d(TAG,"notHasErrorSync...Logout...");
                     logOut();
                 }
+            }
+            else{
+                Log.d(TAG,"nsyncfinish SYNCTYPE:"+bundle.getString(SyncAdapter.ARG_SYNC_TYPE,"Vacio"));
+                if(progressDialog!=null){
+                    if(progressDialog.isShowing()){
+                        progressDialog.dismiss();
+                        //Execute...
+                        try{
+
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                if (messageCollection.hasErrorMessage()) {
+                    Log.d(TAG,"hasErrorSync..");
+                    showDialogMessage(messageCollection,null);
+                }else{
+                    Log.d(TAG,"notHasErrorSync......");
+                }
+
             }
         }catch (Exception e){
             e.printStackTrace();

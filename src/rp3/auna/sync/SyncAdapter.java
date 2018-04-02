@@ -156,19 +156,19 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     if (result == SYNC_EVENT_SUCCESS) {
                         Log.d(TAG,"GeneralValue...");
                         result = rp3.sync.GeneralValue.executeSync(db);
-                        addDefaultMessageAuna(result, "Valores generales.");
+                        //addDefaultMessageAuna(result, "Valores generales.");
                     }
 
                     if (result == SYNC_EVENT_SUCCESS) {
                         Log.d(TAG,"IdentificationType...");
                         result = rp3.sync.IdentificationType.executeSync(db);
-                        addDefaultMessageAuna(result," Identificaciones.");
+                        //addDefaultMessageAuna(result," Identificaciones.");
                     }
 
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"ApplicationParameters...");
                         result = ApplicationParameterSync.executeSync(db);
-                        addDefaultMessageAuna(result," Parametros.");
+                        //addDefaultMessageAuna(result," Parametros.");
                     }
 
                     //region Sync Others
@@ -196,7 +196,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     if (result == SYNC_EVENT_SUCCESS) {
                         Log.d(TAG,"Agente.executeSync...");
                         result = rp3.auna.sync.Agente.executeSync(db);
-                        addDefaultMessageAuna(result, "Usuarios.");
+                        //addDefaultMessageAuna(result, "Usuarios.");
                     }
 
                     /*if (result == SYNC_EVENT_SUCCESS) {
@@ -251,7 +251,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 
                     if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.auna.sync.Agente.executeSyncParametros(db);
-                        addDefaultMessageAuna(result," Parametros.");
+                        //addDefaultMessageAuna(result," Parametros.");
                     }
 
                     /*
@@ -262,16 +262,17 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
 
                     if (result == SYNC_EVENT_SUCCESS) {
                         result = rp3.auna.sync.Agente.executeSyncGetDeviceId(getContext());
-                        addDefaultMessageAuna(result,"");
+                        //addDefaultMessageAuna(result,"");
                     }
                     if (result == SYNC_EVENT_SUCCESS){
                         result = rp3.auna.sync.Agente.executeSyncAgentes(db);
-                        addDefaultMessageAuna(result," Usuarios.");
+                        //addDefaultMessageAuna(result," Usuarios.");
                     }
 
                     if (result == SYNC_EVENT_SUCCESS && !TextUtils.isEmpty(PreferenceManager.getString(Contants.KEY_APP_INSTANCE_ID))) {
                         result = rp3.auna.sync.Agente.executeSyncDeviceId();
-                        addDefaultMessageAuna(result,"");
+                        result = SYNC_EVENT_SUCCESS;
+                        //addDefaultMessageAuna(result,"");
                     }
 
                     if(result == SYNC_EVENT_SUCCESS){
@@ -426,47 +427,47 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
                         result = ProspectoVta.executeSyncInserts(db);
-                        addDefaultMessageAuna(result," Prospectos registrados.");
+                        //addDefaultMessageAuna(result," Prospectos registrados.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar enviando los prospectos en BD sinocronizados...");
                         result = ProspectoVta.executeSyncSincronizada(db);
-                        addDefaultMessageAuna(result," Prospectos modificados.");
+                        //addDefaultMessageAuna(result," Prospectos modificados.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar Obteniendo los prospectos...");
                         result = ProspectoVta.executeSync(db);
-                        addDefaultMessageAuna(result," Prospectos.");
+                        //addDefaultMessageAuna(result," Prospectos.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"insertar llamadas pendientes en BD...");
                         result = LlamadaVta.executeSyncInsert(db);
-                        addDefaultMessageAuna(result," Llamadas registradas.");
+                        //addDefaultMessageAuna(result," Llamadas registradas.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar actualizando las llamadas sincronizadas...");
                         result = LlamadaVta.executeSyncUpdate(db);
-                        addDefaultMessageAuna(result," Llamadas modificadas.");
+                        //addDefaultMessageAuna(result," Llamadas modificadas.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar obteniendo las llamadas...");
                         result = LlamadaVta.executeSync(db,Convert.getDotNetTicksFromDate(calendar.getTime()),context);
-                        addDefaultMessageAuna(result," Llamadas.");
+                        //addDefaultMessageAuna(result," Llamadas.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"insertar visitas pendientes en BD...");
                         result = VisitaVta.executeSyncInserts(db);
-                        addDefaultMessageAuna(result," Visitas registradas.");
+                        //addDefaultMessageAuna(result," Visitas registradas.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar actualizando las visitas sincronizadas...");
                         result = VisitaVta.executeSyncUpdate(db);
-                        addDefaultMessageAuna(result," Visitas modificadas.");
+                        //addDefaultMessageAuna(result," Visitas modificadas.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar obteniendo las visitas...");
                         result = VisitaVta.executeSync(db,Convert.getDotNetTicksFromDate(calendar.getTime()),context);
-                        addDefaultMessageAuna(result," Visitas.");
+                        //addDefaultMessageAuna(result," Visitas.");
                     }
 
                     //Main2Activity.pruebaAlarm(context);
@@ -1043,32 +1044,33 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     if (result == SYNC_EVENT_SUCCESS) {
                         Log.d(TAG,"Agente.executeSync...");
                         result = rp3.auna.sync.Agente.executeSync(db);
-                        addDefaultMessageAuna(result, "Usuarios.");
+                        //addDefaultMessageAuna(result, "Usuarios.");
                     }
                     if (result == SYNC_EVENT_SUCCESS){
                         result = rp3.auna.sync.Agente.executeSyncAgentes(db);
-                        addDefaultMessageAuna(result," Usuarios.");
+                        //addDefaultMessageAuna(result," Usuarios.");
                     }
                     if(result==SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Parametros...");
                         result = ApplicationParameterSync.executeSync(db);
-                        addDefaultMessageAuna(result," Parametros.");
+                        //addDefaultMessageAuna(result," Parametros.");
                     }
                     if(result==SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Parametros de Agente...");
                         result = rp3.auna.sync.Agente.executeSyncParametros(db);
-                        addDefaultMessageAuna(result," Parametros de usuario.");
+                        //addDefaultMessageAuna(result," Parametros de usuario.");
                     }
                     if(result==SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"GeneralValues...");
                         result = rp3.sync.GeneralValue.executeSync(db);
-                        addDefaultMessageAuna(result," Parametros generales.");
+                        // addDefaultMessageAuna(result," Parametros generales.");
                 }
                     if(result==SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"GCM...");
                         if (!TextUtils.isEmpty(PreferenceManager.getString(Contants.KEY_APP_INSTANCE_ID))) {
                             result = rp3.auna.sync.Agente.executeSyncDeviceId();
-                            addDefaultMessageAuna(result,".");
+                            result = SYNC_EVENT_SUCCESS;
+                            //addDefaultMessageAuna(result,".");
                         }
                     }
                     if(result==SYNC_EVENT_SUCCESS){
@@ -1084,47 +1086,47 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     if(result==SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
                         result = ProspectoVta.executeSyncInserts(db);
-                        addDefaultMessageAuna(result," Prospectos registrados.");
+                        //addDefaultMessageAuna(result," Prospectos registrados.");
                     }
                     if(result==SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar enviando los prospectos en BD sinocronizados...");
                         result = ProspectoVta.executeSyncSincronizada(db);
-                        addDefaultMessageAuna(result," Prospectos modificados.");
+                        //addDefaultMessageAuna(result," Prospectos modificados.");
                     }
                     if(result==SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar Obteniendo los Prospectos...");
                         result = ProspectoVta.executeSync(db);
-                        addDefaultMessageAuna(result," Prospectos.");
+                        //addDefaultMessageAuna(result," Prospectos.");
                     }
                     if(result==SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"insertar llamadas pendientes en BD...");
                         result = LlamadaVta.executeSyncInsert(db);
-                        addDefaultMessageAuna(result," Llamadas registradas.");
+                        //addDefaultMessageAuna(result," Llamadas registradas.");
                     }
                     if(result==SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar actualizando las llamadas sincronizadas...");
                         result = LlamadaVta.executeSyncUpdate(db);
-                        addDefaultMessageAuna(result," Llamadas modificadas.");
+                        //addDefaultMessageAuna(result," Llamadas modificadas.");
                     }
                     if(result==SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar obteniendo las llamadas...");
                         result = LlamadaVta.executeSync(db,Convert.getDotNetTicksFromDate(calendar.getTime()),context);
-                        addDefaultMessageAuna(result," Llamadas.");
+                        //addDefaultMessageAuna(result," Llamadas.");
                     }
                     if(result==SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"insertar visitas pendientes en BD...");
                         result = VisitaVta.executeSyncInserts(db);
-                        addDefaultMessageAuna(result," Visitas registradas.");
+                        //addDefaultMessageAuna(result," Visitas registradas.");
                     }
                     if(result==SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar actualizando las visitas sincronizadas...");
                         result = VisitaVta.executeSyncUpdate(db);
-                        addDefaultMessageAuna(result," Visitas modificadas.");
+                        //addDefaultMessageAuna(result," Visitas modificadas.");
                     }
                     if(result==SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar obteniendo las visitas...");
                         result = VisitaVta.executeSync(db,Convert.getDotNetTicksFromDate(calendar.getTime()),context);
-                        addDefaultMessageAuna(result," Visitas.");
+                        //addDefaultMessageAuna(result," Visitas.");
                     }
                 }
                 //Cerrar sesión
@@ -1230,7 +1232,7 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     if(result!=SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Fallo en un servicio...");
                         //addErrorMessage("No se pudo cerrar sesión correctamente,");
-                        addDefaultMessageAuna(result,"");
+                        //addDefaultMessageAuna(result,"");
                     }else{
                         Log.d(TAG,"No Fallo fue success el cierre de sessión...");
                     }
@@ -1252,17 +1254,17 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
                         result = ProspectoVta.executeSyncInserts(db);
-                        addDefaultMessageAuna(result," Prospectos registrados.");
+                        //addDefaultMessageAuna(result," Prospectos registrados.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar enviando los prospectos en BD sinocronizados...");
                         result = ProspectoVta.executeSyncSincronizada(db);
-                        addDefaultMessageAuna(result," Prospectos modificados.");
+                        //addDefaultMessageAuna(result," Prospectos modificados.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar Obteniendo los prospectos...");
                         result = ProspectoVta.executeSync(db);
-                        addDefaultMessageAuna(result," Prospectos.");
+                        //addDefaultMessageAuna(result," Prospectos.");
                     }
                 }
                 else if (syncType.equals(SYNC_TYPE_INSERTAR_PROSPECTOVTA)){
@@ -1281,17 +1283,17 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     if(result==SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
                         result = ProspectoVta.executeSyncInserts(db);
-                        addDefaultMessageAuna(result," Prospectos registrados.");
+                        //addDefaultMessageAuna(result," Prospectos registrados.");
                     }
                     if(result==SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar enviando los prospectos en BD sinocronizados...");
                         result = ProspectoVta.executeSyncSincronizada(db);
-                        addDefaultMessageAuna(result," Prospectos modificados.");
+                        //addDefaultMessageAuna(result," Prospectos modificados.");
                     }
                     if(result==SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar Obteniendo los prospectos...");
                         result = ProspectoVta.executeSync(db);
-                        addDefaultMessageAuna(result," Prospectos.");
+                        //addDefaultMessageAuna(result," Prospectos.");
                     }
                 }
                 else if(syncType.equals(SYNC_TYPE_UPDATE_LLAMADAVTA)){
@@ -1309,47 +1311,47 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     if(result==SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
                         result = ProspectoVta.executeSyncInserts(db);
-                        addDefaultMessageAuna(result," Prospectos registrados.");
+                        //addDefaultMessageAuna(result," Prospectos registrados.");
                     }
                     if(result==SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar enviando los prospectos en BD sinocronizados...");
                         result = ProspectoVta.executeSyncSincronizada(db);
-                        addDefaultMessageAuna(result," Prospectos modificados.");
+                        //addDefaultMessageAuna(result," Prospectos modificados.");
                     }
                     if(result==SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar Obteniendo los prospectos...");
                         result = ProspectoVta.executeSync(db);
-                        addDefaultMessageAuna(result," Prospectos.");
+                        //addDefaultMessageAuna(result," Prospectos.");
                     }
                     if(result==SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"insertar llamadas pendientes en BD...");
                         result = LlamadaVta.executeSyncInsert(db);
-                        addDefaultMessageAuna(result," Llamadas registradas.");
+                        //addDefaultMessageAuna(result," Llamadas registradas.");
                     }
                     if(result==SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar actualizando las llamadas sincronizadas...");
                         result = LlamadaVta.executeSyncUpdate(db);
-                        addDefaultMessageAuna(result," Llamadas modificadas.");
+                        //addDefaultMessageAuna(result," Llamadas modificadas.");
                     }
                     if(result==SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar obteniendo las llamadas...");
                         result = LlamadaVta.executeSync(db,Convert.getDotNetTicksFromDate(calendar.getTime()),context);
-                        addDefaultMessageAuna(result," Llamadas.");
+                        //addDefaultMessageAuna(result," Llamadas.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"insertar visitas pendientes en BD...");
                         result = VisitaVta.executeSyncInserts(db);
-                        addDefaultMessageAuna(result," Visitas registradas.");
+                        //addDefaultMessageAuna(result," Visitas registradas.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar actualizando las visitas sincronizadas...");
                         result = VisitaVta.executeSyncUpdate(db);
-                        addDefaultMessageAuna(result," Visitas actualizadas.");
+                        //addDefaultMessageAuna(result," Visitas actualizadas.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar obteniendo las visitas...");
                         result = VisitaVta.executeSync(db,Convert.getDotNetTicksFromDate(calendar.getTime()),context);
-                        addDefaultMessageAuna(result," Visitas.");
+                        //addDefaultMessageAuna(result," Visitas.");
                     }
                 }
                 //Actualizar Visita
@@ -1368,47 +1370,47 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
                         result = ProspectoVta.executeSyncInserts(db);
-                        addDefaultMessageAuna(result," Prospectos registrados.");
+                        //addDefaultMessageAuna(result," Prospectos registrados.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar enviando los prospectos en BD sinocronizados...");
                         result = ProspectoVta.executeSyncSincronizada(db);
-                        addDefaultMessageAuna(result," Prospectos modificados.");
+                        //addDefaultMessageAuna(result," Prospectos modificados.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar Obteniendo los prospectos...");
                         result = ProspectoVta.executeSync(db);
-                        addDefaultMessageAuna(result," Prospectos.");
+                        //addDefaultMessageAuna(result," Prospectos.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"insertar llamadas pendientes en BD...");
                         result = LlamadaVta.executeSyncInsert(db);
-                        addDefaultMessageAuna(result," Llamadas registradas.");
+                        //addDefaultMessageAuna(result," Llamadas registradas.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar actualizando las llamadas sincronizadas...");
                         result = LlamadaVta.executeSyncUpdate(db);
-                        addDefaultMessageAuna(result," Llamadas modificadas.");
+                        //addDefaultMessageAuna(result," Llamadas modificadas.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar obteniendo las llamadas...");
                         result = LlamadaVta.executeSync(db, Convert.getDotNetTicksFromDate(calendar.getTime()),context);
-                        addDefaultMessageAuna(result," Llamadas.");
+                        //addDefaultMessageAuna(result," Llamadas.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"insertar visitas pendientes en BD...");
                         result = VisitaVta.executeSyncInserts(db);
-                        addDefaultMessageAuna(result," Visitas registradas.");
+                        //addDefaultMessageAuna(result," Visitas registradas.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar actualizando las visitas sincronizadas...");
                         result = VisitaVta.executeSyncUpdate(db);
-                        addDefaultMessageAuna(result," Visitas actualizadas.");
+                        //addDefaultMessageAuna(result," Visitas actualizadas.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar obteniendo las visitas...");
                         result = VisitaVta.executeSync(db,Convert.getDotNetTicksFromDate(calendar.getTime()),context);
-                        addDefaultMessageAuna(result," Visitas.");
+                        //addDefaultMessageAuna(result," Visitas.");
                     }
                 }
                 //refresh llamada
@@ -1427,48 +1429,48 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
                         result = ProspectoVta.executeSyncInserts(db);
-                        addDefaultMessageAuna(result," Prospectos registrados.");
+                        //addDefaultMessageAuna(result," Prospectos registrados.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar enviando los prospectos en BD sinocronizados...");
                         result = ProspectoVta.executeSyncSincronizada(db);
-                        addDefaultMessageAuna(result," Prospectos modificados.");
+                        //addDefaultMessageAuna(result," Prospectos modificados.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar Obteniendo los prospectos...");
                         result = ProspectoVta.executeSync(db);
-                        addDefaultMessageAuna(result," Prospectos.");
+                        //addDefaultMessageAuna(result," Prospectos.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"insertar llamadas pendientes en BD...");
                         result = LlamadaVta.executeSyncInsert(db);
-                        addDefaultMessageAuna(result," Llamadas registradas.");
+                        //addDefaultMessageAuna(result," Llamadas registradas.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar actualizando las llamadas sincronizadas...");
                         result = LlamadaVta.executeSyncUpdate(db);
-                        addDefaultMessageAuna(result," Llamadas modificadas.");
+                        //addDefaultMessageAuna(result," Llamadas modificadas.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar obteniendo las llamadas...");
                         result = LlamadaVta.executeSync(db, fecha,context);
-                        addDefaultMessageAuna(result," Llamadas.");
+                        //addDefaultMessageAuna(result," Llamadas.");
                     }
 
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"insertar visitas pendientes en BD...");
                         result = VisitaVta.executeSyncInserts(db);
-                        addDefaultMessageAuna(result," Visitas registradas.");
+                        //addDefaultMessageAuna(result," Visitas registradas.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar actualizando las visitas sincronizadas...");
                         result = VisitaVta.executeSyncUpdate(db);
-                        addDefaultMessageAuna(result," Visitas actualizadas.");
+                        //addDefaultMessageAuna(result," Visitas actualizadas.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar obteniendo las visitas...");
                         result = VisitaVta.executeSync(db,fecha,context);
-                        addDefaultMessageAuna(result," Visitas.");
+                        //addDefaultMessageAuna(result," Visitas.");
                     }
 
                 }
@@ -1489,46 +1491,46 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
                         result = ProspectoVta.executeSyncInserts(db);
-                        addDefaultMessageAuna(result," Prospectos registrados.");
+                        //addDefaultMessageAuna(result," Prospectos registrados.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar enviando los prospectos en BD sinocronizados...");
                         result = ProspectoVta.executeSyncSincronizada(db);
-                        addDefaultMessageAuna(result," Prospectos modificados.");
+                        //addDefaultMessageAuna(result," Prospectos modificados.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar Obteniendo los prospectos...");
                         result = ProspectoVta.executeSync(db);
-                        addDefaultMessageAuna(result," Prospectos.");
+                        //addDefaultMessageAuna(result," Prospectos.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"insertar llamadas pendientes en BD...");
                         result = LlamadaVta.executeSyncInsert(db);
-                        addDefaultMessageAuna(result," Llamadas registradas.");
+                        //addDefaultMessageAuna(result," Llamadas registradas.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar actualizando las llamadas sincronizadas...");
                         result = LlamadaVta.executeSyncUpdate(db);
-                        addDefaultMessageAuna(result," Llamadas modificadas.");
+                        //addDefaultMessageAuna(result," Llamadas modificadas.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar obteniendo las llamadas...");
                         result = LlamadaVta.executeSync(db, fecha,context);
-                        addDefaultMessageAuna(result," Llamadas.");
+                        //addDefaultMessageAuna(result," Llamadas.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         result = VisitaVta.executeSyncInserts(db);
-                        addDefaultMessageAuna(result," Visitas registradas.");
+                        //addDefaultMessageAuna(result," Visitas registradas.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar actualizando las visitas sincronizadas...");
                         result = VisitaVta.executeSyncUpdate(db);
-                        addDefaultMessageAuna(result," Visitas actualizadas.");
+                        //addDefaultMessageAuna(result," Visitas actualizadas.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar obteniendo las visitas...");
                         result = VisitaVta.executeSync(db,fecha,context);
-                        addDefaultMessageAuna(result," Visitas.");
+                        //addDefaultMessageAuna(result," Visitas.");
                     }
                 }
                 //refresh visita reprogramming
@@ -1582,47 +1584,47 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar enviando los prospectos en BD temp...");
                         result = ProspectoVta.executeSyncInserts(db);
-                        addDefaultMessageAuna(result," Prospectos registrados.");
+                        //addDefaultMessageAuna(result," Prospectos registrados.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar enviando los prospectos en BD sinocronizados...");
                         result = ProspectoVta.executeSyncSincronizada(db);
-                        addDefaultMessageAuna(result," Prospectos sincronizados.");
+                        //addDefaultMessageAuna(result," Prospectos sincronizados.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar Obteniendo los prospectos...");
                         result = ProspectoVta.executeSync(db);
-                        addDefaultMessageAuna(result," Prospectos.");
+                        //addDefaultMessageAuna(result," Prospectos.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"insertar llamadas pendientes en BD...");
                         result = LlamadaVta.executeSyncInsert(db);
-                        addDefaultMessageAuna(result," Llamadas registradas.");
+                        //addDefaultMessageAuna(result," Llamadas registradas.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar actualizando las llamadas sincronizadas...");
                         result = LlamadaVta.executeSyncUpdate(db);
-                        addDefaultMessageAuna(result," Llamadas modificadas.");
+                        //addDefaultMessageAuna(result," Llamadas modificadas.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar obteniendo las llamadas...");
                         result = LlamadaVta.executeSync(db,Convert.getDotNetTicksFromDate(calendar.getTime()),context);
-                        addDefaultMessageAuna(result," Llamadas.");
+                        //addDefaultMessageAuna(result," Llamadas.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"insertar visitas pendientes en BD...");
                         result = VisitaVta.executeSyncInserts(db);
-                        addDefaultMessageAuna(result," Visitas registradas.");
+                        //addDefaultMessageAuna(result," Visitas registradas.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar actualizando las visitas sincronizadas...");
                         result = VisitaVta.executeSyncUpdate(db);
-                        addDefaultMessageAuna(result," Visitas modificadas.");
+                        //addDefaultMessageAuna(result," Visitas modificadas.");
                     }
                     if(result == SYNC_EVENT_SUCCESS){
                         Log.d(TAG,"Iniciar obteniendo las visitas...");
                         result = VisitaVta.executeSync(db,Convert.getDotNetTicksFromDate(calendar.getTime()),context);
-                        addDefaultMessageAuna(result," Visitas.");
+                        //addDefaultMessageAuna(result," Visitas.");
                     }
                 }
                 SyncAudit.insert(syncType, result);
@@ -1630,7 +1632,8 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
             else
             {
                 //addDefaultMessage(SYNC_EVENT_CONNECTION_FAILED);
-                SyncAudit.insert(syncType, SYNC_EVENT_CONNECTION_FAILED);
+                //addDefaultMessageAuna(SYNC_EVENT_ERROR,".");
+                //SyncAudit.insert(syncType, SYNC_EVENT_CONNECTION_FAILED);
             }
 				
 		}catch (Exception e) {			
@@ -1668,6 +1671,10 @@ public class SyncAdapter extends rp3.content.SyncAdapter {
                 Log.d(TAG,"el cargo es null...");
             }else{
                 Log.d(TAG,"el cargo es:"+cargo);
+            }
+
+            if(result!=SYNC_EVENT_SUCCESS){
+                addDefaultMessageAuna(SYNC_EVENT_ERROR,"");
             }
 			notifySyncFinish();
 		}								
