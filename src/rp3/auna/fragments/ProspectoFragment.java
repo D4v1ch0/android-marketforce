@@ -112,6 +112,8 @@ public class ProspectoFragment extends Fragment implements SearchView.OnQueryTex
     private TypedValue typedValueToolbarHeight = new TypedValue();
     private WindowPopup windowPopup;
     private boolean filterState = false;
+    //Capturar que texto esta consultandolo
+    private String textFilterState = null;
 
     @Nullable
     @Override
@@ -514,6 +516,7 @@ public class ProspectoFragment extends Fragment implements SearchView.OnQueryTex
                 Log.d(TAG,"newText!=null...");
                 if(newText.trim().length()>0){
                     filterState = true;
+                    textFilterState = newText;
                     Log.d(TAG,"newText>0");
                     if(isNumber(newText)){
                         for(ProspectoVtaDb obj:list){
@@ -613,6 +616,13 @@ public class ProspectoFragment extends Fragment implements SearchView.OnQueryTex
                             recyclerView.setVisibility(View.VISIBLE);
                             //swipeRefreshLayout.setVisibility(View.VISIBLE);
                             container.setVisibility(View.GONE);
+                            //Validar cuando esta filtrandolo...
+                            if(filterState){
+                                Log.d(TAG,"filterState is true...");
+                                onQueryTextChange(textFilterState);
+                            }else{
+                                Log.d(TAG,"filterState is false...");
+                            }
                         }else{
                             Log.d(TAG,"list.prospecto == 0...");
                             progressBar.setVisibility(View.GONE);
@@ -685,6 +695,10 @@ public class ProspectoFragment extends Fragment implements SearchView.OnQueryTex
         Log.d(TAG,"onResume...");
         try {
             if(!filterState){
+                Log.d(TAG,"!filterState...:"+filterState);
+                refresh();
+            }else{
+                Log.d(TAG,"filterState...:"+filterState);
                 refresh();
             }
             if(windowPopup!=null)windowPopup.dismissTooltip();

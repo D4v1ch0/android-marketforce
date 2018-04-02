@@ -846,12 +846,13 @@ public class CotizacionActivity extends AppCompatActivity {
              */
             final int pos = afiliadosLayouts.size();
             Log.d(TAG,"Cantidad de Layouts:"+afiliadosLayouts.size());
-            (afiliado.findViewById(R.id.tvafiliado_fecha_movil)).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG,"Cantidad de Layouts onclick fecha:"+afiliadosLayouts.size());
-                    Log.d(TAG,"onclick tvFecha : "+pos);
+            (afiliado.findViewById(R.id.tvafiliado_fecha_movil)).setOnClickListener(v -> {
+                Log.d(TAG,"Cantidad de Layouts onclick fecha:"+afiliadosLayouts.size());
+                Log.d(TAG,"onclick tvFecha : "+pos);
+                try{
                     setFechaAfiliado(pos);
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
             });
             ContainerParams.addView(afiliado);
@@ -928,12 +929,13 @@ public class CotizacionActivity extends AppCompatActivity {
          */
         final int pos = afiliadosLayouts.size();
         Log.d(TAG,"Cantidad de Layouts:"+afiliadosLayouts.size());
-        (afiliado.findViewById(R.id.tvafiliado_fecha_movil)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG,"Cantidad de Layouts onclick fecha:"+afiliadosLayouts.size());
-                Log.d(TAG,"onclick tvFecha : "+pos);
+        (afiliado.findViewById(R.id.tvafiliado_fecha_movil)).setOnClickListener(v -> {
+            Log.d(TAG,"Cantidad de Layouts onclick fecha:"+afiliadosLayouts.size());
+            Log.d(TAG,"onclick tvFecha : "+pos);
+            try{
                 setFechaAfiliado(pos);
+            }catch (Exception e){
+                e.printStackTrace();
             }
         });
         ContainerParams.addView(afiliado);
@@ -1160,20 +1162,23 @@ public class CotizacionActivity extends AppCompatActivity {
         final Calendar myCalendar = Calendar.getInstance();
         final Calendar today = Calendar.getInstance();
         final LinearLayout afiliado = afiliadosLayouts.get(i);
-        DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear,
-                                  int dayOfMonth) {
+        DatePickerDialog.OnDateSetListener date = (view, year, monthOfYear, dayOfMonth) -> {
+            Log.d(TAG,"onDateSet...");
+            try{
                 // TODO Auto-generated method stub
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.YEAR, year);
                 SimpleDateFormat sdf = new SimpleDateFormat(Contants.DATE_FORMAT, Locale.US);
                 //if(validateCurrentTimeAfiliado(myCalendar.getTime())){
-                    selectedDateAfiliado = myCalendar.getTime();
-                    ((EditText) afiliado.findViewById(R.id.tvafiliado_fecha_movil)).setText(sdf.format(myCalendar.getTime()));
+                selectedDateAfiliado = myCalendar.getTime();
+                ((EditText) afiliado.findViewById(R.id.tvafiliado_fecha_movil)).setText(sdf.format(myCalendar.getTime()));
                 //}
+            }catch (Exception e){
+                Log.d(TAG,"Exception en fecha...");
+                e.printStackTrace();
             }
+
         };
 
         Log.d(TAG,"Millis Min:"+fechaMinimaAfiliado.getTimeInMillis());
@@ -2439,33 +2444,25 @@ public class CotizacionActivity extends AppCompatActivity {
                 R.layout.spinner_empty_selected,
                 this, "Seleccionar"));
         ((Spinner) findViewById(R.id.cotizacion_programa_movil)).setPrompt("Seleccionar");
-        rbPaymeSi.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG,"onClick rbPaymeSi en linea...");
-                selectTipoPago = 1;
-                showLayoutTarjeta(true);
-                selectTipoPagoFinal = 1;
-            }
+        rbPaymeSi.setOnClickListener(v -> {
+            Log.d(TAG,"onClick rbPaymeSi en linea...");
+            selectTipoPago = 1;
+            showLayoutTarjeta(true);
+            selectTipoPagoFinal = 1;
         });
-        rbPaymeNo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG,"onClick rbPaymeNo Efectivo...");
-                selectTipoPago = 2;
-                showLayoutTarjeta(false);
-                selectTipoPagoFinal = 2;
-            }
+        rbPaymeNo.setOnClickListener(v -> {
+            Log.d(TAG,"onClick rbPaymeNo Efectivo...");
+            selectTipoPago = 2;
+            showLayoutTarjeta(false);
+            selectTipoPagoFinal = 2;
         });
-        rbRegular.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG,"onClick rbRegular Regular..");
-                selectTipoPago = 3 ;
-                showLayoutTarjeta(false);
-                selectTipoPagoFinal = 3;
-            }
+        rbRegular.setOnClickListener(v -> {
+            Log.d(TAG,"onClick rbRegular Regular..");
+            selectTipoPago = 3 ;
+            showLayoutTarjeta(false);
+            selectTipoPagoFinal = 3;
         });
+
         //region Data no usada
         /*btnValidarTarjeta.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -3104,19 +3101,13 @@ public class CotizacionActivity extends AppCompatActivity {
             //rbFrecuenciaAnual.setChecked(false);
             //rbFrecuenciaMensual.setChecked(false);
             //frecuenciaPagoSelected = -1;
-            rbFrecuenciaAnual.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG,"rbFrecuenciaAnual...");
-                    frecuenciaPagoSelected = 1;
-                }
+            rbFrecuenciaAnual.setOnClickListener(v -> {
+                Log.d(TAG,"rbFrecuenciaAnual...");
+                frecuenciaPagoSelected = 1;
             });
-            rbFrecuenciaMensual.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG,"rbFrecuenciaMensual...");
-                    frecuenciaPagoSelected = 2;
-                }
+            rbFrecuenciaMensual.setOnClickListener(v -> {
+                Log.d(TAG,"rbFrecuenciaMensual...");
+                frecuenciaPagoSelected = 2;
             });
             //btnValidarTarjeta.setVisibility(View.VISIBLE);
         }else{
@@ -3837,6 +3828,7 @@ public class CotizacionActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG,"onActivityResult...requestcode:"+requestCode+" resultcode:"+resultCode);
         super.onActivityResult(requestCode, resultCode, data);
+
         //region Request & Result de la Cotizacion
         if(requestCode==REQUEST_VISITA_SOLICITUD_COTIZACION_INICIAL){
             Log.d(TAG,"Request solicitud cotizacion inicial...");
