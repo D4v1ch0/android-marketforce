@@ -11,7 +11,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import rp3.auna.R;
 
-/**
+/*
  * Created by Jesus Villa on 13/12/2017.
  */
 
@@ -43,5 +43,5 @@ public class WalletClient {
         b.build().newCall(request).enqueue(callBack);
     }
 
-    //Hola juan jose
+    //Hola juan jose lucero
 }
