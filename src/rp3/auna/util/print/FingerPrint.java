@@ -18,6 +18,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import asia.kanopi.fingerscan.*;
+import asia.kanopi.fingerscan.ScanFinger;
+import asia.kanopi.fingerscan.Status;
 
 /**
  * Created by Jesus Villa on 23/03/2018.
@@ -30,7 +32,7 @@ public class FingerPrint {
     private Context context;
     private Handler imageHandler;
     private Handler updateHandler;
-    private Status status;
+    private asia.kanopi.fingerscan.Status status;
     private static boolean deviceRegistered;
 
     private static final int U_ARE_U_4500B_PRODUCT_ID = 10;
@@ -41,8 +43,8 @@ public class FingerPrint {
     private static final String LOG_TAG = "Fingerprint";
 
     public FingerPrint() {
-        status = new Status();
-        status.setStatus(Status.INITIALISED);
+        status = new asia.kanopi.fingerscan.Status();
+        status.setStatus(asia.kanopi.fingerscan.Status.INITIALISED);
         deviceRegistered = false;
     }
 
@@ -70,48 +72,60 @@ public class FingerPrint {
     }
 
     private void sendUpdate() {
-        if (updateHandler != null) {
-            Message msg = updateHandler.obtainMessage();
-            Bundle bundle = new Bundle();
-            bundle.putInt("status", status.getStatus());
-            if (status.getStatus() == Status.ERROR) {
-                bundle.putString("errorMessage", status.getErrorMessage());
+        try{
+            if (updateHandler != null) {
+                Message msg = updateHandler.obtainMessage();
+                Bundle bundle = new Bundle();
+                bundle.putInt("status", status.getStatus());
+                if (status.getStatus() == asia.kanopi.fingerscan.Status.ERROR) {
+                    bundle.putString("errorMessage", status.getErrorMessage());
+                }
+                msg.setData(bundle);
+                updateHandler.sendMessage(msg);
             }
-            msg.setData(bundle);
-            updateHandler.sendMessage(msg);
+        }catch (Exception e){
+            Log.d(TAG,e.getMessage());
+            e.printStackTrace();
         }
+
     }
 
     private void connectToReader() {
-        reader = new UruConnection();
-        usbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
-        boolean scannerFound = false;
-        HashMap<String, UsbDevice> deviceList = usbManager.getDeviceList();
-        if (deviceList.isEmpty()) {
-            setStatus(Status.ERROR, "No se encontro dispositivos USB");
+        try{
+            reader = new UruConnection();
+            usbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
+            boolean scannerFound = false;
+            HashMap<String, UsbDevice> deviceList = usbManager.getDeviceList();
+            if (deviceList.isEmpty()) {
+                setStatus(asia.kanopi.fingerscan.Status.ERROR, "No USB devices found");
 
-        } else {
-            Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
-            PendingIntent mPermissionIntent = PendingIntent.getBroadcast(
-                    context, 0, new Intent(ACTION_USB_PERMISSION), 0);
-            if(!deviceRegistered){
-                IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
-                context.registerReceiver(mUsbReceiver, filter);
-                deviceRegistered = true;
-            }
+            } else {
+                Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
+                PendingIntent mPermissionIntent = PendingIntent.getBroadcast(
+                        context, 0, new Intent(ACTION_USB_PERMISSION), 0);
+                if(!deviceRegistered){
+                    IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
+                    context.registerReceiver(mUsbReceiver, filter);
+                    deviceRegistered = true;
+                }
 
-            while (deviceIterator.hasNext()) {
-                UsbDevice device = deviceIterator.next();
-                if (device.getProductId() == U_ARE_U_4500B_PRODUCT_ID
-                        && device.getVendorId() == U_ARE_U_4500B_VENDOR_ID) {
-                    scannerFound = true;
-                    usbManager.requestPermission(device, mPermissionIntent);
+                while (deviceIterator.hasNext()) {
+                    UsbDevice device = deviceIterator.next();
+                    if (device.getProductId() == U_ARE_U_4500B_PRODUCT_ID
+                            && device.getVendorId() == U_ARE_U_4500B_VENDOR_ID) {
+                        scannerFound = true;
+                        usbManager.requestPermission(device, mPermissionIntent);
+                    }
+                }
+                if (!scannerFound) {
+                    setStatus(asia.kanopi.fingerscan.Status.ERROR, "U.are.U 4500B scanner not connected via USB");
                 }
             }
-            if (!scannerFound) {
-                setStatus(asia.kanopi.fingerscan.Status.ERROR, "U.are.U 4500B scanner not connected via USB");
-            }
+        }catch (Exception e){
+            Log.d(TAG,e.getMessage());
+            e.printStackTrace();
         }
+
     }
 
     private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
@@ -125,7 +139,7 @@ public class FingerPrint {
                         if (device != null){
                             initiateCommunication(device);
                         } else {
-                            setStatus(Status.ERROR, "Null device");
+                            setStatus(asia.kanopi.fingerscan.Status.ERROR, "Null device");
                         }
                     } else {
                         setStatus(Status.ERROR, "Permission denied to access fingerprint scanner");
@@ -143,17 +157,21 @@ public class FingerPrint {
             uru_connection.claimInterface(uru_interface, true);
 
             reader.m_connection = uru_connection;
+            try{
+                // Set up listener in new thread
+                asia.kanopi.fingerscan.ScanFinger r = new ScanFinger(reader, usbDevice, status, imageHandler,
+                        updateHandler, context);
+                t = new Thread(r);
+                t.start();
 
-            // Set up listener in new thread
-            ScanFinger r = new ScanFinger(reader, usbDevice, status, imageHandler,
-                    updateHandler, context);
-            t = new Thread(r);
-            t.start();
-
-            reader.init_reader(uru_connection);
-
+                reader.init_reader(uru_connection);
+            }catch (Exception e){
+                Log.d(TAG,e.getMessage());
+                e.printStackTrace();
+            }
         } catch (Exception e) {
-            Log.e (LOG_TAG, "Error: " + e.getMessage());
+            Log.e (TAG, "Error: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

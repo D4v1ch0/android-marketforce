@@ -383,7 +383,7 @@ public class SessionManager {
         SharedPreferences.Editor prefsEditor = _prefDataVisita.edit();
         Gson gson = new Gson();
         String s_userr = gson.toJson(visitaVta);
-        //Log.d(TAG, "subiendo usuario"+s_userr);
+        Log.d(TAG, "CREANDO SESSION VISITA:"+s_userr);
         prefsEditor.putString(Constants.DATA_PRIVATE_PREFERENCES_VISITA, s_userr);
         prefsEditor.commit();
     }

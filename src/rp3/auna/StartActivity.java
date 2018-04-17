@@ -181,7 +181,7 @@ public class StartActivity extends rp3.app.StartActivity{
             String proof2 = PreferenceManager.getString(Constants.KEY_LAST_PASS,"");
             String peer = Session.getUser().getLogonName();
             String peer2 = Session.getUser().getPassword();
-            Canal.getCanal(getDataBase(), "1");
+            //Canal.getCanal(getDataBase(), "1");
 //endregion
 
             //region Validar Login Antiguo

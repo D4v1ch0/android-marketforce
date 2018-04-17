@@ -9,12 +9,15 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
@@ -31,8 +34,14 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -69,6 +78,54 @@ import static com.orm.util.ContextUtil.getPackageManager;
 public class Util {
 
     public static final String TAG="Util";
+
+    public static void ErrorToFile(Exception ex)
+    {
+        try{
+            File file = new File(Environment.getExternalStorageDirectory()+ "/testAuna.log");
+            PrintStream ps = null;
+            try {
+                ps = new PrintStream( new FileOutputStream(file, true));
+            } catch (FileNotFoundException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+            try {
+                ps.append("\r\n");
+                ex.printStackTrace(ps);
+                ps.close();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }catch (Exception e){
+            Log.d(TAG,"ErrorTofile..."+e.getMessage());
+            e.printStackTrace();
+        }
+
+    }
+
+    public static Bitmap getBitmapByte(byte[] bytes){
+        Bitmap bitmap = null;
+        try{
+            /*
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            options.inSampleSize = 8;
+            bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length,options);*/
+
+            BitmapFactory.Options options=new BitmapFactory.Options();// Create object of bitmapfactory's option method for further option use
+            options.inPurgeable = true; // inPurgeable is used to free up memory while required
+            Bitmap songImage1 = BitmapFactory.decodeByteArray(bytes,0, bytes.length,options);//Decode image, "thumbnail" is the object of image file
+            Bitmap songImage = Bitmap.createScaledBitmap(songImage1, 50 , 50 , true);// convert decoded bitmap into well scalled Bitmap format.
+            bitmap = songImage;
+            return bitmap;
+        }catch (Exception e){
+            Log.d(TAG,"getBitmapByte:"+e.getMessage());
+            e.printStackTrace();
+            ErrorToFile(e);
+            return bitmap;
+        }
+    }
 
     public static double calcularDistancia(double initialLat, double initialLong,
                                            double finalLat, double finalLong) {

@@ -112,7 +112,11 @@ public class ProspectoVta {
             }else{
                 Log.d(TAG,"prospectos == null...");
             }
-        } finally {
+        }
+        catch (Exception e){
+            Log.d(TAG,"Exception e:"+e.getMessage());
+        }
+        finally {
             webService.close();
         }
         return rp3.content.SyncAdapter.SYNC_EVENT_SUCCESS;

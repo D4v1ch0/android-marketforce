@@ -1,6 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" >
+    <item android:id="@+id/action_registrar_huella"
+        android:title="Registrar Huella"
+        android:icon="@drawable/ic_finger_print"
+        app:showAsAction="always"></item>
     <item android:id="@+id/action_consultarid_cotizacion"
         android:title="@string/label_grabar"
         android:icon="@drawable/ic_action_search"

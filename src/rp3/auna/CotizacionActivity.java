@@ -23,7 +23,6 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,7 +31,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -50,12 +48,9 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -83,25 +78,23 @@ import rp3.auna.bean.AfiliadoMovil;
 import rp3.auna.bean.Cotizacion;
 import rp3.auna.bean.CotizacionMovil;
 import rp3.auna.bean.CotizacionVisita;
-import rp3.auna.bean.OperationNumberMovil;
 import rp3.auna.bean.PaymeCodWallet;
-import rp3.auna.bean.ProspectoVta;
 import rp3.auna.bean.RegistroPago;
 import rp3.auna.bean.ResponseSolicitudWallet;
 import rp3.auna.bean.SolicitudAfiliadoMovil;
 import rp3.auna.bean.SolicitudMovil;
 import rp3.auna.bean.SolicitudOncosys;
-import rp3.auna.bean.TarjetaValidar;
 import rp3.auna.bean.VentaFisicaData;
 import rp3.auna.bean.VentaRegularData;
 import rp3.auna.bean.VisitaVtaDetalle;
 import rp3.auna.bean.VisitaVtaFinal;
-import rp3.auna.bean.Wallet;
+import rp3.auna.bean.virtual.Authentication;
 import rp3.auna.bean.virtual.CotizacionVirtual;
 import rp3.auna.dialog.EmailContratanteDialog;
 import rp3.auna.dialog.EmailCotizacionDialog;
 import rp3.auna.dialog.FingerPrintDialog;
 import rp3.auna.dialog.MotivoCitaDialog;
+import rp3.auna.dialog.UploadFingerPrintDialog;
 import rp3.auna.models.ApplicationParameter;
 import rp3.auna.models.ventanueva.ProspectoVtaDb;
 import rp3.auna.models.ventanueva.VisitaVta;
@@ -110,23 +103,17 @@ import rp3.auna.util.helper.Util;
 import rp3.auna.util.session.SessionManager;
 import rp3.auna.utils.NothingSelectedSpinnerAdapter;
 import rp3.auna.utils.Utils;
-import rp3.auna.webservices.AutenticarHuellaRp3Client;
+import rp3.auna.webservices.virtual.AutenticarHuellaRp3Client;
 import rp3.auna.webservices.CotizacionVisitaClient;
 import rp3.auna.webservices.CotizadorClient;
-import rp3.auna.webservices.EmailAfiliacionProcesoClient;
 import rp3.auna.webservices.EmailCotizacionClient;
-import rp3.auna.webservices.EmailInstruccionesPagoClient;
 import rp3.auna.webservices.FinalizarVentaClient;
-import rp3.auna.webservices.OperationNumberClient;
-import rp3.auna.bean.RespuestaValidar;
-import rp3.auna.webservices.RegistrarPagoClient;
 import rp3.auna.webservices.SaveCotizacionClient;
 import rp3.auna.webservices.SolicitudClient;
 import rp3.auna.webservices.UpdateVisitaClient;
 import rp3.auna.webservices.ValidarSolicitudOncosysClient;
-import rp3.auna.webservices.ValidarTarjetaClient;
-import rp3.auna.webservices.WalletClient;
 import rp3.auna.webservices.virtual.CotizadorVirtualClient;
+import rp3.auna.webservices.virtual.UploadFingerPrintRp3Client;
 import rp3.configuration.PreferenceManager;
 import rp3.content.SimpleGeneralValueAdapter;
 import rp3.data.models.GeneralValue;
@@ -137,10 +124,6 @@ import static rp3.auna.Contants.GENERAL_TABLE_CONTROL_ERRORES_WS_VALIDAR_PAGO;
 import static rp3.auna.Contants.GENERAL_TABLE_MODO_TARIFA_TIPO_PAGO;
 import static rp3.auna.Contants.GENERAL_TABLE_MOTIVOS_REPROGRAMACION_TABLE_ID_CITA;
 import static rp3.auna.Contants.GENERAL_TABLE_TIPO_DOCUMENTO;
-import static rp3.auna.Contants.KEY_IDAGENTE;
-import static rp3.auna.Contants.PAYME_COD_CARD_HOLDER_COMMERCE;
-import static rp3.auna.Contants.PAYME_IDACQUIRER;
-import static rp3.auna.Contants.PAYME_ID_ENT_COMMERCE;
 
 public class CotizacionActivity extends AppCompatActivity {
 
@@ -261,6 +244,7 @@ public class CotizacionActivity extends AppCompatActivity {
     private boolean validatePaymeFinal = false;
     private int REQUEST_STATE = -1;
     private MenuItem itemEmail;
+    private MenuItem itemHuella;
     private String correoContratante = null;
     private String celularContratante = null;
     private String numeroOperacion = null;
@@ -276,6 +260,7 @@ public class CotizacionActivity extends AppCompatActivity {
     //Si es la primera vez en consultar = 1 , else other
     private int flagConsultoDetalle = 1;
     private int flagRealizoCotizacionInicial = 0;
+    private FingerPrintDialog fingerPrintDialog = null;
 
     //region Solicitud Virtual
     @BindView(R.id.rbFisica) RadioButton rbFisica;
@@ -283,6 +268,7 @@ public class CotizacionActivity extends AppCompatActivity {
     private List<GeneralValue> listExcepcionsVirtual;
     private int consultarCotizacion = -1;
     private CotizacionVirtual cotizacionVirtual;/**Este es el Cotizador Virtual model*/
+    private Authentication authentication = null;
     //endregion
 
     @Override
@@ -891,13 +877,11 @@ public class CotizacionActivity extends AppCompatActivity {
              */
             final int pos = afiliadosLayouts.size();
             Log.d(TAG,"Cantidad de Layouts:"+afiliadosLayouts.size());
-            (afiliado.findViewById(R.id.tvafiliado_fecha_movil)).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG,"Cantidad de Layouts onclick fecha:"+afiliadosLayouts.size());
-                    Log.d(TAG,"onclick tvFecha : "+pos);
-                    setFechaAfiliado(pos);
-                }
+
+            (afiliado.findViewById(R.id.tvafiliado_fecha_movil)).setOnClickListener(v -> {
+                Log.d(TAG,"Cantidad de Layouts onclick fecha:"+afiliadosLayouts.size());
+                Log.d(TAG,"onclick tvFecha : "+pos);
+                setFechaAfiliado(pos);
             });
             ContainerParams.addView(afiliado);
             afiliadosLayouts.add(afiliado);
@@ -1511,7 +1495,7 @@ public class CotizacionActivity extends AppCompatActivity {
             } else
             {
                 Log.d(TAG,"hayError...");
-                Toast.makeText(this, "Hubo un problema al mostrar el resultado de la cotizacionMovil, intentelo nuevamente porfavor..", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Hubo un problema al mostrar el resultado de la cotizacionMovil, intentelo nuevamente por favor..", Toast.LENGTH_SHORT).show();
                 //SE DEBE MOSTRAR EL ERROR QUE RETORNA EL SERVICIO
             }
         }
@@ -1524,7 +1508,7 @@ public class CotizacionActivity extends AppCompatActivity {
 
     private boolean validate(){
         if(tipoVenta==-1){
-            Toast.makeText(this, "Seleccione un tipo de venta porfavor", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Seleccione un tipo de venta por favor", Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -1534,11 +1518,11 @@ public class CotizacionActivity extends AppCompatActivity {
             return false;
         }
         if(((GeneralValue)((Spinner) findViewById(R.id.cotizacion_programa_movil)).getSelectedItem())==null){
-            Toast.makeText(this, "Seleccione un programa porfavor", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Seleccione un programa por favor", Toast.LENGTH_SHORT).show();
             return false;
         }
         if(((GeneralValue)((Spinner) findViewById(R.id.cotizacion_programa_movil)).getSelectedItem()).getCode()==null){
-            Toast.makeText(this, "Seleccione un programa porfavor", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Seleccione un programa por favor", Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -1609,7 +1593,7 @@ public class CotizacionActivity extends AppCompatActivity {
         if(selectPlanCotizacion==1 && tipoVenta==1){
             Log.d(TAG,"Selecciono Anual a pagar...");
             if(((GeneralValue)((Spinner) findViewById(R.id.spFraccionamiento)).getSelectedItem())==null){
-                Toast.makeText(this, "Seleccione una fraccion porfavor", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Seleccione una fraccion por favor", Toast.LENGTH_SHORT).show();
                 return;
             }
             if(consultarCotizacion==1){
@@ -1766,7 +1750,7 @@ public class CotizacionActivity extends AppCompatActivity {
         validate();
         if(select==1 && tipoVenta == 1){
             if(((GeneralValue)((Spinner) findViewById(R.id.spFraccionamiento)).getSelectedItem())==null){
-                Toast.makeText(this, "Seleccione una fraccion porfavor", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Seleccione una fraccion por favor", Toast.LENGTH_SHORT).show();
                 return;
             }
             if(consultarCotizacion==1){
@@ -1876,7 +1860,7 @@ public class CotizacionActivity extends AppCompatActivity {
     private void saveResponseCotizacion(final int idVisita, final String tipo, final int updateVisita){
         final ProgressDialog progressDialog = new ProgressDialog(this,R.style.AppCompatAlertDialogStyle);
         progressDialog.setTitle("Guardando Cotizacion");
-        progressDialog.setMessage("Espere porfavor...");
+        progressDialog.setMessage("Espere por favor...");
         progressDialog.setCancelable(false);
         progressDialog.show();
 
@@ -1908,34 +1892,31 @@ public class CotizacionActivity extends AppCompatActivity {
                 progressDialog.dismiss();
                 if(response.isSuccessful()){
                     Log.d(TAG,"isSuccessful...");
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            //Es Cotización Inicial
-                            if(estado==1){
-                                //Aqui preguntar la autenticación por huella
-                                //setDataSolicitud(visitaVta.getIdVisita(),"V");
-                                showAutenticationFingerPrint();
-                                //setDataSolicitud(idVisita,tipo);
-                            }
-                            //Es Cotización Final
-                            else if(estado==2){
-                                //Es Tipo Efectivo
-                                if(updateVisita==2){
-                                    showEmailInstrucciones(2);
-                                }
-                                //Es  Regular ó En Línea
-                                else if (updateVisita ==1){
-                                    showEmailAfiliacionProceso(1);
-                                }
-                                else if(updateVisita ==3){
-                                    VentaRegularData ventaRegularData = SessionManager.getInstance(CotizacionActivity.this).getVentaRegular();
-                                    showEmailAfiliacionProcesoClient(new Gson().toJson(ventaRegularData),updateVisita);
-                                }
-                                //showUpdateVisitaClient(updateVisita,null,null,0);
-                            }
-
+                    handler.post(() -> {
+                        //Es Cotización Inicial
+                        if(estado==1){
+                            //Aqui preguntar la autenticación por huella
+                            //setDataSolicitud(visitaVta.getIdVisita(),"V");
+                            showAutenticationFingerPrint();
+                            //setDataSolicitud(idVisita,tipo);
                         }
+                        //Es Cotización Final
+                        else if(estado==2){
+                            //Es Tipo Efectivo
+                            if(updateVisita==2){
+                                showEmailInstrucciones(2);
+                            }
+                            //Es  Regular ó En Línea
+                            else if (updateVisita ==1){
+                                showEmailAfiliacionProceso(1);
+                            }
+                            else if(updateVisita ==3){
+                                VentaRegularData ventaRegularData = SessionManager.getInstance(CotizacionActivity.this).getVentaRegular();
+                                showEmailAfiliacionProcesoClient(new Gson().toJson(ventaRegularData),updateVisita);
+                            }
+                            //showUpdateVisitaClient(updateVisita,null,null,0);
+                        }
+
                     });
                 }else{
                     Log.d(TAG,"NoisSuccessful...");
@@ -2424,7 +2405,7 @@ public class CotizacionActivity extends AppCompatActivity {
         switch (select){
             case 1:
                 if(((GeneralValue)((Spinner) findViewById(R.id.spFraccionamiento)).getSelectedItem())==null){
-                    Toast.makeText(this, "Seleccione una fraccion porfavor", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Seleccione una fraccion por favor", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -2594,7 +2575,7 @@ public class CotizacionActivity extends AppCompatActivity {
         validate();
         if(select==1 && tipoVenta == 1){
             if(((GeneralValue)((Spinner) findViewById(R.id.spFraccionamiento)).getSelectedItem())==null){
-                Toast.makeText(this, "Seleccione una fraccion porfavor", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Seleccione una fraccion por favor", Toast.LENGTH_SHORT).show();
                 return;
             }
             if(consultarCotizacion==1){
@@ -2882,7 +2863,7 @@ public class CotizacionActivity extends AppCompatActivity {
         switch (select){
             case 1:
                 if(((GeneralValue)((Spinner) findViewById(R.id.spFraccionamiento)).getSelectedItem())==null){
-                    Toast.makeText(this, "Seleccione una fraccion porfavor", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Seleccione una fraccion por favor", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -2976,13 +2957,13 @@ public class CotizacionActivity extends AppCompatActivity {
                                                 }
                                                 Toast.makeText(CotizacionActivity.this, general.getValue(), Toast.LENGTH_SHORT).show();
                                             }else if(wallet.getFlag()==2){
-                                                Toast.makeText(CotizacionActivity.this, "Ocurrio un problema al consultar el servicio de Pago. Intentelo nuevamente porfavor.", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(CotizacionActivity.this, "Ocurrio un problema al consultar el servicio de Pago. Intentelo nuevamente por favor.", Toast.LENGTH_SHORT).show();
                                             }else if(wallet.getFlag()==3){
-                                                Toast.makeText(CotizacionActivity.this, "Vuelva a consultar el servicio porfavor.", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(CotizacionActivity.this, "Vuelva a consultar el servicio por favor.", Toast.LENGTH_SHORT).show();
                                             }else if(wallet.getFlag()==4){
                                                 Toast.makeText(CotizacionActivity.this, wallet.getResponse(), Toast.LENGTH_SHORT).show();
                                             }else if(wallet.getFlag()==5){
-                                                Toast.makeText(CotizacionActivity.this, "Hubo un problema al consultar al servidor. Intentelo nuevamente porfavor.", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(CotizacionActivity.this, "Hubo un problema al consultar al servidor. Intentelo nuevamente por favor.", Toast.LENGTH_SHORT).show();
                                             }else{
                                                 Toast.makeText(CotizacionActivity.this, R.string.message_error_general, Toast.LENGTH_SHORT).show();
                                             }
@@ -3309,11 +3290,11 @@ public class CotizacionActivity extends AppCompatActivity {
 
     private boolean validateFieldTarjeta(){
         if(((GeneralValue)((Spinner) findViewById(R.id.spTipoTarjeta_payme)).getSelectedItem())==null){
-            Toast.makeText(this, "Seleccione un Tipo de Tarjeta porfavor", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Seleccione un Tipo de Tarjeta por favor", Toast.LENGTH_SHORT).show();
             return false;
         }
         if(((GeneralValue)((Spinner) findViewById(R.id.spMarcaTarjeta_payme)).getSelectedItem())==null){
-            Toast.makeText(this, "Seleccione una Marca de Tarjeta porfavor", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Seleccione una Marca de Tarjeta por favor", Toast.LENGTH_SHORT).show();
             return false;
         }
         if(TextUtils.isEmpty(etNumeroTarjeta.getText())){
@@ -3325,15 +3306,15 @@ public class CotizacionActivity extends AppCompatActivity {
             return false;
         }
         if(etNumeroTarjeta.getText().toString().trim().length()<6 || etNumeroTarjeta.getText().toString().trim().length()>6){
-            Toast.makeText(this, "Digite una longitud valida del numero bin de tarjeta porfavor", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Digite una longitud valida del numero bin de tarjeta por favor", Toast.LENGTH_SHORT).show();
             return false;
         }
         if(etFechaVencimiento.getText().toString().trim().length()<7 || etNumeroTarjeta.getText().toString().trim().length()>7){
-            Toast.makeText(this, "Digite la fecha de vencimiento de la tarjeta correctamente porfavor", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Digite la fecha de vencimiento de la tarjeta correctamente por favor", Toast.LENGTH_SHORT).show();
             return false;
         }
         if(frecuenciaPagoSelected == -1){
-            Toast.makeText(this, "Seleccione una frecuencia de pago porfavor", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Seleccione una frecuencia de pago por favor", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -3679,6 +3660,10 @@ public class CotizacionActivity extends AppCompatActivity {
             Log.d(TAG,"Agenda visita cotizacionMovil...");
             showDialogVisitaReprogrammar(1);
         }
+        else if(id==R.id.action_registrar_huella){
+            Log.d(TAG,"Registrar una huella...");
+            showDialogUploadHuella();
+        }
     }
 
     private void optionsItemMenuFinal(int id){
@@ -3688,13 +3673,14 @@ public class CotizacionActivity extends AppCompatActivity {
         }
         else if(id==R.id.action_save_cotizacion){
             Log.d(TAG,"GuardarPayme ...");
+
             //region Validaciones del grabado
             if(ResponseView.getVisibility() == View.GONE){
-                Toast.makeText(this, "Debe generar una cotizacion porfavor.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Debe generar una cotizacion por favor.", Toast.LENGTH_SHORT).show();
                 return;
             }
             if(selectTipoPagoFinal==-1){
-                Toast.makeText(this, "Seleccione una forma de pago porfavor.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Seleccione una forma de pago por favor.", Toast.LENGTH_SHORT).show();
                 return;
             }
             if(selectPlanCotizacion==-1){
@@ -3705,7 +3691,7 @@ public class CotizacionActivity extends AppCompatActivity {
             if(tipoVenta == 1){
                 if(selectPlanCotizacion == 1){
                     if(((GeneralValue)((Spinner) findViewById(R.id.spFraccionamiento)).getSelectedItem())==null){
-                        Toast.makeText(this, "Seleccione una fraccion porfavor", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Seleccione una fraccion por favor", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     cotizacionMovil.setCantidadCuota(((GeneralValue)((Spinner) findViewById(R.id.spFraccionamiento)).getSelectedItem()).getCode());
@@ -3752,7 +3738,12 @@ public class CotizacionActivity extends AppCompatActivity {
         }
         else if(id==android.R.id.home){
             Log.d(TAG,"Click en boton retroceder...ir a la solicitud...");
-            setDataSolicitudBack(visitaVta.getIdVisita(),"F");
+            if(authentication!=null){
+                setDataSolicitudBack(visitaVta.getIdVisita(),"V");
+            }else{
+                setDataSolicitudBack(visitaVta.getIdVisita(),"F");
+            }
+
         }
         //endregion
     }
@@ -4081,6 +4072,7 @@ public class CotizacionActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG,"onActivityResult...requestcode:"+requestCode+" resultcode:"+resultCode);
         super.onActivityResult(requestCode, resultCode, data);
+
         //region Request & Result de la Cotizacion
         if(requestCode==REQUEST_VISITA_SOLICITUD_COTIZACION_INICIAL){
             Log.d(TAG,"Request solicitud cotizacion inicial...");
@@ -4113,8 +4105,13 @@ public class CotizacionActivity extends AppCompatActivity {
                 selectTipoPago = -1;
                 selectTipoVenta = -1;
 
-               //
-                consultarCotizacion=-1;
+               //Aquí validar que cotizador se predeterminará
+                if(authentication!=null){
+                    consultarCotizacion=1;
+                }else{
+                    consultarCotizacion=2;
+                }
+                //consultarCotizacion=-1;
                 //
                 ResponseView.setVisibility(View.GONE);
                 rbFrecuenciaAnual.setChecked(false);
@@ -4128,6 +4125,7 @@ public class CotizacionActivity extends AppCompatActivity {
                 frecuenciaPagoSelected = -1;
                 tvCotizacionTitle.setText(estado==1?"Cotización Inicial":"Cotización Final");
                 itemEmail.setVisible(false);
+                itemHuella.setVisible(false);
                 cvPayme.setVisibility(View.VISIBLE);
                 etFechaVencimiento.addTextChangedListener(new TextWatcher() {
                     @Override
@@ -4173,44 +4171,48 @@ public class CotizacionActivity extends AppCompatActivity {
                                 Log.d(TAG,"concatString:"+concatString);
                                 s.replace(0, s.length(),concatString );
                             }
-
-
-
                         }
                     }
                 });
-                if(solicitudMovil.getIdGeneraSolicitud().equalsIgnoreCase("F")){
-                    for(SolicitudAfiliadoMovil solicitud:solicitudMovil.getAfiliados()){
-                        if(solicitud.getIdTitular()!=null){
-                            if(solicitud.getIdTitular().length()>0){
-                                if(solicitud.getIdTitular().equalsIgnoreCase(Contants.GENERAL_VALUE_SOLICITUD_VALIDAR_TITULAR_SI)){
-                                    afiliadoContratante = solicitud;
-                                    break;
+
+                //Validar si es Virtual o Física
+                if(authentication!=null){
+
+                }else{
+                    if(solicitudMovil.getIdGeneraSolicitud().equalsIgnoreCase("F")){
+                        for(SolicitudAfiliadoMovil solicitud:solicitudMovil.getAfiliados()){
+                            if(solicitud.getIdTitular()!=null){
+                                if(solicitud.getIdTitular().length()>0){
+                                    if(solicitud.getIdTitular().equalsIgnoreCase(Contants.GENERAL_VALUE_SOLICITUD_VALIDAR_TITULAR_SI)){
+                                        afiliadoContratante = solicitud;
+                                        break;
+                                    }
                                 }
                             }
                         }
+                        initSolicitudFisica();
                     }
-                    initSolicitudFisica();
-                }
-                //Recurrencia
-                if(solicitudMovil.getModoTarifa()!=null){
-                    if(solicitudMovil.getModoTarifa().length()>0){
-                        GeneralValue generalValue = null;
-                        List<GeneralValue> list = GeneralValue.getGeneralValues(Utils.getDataBase(this),GENERAL_TABLE_MODO_TARIFA_TIPO_PAGO);
-                        for (GeneralValue obj:list){
-                            if(obj.getCode().equalsIgnoreCase(solicitudMovil.getModoTarifa())){
-                                generalValue = obj;
-                                break;
+                    //Recurrencia
+                    if(solicitudMovil.getModoTarifa()!=null){
+                        if(solicitudMovil.getModoTarifa().length()>0){
+                            GeneralValue generalValue = null;
+                            List<GeneralValue> list = GeneralValue.getGeneralValues(Utils.getDataBase(this),GENERAL_TABLE_MODO_TARIFA_TIPO_PAGO);
+                            for (GeneralValue obj:list){
+                                if(obj.getCode().equalsIgnoreCase(solicitudMovil.getModoTarifa())){
+                                    generalValue = obj;
+                                    break;
+                                }
+                            }
+                            //Dato
+                            if(generalValue.getCode().equalsIgnoreCase("RE")){
+                                setBlockRecurrencia(true);
+                            }else{
+                                setBlockRecurrencia(false);
                             }
                         }
-                        //Dato
-                        if(generalValue.getCode().equalsIgnoreCase("RE")){
-                            setBlockRecurrencia(true);
-                        }else{
-                            setBlockRecurrencia(false);
-                        }
                     }
                 }
+
                 showLayoutTarjeta(false);
                 //
             }
@@ -4400,7 +4402,12 @@ public class CotizacionActivity extends AppCompatActivity {
         Log.d(TAG,"onBackPressed...");
         //super.onBackPressed();
         if(estado==2){
-            setDataSolicitudBack(visitaVta.getIdVisita(),"F");
+            if(authentication!=null){
+                setDataSolicitudBack(visitaVta.getIdVisita(),"V");
+            }else{
+                setDataSolicitudBack(visitaVta.getIdVisita(),"F");
+            }
+
         }else{
             moveTaskToBack(true);
         }
@@ -4422,6 +4429,7 @@ public class CotizacionActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_cotizacion,menu);
         itemEmail = menu.findItem(R.id.action_email_cotizacion);
+        itemHuella = menu.findItem(R.id.action_registrar_huella);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -4432,69 +4440,92 @@ public class CotizacionActivity extends AppCompatActivity {
 
     private void showAutenticationFingerPrint(){
         Log.d(TAG,"showAutenticationFingerPrint...");
-        FingerPrintDialog fingerPrintDialog = FingerPrintDialog.newInstance(new FingerPrintDialog.callBackListener() {
-            Handler handler = new Handler(Looper.getMainLooper());
-            @Override
-            public void onError(String mensaje) {
-                Log.d(TAG,"onError:"+mensaje);
+        try{
+            fingerPrintDialog = FingerPrintDialog.newInstance(new FingerPrintDialog.callBackListener() {
+                                                                  Handler handler = new Handler(Looper.getMainLooper());
+                                                                  @Override
+                                                                  public void onError(String mensaje) {
+                                                                      Log.d(TAG,"onError:"+mensaje);
 
-                try{
-                    //setDataSolicitud(visitaVta.getIdVisita(),"V");
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
+                                                                      try{
+                                                                          //setDataSolicitud(visitaVta.getIdVisita(),"V");
+                                                                      }catch (Exception e){
+                                                                          e.printStackTrace();
+                                                                          Util.ErrorToFile(e);
+                                                                      }
+                                                                  }
 
-            @Override
-            public void onSuccess() {
-                Log.d(TAG,"onSuccess...");
-                try{
-                    //setDataSolicitud(visitaVta.getIdVisita(),"V");
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        },
-                new Bundle(),
-                new Handler(Looper.getMainLooper()){
-                    public void handleMessage(Message msg) {
-
-                    }
-
-        } ,
-                new Handler(Looper.getMainLooper()){
-                    public void handleMessage(Message msg) {
-                        Log.d(TAG,"printHandler...");
-
-                        if(msg!=null){
-                            Log.d(TAG,"msg!=null...");
-                            System.out.println(msg);
-                        }else{
-                            Log.d(TAG,"msg==null...");
+                                                                  @Override
+                                                                  public void onSuccess() {
+                                                                      Log.d(TAG,"onSuccess...");
+                                                                      try{
+                                                                          //setDataSolicitud(visitaVta.getIdVisita(),"V");
+                                                                      }catch (Exception e){
+                                                                          e.printStackTrace();
+                                                                          Util.ErrorToFile(e);
+                                                                      }
+                                                                  }
+                                                              },
+                    new Bundle(),
+                    new Handler(Looper.getMainLooper()){
+                        public void handleMessage(Message msg) {
+                            Log.d(TAG,TAG+"msg....");
                         }
-                        byte[] image;
-                        String errorMessage = "empty";
-                        int status = msg.getData().getInt("status");
-                        Intent intent = new Intent();
-                        intent.putExtra("status", status);
-                        if (status == Status.SUCCESS) {
-                            Log.d(TAG,"statuss== SUCCESS..");
-                            image = msg.getData().getByteArray("img");
-                            showDialogPrintAuthenticate(image);
-                        } else {
-                            Log.d(TAG,"Status != SUCCESS...");
-                            errorMessage = msg.getData().getString("errorMessage");
-                            intent.putExtra("errorMessage", errorMessage);
-                            Toast.makeText(CotizacionActivity.this, errorMessage, Toast.LENGTH_LONG).show();
-                        }
-                    }
 
-        });
-        fingerPrintDialog.setCancelable(true);
-        fingerPrintDialog.show(getSupportFragmentManager(),null);
+                    } ,
+                    new Handler(Looper.getMainLooper()){
+                        public void handleMessage(Message msg) {
+                            super.handleMessage(msg);
+                            Log.d(TAG,TAG+ "printHandler Authentication...");
+                            try {
+                                if(msg!=null){
+                                    Log.d(TAG,"msg!=null...");
+                                    Log.d(TAG,msg.toString());
+                                }else{
+                                    Log.d(TAG,"msg==null...");
+                                }
+                                byte[] image;
+                                String errorMessage = "empty";
+                                int status = msg.getData().getInt("status");
+                                Intent intent = new Intent();
+                                intent.putExtra("status", status);
+                                try{
+                                    if (status == Status.SUCCESS) {
+                                        Log.d(TAG,"statuss== SUCCESS..");
+                                        image = msg.getData().getByteArray("img");
+                                        fingerPrintDialog.dismiss();
+                                        showDialogPrintAuthenticate(image);
+                                    } else {
+                                        Log.d(TAG,"Status != SUCCESS...");
+                                        errorMessage = msg.getData().getString("errorMessage");
+                                        intent.putExtra("errorMessage", errorMessage);
+                                        fingerPrintDialog.dismiss();
+                                        Log.d(TAG,"errorMessage:"+errorMessage);
+                                        //Toast.makeText(CotizacionActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+                                    }
+                                }catch (Exception e){
+                                    Log.d(TAG,e.getMessage());
+                                    e.printStackTrace();
+                                    Util.ErrorToFile(e);
+                                }
+                            }catch (Exception e){
+                                Log.d(TAG,e.getMessage());
+                                e.printStackTrace();
+                                Util.ErrorToFile(e);
+                            }
+                        }
+                    });
+            fingerPrintDialog.setCancelable(true);
+            fingerPrintDialog.show(getSupportFragmentManager(),null);
+        }catch (Exception e){
+            Log.d(TAG,e.getMessage());
+            e.printStackTrace();
+            Util.ErrorToFile(e);
+        }
     }
 
     private void showDialogPrintAuthenticate(byte[] image){
+        Log.d(TAG,"showDialogPrintAuthenticate...");
         final ProgressDialog progressDialog = new ProgressDialog(this,R.style.AppCompatAlertDialogStyle);
         progressDialog.setTitle(R.string.appname_marketforce);
         progressDialog.setMessage("Autenticando huella...");
@@ -4502,6 +4533,7 @@ public class CotizacionActivity extends AppCompatActivity {
         progressDialog.show();
 
         new AutenticarHuellaRp3Client(CotizacionActivity.this, new Callback() {
+            Handler handler = new Handler(Looper.getMainLooper());
             @Override
             public void onFailure(Call call1, IOException e) {
                 Log.d(TAG,"onFailure...");
@@ -4510,39 +4542,140 @@ public class CotizacionActivity extends AppCompatActivity {
                 try{
                     progressDialog.dismiss();
                 }catch (Exception ee){
+                    Log.d(TAG,ee.getMessage());
                     ee.printStackTrace();
                 }
             }
             @Override
             public void onResponse(Call calll, Response response) throws IOException {
                 Log.d(TAG,"onResponse...");
-                progressDialog.dismiss();
                 try{
+                    progressDialog.dismiss();
                     final String rpta = response.body().string();
 
                     Log.d(TAG,"rpta autentication huella:"+rpta);
-                    if(response.isSuccessful()){
-                        Log.d(TAG,"response.isSuccessful...");
-                        if(rpta.trim().equalsIgnoreCase("1") || rpta.trim().equalsIgnoreCase("\"1\"")){
-                            Log.d(TAG,"Autenticado....");
-                            setDataSolicitud(visitaVta.getIdVisita(),"V");
-                        }else{
-                            Toast.makeText(CotizacionActivity.this, "No se encuentra registrado.", Toast.LENGTH_SHORT).show();
-                            setDataSolicitud(visitaVta.getIdVisita(),"V");
-                            //call.onError("No se encuentra registrado.");
-                        }
-                    }else{
-                        Log.d(TAG,"response no is Successful...");
-                        Toast.makeText(CotizacionActivity.this, "No se encuentra registrado.", Toast.LENGTH_SHORT).show();
-                        //call.onError("No se encuentra registrado.");
+                    //handler.post(() -> {
+                        try{
+                            if(response.isSuccessful()){
+                                Log.d(TAG,"response.isSuccessful...");
+                                if(rpta.trim().equalsIgnoreCase("0") || rpta.trim().equalsIgnoreCase("\"0\"")){
+                                    Log.d(TAG,"No Autenticado....");
+                                    handler.post(() -> {
+                                        showAlertDialogPrint("F");
+                                    });
 
-                        //Toast.makeText(getActivity(), rpta, Toast.LENGTH_SHORT).show();
-                    }
+                                }else{
+                                    Log.d(TAG,"Autenticado....");
+                                    handler.post(() -> {
+                                        authentication = new Gson().fromJson(rpta,Authentication.class);
+                                        showAlertDialogPrint("V");
+                                    });
+
+                                }
+                            }else{
+                                Log.d(TAG,"response no is Successful...");
+                            }
+                        }catch (Exception e){
+                            Log.d(TAG,e.getMessage());
+                            e.printStackTrace();
+                        }
+                    //});
                 }catch (Exception e){
+                    Log.d(TAG,e.getMessage());
                     e.printStackTrace();
                 }
             }
         }).autenticar(image);
+    }
+
+    private void showDialogUploadHuella(){
+        Log.d(TAG,"showDialogUploadHuella...");
+        try{
+            UploadFingerPrintDialog uploadFingerPrintDialog = UploadFingerPrintDialog.newInstance(new UploadFingerPrintDialog.callBackListener() {
+                @Override
+                public void onError(String mensaje) {
+                    Log.d(TAG,"onError");
+                    try{
+                        Toast.makeText(CotizacionActivity.this, mensaje, Toast.LENGTH_SHORT).show();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        Util.ErrorToFile(e);
+                    }
+                }
+                @Override
+                public void onSuccess(byte[] data,Authentication person) {
+                    Log.d(TAG,"onSuccess...");
+                    try{
+                        showDialogPrintUpload(data,person);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        Util.ErrorToFile(e);
+                    }
+
+                }
+            });
+            uploadFingerPrintDialog.setCancelable(true);
+            uploadFingerPrintDialog.show(getSupportFragmentManager(),null);
+        }catch (Exception e){
+            Log.d(TAG,"Catch:"+e.getMessage());
+            e.printStackTrace();
+            Util.ErrorToFile(e);
+        }
+    }
+
+    private void showDialogPrintUpload(byte[] image,Authentication person){
+        Log.d(TAG,"showDialogPrintUpload...");
+        try{
+            final ProgressDialog progressDialog = new ProgressDialog(this,R.style.AppCompatAlertDialogStyle);
+            progressDialog.setTitle(R.string.appname_marketforce);
+            progressDialog.setMessage("Registrando huella...");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+
+            new UploadFingerPrintRp3Client(CotizacionActivity.this, new Callback() {
+                Handler handler = new Handler(Looper.getMainLooper());
+                @Override
+                public void onFailure(Call call1, IOException e) {
+                    Log.d(TAG,"onFailure...");
+                    Log.d(TAG,"IOException:"+e.getMessage());
+                    e.printStackTrace();
+                    try{
+                        progressDialog.dismiss();
+                        handler.post(() -> {
+                            Toast.makeText(CotizacionActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
+                    }catch (Exception ee){
+                        ee.printStackTrace();
+                    }
+                }
+                @Override
+                public void onResponse(Call calll, Response response) throws IOException {
+                    Log.d(TAG,"onResponse...");
+                    progressDialog.dismiss();
+                    try{
+                        final String rpta = response.body().string();
+                        Log.d(TAG,"rpta autentication huella:"+rpta);
+                        if(response.isSuccessful()){
+                            Log.d(TAG,"response.isSuccessful...");
+                            handler.post(() -> Toast.makeText(CotizacionActivity.this, "Huella registrada satisfactoriamente", Toast.LENGTH_LONG).show());
+                        }else{
+                            Log.d(TAG,"response no is Successful...");
+                            handler.post(() -> {
+                                Toast.makeText(CotizacionActivity.this, rpta, Toast.LENGTH_LONG).show();
+                            });
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        Util.ErrorToFile(e);
+                    }
+                }
+            }).upload(image,person);
+        }catch (Exception e){
+            Log.d(TAG,e.getMessage());
+            e.printStackTrace();
+            Util.ErrorToFile(e);
+        }
+
     }
 
     private void showDialogCotizadorVirtualClient(CotizacionVirtual cotizacionzacionMovil){
@@ -4643,5 +4776,45 @@ public class CotizacionActivity extends AppCompatActivity {
         consultarCotizacion=2;
         rbIndividual.setChecked(true);
         tipoVenta = 1;
+    }
+
+    private void showAlertDialogPrint(String tipoSolicitud){
+        Log.d(TAG,"showAlertDialogPrint...");
+        try{
+            AlertDialog.Builder builder = new AlertDialog.Builder(CotizacionActivity.this,R.style.AppCompatAlertDialogStyle)
+                    .setCancelable(true)
+                    .setTitle(R.string.appname_marketforce);
+            if(tipoSolicitud.equalsIgnoreCase("V")){
+                builder.setMessage("Se autentico correctamente." +"\n"+
+                        "Nombres:"+authentication.getNombres()+"\n"+
+                        "Apellidos:"+authentication.getApellidos()+"\n"+
+                        "Documento:"+authentication.getDocumento()+"\n\nIniciar Solicitud Virtual");
+            }else{
+                builder.setMessage("No se encontro la huella, iniciar Solicitud Fisica");
+            }
+            builder.setPositiveButton("Continuar",(dialog, which) -> {
+                try{
+                    Log.d(TAG,"PositiveButton Continuar...");
+                    setDataSolicitud(visitaVta.getIdVisita(),tipoSolicitud);
+                }catch (Exception e){
+                    Log.d(TAG,e.getMessage());
+                    e.printStackTrace();
+                }
+            });
+            builder.setNegativeButton("Cancelar",(dialog, which) -> {
+                try{
+                    Log.d(TAG,"NegativeButton Cancelar...");
+                    dialog.dismiss();
+                }catch (Exception e){
+                    Log.d(TAG,e.getMessage());
+                    e.printStackTrace();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }catch (Exception e){
+            Log.d(TAG,e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

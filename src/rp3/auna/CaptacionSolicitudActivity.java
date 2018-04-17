@@ -121,9 +121,9 @@ public class CaptacionSolicitudActivity extends AppCompatActivity {
         costo = getIntent().getStringExtra("Costo");
         esNuevo = getIntent().getIntExtra("EsNuevo",1);
         if(tipoSolicitud.equalsIgnoreCase("F")){
-            getSupportActionBar().setTitle("Registro de Solicitud Fisica");
+            getSupportActionBar().setTitle("Solicitud Fisica");
         }else{
-            getSupportActionBar().setTitle("Registro de Solicitud Virtual");
+            getSupportActionBar().setTitle("Solicitud Virtual");
         }
         if(validate()){
             containerOff.setVisibility(View.GONE);
@@ -131,7 +131,7 @@ public class CaptacionSolicitudActivity extends AppCompatActivity {
             final ProgressDialog progressdialog = new ProgressDialog(this,R.style.AppCompatAlertDialogStyle);
             progressdialog.setCancelable(false);
             progressdialog.setTitle("RP3 Market Force");
-            progressdialog.setMessage("Cargando...espere porfavor...");
+            progressdialog.setMessage("Cargando, espere por favor...");
             progressdialog.show();
             webView.setWebViewClient(new WebViewClient(){
                 @Override

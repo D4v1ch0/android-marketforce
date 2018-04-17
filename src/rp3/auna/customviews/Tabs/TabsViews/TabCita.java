@@ -493,6 +493,7 @@ public class TabCita extends Fragment{
                 //Iniciar la Cotizacion Inicial
                 intent = new Intent(getActivity(), CotizacionActivity.class);
                 intent.putExtra("Estado",1);
+                SessionManager.getInstance(getActivity()).createVisitaSession(visitaVta);
                 getActivity().startActivityForResult(intent,REQUEST_VISITA_COTIZACION_NUEVO);
             }
 

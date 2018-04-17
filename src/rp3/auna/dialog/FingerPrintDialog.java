@@ -3,9 +3,7 @@ package rp3.auna.dialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -13,18 +11,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 import butterknife.BindView;
@@ -32,13 +24,11 @@ import butterknife.ButterKnife;
 import asia.kanopi.fingerscan.Fingerprint;
 import asia.kanopi.fingerscan.Status;
 import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.Response;
 import rp3.auna.CotizacionActivity;
 import rp3.auna.R;
 import rp3.auna.util.helper.Util;
-import rp3.auna.util.print.FingerPrint;
-import rp3.auna.webservices.AutenticarHuellaRp3Client;
+import rp3.auna.webservices.virtual.AutenticarHuellaRp3Client;
 
 /**
  * Created by Jesus Villa on 09/03/2018.
@@ -47,70 +37,74 @@ import rp3.auna.webservices.AutenticarHuellaRp3Client;
 public class FingerPrintDialog extends DialogFragment {
     private static final String TAG = FingerPrintDialog.class.getSimpleName();
     @BindView(R.id.fingerprint_icon)ImageView ivFinger;
-    @BindView(R.id.fingerprint_status)TextView tvAutenticate;
+    @Nullable @BindView(R.id.fingerprint_status)TextView tvAutenticate;
     private Fingerprint fingerprint;
     FingerPrintDialog.callBackListener call;
     String errorScanner;
     ProgressDialog progressDialog;
     //region Handlers Scanner
-    Handler handler = new Handler(Looper.getMainLooper());
     Handler updateHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
-            Log.d(TAG,"updateHandler...");
+            Log.d(TAG,"updateHandler Authentication...");
+            try{
+                int status = msg.getData().getInt("status");
+                errorScanner=null;
+                switch (status) {
+                    case Status.INITIALISED:
+                        errorScanner=("Setting up reader");
+                        tvAutenticate.setText("Configurar el lector");
+                        break;
+                    case Status.SCANNER_POWERED_ON:
+                        errorScanner=("Reader powered on");
+                        tvAutenticate.setText("Lector encendido, presione el sensor");
+                        break;
+                    case Status.READY_TO_SCAN:
+                        errorScanner=("Ready to scan finger");
+                        tvAutenticate.setText("Listo para scanear huella");
+                        break;
+                    case Status.FINGER_DETECTED:
+                        errorScanner=("Finger detected");
+                        tvAutenticate.setText("Huella no reconocida por el lector, presione nuevamente.");
+                        break;
+                    case Status.RECEIVING_IMAGE:
+                        errorScanner=("Receiving image");
+                        tvAutenticate.setText("Recibiendo huella...");
+                        break;
+                    case Status.FINGER_LIFTED:
+                        errorScanner=("El dedo ha sido levantado del lesto");
+                        tvAutenticate.setText("Configurar el lector");
+                        break;
+                    case Status.SCANNER_POWERED_OFF:
+                        errorScanner=("Reader is off");
+                        tvAutenticate.setText("El lector esta apagado.");
+                        break;
+                    case Status.SUCCESS:
+                        errorScanner=("Fingerprint successfully captured");
+                        tvAutenticate.setText("Huella reconocida, autenticar...");
+                        break;
+                    case Status.ERROR:
+                        errorScanner=("Error");
+                        errorScanner=(msg.getData().getString("errorMessage"));
+                        tvAutenticate.setText(errorScanner);
+                        break;
+                    default:
+                        errorScanner=(String.valueOf(status));
+                        errorScanner=(msg.getData().getString("errorMessage"));
+                        tvAutenticate.setText(errorScanner);
+                        break;
+
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             if(msg!=null){
                 Log.d(TAG,"msg!=null...");
                 System.out.println(msg);
             }else{
                 Log.d(TAG,"msg==null...");
             }
-            int status = msg.getData().getInt("status");
-            errorScanner=null;
-            switch (status) {
-                case Status.INITIALISED:
-                    errorScanner=("Setting up reader");
-                    tvAutenticate.setText("Configurar el lector");
-                    break;
-                case Status.SCANNER_POWERED_ON:
-                    errorScanner=("Reader powered on");
-                    tvAutenticate.setText("Lector encendido, presione el sensor");
-                    break;
-                case Status.READY_TO_SCAN:
-                    errorScanner=("Ready to scan finger");
-                    tvAutenticate.setText("Listo para scanear huella");
-                    break;
-                case Status.FINGER_DETECTED:
-                    errorScanner=("Finger detected");
-                    tvAutenticate.setText("Huella no reconocida por el lector, presione nuevamente.");
-                    break;
-                case Status.RECEIVING_IMAGE:
-                    errorScanner=("Receiving image");
-                    tvAutenticate.setText("Recibiendo huella...");
-                    break;
-                case Status.FINGER_LIFTED:
-                    errorScanner=("El dedo ha sido levantado del lesto");
-                    tvAutenticate.setText("Configurar el lector");
-                    break;
-                case Status.SCANNER_POWERED_OFF:
-                    errorScanner=("Reader is off");
-                    tvAutenticate.setText("El lector esta apagado.");
-                    break;
-                case Status.SUCCESS:
-                    errorScanner=("Fingerprint successfully captured");
-                    tvAutenticate.setText("Huella reconocida, autenticar...");
-                    break;
-                case Status.ERROR:
-                    errorScanner=("Error");
-                    errorScanner=(msg.getData().getString("errorMessage"));
-                    tvAutenticate.setText(errorScanner);
-                    break;
-                default:
-                    errorScanner=(String.valueOf(status));
-                    errorScanner=(msg.getData().getString("errorMessage"));
-                    tvAutenticate.setText(errorScanner);
-                    break;
 
-            }
         }
     };
 
@@ -213,6 +207,7 @@ public class FingerPrintDialog extends DialogFragment {
                         });*/
                     }
                 }).autenticar(image);
+                dismiss();
             } else {
                 Log.d(TAG,"Status != SUCCESS...");
                 errorMessage = msg.getData().getString("errorMessage");
@@ -284,27 +279,28 @@ public class FingerPrintDialog extends DialogFragment {
             fingerprint.scan(((CotizacionActivity)getActivity()), printHandler, updateHandler);
         }catch (Exception e){
             e.printStackTrace();
+            Util.ErrorToFile(e);
         }
 
     }
 
     @Override
     public void onDestroyView() {
-
         Log.d(TAG,"onDestroyView...");
+        try{
+            fingerprint.turnOffReader();
+        }catch (Exception e){
+            e.printStackTrace();
+            Util.ErrorToFile(e);
+        }
         super.onDestroyView();
+
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         Log.d(TAG,"onDestroy...");
-        try{
-            fingerprint.turnOffReader();
-        }catch (Exception e){
-           e.printStackTrace();
-        }
-
 
     }
 

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:padding="@dimen/normal_space"
+    android:background="@color/alternative_background"
+    >
+
+    <TextView
+        android:background="@color/alternative_background"
+        android:fontFamily="sans-serif"
+        android:textColor="@color/md_text"
+        android:textSize="15sp"
+        android:id="@+id/tvLlamada"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/padding_between_title_body"
+        android:gravity="center"
+        android:text="RP3 Market Force"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/fingerprint_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Registre una Huella digital"
+        android:textColor="@color/md_black_1000_75"
+        android:gravity="center_horizontal"
+        android:layout_gravity="center_horizontal"
+        android:textSize="21sp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tvAuthenticatee"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_gravity="center_horizontal"
+                android:text="Presione el sensor"
+                android:gravity="center_horizontal"
+                android:textColor="@color/md_black_1000_50"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/fingerprint_iconn"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="16dp"
+                android:padding="0dp"
+                android:src="@drawable/ic_finger_black"
+                android:layout_marginBottom="6dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                android:layout_gravity="center"
+                android:contentDescription="Scanned fingerprint"
+                />
+            <android.support.design.widget.TextInputLayout
+                android:layout_marginTop="3dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nombres"
+                android:textColorHint="?attr/colorPrimary">
+                <EditText
+                    android:id="@+id/etNombree"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Nombres"
+                    android:textSize="15sp"
+
+                    android:inputType="textCapSentences"
+                    android:textColor="@color/md_black_1000_75"
+                    android:textColorHint="@color/md_black_1000_15"/>
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_marginTop="3dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Apellidos"
+                android:textColorHint="?attr/colorPrimary">
+                <EditText
+                    android:id="@+id/etApellidoss"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Apellidos"
+                    android:textSize="15sp"
+                    android:inputType="textCapSentences"
+                    android:textColor="@color/md_black_1000_75"
+                    android:textColorHint="@color/md_black_1000_15"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nº Documento"
+                android:textColorHint="?attr/colorPrimary">
+                <EditText
+                    android:id="@+id/etNumeroDocumentoo"
+                    android:layout_marginTop="3dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Nº Documento"
+                    android:textSize="15sp"
+                    android:inputType="text"
+                    android:maxLength="12"
+                    android:textColor="@color/md_black_1000_75"
+                    android:textColorHint="@color/md_black_1000_15"/>
+            </android.support.design.widget.TextInputLayout>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+    <LinearLayout
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="10dp"
+        android:gravity="right"
+        android:orientation="horizontal">
+        <Button
+            android:layout_marginLeft="5dp"
+            android:id="@+id/btnSubirUploadFinger"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/button_padding"
+            android:text="Subir"
+            android:textColor="?attr/colorPrimary" />
+        <Button
+            android:layout_marginLeft="5dp"
+            android:id="@+id/btnCancelarUploadFinger"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/button_padding"
+            android:text="Cancelar"
+            android:textColor="?attr/colorPrimary" />
+
+    </LinearLayout>
+
+
+</LinearLayout>
