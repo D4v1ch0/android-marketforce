@@ -42,6 +42,4 @@ public class WalletClient {
 
         b.build().newCall(request).enqueue(callBack);
     }
-
-    //Hola juan jose lucero
 }
