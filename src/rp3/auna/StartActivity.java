@@ -358,73 +358,19 @@ public class StartActivity extends rp3.app.StartActivity{
             Log.d(TAG,"data SYNCD GENERAL..");
             String session = PreferenceManager.getString(Constants.KEY_LOGIN_SESSION,"");
             Log.d(TAG,"Esta logeado:"+session);
-            /*if (messages.hasErrorMessage()){
-                Log.d(TAG,"messages.hasErrorMessage()...");
-                if (Session.IsLogged()&& session.equalsIgnoreCase("true")) {
-                    Log.d(TAG,"Session.IsLogged()...");
-                    String cargo = PreferenceManager.getString(Contants.KEY_CARGO,null);
-                    if(cargo==null){
-                        Log.d(TAG,"el cargo es null...");
-                    }else{
-                        Log.d(TAG,"el cargo es:"+cargo);
-                    }
-                    callNextActivity();
-                } else {
-                    Log.d(TAG,"Session.NoIsLogged()...");
-                    showDialogMessage(messages, new SimpleCallback() {
-                        @Override
-                        public void onExecute(Object... params) {
-                            if (!messages.hasErrorMessage()){
-                                Log.d(TAG,"No se encontro errores...callNextActivity...");
-                                String session = PreferenceManager.getString(Constants.KEY_LOGIN_SESSION,"");
-                                Log.d(TAG,"Esta logeado:"+session);
-                                if(session.equalsIgnoreCase("true")){
-                                    Log.d(TAG,"Session is Logged...");
-                                    Log.d(TAG,"Usuario Logeado:"+Session.getUser().toString());
-                                    String logonName = PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"");
-                                    String passowrd = PreferenceManager.getString(Constants.KEY_LAST_PASS,"");
-                                    Log.d(TAG,"LogonName:"+logonName);
-                                    Log.d(TAG,"Password:"+passowrd);
-                                    //Log.d(TAG,"AuthToken:"+Session.getUser().getAuthToken());
-                                    Log.d(TAG,"Loged:"+Session.getUser().isLogged());
-                                    Log.d(TAG,"LogonNameSession:"+Session.getUser().getLogonName());
-                                    Log.d(TAG,"PasswordSession:"+Session.getUser().getPassword());
-                                    if(PreferenceManager.getString(Constants.KEY_LAST_LOGIN,"").equalsIgnoreCase(Session.getUser().getLogonName()) &&
-                                            PreferenceManager.getString(Constants.KEY_LAST_PASS,"").equalsIgnoreCase(Session.getUser().getPassword())){
-                                        Log.d(TAG,"Usuario y clave temporales son iguales al logeado...");
-                                        callNextActivity();
-                                    }else{
-                                        Log.d(TAG,"Usuari o y clave temporalres no son iguales al logeado...");
-                                        //callLoginActivity();
-                                    }
-                                }else{
-                                    Log.d(TAG,"callLoginActivity...");
-                                }
-                                //callNextActivity();
-                            }
-                            else{
-                                Log.d(TAG,"Finish...");
-                                finish();
-                            }
-                        }
-                    });
-                }
-            }*/
-           // else {
-                Log.d(TAG,"!messages.hasErrorMessage()...");
-                if(session.equalsIgnoreCase("true") && Session.IsLogged()){
-                    Log.d(TAG,"esta logeado...");
-                    System.out.println(Session.getUser().getAccount());
-                    System.out.println(Session.getUser());
-                    Log.d(TAG,PreferenceManager.getString(Constants.KEY_LAST_LOGIN,""));
-                    Log.d(TAG,PreferenceManager.getString(Constants.KEY_LAST_PASS,""));
-                    callNextActivity();
-                }else{
-                    Log.d(TAG,"No esta logeado...");
-                    callLoginActivity();
-                }
-                //callNextActivity();
-           // }
+
+            Log.d(TAG,"!messages.hasErrorMessage()...");
+            if(session.equalsIgnoreCase("true") && Session.IsLogged()){
+                Log.d(TAG,"esta logeado...");
+                System.out.println(Session.getUser().getAccount());
+                System.out.println(Session.getUser());
+                Log.d(TAG,PreferenceManager.getString(Constants.KEY_LAST_LOGIN,""));
+                Log.d(TAG,PreferenceManager.getString(Constants.KEY_LAST_PASS,""));
+                callNextActivity();
+            }else{
+                Log.d(TAG,"No esta logeado...");
+                callLoginActivity();
+            }
         }else{
             String session = PreferenceManager.getString(Constants.KEY_LOGIN_SESSION,"");
             Log.d(TAG,"Data sync type no is General ni resumen...quizas es de tracking...");
@@ -437,7 +383,6 @@ public class StartActivity extends rp3.app.StartActivity{
                 Log.d(TAG,"Dejar ahi nada mas...");
                 callLoginActivity();
             }
-
         }
     }
 

@@ -398,9 +398,28 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
     }
 
     private void validate(){
-        if(tipoPersonaCode==null){Toast.makeText(this, "Debe seleccionar un tipo de persona y llenar sus datos respectivamente...", Toast.LENGTH_SHORT).show();return;}
-        if(tipoPersonaCode=="N"){if(validateNatural()){initDataPersonaN();}return;}
-        if(tipoPersonaCode=="J"){if(validateJuridico()){initDataPersonaJ();}return;}
+        if(tipoPersonaCode==null)
+        {
+            Toast.makeText(this, "Debe seleccionar un tipo de persona y llenar sus datos respectivamente...", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(tipoPersonaCode=="N")
+        {
+            if(validateNatural()){
+                initDataPersonaN();
+            }
+
+            return;
+        }
+        if(tipoPersonaCode=="J")
+        {
+            if(validateJuridico())
+            {
+                initDataPersonaJ();
+            }
+
+            return;
+        }
     }
 
     //Confirmar cambios
@@ -410,48 +429,93 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
         handler.post(new Runnable() {
             @Override
             public void run() {
+                Log.d(TAG,"Run");
                 prospectoVta.setIdAgente(rp3.configuration.PreferenceManager.getInt(Contants.KEY_IDAGENTE,0));
                 prospectoVta.setEstado(1);
                 prospectoVta.setEstadoCode("A");
                 Log.d(TAG,"flagdocumento:"+flagDocumento+" opcionProspectar:"+opcionProspectar);
-                if(tipo.equalsIgnoreCase("N")){
+                if(tipo.equalsIgnoreCase("N"))
+                {
+                    //region Natural
+                    Log.d(TAG,"Natural");
+
                     if(flagDocumento == 0){
+                        //region Opcion 0
                         setConfirmFromDialog(tipo);
-                    }else if (flagDocumento == 1){
-                        if(opcionProspectar==2){
+                        //endregion
+                    }else if (flagDocumento == 1)
+                    {
+                        //region Opcion 1
+                        if(opcionProspectar==2)
+                        {
                             if(!TextUtils.isEmpty(etDocumento.getText())){
-                                if(prospectoEditar.getDocumento()!=null){
-                                    if(prospectoEditar.getDocumento().length()>0){
+                                //region No vacio
+                                Log.d(TAG,"No vacio");
+                                Log.d(TAG,etDocumento.getText().toString());
+
+                                if(prospectoEditar.getDocumento()!=null)
+                                {
+                                    Log.d(TAG, prospectoEditar.getDocumento().toString());
+                                    Log.d(TAG, Integer.toString(prospectoEditar.getDocumento().length()));
+                                    Log.d(TAG, "Prospecto a editar No Vacio");
+
+                                    if(prospectoEditar.getDocumento().length()>0)
+                                    {
                                         if(etDocumento.getText().toString().equalsIgnoreCase(prospectoEditar.getDocumento())){
                                             setConfirmFromDialog(tipo);
-                                        }else{
+                                        }
+                                        else
+                                        {
                                             Toast.makeText(ProspectoActivity.this, R.string.prospecto_document_exist, Toast.LENGTH_SHORT).show();
                                         }
                                     }
+                                    else
+                                    {
+                                        setConfirmFromDialog(tipo);
+                                    }
                                 }else{
+                                    Log.d(TAG, "Prospecto a editar Vacio");
                                     setConfirmFromDialog(tipo);
                                 }
-                            }else{
-                                Toast.makeText(ProspectoActivity.this, R.string.prospecto_document_exist, Toast.LENGTH_SHORT).show();
+                                //endregion
                             }
-                        }else{
+                            else
+                            {
+                                //region Vacio
+                                Log.d(TAG,"Vacio");
+                                Toast.makeText(ProspectoActivity.this, R.string.prospecto_document_exist, Toast.LENGTH_SHORT).show();
+                                //endregion
+                            }
+                        }
+                        else
+                        {
                             Toast.makeText(ProspectoActivity.this, R.string.prospecto_document_exist, Toast.LENGTH_SHORT).show();
                         }
-
+                        //endregion
                     }else if (flagDocumento == 2){
+                        //region Opcion 2
                         Toast.makeText(ProspectoActivity.this, R.string.prospecto_document_robinson, Toast.LENGTH_SHORT).show();
+                        //endregion
                     }else {
+                        //region Opcion else
                         Toast.makeText(ProspectoActivity.this, R.string.prospecto_document_validate, Toast.LENGTH_SHORT).show();
+                        //endregion
                     }
 
-            /*if(validateProspecto(tipo)){
-                Log.d(TAG,"Normal N validar...");
-                setConfirmFromDialog(tipo);
-            }else{
-                Log.d(TAG,"tipo N is false...equivalente en su base...");
-                Toast.makeText(this, "Disculpe este documento ya se encuentra registrado en su base de prospectos.", Toast.LENGTH_SHORT).show();
-            }*/
-                }else{
+                    /*if(validateProspecto(tipo)){
+                        Log.d(TAG,"Normal N validar...");
+                        setConfirmFromDialog(tipo);
+                    }else{
+                        Log.d(TAG,"tipo N is false...equivalente en su base...");
+                        Toast.makeText(this, "Disculpe este documento ya se encuentra registrado en su base de prospectos.", Toast.LENGTH_SHORT).show();
+                    }*/
+                    //endregion
+                }
+                else
+                {
+                    //region Juridico
+                    Log.d(TAG,"Juridico");
+
                     if(flagDocumento == 0 ){
                         setConfirmFromDialog(tipo);
                     }else if (flagDocumento == 1){
@@ -461,21 +525,22 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
                     }else {
                         Toast.makeText(ProspectoActivity.this, R.string.prospecto_document_validate, Toast.LENGTH_SHORT).show();
                     }
-            /*if(validateProspecto(tipo)){
-                Log.d(TAG,"Normal J validar...");
-                setConfirmFromDialog(tipo);
-            }else{
-                Log.d(TAG,"tipo J is false...equivalente en su base...");
-                Toast.makeText(this, "Disculpe este Ruc ya se encuentra registrado en su base de prospectos.", Toast.LENGTH_SHORT).show();
-            }*/
+                    /*if(validateProspecto(tipo)){
+                        Log.d(TAG,"Normal J validar...");
+                        setConfirmFromDialog(tipo);
+                    }else{
+                        Log.d(TAG,"tipo J is false...equivalente en su base...");
+                        Toast.makeText(this, "Disculpe este Ruc ya se encuentra registrado en su base de prospectos.", Toast.LENGTH_SHORT).show();
+                    }*/
+                    //endregion
                 }
             }
         });
-
     }
 
     private void setConfirmFromDialog(final String tipo){
         DataBase dataBase = Utils.getDataBase(ProspectoActivity.this);
+        //region Comentado
         /*if(opcionProspectar==2){
             ProspectoVtaDb model = ProspectoVtaDb.getProspectoIdProspectoBD(dataBase,(int)prospectoEditar.getID());
             if(model==null){
@@ -501,20 +566,27 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
         }else{
             Log.d(TAG,"database is close...");
         }*/
+        //endregion
+
         if(opcionProspectar == 3){
             Log.d(TAG,"opcionProspectar == 3...");
             showAlertDialogReferidoConfirm();
-        }else{
+        }
+        else
+        {
             Log.d(TAG,"opcion a prospectar:"+opcionProspectar);
-            AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.AppCompatAlertDialogStyle)
-                    .setTitle(this.getResources().getString(R.string.appname_marketforce));
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.AppCompatAlertDialogStyle).setTitle(this.getResources().getString(R.string.appname_marketforce));
+
             if(opcionProspectar==2){
                 builder.setMessage("¿Desea editar este prospecto?");
+
                 if(prospectoEditar.getIdProspecto()>0){
                     prospectoVta.setIdProspecto(prospectoEditar.getIdProspecto());
                 }else{
                     prospectoVta.setIdProspecto((int)prospectoEditar.getID());
                 }
+
                 if(prospectoEditar.getOrigenCode().equalsIgnoreCase(Contants.GENERAL_VALUE_CODE_ORIGEN_VENTA_MKF)){
                     prospectoVta.setOrigenCode(Contants.GENERAL_VALUE_CODE_ORIGEN_VENTA_MKF);
                 }else{
@@ -527,154 +599,255 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
             /*else if(opcionProspectar == 3){
                 builder.setMessage("¿Desea grabar este referido?");
             }*/
-            builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Log.d(TAG,"onClickDialog Si...");
-                    prospectoVta.setEstado(1);
-                    if(opcionProspectar==2){
-                        if(prospectoEditar.getOrigenCode().equalsIgnoreCase(Contants.GENERAL_VALUE_CODE_ORIGEN_VENTA_MKF)){
-                            prospectoVta.setOrigenCode(Contants.GENERAL_VALUE_CODE_ORIGEN_VENTA_MKF);
-                        }else{
-                            prospectoVta.setOrigenCode(Contants.GENERAL_VALUE_CODE_ORIGEN_MKF_MOVIL);
-                        }
-                    }else{
-                        prospectoVta.setEstadoCode(Contants.GENERAL_VALUE_CODE_APTO_PROSPECCION);
-                        prospectoVta.setOrigenCode(Contants.GENERAL_VALUE_CODE_ORIGEN_MKF_MOVIL);
-                    }
+            builder
+                    .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Log.d(TAG,"onClickDialog Si...");
 
-                    String json = new Gson().toJson(prospectoVta);
-                    if(tipo.equalsIgnoreCase("N") && prospectoVta.getTipoDocumento()>0 && prospectoVta.getDocumento()!=null){
-                        Log.d(TAG," es de tipo N y tiene documento...");
-                        if(flagDocumento==1 && opcionProspectar == 2){
-                            if(etDocumento.getText().toString().equalsIgnoreCase(prospectoEditar.getDocumento())){
-                                Log.d(TAG,"tiene documento y es natural es prospecto aeditar...");
-                                if(opcionProspectar==2){
-                                    Log.d(TAG,"Prospecto a editar...");
-                                    Log.d(TAG,"ProspectoEditar before:"+prospectoEditar.toString());
-                                    if(prospectoEditar.getIdProspecto()>0){
-                                        prospectoEditar.setEstado(2);
-                                    }else{
-                                        prospectoEditar.setEstado(1);
-                                    }
-                                    prospectoEditar.setIdAgente(rp3.configuration.PreferenceManager.getInt(Contants.KEY_IDAGENTE,0));
-                                    prospectoEditar.setEstadoCode(Contants.GENERAL_VALUE_CODE_APTO_PROSPECCION);
-                                    setDataToEdit();
-                                    Log.d(TAG,"ProspectoEditar after:"+prospectoEditar.toString());
-                                    //dataBase.beginTransactionNonExclusive();
-                                    try {
-                                        //do some insertions or whatever you need
-                                        //dataBase.setTransactionSuccessful();
-                                        //boolean resukt = ProspectoVtaDb.update(Utils.getDataBase(ProspectoActivity.this),prospectoEditar,ACTION_UPDATE);
-                                        boolean resukt = ProspectoVtaDb.update(dataBase,prospectoEditar);
-                                        System.out.print(prospectoEditar.getMessages());
-                                        if(resukt){
-                                            Log.d(TAG,"Se actualizo el prospecto a editar...");
-                                            Log.d(TAG,prospectoEditar.toString());
-                                        }else{
-                                            Log.d(TAG,"No se actulizo prospecto a editar...");
-                                        }
-                                    }catch (Exception e){
-                                        e.printStackTrace();
-                                    }finally {
-                                        //dataBase.endTransaction();
-                                        dataBase.close();
-                                    }
+                            prospectoVta.setEstado(1);
 
-                                    setResult(RESULT_PROSPECTO_EDIT);
-                                    finish();
-                                }
-                                else if(opcionProspectar==0){
-                                    Log.d(TAG,"Prospecto a crear...");
-                                    prospectoVta.setEstado(1);
-                                    boolean result = ProspectoVtaDb.insert(DataBase.newDataBase(rp3.auna.db.DbOpenHelper.class),prospectoVta);
-                                    if(result){
-                                        Log.d(TAG,"Se inserto el prospecto a crear...");
-                                        Log.d(TAG,prospectoVta.toString());
-                                    }else{
-                                        Log.d(TAG,"No se inserto el prospecto a crear...");
-                                    }
-                                    setResult(RESULT_PROSPECTO_NUEVO);
-                                    finish();
+                            if(opcionProspectar==2){
+                                if(prospectoEditar.getOrigenCode().equalsIgnoreCase(Contants.GENERAL_VALUE_CODE_ORIGEN_VENTA_MKF)){
+                                    prospectoVta.setOrigenCode(Contants.GENERAL_VALUE_CODE_ORIGEN_VENTA_MKF);
+                                }else{
+                                    prospectoVta.setOrigenCode(Contants.GENERAL_VALUE_CODE_ORIGEN_MKF_MOVIL);
                                 }
                             }else{
-                                if(validateDocument){
-                                    Log.d(TAG,"tiene documento y es natural...");
-                                    if(opcionProspectar==2){
-                                        Log.d(TAG,"Prospecto a editar...");
-                                        Log.d(TAG,"ProspectoEditar before:"+prospectoEditar.toString());
-                                        if(prospectoEditar.getIdProspecto()>0){
-                                            prospectoEditar.setEstado(2);
-                                        }else{
-                                            prospectoEditar.setEstado(1);
-                                        }
-                                        prospectoEditar.setIdAgente(rp3.configuration.PreferenceManager.getInt(Contants.KEY_IDAGENTE,0));
-                                        prospectoEditar.setEstadoCode("A");
-                                        //prospectoEditar.setEstado(1);
-                                        prospectoEditar.setEstadoCode(Contants.GENERAL_VALUE_CODE_APTO_PROSPECCION);
-                                        prospectoEditar.setOrigenCode(Contants.GENERAL_VALUE_CODE_ORIGEN_VENTA_MKF);
-                                        setDataToEdit();
-                                        Log.d(TAG,"ProspectoEditar after:"+prospectoEditar.toString());
-                                        //dataBase.beginTransactionNonExclusive();
-                                        try {
-                                            //do some insertions or whatever you need
-                                            //dataBase.setTransactionSuccessful();
-                                            //boolean resukt = prospectoEditar.update(Utils.getDataBase(ProspectoActivity.this),prospectoEditar,ACTION_UPDATE);
-                                            boolean resukt = ProspectoVtaDb.update(dataBase,prospectoEditar);
-                                            System.out.print(prospectoEditar.getMessages());
-                                            if(resukt){
-                                                Log.d(TAG,"Se actualizo el prospecto a editar...");
-                                                Log.d(TAG,prospectoEditar.toString());
-                                            }else{
-                                                Log.d(TAG,"No se actulizo prospecto a editar...");
-                                            }
-                                        }catch (Exception e){
-                                            e.printStackTrace();
-                                        } finally {
-                                            //dataBase.endTransaction();
-                                            dataBase.close();
-                                        }
-
-                                        setResult(RESULT_PROSPECTO_EDIT);
-                                        finish();
-                                    }
-                                    else if(opcionProspectar==0){
-                                        Log.d(TAG,"Prospecto a crear...");
-                                        prospectoVta.setEstado(1);
-                                        boolean result = ProspectoVtaDb.insert(DataBase.newDataBase(rp3.auna.db.DbOpenHelper.class),prospectoVta);
-                                        if(result){
-                                            Log.d(TAG,"Se inserto el prospecto a crear...");
-                                            Log.d(TAG,prospectoVta.toString());
-                                        }else{
-                                            Log.d(TAG,"No se inserto el prospecto a crear...");
-                                        }
-                                        setResult(RESULT_PROSPECTO_NUEVO);
-                                        finish();
-                                    }
-                                }else{
-                                    Toast.makeText(ProspectoActivity.this, R.string.prospecto_document_validate, Toast.LENGTH_SHORT).show();
-                                }
+                                prospectoVta.setEstadoCode(Contants.GENERAL_VALUE_CODE_APTO_PROSPECCION);
+                                prospectoVta.setOrigenCode(Contants.GENERAL_VALUE_CODE_ORIGEN_MKF_MOVIL);
                             }
-                        }else{
-                            if(validateDocument){
-                                Log.d(TAG,"tiene documento y es natural...");
+
+                            String json = new Gson().toJson(prospectoVta);
+                            if(tipo.equalsIgnoreCase("N") && prospectoVta.getTipoDocumento()>0 && prospectoVta.getDocumento()!=null)
+                            {
+                                //region es de tipo N y tiene documento...
+                                Log.d(TAG,"es de tipo N y tiene documento...");
+
+                                if(flagDocumento==1 && opcionProspectar == 2)
+                                {
+                                    //region flagDocumento==1 && opcionProspectar == 2
+                                    if(etDocumento.getText().toString().equalsIgnoreCase(prospectoEditar.getDocumento()))
+                                    {
+                                        Log.d(TAG,"tiene documento y es natural es prospecto aeditar...");
+
+                                        if(opcionProspectar==2)
+                                        {
+                                            //region opcionProspectar 2
+                                            Log.d(TAG,"Prospecto a editar...");
+                                            Log.d(TAG,"ProspectoEditar before:"+prospectoEditar.toString());
+                                            if(prospectoEditar.getIdProspecto()>0){
+                                                prospectoEditar.setEstado(2);
+                                            }else{
+                                                prospectoEditar.setEstado(1);
+                                            }
+                                            prospectoEditar.setIdAgente(rp3.configuration.PreferenceManager.getInt(Contants.KEY_IDAGENTE,0));
+                                            prospectoEditar.setEstadoCode(Contants.GENERAL_VALUE_CODE_APTO_PROSPECCION);
+                                            setDataToEdit();
+                                            Log.d(TAG,"ProspectoEditar after:"+prospectoEditar.toString());
+                                            //dataBase.beginTransactionNonExclusive();
+                                            try {
+                                                //do some insertions or whatever you need
+                                                //dataBase.setTransactionSuccessful();
+                                                //boolean resukt = ProspectoVtaDb.update(Utils.getDataBase(ProspectoActivity.this),prospectoEditar,ACTION_UPDATE);
+                                                boolean resukt = ProspectoVtaDb.update(dataBase,prospectoEditar);
+                                                System.out.print(prospectoEditar.getMessages());
+                                                if(resukt){
+                                                    Log.d(TAG,"Se actualizo el prospecto a editar...");
+                                                    Log.d(TAG,prospectoEditar.toString());
+                                                }else{
+                                                    Log.d(TAG,"No se actulizo prospecto a editar...");
+                                                }
+                                            }catch (Exception e){
+                                                e.printStackTrace();
+                                            }finally {
+                                                //dataBase.endTransaction();
+                                                dataBase.close();
+                                            }
+
+                                            setResult(RESULT_PROSPECTO_EDIT);
+                                            finish();
+                                            //endregion
+                                        }
+                                        else if(opcionProspectar==0)
+                                        {
+                                            //region opcionProspectar 0
+                                            Log.d(TAG,"Prospecto a crear...");
+                                            prospectoVta.setEstado(1);
+                                            boolean result = ProspectoVtaDb.insert(DataBase.newDataBase(rp3.auna.db.DbOpenHelper.class),prospectoVta);
+                                            if(result){
+                                                Log.d(TAG,"Se inserto el prospecto a crear...");
+                                                Log.d(TAG,prospectoVta.toString());
+                                            }else{
+                                                Log.d(TAG,"No se inserto el prospecto a crear...");
+                                            }
+                                            setResult(RESULT_PROSPECTO_NUEVO);
+                                            finish();
+                                            //endregion
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Log.d(TAG,"Documento Valido: " + validateDocument);
+                                        if(validateDocument)
+                                        {
+                                            //region Documento valido
+                                            Log.d(TAG,"tiene documento y es natural...");
+
+                                            if(opcionProspectar==2)
+                                            {
+                                                Log.d(TAG,"Prospecto a editar...");
+                                                Log.d(TAG,"ProspectoEditar before:"+prospectoEditar.toString());
+                                                if(prospectoEditar.getIdProspecto()>0){
+                                                    prospectoEditar.setEstado(2);
+                                                }else{
+                                                    prospectoEditar.setEstado(1);
+                                                }
+                                                prospectoEditar.setIdAgente(rp3.configuration.PreferenceManager.getInt(Contants.KEY_IDAGENTE,0));
+                                                prospectoEditar.setEstadoCode("A");
+                                                //prospectoEditar.setEstado(1);
+                                                prospectoEditar.setEstadoCode(Contants.GENERAL_VALUE_CODE_APTO_PROSPECCION);
+                                                prospectoEditar.setOrigenCode(Contants.GENERAL_VALUE_CODE_ORIGEN_VENTA_MKF);
+                                                setDataToEdit();
+                                                Log.d(TAG,"ProspectoEditar after:"+prospectoEditar.toString());
+                                                //dataBase.beginTransactionNonExclusive();
+                                                try {
+                                                    //do some insertions or whatever you need
+                                                    //dataBase.setTransactionSuccessful();
+                                                    //boolean resukt = prospectoEditar.update(Utils.getDataBase(ProspectoActivity.this),prospectoEditar,ACTION_UPDATE);
+                                                    boolean resukt = ProspectoVtaDb.update(dataBase,prospectoEditar);
+                                                    System.out.print(prospectoEditar.getMessages());
+                                                    if(resukt){
+                                                        Log.d(TAG,"Se actualizo el prospecto a editar...");
+                                                        Log.d(TAG,prospectoEditar.toString());
+                                                    }else{
+                                                        Log.d(TAG,"No se actulizo prospecto a editar...");
+                                                    }
+                                                }catch (Exception e){
+                                                    e.printStackTrace();
+                                                } finally {
+                                                    //dataBase.endTransaction();
+                                                    dataBase.close();
+                                                }
+
+                                                setResult(RESULT_PROSPECTO_EDIT);
+                                                finish();
+                                            }
+                                            else if(opcionProspectar==0)
+                                            {
+                                                Log.d(TAG,"Prospecto a crear...");
+                                                prospectoVta.setEstado(1);
+                                                boolean result = ProspectoVtaDb.insert(DataBase.newDataBase(rp3.auna.db.DbOpenHelper.class),prospectoVta);
+                                                if(result){
+                                                    Log.d(TAG,"Se inserto el prospecto a crear...");
+                                                    Log.d(TAG,prospectoVta.toString());
+                                                }else{
+                                                    Log.d(TAG,"No se inserto el prospecto a crear...");
+                                                }
+                                                setResult(RESULT_PROSPECTO_NUEVO);
+                                                finish();
+                                            }
+                                            else
+                                            {
+                                                Log.d(TAG,"por aqui sale");
+                                            }
+                                            //endregion
+                                        }
+                                        else
+                                        {
+                                            Toast.makeText(ProspectoActivity.this, R.string.prospecto_document_exist, Toast.LENGTH_SHORT).show();
+                                            //Toast.makeText(ProspectoActivity.this, R.string.prospecto_document_validate, Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                    //endregion
+                                }
+                                else
+                                {
+                                    //region else
+                                    if(validateDocument)
+                                    {
+                                        //region Documento valido
+                                        Log.d(TAG,"tiene documento y es natural...");
+                                        if(opcionProspectar==2){
+                                            Log.d(TAG,"Prospecto a editar...");
+                                            Log.d(TAG,"ProspectoEditar before:"+prospectoEditar.toString());
+                                            if(prospectoEditar.getIdProspecto()>0){
+                                                prospectoEditar.setEstado(2);
+                                            }else{
+                                                prospectoEditar.setEstado(1);
+                                            }
+
+                                            prospectoEditar.setIdAgente(rp3.configuration.PreferenceManager.getInt(Contants.KEY_IDAGENTE,0));
+                                            prospectoEditar.setEstadoCode("A");
+                                            //prospectoEditar.setEstado(1);
+                                            prospectoEditar.setEstadoCode(Contants.GENERAL_VALUE_CODE_APTO_PROSPECCION);
+                                            if(prospectoEditar.getOrigenCode().equalsIgnoreCase(Contants.GENERAL_VALUE_CODE_ORIGEN_VENTA_MKF)){
+                                                prospectoEditar.setOrigenCode(Contants.GENERAL_VALUE_CODE_ORIGEN_VENTA_MKF);
+                                            }else{
+                                                prospectoEditar.setOrigenCode(Contants.GENERAL_VALUE_CODE_ORIGEN_MKF_MOVIL);
+                                            }
+                                            setDataToEdit();
+                                            Log.d(TAG,"ProspectoEditar after:"+prospectoEditar.toString());
+                                            //dataBase.beginTransactionNonExclusive();
+                                            try {
+                                                //do some insertions or whatever you need
+                                                //dataBase.setTransactionSuccessful();
+                                                //boolean resukt = prospectoEditar.update(Utils.getDataBase(ProspectoActivity.this),prospectoEditar,ACTION_UPDATE);
+                                                boolean resukt = ProspectoVtaDb.update(dataBase,prospectoEditar);;
+                                                System.out.print(prospectoEditar.getMessages());
+                                                if(resukt){
+                                                    Log.d(TAG,"Se actualizo el prospecto a editar...");
+                                                    Log.d(TAG,prospectoEditar.toString());
+                                                }else{
+                                                    Log.d(TAG,"No se actulizo prospecto a editar...");
+                                                }
+                                            }catch (Exception e){
+                                                e.printStackTrace();
+                                            } finally {
+                                                //dataBase.endTransaction();
+                                                dataBase.close();
+                                            }
+                                            setResult(RESULT_PROSPECTO_EDIT);
+                                            finish();
+                                        }
+                                        else if(opcionProspectar==0){
+                                            Log.d(TAG,"Prospecto a crear...");
+                                            prospectoVta.setEstado(1);
+                                            boolean result = ProspectoVtaDb.insert(Utils.getDataBase(getApplicationContext()),prospectoVta);
+                                            if(result){
+                                                Log.d(TAG,"Se inserto el prospecto a crear...");
+                                                Log.d(TAG,prospectoVta.toString());
+                                            }else{
+                                                Log.d(TAG,"No se inserto el prospecto a crear...");
+                                            }
+                                            setResult(RESULT_PROSPECTO_NUEVO);
+                                            finish();
+                                        }
+                                        //endregion
+                                    }
+                                    else
+                                    {
+                                        //region Documento no valido
+                                        Toast.makeText(ProspectoActivity.this, R.string.prospecto_document_validate, Toast.LENGTH_SHORT).show();
+                                        //endregion
+                                    }
+                                    //endregion
+                                }
+                                //endregion
+                            }
+                            else if (tipo.equalsIgnoreCase("N"))
+                            {
+                                //region Es natural
+                                Log.d(TAG,"Solo es Es natural...");
+                                Log.d(TAG,"SET RESULT Natural...");
                                 if(opcionProspectar==2){
                                     Log.d(TAG,"Prospecto a editar...");
+                                    prospectoEditar.setEstadoCode("A");
                                     Log.d(TAG,"ProspectoEditar before:"+prospectoEditar.toString());
                                     if(prospectoEditar.getIdProspecto()>0){
                                         prospectoEditar.setEstado(2);
                                     }else{
                                         prospectoEditar.setEstado(1);
-                                    }
-
-                                    prospectoEditar.setIdAgente(rp3.configuration.PreferenceManager.getInt(Contants.KEY_IDAGENTE,0));
-                                    prospectoEditar.setEstadoCode("A");
-                                    //prospectoEditar.setEstado(1);
-                                    prospectoEditar.setEstadoCode(Contants.GENERAL_VALUE_CODE_APTO_PROSPECCION);
-                                    if(prospectoEditar.getOrigenCode().equalsIgnoreCase(Contants.GENERAL_VALUE_CODE_ORIGEN_VENTA_MKF)){
-                                        prospectoEditar.setOrigenCode(Contants.GENERAL_VALUE_CODE_ORIGEN_VENTA_MKF);
-                                    }else{
-                                        prospectoEditar.setOrigenCode(Contants.GENERAL_VALUE_CODE_ORIGEN_MKF_MOVIL);
                                     }
                                     setDataToEdit();
                                     Log.d(TAG,"ProspectoEditar after:"+prospectoEditar.toString());
@@ -683,7 +856,7 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
                                         //do some insertions or whatever you need
                                         //dataBase.setTransactionSuccessful();
                                         //boolean resukt = prospectoEditar.update(Utils.getDataBase(ProspectoActivity.this),prospectoEditar,ACTION_UPDATE);
-                                        boolean resukt = ProspectoVtaDb.update(dataBase,prospectoEditar);;
+                                        boolean resukt = ProspectoVtaDb.update(dataBase,prospectoEditar);
                                         System.out.print(prospectoEditar.getMessages());
                                         if(resukt){
                                             Log.d(TAG,"Se actualizo el prospecto a editar...");
@@ -697,6 +870,7 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
                                         //dataBase.endTransaction();
                                         dataBase.close();
                                     }
+                                    //boolean resukt = ProspectoVtaDb.update(DataBase.newDataBase(rp3.auna.db.DbOpenHelper.class),prospectoEditar);
                                     setResult(RESULT_PROSPECTO_EDIT);
                                     finish();
                                 }
@@ -713,117 +887,67 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
                                     setResult(RESULT_PROSPECTO_NUEVO);
                                     finish();
                                 }
-                            }else{
-                                Toast.makeText(ProspectoActivity.this, R.string.prospecto_document_validate, Toast.LENGTH_SHORT).show();
+                                /*else if(opcionProspectar==3){
+                                    showAlertDialogReferidoConfirm();
+                                }*/
+                                //endregion
                             }
-                        }
+                            else
+                            {
+                                //region Es juridico
+                                Log.d(TAG, "Es juridico...");
+                                Log.d(TAG,"SET RESULT Juridico...");
+                                if(opcionProspectar==2){
+                                    Log.d(TAG,"Prospecto a editar...");
+                                    Log.d(TAG,"ProspectoEditar before:"+prospectoEditar.toString());
+                                    if(prospectoEditar.getIdProspecto()>0){
+                                        prospectoEditar.setEstado(2);
+                                    }else{
+                                        prospectoEditar.setEstado(1);
+                                    }
 
+                                    prospectoEditar.setEstadoCode("A");
+                                    setDataToEdit();
+                                    Log.d(TAG,"ProspectoEditar after:"+prospectoEditar.toString());
+                                    //dataBase.beginTransactionNonExclusive();
+                                    try {
+                                        //do some insertions or whatever you need
+                                        //dataBase.setTransactionSuccessful();
+                                        //boolean resukt = prospectoEditar.update(Utils.getDataBase(ProspectoActivity.this),prospectoEditar,ACTION_UPDATE);
+                                        boolean resukt = ProspectoVtaDb.update(dataBase,prospectoEditar);
+                                        System.out.print(prospectoEditar.getMessages());
+                                        if(resukt){
+                                            Log.d(TAG,"Se actualizo el prospecto a editar...");
+                                            Log.d(TAG,prospectoEditar.toString());
+                                        }else{
+                                            Log.d(TAG,"No se actulizo prospecto a editar...");
+                                        }
+                                    }catch (Exception e){
+                                        e.printStackTrace();
+                                    } finally {
+                                        //dataBase.endTransaction();
+                                        dataBase.close();
+                                    }
 
-                    }
-                    else if (tipo.equalsIgnoreCase("N")){
-                        Log.d(TAG,"Solo es Es natural...");
-                        Log.d(TAG,"SET RESULT Natural...");
-                        if(opcionProspectar==2){
-                            Log.d(TAG,"Prospecto a editar...");
-                            prospectoEditar.setEstadoCode("A");
-                            Log.d(TAG,"ProspectoEditar before:"+prospectoEditar.toString());
-                            if(prospectoEditar.getIdProspecto()>0){
-                                prospectoEditar.setEstado(2);
-                            }else{
-                                prospectoEditar.setEstado(1);
-                            }
-                            setDataToEdit();
-                            Log.d(TAG,"ProspectoEditar after:"+prospectoEditar.toString());
-                            //dataBase.beginTransactionNonExclusive();
-                            try {
-                                //do some insertions or whatever you need
-                                //dataBase.setTransactionSuccessful();
-                                //boolean resukt = prospectoEditar.update(Utils.getDataBase(ProspectoActivity.this),prospectoEditar,ACTION_UPDATE);
-                                boolean resukt = ProspectoVtaDb.update(dataBase,prospectoEditar);
-                                System.out.print(prospectoEditar.getMessages());
-                                if(resukt){
-                                    Log.d(TAG,"Se actualizo el prospecto a editar...");
-                                    Log.d(TAG,prospectoEditar.toString());
-                                }else{
-                                    Log.d(TAG,"No se actulizo prospecto a editar...");
+                                    setResult(RESULT_PROSPECTO_EDIT);
+                                    finish();
                                 }
-                            }catch (Exception e){
-                                e.printStackTrace();
-                            } finally {
-                                //dataBase.endTransaction();
-                                dataBase.close();
-                            }
-                            //boolean resukt = ProspectoVtaDb.update(DataBase.newDataBase(rp3.auna.db.DbOpenHelper.class),prospectoEditar);
-                            setResult(RESULT_PROSPECTO_EDIT);
-                            finish();
-                        }
-                        else if(opcionProspectar==0){
-                            Log.d(TAG,"Prospecto a crear...");
-                            prospectoVta.setEstado(1);
-                            boolean result = ProspectoVtaDb.insert(Utils.getDataBase(getApplicationContext()),prospectoVta);
-                            if(result){
-                                Log.d(TAG,"Se inserto el prospecto a crear...");
-                                Log.d(TAG,prospectoVta.toString());
-                            }else{
-                                Log.d(TAG,"No se inserto el prospecto a crear...");
-                            }
-                            setResult(RESULT_PROSPECTO_NUEVO);
-                            finish();
-                        }/*else if(opcionProspectar==3){
-                                showAlertDialogReferidoConfirm();
-                            }*/
-                    }else {
-                        Log.d(TAG, "Es juridico...");
-                        Log.d(TAG,"SET RESULT Juridico...");
-                        if(opcionProspectar==2){
-                            Log.d(TAG,"Prospecto a editar...");
-                            Log.d(TAG,"ProspectoEditar before:"+prospectoEditar.toString());
-                            if(prospectoEditar.getIdProspecto()>0){
-                                prospectoEditar.setEstado(2);
-                            }else{
-                                prospectoEditar.setEstado(1);
-                            }
-
-                            prospectoEditar.setEstadoCode("A");
-                            setDataToEdit();
-                            Log.d(TAG,"ProspectoEditar after:"+prospectoEditar.toString());
-                            //dataBase.beginTransactionNonExclusive();
-                            try {
-                                //do some insertions or whatever you need
-                                //dataBase.setTransactionSuccessful();
-                                //boolean resukt = prospectoEditar.update(Utils.getDataBase(ProspectoActivity.this),prospectoEditar,ACTION_UPDATE);
-                                boolean resukt = ProspectoVtaDb.update(dataBase,prospectoEditar);
-                                System.out.print(prospectoEditar.getMessages());
-                                if(resukt){
-                                    Log.d(TAG,"Se actualizo el prospecto a editar...");
-                                    Log.d(TAG,prospectoEditar.toString());
-                                }else{
-                                    Log.d(TAG,"No se actulizo prospecto a editar...");
+                                else if(opcionProspectar==0){
+                                    Log.d(TAG,"Prospecto a crear...");
+                                    prospectoVta.setEstado(1);
+                                    ProspectoVtaDb.insert(DataBase.newDataBase(rp3.auna.db.DbOpenHelper.class),prospectoVta);
+                                    setResult(RESULT_PROSPECTO_NUEVO);
+                                    finish();
                                 }
-                            }catch (Exception e){
-                                e.printStackTrace();
-                            } finally {
-                                //dataBase.endTransaction();
-                                dataBase.close();
+                                /*else if(opcionProspectar==3){
+                                    showAlertDialogReferidoConfirm();
+                                }*/
+                                //endregion
                             }
 
-                            setResult(RESULT_PROSPECTO_EDIT);
-                            finish();
+                            Log.d(TAG,"json prospecto:"+json);
                         }
-                        else if(opcionProspectar==0){
-                            Log.d(TAG,"Prospecto a crear...");
-                            prospectoVta.setEstado(1);
-                            ProspectoVtaDb.insert(DataBase.newDataBase(rp3.auna.db.DbOpenHelper.class),prospectoVta);
-                            setResult(RESULT_PROSPECTO_NUEVO);
-                            finish();
-                        }
-                            /*else if(opcionProspectar==3){
-                                showAlertDialogReferidoConfirm();
-                            }*/
-                    }
-                    Log.d(TAG,"json prospecto:"+json);
-                }
-            })
+                    })
                     .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -831,6 +955,7 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
                             dialog.dismiss();
                         }
                     });
+
             AlertDialog dialog = builder.create();
             dialog.show();
         }
@@ -2031,8 +2156,13 @@ public class ProspectoActivity extends ActionBarActivity implements View.OnClick
     //region OnClick
 
     @Override
-    public void onClick(View v) {
-        if(v.getId()==fabNuevo.getId()){Log.d(TAG,"fabNuevo Onclick...");validate();}
+    public void onClick(View v)
+    {
+        if(v.getId()==fabNuevo.getId())
+        {
+            Log.d(TAG,"fabNuevo Onclick...");
+            validate();
+        }
     }
 
     @Override

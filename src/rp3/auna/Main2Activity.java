@@ -629,7 +629,8 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
     }
     //endregion
 
-    public void invokeSync(String titulo,String mensaje){
+    public void invokeSync(String titulo,String mensaje)
+    {
         if (!ConnectionUtils.isNetAvailable(this)) {
             Log.d(TAG,"!ConnectionUtils.isNetAvailable(this)...");
             Alarm.removeAllAlarms(Utils.getDataBase(this),this);
@@ -815,6 +816,7 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
         try {
             if (ConnectionUtils.isNetAvailable(this)) {
                 //PreferenceManager.close();
+                //bundle.putString(SyncAdapter.ARG_SYNC_TYPE, SyncAdapter.SYNC_TYPE_VENTA_NUEVA);
                 SyncUtils.requestSync(settingsBundle);
                 //lockRotation();
             } else {
@@ -1569,7 +1571,8 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
         }*/
             else if(requestCode == REQUEST_VISITA_COTIZACION_NUEVO){
                 Log.d(TAG,"REQUEST_VISITA_COTIZACION_NUEVO...Verificar su RESULT...");
-                if(resultCode == RESULT_VISITA_NUEVA_PAGO_FISICO){
+                if(resultCode == RESULT_VISITA_NUEVA_PAGO_FISICO)
+                {
                     Log.d(TAG,"RESULT == RESULT_VISITA_NUEVA_PAGO_FISICO...");
                     Log.d(TAG,"Se creo una visita por y el tipo de pago fue fisico se necesita registrar las visitas en agenda...");
                     invokeSync("Agenda","Actualizando Visitas...");

@@ -549,6 +549,7 @@ public class Agente {
                 return rp3.auna.sync.SyncAdapter.SYNC_EVENT_SUCCESS;
             }
         } finally {
+            Log.d(TAG,"despues deleteAll...");
             webService.close();
         }
 

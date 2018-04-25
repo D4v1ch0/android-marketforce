@@ -3506,6 +3506,7 @@ public class CotizacionActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.message_error_sync_no_net_available, Toast.LENGTH_SHORT).show();
             return;
         }else{
+            //Log.d("JL","else");
             visitaVta.setEstado(estado);
             visitaVta.setFechaFin(Calendar.getInstance().getTime());
             visitaVta.setVisitaValue(Contants.GENERAL_VALUE_CODE_VISITA_REALIZADA);
@@ -3534,6 +3535,7 @@ public class CotizacionActivity extends AppCompatActivity {
             obj.setIdClienteDireccion(visitaVta.getIdClienteDireccion());
             obj.setIdVisita(visitaVta.getIdVisita());
             if(code!=null && tipo == 1){
+
                 visitaVta.setObservacion(motivo);
                 visitaVta.setMotivoReprogramacionValue(code);
                 visitaVta.setMotivoReprogramacionTabla(GENERAL_TABLE_MOTIVOS_REPROGRAMACION_TABLE_ID_CITA);
@@ -3563,6 +3565,7 @@ public class CotizacionActivity extends AppCompatActivity {
             progressDialog.setMessage("Finalizando Visita...");
             progressDialog.show();
             if(tipo>0){
+                //Log.d("JL","Actualiza visita");
                 //region Actualizar Visita
                 new UpdateVisitaClient(this, new Callback() {
                     Handler handler = new Handler(Looper.getMainLooper());
@@ -3712,6 +3715,7 @@ public class CotizacionActivity extends AppCompatActivity {
                 }).actualizar(json);
                 //endregion
             }else{
+                //Log.d("JL","Inserta visita");
                 VisitaVtaFinal venta = new VisitaVtaFinal();
                 obj.setVisitaValue(Contants.GENERAL_VALUE_CODE_VISITA_REALIZADA);
                 visitaVta.setVisitaValue(Contants.GENERAL_VALUE_CODE_VISITA_REALIZADA);
