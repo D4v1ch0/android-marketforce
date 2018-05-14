@@ -32,15 +32,13 @@ public class SolicitudAfiliadoMovil {
     public String ApellidoMaterno;
 
     //region Encapsulamiento
+    //public String getModoTarifa() {
+    //    return ModoTarifa;
+    //}
 
-
-   /* public String getModoTarifa() {
-        return ModoTarifa;
-    }
-
-    public void setModoTarifa(String modoTarifa) {
-        ModoTarifa = modoTarifa;
-    }*/
+    //public void setModoTarifa(String modoTarifa) {
+    //    ModoTarifa = modoTarifa;
+    //}
 
     public String getTipoDocumentoIdentificacion() {
         return TipoDocumentoIdentificacion;

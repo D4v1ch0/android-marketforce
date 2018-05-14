@@ -41,6 +41,7 @@ public class SolicitudFragment extends Fragment {
     @BindView(R.id.tvTelefono)TextView tvTelefono;
     @BindView(R.id.tvCelular)TextView tvCelular;
     @BindView(R.id.tvCorreo)TextView tvCorreo;
+    @BindView(R.id.tvFormaPago)TextView tvFormaPago;
     //endregion
 
     @Nullable
@@ -103,11 +104,28 @@ public class SolicitudFragment extends Fragment {
             }else{
                 tvCorreo.setText("-----");
             }
+            if (solicitudMovil.getModoTarifa()!=null){
+                if (solicitudMovil.getModoTarifa().equalsIgnoreCase("NR"))
+                {
+                    tvFormaPago.setText("NO RECURRENTE");
+                }
+                else if (solicitudMovil.getModoTarifa().equalsIgnoreCase("RE"))
+                {
+                    tvFormaPago.setText("RECURRENTE");
+                }
+                else
+                {
+                    tvFormaPago.setText("----");
+                }
+            }else{
+                tvFormaPago.setText("-----");
+            }
         }else{
             tvContratante.setText("-----");
             tvTelefono.setText("-----");
             tvCelular.setText("-----");
             tvCorreo.setText("-----");
+            tvFormaPago.setText("-----");
         }
         if(solicitudMovil.getIdTipoSolicitud().equalsIgnoreCase("N")){
             tvTipoVenta.setText("INDIVIDUAL");

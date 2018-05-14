@@ -187,7 +187,7 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
     private int positionSelected = 0;
     private int positiSelectedLast = 0;
     //
-    private int collapse = 0;
+    //private int collapse = 0;
     ReporteAdapter reporteAdapter;
     ReporteriaAdapter adapter;
 
@@ -1778,7 +1778,7 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
         Log.d(TAG,"handleSettingsResolutionRequired:"+resolutionRequired);
         try {
             this.status=status;
-            GPS = false;
+            //GPS = false;
             status.startResolutionForResult(this,REQUEST_CHECK_SETTINGS);
         } catch (IntentSender.SendIntentException e) {
             e.printStackTrace();
@@ -1815,8 +1815,6 @@ public class Main2Activity extends AppCompatActivity implements rp3.auna.util.lo
         try{
             final Calendar hoy = Calendar.getInstance();
             final long ONE_MINUTE_IN_MILLIS=60000;
-
-
 
             //region Alarma de Llamadas
             //Llamadas

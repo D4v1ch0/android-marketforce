@@ -176,7 +176,7 @@
                     android:layout_weight="0.4"
                     android:fontFamily="sans-serif-medium"
                     android:lines="2"
-                    android:text="Número solicitud:"
+                    android:text="Número Solicitud:"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
                     android:textColor="@color/md_text"
                     android:textSize="14sp" />
@@ -417,6 +417,52 @@
 
                 <TextView
                     android:id="@+id/tvCorreo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_weight="0.6"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Tipo de Venta:"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
+                    android:textColor="@color/blackA75"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorGrayA75" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="36dp"
+                android:layout_marginTop="3dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="32dp"
+                    android:layout_weight="0.1"
+                    android:src="@drawable/ic_right_arrow"
+                    android:tint="@color/md_text" />
+
+                <TextView
+                    android:id="@+id/tvTipoVenta"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_weight="0.4"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Forma de Pago:"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
+                    android:textColor="@color/md_text"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tvFormaPago"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
